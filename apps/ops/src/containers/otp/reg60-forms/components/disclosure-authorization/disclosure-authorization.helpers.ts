@@ -2,10 +2,10 @@ import { TFunction } from 'next-i18next';
 
 import { CDSCPeriods, Products } from './disclosure-authorization.types';
 
-const stableVoyagePlusPlanCodes = [''];
+const stableVoyagePlusPlanCodes: string[] = [];
 
 export const productOptions = (t: TFunction, planCode: string) => {
-    const isStableVoyagePlus = stableVoyagePlusPlanCodes.includes(planCode);
+    const isStableVoyagePlus = stableVoyagePlusPlanCodes?.includes(planCode);
     return [
         { label: t('products.stableVoyage'), value: Products.stableVoyage },
         { label: t('products.retireEase'), value: Products.retireEase },
@@ -15,7 +15,7 @@ export const productOptions = (t: TFunction, planCode: string) => {
 };
 
 export const cdscPeriodOptions = (t: TFunction, planCode: string) => {
-    const isStableVoyagePlus = stableVoyagePlusPlanCodes.includes(planCode);
+    const isStableVoyagePlus = stableVoyagePlusPlanCodes?.includes(planCode);
     return [
         !isStableVoyagePlus && { label: t('cdscPeriods.oneYearGuarantee'), value: CDSCPeriods['1YearGuarantee'] },
         { label: t('cdscPeriods.threeYearGuarantee'), value: CDSCPeriods['3YearGuarantee'] },
