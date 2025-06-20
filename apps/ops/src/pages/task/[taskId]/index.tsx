@@ -125,13 +125,15 @@ export const getServerSideProps = withPageAuthAndLogging(
                 }
                 if (!(!isProd() && (taskUserOverride || taskTypeOverride || taskSchemaOverride))) {
                     if (!(user.partyId && task.assigneePartyId && task.assigneePartyId === user.partyId)) {
-                        logWarn('task/:id::task is not assigned to user', { ...loggingContext, assignee: task.assignee });
-                        return {
-                            redirect: {
-                                destination: '/403',
-                                permanent: false,
-                            },
-                        };
+                        if (task.status !== TaskStatus.Completed) {
+                            logWarn('task/:id::task is not assigned to user', { ...loggingContext, assignee: task.assignee });
+                            return {
+                                redirect: {
+                                    destination: '/403',
+                                    permanent: false,
+                                },
+                            };
+                        }
                     }
                     const enabledTask = await getFeatureFlagByKey(
                         FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
