@@ -304,10 +304,12 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
     return Object.keys(errors).length === 0;
   };
   useEffect(() => {
-    if (filteredCallLogs.length === 1) {
+    if (filteredCallLogs.length === 1 && contactRole !== ContactRole.OTHER) {
       setName(filteredCallLogs[0].fullName)
     }
-  }, [filteredCallLogs])
+  }, [filteredCallLogs, contactRole])
+
+
 
   useEffect(() => {
     validateAddress();
@@ -384,7 +386,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
                 <Label labelFor="name">{t('name') ?? 'Name'}</Label>
                 <input
                   type="text"
-                  id="name"
+                  key={`name-input-${callEntries.length}`}
                   placeholder={t('name') ?? 'Name'}
                   className={`${styles.textField} w-full`}
                   value={name}
