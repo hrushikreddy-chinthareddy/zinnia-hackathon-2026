@@ -70,7 +70,7 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
             let matchedData = {};
             let matchingResult = task?.data?.matchingResult;
 
-            if (![MatchingCase.NO_MATCH].includes(correlationId)) {
+            if (![MatchingCase.NO_MATCH, MatchingCase.NOT_APPLICABLE].includes(correlationId)) {
                 const potentialMatch = initialTask.data.potentialMatches?.find(
                     (item: PotentialMatches) => item.correlationid === correlationId
                 );

@@ -39,6 +39,7 @@ export enum MatchingCase {
     NO_MATCH = 'NO_MATCH',
     DUPLICATE = 'DUPLICATE',
     ENTERED = 'ENTERED',
+    NOT_APPLICABLE = 'NOT_APPLICABLE',
 }
 
 type Entity = {

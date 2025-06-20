@@ -1,0 +1,475 @@
+{
+    "formId": "dc7ce621-295e-4588-9756-5c279121bcc1",
+    "process": "Qualification",
+    "taskType": "STANDARD_DOCUMENT_MATCHING",
+    "carrier": "FLIC",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Match Document",
+                "formSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "definitions": {
+                        "caseTypeEnum": {},
+                        "caseSubTypeEnum": {}
+                    },
+                    "required": ["matchingResult"],
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Review supporting information and determine if the document can be matched to an existing case. Search all cases and review any suggested potential matches. Confirm the matching Case ID, if possible. If there's no existing case to match the document to, mark the task as pending and wait for the application to arrive."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "caseOverview": {
+                            "type": "string",
+                            "title": "Open case search",
+                            "default": "/cases"
+                        },
+                        "matchingResult": {
+                            "type": "string",
+                            "title": "Can you find a matching case for this document?"
+                        }
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "matchingResult": {
+                                        "const": ""
+                                    }
+                                }
+                            },
+                            "then": {},
+                            "else": {
+                                "if": {
+                                    "properties": {
+                                        "matchingResult": {
+                                            "const": "NO_MATCH"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "caseTitle": {
+                                            "type": "string",
+                                            "title": "Select a case type to index this document."
+                                        },
+                                        "caseType": {
+                                            "type": "string",
+                                            "title": "Case",
+                                            "$ref": "#/definitions/caseTypeEnum"
+                                        },
+                                        "caseSubType": {
+                                            "type": "string",
+                                            "title": "Case Type",
+                                            "$ref": "#/definitions/caseSubTypeEnum"
+                                        }
+                                    },
+                                    "required": ["caseType"]
+                                },
+                                "else": {
+                                    "if": {
+                                        "properties": {
+                                            "matchingResult": {
+                                                "const": "ENTERED"
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "caseId": {
+                                                "type": "string",
+                                                "title": "Case ID",
+                                                "minLength": 12,
+                                                "maxLength": 15,
+                                                "pattern": "^[a-zA-Z0-9]*$"
+                                            }
+                                        },
+                                        "required": ["caseId"]
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                },
+                                "carrier": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "caseOverview": {
+                        "ui:options": {
+                            "label": false,
+                            "type": "link"
+                        },
+                        "ui:widget": "HyperLinkWidget"
+                    },
+                    "matchingResult": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "cardType": "Hyperlink",
+                            "label": true,
+                            "customOptions": [
+                                {
+                                    "value": "ENTERED",
+                                    "subElement": {
+                                        "label": "Enter a case ID",
+                                        "value": "",
+                                        "url": ""
+                                    }
+                                },
+                                {
+                                    "value": "NO_MATCH",
+                                    "subElement": {
+                                        "label": "Document cannot be matched to a case",
+                                        "value": "",
+                                        "url": ""
+                                    }
+                                },
+                                {
+                                    "value": "NOT_APPLICABLE",
+                                    "subElement": {
+                                        "label": "Not Applicable",
+                                        "value": "",
+                                        "url": ""
+                                    }
+                                }
+                            ]
+                        },
+                        "ui:hideError": true
+                    },
+                    "caseId": {
+                        "ui:placeholder": "eg: CA1234567890",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:hideError": false
+                    },
+                    "caseTitle": {
+                        "ui:options": {
+                            "label": false,
+                            "inlinetext": true
+                        }
+                    },
+                    "caseType": {
+                        "ui:placeholder": "Select Case Type",
+                        "ui:props": {
+                            "apiUrl": "case/v1/refdata/PROCESS_SUB_TYPE?",
+                            "apiPayload": {
+                                "parentKey": ["{{value}}"]
+                            },
+                            "apiMethod": "get",
+                            "dataKey": "caseSubTypeEnum",
+                            "response": {
+                                "enum": "key",
+                                "enumNames": "value"
+                            }
+                        },
+                        "ui:hideError": true
+                    },
+                    "caseSubType": {
+                        "ui:widget": "SelectWidget",
+                        "ui-options": {
+                            "label": true,
+                            "dependentField": "caseType"
+                        },
+                        "ui:placeholder": "Select Case Sub Type",
+                        "ui:hideError": true
+                    }
+                }
+            },
+            {
+                "title": "Document Processing",
+                "formSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "required": ["matchedDocumentData"],
+                    "properties": {
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting information",
+                            "properties": {
+                                "documents": {
+                                    "title": "Supporting Information",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "caseOverview": {
+                            "type": "string",
+                            "title": "Open case search",
+                            "default": "/cases/"
+                        },
+                        "matchCaseIdTitle": {
+                            "type": "object",
+                            "title": "Match case ID"
+                        },
+                        "matchCaseId": {
+                            "type": "string",
+                            "title": "{{customData.matchedCaseId}}",
+                            "default": "/cases/{{customData.matchedCaseId}}/progress"
+                        },
+                        "matchedDocumentData": {
+                            "type": "object",
+                            "title": "What do you want to do with this document?",
+                            "properties": {
+                                "matchType": {
+                                    "type": "string",
+                                    "enum": ["NEW", "EXISTING", "DUPLICATE"],
+                                    "enumNames": [
+                                        "Add as a new document",
+                                        "Replace the existing document with this version",
+                                        "Discard because it is a duplicate document"
+                                    ],
+                                    "title": ""
+                                }
+                            },
+                            "required": ["matchType"],
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "matchType": {
+                                                "enum": ["", "NEW"]
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {}
+                                    },
+                                    "else": {
+                                        "if": {
+                                            "properties": {
+                                                "matchType": {
+                                                    "enum": ["EXISTING", "DUPLICATE"]
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "documentList": {
+                                                    "type": "object",
+                                                    "title": "Replace document on Case",
+                                                    "properties": {
+                                                        "upload": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "attachments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "documentName": {
+                                                            "title": "Name",
+                                                            "type": "string"
+                                                        },
+                                                        "documentId": {
+                                                            "title": "Document Id",
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http: //json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": true,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                },
+                                "carrier": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "caseOverview": {
+                        "ui:options": {
+                            "label": false,
+                            "type": "link"
+                        },
+                        "ui:widget": "HyperLinkWidget"
+                    },
+                    "matchCaseId": {
+                        "ui:options": {
+                            "label": false,
+                            "type": "link"
+                        },
+                        "ui:widget": "HyperLinkWidget"
+                    },
+                    "matchedDocumentData": {
+                        "matchType": {
+                            "ui:widget": "radio",
+                            "ui:options": {
+                                "label": false
+                            },
+                            "ui:hideError": true
+                        },
+                        "documentList": {
+                            "inline": true,
+                            "ui:options": {
+                                "label": true
+                            },
+                            "upload": {
+                                "ui:widget": "AutoCompleteWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "icon": "Search",
+                                    "placeholder": "Find existing documents...",
+                                    "singleDocument": true,
+                                    "default": "{{matchedCaseId}}"
+                                }
+                            },
+                            "attachment": {
+                                "ui:options": {
+                                    "label": false,
+                                    "showFiles": false
+                                },
+                                "ui:props": {
+                                    "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                    "apiMethod": "get"
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "ui:options": {
+                                "label": false,
+                                "addable": false,
+                                "removable": true,
+                                "ArrayFieldTemplate": "FileInfoTemplate",
+                                "formContext": {
+                                    "keyName": "customData",
+                                    "listName": "attachments"
+                                }
+                            }
+                        },
+                        "ui:hideError": true
+                    }
+                }
+            }
+        ]
+    }
+}

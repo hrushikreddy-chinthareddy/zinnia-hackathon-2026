@@ -5,6 +5,7 @@ import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { TaskType } from '@deps/models/case/task';
 
 export const getMatchDocumentPaymentReviewSteps = ({
     taskType,
@@ -16,7 +17,10 @@ export const getMatchDocumentPaymentReviewSteps = ({
 }: GetStepsProps) => {
     let isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
 
-    if (task.data.matchingResult === 'NO_MATCH' && task.taskType === 'STANDARD_DOCUMENT_MATCHING') {
+    if (
+        [MatchingCase.NO_MATCH, MatchingCase.NOT_APPLICABLE].includes(task.data.matchingResult) &&
+        task.taskType === TaskType.Standard_Document_Matching
+    ) {
         isSubmit = true;
     }
 
