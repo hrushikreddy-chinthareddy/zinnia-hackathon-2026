@@ -255,6 +255,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 customData: { ...formContext, ...task.data, task },
                 setCustomData: setFormContext,
                 updateSchema: updateSchemaHandler,
+                isReadOnlyOverride: readonly,
             }}
         ></DynamicForm>
     );

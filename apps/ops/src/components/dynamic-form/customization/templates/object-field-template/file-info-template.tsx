@@ -1,19 +1,18 @@
 import { ArrayFieldTemplateProps, UiSchema } from '@rjsf/utils';
-import { Icon, IconType, ToastVariant } from '@zinnia/bloom/components';
+import { MetadataSearchResponse } from '@xd/api-types/dist/generated-types/documents-v3';
+import { Icon, IconType, ToastVariant, Toast } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { Toast } from '@zinnia/bloom/components';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TranslationFiles } from '@deps/config/translations';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { ActionTypes, INTERVAL } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { useEffect, useState } from 'react';
-import { TranslationFiles } from '@deps/config/translations';
-import { MetadataSearchResponse } from '@xd/api-types/dist/generated-types/documents-v3';
 function FileInfoTemplate(props: ArrayFieldTemplateProps) {
-    const { items: _items, uiSchema } = props;
+    const { items: _items, uiSchema, readonly } = props;
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
     let { formData, formContext } = props;
     const [toastMessage, setToastMessage] = useState<string | undefined>(undefined);
@@ -25,8 +24,10 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
             formData = data;
         }
     }
-
     const removeAttachment = async (fileInfo: MetadataSearchResponse) => {
+        if (readonly) {
+            return;
+        }
         let attachments = [...(formContext?.customData?.attachments || [])];
         try {
             const updatedMappedDocuments =
@@ -34,11 +35,9 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
                     return { ...item, operationType: item.documentId === fileInfo.documentId ? ActionTypes.Remove : null };
                 }) || [];
             attachments = attachments.filter(item => item.documentId !== fileInfo.documentId);
-
             if (formContext?.setCustomData) {
                 formContext.setCustomData({ attachments });
             }
-
             const updatedTask = {
                 ...formContext?.customData?.task,
                 data: {
@@ -48,7 +47,6 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
                 mappedDocuments: [...(formContext?.customData?.task?.mappedDocuments || []), ...updatedMappedDocuments],
             };
             const success = await updateTask(updatedTask, formContext?.customData?.correlationId, TaskStatus.InProgress);
-
             if (success) {
                 setToastVariant(ToastVariant.Success);
                 setToastMessage(t(`fileUploadToastMessages.fileDeletedSuccess`) as string);
@@ -65,7 +63,6 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
             });
         }
     };
-
     useEffect(() => {
         if (toastMessage && toastVariant) {
             const timer = setTimeout(() => {
@@ -75,7 +72,10 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
             return () => clearTimeout(timer);
         }
     }, [toastMessage, toastVariant]);
-
+    const className = clsx('flex ', {
+        'cursor-pointer': !readonly,
+        '!border-gray-300 !text-gray-100': readonly,
+    });
     return (
         <div className={clsx('flex ')}>
             <ul className="file-info">
@@ -88,7 +88,7 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
                                     <UploadIcon height={25} width={25} />
                                     <div>{documentName || documentId || ''}</div>
                                 </div>
-                                <span onClick={() => removeAttachment(fileInfo)} className="cursor-pointer ml-4">
+                                <span onClick={() => removeAttachment(fileInfo)} className={`ml-4 ${className}`}>
                                     <Icon type={IconType.CLOSE} height={25} width={25} />
                                 </span>
                             </div>
@@ -104,5 +104,4 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
         </div>
     );
 }
-
 export default FileInfoTemplate;
