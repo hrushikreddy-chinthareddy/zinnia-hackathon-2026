@@ -28,6 +28,7 @@ import {
 import { checkResetDeliveryDateEligibility } from './services/bpm';
 import { ROOT_URL_PATH } from './types';
 import { TermsAndConditionApiResponse } from './types/auth';
+import { Subdomains } from './types/carriers';
 import {
   deleteCookie,
   deleteSession,
@@ -104,11 +105,19 @@ export async function middleware(req: NextRequest) {
 
   applyThemeCookies(req, resNext);
 
-  // TODO: need to test this!!! and also probably move it into it's own util file?
-  // const currentSubDomain = getSubdomain(req.headers);
-  // if (!session && currentSubDomain === Subdomains.FARMERS) {
-  //   return NextResponse.redirect(process.env.SSO_FARMERS_REDIRECT);
-  // }
+  const currentSubDomain = getSubdomain(req.headers);
+  // Checking isMockAllowed because in lower levels (not uat or prod), we want
+  // users to be able to log in via the standard mypolicyview process.
+  // In the real experience we will only allow farmers users with current
+  // sessions to access mypolicyview
+  // which forces them to authenticate and go through the sso app before landing
+  // in mypolicyview with active session
+  // TODO: use the carrier config with `requiresSSO` property and `redirectAfterLogout`
+  if (!session && currentSubDomain === Subdomains.FARMERS && !isMockAllowed()) {
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/my-profile`
+    );
+  }
 
   if (session) {
     // since the user has a session we need to check if they signed the terms and conditions
