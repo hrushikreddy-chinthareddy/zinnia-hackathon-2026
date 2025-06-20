@@ -52,6 +52,7 @@ export const getCarrierLogoSrc = (marketingName: string): string => {
 
 export const PolicyCarrierLogo = ({ carrierId, tooltipPlacements = PopoverPlacement.TopRight }: Partial<GlobalValues>) => {
     const carrierName = getCarrierNameByClientId(carrierId as string);
+
     return (
         <div className="mr-2">
             {carrierId &&

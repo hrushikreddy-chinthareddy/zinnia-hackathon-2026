@@ -5,6 +5,7 @@ import arcus from '@deps/styles/elements/icons/carriers/arcus.svg';
 import delaware from '@deps/styles/elements/icons/carriers/delaware.svg';
 import empower from '@deps/styles/elements/icons/carriers/empower.svg';
 import everly from '@deps/styles/elements/icons/carriers/everly.svg';
+import farmers from '@deps/styles/elements/icons/carriers/farmers.svg';
 import globalAtlantic from '@deps/styles/elements/icons/carriers/global-atlantic.svg';
 import guaranty from '@deps/styles/elements/icons/carriers/guaranty.svg';
 import guggenheim from '@deps/styles/elements/icons/carriers/guggenheim.svg';
@@ -60,6 +61,8 @@ const carriers = {
     ULPC: 'United Life',
     USAA: 'USAA',
     WELB: 'Wellabe',
+    FNWL: 'Farmers Insurance',
+    CPAF: 'Farmers Insurance',
 };
 
 export const getCarrierNameByClientId = (clientId: string, showClientCode: boolean = false): string => {
@@ -162,6 +165,9 @@ export const getCarrierLogoByClientId = (clientId: string): string => {
             return wellabe;
         case 'ZINN':
             return zinnia;
+        case 'FNWL':
+        case 'CPAF':
+            return farmers;
         default:
             return placeholder;
     }
