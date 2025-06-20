@@ -6311,12 +6311,8 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
-            },
-            "invalidEmail": "E-mail invalide",
-            "invalidFax": "Fax invalide"
-        },
-        "invalidEmail": "E-mail invalide",
-        "invalidFax": "Fax invalide"
+            }
+        }
     },
     "claimsDay150": {
         "beneStatus": {

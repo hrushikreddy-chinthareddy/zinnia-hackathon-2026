@@ -9,7 +9,7 @@ import Radio from '@deps/components/radio/radio';
 import SelectComponent from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import PhoneNumber from '@deps/containers/address-change-container/components/contact-details/phone-number';
-import { ClaimActionTypes } from '@deps/containers/death-claim-container/death-claim.types';
+import { ClaimActionTypes, ClaimCommunicationTypes } from '@deps/containers/death-claim-container/death-claim.types';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { formatPhone } from '@deps/helpers/string.helpers';
@@ -17,7 +17,6 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
 import BeneficiaryNotificationChange from './beneficiary-notification-change';
-import { updateCallLogs, validateForm } from './call-for-information.helper';
 import { CallEntry, CallLog, ChangeTypeEnum, ContactRole, UpdatedBeneficiaryRecord } from './claims.type';
 import { DisplayCompletedCalls } from './display-completed-calls';
 import styles from '../../../../../components/dynamic-form/components/text-field/text-field.module.css';
@@ -77,7 +76,6 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
       disabled: false,
     },
   ];
-
   const changeTypeOptions = [
     {
       value: 'BENEFICIARY_NOTIFICATION_CHANGE',
@@ -94,7 +92,8 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
 
   useEffect(() => {
     const handleContinue = async () => {
-      let updatedTask = { ...task };
+
+      const updatedTask = { ...task };
       updatedTask.data.details[dynamicKey].beneficiaryChangeDetail = { ...beneficiary };
 
       let maxCallSequence = 0
@@ -104,7 +103,45 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
         }
       }
 
-      updatedTask = updateCallLogs(updatedTask, dynamicKey, maxCallSequence + 1, contactRole, name, phone, country, relationshipToOwner);
+      if (task?.data?.details?.[dynamicKey]?.callLogs && task.data.details[dynamicKey].callLogs.length > 0) {
+
+        const logIndex = task.data.details[dynamicKey].callLogs.findIndex(
+          (log: CallLog) =>
+            log.fullName === name && (contactRole === ContactRole.AGENT ? log.partyRoleCategory === ContactRole.AGENT : log.partyRole === contactRole)
+        );
+        if (logIndex !== -1) {
+          updatedTask.data.details[dynamicKey].callLogs[logIndex] = {
+            ...updatedTask.data.details[dynamicKey].callLogs[logIndex],
+            callSequence: maxCallSequence + 1,
+            callDone: true,
+          };
+
+        } else {
+          contactRole === ContactRole.OTHER && updatedTask.data.details[dynamicKey].callLogs.push({
+            fullName: name,
+            partyRole: contactRole,
+            callSequence: maxCallSequence + 1,
+            phone: { ...phone, countryCode: countries[country].phone },
+            partyRoleCategory: contactRole,
+            relationshipToInsured: relationshipToOwner,
+            callDone: true,
+          });
+        }
+      } else {
+        const updatedTask = { ...task };
+        updatedTask.data.details[dynamicKey].callLogs = [];
+        contactRole === ContactRole.OTHER && updatedTask.data.details[dynamicKey].callLogs.push({
+          fullName: name,
+          partyRole: contactRole,
+          callSequence: callEntries.length,
+          phone: { ...phone, countryCode: countries[country].phone },
+          partyRoleCategory: contactRole,
+          relationshipToInsured: relationshipToOwner,
+          callDone: true,
+        });
+        setTask(updatedTask);
+      }
+
       if (dynamicKey === 'benefinalcontactattempt') {
         updatedTask.data.details[dynamicKey].subTaskBeneCallChangeRequire = beneficiary.changeRequire ? true : false;
       }
@@ -117,11 +154,53 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
     onContinueReady && onContinueReady(() => handleContinue);
   }, [onContinueReady, task, beneficiary, callEntries, contactRole, name, setTask, phone, relationshipToOwner, correlationId, setSubmitFailed, goToNext, country, dynamicKey]);
 
-
-
   const addNewCallEntry = () => {
-    const updatedTask = updateCallLogs(task, dynamicKey, callEntries.length, contactRole, name, phone, country, relationshipToOwner);
-    setTask(updatedTask);
+    if (task?.data?.details?.[dynamicKey]?.callLogs && task.data.details[dynamicKey].callLogs.length > 0) {
+
+      const logIndex = task.data.details[dynamicKey].callLogs.findIndex(
+        (log: CallLog) =>
+          log.fullName === name && (contactRole === ContactRole.AGENT ? log.partyRoleCategory === ContactRole.AGENT : log.partyRole === contactRole)
+      );
+
+      if (logIndex !== -1) {
+        const updatedTask = { ...task };
+        updatedTask.data.details[dynamicKey].callLogs[logIndex] = {
+          ...updatedTask.data.details[dynamicKey].callLogs[logIndex],
+          callSequence: callEntries.length,
+          callDone: true,
+        };
+
+        setTask(updatedTask);
+      } else {
+        const updatedTask = { ...task };
+        contactRole === ContactRole.OTHER && updatedTask.data.details[dynamicKey].callLogs.push({
+          fullName: name,
+          partyRole: contactRole,
+          callSequence: callEntries.length,
+          phone: { ...phone, countryCode: countries[country].phone },
+          partyRoleCategory: contactRole,
+          relationshipToInsured: relationshipToOwner,
+          callDone: true,
+        });
+
+        setTask(updatedTask);
+      }
+    } else {
+      const updatedTask = { ...task };
+      updatedTask.data.details[dynamicKey].callLogs = [];
+      contactRole === ContactRole.OTHER && updatedTask.data.details[dynamicKey].callLogs.push({
+        fullName: name,
+        partyRole: contactRole,
+        callSequence: callEntries.length,
+        phone: { ...phone, countryCode: countries[country].phone },
+        partyRoleCategory: contactRole,
+        relationshipToInsured: relationshipToOwner,
+        callDone: true,
+      });
+      setTask(updatedTask);
+    }
+
+    // Save the completed call and add a new empty entry
     setCallEntries(prev => [
       ...prev,
       {
@@ -148,7 +227,6 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
             contactRole,
             name,
             phone,
-
           },
         ];
       });
@@ -156,7 +234,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
   }, [contactRole, name, phone]);
 
   useEffect(() => {
-    if (name && filteredCallLogs.length > 0 && contactRole !== ContactRole.OTHER) {
+    if (name && filteredCallLogs.length > 0) {
       const selectedLog = filteredCallLogs.find(log => log.fullName === name);
       if (selectedLog?.phone) {
         setPhone(selectedLog.phone as Phone);
@@ -164,7 +242,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
         setPhone({} as Phone);
       }
     }
-  }, [name, filteredCallLogs, contactRole]);
+  }, [name, filteredCallLogs]);
 
   useEffect(() => {
     if (contactRole && name) {
@@ -187,7 +265,44 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
     setFilteredCallLogs(filtered);
   }, [contactRole, task, dynamicKey]);
 
+  const validateAddress = () => {
+    const errors: FormValidationErrors = {};
 
+    if (dynamicKey !== 'benefinalcontactattempt') {
+      if (!contactRole || !phone.dialNumber || !name) {
+        errors['mandatoryField'] = "Missing contactRole or phone or name or changeType ";
+      }
+    }
+    if (contactRole) {
+      if (!phone.dialNumber || !name || beneficiary.changeRequire === null) {
+        errors['mandatoryField'] = "Missing phone or name";
+      }
+
+
+    }
+    if (contactRole === ContactRole.OTHER && !relationshipToOwner) {
+
+      errors['mandatoryField'] = "Missing relationshipToOwner";
+    }
+    if (beneficiary.changeRequire && !beneficiary.changeType) {
+      errors['mandatoryField'] = "Missing changeType";
+    }
+
+    if (beneficiary.changeType === ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE) {
+      if (beneficiary.notificationPreferences.notificationMethod.method === ClaimCommunicationTypes.Email && !beneficiary.notificationPreferences.email?.emailAddress) {
+        errors['mandatoryField'] = "Missing emailAddress";
+      }
+      if (beneficiary.notificationPreferences.notificationMethod.method === ClaimCommunicationTypes.Fax && !beneficiary.notificationPreferences.fax?.faxNumber) {
+        errors['mandatoryField'] = "Missing faxNumber";
+      }
+      if (beneficiary.notificationPreferences.notificationMethod.method === ClaimCommunicationTypes.Mail && !addressSelected) {
+        errors['mandatoryField'] = "Missing addressLine1 or city or state or zipCode";
+      }
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
   useEffect(() => {
     if (filteredCallLogs.length === 1 && contactRole !== ContactRole.OTHER) {
       setName(filteredCallLogs[0].fullName)
@@ -197,7 +312,7 @@ function CallForInformation({ task, setTask, onContinueReady, correlationId, set
 
 
   useEffect(() => {
-    validateForm(dynamicKey, contactRole, phone, name, beneficiary, setFormErrors, relationshipToOwner, addressSelected);
+    validateAddress();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contactRole, phone, name, beneficiary, addressSelected]);
 

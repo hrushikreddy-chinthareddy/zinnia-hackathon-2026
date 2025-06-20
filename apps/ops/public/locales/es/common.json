@@ -6143,9 +6143,7 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
-            },
-            "invalidEmail": "Correo electrónico no válido",
-            "invalidFax": "Fax no válido"
+            }
         },
         "confirmStep": {
             "title": "¡Entendido!",
@@ -6213,9 +6211,7 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
-            },
-            "invalidEmail": "Correo electrónico no válido",
-            "invalidFax": "Fax no válido"
+            }
         }
     },
     "claimsDay150": {
