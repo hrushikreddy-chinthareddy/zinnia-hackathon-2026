@@ -137,4 +137,5 @@ export enum FEATURE_FLAGS {
     CALL_AUDIO_FEATURE = 'call-audio-feature',
     NEW_DEATH_CLAIM = 'new_death_claim',
     DASHBOARD_NIGO_TAB = 'dashboard_nigo_tab',
+    SERVICE_REQUEST_FORM_ENABLED = 'service_request_default_case',
 }

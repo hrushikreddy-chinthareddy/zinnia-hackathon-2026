@@ -64,7 +64,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
             const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const shouldShowDefaultCase = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT];
+            const shouldShowDefaultCase = featureFlagDecisions?.[FEATURE_FLAGS.SERVICE_REQUEST_FORM_ENABLED];
 
             if (!shouldShowDefaultCase) {
                 return {

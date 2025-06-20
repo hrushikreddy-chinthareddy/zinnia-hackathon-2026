@@ -12,7 +12,10 @@ import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import { commonPopoverClasses, commonTriggerClasses } from '@deps/components/popover/popover.helpers';
 import { TranslationFiles } from '@deps/config/translations';
-import { deathClaimNotApplicableStatuses, existingDeathClaimStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
+import {
+    deathClaimNotApplicableStatuses,
+    existingDeathClaimStatuses,
+} from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -77,7 +80,8 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
     const freeLookEnabled = featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
     const loanPaymentEnabled = featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
     const isNewDeathClaim = featureFlags[FEATURE_FLAGS.NEW_DEATH_CLAIM];
-    const isDeathClaimNotApplicable =  deathClaimNotApplicableStatuses.includes(policy.policyStatus as PolicyStatus);
+    const serviceRequestFormEnabled = featureFlags[FEATURE_FLAGS.SERVICE_REQUEST_FORM_ENABLED];
+    const isDeathClaimNotApplicable = deathClaimNotApplicableStatuses.includes(policy.policyStatus as PolicyStatus);
 
     const trackClick = (linkName: string, linkUrl: string) => {
         // TODO MG: do we always want to call both of these?
@@ -238,9 +242,13 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                     />
                     {isNewDeathClaim && (
                         <MenuContextualItem
-                            disabled={!initialDeathClaimEligibility?.isEligibleNewDeathClaim
-                                    || isDeathClaimNotApplicable
-                                    || (!initialDeathClaimEligibility?.isEligibleNewDeathClaim && !initialDeathClaimEligibility.zlCaseId  && existingDeathClaimStatuses.includes(policy.policyStatus))}
+                            disabled={
+                                !initialDeathClaimEligibility?.isEligibleNewDeathClaim ||
+                                isDeathClaimNotApplicable ||
+                                (!initialDeathClaimEligibility?.isEligibleNewDeathClaim &&
+                                    !initialDeathClaimEligibility.zlCaseId &&
+                                    existingDeathClaimStatuses.includes(policy.policyStatus))
+                            }
                             content={t('transactions.newDeathClaim')}
                             href={`/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`}
                             icon={<BriefcaseIcon height={20} width={20} />}
@@ -340,17 +348,19 @@ const MenuContextualContent = ({ t, policy }: TranslateProps & QuickActionsMenuP
                 />
             </MenuContextualLabel>
 
-            <MenuContextualLabel label={t('additionalActions.label')}>
-                <MenuContextualItem
-                    content={t('additionalActions.serviceRequestForm')}
-                    href={`/policies/${policy.planCode}/${policy.policyNumber}/default-case/`}
-                    icon={<TicketIcon height={20} width={20} />}
-                    onClick={() => {
-                        trackClick('Raise a Service Request', `/policies/${policy.planCode}/${policy.policyNumber}/default-case/`);
-                    }}
-                    openInNewTab={true}
-                />
-            </MenuContextualLabel>
+            {serviceRequestFormEnabled && (
+                <MenuContextualLabel label={t('additionalActions.label')}>
+                    <MenuContextualItem
+                        content={t('additionalActions.serviceRequestForm')}
+                        href={`/policies/${policy.planCode}/${policy.policyNumber}/default-case/`}
+                        icon={<TicketIcon height={20} width={20} />}
+                        onClick={() => {
+                            trackClick('Raise a Service Request', `/policies/${policy.planCode}/${policy.policyNumber}/default-case/`);
+                        }}
+                        openInNewTab={true}
+                    />
+                </MenuContextualLabel>
+            )}
         </>
     );
 };
