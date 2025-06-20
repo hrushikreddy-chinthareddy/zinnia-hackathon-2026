@@ -6299,7 +6299,9 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Beneficiary Notification Change",
                 "beneficiaryDeceased": "Beneficiary Deceased"
-            }
+            },
+            "invalidEmail": "Invalid email",
+            "invalidFax": "Invalid fax"
         },
         "confirmStep": {
             "title": "Got It!",
@@ -6389,7 +6391,9 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Beneficiary Notification Change",
                 "beneficiaryDeceased": "Beneficiary Deceased"
-            }
+            },
+            "invalidEmail": "Invalid email",
+            "invalidFax": "Invalid fax"
         }
     },
     "claimsDay150": {

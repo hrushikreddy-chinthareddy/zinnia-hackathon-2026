@@ -1,14 +1,18 @@
 
-import { TFunction } from 'i18next'
+import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import { TFunction } from 'i18next';
+import { useEffect, useState } from 'react';
 
-import ButtonGrp from '@deps/components/button-group/button-group'
-import DifferentAddress from '@deps/components/otp-send-document/components/different-address'
-import EmailAddress from '@deps/components/otp-send-document/components/email-field'
-import FaxNumber from '@deps/components/otp-send-document/components/fax-field'
-import { TranslationFiles } from '@deps/config/translations'
-import { ClaimActionTypes, ClaimCommunicationTypes } from '@deps/containers/death-claim-container/death-claim.types'
+import ButtonGrp from '@deps/components/button-group/button-group';
+import DifferentAddress from '@deps/components/otp-send-document/components/different-address';
+import EmailAddress from '@deps/components/otp-send-document/components/email-field';
+import FaxNumber from '@deps/components/otp-send-document/components/fax-field';
+import { TranslationFiles } from '@deps/config/translations';
+import { ClaimActionTypes, ClaimCommunicationTypes } from '@deps/containers/death-claim-container/death-claim.types';
+import { validateEmail, validateFax } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
+import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
-import { UpdatedBeneficiaryRecord } from './claims.type'
+import { UpdatedBeneficiaryRecord } from './claims.type';
 
 interface BeneficiaryNotificationChangeProps {
   beneficiary: UpdatedBeneficiaryRecord;
@@ -19,6 +23,8 @@ interface BeneficiaryNotificationChangeProps {
 }
 
 function BeneficiaryNotificationChange({ beneficiary, setBeneficiary, task, setAddressSelected, t }: BeneficiaryNotificationChangeProps) {
+  const [error, setError] = useState<FormValidationErrors>({});
+
   const handleAddressSubmit = (addressData: any) => {
     if (!Object.keys(addressData || {}).length) {
       return;
@@ -28,7 +34,15 @@ function BeneficiaryNotificationChange({ beneficiary, setBeneficiary, task, setA
     setBeneficiary({ ...beneficiary, notificationPreferences: { ...beneficiary.notificationPreferences, address: updatedAddress } });
   }
 
-
+  useEffect(() => {
+    const emailError = validateEmail(beneficiary.notificationPreferences.email?.emailAddress);
+    const faxError = validateFax(beneficiary.notificationPreferences.fax?.faxNumber);
+    setError((prev) => ({
+      ...prev,
+      emailValidation: emailError ?? "",
+      faxValidation: faxError ?? "",
+    }));
+  }, [beneficiary.notificationPreferences.email?.emailAddress, beneficiary.notificationPreferences.fax?.faxNumber])
   const renderNotificationComponent = () => {
     switch (beneficiary.notificationPreferences.notificationMethod.method) {
       case ClaimCommunicationTypes.Mail:
@@ -53,6 +67,7 @@ function BeneficiaryNotificationChange({ beneficiary, setBeneficiary, task, setA
                 email: { ...beneficiary.notificationPreferences.email, emailAddress: val, action: ClaimActionTypes.UPDATE }
               }
             })} />
+            {error?.emailValidation && <AssistiveText text={t('invalidEmail')} variant={AssistiveTextVariant.Error} className="mt-2" />}
           </div>
         );
       case ClaimCommunicationTypes.Fax:
@@ -64,6 +79,7 @@ function BeneficiaryNotificationChange({ beneficiary, setBeneficiary, task, setA
                 fax: { ...beneficiary.notificationPreferences.fax, faxNumber: val, action: ClaimActionTypes.UPDATE }
               }
             })} />
+            {error?.faxValidation && <AssistiveText text={t('invalidFax')} variant={AssistiveTextVariant.Error} className="mt-2" />}
           </div>
         );
       default:
