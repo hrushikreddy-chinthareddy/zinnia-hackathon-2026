@@ -9,9 +9,10 @@ import {
 } from '@/components/paymentus/utils';
 import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { PaymentMethod, PaymentProvider } from '@/types/payment';
+import { PaymentMethod } from '@/types/payment';
 
 import { SelectBank } from './SelectBank';
+import { PaymentProvider } from '@/types/carrier-config';
 
 interface SelectBankWrapperProps {
   planCode: string;

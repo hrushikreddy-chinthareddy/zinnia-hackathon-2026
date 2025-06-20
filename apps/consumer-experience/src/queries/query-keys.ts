@@ -9,6 +9,7 @@ export enum QueryKeys {
   USER_AUTHENTICATION_METHODS = 'userAuthenticationMethods',
   CASE_DETAILS = 'caseDetails',
   CASES_FOR_POLICY = 'casesForPolicy',
+  CARRIER_CONFIG = 'carrierConfig',
   PAYMENT_METHODS = 'paymentMethods',
   SYSTEMATIC_PREMIUMS = 'systematicPremiums',
 }

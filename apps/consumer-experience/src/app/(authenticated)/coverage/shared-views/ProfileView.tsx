@@ -2,7 +2,6 @@ import { EDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 import { Email, LineOfBusiness, Phone } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
-import { getCarrierConfig, PaymentProvider } from '@/carrier-config/config';
 import AccordionDetails from '@/components/accordion-details/AccordionDetails';
 import { AddressList } from '@/components/address-list/AddressList';
 import { BankList } from '@/components/bank-list/BankList';
@@ -14,8 +13,10 @@ import { PartyList } from '@/components/party-list/PartyList';
 import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]';
+import { PaymentProvider } from '@/types/carrier-config';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
@@ -96,17 +97,12 @@ export const ProfileView = async ({
   };
 
   const communicationPreferences = () => {
-    // The api returns an array of preferences, instead of a single object per the api spec
-    if (preferencesData) {
-      return (
-        <CommunicationPreferences
-          preferenceData={preferencesData}
-          profileData={profileData}
-        />
-      );
-    }
-
-    return null;
+    return (
+      <CommunicationPreferences
+        preferenceData={preferencesData}
+        profileData={profileData}
+      />
+    );
   };
 
   const bank = () => {

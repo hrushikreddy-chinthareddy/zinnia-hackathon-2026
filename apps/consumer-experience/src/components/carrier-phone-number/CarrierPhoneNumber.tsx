@@ -10,6 +10,7 @@ import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 export const WELLABE_CONTACT_PHONE_NUMBER = '1-888-222-3003';
+export const FARMERS_CONTACT_PHONE_NUMBER = '1-800-238-9671';
 
 const phoneByCarrier = (name?: CompanyName | string) => {
   switch (name?.toLowerCase()) {
@@ -17,6 +18,8 @@ const phoneByCarrier = (name?: CompanyName | string) => {
       return EVERLY_CONTACT_PHONE_NUMBER;
     case CompanyName.WELLABE:
       return WELLABE_CONTACT_PHONE_NUMBER;
+    case CompanyName.FARMERS:
+      return FARMERS_CONTACT_PHONE_NUMBER;
     default:
       '';
   }
@@ -37,10 +40,7 @@ export const CarrierPhoneNumber = () => {
   }
 
   return (
-    <Link
-      isNativeAnchorTag
-      href={href}
-    >
+    <Link isNativeAnchorTag href={href}>
       {phoneNumber}
     </Link>
   );

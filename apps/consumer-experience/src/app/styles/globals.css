@@ -32,7 +32,8 @@ body {
 
 body,
 main {
-  --border-style: var(--measure-dimension-stroke-sm, 2px) solid var(--color-base-border-border-light, #ededed);
+  --border-style: var(--measure-dimension-stroke-sm, 2px) solid
+    var(--color-base-border-border-light, #ededed);
 }
 
 main {
@@ -197,17 +198,17 @@ a:focus-visible {
 }
 
 .card-container {
-  >*:not(:last-child) {
+  > *:not(:last-child) {
     margin-bottom: 8px;
   }
 }
 
 .info-card-container {
-  >* {
+  > * {
     padding: var(--measure-dimension-padding-2xl) 0;
   }
 
-  >*:not(:last-of-type) {
+  > *:not(:last-of-type) {
     border-bottom: var(--border-style);
   }
 }
@@ -293,7 +294,8 @@ input[type='radio'] {
 .input-with-interaction {
   width: 100%;
   background-color: white;
-  border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);
   padding: var(--measure-dimension-padding-lg);
   display: flex;
@@ -308,5 +310,13 @@ input[type='text'] {
 @media (width > 767px) {
   .field-container {
     width: 350px;
+  }
+}
+
+/* I know this is bizarre, but it's specifically for the settings
+icon within a link. which is used in multiple places */
+.settings-link-icon-rotated {
+  svg {
+    transform: rotate(90deg);
   }
 }

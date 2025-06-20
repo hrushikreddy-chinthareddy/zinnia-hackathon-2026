@@ -4,7 +4,11 @@ import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-
+  // If this causes issues for your component, you can selectively disable it per story
+  // https://storybook.js.org/docs/get-started/frameworks/nextjs#react-server-components-rsc
+  features: {
+    experimentalRSC: true,
+  },
   addons: [
     getAbsolutePath('@storybook/addon-links'),
     getAbsolutePath('@storybook/addon-docs'),

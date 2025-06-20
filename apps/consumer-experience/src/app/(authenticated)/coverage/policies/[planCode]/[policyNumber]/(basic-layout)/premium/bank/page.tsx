@@ -1,7 +1,7 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
-import { getCarrierConfig } from '@/carrier-config/config';
 import { SelectBankWrapper } from '@/components/one-time-premium-payment/select-bank/SelectBankWrapper';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { getPaymentMethods } from '@/services/payment-methods';
 import { PolicyRequestInputs } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';

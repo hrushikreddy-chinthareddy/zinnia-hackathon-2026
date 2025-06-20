@@ -1,5 +1,6 @@
 .link {
   &a {
     text-decoration: none;
+    width: fit-content;
   }
 }

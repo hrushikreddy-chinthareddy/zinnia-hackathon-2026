@@ -1,6 +1,7 @@
 import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';
-import { PaymentMethod, PaymentProvider } from '@/types/payment';
+import { PaymentProvider } from '@/types/carrier-config';
+import { PaymentMethod } from '@/types/payment';
 
 export const getPaymentMethods = async (
   policyNumber: string,

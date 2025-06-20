@@ -1,4 +1,4 @@
-import { PaymentProvider } from '@/carrier-config/config';
+import { PaymentProvider } from '@/types/carrier-config';
 import { PaymentMethod } from '@/types/payment';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';

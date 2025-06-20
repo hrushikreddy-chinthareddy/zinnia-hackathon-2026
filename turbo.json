@@ -44,7 +44,8 @@
         "PINO_LOG_LEVEL",
         "SESSION_DURATION_IN_MINUTES",
         "VERCEL_BRANCH_URL",
-        "FARMERS_IFRAME_KEY"
+        "FARMERS_IFRAME_KEY",
+        "NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL"
       ],
       "dependsOn": ["^build"]
     },

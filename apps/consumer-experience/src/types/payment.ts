@@ -1,14 +1,5 @@
 import { PaymentusAccountType } from './paymentus';
 
-export enum PaymentProvider {
-  ZINNIA = 'ZINNIA',
-  PAYMENTUS = 'PAYMENTUS',
-}
-export interface PaymentConfig {
-  provider: PaymentProvider;
-  verifyIdentityRequired: boolean;
-}
-
 export interface PaymentMethod {
   bankId?: string;
   branchName?: string;

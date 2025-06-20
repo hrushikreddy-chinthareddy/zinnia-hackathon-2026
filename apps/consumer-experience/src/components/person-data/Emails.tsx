@@ -1,13 +1,19 @@
 import { EmailType } from '@zinnia/api-types/types/sor';
-import { Label } from '@zinnia/bloom/components';
+import { IconType, Label } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { Email } from '@/components/pii/Email';
+import { getCarrierConfig } from '@/services/carrier-config';
+import { ManageChange } from '@/types/carrier-config';
 
 import styles from './PersonData.module.css';
 import { EmailProps } from './types';
+import { Link } from '../link/Link';
 
-export const Emails = ({ emails, title }: EmailProps) => {
+export const Emails = async ({ emails, title }: EmailProps) => {
+  const carrierConfig = await getCarrierConfig();
+  const emailConfig = carrierConfig.policyProfile.email;
+
   if (!emails || emails.length === 0) {
     return null;
   }
@@ -54,6 +60,15 @@ export const Emails = ({ emails, title }: EmailProps) => {
           </FieldData>
         ))}
       </div>
+      {emailConfig?.manageChanges === ManageChange.EXTERNAL && (
+        <Link
+          href={emailConfig?.url || ''}
+          text="Manage email"
+          iconType={IconType.SETTINGS}
+          className="mt-lg settings-link-icon-rotated"
+          size="small"
+        />
+      )}
     </div>
   );
 };

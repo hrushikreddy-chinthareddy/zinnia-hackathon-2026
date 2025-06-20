@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getPaymentMethods } from '@/services/payment-methods';
-import { PaymentProvider } from '@/types/payment';
+import { PaymentProvider } from '@/types/carrier-config';
 import {
   buildNextReqLoggingContext,
   logTrace,

@@ -1,11 +1,14 @@
 import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
-import { Label } from '@zinnia/bloom/components';
+import { IconType, Label } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
+import { getCarrierConfig } from '@/services/carrier-config';
+import { ManageChange } from '@/types/carrier-config';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
 import { PhoneProps } from './types';
+import { Link } from '../link/Link';
 import { PhoneNumber } from '../pii/PhoneNumber';
 import { PiiWrapper } from '../pii/PiiWrapper';
 
@@ -24,7 +27,10 @@ const PhoneNumberInternal = (phone: Phone) => {
   );
 };
 
-export const Phones = ({ phones, title }: PhoneProps) => {
+export const Phones = async ({ phones, title }: PhoneProps) => {
+  const carrierConfig = await getCarrierConfig();
+  const phoneConfig = carrierConfig.policyProfile.phoneNumber;
+
   if (
     !phones ||
     phones.length === 0 ||
@@ -92,6 +98,15 @@ export const Phones = ({ phones, title }: PhoneProps) => {
           );
         })}
       </div>
+      {phoneConfig?.manageChanges === ManageChange.EXTERNAL && (
+        <Link
+          href={phoneConfig?.url || ''}
+          text="Manage phone numbers"
+          iconType={IconType.SETTINGS}
+          className="mt-lg settings-link-icon-rotated"
+          size="small"
+        />
+      )}
     </div>
   );
 };

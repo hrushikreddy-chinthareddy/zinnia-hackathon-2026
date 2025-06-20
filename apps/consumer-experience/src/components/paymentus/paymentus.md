@@ -14,10 +14,10 @@ From the paymentus documentation the following token parameters are accepted for
 | `email` | N | User’s email address |
 | `timestamp` | Y | milliseconds since January 1, 1970, 00:00:00 GMT |
 | `externalReference` | N | A custom reference number to be returned in the post-back |
-| `cvv` | N | [true|false] - Hide CVV field when not required for validation |
-| `ignoreCase` | N | [true|false] - Used to override standard case sensitivity settings. If true then letter casing of ownerId will be preserved in resulting wallet owner’s loginId. |
-| `nickname` | N | [true|false] - Used to hide the optional nickname field. If false, then the nickname field will be hidden. Note field only applies if we enable client configuration to show the nickname by default. |
-| `primaryPM` | N | [true|false] - Used to hide the optional primary payment method checkbox. If false, then the primary PM checkbox will be hidden. Note field only applies if we enable client configuration to show the primary PM checkbox by default. |
+| `cvv` | N | [true/false] - Hide CVV field when not required for validation |
+| `ignoreCase` | N | [true/false] - Used to override standard case sensitivity settings. If true then letter casing of ownerId will be preserved in resulting wallet owner’s loginId. |
+| `nickname` | N | [true/false] - Used to hide the optional nickname field. If false, then the nickname field will be hidden. Note field only applies if we enable client configuration to show the nickname by default. |
+| `primaryPM` | N | [true/false] - Used to hide the optional primary payment method checkbox. If false, then the primary PM checkbox will be hidden. Note field only applies if we enable client configuration to show the primary PM checkbox by default. |
 | `paymentTypeCode` | N | Payment Type Configured by Paymentus. Passed when using PayPal with multiple MIDs and depends on the merchant ID configured for PayPal. |
 | `pmCategory` | Y | see mappings below |
 
