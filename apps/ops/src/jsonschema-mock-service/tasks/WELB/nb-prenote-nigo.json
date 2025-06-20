@@ -121,9 +121,9 @@
                                 },
                                 "attachment": {
                                     "type": "array",
-                                    "title": "upload",
+                                    "title": "Upload",
                                     "items": {
-                                        "title": "upload",
+                                        "title": "Upload",
                                         "type": "string",
                                         "format": "data-url"
                                     }
@@ -277,7 +277,8 @@
                                         },
                                         "statusReason": {
                                             "type": "object",
-                                            "title": "The status reason for the task will be set to:"
+                                            "title": "The status reason for the task will be set to:",
+                                            "description": "NIGOs unable to be resolved"
                                         },
                                         "communicationSent": {
                                             "type": "boolean",
@@ -407,6 +408,7 @@
                                 }
                             },
                             "resolved": {
+                                "ui:readonly": false,
                                 "ui:options": {
                                     "label": false
                                 }
@@ -593,9 +595,6 @@
                         }
                     },
                     "statusReason": {
-                        "props": {
-                            "description": "NIGOs unable to be resolved"
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"

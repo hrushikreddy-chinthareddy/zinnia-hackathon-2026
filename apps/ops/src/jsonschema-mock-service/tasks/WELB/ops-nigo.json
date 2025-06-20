@@ -93,9 +93,9 @@
                                 },
                                 "attachment": {
                                     "type": "array",
-                                    "title": "upload",
+                                    "title": "Upload",
                                     "items": {
-                                        "title": "upload",
+                                        "title": "Upload",
                                         "type": "string",
                                         "format": "data-url"
                                     }
@@ -174,6 +174,7 @@
                                 }
                             },
                             "resolved": {
+                                "ui:readonly": false,
                                 "ui:options": {
                                     "label": false
                                 }

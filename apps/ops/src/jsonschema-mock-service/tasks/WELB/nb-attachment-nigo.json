@@ -67,7 +67,7 @@
                                 "documentDetails": {
                                     "type": "object",
                                     "properties": {
-                                        "docType": {
+                                        "documentTypeDescription": {
                                             "type": "string",
                                             "ui:field": "title"
                                         },
@@ -77,8 +77,7 @@
                                             "ui:placeholder": "Document ID: "
                                         },
                                         "documentSource": {
-                                            "type": "string",
-                                            "ui:field": "title"
+                                            "type": "string"
                                         },
                                         "carrier": {
                                             "type": "string",
@@ -107,9 +106,9 @@
                                 },
                                 "attachment": {
                                     "type": "array",
-                                    "title": "upload",
+                                    "title": "Upload",
                                     "items": {
-                                        "title": "upload",
+                                        "title": "Upload",
                                         "type": "string",
                                         "format": "data-url"
                                     }
@@ -148,7 +147,8 @@
                                         },
                                         "issueReason": {
                                             "type": "object",
-                                            "title": "The status reason for the task will be set to:"
+                                            "title": "The status reason for the task will be set to:",
+                                            "description": "NIGO's unable to be resolved"
                                         }
                                     },
                                     "required": ["issueResolved"]
@@ -201,6 +201,7 @@
                                 }
                             },
                             "resolved": {
+                                "ui:readonly": false,
                                 "ui:options": {
                                     "label": false
                                 }
@@ -228,6 +229,11 @@
                                 "cardType": "Document",
                                 "icon": "DOCUMENT_TEXT",
                                 "ObjectFieldTemplate": "CardTemplate"
+                            },
+                            "carrier": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
                             }
                         }
                     },
@@ -278,9 +284,6 @@
                         }
                     },
                     "issueReason": {
-                        "props": {
-                            "description": "NIGO's unable to be resolved"
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"

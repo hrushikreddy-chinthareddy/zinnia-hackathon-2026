@@ -18,7 +18,6 @@ import style from './file-widget.module.css';
 export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     props: WidgetProps<T, S, F>
 ) {
-
     const { id, disabled, readonly, rawErrors, uiSchema, value, formContext, Placeholder } = props;
 
     const { icon } = getUiOptions(uiSchema);
@@ -32,6 +31,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     const { t } = useTranslation(undefined, { keyPrefix: 'taskManagementQueue' });
     const caseKey = uiSchema?.['ui:options']?.['default'];
     const extractedCaseId = caseKey ? replacePlaceholders(caseKey, formContext?.customData) : '';
+
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         const value = event.target.value;
@@ -40,11 +40,11 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
     };
 
     useEffect(() => {
-        const fetchApiData = async (value: string) => {
+        const fetchApiData = async () => {
             setFetchingDocuments(true);
             const searchBody: SearchRequest = {
                 documentClassification: SearchRequest.documentClassification.INBOUND,
-                zinniaLiveCaseId: value ? value : extractedCaseId || formContext?.customData?.caseId,
+                zinniaLiveCaseId: extractedCaseId || formContext?.customData?.caseId,
                 parentCarrierCode: formContext?.customData?.carrier,
             };
             try {
@@ -70,7 +70,7 @@ export default function AutoCompleteWidget<T = any, S extends StrictRJSFSchema =
                 setFetchingDocuments(false);
             }
         };
-        fetchApiData(value);
+        fetchApiData();
     }, []);
 
     const onFocusHandler = () => {

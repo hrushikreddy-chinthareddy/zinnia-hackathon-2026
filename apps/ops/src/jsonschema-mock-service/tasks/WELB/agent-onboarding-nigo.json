@@ -150,7 +150,8 @@
                                         },
                                         "issueReason": {
                                             "type": "object",
-                                            "title": "The status reason for the task will be set to:"
+                                            "title": "The status reason for the task will be set to:",
+                                            "description": "NIGO's unable to be resolved"
                                         }
                                     }
                                 }
@@ -204,6 +205,7 @@
                                 }
                             },
                             "resolved": {
+                                "ui:readonly": false,
                                 "ui:options": {
                                     "label": false
                                 }
@@ -293,9 +295,6 @@
                         }
                     },
                     "issueReason": {
-                        "props": {
-                            "description": "NIGO's unable to be resolved"
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"

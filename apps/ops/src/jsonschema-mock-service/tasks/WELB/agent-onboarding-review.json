@@ -187,6 +187,7 @@
                                 }
                             },
                             "resolved": {
+                                "ui:readonly": false,
                                 "ui:options": {
                                     "label": false
                                 }

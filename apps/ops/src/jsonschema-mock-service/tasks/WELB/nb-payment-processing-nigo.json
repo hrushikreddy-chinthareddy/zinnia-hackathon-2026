@@ -60,24 +60,52 @@
                                         }
                                     }
                                 },
-                                "document": {
+                                "onwerDetails": {
                                     "type": "object",
                                     "properties": {
-                                        "documentName": {
-                                            "type": "string"
-                                        },
-                                        "documentId": {
-                                            "type": "string"
-                                        },
-                                        "documentSource": {
-                                            "type": "string"
-                                        },
-                                        "createdDate": {
-                                            "type": "string"
-                                        },
-                                        "carrier": {
+                                        "firstName": {
                                             "type": "string",
-                                            "default": "{{carrier}}"
+                                            "title": "First Name",
+                                            "ui:field": "title"
+                                        },
+                                        "ssn": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "ui:field": "subTitle",
+                                            "dataType": "ssn"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name",
+                                            "ui:field": "title"
+                                        }
+                                    }
+                                },
+                                "documents": {
+                                    "type": "array",
+                                    "title": "",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentTypeDescription": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "createdDate": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
                                         }
                                     }
                                 }
@@ -102,9 +130,9 @@
                                 },
                                 "attachment": {
                                     "type": "array",
-                                    "title": "upload",
+                                    "title": "Upload",
                                     "items": {
-                                        "title": "upload",
+                                        "title": "Upload",
                                         "type": "string",
                                         "format": "data-url"
                                     }
@@ -157,7 +185,8 @@
                                         },
                                         "reason": {
                                             "type": "object",
-                                            "title": "The status reason for the task will be set to:"
+                                            "title": "The status reason for the task will be set to:",
+                                            "description": "NIGO's unable to be resolved"
                                         }
                                     }
                                 }
@@ -196,6 +225,7 @@
                                 }
                             },
                             "resolved": {
+                                "ui:readonly": false,
                                 "ui:options": {
                                     "label": false
                                 }
@@ -236,13 +266,43 @@
                                 }
                             }
                         },
-                        "document": {
+                        "onwerDetails": {
                             "ui:options": {
-                                "canAdd": false,
+                                "cardtype": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": true,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "key": "onwerDetails"
+                            }
+                        },
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "ui:options": {
                                 "label": false,
-                                "cardType": "Document",
-                                "icon": "DOCUMENT_TEXT",
-                                "ObjectFieldTemplate": "CardTemplate"
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true,
+                                    "label": false
+                                },
+                                "documentTypeDescription": {
+                                    "ui:widget": "text"
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "carrier": {
+                                    "omitValue": true
+                                }
                             }
                         }
                     },
@@ -293,9 +353,6 @@
                         }
                     },
                     "reason": {
-                        "props": {
-                            "description": "NIGO's unable to be resolved"
-                        },
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"

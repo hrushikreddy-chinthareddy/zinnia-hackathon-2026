@@ -92,7 +92,7 @@
                             "type": "array",
                             "title": "Attach Document",
                             "items": {
-                                "title": "upload",
+                                "title": "Upload",
                                 "type": "string",
                                 "format": "data-url"
                             }

@@ -61,8 +61,7 @@
                                                 "ui:field": "subTitle"
                                             },
                                             "docType": {
-                                                "type": "string",
-                                                "ui:field": "title"
+                                                "type": "string"
                                             },
                                             "documentSource": {
                                                 "type": "string"
