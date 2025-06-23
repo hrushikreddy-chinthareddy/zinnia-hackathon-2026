@@ -1,6 +1,6 @@
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
-import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPaymentMethod';
-import { getPaymentusUserPaymentsList } from '@/services/payment-methods/paymentus';
+import { getPaymentMethods } from '@/services/payment-methods';
+import { PaymentProvider } from '@/types/carrier-config';
 import {
   buildCommonLogContext,
   CommonLogContext,
@@ -11,13 +11,15 @@ import { PaymentProfilesList } from './PaymentProfilesList';
 export const PaymentDetails = async ({
   verifyIdentityRequired,
   policyNumber,
+  planCode,
 }: {
   verifyIdentityRequired?: boolean;
   policyNumber: string;
+  planCode: string;
 }) => {
   const loggingContext: CommonLogContext = await buildCommonLogContext();
-  const { data } = await getPaymentusUserPaymentsList(
-    { isMock: false },
+  const { data } = await getPaymentMethods(
+    { paymentProvider: PaymentProvider.PAYMENTUS },
     loggingContext
   );
 
@@ -28,13 +30,12 @@ export const PaymentDetails = async ({
         Need help updating banking details? Give us a call at&nbsp;
         <CarrierPhoneNumber />.
       </p>
-      {data && data.length > 0 && (
-        <PaymentProfilesList
-          profiles={data}
-          verifyIdentityRequired={verifyIdentityRequired}
-        />
-      )}
-      <PaymentusAddPaymentMethod policyNumber={policyNumber} />
+      <PaymentProfilesList
+        verifyIdentityRequired={verifyIdentityRequired}
+        policyNumber={policyNumber}
+        planCode={planCode}
+        profiles={data || []}
+      />
     </div>
   );
 };

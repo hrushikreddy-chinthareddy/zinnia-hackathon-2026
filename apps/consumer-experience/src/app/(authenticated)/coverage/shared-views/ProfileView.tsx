@@ -114,6 +114,7 @@ export const ProfileView = async ({
         <PaymentDetails
           verifyIdentityRequired={payment.verifyIdentityRequired}
           policyNumber={policyNumber}
+          planCode={planCode}
         />
       );
     }

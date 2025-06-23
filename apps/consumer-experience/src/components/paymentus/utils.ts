@@ -54,7 +54,11 @@ export const getBranchName = ({
   return accountType[type];
 };
 
-export const getAccountTypeDisplay = (paymentType: PaymentusAccountType) => {
+export const getAccountTypeDisplay = (paymentType?: PaymentusAccountType) => {
+  if (!paymentType) {
+    return DEFAULT_ERROR_STRING;
+  }
+
   if (paymentType.toLowerCase().includes('debit')) {
     return 'Debit Card';
   }
@@ -67,5 +71,6 @@ export const getAccountTypeDisplay = (paymentType: PaymentusAccountType) => {
   if (paymentType === PaymentusAccountType.SAV) {
     return 'Savings';
   }
+
   return DEFAULT_ERROR_STRING;
 };

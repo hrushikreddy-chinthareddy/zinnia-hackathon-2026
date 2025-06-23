@@ -9,7 +9,6 @@ export async function POST(_request: NextRequest) {
 
   const ownerId = await getFarmersECN();
   const encryptedToken = getPaymentusIframeToken({
-    // TODO: get this from the access token
     ownerId,
     // TODO: is this supposed to be postbackUrl? postMessagePmDetailsOrigin is
     // from the farmers implementation
