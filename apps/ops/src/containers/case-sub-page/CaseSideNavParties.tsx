@@ -3,11 +3,11 @@ import { Tag, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
 
+import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
-import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 
 type PartyDataPoint<T> = {
@@ -35,45 +35,46 @@ export type PartiesProps = {
     owners: PartyInfo[];
 };
 
-const NoPartiesStatus = ({
-    caseStatus,
-    partyType,
-    spinLoader = false,
-    className = '',
-    ...rest
-}: { caseStatus: string; partyType: 'agent' | 'owner'; spinLoader?: boolean } & HTMLAttributes<HTMLDivElement>) => {
+const NoParties = ({ caseStatus, className = '', ...rest }: { caseStatus: string } & HTMLAttributes<HTMLDivElement>) => {
     const { t } = useTranslation();
-    const missingDataClasses = 'flex flex-row items-center text-gray-600';
-    let statusTextKey = 'caseOverview.sidenav.';
-    let statusSubtextKey = 'caseOverview.sidenav.';
-    const partyTypeKey = partyType === 'agent' ? 'Agent' : 'Owner';
-    if ([Statuses.Canceled, Statuses.Completed].includes(caseStatus as Statuses)) {
-        statusTextKey += `unavailable${partyTypeKey}Details`;
-        statusSubtextKey += 'unavailableDetailsSubtext';
-    } else {
-        statusTextKey += `get${partyTypeKey}Details`;
-        statusSubtextKey += 'getDetailsSubtext';
-    }
-
-    const loadingClasses = 'transform-origin-center duration-5000 animate-spin ease-linear';
+    const { loadingPolicy, policy } = useCaseActivityContext();
 
     return (
         <div className={`flex flex-row gap-2 ${className}`} {...rest}>
-            <InProgressIcon
-                height={18}
-                width={18}
-                role="presentation"
-                aria-hidden="true"
-                className={`shrink-0 fill-gray-600 ${spinLoader && loadingClasses}`}
-            />
-            <div>
-                <Typography variant={TypographyVariant.BodySmBold} className={missingDataClasses}>
-                    {t(statusTextKey, { status: caseStatus.toLowerCase() })}
-                </Typography>
-                <Typography variant={TypographyVariant.BodySm} className="text-gray-600">
-                    {t(statusSubtextKey, { status: caseStatus.toLowerCase() })}
-                </Typography>
-            </div>
+            {loadingPolicy && (
+                <>
+                    <InProgressIcon
+                        height={18}
+                        width={18}
+                        role="presentation"
+                        aria-hidden="true"
+                        className={`shrink-0 fill-gray-600 transform-origin-center duration-5000 animate-spin ease-linear`}
+                    />
+                    <div>
+                        <Typography variant={TypographyVariant.BodySmBold} className="flex flex-row items-center text-gray-600">
+                            {t('caseOverview.sidenav.gettingPartyDetails')}
+                        </Typography>
+                    </div>
+                </>
+            )}
+            {!loadingPolicy && (
+                <div>
+                    <Typography variant={TypographyVariant.BodySm} className="flex flex-row items-center text-gray-600">
+                        {t('caseOverview.sidenav.partyDetailsUnavailable')}
+                    </Typography>
+                    {!!policy && !!policy.policyNumber && !!policy.planCode && (
+                        <NavElement
+                            type={NavElementType.Link}
+                            className="flex items-center max-w-max"
+                            size={NavElementSize.Small}
+                            variant={NavElementVariant.Default}
+                            href={`/policies/${policy.planCode}/${policy.policyNumber}/people`}
+                        >
+                            {t('caseOverview.sidenav.goToPolicyParties')}
+                        </NavElement>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
@@ -142,8 +143,9 @@ export const Parties = ({
     ...rest
 }: { parties: PartiesProps | undefined; caseStatus: string; showTitle?: boolean } & HTMLAttributes<HTMLDivElement>) => {
     const { t } = useTranslation();
-    const { loadingPolicy } = useCaseActivityContext();
     const { owners = [], agents = [], brokers } = parties ?? {};
+
+    const noParties = !owners.length && !agents.length && !brokers?.length;
 
     return (
         <div className="flex w-full flex-col" {...rest}>
@@ -152,23 +154,19 @@ export const Parties = ({
                     {t('caseOverview.sidenav.people')}
                 </Title>
             )}
-            {owners.length ? (
+            {!!owners.length && (
                 <ul className="flex w-full flex-col">
                     {owners.map(owner => (
                         <PartyInformation party={owner} key={owner.fullName} />
                     ))}
                 </ul>
-            ) : (
-                <NoPartiesStatus caseStatus={caseStatus} partyType="owner" className="gap-md" spinLoader={loadingPolicy} />
             )}
-            {agents.length ? (
+            {!!agents.length && (
                 <ul className="flex w-full flex-col">
                     {agents.map(agent => (
                         <PartyInformation party={agent} key={agent.fullName} />
                     ))}
                 </ul>
-            ) : (
-                <NoPartiesStatus caseStatus={caseStatus} partyType="agent" className="gap-md" spinLoader={loadingPolicy} />
             )}
             {!!brokers?.length && (
                 <ul className="flex w-full flex-col">
@@ -177,6 +175,7 @@ export const Parties = ({
                     ))}
                 </ul>
             )}
+            {noParties && <NoParties caseStatus={caseStatus} className="gap-md" />}
         </div>
     );
 };
