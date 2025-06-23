@@ -2907,6 +2907,7 @@
                 "applicationSource": "Fuente de la solicitud",
                 "applicationSourceDetails": "Detalles de la fuente de la solicitud",
                 "issueState": "Estado de emisión",
+                "multiPolicyDiscount": "Descuento de múltiples pólizas",
                 "originalContractNumber": "Número de contrato original",
                 "originalPolicyNumber": "Número de póliza original",
                 "originalPolicyNumberTooltip": "El Número de Póliza Original identifica el padre original vinculado a través de conversión, continuación o reemplazo.",

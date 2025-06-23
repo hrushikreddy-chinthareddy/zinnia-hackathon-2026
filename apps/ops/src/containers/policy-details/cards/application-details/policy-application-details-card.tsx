@@ -36,6 +36,15 @@ export function PolicyApplicationDetailsCard({ policy }: BasePolicyComponentArgs
                     <Label label={t(`${BASE_KEY}applicationSourceDetails`)} variant={LabelVariant.FieldLabel} />
                     <Content details={applicationDetailsData.applicationSourceDetails} variant={ContentVariant.BodySm} />
                 </div>
+                {applicationDetailsData.multiPolicyDiscount && (
+                    <div>
+                        <Label label={t(`${BASE_KEY}multiPolicyDiscount`)} variant={LabelVariant.FieldLabel} />
+                        <Content
+                            details={applicationDetailsData.multiPolicyDiscount ?? DEFAULT_ERROR_STRING}
+                            variant={ContentVariant.BodySm}
+                        />
+                    </div>
+                )}
                 <div>
                     <Label
                         label={t(`${BASE_KEY}originalPolicyNumber`)}

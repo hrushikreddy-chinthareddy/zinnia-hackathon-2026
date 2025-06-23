@@ -2908,6 +2908,7 @@
                 "applicationSource": "Source de l'application",
                 "applicationSourceDetails": "Détails de la source de l'application",
                 "issueState": "État de délivrance",
+                "multiPolicyDiscount": "Remise multi-polices",
                 "originalContractNumber": "Numéro de contrat original",
                 "originalPolicyNumber": "Numéro de police d'origine",
                 "originalPolicyNumberTooltip": "Le Numéro de Police d'Origine identifie le parent original lié par conversion, continuation ou remplacement.",

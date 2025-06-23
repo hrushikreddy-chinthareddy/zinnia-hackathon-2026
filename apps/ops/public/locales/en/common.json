@@ -2951,6 +2951,7 @@
                 "applicationSource": "Application source",
                 "applicationSourceDetails": "Application source details",
                 "issueState": "Issue state",
+                "multiPolicyDiscount": "Multi-policy discount",
                 "originalContractNumber": "Original contract number",
                 "originalPolicyNumber": "Original policy number",
                 "originalPolicyNumberTooltip": "Original Policy Number identifies the original parent linked through conversion, continuation, or replacement.",

@@ -17,6 +17,7 @@ export interface ApplicationDetailsCardData {
     originalPolicyNumber: string;
     applicationSource: string;
     applicationSourceDetails: string;
+    multiPolicyDiscount: string | null; // DEPU-5046 - only show if feature exists
 }
 
 export function AnnuityApplicationDetailsCard({ policy }: BasePolicyComponentArgs) {
@@ -50,6 +51,12 @@ export function AnnuityApplicationDetailsCard({ policy }: BasePolicyComponentArg
                     <Label label={t(`${BASE_KEY}originalContractNumber`)} variant={LabelVariant.FieldLabel} />
                     <Content details={applicationDetailsData.originalPolicyNumber} variant={ContentVariant.BodySm} />
                 </div>
+                {applicationDetailsData.multiPolicyDiscount && (
+                    <div>
+                        <Label label={t(`${BASE_KEY}multiPolicyDiscount`)} variant={LabelVariant.FieldLabel} />
+                        <Content details={applicationDetailsData.multiPolicyDiscount} variant={ContentVariant.BodySm} />
+                    </div>
+                )}
             </div>
         </CardContainer>
     );

@@ -1,4 +1,4 @@
-import { DistributionType, FeatureType } from '@zinnia/api-types/types/sor';
+import { DistributionType, FeatureType, PolicyFeatureBase } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { ApplicationDetailsCardData } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card.tsx';
@@ -116,11 +116,22 @@ export const mapPolicyTimelineValues = (policy: PolicyDetails, t: TFunction): Po
 };
 
 export const getApplicationDetailsData = (policy: PolicyDetails, t: TFunction): ApplicationDetailsCardData => {
+    const customFeatures = policy.getFeaturesByType(FeatureType.CUSTOMFEATURE);
+    const multiplePolicyDiscountFeature = customFeatures.find(
+        feature => feature.featureSubType === PolicyFeatureBase.featureSubType.MULTIPLEPOLICYDISCOUNT
+    );
+
+    // Group discount should only be shown for policies where the feature exists (DEPU-5046)
+    let multiPolicyDiscount = null;
+    if (multiplePolicyDiscountFeature) {
+        multiPolicyDiscount = multiplePolicyDiscountFeature.featureIndicator ? t('yes') : t('no');
+    }
     return {
         issueState: getStateName(policy?.issueState),
         salesChannel: mapDistribution(policy.distribution, t),
         originalPolicyNumber: policy?.policy?.parentPolicyNumber ?? DEFAULT_ERROR_STRING,
         applicationSource: policy?.policy?.policySource ?? DEFAULT_ERROR_STRING,
         applicationSourceDetails: policy?.policy?.policySourceDescription ?? DEFAULT_ERROR_STRING,
+        multiPolicyDiscount,
     };
 };

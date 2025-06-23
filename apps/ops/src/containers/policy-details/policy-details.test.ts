@@ -87,6 +87,7 @@ describe('policy details helpers', () => {
                 issueState: 'New York',
                 originalPolicyNumber: '--',
                 salesChannel: 'policy.distributionType.thirdPartyDirectToConsumer',
+                multiPolicyDiscount: null,
             });
         });
         it('should map the policy details to the corresponding props', () => {
