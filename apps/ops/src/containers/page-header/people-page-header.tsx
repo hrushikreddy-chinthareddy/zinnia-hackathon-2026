@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
 import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';

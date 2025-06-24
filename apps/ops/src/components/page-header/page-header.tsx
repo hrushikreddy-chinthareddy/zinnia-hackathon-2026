@@ -1,6 +1,6 @@
 import { Party } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext } from 'react';
 
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -71,7 +71,7 @@ export const Breadcrumb = ({ breadcrumbUrl, breadcrumbText, onClick }: PageHeade
 
 const HeaderText = ({ headerText }: Pick<PageHeaderProps, 'headerText'>) => {
     return (
-        <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid='header-text'>
+        <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid="header-text">
             {headerText}
         </Typography>
     );
@@ -103,24 +103,10 @@ export const PageHeader = ({
     groupOneFlexClassNames,
     headerRowFlexClassNames,
 }: PageHeaderProps) => {
-    const h1Ref = useRef<HTMLDivElement>(null);
-    const [isH1Focused, setIsH1Focused] = useState(false);
-
-    useEffect(() => {
-        // Focus the h1Ref element when the breadcrumb mounts
-        if (h1Ref.current) {
-            h1Ref.current.focus();
-            setIsH1Focused(true);
-        }
-    }, []);
-
     const headerRowClassNames = `flex justify-between ${headerRowFlexClassNames}`;
 
     return (
         <CardContainer data-testid="page-header" containerClassNames="rounded-t" classNames="flex w-full flex-col justify-center">
-            <div className="sr-only outline-none" tabIndex={isH1Focused ? -1 : 0} ref={h1Ref}>
-                {headerText}
-            </div>
             {/* breadcrumb and breadcrumb siblings -- elements above header text row */}
             {(breadcrumbText || breadcrumbSiblings) && (
                 <div className="mb-4 flex justify-between">
@@ -143,9 +129,11 @@ export const PageHeader = ({
                 </div>
 
                 {/* header text siblings - group two -- elements justified on the right side within the header text row */}
-                <div data-testid="group-two-siblings" className="flex">
-                    {headerTextSiblingsGroupTwo && headerTextSiblingsGroupTwo}
-                </div>
+                {headerTextSiblingsGroupTwo && (
+                    <div data-testid="group-two-siblings" className="flex">
+                        {headerTextSiblingsGroupTwo}
+                    </div>
+                )}
             </div>
             {/* below header text children - elements below header text row */}
             {belowHeaderTextChildren && <div data-testid="children-below">{belowHeaderTextChildren}</div>}

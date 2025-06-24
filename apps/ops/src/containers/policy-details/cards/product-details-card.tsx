@@ -17,9 +17,7 @@ export default function ProductDetailsCard({ policy }: BasePolicyComponentArgs) 
     return (
         <CardContainer fullWidth={false} containerClassNames="rounded-b">
             <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}productDetails`)}</Typography>
-            <div
-                className={`mt-4 grid grid-rows-6 gap-8 sm:grid-cols-2 sm:grid-rows-3 sm:gap-8 md:grid-flow-row md:grid-cols-3 md:grid-rows-none lg:flex`}
-            >
+            <div className={`mt-4 grid grid-cols-2 gap-4 sm:flex sm:flex-wrap`}>
                 <div>
                     <Label label={t(`${BASE_KEY}carrierName`)} variant={LabelVariant.FieldLabel} />
                     <Content

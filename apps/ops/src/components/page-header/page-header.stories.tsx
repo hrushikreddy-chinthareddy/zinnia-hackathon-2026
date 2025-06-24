@@ -241,7 +241,5 @@ export const HeaderWithPartyInfo = () => {
 };
 
 export const WithdrawalsPageHeader = () => {
-    return (
-        <WithdrawalsPageHeaderContainer breadcrumbText="Back to previous page" breadcrumbUrl="#" policyNumber={mockPolicy.policyNumber} />
-    );
+    return <WithdrawalsPageHeaderContainer policyNumber={mockPolicy.policyNumber} />;
 };

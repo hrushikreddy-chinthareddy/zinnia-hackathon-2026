@@ -21,49 +21,45 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
 
     const belowHeaderTextChildren = (
         <>
-            <div className="mt-4 flex flex-col gap-8 sm:flex-row">
-                <div className="flex flex-col gap-8 lg:flex-row">
-                    <div>
-                        <Label
-                            label={t(`baseDeathBenefit`)}
-                            tooltipBody={t(`baseDeathBenefitTooltip`)}
-                            tooltipTitle={t(`baseDeathBenefit`)}
-                            variant={LabelVariant.FieldLabel}
-                        />
-                        <Content details={numberFormatify(faceValue as number, currencyFormat)} variant={ContentVariant.Value} />
-                    </div>
-                    <div>
-                        <Label
-                            label={t(`accountValue`)}
-                            tooltipBody={t(`accountValueTooltip`)}
-                            tooltipTitle={t(`accountValue`)}
-                            variant={LabelVariant.FieldLabel}
-                        />
-                        <Content details={numberFormatify(accountValue as number, currencyFormat)} variant={ContentVariant.Value} />
-                    </div>
+            <div className="mt-4 sm:flex gap-8 sm:flex-wrap grid grid-cols-2">
+                <div>
+                    <Label
+                        label={t(`baseDeathBenefit`)}
+                        tooltipBody={t(`baseDeathBenefitTooltip`)}
+                        tooltipTitle={t(`baseDeathBenefit`)}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content details={numberFormatify(faceValue as number, currencyFormat)} variant={ContentVariant.Value} />
                 </div>
-                <div className="flex flex-col gap-8 lg:flex-row">
-                    <div>
-                        <Label
-                            label={t(`netSurrenderValue`)}
-                            tooltipBody={t(`netSurrenderValueTooltip`)}
-                            tooltipTitle={t(`netSurrenderValue`)}
-                            variant={LabelVariant.FieldLabel}
-                        />
-                        <Content details={numberFormatify(surrenderValue as number, currencyFormat)} variant={ContentVariant.Value} />
-                    </div>
-                    <div>
-                        <Label
-                            label={t(`costBasis`)}
-                            tooltipBody={t(`costBasisTooltip`)}
-                            tooltipTitle={t(`costBasis`)}
-                            variant={LabelVariant.FieldLabel}
-                        />
-                        <Content details={numberFormatify(costBasis as number, currencyFormat)} variant={ContentVariant.Value} />
-                    </div>
+                <div>
+                    <Label
+                        label={t(`accountValue`)}
+                        tooltipBody={t(`accountValueTooltip`)}
+                        tooltipTitle={t(`accountValue`)}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content details={numberFormatify(accountValue as number, currencyFormat)} variant={ContentVariant.Value} />
+                </div>
+                <div>
+                    <Label
+                        label={t(`netSurrenderValue`)}
+                        tooltipBody={t(`netSurrenderValueTooltip`)}
+                        tooltipTitle={t(`netSurrenderValue`)}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content details={numberFormatify(surrenderValue as number, currencyFormat)} variant={ContentVariant.Value} />
+                </div>
+                <div>
+                    <Label
+                        label={t(`costBasis`)}
+                        tooltipBody={t(`costBasisTooltip`)}
+                        tooltipTitle={t(`costBasis`)}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content details={numberFormatify(costBasis as number, currencyFormat)} variant={ContentVariant.Value} />
                 </div>
             </div>
-            <div className="mt-6 flex flex-col gap-6 md:flex-row md:flex-wrap" data-testid="transaction-cards">
+            <div className="mt-4 flex gap-4 flex-wrap" data-testid="transaction-cards">
                 {transactionCards.map(transactionCardProps => (
                     <TransactionCard key={transactionCardProps.cardTitle} {...transactionCardProps} />
                 ))}

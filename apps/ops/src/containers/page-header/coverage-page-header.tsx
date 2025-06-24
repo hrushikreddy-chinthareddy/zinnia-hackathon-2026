@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 
 import { PageHeader } from '@deps/components/page-header/page-header';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { toTitleCase } from '@deps/helpers/string.helpers';
@@ -9,8 +10,6 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 interface CoveragePageHeaderContainerProps {
-    breadcrumbText?: string;
-    breadcrumbUrl?: string;
     policyDetails?: PolicyDetails;
 }
 
@@ -25,11 +24,11 @@ const CoverageHeaderItem = ({ title, body, value }: CoverageHeaderItemProps) => 
     });
 
     return (
-        <div className="my-0 w-fit xs:mr-4 md:mr-0">
+        <div>
             <div className="flex items-center gap-2">
-                <label aria-label={title} htmlFor={title} className="label relative font-primary text-sm font-bold leading-4.5">
+                <Typography variant={TypographyVariant.FieldLabel} htmlFor={title}>
                     {title}
-                </label>
+                </Typography>
                 <Popover
                     popoverClassName="font-secondary text-md font-normal leading-[22px]"
                     title={title}
@@ -48,12 +47,12 @@ const CoverageHeaderItem = ({ title, body, value }: CoverageHeaderItemProps) => 
                     </span>
                 </Popover>
             </div>
-            <div className="mb-0 ml-0 h-[25px] break-words font-primary text-[22px] font-medium leading-[26px]">{value}</div>
+            <Typography variant={TypographyVariant.Value}>{value}</Typography>
         </div>
     );
 };
 
-const CoveragePageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, policyDetails }: CoveragePageHeaderContainerProps) => {
+const CoveragePageHeaderContainer = ({ policyDetails }: CoveragePageHeaderContainerProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'pageHeader.coverage',
     });
@@ -70,7 +69,7 @@ const CoveragePageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, policyDeta
     };
 
     const belowHeaderTextChildren = (
-        <div className="mt-4 flex xs:w-[328px] xs:flex-wrap xs:gap-4 md:w-full md:flex-nowrap md:gap-8">
+        <div className="mt-4 flex flex-wrap gap-8">
             {Object.entries(coveragePageHeaderItems).map(([key, value]) => (
                 <CoverageHeaderItem
                     key={key}
@@ -84,12 +83,7 @@ const CoveragePageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, policyDeta
 
     return (
         <div className="content-divider flex items-center rounded-t bg-white">
-            <PageHeader
-                headerText={t('headerText') as string}
-                breadcrumbText={breadcrumbText}
-                breadcrumbUrl={breadcrumbUrl}
-                belowHeaderTextChildren={belowHeaderTextChildren}
-            />
+            <PageHeader headerText={t('headerText') as string} belowHeaderTextChildren={belowHeaderTextChildren} />
         </div>
     );
 };

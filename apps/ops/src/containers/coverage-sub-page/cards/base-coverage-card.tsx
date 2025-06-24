@@ -75,7 +75,7 @@ const BaseCoverageCard = ({ policyDetails }: BaseCoverageCardProps) => {
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <div className="flex flex-wrap gap-4 sm:justify-start md:justify-between">
+            <div className="flex flex-wrap gap-4 justify-between">
                 <Typography variant={TypographyVariant.H2}>{t(`${BASE_KEY}.baseCoverage`)}</Typography>
                 {!policyDetails.isAnnuity && (
                     <NavElement

@@ -35,7 +35,6 @@ describe('verify correct labels and fields are present', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
-    // TODO: DEPU-2242 update this unit test to reflect updates made to LoansPageHeaderContainer
     it('should contain correct h1 and loan transaction history texts', async () => {
         await act(async () => {
             render(
@@ -46,7 +45,7 @@ describe('verify correct labels and fields are present', () => {
         });
 
         const allHeaders = screen.getAllByText('pageHeader.loans.headerText');
-        expect(allHeaders).toHaveLength(2);
+        expect(allHeaders).toHaveLength(1);
 
         const h1Headers = allHeaders.filter(element => element.tagName.toLowerCase() === 'h1');
         expect(h1Headers).toHaveLength(1); // Assuming only one of them should be an h1

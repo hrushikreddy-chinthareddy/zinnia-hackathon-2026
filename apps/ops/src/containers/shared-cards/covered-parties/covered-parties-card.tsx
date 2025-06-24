@@ -83,56 +83,48 @@ export const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
             <Typography variant={TypographyVariant.H2}>{t('insured')}</Typography>
-            <div className="mt-4 flex flex-col gap-8 sm:flex-row">
-                <div className="flex flex-col gap-8 lg:flex-row">
-                    <div>
-                        <Label label={t('fullName')} variant={LabelVariant.FieldLabel} />
-                        <NavElement
-                            href={`/policies/${policy.planCode}/${policy.policyNumber}/people/${partyId}`}
-                            size={NavElementSize.Small}
-                            type={NavElementType.Link}
-                        >
-                            <PiiWrapper>{fullName}</PiiWrapper>
-                        </NavElement>
-                    </div>
-                    <div>
-                        <Label
-                            label={t('riskClass')}
-                            tooltipBody={t('riskClassTooltip')}
-                            tooltipTitle={t('riskClass')}
-                            variant={LabelVariant.FieldLabel}
-                        />
-                        <Content
-                            details={riskClass ? (getRiskClass(riskClass) as string) : DEFAULT_ERROR_STRING}
-                            variant={ContentVariant.BodySm}
-                        />
-                    </div>
+            <div className="mt-4 sm:flex gap-8 sm:flex-wrap grid grid-cols-2">
+                <div>
+                    <Label label={t('fullName')} variant={LabelVariant.FieldLabel} />
+                    <NavElement
+                        href={`/policies/${policy.planCode}/${policy.policyNumber}/people/${partyId}`}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Link}
+                    >
+                        <PiiWrapper>{fullName}</PiiWrapper>
+                    </NavElement>
                 </div>
-                <div className="flex flex-col gap-8 lg:flex-row">
-                    <TableRating substandardRating={substandardRating} />
-                    <FlatExtras flatExtras={flatExtra} />
+                <div>
+                    <Label
+                        label={t('riskClass')}
+                        tooltipBody={t('riskClassTooltip')}
+                        tooltipTitle={t('riskClass')}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content
+                        details={riskClass ? (getRiskClass(riskClass) as string) : DEFAULT_ERROR_STRING}
+                        variant={ContentVariant.BodySm}
+                    />
                 </div>
-                <div className="flex flex-col gap-8 lg:flex-row">
-                    <div>
-                        <Label label={t('currentAge')} variant={LabelVariant.FieldLabel} />
-                        <Content
-                            pii={true}
-                            details={
-                                isNullEmptyOrUndefined(ageInYears) ? DEFAULT_ERROR_STRING : (t('yearsOld', { count: ageInYears }) as string)
-                            }
-                            variant={ContentVariant.BodySm}
-                        />
-                    </div>
-                    <div>
-                        <Label label={t('ageAtIssue')} variant={LabelVariant.FieldLabel} />
-                        <Content
-                            pii={true}
-                            details={
-                                isNullEmptyOrUndefined(issueAge) ? DEFAULT_ERROR_STRING : (t('yearsOld', { count: issueAge }) as string)
-                            }
-                            variant={ContentVariant.BodySm}
-                        />
-                    </div>
+                <TableRating substandardRating={substandardRating} />
+                <FlatExtras flatExtras={flatExtra} />
+                <div>
+                    <Label label={t('currentAge')} variant={LabelVariant.FieldLabel} />
+                    <Content
+                        pii={true}
+                        details={
+                            isNullEmptyOrUndefined(ageInYears) ? DEFAULT_ERROR_STRING : (t('yearsOld', { count: ageInYears }) as string)
+                        }
+                        variant={ContentVariant.BodySm}
+                    />
+                </div>
+                <div>
+                    <Label label={t('ageAtIssue')} variant={LabelVariant.FieldLabel} />
+                    <Content
+                        pii={true}
+                        details={isNullEmptyOrUndefined(issueAge) ? DEFAULT_ERROR_STRING : (t('yearsOld', { count: issueAge }) as string)}
+                        variant={ContentVariant.BodySm}
+                    />
                 </div>
             </div>
         </CardContainer>

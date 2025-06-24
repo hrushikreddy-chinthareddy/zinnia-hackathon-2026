@@ -24,14 +24,12 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface WithdrawalsPageHeaderContainerProps {
-    breadcrumbText?: string;
-    breadcrumbUrl?: string;
     isNavDrawerOpen?: boolean;
     planCode?: string;
     policyNumber?: string;
 }
 
-const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCode, policyNumber }: WithdrawalsPageHeaderContainerProps) => {
+const WithdrawalsPageHeaderContainer = ({ planCode, policyNumber }: WithdrawalsPageHeaderContainerProps) => {
     const { t } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
     const { featureFlags } = useOptimizely();
@@ -301,8 +299,6 @@ const WithdrawalsPageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, planCod
     return (
         <PageHeader
             headerText={t('pageHeader.withdrawals.headerText') || ''}
-            breadcrumbText={breadcrumbText}
-            breadcrumbUrl={breadcrumbUrl}
             headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}
             headerRowFlexClassNames={headerRowFlexClassNames}
             groupOneFlexClassNames={groupOneFlexClassNames}

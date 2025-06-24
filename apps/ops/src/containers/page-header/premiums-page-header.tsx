@@ -10,8 +10,6 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 interface PremiumsPageHeaderContainerProps {
-    breadcrumbText?: string;
-    breadcrumbUrl?: string;
     costBasis?: CostBasis;
     currency?: string;
     policyValues?: AccountValues;
@@ -79,8 +77,6 @@ const GracePeriodValues = ({ values }: GracePeriodValuesProps) => {
 };
 
 const PremiumsPageHeaderContainer = ({
-    breadcrumbText,
-    breadcrumbUrl,
     costBasis,
     currency,
     policyValues,
@@ -144,14 +140,7 @@ const PremiumsPageHeaderContainer = ({
         </div>
     );
 
-    return (
-        <PageHeader
-            headerText={t('pageHeader.premiums.headerText') || ''}
-            breadcrumbText={breadcrumbText}
-            breadcrumbUrl={breadcrumbUrl}
-            belowHeaderTextChildren={belowHeaderTextChildren}
-        />
-    );
+    return <PageHeader headerText={t('pageHeader.premiums.headerText') || ''} belowHeaderTextChildren={belowHeaderTextChildren} />;
 };
 
 export default PremiumsPageHeaderContainer;

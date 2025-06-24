@@ -20,8 +20,6 @@ import { HeaderInfoCard } from '../people-data-cards/header-info-card/header-inf
 import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
 
 interface InteriorPeoplePageHeaderContainerProps {
-    breadcrumbText?: string;
-    breadcrumbUrl?: string;
     selectedPolicyParty?: Party;
     selectedPolicyPartyRoles?: PolicyPartyRoles[];
     editable: boolean;
@@ -29,8 +27,6 @@ interface InteriorPeoplePageHeaderContainerProps {
 }
 
 const InteriorPeoplePageHeaderContainer = ({
-    breadcrumbText,
-    breadcrumbUrl,
     selectedPolicyParty,
     selectedPolicyPartyRoles,
     editable,
@@ -176,8 +172,6 @@ const InteriorPeoplePageHeaderContainer = ({
 
     return (
         <PageHeader
-            breadcrumbText={breadcrumbText}
-            breadcrumbUrl={breadcrumbUrl}
             headerText={headerText}
             headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}
             headerTextSiblingsGroupTwo={headerTextSiblingsGroupTwo}

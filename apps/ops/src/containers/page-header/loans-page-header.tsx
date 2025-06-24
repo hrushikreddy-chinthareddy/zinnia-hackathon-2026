@@ -24,11 +24,9 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 interface LoansContainerProps {
     policy: Policy;
     loanCarryingBalance: boolean;
-    breadcrumbText?: string;
-    breadcrumbUrl?: string;
 }
 
-const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanCarryingBalance }: LoansContainerProps) => {
+const LoansPageHeaderContainer = ({ policy, loanCarryingBalance }: LoansContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
     const [availableLoanInterestRate, setAvailableLoanInterestRate] = useState(t('general.loadingThing', { thing: t('general.rate') }));
@@ -182,8 +180,6 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
     return (
         <PageHeader
             headerText={t(`pageHeader.loans.headerText`) || ''}
-            breadcrumbText={breadcrumbText}
-            breadcrumbUrl={breadcrumbUrl}
             headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}
             headerRowFlexClassNames={headerRowFlexClassNames}
             groupOneFlexClassNames={groupOneFlexClassNames}

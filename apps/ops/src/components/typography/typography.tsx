@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ElementType, HTMLAttributes } from 'react';
+import { ElementType, HTMLAttributes, LabelHTMLAttributes } from 'react';
 
 export type TypographyProps = {
     children: React.ReactNode;
@@ -8,7 +8,7 @@ export type TypographyProps = {
     asTag?: ElementType; // allows overriding tag when we apply one style (label) to a different type (h2)
 } & HTMLAttributes<HTMLHeadingElement> &
     HTMLAttributes<HTMLParagraphElement> &
-    HTMLAttributes<HTMLLabelElement>;
+    LabelHTMLAttributes<HTMLLabelElement>;
 
 export enum TypographyVariant {
     H1 = 'h1',

@@ -5,13 +5,13 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
 import FreeLookCancelDate from '@deps/containers/policy-summary-card/display-fields/free-look-cancel-date';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import FixedCostPeriod from '../display-fields/fixed-cost-period';
 import IssueDate from '../display-fields/issue-date';
 import PolicyAge from '../display-fields/policy-age';
 import PolicyLength from '../display-fields/policy-length';
 import { PolicyTimelineCardData } from '../timeline-card';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 interface EverlyIulProps {
     policyTimelineCardData: PolicyTimelineCardData;
@@ -26,7 +26,7 @@ const EverlyIul = ({ policyTimelineCardData, productType }: EverlyIulProps) => {
         policyTimelineCardData;
 
     return (
-        <div className="mt-4 grid grid-cols-[repeat(3,max-content)] gap-8 lg:grid-cols-[repeat(7,max-content)]">
+        <div className="mt-4 grid gap-8 grid-cols-2 sm:flex sm:flex-wrap">
             <PolicyLength productType={productType} policyLength={policyLength} policyYearsLeft={policyYearsLeft} />
             <PolicyAge policyAge={policyAge} />
             <IssueDate issueDate={issueDate} />

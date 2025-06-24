@@ -4,12 +4,12 @@ import { useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import IssueDate from '../display-fields/issue-date';
 import PolicyAge from '../display-fields/policy-age';
 import PolicyLength from '../display-fields/policy-length';
 import { PolicyTimelineCardData } from '../timeline-card';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 interface EverlyUlPolicyProps {
     policyTimelineCardData: PolicyTimelineCardData;
@@ -23,7 +23,7 @@ const EverlyUl = ({ policyTimelineCardData, productType }: EverlyUlPolicyProps) 
     const { issueDate, maturityDate, policyAge, policyLength, policyYearsLeft, freeLookCancelDate } = policyTimelineCardData;
 
     return (
-        <div className="mt-4 grid grid-cols-[repeat(2,max-content)] gap-8 lg:grid-cols-[repeat(5,max-content)]">
+        <div className="mt-4 grid grid-cols-2 gap-8 sm:flex sm:flex-wrap">
             <PolicyLength productType={productType} policyLength={policyLength} policyYearsLeft={policyYearsLeft} />
             <PolicyAge policyAge={policyAge} />
             <IssueDate issueDate={issueDate} />
