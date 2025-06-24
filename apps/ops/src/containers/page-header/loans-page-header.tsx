@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Policy } from '@zinnia/api-types/types/sor';
-import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -156,7 +155,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                     <NavElement
                         className="mr-5"
                         data-testid={LoansTest.START_LOAN_LINK}
-                        onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans/new-loan`)}
+                        href={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans/new-loan`}
                         size={NavElementSize.Small}
                         type={NavElementType.Link}
                     >
@@ -167,9 +166,7 @@ const LoansPageHeaderContainer = ({ policy, breadcrumbText, breadcrumbUrl, loanC
                         <NavElement
                             className="mr-5"
                             data-testid={LoansTest.START_LOAN_LINK}
-                            onClick={() =>
-                                router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans/new-loan`)
-                            }
+                            href={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/loans/new-loan`}
                             size={NavElementSize.Small}
                             type={NavElementType.Link}
                             disabled={true}
