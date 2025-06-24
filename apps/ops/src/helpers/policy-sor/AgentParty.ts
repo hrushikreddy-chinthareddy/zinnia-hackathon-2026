@@ -22,6 +22,14 @@ import { PolicyParty } from './Parties';
 export const transformAgentDataToParty = (agentData: AgentData | undefined, partyData: Party): Party => {
     // BPB - taking the first agent in the individuals array for now
     const firstAgent = agentData?.individuals?.[0];
+
+    const taxIds =
+        partyData?.identifications?.filter(
+            id => id.identificationType === IdentificationType.SSN || id.identificationType === IdentificationType.TIN
+        ) ?? [];
+
+    const alreadyHasTheSameTaxId = taxIds.find(id => id.identificationValue === (agentData?.taxId || firstAgent?.taxId));
+
     const party: Party = {
         ...partyData,
         addresses: (agentData?.addresses ?? []).map((address: AgentData['addresses'][number]): Address => {
@@ -37,11 +45,17 @@ export const transformAgentDataToParty = (agentData: AgentData | undefined, part
                 addressType: (address.addressType as AddressType) || undefined,
             };
         }),
+        // Add agent specific identifications to the identifications array if they don't already exist
         identifications: [
-            {
-                identificationType: IdentificationType.SSN,
-                identificationValue: agentData?.taxId || firstAgent?.taxId || undefined,
-            },
+            ...(alreadyHasTheSameTaxId
+                ? []
+                : [
+                      {
+                          identificationType: IdentificationType.SSN,
+                          identificationValue: agentData?.taxId || firstAgent?.taxId || undefined,
+                      },
+                  ]),
+            ...(partyData.identifications ?? []),
         ],
         emails: (agentData?.emails ?? []).map((email: AgentData['emails'][number]): Email => {
             return {

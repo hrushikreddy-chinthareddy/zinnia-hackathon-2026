@@ -369,8 +369,7 @@ export const caseSearchFullMasker = ({ data, ...rest }: CaseSearchResponse): Cas
 
 export const mcsResponseSanitizer = (mcsResponse: AgentDataResponse): AgentDataResponse => {
     try {
-        const response = agentSanitizer(mcsResponse.items[0]);
-        return { ...mcsResponse, items: [response] };
+        return { ...mcsResponse, items: mcsResponse?.items?.map(agentSanitizer) };
     } catch (e) {
         logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
         throw e;
@@ -395,21 +394,35 @@ export const agentSanitizer = (agent: AgentData): AgentData => {
 
 export const fullyMaskMcsResponse = (mcsResponse: AgentDataResponse): AgentDataResponse => {
     try {
-        const agent = agentSanitizer(mcsResponse.items[0]);
+        const sanitizedItems = mcsResponse?.items?.map(agent => {
+            const { bankAccountNumber, taxId, individuals, addresses, phones, emails, ...rest } = agent;
+            return {
+                ...rest,
+                bankAccountNumber: toMaskedStringOrNull(bankAccountNumber),
+                taxId: toMaskedStringOrNull(taxId),
+                individuals: individuals?.map(individual => {
+                    return Object.keys(individual).reduce((acc, key) => {
+                        const typedKey = key as keyof typeof individual;
+                        const val = individual[typedKey];
 
-        const { bankAccountNumber, taxId, individuals, addresses, phones, emails, ...rest } = agent;
-        const firstAgent = individuals?.[0];
-        const response = {
-            ...rest,
-            bankAccountNumber: formatAccountNumber(bankAccountNumber || undefined),
-            taxId: toMaskedStringOrNull(taxId || firstAgent?.taxId || undefined),
-            individuals: [{ ...firstAgent, taxId: toMaskedStringOrNull(firstAgent.taxId || undefined) }],
-            addresses: fullyMaskAgentAddresses(addresses),
-            phones: fullyMaskAgentPhones(phones) || [],
-            emails: fullyMaskAgentEmails(emails) || [],
-        };
-
-        return { ...mcsResponse, items: [response] };
+                        // For all string values, mask them
+                        if (typeof val === 'string') {
+                            // @ts-expect-error Type 'string | null' is not assignable to type 'null'.  This is a lie.
+                            acc[typedKey] = toMaskedStringOrNull(val as string | null);
+                        }
+                        // For all other values (numbers, etc.), set to null
+                        else {
+                            acc[typedKey] = null;
+                        }
+                        return acc;
+                    }, {} as typeof individual);
+                }),
+                addresses: fullyMaskAgentAddresses(addresses),
+                phones: fullyMaskAgentPhones(phones) || [],
+                emails: fullyMaskAgentEmails(emails) || [],
+            };
+        });
+        return { ...mcsResponse, items: sanitizedItems };
     } catch (e) {
         logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', { ...parseErrorInformation(e) });
         throw e;

@@ -4153,20 +4153,24 @@
                 "yes": "Oui",
                 "no": "Non",
                 "options": {
-                    "driversLicense": "Le permis de conduire",
                     "entityType": "Type d'entité",
                     "orgCode": "Code",
                     "orgCodeTooltip": "Popover Copy TK",
-                    "passport": "Passeport",
-                    "socialSecurity": "Numéro de Sécurité Sociale",
-                    "stateId": "ID d'état",
-                    "taxId": "NIF",
                     "trustDate": "Date du trust",
                     "trustType": "Type de trust",
                     "usCitizen": "citoyen des États-Unis",
                     "citizenCountry": "pays de citoyenneté",
-                    "externalId": "ID externe",
                     "channel": "Canal"
+                },
+                "types": {
+                    "DRIVERLICENSE": "Le permis de conduire",
+                    "DRIVERLICENSENUMBER": "Le permis de conduire",
+                    "PASSPORT": "Passeport",
+                    "STATEPHOTOID": "ID d'état",
+                    "SSN": "Numéro de Sécurité Sociale",
+                    "TIN": "NIF",
+                    "EXTERNAL": "ID externe",
+                    "OTHER": "Autre"
                 }
             },
             "underwriting": "Souscription",

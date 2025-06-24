@@ -4207,20 +4207,24 @@
                 "yes": "Yes",
                 "no": "No",
                 "options": {
-                    "driversLicense": "Driver's license",
                     "entityType": "Entity type",
                     "orgCode": "Code",
                     "orgCodeTooltip": "Popover Copy TK",
-                    "passport": "Passport",
-                    "socialSecurity": "Social Security number",
-                    "stateId": "State ID",
-                    "taxId": "TIN",
                     "trustDate": "Trust date",
                     "trustType": "Trust type",
                     "usCitizen": "United States citizen",
                     "citizenCountry": "Citizenship country",
-                    "externalId": "External ID",
                     "channel": "Channel"
+                },
+                "types": {
+                    "DRIVERLICENSE": "Driver's license",
+                    "DRIVERLICENSENUMBER": "Driver's license",
+                    "PASSPORT": "Passport",
+                    "STATEPHOTOID": "State ID",
+                    "SSN": "Social Security number",
+                    "TIN": "TIN",
+                    "EXTERNAL": "External ID",
+                    "OTHER": "Other"
                 }
             },
             "underwriting": "Underwriting",

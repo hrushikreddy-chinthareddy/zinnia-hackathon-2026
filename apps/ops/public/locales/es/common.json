@@ -4130,20 +4130,24 @@
                 "yes": "Sí",
                 "no": "No",
                 "options": {
-                    "driversLicense": "Licencia de conducir",
                     "entityType": "Tipo de entidad",
                     "orgCode": "Código",
                     "orgCodeTooltip": "Popover Copy TK",
-                    "passport": "Pasaporte",
-                    "socialSecurity": "Número de Seguro Social",
-                    "stateId": "ID del estado",
-                    "taxId": "TIN",
                     "trustDate": "Fecha de fideicomiso",
                     "trustType": "Tipo de fideicomiso",
                     "usCitizen": "Ciudadano de los Estados Unidos",
                     "citizenCountry": "País de ciudadanía",
-                    "externalId": "ID externo",
                     "channel": "Canal"
+                },
+                "types": {
+                    "DRIVERLICENSE": "Licencia de conducir",
+                    "DRIVERLICENSENUMBER": "Licencia de conducir",
+                    "PASSPORT": "Pasaporte",
+                    "STATEPHOTOID": "ID del estado",
+                    "SSN": "Número de Seguro Social",
+                    "TIN": "TIN",
+                    "EXTERNAL": "ID externo",
+                    "OTHER": "Otro"
                 }
             },
             "underwriting": "Suscripción",
