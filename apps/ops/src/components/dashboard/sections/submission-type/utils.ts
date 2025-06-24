@@ -7,6 +7,9 @@ type TransformedData = {
     [key: string]: { [key: string]: number };
 };
 
+const paperSubmissions = ['Paper', 'Fax', 'Email'];
+const electronicSubmissions = ['Electronic', 'Digital'];
+
 // Application Type
 export const transformData = (data: DashboardStatsElementResponse[]): TransformedData => {
     return data.reduce((result, item) => {
@@ -51,13 +54,19 @@ export const generateSeries = (transformedData: TransformedData): SeriesOptionsT
     return series;
 };
 
-// The API returns digital and electronic. We need to combien the data set to make them both just say "Electronic (E-App)"
-export const combineElectronicAndDigital = (data: CaseCountOutputLevel1[]): CaseCountOutputLevel1[] => {
+// The API returns digital and electronic, fax, email and paper. We need to combine the digital set to make them both just say "Electronic (E-App) and the others just to "Paper"
+export const combineSubmissionTypes = (data: CaseCountOutputLevel1[]): CaseCountOutputLevel1[] => {
     const combinedData: Record<string, CaseCountOutputLevel1> = {};
 
     data.forEach(item => {
-        if (item.name === 'Electronic' || item.name === 'Digital') {
+        if (electronicSubmissions.includes(item.name)) {
             const combinedName = 'Electronic (E-App)';
+            if (!combinedData[combinedName]) {
+                combinedData[combinedName] = { ...item, name: combinedName, count: 0 };
+            }
+            combinedData[combinedName].count += item.count;
+        } else if (paperSubmissions.includes(item.name)) {
+            const combinedName = 'Paper';
             if (!combinedData[combinedName]) {
                 combinedData[combinedName] = { ...item, name: combinedName, count: 0 };
             }
@@ -68,7 +77,7 @@ export const combineElectronicAndDigital = (data: CaseCountOutputLevel1[]): Case
 
         // Recursively process nested values
         if (item.values && item.values.length > 0) {
-            combinedData[item.name].values = combineElectronicAndDigital(item.values);
+            combinedData[item.name].values = combineSubmissionTypes(item.values);
         }
     });
 

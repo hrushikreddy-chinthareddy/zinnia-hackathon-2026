@@ -3,7 +3,7 @@ import { CaseCountGroupByEnum, CaseCountInputFilter, CaseCountOutput } from '@zi
 import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
-import { combineElectronicAndDigital } from '@deps/components/dashboard/sections/submission-type/utils';
+import { combineSubmissionTypes } from '@deps/components/dashboard/sections/submission-type/utils';
 import { TimeframeFilterOptions, startDates, formatProcessFilter, createBaseQuery } from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
@@ -103,7 +103,7 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         enabled: Object.keys(filter).length > 0,
         select: response => {
             const { data } = response;
-            const updatedData = combineElectronicAndDigital(data || []);
+            const updatedData = combineSubmissionTypes(data || []);
             return {
                 ...response,
                 data: updatedData,
@@ -123,7 +123,7 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         enabled: Object.keys(filter).length > 0,
         select: response => {
             const { data } = response;
-            const updatedData = combineElectronicAndDigital(data || []);
+            const updatedData = combineSubmissionTypes(data || []);
             return {
                 ...response,
                 data: updatedData,
