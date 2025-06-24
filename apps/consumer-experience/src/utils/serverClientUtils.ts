@@ -28,6 +28,7 @@ export const MOCK_EMPTY_BANK_DETAILS = '..mock_empty_bank_details..';
 export const SHOW_DEV_MENU_COOKIE_KEY = '..show_dev_menu..';
 export const SHOW_TEST_POLICIES_COOKIE_KEY = '..show_test_policies..';
 export const MOCK_ANNUITY_COOKIE_KEY = '..mock_annuity..';
+export const MOCK_FARMERS_ECN_COOKIE_KEY = '..mock_farmers_ecn..';
 export const THEME_COOKIE = '..theme..';
 export const ACKNOWLEDGEMENT_COOKIE_KEY = 'hasAckowledgedPolicy';
 export const LOGIN_EMAIL_COOKIE_KEY = 'loginEmail';
@@ -38,7 +39,6 @@ export interface GetSessionResponse {
 export interface PostSessionResponse {
   success: boolean;
 }
-
 
 interface UniformServiceSuccessResponse<T> {
   data: T;
@@ -57,4 +57,3 @@ interface UniformServiceErrorResponse {
 export type UniformServiceResponse<T> =
   | UniformServiceSuccessResponse<T>
   | UniformServiceErrorResponse;
-

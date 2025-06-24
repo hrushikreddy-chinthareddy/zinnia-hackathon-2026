@@ -5,6 +5,11 @@
   padding: var(--measure-dimension-padding-2xl) 0;
 }
 
+.logoContainer {
+  display: flex;
+  gap: var(--measure-dimension-gap-md);
+}
+
 .account {
   display: flex;
   align-items: center;

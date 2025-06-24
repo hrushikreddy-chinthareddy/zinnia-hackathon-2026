@@ -3,7 +3,11 @@ import type { StorybookConfig } from '@storybook/nextjs';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    '../src/**/*.mdx',
+    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../docs/**/*.mdx',
+  ],
   // If this causes issues for your component, you can selectively disable it per story
   // https://storybook.js.org/docs/get-started/frameworks/nextjs#react-server-components-rsc
   features: {

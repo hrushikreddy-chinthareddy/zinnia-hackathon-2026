@@ -17,6 +17,7 @@ import {
   UserClaims,
 } from '@/types/auth';
 
+import { isMockAllowed } from '.';
 import { logWarn } from './logging/server-logging';
 import {
   AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY,
@@ -27,10 +28,15 @@ import {
   MAX_COOKIE_SIZE,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
+  MOCK_COOKIE_KEY,
+  MOCK_ERROR_COOKIE_KEY,
+  MOCK_FARMERS_ECN_COOKIE_KEY,
   REFRESH_ROUTER_COOKIE_KEY,
   RETURN_TO_URL_COOKIE_KEY,
   SESSION_TIMEOUT_IN_MILLISECONDS,
+  SHOW_DEV_MENU_COOKIE_KEY,
 } from './serverClientUtils';
+const MOCK_FARMERS_ECN = '7657659';
 const notNull = <T>(value: T | null): value is T => value !== null;
 const BYTE_LENGTH = 32;
 const ENCRYPTION_INFO = 'JWE CEK';
@@ -305,7 +311,16 @@ export const deleteCookie = async (cookieName: string, res?: NextResponse) => {
   }
 };
 
+export const deleteMockCookies = async () => {
+  await deleteCookie(MOCK_COOKIE_KEY);
+  await deleteCookie(MOCK_ERROR_COOKIE_KEY);
+  await deleteCookie(SHOW_DEV_MENU_COOKIE_KEY);
+  await deleteCookie(MOCK_FARMERS_ECN_COOKIE_KEY);
+};
+
 export const deleteSession = async (res?: NextResponse) => {
+  await deleteMockCookies();
+
   await deleteCookie(APP_SESSION_COOKIE_KEY, res);
   await deleteCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY, res);
   await deleteCookie(RETURN_TO_URL_COOKIE_KEY, res);
@@ -435,6 +450,17 @@ export const setRefreshRouterCookie = async (res?: NextResponse) => {
 export const getFarmersECN = async () => {
   const { accessToken } = await getAccessToken();
   const decodedToken = jose.decodeJwt(accessToken ?? '');
+  const cookieStore = cookies();
+
+  // To use paymentus outside of the sso experience (a.k.a if you logged into MyPolicyView)
+  // through the standard login process, you'll need to use this mock ecn. This can be
+  // turned on using the dev menu. Add query param `..show_dev_menu..=true` to toggle
+  if (
+    isMockAllowed() &&
+    cookieStore.get(MOCK_FARMERS_ECN_COOKIE_KEY)?.value === 'on'
+  ) {
+    return MOCK_FARMERS_ECN;
+  }
 
   return decodedToken?.ecn;
 };

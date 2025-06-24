@@ -1,9 +1,14 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import {
+  CarrierAvatar,
+  CarrierName,
+  Icon,
+  IconType,
+} from '@zinnia/bloom/components';
 import Cookies from 'js-cookie';
-import { MouseEvent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useMemo, useState } from 'react';
 
 import useMock from '@/hooks/use-mock';
 import { ROOT_URL_PATH } from '@/types';
@@ -11,19 +16,23 @@ import { isMockAllowed } from '@/utils';
 import {
   MOCK_ANNUITY_COOKIE_KEY,
   MOCK_ERROR_COOKIE_KEY,
+  MOCK_FARMERS_ECN_COOKIE_KEY,
   SHOW_TEST_POLICIES_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
-import { ApiEndpoints } from './types';
 import { Link } from '../link/Link';
+import { MockApiErrors } from './MockApiErrors';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
-  const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);
+
   const [testPoliciesOn, setTestPoliciesOn] = useState(false);
   const [isAnnuityOn, setIsAnnuityOn] = useState(false);
+  const [isMockFarmersECNOn, setIsMockFarmersECNOn] = useState(
+    !!Cookies.get(MOCK_FARMERS_ECN_COOKIE_KEY)
+  );
 
   const {
     mockText,
@@ -39,11 +48,6 @@ export const DevMenu = () => {
   }, [isMockOn]);
 
   useEffect(() => {
-    if (Cookies.get(MOCK_ERROR_COOKIE_KEY)) {
-      const mockErrors = Cookies.get(MOCK_ERROR_COOKIE_KEY) || '';
-      setApiErrorSet(JSON.parse(mockErrors));
-    }
-
     if (Cookies.get(SHOW_TEST_POLICIES_COOKIE_KEY) === 'on') {
       setTestPoliciesOn(true);
     }
@@ -57,32 +61,6 @@ export const DevMenu = () => {
     return null;
   }
 
-  const setAPIErrorCookie = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    if (apiErrorSet && apiErrorSet.length > 0) {
-      Cookies.set(MOCK_ERROR_COOKIE_KEY, JSON.stringify(apiErrorSet));
-    } else {
-      Cookies.remove(MOCK_ERROR_COOKIE_KEY);
-    }
-
-    const queryParams = new URLSearchParams(location.search);
-    queryParams.delete(MOCK_ERROR_COOKIE_KEY);
-    const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
-    window.location.href = `${window.location.origin}/${ROOT_URL_PATH}${params}`;
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const selectAPIErrorType = (e: any) => {
-    const item = e.target.value;
-
-    if (apiErrorSet?.includes(item)) {
-      const itemRemoved = apiErrorSet?.filter(apiType => apiType !== item);
-      setApiErrorSet(itemRemoved);
-    } else {
-      setApiErrorSet([...(apiErrorSet || []), item]);
-    }
-  };
-
   const setTestPoliciesCookie = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (testPoliciesOn) {
@@ -95,6 +73,16 @@ export const DevMenu = () => {
     // queryParams.delete(SHOW_TEST_POLICIES_COOKIE_KEY);
     // const params = queryParams.toString() ? `?${queryParams.toString()}` : '';
     window.location.href = `${window.location.origin}/${ROOT_URL_PATH}`;
+  };
+
+  const setMockFarmersECNCookie = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      Cookies.set(MOCK_FARMERS_ECN_COOKIE_KEY, 'on');
+      setIsMockFarmersECNOn(true);
+    } else {
+      Cookies.remove(MOCK_FARMERS_ECN_COOKIE_KEY);
+      setIsMockFarmersECNOn(false);
+    }
   };
 
   return (
@@ -123,191 +111,132 @@ export const DevMenu = () => {
           style={{ zIndex: zIndexOrder.Dialog }}
         >
           <nav className={styles.innerContent}>
-            <ul>
-              <li>
-                <Link
-                  isNativeAnchorTag
-                  href="#"
-                  onClick={setMock}
-                  className={`${styles.navItem} typography-nav-nav-drawer`}
+            <div>
+              <h2 style={{ color: 'white' }}>App Experience</h2>
+              <ul>
+                <li>
+                  <Link
+                    isNativeAnchorTag
+                    href="#"
+                    onClick={setMock}
+                    className={`${styles.navItem} typography-nav-nav-drawer`}
+                  >
+                    <span className={styles.firstItem}>
+                      <Icon
+                        type={IconType.DATABASE}
+                        color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
+                      />
+                    </span>
+                    <span>{mockText}</span>
+                  </Link>
+                  {isMockOn && (
+                    <div>
+                      <div className={styles.radioItem}>
+                        <input
+                          type="radio"
+                          id="policies"
+                          name="mocks"
+                          value="policy"
+                          className={styles.radioInput}
+                          checked={isMockOn && !isAnnuityOn}
+                          onChange={() => {
+                            setIsAnnuityOn(false);
+                            setAnnuityProducts(false);
+                          }}
+                        />
+                        <label
+                          className={`${styles.navItem} typography-nav-nav-drawer`}
+                          htmlFor="policies"
+                        >
+                          Mock Policy
+                        </label>
+                      </div>
+
+                      <div className={styles.radioItem}>
+                        <input
+                          type="radio"
+                          id="annuities"
+                          name="mocks"
+                          value="annuity"
+                          className={styles.radioInput}
+                          checked={isMockOn && isAnnuityOn}
+                          onChange={() => {
+                            setIsAnnuityOn(true);
+                            setAnnuityProducts(true);
+                          }}
+                        />
+                        <label
+                          className={`${styles.navItem} typography-nav-nav-drawer`}
+                          htmlFor="annuities"
+                        >
+                          Mock Annuity
+                        </label>
+                      </div>
+                    </div>
+                  )}
+                </li>
+
+                <li
+                  className="typography-nav-nav-drawer"
+                  style={{ color: 'white' }}
                 >
-                  <span className={styles.firstItem}>
-                    <Icon
-                      type={IconType.DATABASE}
-                      color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
-                    />
-                  </span>
-                  <span>{mockText}</span>
-                </Link>
-                {isMockOn && (
-                  <div>
-                    <div className={styles.radioItem}>
-                      <input
-                        type="radio"
-                        id="policies"
-                        name="mocks"
-                        value="policy"
-                        className={styles.radioInput}
-                        checked={isMockOn && !isAnnuityOn}
-                        onChange={() => {
-                          setIsAnnuityOn(false);
-                          setAnnuityProducts(false);
-                        }}
+                  <MockApiErrors />
+                </li>
+                <li>
+                  <button
+                    onClick={setTestPoliciesCookie}
+                    className={`${styles.navItem} typography-nav-nav-drawer`}
+                  >
+                    <span className={styles.firstItem}>
+                      <Icon
+                        type={IconType.DOCUMENT_DUPLICATE}
+                        color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
                       />
-                      <label
-                        className={`${styles.navItem} typography-nav-nav-drawer`}
-                        htmlFor="policies"
-                      >
-                        Mock Policy
-                      </label>
-                    </div>
-
-                    <div className={styles.radioItem}>
-                      <input
-                        type="radio"
-                        id="annuities"
-                        name="mocks"
-                        value="annuity"
-                        className={styles.radioInput}
-                        checked={isMockOn && isAnnuityOn}
-                        onChange={() => {
-                          setIsAnnuityOn(true);
-                          setAnnuityProducts(true);
-                        }}
+                    </span>
+                    <span>{`${testPoliciesOn ? 'Hide' : 'Show'} Test Policies`}</span>
+                  </button>
+                </li>
+                <li>
+                  <Link
+                    isNativeAnchorTag
+                    href="#"
+                    onClick={removeDevMenu}
+                    className={`${styles.navItem} typography-nav-nav-drawer`}
+                  >
+                    <span className={styles.firstItem}>
+                      <Icon
+                        type={IconType.TRASH}
+                        color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
                       />
-                      <label
-                        className={`${styles.navItem} typography-nav-nav-drawer`}
-                        htmlFor="annuities"
-                      >
-                        Mock Annuity
-                      </label>
-                    </div>
-                  </div>
-                )}
-              </li>
-
-              <li
-                className="typography-nav-nav-drawer"
-                style={{ color: 'white' }}
-              >
-                <p className={`${styles.navItem} pl-lg `}>
-                  <Icon
-                    className="mr-md"
-                    type={IconType.ALERT_EXCLAMATION}
-                    color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
-                  />
-                  <span className="ml-md">Mock API Errors</span>
-                </p>
-                <div className="ml-3xl mb-md pl-2xl">
+                    </span>
+                    <span>Remove Dev Menu</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 style={{ color: 'white' }}>Carrier Experience</h2>
+              <h3 className={styles.carrierHeader} style={{ color: 'white' }}>
+                <CarrierAvatar carrier={CarrierName.FARMERS} />
+                Farmers
+              </h3>
+              <ul>
+                <li style={{ margin: '0 var(--measure-dimension-gap-lg)' }}>
                   <label style={{ display: 'block' }}>
                     <input
                       type="checkbox"
-                      value={ApiEndpoints.POLICY}
-                      onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(ApiEndpoints.POLICY)}
-                    />
-                    <span className="ml-sm">Policy</span>
-                  </label>
-                  <label style={{ display: 'block' }}>
-                    <input
-                      type="checkbox"
-                      value={ApiEndpoints.METRICS}
-                      onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(ApiEndpoints.METRICS)}
+                      onChange={e => setMockFarmersECNCookie(e)}
+                      checked={isMockFarmersECNOn}
                     />
                     <span className="ml-sm">
-                      Metrics (includes account value change)
+                      <strong>Use Farmers Mock ECN:</strong> use a hardcoded ECN
+                      when logged in without SSO experience. (Refresh after
+                      toggling)
                     </span>
                   </label>
-                  <label style={{ display: 'block' }}>
-                    <input
-                      type="checkbox"
-                      value={ApiEndpoints.TRANSACTIONS}
-                      onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(ApiEndpoints.TRANSACTIONS)}
-                    />
-                    <span className="ml-sm">
-                      Transactions (Displays history of payments)
-                    </span>
-                  </label>
-                  <label style={{ display: 'block' }}>
-                    <input
-                      type="checkbox"
-                      value={ApiEndpoints.POLICY_BY_CARRIERS}
-                      onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(
-                        ApiEndpoints.POLICY_BY_CARRIERS
-                      )}
-                    />
-                    <span className="ml-sm">Policies by carrier</span>
-                  </label>
-                  <label style={{ display: 'block' }}>
-                    <input
-                      type="checkbox"
-                      value={ApiEndpoints.WITHDRAWAL_ELIGIBILITY}
-                      onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(
-                        ApiEndpoints.WITHDRAWAL_ELIGIBILITY
-                      )}
-                    />
-                    <span className="ml-sm">Withdrawal eligibility</span>
-                  </label>
-                  <label style={{ display: 'block' }}>
-                    <input
-                      type="checkbox"
-                      value={ApiEndpoints.ONE_TIME_PREMIUM_PAYMENT}
-                      onChange={selectAPIErrorType}
-                      checked={apiErrorSet?.includes(
-                        ApiEndpoints.ONE_TIME_PREMIUM_PAYMENT
-                      )}
-                    />
-                    <span className="ml-sm">One time premium payment</span>
-                  </label>
-                </div>
-                <button
-                  className="ml-3xl mb-md pl-3xl"
-                  onClick={setAPIErrorCookie}
-                  style={{
-                    display: 'flex',
-                    border: '2px solid white',
-                    padding: '6px',
-                    borderRadius: '4px',
-                  }}
-                >
-                  <span style={{ color: 'white' }}>Update mock error APIs</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={setTestPoliciesCookie}
-                  className={`${styles.navItem} typography-nav-nav-drawer`}
-                >
-                  <span className={styles.firstItem}>
-                    <Icon
-                      type={IconType.DOCUMENT_DUPLICATE}
-                      color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
-                    />
-                  </span>
-                  <span>{`${testPoliciesOn ? 'Hide' : 'Show'} Test Policies`}</span>
-                </button>
-              </li>
-              <li>
-                <Link
-                  isNativeAnchorTag
-                  href="#"
-                  onClick={removeDevMenu}
-                  className={`${styles.navItem} typography-nav-nav-drawer`}
-                >
-                  <span className={styles.firstItem}>
-                    <Icon
-                      type={IconType.TRASH}
-                      color="var(--color-nav-menu-icon-menu-icon-default-fill, #fff)"
-                    />
-                  </span>
-                  <span>Remove Dev Menu</span>
-                </Link>
-              </li>
-            </ul>
+                </li>
+              </ul>
+            </div>
           </nav>
         </Dialog.Content>
       </Dialog.Portal>
