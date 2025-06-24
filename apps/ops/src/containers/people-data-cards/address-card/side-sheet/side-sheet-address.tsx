@@ -1,5 +1,5 @@
 import { Transition } from '@headlessui/react';
-import { Address, AddressType, Country, Party, State } from '@zinnia/api-types/types/sor';
+import { Address, AddressType, Country, Party, State, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -422,6 +422,10 @@ const SideSheetAddress = ({
                     text: t('general.cancel'),
                 }}
                 stopLoading={stopLoading}
+                trackEventProps={{
+                    type: TransactionType.ADDRESS_CHANGE,
+                    correlationId: body.correlationId,
+                }}
             />
         </div>
     );

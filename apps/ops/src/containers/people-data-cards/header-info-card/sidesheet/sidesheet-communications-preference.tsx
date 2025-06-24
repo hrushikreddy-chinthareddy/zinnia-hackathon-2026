@@ -1,6 +1,6 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { CommunicationPreferenceChange, CommunicationPreferenceChangeRequest } from '@zinnia/api-types/types/bpm';
-import { PreferredCommunicationType, Email, Address } from '@zinnia/api-types/types/sor';
+import { PreferredCommunicationType, Email, Address, TransactionType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -356,6 +356,10 @@ export const SidesheetCommunicationsPreference = ({
                             text: t('general.cancel'),
                         }}
                         stopLoading={stopLoading}
+                        trackEventProps={{
+                            type: TransactionType.COMMUNICATION_PREFERENCE_CHANGE,
+                            correlationId: body.correlationId,
+                        }}
                     />
                 </div>
             );

@@ -1,3 +1,4 @@
+import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -14,7 +15,9 @@ import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@
 import SpinnerButton from '@deps/components/spinner-button/spinner-button';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Statuses } from '@deps/models/case/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
@@ -22,6 +25,7 @@ import { getCases } from '@deps/queries/api/cases';
 import { fundAllocation, validateFundAllocation } from '@deps/queries/api/fund-allocation';
 import { ReactComponent as ClockIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { TransactionContinueClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import { FundViewModel } from '../types';
 import { AllocationSuccessFlow } from './allocation-success-flow';
@@ -51,6 +55,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
 }) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
+    const { sessionId, partyId } = usePermissionsContext();
     const [caseOptions, setCaseOptions] = useState<CaseDocumentOption[]>([]);
     const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: '' };
     const [selectedCaseId, setSelectedCaseId] = useState<string | undefined>(policyNumber);
@@ -191,7 +196,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
 
         const allocationsPayload = {
             effectiveDate: effectiveDateFormatted,
-            correlationid: uuidv4(),
+            correlationId: uuidv4(),
             caseId: '',
             reverseInitiator: false,
             allocation: {
@@ -205,7 +210,16 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
     };
 
     const submitHandler = async (location: string) => {
-        const fundAllocationResponse = await fundAllocation(planCode, policyNumber, getAllocationPayload());
+        const payload = getAllocationPayload();
+        const fundAllocationResponse = await fundAllocation(planCode, policyNumber, payload);
+
+        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
+            session_id: sessionId,
+            userId: partyId,
+            type: TransactionType.FUND_ALLOCATIONS_CHANGE,
+            correlationId: payload.correlationId,
+        });
+
         if (fundAllocationResponse === 'System down') {
             setIsSystenDown(true);
         }

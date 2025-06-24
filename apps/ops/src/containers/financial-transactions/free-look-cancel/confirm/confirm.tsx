@@ -1,4 +1,4 @@
-import { Policy } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -7,10 +7,13 @@ import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { Statuses } from '@deps/models/case/case';
 import { submitFreeLookCancel } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { TransactionContinueClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { buildFreeLookCancelRequestBody } from '../free-look-cancel.helpers';
@@ -31,10 +34,17 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const [submitNigo, setSubmitNigo] = useState(false);
     const [newCaseId, setNewCaseId] = useState<string | undefined>(withdrawal.caseId);
     const [isLoading, setIsLoading] = useState(true);
+    const { sessionId, partyId } = usePermissionsContext();
 
     const submit = useCallback(async () => {
         const requestBody = buildFreeLookCancelRequestBody(withdrawal, wireCheckPaymentsEnabled);
         const response = await submitFreeLookCancel(policy.product?.planCode, policy.policyNumber, requestBody);
+        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
+            session_id: sessionId,
+            userId: partyId,
+            type: TransactionType.FREE_LOOK_CANCELLATION,
+            correlationId: requestBody.correlationId,
+        });
 
         if (![StatusCode.Accepted, StatusCode.Okay].includes(response.status as StatusCode)) {
             setSubmitFailed(true);

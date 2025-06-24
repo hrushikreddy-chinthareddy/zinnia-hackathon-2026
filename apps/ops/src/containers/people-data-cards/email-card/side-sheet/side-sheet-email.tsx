@@ -1,4 +1,4 @@
-import { Email, EmailType, Party, PreferredCommunicationType } from '@zinnia/api-types/types/sor';
+import { Email, EmailType, Party, PreferredCommunicationType, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -271,6 +271,10 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
                     text: t('general.cancel'),
                 }}
                 stopLoading={stopLoading}
+                trackEventProps={{
+                    type: TransactionType.EMAIL_CHANGE,
+                    correlationId: body.correlationId,
+                }}
             />
         </div>
     );

@@ -1,4 +1,4 @@
-import { AccountStatus, AccountType, BankAccount, Party } from '@zinnia/api-types/types/sor';
+import { AccountStatus, AccountType, BankAccount, Party, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -244,6 +244,10 @@ const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBank
                     text: t('general.cancel'),
                 }}
                 stopLoading={stopLoading}
+                trackEventProps={{
+                    type: TransactionType.BANK_ACCOUNT_CHANGE,
+                    correlationId: body.correlationId,
+                }}
             />
         </div>
     );

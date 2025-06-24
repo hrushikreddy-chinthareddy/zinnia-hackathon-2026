@@ -1,14 +1,18 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
+import { v4 as uuid4 } from 'uuid';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { cancelTransaction } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as AlertExclamationIcon } from '@deps/styles/elements/icons/alert/alert-exclamation.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as HexExclamationIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
+import { TransactionContinueClickedEvent, SegmentTrackedEventName, ExtendedTransactionType } from '@deps/types/segment-analytics';
 
 import { HELP_DESK_LINK } from '../non-financial-transactions/states/api-error-state';
 import LoadingState from '../non-financial-transactions/states/loading-state';
@@ -36,9 +40,21 @@ export default function SidesheetCancelPending({
 }: SidesheetCancelPendingProps) {
     const { t } = useTranslation();
     const [viewState, setViewState] = useState(ViewState.Warn);
+    const correlationId = uuid4();
+    const { sessionId, partyId } = usePermissionsContext();
+
     const callCancelTransaction = async () => {
         setViewState(ViewState.Loading);
-        const result = await cancelTransaction(planCode, policyNumber, transactionId);
+        const result = await cancelTransaction(planCode, policyNumber, transactionId, undefined, undefined, correlationId);
+
+        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
+            session_id: sessionId,
+            userId: partyId,
+            type: ExtendedTransactionType.CancelTransaction,
+            correlationId,
+            transactionId,
+        });
+
         if (result.status !== StatusCode.Accepted) {
             setViewState(ViewState.ApiError);
         } else {

@@ -5,7 +5,9 @@ import {
     OneTimePremiumRequest,
     PartialWithdrawalOneTimeQuoteResponse,
     SystematicProgramUpdateRequest,
- LoanRepaymentOneTimeRequest, NewLoanRequest } from '@zinnia/api-types/types/sor';
+    LoanRepaymentOneTimeRequest,
+    NewLoanRequest,
+} from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';

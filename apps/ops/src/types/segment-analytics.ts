@@ -97,14 +97,19 @@ export type FilterClickedEvent = BaseSegmentEventProperties & {
     selectedItemName: string;
 };
 
+export enum ExtendedTransactionType {
+    CancelTransaction = 'CancelTransaction',
+}
+
 // TODO MG: this is the same as TransactionTrackEventProps
 type BaseTransactionClickedEvent = BaseSegmentEventProperties & {
     step?: TransactionStep;
-    type?: TransactionType | ContactCenterTransactionType;
+    type?: TransactionType | ContactCenterTransactionType | ExtendedTransactionType;
 };
 
 export type TransactionContinueClickedEvent = BaseTransactionClickedEvent & {
     correlationId?: string;
+    transactionId?: string;
 };
 
 export type TransactionCancelClickedEvent = BaseTransactionClickedEvent;

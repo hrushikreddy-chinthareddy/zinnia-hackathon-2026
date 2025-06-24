@@ -20,6 +20,8 @@ import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/fiel
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
@@ -27,7 +29,7 @@ import { Processes } from '@deps/models/case/case';
 import { submitSystematicProgramUpdate, validateSystematicProgramUpdate, ValidationResult } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { TransactionStep } from '@deps/types/segment-analytics';
+import { SegmentTrackedEventName, TransactionContinueClickedEvent, TransactionStep } from '@deps/types/segment-analytics';
 
 import { CancelAutopayDetails } from './cancel-autopay-details';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
@@ -76,13 +78,14 @@ const SideSheetCancelAutopay = ({
         effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
     };
 
+    const { sessionId, partyId } = usePermissionsContext();
+
     const systematicProgram = useMemo(
         () => policy.systematicPrograms?.find(sp => sp.reason === systematicProgramReason),
         [policy.systematicPrograms, systematicProgramReason]
     );
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
     const [body, setBody] = useState(INITIAL_BODY);
-    const { caseId } = body;
     const [newCaseId, setNewCaseId] = useState<string>();
     const [effectiveDate, setEffectiveDate] = useState<string>(
         dayjs(policy.policyDates?.nextMonthiversaryDate).format(NUMERIC_DATE_FORMAT)
@@ -126,8 +129,8 @@ const SideSheetCancelAutopay = ({
         const effectiveDateFormatted = dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
 
         return {
-            caseId: caseId || '',
-            correlationId: uuidV4(),
+            caseId: body.caseId || '',
+            correlationId: body.correlationId,
             effectiveDate: effectiveDateFormatted,
             reverseInitiator: false,
             systematicProgram: {
@@ -185,6 +188,13 @@ const SideSheetCancelAutopay = ({
             arrangementId,
             updateBody
         );
+
+        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
+            session_id: sessionId,
+            userId: partyId,
+            type: TransactionType.SYSTEMATIC_PROGRAM_UPDATE,
+            correlationId: updateBody.correlationId,
+        });
 
         if (submitResponse?.data?.caseId) {
             setNewCaseId(submitResponse?.data?.caseId);
@@ -265,7 +275,7 @@ const SideSheetCancelAutopay = ({
         <div className="flex flex-col p-8">
             <div className="flex flex-col gap-8">
                 <CaseDocumentSelect
-                    caseId={caseId}
+                    caseId={body.caseId}
                     caseDocumentOptions={caseDocumentOptions}
                     currentErrors={errors}
                     policyNumber={policy?.policyNumber}
@@ -325,6 +335,7 @@ const SideSheetCancelAutopay = ({
                             ? TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION
                             : TransactionType.SUBSEQUENT_PREMIUM,
                     step: TransactionStep.Cancel,
+                    correlationId: body.correlationId,
                 }}
             />
         </div>

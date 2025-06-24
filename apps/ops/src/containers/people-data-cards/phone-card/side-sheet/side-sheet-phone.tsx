@@ -1,5 +1,5 @@
 import { Transition } from '@headlessui/react';
-import { Phone, PhoneType, Party } from '@zinnia/api-types/types/sor';
+import { Phone, PhoneType, Party, TransactionType } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -352,6 +352,10 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                     text: t('general.cancel'),
                 }}
                 stopLoading={stopLoading}
+                trackEventProps={{
+                    type: TransactionType.PHONE_NUMBER_CHANGE,
+                    correlationId: body.correlationId,
+                }}
             />
         </div>
     );
