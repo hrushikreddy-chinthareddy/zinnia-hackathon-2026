@@ -112,7 +112,7 @@ export default function WithdrawalCase({
     const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
 
     const accountInfo = useAccountInfo(document.contract, clientId as string);
-    const contractAccountInfo = useContractAccountInfo(document.contract, clientId as string);
+    const contractAccountInfo = useContractAccountInfo(document.contract, planCode as string);
     const { issueState, qualType, issueDate } = isLC ? accountInfo : contractAccountInfo;
 
     const showTransactions = featureFlagDecisions?.[FEATURE_FLAGS.TRANSACTION_HISTORY];

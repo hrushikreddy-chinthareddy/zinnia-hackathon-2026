@@ -99,7 +99,7 @@ const NigoEntry = ({
 
     const isLC = !isFastFeatureEnabled(form.taskType, featureFlagDecisions);
     const accountInfo = useAccountInfo(document.contract, clientCode as string);
-    const contractAccountInfo = useContractAccountInfo(document.contract, clientCode as string);
+    const contractAccountInfo = useContractAccountInfo(document.contract, planCode as string);
     const { issueState } = isLC ? accountInfo : contractAccountInfo;
 
     return (

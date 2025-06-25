@@ -46,7 +46,7 @@ import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpe
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs, PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
-import { convertKebabedDateString, formatDate, formatPhone, formatSSN, isNullEmptyOrUndefined, toTitleCase } from '@deps/helpers/string.helpers';
+import { convertKebabedDateString, formatDate, formatPhone, formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 import { CardColumnsTest, CardDetailsTest } from '@deps/jest/constants/test-id-constants';
@@ -348,7 +348,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                     bodyText={t('dashboard.search.results.policySummaryCard.initialDeathNotification')}
                 />
             )}
-            {isNewDeathClaimEnabled && policyStatus && !isDeathClaimStatusApplicable && !isNullEmptyOrUndefined(cancelledPolicyStatus) && (
+            {isNewDeathClaimEnabled && policyStatus && !isDeathClaimStatusApplicable && cancelledPolicyStatus && (
                 <BannerAlert
                     variant={BannerVariant.Warning}
                     bodyText={cancelledPolicyStatus}

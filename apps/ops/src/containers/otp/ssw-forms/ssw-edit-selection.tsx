@@ -19,7 +19,7 @@ export const sswUpdateOptions = (t: TFunction, carrier = '') =>
             label: t('sswUpdateOptions.rmdUpdate'),
             value: SswUpdateOption.RMD_UPDATE,
         },
-        carrier !== Carrier.MASS && {
+        {
             label: t('sswUpdateOptions.sswUpdate'),
             value: SswUpdateOption.SSW_UPDATE,
         },
@@ -31,7 +31,7 @@ export const sswUpdateOptions = (t: TFunction, carrier = '') =>
             label: t('sswUpdateOptions.eftDrawUpdate'),
             value: SswUpdateOption.EFT_DRAW_UPDATE,
         },
-        {
+        carrier !== Carrier.MASS && {
             label: t('sswUpdateOptions.withholdingUpdate'),
             value: SswUpdateOption.WITHHOLDING_UPDATE,
         },

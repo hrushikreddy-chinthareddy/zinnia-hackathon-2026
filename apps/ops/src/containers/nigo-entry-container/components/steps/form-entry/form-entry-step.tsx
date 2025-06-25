@@ -81,7 +81,7 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
     const { setSubmitFailed } = useNigoEntry();
     const isLC = !isFastFeatureEnabled(formState?.initialForm?.taskType, formState.featureFlagDecisions);
     const accountInfo = useAccountInfo(document.contract, clientCode as string);
-    const contractAccountInfo = useContractAccountInfo(document.contract, clientCode as string);
+    const contractAccountInfo = useContractAccountInfo(document.contract, planCode as string);
     const { qualType } = isLC ? accountInfo : contractAccountInfo;
 
     const formParts = getFormParts(caseType, clientCode, qualType, planCode, isLC);
