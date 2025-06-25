@@ -284,6 +284,9 @@
         "logout": {
             "text": "Sign Out",
             "link": "/api/auth/logout"
+        },
+        "apexLink": {
+            "text": "Return to APEX"
         }
     },
     "formValidations": {

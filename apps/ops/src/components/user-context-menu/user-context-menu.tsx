@@ -1,8 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { IconType, Icon } from '@zinnia/bloom/components';
+import { IconType, Icon, CarrierName } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { FC } from 'react';
+import { getCookie } from 'cookies-next';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
@@ -12,9 +13,18 @@ import { firstNameAndLastInitial } from '@deps/helpers/string.helpers';
 
 import styles from './user-context-menu.module.css';
 
-export const UserContextMenu: FC<{ name: string }> = props => {
+export const UserContextMenu: FC<{ name: string }> = (props) => {
     const { t } = useTranslation();
     const { user } = useUser();
+    const [role, setRole] = useState<CarrierName>(CarrierName.ZINNIA);
+    const apexUrl = process.env.NEXT_PUBLIC_APEX_URL;
+
+    useEffect(() => {
+        const cookie = getCookie('role') as string | undefined;
+        if (cookie == 'farmers') {
+            setRole(CarrierName.FARMERS);
+        }
+    }, []);
 
     const handleAnalytics = () => {
         storage.clear();
@@ -29,13 +39,35 @@ export const UserContextMenu: FC<{ name: string }> = props => {
         <MenuContextual
             triggerAsChild
             trigger={
-                <div className={clsx(styles.contextTrigger, 'typography-content-body color-base-text-text-secondary')}>
+                <div
+                    className={clsx(
+                        styles.contextTrigger,
+                        'typography-content-body color-base-text-text-secondary'
+                    )}
+                >
                     <Icon className={styles.icon} type={IconType.USER} />
                     <span>{firstNameAndLastInitial(props.name)}</span>
                 </div>
             }
         >
-            <DropdownMenu.Item onSelect={handleAnalytics}>
+            {role === CarrierName.FARMERS && (
+                <DropdownMenu.Item
+                    onSelect={handleAnalytics}
+                    className="w-full"
+                >
+                    <a
+                        className={
+                            'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10'
+                        }
+                        href={apexUrl}
+                    >
+                        <Icon type={IconType.REPLY} width={20} height={20} />
+                        {t('auth.apexLink.text')}
+                    </a>
+                </DropdownMenu.Item>
+            )}
+
+            <DropdownMenu.Item onSelect={handleAnalytics} className="w-full">
                 <a
                     className={
                         'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10'

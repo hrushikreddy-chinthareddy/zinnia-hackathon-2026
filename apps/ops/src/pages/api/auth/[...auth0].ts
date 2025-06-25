@@ -1,13 +1,28 @@
-import { handleAuth, handleCallback, handleLogin } from '@auth0/nextjs-auth0';
-import { deleteCookie } from 'cookies-next';
+import {
+    handleAuth,
+    handleCallback,
+    handleLogin,
+    handleLogout,
+} from '@auth0/nextjs-auth0';
+import { deleteCookie, setCookie } from 'cookies-next';
 
 import { PERMISSIONS_COOKIE_NAME } from '@deps/types/permissionsCookie';
-import { buildNextApiLoggingContext, LoggingContext, logTrace, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    buildNextApiLoggingContext,
+    LoggingContext,
+    logTrace,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
+import { getRole } from '@deps/utils/theme';
 
 export default handleAuth({
     async login(req, res) {
         const logCtx = await buildNextApiLoggingContext(req, res);
-        const loggingContext = { ...logCtx, file: '[...auth0]', function: 'login' } as LoggingContext;
+        const loggingContext = {
+            ...logCtx,
+            file: '[...auth0]',
+            function: 'login',
+        } as LoggingContext;
         // remove the "broken" cookie for now
         // setCookie(PERMISSIONS_COOKIE_NAME, DEFAULT_PERMISSIONS_COOKIE, {
         //     req,
@@ -32,6 +47,7 @@ export default handleAuth({
                 if (params.toString()?.length) {
                     modifiedReturnTo += `?${params.toString()}`;
                 }
+
                 req.query.returnTo = modifiedReturnTo.toString();
             }
         } catch (e) {
@@ -43,10 +59,22 @@ export default handleAuth({
             });
         }
 
-        // If a connectionName is provided, use it to try to authenticate
-        // A failed authentication will redirect to the login page without the connectionName via the callback method
+        // If a connectionName is provided, use it to attempt a client-specific login
         if (connectionName) {
-            logTrace('Silent login', loggingContext);
+            const roleFromParam = getRole(connectionName);
+
+            setCookie('role', roleFromParam, {
+                req,
+                res,
+                maxAge: 60 * 60 * 24 * 30, // 30 days
+                path: '/',
+                sameSite: 'lax',
+            });
+
+            logTrace('Silent login with connection', {
+                ...loggingContext,
+                connection: connectionName,
+            });
             await handleLogin(req, res, {
                 returnTo: '/',
                 authorizationParams: {
@@ -56,7 +84,7 @@ export default handleAuth({
                 },
             });
         } else {
-            // Standard login flow
+            // No client connection specified → default Zinnia login flow
             logTrace('Standard login', loggingContext);
             await handleLogin(req, res, {
                 returnTo: '/',
@@ -71,8 +99,13 @@ export default handleAuth({
     // if there's a problem with the silent login flow, redirect to the landing page so a user can try to authenticate again
     async callback(req, res) {
         const logCtx = await buildNextApiLoggingContext(req, res);
-        const loggingContext = { ...logCtx, file: '[...auth0]', function: 'callback' } as LoggingContext;
+        const loggingContext = {
+            ...logCtx,
+            file: '[...auth0]',
+            function: 'callback',
+        } as LoggingContext;
         logTrace('callback ', loggingContext);
+
         try {
             await handleCallback(req, res, {
                 // We dont need idToken or the permissions object in the cookie.
@@ -90,8 +123,16 @@ export default handleAuth({
                 },
             });
         } catch (e) {
-            logTrace('Callback failed.  Redirecting to login', { ...loggingContext, ...parseErrorInformation(e) });
+            logTrace('Callback failed.  Redirecting to login', {
+                ...loggingContext,
+                ...parseErrorInformation(e),
+            });
             res.redirect('/');
         }
+    },
+
+    async logout(req, res) {
+        deleteCookie('role', { req, res });
+        await handleLogout(req, res);
     },
 });

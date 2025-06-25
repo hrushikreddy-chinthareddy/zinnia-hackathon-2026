@@ -280,6 +280,9 @@
         "logout": {
             "text": "Cerrar Sesión",
             "link": "/api/auth/logout"
+        },
+        "apexLink": {
+            "text": "Regresar a APEX"
         }
     },
     "formValidations": {

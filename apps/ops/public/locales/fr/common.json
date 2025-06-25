@@ -283,6 +283,9 @@
         "logout": {
             "text": "Déconnecter",
             "link": "/api/auth/logout"
+        },
+        "apexLink": {
+            "text": "Retour à l'APEX"
         }
     },
     "formValidations": {

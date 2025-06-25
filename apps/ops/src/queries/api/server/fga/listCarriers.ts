@@ -7,7 +7,10 @@ import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ApiResponse } from '@deps/types/api-response';
 import { GetCarrierListQuery } from '@deps/types/fga';
-import { addCarrierListToCookie, checkPermissionsCookieForCarrierList } from '@deps/utils/permissionsCookie';
+import {
+    addCarrierListToCookie,
+    checkPermissionsCookieForCarrierList,
+} from '@deps/utils/permissionsCookie';
 import { LoggingContext, logWarn } from '@deps/utils/server-logging';
 
 const listCarrierUrlSsr = `${apiServerBaseUrl}/fga/v1/list-carriers`;
@@ -25,29 +28,47 @@ export const listCarriersPage = async (
         inputs: { relation },
     };
     try {
-        const val = checkPermissionsCookieForCarrierList(relation, ctx.req, ctx.res);
+        const val = checkPermissionsCookieForCarrierList(
+            relation,
+            ctx.req,
+            ctx.res
+        );
 
         if (val) {
             return val;
         }
 
         const user = await getUserData(ctx);
-        const accessToken = (await getAccessToken(ctx.req, ctx.res)).accessToken;
-        const result = await getCarrierListSSR(accessToken as string, user.partyId, relation, logCtx);
+        const accessToken = (await getAccessToken(ctx.req, ctx.res))
+            .accessToken;
+        const result = await getCarrierListSSR(
+            accessToken as string,
+            user.partyId,
+            relation,
+            logCtx
+        );
 
         // add the list to the cookie only if the request was successful
         if (!result.error) {
-            addCarrierListToCookie(relation, result.data ?? [], ctx.req, ctx.res);
+            addCarrierListToCookie(
+                relation,
+                result.data ?? [],
+                ctx.req,
+                ctx.res
+            );
         }
 
         return result.data ?? [];
     } catch (e) {
-        logWarn('listCarriersPage::An error occurred while getting the carrier list', {
-            ...logCtx,
-            file: 'queries/api/fga',
-            function: 'listCarriersPage',
-            inputs: { relation },
-        });
+        logWarn(
+            'listCarriersPage::An error occurred while getting the carrier list',
+            {
+                ...logCtx,
+                file: 'queries/api/fga',
+                function: 'listCarriersPage',
+                inputs: { relation },
+            }
+        );
         return [];
     }
 };
@@ -70,7 +91,10 @@ const getCarrierListSSR = async (
         },
     };
     try {
-        const listCarrierCheck = await serverApi.post<GetCarrierListQuery, AxiosResponse>(
+        const listCarrierCheck = await serverApi.post<
+            GetCarrierListQuery,
+            AxiosResponse
+        >(
             listCarrierUrlSsr,
             {
                 user: `party:${partyId}`,
@@ -82,34 +106,54 @@ const getCarrierListSSR = async (
             logCtx
         );
 
-        const reponse: ApiResponse<string[]> = { data: listCarrierCheck?.data?.carriers || [], error: null };
+        const reponse: ApiResponse<string[]> = {
+            data: listCarrierCheck?.data?.carriers || [],
+            error: null,
+        };
 
         if (listCarrierCheck.status !== 200) {
-            logWarn('getCarrierListSSR::An error occurred while getting the carrier list', {
+            logWarn(
+                'getCarrierListSSR::An error occurred while getting the carrier list',
+                {
+                    ...logCtx,
+                    file: 'queries/api/fga',
+                    function: 'getCarrierListSSR',
+                    url: listCarrierUrlSsr,
+                    inputs: {
+                        partyId,
+                        relation,
+                    },
+                }
+            );
+            reponse.error = {
+                status: listCarrierCheck.status,
+                message: listCarrierCheck.statusText,
+                name: 'Error getting carrier list',
+            };
+        }
+
+        return reponse;
+    } catch (error: any) {
+        logWarn(
+            'getCarrierListServerSSR::An error occurred while getting the carrier list',
+            {
                 ...logCtx,
                 file: 'queries/api/fga',
-                function: 'getCarrierListSSR',
+                function: 'getCarrierListServerSSR',
                 url: listCarrierUrlSsr,
                 inputs: {
                     partyId,
                     relation,
                 },
-            });
-            reponse.error = { status: listCarrierCheck.status, message: listCarrierCheck.statusText, name: 'Error getting carrier list' };
-        }
-
-        return reponse;
-    } catch (error: any) {
-        logWarn('getCarrierListServerSSR::An error occurred while getting the carrier list', {
-            ...logCtx,
-            file: 'queries/api/fga',
-            function: 'getCarrierListServerSSR',
-            url: listCarrierUrlSsr,
-            inputs: {
-                partyId,
-                relation,
+            }
+        );
+        return {
+            data: [],
+            error: {
+                status: 500,
+                message: error?.message,
+                name: 'Error getting carrier list',
             },
-        });
-        return { data: [], error: { status: 500, message: error?.message, name: 'Error getting carrier list' } };
+        };
     }
 };

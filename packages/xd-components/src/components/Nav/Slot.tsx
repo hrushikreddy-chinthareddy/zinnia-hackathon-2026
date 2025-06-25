@@ -27,8 +27,10 @@ export const Slot = ({ renderComponent, children, ...props }: SlotType) => {
       children
     );
   }
+
   if (React.Children.count(children) > 1) {
     React.Children.only(null);
   }
+
   return null;
 };
