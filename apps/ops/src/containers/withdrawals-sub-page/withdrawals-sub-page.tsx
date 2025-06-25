@@ -115,76 +115,74 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
             <WithdrawalsPageHeaderContainer planCode={policyDetails.planCode} policyNumber={policyDetails.policyNumber} />
             <hr className="h-0.5 border-none bg-gray-200" />
             <WithdrawalRules policy={policy} policyDetails={policyDetails} />
-            <hr className="h-0.5 border-none bg-gray-100" />
-            {
+            <hr className="h-0.5 border-none bg-gray-200" />
+            {withdrawalEnabled && (
                 <>
-                    <hr className="h-0.5 border-none bg-gray-100" />
-                    {withdrawalEnabled && (
-                        <UpcomingPaymentCard
-                            title={`${t('withdrawalAutopay')}`}
-                            titleCase={false}
-                            autopayAmount={withdrawalProgram?.amount}
-                            paymentDate={withdrawalProgram?.nextProgramDate}
-                            bankDetails={getBankDetails(getParty(parties, withdrawalProgram), withdrawalProgram)}
-                            additionalCharges={getAddCharges({ flatExtra: getFlatExtra(policy.coverage), t })}
-                            footerLinks={[
-                                {
-                                    href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=WITHDRAWAL`,
-                                    text: t('manageAutopay'),
-                                    isDisabled: !withdrawalEligibility?.isEligibleWithdrawal || !withdrawalProgram?.nextProgramDate,
-                                    tooltip: withdrawalEligibility?.ineligibleWithdrawalReason,
+                    <UpcomingPaymentCard
+                        title={`${t('withdrawalAutopay')}`}
+                        titleCase={false}
+                        autopayAmount={withdrawalProgram?.amount}
+                        paymentDate={withdrawalProgram?.nextProgramDate}
+                        bankDetails={getBankDetails(getParty(parties, withdrawalProgram), withdrawalProgram)}
+                        additionalCharges={getAddCharges({ flatExtra: getFlatExtra(policy.coverage), t })}
+                        footerLinks={[
+                            {
+                                href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=WITHDRAWAL`,
+                                text: t('manageAutopay'),
+                                isDisabled: !withdrawalEligibility?.isEligibleWithdrawal || !withdrawalProgram?.nextProgramDate,
+                                tooltip: withdrawalEligibility?.ineligibleWithdrawalReason,
+                            },
+                            {
+                                href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
+                                text: t('setUpAutopay'),
+                                isDisabled: !withdrawalEligibility?.isEligibleWithdrawal || !!withdrawalProgram?.nextProgramDate,
+                                tooltip: withdrawalEligibility?.ineligibleWithdrawalReason,
+                            },
+                            {
+                                href: '#',
+                                text: t('cancelAutopay'),
+                                onClick: () => {
+                                    openCancelSideSheet(ArrangementType.WITHDRAWAL);
                                 },
-                                {
-                                    href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
-                                    text: t('setUpAutopay'),
-                                    isDisabled: !withdrawalEligibility?.isEligibleWithdrawal || !!withdrawalProgram?.nextProgramDate,
-                                    tooltip: withdrawalEligibility?.ineligibleWithdrawalReason,
-                                },
-                                {
-                                    href: '#',
-                                    text: t('cancelAutopay'),
-                                    onClick: () => {
-                                        openCancelSideSheet(ArrangementType.WITHDRAWAL);
-                                    },
-                                    isDisabled: !withdrawalEligibility?.isEligibleWithdrawal || !withdrawalProgram?.nextProgramDate,
-                                },
-                            ]}
-                        />
-                    )}
-                    {rmdEnabled && (
-                        <UpcomingPaymentCard
-                            autopayAmount={rmdProgram?.amount}
-                            title={`${t('rmdAutopay')}`}
-                            paymentDate={rmdProgram?.nextProgramDate}
-                            bankDetails={getBankDetails(getParty(parties, rmdProgram), rmdProgram)}
-                            additionalCharges={getAddCharges({ flatExtra: getFlatExtra(policy.coverage), t })}
-                            titleCase={false}
-                            footerLinks={[
-                                {
-                                    href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=RMD`,
-                                    text: t('manageAutopay'),
-                                    isDisabled: !rmdEligibility?.isEligibleRmd || !rmdProgram?.nextProgramDate,
-                                    tooltip: rmdEligibility?.ineligibleRmdReason,
-                                },
-                                {
-                                    href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
-                                    text: t('setUpAutopay'),
-                                    isDisabled: !rmdEligibility?.isEligibleRmd || !!rmdProgram?.nextProgramDate,
-                                    tooltip: rmdEligibility?.ineligibleRmdReason,
-                                },
-                                {
-                                    href: '#',
-                                    text: t('cancelAutopay'),
-                                    onClick: () => {
-                                        openCancelSideSheet(ArrangementType.REQUIREDMINIMUMDISTRIBUTION);
-                                    },
-                                    isDisabled: !rmdEligibility?.isEligibleRmd || !rmdProgram?.nextProgramDate,
-                                },
-                            ]}
-                        />
-                    )}
+                                isDisabled: !withdrawalEligibility?.isEligibleWithdrawal || !withdrawalProgram?.nextProgramDate,
+                            },
+                        ]}
+                    />
+                    <hr className="h-0.5 border-none bg-gray-200" />
                 </>
-            }
+            )}
+            {rmdEnabled && (
+                <UpcomingPaymentCard
+                    autopayAmount={rmdProgram?.amount}
+                    title={`${t('rmdAutopay')}`}
+                    paymentDate={rmdProgram?.nextProgramDate}
+                    bankDetails={getBankDetails(getParty(parties, rmdProgram), rmdProgram)}
+                    additionalCharges={getAddCharges({ flatExtra: getFlatExtra(policy.coverage), t })}
+                    titleCase={false}
+                    footerLinks={[
+                        {
+                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=RMD`,
+                            text: t('manageAutopay'),
+                            isDisabled: !rmdEligibility?.isEligibleRmd || !rmdProgram?.nextProgramDate,
+                            tooltip: rmdEligibility?.ineligibleRmdReason,
+                        },
+                        {
+                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
+                            text: t('setUpAutopay'),
+                            isDisabled: !rmdEligibility?.isEligibleRmd || !!rmdProgram?.nextProgramDate,
+                            tooltip: rmdEligibility?.ineligibleRmdReason,
+                        },
+                        {
+                            href: '#',
+                            text: t('cancelAutopay'),
+                            onClick: () => {
+                                openCancelSideSheet(ArrangementType.REQUIREDMINIMUMDISTRIBUTION);
+                            },
+                            isDisabled: !rmdEligibility?.isEligibleRmd || !rmdProgram?.nextProgramDate,
+                        },
+                    ]}
+                />
+            )}
         </>
     );
 };

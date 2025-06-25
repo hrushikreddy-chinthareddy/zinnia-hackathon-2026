@@ -2938,7 +2938,6 @@
                 "coverageChangeRules": "Voir les règles de modification de la couverture",
                 "coverageChangeRulesSidesheet": "Règles de Modification de la Couverture",
                 "sideSheetBody": "Les modifications de la couverture peuvent avoir des répercussions sur la police au-delà de la modification du capital décès. Toute modification réinitialise la période de sept ans utilisée pour le test de prime sur sept ans ; les diminutions peuvent influencer d'autres tests de conformité. Si une police ne réussit pas l'un de ces tests, elle perd d'importants avantages fiscaux.",
-                "footer": "*Jamais vu cela auparavant ? Ces champs reflètent des règles propres au produit Universal Life d'Every Life.",
                 "baseCoverage": "Couverture de base",
                 "baseDeathBenefit": "Montant de base de la prestation en cas de décès",
                 "baseDeathBenefitPopover": "Il s'agit du montant de la prestation en cas de décès lié à la couverture de base du propriétaire. Il reflète le chiffre actuel, prenant ainsi en compte toute modification de la prestation en cas de décès due à des retraits ou à des prêts. (Remarque : Ce chiffre peut différer du montant total du capital décès brut s'il existe d'autres lignes de couverture ou des avenants qui ajoutent à la prestation en cas de décès.)",

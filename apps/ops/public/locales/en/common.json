@@ -2981,7 +2981,6 @@
                 "coverageChangeRules": "View coverage change rules",
                 "coverageChangeRulesSidesheet": "Coverage Change Rules",
                 "sideSheetBody": "Coverage changes can impact the policy beyond changing the death benefit. Any change resets the seven year period used for the 7-pay premium test; decreases can impact other guidelines tests. If a policy fails any of these tests, the policy loses important tax advantages.",
-                "footer": "*Never seen these before? These fields reflect rules that are specific to Every Life's Universal Life product.",
                 "baseCoverage": "Base Coverage",
                 "baseDeathBenefit": "Base death benefit",
                 "baseDeathBenefitPopover": "This is the death benefit amount related to the owner's base coverage. It reflects the current figure, so it accounts for any changes to the death benefit that have occurred due to withdrawals or loans. (Note: This figure may differ from total gross death benefit if there are additional lines of coverage or riders that add to the death benefit.)",

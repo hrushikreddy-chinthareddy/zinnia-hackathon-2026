@@ -1,21 +1,19 @@
 import { Policy } from '@zinnia/api-types/types/sor';
+import { convertToCamelCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
-import { convertToCamelCase } from '@zinnia/utils';
 
-import Footnote from '@deps/components/footnote/footnote';
+import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
+import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Label, { LabelVariant } from '@deps/components/label/label';
+import { PopoverPlacement } from '@deps/components/popover/popover';
 import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { formatDate } from '@deps/helpers/string.helpers';
 import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
-import { PopoverPlacement } from '@deps/components/popover/popover';
-import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 
 export type WithdrawalRulesProps = {
     policy: Policy;
@@ -26,7 +24,6 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
     const { t } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
     const {
-        annualWithdrawalLimitNoCoverageDecrease,
         maximumWithdrawalAmount,
         maximumWithdrawalRequestDuringVestingPeriod,
         maximumWithdrawalRequestAfterVestingPeriod,
@@ -35,7 +32,6 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
 
     if (
         [
-            annualWithdrawalLimitNoCoverageDecrease,
             maximumWithdrawalAmount,
             maximumWithdrawalRequestDuringVestingPeriod,
             maximumWithdrawalRequestAfterVestingPeriod,
@@ -43,20 +39,6 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
         ].every(x => x === undefined)
     ) {
         return null;
-    }
-
-    let vestingDate = formatDate(policy?.allocation?.matchSegment?.matchVestingDate);
-
-    if (vestingDate !== DEFAULT_ERROR_STRING) {
-        vestingDate = dayjs(vestingDate).isAfter(dayjs().format(DEFAULT_DATE_FORMAT))
-            ? t('withdrawals.rules.maxAnnualFuture', {
-                  maxDuring: maximumWithdrawalRequestDuringVestingPeriod,
-                  date: vestingDate,
-                  maxAfter: maximumWithdrawalRequestAfterVestingPeriod,
-              })
-            : t('withdrawals.rules.maxAnnualPast', {
-                  maxDuring: maximumWithdrawalRequestDuringVestingPeriod,
-              });
     }
 
     const totalAnnualAmount = policyDetails.requiredMinimumDistribution.totalAnnualAmount;
@@ -194,42 +176,9 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
                                     </Typography>
                                 </div>
                             </div>
-
-                            <div className="flex flex-col gap-8 md:flex-row">
-                                <div className="flex w-[208px] flex-col items-start">
-                                    <Label
-                                        aria-labelledby={`${t('withdrawals.rules.maxAnnual')} footnote`}
-                                        variant={LabelVariant.FieldLabel}
-                                        tooltipTitle={t('withdrawals.rules.maxAnnual')}
-                                        tooltipBody={t('withdrawals.rules.maxAnnualTooltip')}
-                                        label={t('withdrawals.rules.maxAnnual') + '*'}
-                                    />
-                                    <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {vestingDate}
-                                    </Typography>
-                                </div>
-                                <div className="flex w-[208px] flex-col items-start xl:w-fit">
-                                    <Label
-                                        aria-labelledby={`$t('withdrawals.rules.coverageLimit')} footnote`}
-                                        variant={LabelVariant.FieldLabel}
-                                        tooltipTitle={t('withdrawals.rules.coverageLimit')}
-                                        tooltipBody={t('withdrawals.rules.coverageLimitTooltip')}
-                                        label={t('withdrawals.rules.coverageLimit') + '*'}
-                                    />
-                                    <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {numberFormatify(annualWithdrawalLimitNoCoverageDecrease, {
-                                            style: 'currency',
-                                            currency: 'USD',
-                                        })}
-                                    </Typography>
-                                </div>
-                            </div>
                         </>
                     )}
                 </div>
-                {!policyDetails.isAnnuity && (
-                    <Footnote productMarketingName={policy.product?.marketingName} productType={policy.product?.productType} />
-                )}
             </div>
         </CardContainer>
     );

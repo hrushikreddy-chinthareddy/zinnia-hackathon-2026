@@ -2937,7 +2937,6 @@
                 "coverageChangeRules": "Ver reglas de cambio de cobertura",
                 "coverageChangeRulesSidesheet": "Reglas de Cambio de Cobertura",
                 "sideSheetBody": "Los cambios de cobertura pueden impactar la póliza más allá de cambiar el beneficio por fallecimiento. Cualquier cambio reinicia el período de siete años utilizado para la prueba de primas de 7 pagos; las disminuciones pueden impactar otras pruebas de pautas. Si una póliza falla alguna de estas pruebas, la póliza pierde importantes ventajas fiscales.",
-                "footer": "*¿Nunca ha visto esto antes? Estos campos reflejan reglas específicas del producto de Vida Universal de Every Life.",
                 "baseCoverage": "Cobertura Base",
                 "baseDeathBenefit": "Beneficio básico por fallecimiento",
                 "baseDeathBenefitPopover": "Este es el monto del beneficio por fallecimiento relacionado con la cobertura base del propietario. Refleja la cifra actual, por lo que tiene en cuenta cualquier cambio en el beneficio por fallecimiento que haya ocurrido debido a retiros o préstamos. (Nota: Esta cifra puede diferir del beneficio bruto total por fallecimiento si hay líneas de cobertura adicionales o riders que aumenten el beneficio por fallecimiento).",
