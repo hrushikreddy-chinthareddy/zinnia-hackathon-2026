@@ -24,20 +24,10 @@ import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
 
 import styles from './AddEditAddress.module.css';
-import { FormActionType } from '../../types';
+import { AddressFormFields, FormActionType } from '../../types';
 
 
-export interface AddressObj {
-  addressVal: string;
-}
-export interface AddressFormFields {
-  addressType?: AddressChange.addressType;
-  addresses?: AddressObj[];
-  city?: string;
-  state?: AddressChange.state;
-  zipCode?: string;
-  defaultAddress?: boolean;
-}
+
 
 export interface AddEditAddressProps {
   values?: AddressFormFields;

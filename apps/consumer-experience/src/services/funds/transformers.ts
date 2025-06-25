@@ -7,8 +7,8 @@ import { PolicyFund } from '@/types/policy';
 import { getNextOccurrenceOfDay } from '@/utils/dates';
 import { findPropertyValue } from '@/utils/objects';
 
-import { FundDetails, Fund } from '.';
 import { ApiResponse } from '..';
+import { FundDetails, Fund } from './types';
 
 interface CombineFundArgs {
   fundDetails: (FundDetails | null | undefined)[];

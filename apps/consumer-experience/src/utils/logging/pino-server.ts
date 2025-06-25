@@ -50,12 +50,17 @@ const logger = pino({
   },
   // level of logs to display. trace|debug|info|warn|error|fatal
   level: process.env.PINO_LOG_LEVEL || 'trace',
-}).child({
-  app_name: 'consumer-xd',
-  service: 'consumer-xd',
-  env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',
-  version: process.env.NEXT_PUBLIC_GIT_SHA || '',
-});
+}).child(
+  {
+    app_name: 'consumer-xd',
+    service: 'consumer-xd',
+    env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',
+    version: process.env.NEXT_PUBLIC_GIT_SHA || '',
+  },
+  {
+    msgPrefix: 'consumer-xd',
+  }
+);
 
 // used to ensure compliance logs are sent to datadog even if the logging level is set to only warn or error
 export const complianceLogger = pino({
@@ -65,11 +70,16 @@ export const complianceLogger = pino({
     compliance: 39,
   },
   level: 'trace',
-}).child({
-  app_name: 'consumer-xd',
-  service: 'consumer-xd',
-  env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',
-  version: process.env.NEXT_PUBLIC_GIT_SHA || '',
-});
+}).child(
+  {
+    app_name: 'consumer-xd',
+    service: 'consumer-xd',
+    env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',
+    version: process.env.NEXT_PUBLIC_GIT_SHA || '',
+  },
+  {
+    msgPrefix: 'consumer-xd',
+  }
+);
 
 export default logger;

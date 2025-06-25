@@ -8,11 +8,8 @@ import {
   WithdrawalSubmissionResponse,
 } from '@/services/bpm/partial-withdrawal';
 import { PolicyRequestInputsParams } from '@/types/policy';
-import {
-  buildNextReqLoggingContext,
-  logTrace,
-  logError,
-} from '@/utils/logging/server-logging';
+import { logError, logTrace } from '@/utils/logging/log-fns';
+import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 dayjs.extend(utc);
 
@@ -37,7 +34,7 @@ export async function POST(
       paymentDetails,
       loggingContext
     );
-    
+
     logTrace('bpm::partial-withdrawal-one-time::POST::complete', {
       ...loggingContext,
       planCode,
@@ -52,10 +49,8 @@ export async function POST(
       });
     }
 
-   throw new Error('Error fetching one time withdrawal validation');
-
+    throw new Error('Error fetching one time withdrawal validation');
   } catch (error) {
-
     logError('bpm::partial-withdrawal-one-time::validation::POST::error', {
       ...loggingContext,
       planCode,

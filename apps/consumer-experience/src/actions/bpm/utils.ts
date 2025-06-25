@@ -1,7 +1,7 @@
 import { isBpmError } from '@/services/bpm/types';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
-import { logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
 
 export enum TransactionTypes {
   ADDRESS = 'address',

@@ -1,4 +1,4 @@
-import { Fund } from '../funds';
+import { Fund } from '../funds/types';
 
 export const mockULFundResponse = [
   {

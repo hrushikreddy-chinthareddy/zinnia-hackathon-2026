@@ -9,10 +9,10 @@ import {
 } from '@/components/paymentus/utils';
 import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
+import { PaymentProvider } from '@/types/carrier-config';
 import { PaymentMethod } from '@/types/payment';
 
 import { SelectBank } from './SelectBank';
-import { PaymentProvider } from '@/types/carrier-config';
 
 interface SelectBankWrapperProps {
   planCode: string;
@@ -41,13 +41,13 @@ export const SelectBankWrapper = ({
     select: data => {
       return paymentProvider === PaymentProvider.PAYMENTUS
         ? data?.map(paymentMethod => ({
-            ...paymentMethod,
-            accountType: getAccountTypeDisplay(paymentMethod.type!),
-            branchName: getBranchName({
-              type: paymentMethod.type!,
-              bankName: paymentMethod.branchName,
-            }),
-          }))
+          ...paymentMethod,
+          accountType: getAccountTypeDisplay(paymentMethod.type!),
+          branchName: getBranchName({
+            type: paymentMethod.type!,
+            bankName: paymentMethod.branchName,
+          }),
+        }))
         : data;
     },
   });

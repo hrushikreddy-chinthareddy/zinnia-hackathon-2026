@@ -1,7 +1,13 @@
 import { Frequency } from '@xd/api-types/dist/generated-types/bpm';
 import { z } from 'zod';
 
-import { SystematicPremiumSteps } from '@/components/workflows/systematic-premiums/steps';
+export enum SystematicPremiumSteps {
+  AMOUNT = 'amount',
+  BANK = 'bank',
+  SUMMARY = 'summary',
+  MFA = 'verify-identity',
+  SUBMITTED = 'submitted',
+}
 
 export enum SystematicPremiumsAction {
   SET_ACTIVE_SYSTEMATIC_PROGRAM = 'setActiveSystematicProgram',

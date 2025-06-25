@@ -1,6 +1,18 @@
+import { AddressChange } from '@zinnia/api-types/types/bpm';
 import { Address } from '@zinnia/api-types/types/sor';
 
-import { AddressFormFields } from './form-steps/add/AddEditAddress';
+export interface AddressObj {
+  addressVal: string;
+}
+
+export interface AddressFormFields {
+  addressType?: AddressChange.addressType;
+  addresses?: AddressObj[];
+  city?: string;
+  state?: AddressChange.state;
+  zipCode?: string;
+  defaultAddress?: boolean;
+}
 
 export enum FormActionType {
   ADD = 'add',

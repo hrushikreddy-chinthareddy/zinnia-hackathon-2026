@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getPolicyProfileData } from '@/services';
-import {
-  buildNextReqLoggingContext,
-  logError,
-  logTrace,
-} from '@/utils/logging/server-logging';
+import { logError, logTrace } from '@/utils/logging/log-fns';
+import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 export async function GET(
   _request: NextRequest,

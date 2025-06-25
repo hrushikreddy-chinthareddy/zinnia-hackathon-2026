@@ -6,7 +6,7 @@ import { toSentenceCase } from '@zinnia/utils';
 import { ReactNode } from 'react';
 import { z } from 'zod';
 
-import { Fund } from '@/services/funds';
+import { Fund } from '@/services/funds/types';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';

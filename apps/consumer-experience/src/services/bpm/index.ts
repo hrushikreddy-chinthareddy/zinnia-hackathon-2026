@@ -9,7 +9,7 @@ import { TransactionEligbility } from '@/types/transactions';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { POLICY_ACKNOWLEDGEMENT_DOC_TYPE } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
-import { logError, logTrace, logWarn } from '@/utils/logging/server-logging';
+import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
 
 import { ApiResponse } from '..';
 import { transformEligibility } from './transformers';

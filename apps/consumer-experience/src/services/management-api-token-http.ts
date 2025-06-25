@@ -4,7 +4,7 @@
 // genercize that generateToken function....
 
 import { logApiNotOkDetails } from '@/utils/api';
-import { logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
 
 import { HttpRequest } from './http';
 

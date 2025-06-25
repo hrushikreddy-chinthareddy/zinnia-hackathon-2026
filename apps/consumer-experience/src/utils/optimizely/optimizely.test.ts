@@ -2,7 +2,7 @@ import { Client, createInstance } from '@optimizely/optimizely-sdk';
 
 import { OptimizelyService } from './optimizely';
 
-jest.mock('../logging/server-logging', () => ({
+jest.mock('../logging/log-fns', () => ({
   logError: jest.fn(),
 }));
 

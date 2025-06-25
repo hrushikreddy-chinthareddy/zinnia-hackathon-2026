@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { logInfo } from '@/utils/logging/server-logging';
+import { logInfo } from '@/utils/logging/log-fns';
 
 export const getFeatureFlagQuery = async (req?: NextRequest) => {
   const headers = req?.headers;

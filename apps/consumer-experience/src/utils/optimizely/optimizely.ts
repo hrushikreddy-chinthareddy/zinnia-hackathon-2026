@@ -4,7 +4,7 @@ import {
   OptimizelyDecideOption,
 } from '@optimizely/optimizely-sdk';
 
-import { logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
 
 import { FEATURE_FLAGS } from './flags';
 

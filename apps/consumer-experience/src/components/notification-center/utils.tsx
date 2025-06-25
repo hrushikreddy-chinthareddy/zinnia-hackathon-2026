@@ -1,6 +1,7 @@
 import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
-import { NotificationCenterNotification } from './NotificationCenter';
+import { NotificationCenterNotification } from './types';
+
 
 export const transformNotifications = (
   acc: {

@@ -1,6 +1,5 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -25,17 +24,10 @@ import {
 } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 
-import { acknowledgePolicyAction } from './acknowledge-policy-action';
+import { AcknowledgeInputs, acknowledgePolicyAction } from './acknowledge-policy-action';
 import styles from './AcknowledgePolicyCard.module.css';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';
 import { FullName } from '../pii/FullName';
-
-export interface AckowledgeInputs {
-  policyAcknowledged: boolean;
-  planCode: string;
-  policyNumber: string;
-  lineOfBusiness: LineOfBusiness;
-}
 
 const acknowledgmentCopy = ({
   carrierId,
@@ -77,7 +69,7 @@ export const AcknowledgePolicyCard = ({
     formState,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<AckowledgeInputs>({
+  } = useForm<AcknowledgeInputs>({
     defaultValues: {
       policyAcknowledged: false,
       planCode,
@@ -86,7 +78,7 @@ export const AcknowledgePolicyCard = ({
     },
   });
 
-  const onSubmit: SubmitHandler<AckowledgeInputs> = async data => {
+  const onSubmit: SubmitHandler<AcknowledgeInputs> = async data => {
     try {
       await acknowledgePolicyAction(data);
     } catch (error) {

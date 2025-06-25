@@ -1,14 +1,7 @@
 import { selectBankSchema } from '@/components/providers/one-time-premium-payment/types';
-import { systematicPremiumAmountStepSchema } from '@/components/providers/systematic-premiums/types';
+import { systematicPremiumAmountStepSchema, SystematicPremiumSteps } from '@/components/providers/systematic-premiums/types';
 import { StepInfo } from '@/components/stepped-workflow/types';
 
-export enum SystematicPremiumSteps {
-  AMOUNT = 'amount',
-  BANK = 'bank',
-  SUMMARY = 'summary',
-  MFA = 'verify-identity',
-  SUBMITTED = 'submitted',
-}
 
 export const systematicPremiumUrls: Record<SystematicPremiumSteps, string> = {
   [SystematicPremiumSteps.AMOUNT]: 'amount',

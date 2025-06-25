@@ -16,5 +16,9 @@
       "name": "pom",
       "path": "../packages/pom",
     },
+    {
+      "name": "xd-components",
+      "path": "../packages/xd-components",
+    },
   ],
 }

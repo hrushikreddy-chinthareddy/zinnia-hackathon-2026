@@ -2,11 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 
+import { SystematicPremiumSteps } from '@/components/providers/systematic-premiums/types';
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
 import { SteppedWorkflow } from '@/components/stepped-workflow/SteppedWorkflow';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 
-import { stepsInfo, SystematicPremiumSteps } from './steps';
+import { stepsInfo } from './steps';
 
 interface SystematicPremiumsProps {
   currentStepOverride: number;

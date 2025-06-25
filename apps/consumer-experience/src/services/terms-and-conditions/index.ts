@@ -1,9 +1,7 @@
 import { logApiNotOkDetails } from '@/utils/api';
 import { getSession } from '@/utils/auth';
-import {
-  getUserInfoFromSession,
-  logError,
-} from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
+import { getUserInfoFromSession } from '@/utils/logging/server-logging';
 
 import { consumerExperienceAPIBaseUrl } from '../api-config';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';

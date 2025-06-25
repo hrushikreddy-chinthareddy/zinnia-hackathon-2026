@@ -1,7 +1,6 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useIsClient } from '@xd/hooks/useIsClient';
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 import {
   AssistiveTextVariant,
   Icon,
@@ -18,30 +17,17 @@ import {
   searchCasesByPolicyNumber,
 } from '@/queries/case-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { default as Styles } from './NotificationCenter.module.css';
+import { NotificationCenterProps } from './types';
 import {
   parseNotifications,
   sortNotificationsByDate,
   transformNotifications,
 } from './utils';
 
-export type NotificationCenterNotification = {
-  id: string;
-  title: string;
-  date: Date;
-  completed: boolean;
-  stepsToAcknowledge?: string[];
-};
 
-export type NotificationCenterProps = {
-  initialNotifications?: Array<CaseInstanceSummary> | null;
-  initialAcknowledgedNotifications?: Array<CaseAcknowledgmentItem>;
-  policyNumber: string;
-  planCode: string;
-};
 
 export const NotificationCenter = ({
   initialAcknowledgedNotifications,
@@ -166,7 +152,7 @@ export const NotificationCenter = ({
         style={{
           backgroundColor: clsx(
             (isError || isLoading) &&
-              'var(--color-base-surface-surface-secondary)'
+            'var(--color-base-surface-surface-secondary)'
           ),
         }}
         className={Styles.end}

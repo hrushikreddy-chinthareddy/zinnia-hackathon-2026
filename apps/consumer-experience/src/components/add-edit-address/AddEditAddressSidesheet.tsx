@@ -23,9 +23,8 @@ import { Loading } from '../transaction-steps/loading/Loading';
 import { Success } from '../transaction-steps/success/Success';
 import {
   AddEditAddress,
-  AddressFormFields,
 } from './form-steps/add/AddEditAddress';
-import { AddEditAddressSidesheetProps, FormActionType } from './types';
+import { AddEditAddressSidesheetProps, AddressFormFields, FormActionType } from './types';
 import { Confirm } from '../transaction-steps/confirm/Confirm';
 
 export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
@@ -126,20 +125,20 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     const request =
       actionType === FormActionType.EDIT
         ? putUpdateAddress({
-            planCode: params.planCode,
-            policyNumber: params.policyNumber,
-            partyId,
-            addressId,
-            addressChangeRequest,
-            correlationId,
-          })
+          planCode: params.planCode,
+          policyNumber: params.policyNumber,
+          partyId,
+          addressId,
+          addressChangeRequest,
+          correlationId,
+        })
         : postAddAddress({
-            planCode: params.planCode,
-            policyNumber: params.policyNumber,
-            partyId,
-            addressChangeRequest,
-            correlationId,
-          });
+          planCode: params.planCode,
+          policyNumber: params.policyNumber,
+          partyId,
+          addressChangeRequest,
+          correlationId,
+        });
 
     // TODO: Create a generic request method. It still takes in the same things, with the addition of a type.
     // I'm not sure how much we can genericize these actions since they call different endpoints,

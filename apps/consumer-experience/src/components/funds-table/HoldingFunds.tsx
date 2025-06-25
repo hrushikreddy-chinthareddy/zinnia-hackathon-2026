@@ -13,7 +13,7 @@ import {
 import { toSentenceCase } from '@zinnia/utils';
 import { useWindowSize } from 'react-use';
 
-import { Fund } from '@/services/funds';
+import { Fund } from '@/services/funds/types';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 

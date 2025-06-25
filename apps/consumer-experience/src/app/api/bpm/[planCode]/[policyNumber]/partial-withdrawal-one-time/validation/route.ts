@@ -1,4 +1,7 @@
-import { TransactionFailureResponse, TransactionResponse } from '@xd/api-types/dist/generated-types/bpm';
+import {
+  TransactionFailureResponse,
+  TransactionResponse,
+} from '@xd/api-types/dist/generated-types/bpm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,11 +13,8 @@ import {
 } from '@/services/bpm/partial-withdrawal';
 import { withdrawalStateToPolicyRequestInput } from '@/services/bpm/transformers';
 import { PolicyRequestInputs } from '@/types/policy';
-import {
-  buildNextReqLoggingContext,
-  logTrace,
-  logError,
-} from '@/utils/logging/server-logging';
+import { logError, logTrace } from '@/utils/logging/log-fns';
+import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 dayjs.extend(utc);
 
@@ -62,7 +62,9 @@ export async function POST(
       });
     }
 
-    if(response.data?.data?.status === TransactionFailureResponse.status.FAILURE) {
+    if (
+      response.data?.data?.status === TransactionFailureResponse.status.FAILURE
+    ) {
       return NextResponse.json({
         data: {
           status: TransactionResponse.status.FAILURE,

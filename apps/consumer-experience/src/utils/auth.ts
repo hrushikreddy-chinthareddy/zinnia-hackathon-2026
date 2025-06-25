@@ -18,7 +18,7 @@ import {
 } from '@/types/auth';
 
 import { isMockAllowed } from '.';
-import { logWarn } from './logging/server-logging';
+import { logWarn } from './logging/log-fns';
 import {
   AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY,
   APP_SESSION_COOKIE_KEY,
@@ -241,6 +241,9 @@ export const setMfaOobCookie = async (cookieConfig: SetCookieOptions) => {
  * @param {NextResponse} res - Optional NextResponse object for handling the response
  * @return {Promise<Session | undefined>} Returns a Promise resolving to a Session object or undefined
  */
+// TODO: These need to be server actions to enable incremental static generation
+// https://nextjs.org/docs/app/guides/incremental-static-regeneration
+// https://nextjs.org/docs/app/getting-started/updating-data#cookies
 export const getSession = async (
   res?: NextResponse
 ): Promise<Session | undefined> => {

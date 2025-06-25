@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getAgentInformation } from '@/services/agent';
-import {
-  buildNextReqLoggingContext,
-  logTrace,
-  logError,
-} from '@/utils/logging/server-logging';
+import { logError, logTrace } from '@/utils/logging/log-fns';
+import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 export async function GET(
   _request: NextRequest,

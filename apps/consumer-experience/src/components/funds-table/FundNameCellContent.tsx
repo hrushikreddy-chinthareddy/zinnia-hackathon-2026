@@ -3,7 +3,7 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { toSentenceCase } from '@zinnia/utils';
 import clsx from 'clsx';
 
-import { Fund } from '@/services/funds';
+import { Fund } from '@/services/funds/types';
 
 import { FundDescription } from './FundDescription';
 import { FundDetailsSidesheetInner } from './FundDetailsSidesheetInner';

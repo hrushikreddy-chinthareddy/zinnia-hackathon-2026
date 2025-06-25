@@ -7,11 +7,8 @@ import {
   SystematicProgramResponse,
 } from '@/services/policy/systematic-programs';
 import { PolicyRequestInputs } from '@/types/policy';
-import {
-  buildNextReqLoggingContext,
-  logTrace,
-  logWarn,
-} from '@/utils/logging/server-logging';
+import { logTrace, logWarn } from '@/utils/logging/log-fns';
+import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 dayjs.extend(utc);
 

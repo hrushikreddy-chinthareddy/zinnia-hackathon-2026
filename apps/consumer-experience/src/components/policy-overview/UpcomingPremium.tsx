@@ -20,9 +20,9 @@ import { getFeatureFlags } from '@/services/feature-flags';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { logError } from '@/utils/logging/log-fns';
 import {
   buildCommonLogContext,
-  logError,
 } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';

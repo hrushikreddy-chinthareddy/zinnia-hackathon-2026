@@ -2,12 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { ServerApi } from '@/services';
 import { getMfaCookie } from '@/utils/auth';
-import {
-  buildNextReqLoggingContext,
-  logTrace,
-  logError,
-  logWarn,
-} from '@/utils/logging/server-logging';
+import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
+import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 export async function GET(req: NextRequest) {
   const loggingContext = buildNextReqLoggingContext(req);

@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { b64ToBlob } from '@/app/api/documents/utils';
 import { getDocumentDownloadV2 } from '@/services/document/v2';
 import { getSession } from '@/utils/auth';
+import { logWarn } from '@/utils/logging/log-fns';
 import {
   getUserInfoFromSession,
   logCompliance,
-  logWarn,
 } from '@/utils/logging/server-logging';
 
 export const GET = async (

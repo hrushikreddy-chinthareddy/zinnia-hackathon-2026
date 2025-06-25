@@ -7,11 +7,8 @@ import {
   TransactionEligbilityResponse,
 } from '@/services/bpm/systematic-programs';
 import { PolicyRequestInputs } from '@/types/policy';
-import {
-  buildNextReqLoggingContext,
-  logTrace,
-  logError,
-} from '@/utils/logging/server-logging';
+import { logError, logTrace } from '@/utils/logging/log-fns';
+import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 import { UniformServiceResponse } from '@/utils/serverClientUtils';
 dayjs.extend(utc);
 

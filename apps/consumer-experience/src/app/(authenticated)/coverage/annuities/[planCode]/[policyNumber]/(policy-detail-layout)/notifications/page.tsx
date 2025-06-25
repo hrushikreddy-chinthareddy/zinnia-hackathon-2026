@@ -7,7 +7,7 @@ import { getPageTitle, RouteKey } from '@/route-map';
 import { searchCasesByPolicyNumber } from '@/services/case';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
-import { logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 const pageTitle = getPageTitle(RouteKey.NOTIFICATIONS);

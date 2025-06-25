@@ -7,11 +7,11 @@ import {
   getCarrierProductOneTimePaymentFee,
 } from '@/services/product-rate';
 import { PolicyRequestInputs } from '@/types/policy';
+import { logTrace } from '@/utils/logging/log-fns';
 import {
   buildCommonLogContext,
   LoggingModule,
   LoggingStage,
-  logTrace,
 } from '@/utils/logging/server-logging';
 
 const currentFilePath = new URL(import.meta.url).pathname;
@@ -75,7 +75,7 @@ export default async function SelectAmountPage({
         lineOfBusiness={LineOfBusiness.ANNUITY}
         minimumPaymentDue={
           policyStatusDetails?.policyStatus === PolicyStatus.PENDINGLAPSE &&
-          policyStatusDetails?.minimumPaymentDue
+            policyStatusDetails?.minimumPaymentDue
             ? policyStatusDetails?.minimumPaymentDue
             : 0
         }

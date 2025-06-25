@@ -2,7 +2,7 @@ import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
 
 import { CaseSummary } from '@/types/case';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
-import { logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
 
 import { caseManagementBaseUrl } from '../api-config';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';

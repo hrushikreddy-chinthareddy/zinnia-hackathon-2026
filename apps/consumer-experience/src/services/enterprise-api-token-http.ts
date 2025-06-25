@@ -2,11 +2,10 @@ import { v4 as uuid4 } from 'uuid';
 
 import { logApiNotOkDetails } from '@/utils/api';
 import { getSession } from '@/utils/auth';
+import { logError, logTrace } from '@/utils/logging/log-fns';
 import {
   CommonLogContext,
   getUserInfoFromSession,
-  logError,
-  logTrace,
 } from '@/utils/logging/server-logging';
 
 import { HttpRequest } from './http';

@@ -1,5 +1,6 @@
+import { logTrace } from '@/utils/logging/log-fns';
+
 import { getSession } from './auth';
-import { logTrace } from './logging/server-logging';
 
 export const userSessionForLogging = async () => {
   const session = await getSession();

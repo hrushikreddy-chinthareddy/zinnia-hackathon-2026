@@ -13,8 +13,6 @@ import dayjs from 'dayjs';
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { BankDetail } from '@/components/person-data/types';
 import {
-  ApiResponse,
-  ServerApi,
   enterprisePolicySearchBaseUrl,
   isMockErrorEnabled,
   isMockPaymentHistoryRequestEnabled,
@@ -25,7 +23,7 @@ import {
   isTestAnnuitiesEnabled,
   isTestPoliciesEnabled,
   policyApiBaseUrl,
-} from '@/services';
+} from '@/services/api-config';
 import { mockPolicyResponse } from '@/services/mocks/policy';
 import {
   transformPolicyReferenceData,
@@ -48,6 +46,8 @@ import {
   transformPolicyForProfile,
   transformPolicyForSurrender,
 } from '@/services/policy/transformers';
+import { ServerApi } from '@/services/server-http';
+import { ApiResponse } from '@/services/types';
 import { CarrierId } from '@/types/carriers';
 import {
   PolicyApiResponse,
@@ -79,7 +79,8 @@ import {
 import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getSession } from '@/utils/auth';
-import { CommonLogContext, logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
+import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 

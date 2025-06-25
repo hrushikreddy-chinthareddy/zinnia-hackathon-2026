@@ -17,7 +17,7 @@ import {
   setMfaOobCookie,
   setMfaCookie,
 } from '@/utils/auth';
-import { logTrace, logWarn } from '@/utils/logging/server-logging';
+import { logTrace, logWarn } from '@/utils/logging/log-fns';
 
 /**
  * We are using the refreshToken endpoint very specifically to retrieve

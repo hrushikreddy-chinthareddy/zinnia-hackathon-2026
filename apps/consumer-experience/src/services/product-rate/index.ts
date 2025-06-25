@@ -1,7 +1,7 @@
 // DOCUMENTATION ABOUT THIS API https://zinnia.atlassian.net/wiki/spaces/LPS/pages/3818750009/Product-Rate+Service
 
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
-import { logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
 
 import { productRateBaseUrl } from '../api-config';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';

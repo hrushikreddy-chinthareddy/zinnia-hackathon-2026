@@ -3,7 +3,7 @@ import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
 import { ApiResponse } from '@/services';
 import { TransactionEligbilityResponse } from '@/services/bpm/systematic-programs';
 import { ClientApi } from '@/services/client-http';
-import { Fund } from '@/services/funds';
+import { Fund } from '@/services/funds/types';
 import {
   PolicyProfile,
   PolicyRequestInputs,

@@ -23,7 +23,7 @@ import {
   setMfaOobCookie,
 } from '@/utils/auth';
 import { lineOfBusinessUrlPath } from '@/utils/data';
-import { logTrace, logWarn } from '@/utils/logging/server-logging';
+import { logTrace, logWarn } from '@/utils/logging/log-fns';
 import {
   LOGIN_EMAIL_COOKIE_KEY,
   RETURN_TO_URL_COOKIE_KEY,

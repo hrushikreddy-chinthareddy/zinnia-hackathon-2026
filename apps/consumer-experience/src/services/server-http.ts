@@ -7,12 +7,12 @@ import {
   MfaSendChallengeInputs,
 } from '@/types/auth';
 import { getAccessToken, getSession } from '@/utils/auth';
+import { logTrace } from '@/utils/logging/log-fns';
 import {
   CommonLogContext,
   getUserInfoForLogging,
   LoggingModule,
   LoggingStage,
-  logTrace,
 } from '@/utils/logging/server-logging';
 import { AUTH0_SCOPE } from '@/utils/serverClientUtils';
 

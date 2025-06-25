@@ -1,6 +1,6 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
-import { Fund } from '@/services/funds';
+import { Fund } from '@/services/funds/types';
 
 export const sortNonHoldingFunds = (funds: Fund[] | undefined) => {
   if (!funds) {

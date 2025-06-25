@@ -1,4 +1,4 @@
-import { AddressObj, AddressFormFields } from './form-steps/add/AddEditAddress';
+import { AddressObj, AddressFormFields } from './types';
 
 export const formatAddressLines = (
   addressLines?: AddressObj[]

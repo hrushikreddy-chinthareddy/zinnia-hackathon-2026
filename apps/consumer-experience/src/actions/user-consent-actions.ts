@@ -4,7 +4,7 @@ import { ServerApi, consumerExperienceAPIBaseUrl } from '@/services';
 import { TermsAndConditionApiResponse, User } from '@/types/auth';
 import { parseAPIResponse } from '@/utils/api';
 import { getSession, setTermsAndConditionsCookie } from '@/utils/auth';
-import { logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
 
 export async function setUserConsent(
   _:

@@ -13,7 +13,8 @@ import { SystematicPremiumsState } from '@/components/providers/systematic-premi
 import { PolicyRequestInputs } from '@/types/policy';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
-import { CommonLogContext, logError, logTrace } from '@/utils/logging/server-logging';
+import { logError, logTrace } from '@/utils/logging/log-fns';
+import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
 import { bpmApiBaseUrl, transactionApiBaseUrl } from '../../api-config';
@@ -169,7 +170,7 @@ export const getSystematicProgramsEligibility = withLogging(
     const response: TransactionEligbilityResponse =
       await parseAPIResponse(rawResponse);
 
-    if(rawResponse.status > 400) {
+    if (rawResponse.status > 400) {
       logError(
         'Error fetching systematic programs eligibility',
         await logApiNotOkDetails({ rawResponse, parsedResponse: response })
@@ -183,7 +184,7 @@ export const getSystematicProgramsEligibility = withLogging(
     ) {
       logTrace('systematic programs ineligible', {
         results: response.status,
-      })
+      });
     }
 
     return response;

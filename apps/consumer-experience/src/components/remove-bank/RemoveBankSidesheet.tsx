@@ -9,12 +9,12 @@ import { ApiResponseError } from '@/services';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
 
+import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 import { Error } from './form-steps/error/Error';
 import { Loading } from './form-steps/loading/Loading';
 import { RemoveBankConfirm } from './form-steps/remove-bank-confirm/RemoveBankConfirm';
 import { Success } from './form-steps/success/Success';
 import { VerifyIdentity } from '../transaction-steps/verify-identity/VerifyIdentity';
-import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 
 export interface RemoveBankProps {
   values?: Omit<BankFormFields, 'accountType'> & {

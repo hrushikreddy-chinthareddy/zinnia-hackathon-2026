@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { PropsWithChildren, useReducer } from 'react';
 
-import { SystematicPremiumSteps } from '@/components/workflows/systematic-premiums/steps';
 import {
   getSystematicProgramAmounts,
 } from '@/components/workflows/systematic-premiums/utils';
@@ -11,7 +10,7 @@ import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { getAllSystematicPrograms } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 
-import { Action, SystematicPremiumsState } from './types';
+import { Action, SystematicPremiumsState, SystematicPremiumSteps } from './types';
 import { SystematicPremiumsContext } from './useSystematicPremiums';
 
 interface SystematicPremiumsProviderProps extends PropsWithChildren { }

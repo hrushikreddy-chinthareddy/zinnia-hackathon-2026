@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useWindowSize } from 'react-use';
 
-import { Fund } from '@/services/funds';
+import { Fund } from '@/services/funds/types';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 

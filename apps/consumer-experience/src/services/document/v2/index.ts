@@ -13,7 +13,7 @@ import {
   TaxDocumentApiRequestInputs,
 } from '@/types/document';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
-import { logError, logWarn } from '@/utils/logging/server-logging';
+import { logError, logWarn } from '@/utils/logging/log-fns';
 
 import {
   ApiResponse,

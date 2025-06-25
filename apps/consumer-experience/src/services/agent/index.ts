@@ -1,6 +1,6 @@
 import { AgentData, ModifiedAgentData } from '@/types/agent';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
-import { logError, logWarn } from '@/utils/logging/server-logging';
+import { logError, logWarn } from '@/utils/logging/log-fns';
 
 import { ApiResponse, ServerApi } from '..';
 import { transformMcsAgentData } from './transformers';

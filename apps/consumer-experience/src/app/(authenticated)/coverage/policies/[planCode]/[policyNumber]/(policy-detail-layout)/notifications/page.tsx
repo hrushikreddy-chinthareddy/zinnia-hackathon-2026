@@ -11,7 +11,7 @@ import {
   fetchAcknowledgedCases,
 } from '@/services/terms-and-conditions';
 import { PolicyRequestInputs } from '@/types/policy';
-import { logError } from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 const pageTitle = getPageTitle(RouteKey.NOTIFICATIONS);

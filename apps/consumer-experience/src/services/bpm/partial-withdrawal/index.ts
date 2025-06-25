@@ -15,12 +15,8 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { TransactionEligbility } from '@/types/transactions';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
-import {
-  CommonLogContext,
-  logError,
-  logTrace,
-  logWarn,
-} from '@/utils/logging/server-logging';
+import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
+import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
 import { bpmApiBaseUrl, isMockErrorEnabled } from '../../api-config';
@@ -44,8 +40,7 @@ type PwotWithdrawalBPMResponse =
   | PWOTWithdrawalBPMSucessResponse
   | PWOTWithdrawalBPMErrorResponse;
 
-type WithdrawalEligibilityResponse =
-  ApiResponse<TransactionEligbility>;
+type WithdrawalEligibilityResponse = ApiResponse<TransactionEligbility>;
 
 export type WithdrawalValidationResposne =
   ApiResponse<PwotWithdrawalBPMResponse>;
@@ -74,37 +69,36 @@ export const submitOneTimeWithdrawal = withLogging<
     try {
       const rawResponse = await ServerApi.post(
         url,
-      JSON.stringify(body),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-      loggingCtx
-    );
-    const response: TransactionAcceptedResponse =
-    await parseAPIResponse(rawResponse);
+        JSON.stringify(body),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        },
+        loggingCtx
+      );
+      const response: TransactionAcceptedResponse =
+        await parseAPIResponse(rawResponse);
 
-    // console.log('submission response', JSON.stringify(response));
+      // console.log('submission response', JSON.stringify(response));
 
-    if(response.caseId?.length) {
-      return {
-        data: response,
-        error: null
+      if (response.caseId?.length) {
+        return {
+          data: response,
+          error: null,
+        };
       }
-    }
 
-    throw new Error('Error submitting one time withdrawal');
-
-  } catch (error) {
-    logError('Error submitting one time withdrawal', { error });
-    return {
-      data: null,
-      error: {
-        status: 500,
-        name: 'Error submitting one time withdrawal',
-        message: 'error submitting one time withdrawal'
-      },
+      throw new Error('Error submitting one time withdrawal');
+    } catch (error) {
+      logError('Error submitting one time withdrawal', { error });
+      return {
+        data: null,
+        error: {
+          status: 500,
+          name: 'Error submitting one time withdrawal',
+          message: 'error submitting one time withdrawal',
+        },
+      };
     }
-  }
   },
   {
     file: FILE_NAME,
@@ -167,7 +161,6 @@ export const getOneTimeWithdrawalValidation = withLogging<
     pwotRequestDetails: PartialWithdrawalOneTimeRequest,
     loggingCtx: CommonLogContext
   ) => {
-
     const { planCode, policyNumber } = options;
     const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime/validation`;
 
@@ -213,7 +206,7 @@ export const getOneTimeWithdrawalValidation = withLogging<
             status: TransactionFailureResponse.status.FAILURE,
             validationResult: response.validationResult,
           },
-          error: null
+          error: null,
         };
       }
 
@@ -223,21 +216,19 @@ export const getOneTimeWithdrawalValidation = withLogging<
             status: TransactionFailureResponse.status.SUCCESS,
             quoteResponse: response.quoteResponse,
           },
-          error: null
+          error: null,
         };
       }
 
       throw new Error('Error fetching one time withdrawal validation');
-
     } catch (error) {
-
       logError('Error fetching one time withdrawal validation', { error });
       return {
         data: null,
         error: {
           status: 500,
           name: 'Error fetching one time withdrawal validation',
-          message: 'error fetching one time withdrawal validation'
+          message: 'error fetching one time withdrawal validation',
         },
       };
     }

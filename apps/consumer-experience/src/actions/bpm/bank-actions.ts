@@ -19,10 +19,8 @@ import {
   getBankAccountByBankId,
 } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
-import {
-  buildCommonLogContext,
-  logError,
-} from '@/utils/logging/server-logging';
+import { logError } from '@/utils/logging/log-fns';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 /**
  * Posts a bank account to the BPM API.

@@ -1,6 +1,7 @@
-import { ApiResponse } from '@/services'; // Assuming ApiResponse is exported from here
+import { ApiResponse } from '@/services/types'; // Assuming ApiResponse is exported from here
 
-import { CommonLogContext, logError, logTrace } from './server-logging';
+import { logError, logTrace } from './log-fns';
+import { CommonLogContext } from './server-logging';
 
 type ServerFunction<T extends unknown[], R> = (
   ...args: [...T, CommonLogContext]

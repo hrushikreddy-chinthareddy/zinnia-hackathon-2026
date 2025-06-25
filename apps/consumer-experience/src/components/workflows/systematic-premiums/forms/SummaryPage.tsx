@@ -10,10 +10,11 @@ import styles from '@/components/one-time-premium-payment/OneTimePremiumPayment.
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { BankName } from '@/components/pii/BankName';
 import { Payee } from '@/components/pii/Payee';
+import { SystematicPremiumSteps } from '@/components/providers/systematic-premiums/types';
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 
-import { stepsInfo, SystematicPremiumSteps } from '../steps';
+import { stepsInfo } from '../steps';
 
 export const SummaryPage = () => {
   const router = useRouter();

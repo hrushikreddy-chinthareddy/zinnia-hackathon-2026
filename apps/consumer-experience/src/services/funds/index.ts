@@ -1,37 +1,27 @@
 import {
   FundAccountTypeEnum,
-  FundDescriptor,
   ProductRules,
 } from '@zinnia/api-types/types/funds';
-import { FundSegment } from '@zinnia/api-types/types/sor';
 import { z } from 'zod';
 
 import { PolicyFund, PolicyRequestInputs } from '@/types/policy';
-import { CommonLogContext, logTrace } from '@/utils/logging/server-logging';
+import { logTrace } from '@/utils/logging/log-fns';
+import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
 import { combineFundData, transformFundsTotalValue } from './transformers';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';
 import { getPolicyByPlanCodeAndId } from '../policy';
+import {
+  Fund,
+  FundDetails,
+  GetFundDetailsArgs,
+  GetFundsArgs,
+  GetProductDetailsArgs,
+} from './types';
 import { transformPolicyForFundDetails } from '../policy/transformers';
 
 const FILE_NAME = '/src/services/funds/index.ts';
-
-export interface FundDetails extends FundDescriptor {
-  fundId: string;
-}
-
-/**
- * The FundSegment type provided in SOR does not match what we get back from the
- * funds API, but the funds API doesn't have a FundSegment type. So just doing this for now
- */
-export interface ExtendedFundSegment extends FundSegment {
-  interestEarningAmount: number;
-  startingPrice: number;
-  startingPriceDate: string;
-  endingPrice: number;
-  endingPriceDate: string;
-}
 
 export const fundValidator = z.object({
   fundId: z.string(),
@@ -43,34 +33,6 @@ export const fundValidator = z.object({
   isElected: z.boolean().nullable(),
   sweepDate: z.string().nullable(),
 });
-
-export interface Fund {
-  fundId?: string;
-  fundName?: string | null;
-  totalFundValue?: number;
-  fundSegments?: Array<ExtendedFundSegment> | Array<FundSegment>;
-  fundAccountType?: FundAccountTypeEnum;
-  allocationPercentage?: number | null;
-  interestRate?: number | null;
-  isElected?: boolean;
-  sweepDate?: string | null;
-}
-
-interface GetFundDetailsArgs {
-  carrierId?: string;
-  fundId?: string;
-  queryParams?: { fundDetailsAsOfDate?: string; amount?: number };
-}
-
-interface getProductDetailsArgs {
-  carrierId?: string;
-  planCode: string;
-}
-
-interface getFundsArgs {
-  planCode: string;
-  policyNumber: string;
-}
 
 /**
  * Retrieve fund information for a specific fund id
@@ -183,7 +145,7 @@ const collectAllFundDetails = async (
  */
 export const getProductDetails = withLogging(
   async (
-    { carrierId, planCode }: getProductDetailsArgs,
+    { carrierId, planCode }: GetProductDetailsArgs,
     loggingCtx: CommonLogContext
   ): Promise<ProductRules> => {
     const response = await EnterpriseTokenApi.get(
@@ -199,7 +161,7 @@ export const getProductDetails = withLogging(
       const error = new Error(
         `Error fetching product details: ${errorData.message || response.statusText}`
       );
-      // @ts-expect-error
+      // @ts-expect-error theres an error
       error.status = response.status;
       throw error;
     }
@@ -220,7 +182,7 @@ export const getProductDetails = withLogging(
  */
 export const getFunds = withLogging(
   async (
-    { planCode, policyNumber }: getFundsArgs,
+    { planCode, policyNumber }: GetFundsArgs,
     loggingCtx: CommonLogContext
   ): Promise<Fund[] | PolicyFund[]> => {
     const { data: policyData } = await getPolicyByPlanCodeAndId(

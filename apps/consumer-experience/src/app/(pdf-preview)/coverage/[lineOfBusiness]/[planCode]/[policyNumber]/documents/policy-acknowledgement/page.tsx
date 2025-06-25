@@ -10,7 +10,7 @@ import { getFeatureFlags } from '@/services/feature-flags';
 import { DocumentV3SearchItem, ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
 import { retrieveDocumentsFromV2 } from '@/utils/documents';
-import { logInfo } from '@/utils/logging/server-logging';
+import { logInfo } from '@/utils/logging/log-fns';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import previewStyles from '../[documentId]/Preview.module.css';
@@ -44,22 +44,22 @@ export default async function PolicyAcknowledgementDocumentPreview({
 
   const policyDocuments = shouldUseV2
     ? await getDocumentsV2({
-        clientCode: searchParams.clientCode,
-        contractNumber: params.policyNumber,
-        recipient: 'Client',
-        // This code is different than the one we use to set preferences and
-        // check delivery date. This code is specifically for viewing the policy
-        // acknowledgement document
-        documentType: 'POLPG',
-      })
+      clientCode: searchParams.clientCode,
+      contractNumber: params.policyNumber,
+      recipient: 'Client',
+      // This code is different than the one we use to set preferences and
+      // check delivery date. This code is specifically for viewing the policy
+      // acknowledgement document
+      documentType: 'POLPG',
+    })
     : await searchDocumentsV3({
-        documentType: 'POLPG',
-        recipient: 'CLIENT',
-        parentCarrierCode: searchParams.clientCode,
-        policyNumber: params.policyNumber,
-        planCode,
-        documentClassification: SearchRequest.documentClassification.OUTBOUND,
-      });
+      documentType: 'POLPG',
+      recipient: 'CLIENT',
+      parentCarrierCode: searchParams.clientCode,
+      policyNumber: params.policyNumber,
+      planCode,
+      documentClassification: SearchRequest.documentClassification.OUTBOUND,
+    });
   const document = policyDocuments?.data?.documents?.[0];
 
   logInfo(

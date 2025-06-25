@@ -1,15 +1,21 @@
 'use server';
 
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { cookies } from 'next/headers';
 
 import { postResetDeliveryDate } from '@/services/bpm';
 import { getCookie } from '@/utils/auth';
 import { ACKNOWLEDGEMENT_COOKIE_KEY } from '@/utils/serverClientUtils';
 
-import { AckowledgeInputs } from './AcknowledgePolicyCard';
+export interface AcknowledgeInputs {
+  policyAcknowledged: boolean;
+  planCode: string;
+  policyNumber: string;
+  lineOfBusiness: LineOfBusiness;
+}
 
 export async function acknowledgePolicyAction(
-  formData: AckowledgeInputs
+  formData: AcknowledgeInputs
 ): Promise<void> {
   const cookieStore = cookies();
   const acknowledged = formData.policyAcknowledged;
