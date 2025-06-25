@@ -4661,7 +4661,7 @@
         "eligible": "Éligible",
         "eligibleForWithdrawal": "Éligible au retrait",
         "eligibleForWithdrawalTooltip": "Les retraits de la valeur du compte sont autorisés actuellement. Les retraits peuvent réduire le bénéfice décès.",
-        "freeWithdrawalAmount": "Montant de retrait gratuit",
+        "freeWithdrawalRemaining": "Montant de retrait gratuit restant",
         "ineligible": "Non éligible",
         "ineligibleForRmdsTooltip": "Ce contrat n'est actuellement pas éligible aux distributions minimales requises (RMD). ",
         "maximumWithdrawal": "Montant maximal de retrait",

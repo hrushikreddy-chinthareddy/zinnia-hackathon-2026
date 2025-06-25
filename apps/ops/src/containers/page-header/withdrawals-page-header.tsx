@@ -13,6 +13,7 @@ import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav
 import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -20,7 +21,6 @@ import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkPartialWithdrawalOneTimeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface WithdrawalsPageHeaderContainerProps {
@@ -143,12 +143,7 @@ const WithdrawalsPageHeaderContainer = ({ planCode, policyNumber }: WithdrawalsP
                         <div className="w-[224px] xl:w-fit">
                             {policyDetails.isAnnuity ? (
                                 <>
-                                    <Label
-                                        label={t('withdrawals.freeWithdrawalAmount')}
-                                        tooltipTitle={t('withdrawals.maximumWithdrawalAmount')}
-                                        tooltipBody={t('withdrawals.maximumWithdrawalAmountTooltip')}
-                                        variant={LabelVariant.FieldLabel}
-                                    />
+                                    <Label label={t('withdrawals.freeWithdrawalRemaining')} variant={LabelVariant.FieldLabel} />
                                     <Content
                                         details={numberFormatify(freeWithdrawalAmount as number) || DEFAULT_ERROR_STRING}
                                         variant={ContentVariant.Value}
