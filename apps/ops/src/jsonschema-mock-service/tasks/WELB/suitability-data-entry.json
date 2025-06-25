@@ -437,10 +437,6 @@
                                             "type": "string",
                                             "title": "Net worth"
                                         },
-                                        "liquidNetWorth": {
-                                            "type": "string",
-                                            "title": "Liquid net worth"
-                                        },
                                         "sourceOfIncome": {
                                             "type": "array",
                                             "title": "Source of income",
@@ -515,7 +511,6 @@
                                     "required": [
                                         "annualIncome",
                                         "netWorth",
-                                        "liquidNetWorth",
                                         "sourceOfIncome",
                                         "surrPeriodMaterialChangeExp",
                                         "totalAssets",
@@ -558,6 +553,26 @@
                                                         "required": ["type", "amount", "numberOfYears"]
                                                     }
                                                 }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "sourceOfFunds": {
+                                                        "contains": {
+                                                            "const": "OTHERS"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "sourceOfFundsOthers": {
+                                                        "type": "string",
+                                                        "title": "Other source of funds"
+                                                    }
+                                                },
+                                                "required": ["sourceOfFundsOthers"]
                                             }
                                         }
                                     ]
@@ -848,7 +863,49 @@
                                                             },
                                                             "uniqueItems": true
                                                         }
-                                                    }
+                                                    },
+                                                    "allOf": [
+                                                        {
+                                                            "if": {
+                                                                "properties": {
+                                                                    "byAgent": {
+                                                                        "contains":{
+                                                                            "const": "OTHERS"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "properties": {
+                                                                    "byAgentOther": {
+                                                                        "type": "string",
+                                                                        "title": "Other reason"
+                                                                    }
+                                                                },
+                                                                "required": ["byAgentOther"]
+                                                            }
+                                                        },
+                                                        {
+                                                            "if": {
+                                                                "properties": {
+                                                                    "byApplicant": {
+                                                                        "contains":{
+                                                                            "const": "OTHERS"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "properties": {
+                                                                    "byApplicantOther": {
+                                                                        "type": "string",
+                                                                        "title": "Other reason"
+                                                                    }
+                                                                },
+                                                                "required": ["byApplicantOther"]
+                                                            }
+                                                        }
+                                                    ]
                                                 }
                                             }
                                         }
@@ -1285,11 +1342,12 @@
                         },
                         "liquidityOptions_distributionOptionEnum": {
                             "enum": [
-                                "PENALTY-FREE-WITHDRWAWAL",
-                                "ANNUITIZE",
+                                "FREE_WITHDRAWAL",
+                                "ANNUITIZATION",
                                 "LUMP_SUM",
-                                "REQUIRED_MINIMUM_DISTRIBUTION",
-                                "NO_PLANS_TO_ACCESS"
+                                "RMD",
+                                "NO_PLANS",
+                                "OTHERS"
                             ]
                         },
                         "liquidityOptions_planToHoldAnnuityEnum": {
@@ -1718,12 +1776,12 @@
                                 "annualExpenses",
                                 "disposableIncome",
                                 "netWorth",
-                                "liquidNetWorth",
                                 "sourceOfIncome",
                                 "sourceOfIncomeOther",
                                 "totalAssets",
                                 "totalDebt",
                                 "sourceOfFunds",
+                                "sourceOfFundsOthers",
                                 "federalTaxBand"
                             ],
                             "ui:options": {
@@ -1746,11 +1804,6 @@
                                 }
                             },
                             "netWorth": {
-                                "ui:options": {
-                                    "widget": "ValueWidget"
-                                }
-                            },
-                            "liquidNetWorth": {
                                 "ui:options": {
                                     "widget": "ValueWidget"
                                 }
@@ -1849,6 +1902,7 @@
                                     ]
                                 }
                             },
+                            "sourceOfFundsOthers": {},
                             "federalTaxBand": {
                                 "label": true,
                                 "ui:options": {
@@ -1916,7 +1970,7 @@
                                     },
                                     "productName": {
                                         "ui:options": {
-                                            "enumNames": ["Certificates of Deposit", "Fixed annuities", "Stocks/Bonds/MF", "Others"]
+                                            "enumNames": ["Certificates of Deposit", "Fixed/variable annuity", "Stocks/Bonds/MF", "Others"]
                                         }
                                     }
                                 }
@@ -1983,7 +2037,8 @@
                                                 "Annuitization",
                                                 "Lump Sum",
                                                 "Required Minimum Distribution",
-                                                "No Current Plans to Access"
+                                                "No Current Plans to Access",
+                                                "Others"
                                             ],
                                             "label": true
                                         }
@@ -2024,6 +2079,7 @@
                             },
                             "disclosureAcknowledgement": {
                                 "productConsDiscussed": {
+                                    "ui:order":["byAgent", "byAgentOther", "byApplicant", "byApplicantOther"],
                                     "byAgent": {
                                         "ui:options": {
                                             "label": "true",
@@ -2039,6 +2095,7 @@
                                             ]
                                         }
                                     },
+                                    "byAgentOther":{},
                                     "byApplicant": {
                                         "ui:options": {
                                             "label": "true",
@@ -2053,7 +2110,8 @@
                                                 "Others"
                                             ]
                                         }
-                                    }
+                                    },
+                                    "byApplicantOther":{}
                                 }
                             }
                         },
