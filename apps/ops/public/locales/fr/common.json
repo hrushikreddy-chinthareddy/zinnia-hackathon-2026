@@ -909,6 +909,7 @@
                     "unableToProceedWithDeathClaimPolicyPendingFunds": "Impossible de procéder à la réclamation en cas de décès car la police est en attente de fonds.",
                     "unableToProceedWithDeathClaimPolicyRejected": "Impossible de procéder à la réclamation en cas de décès car la police est rejetée.",
                     "unableToProceedWithDeathClaimPolicyWithdrawn": "Impossible de procéder à la réclamation en cas de décès car la police est retirée.",
+                    "deathClaimNotApplicable": "Le traitement des demandes de remboursement en cas de décès n’est pas applicable au statut actuel de la police.",
                     "errorTitle": "Oh non ! Nous avons rencontré un problème technique...",
                     "errorSubtitle": "Nous n'avons pas pu récupérer les données pour la police {{policyNumber}}. Essayez de rafraîchir votre navigateur."
                 }

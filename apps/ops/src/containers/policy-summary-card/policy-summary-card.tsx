@@ -66,7 +66,7 @@ import { ActiveQuickView } from './active-quick-view/active-quick-view';
 import AnnuityQuickView from './active-quick-view/annuity';
 import { LapseQuickView } from './lapse-quick-view';
 import { PendingLapseQuickView } from './pending-lapse-quick-view';
-import { deathClaimNotApplicableStatuses, existingDeathClaimStatuses, getCancelledPolicyStatuses } from './policy-summary-card.helpers';
+import { deathClaimApplicableStatuses, getCancelledPolicyStatuses } from './policy-summary-card.helpers';
 import { default as styles } from './policy-summary-card.module.css';
 import { OwnerInfoSkeleton, QuickViewSkeleton } from './skeletons';
 import { TermQuickView } from './term-quick-view';
@@ -271,13 +271,11 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
 
     const [isNewDeathClaim, setIsNewDeathClaim] = useState(null);
     const [zlCaseId, setZlCaseId] = useState(null);
-    const [isCheckingdeathClaim, setIsCheckingdeathClaim] = useState(false);
     const cancelledPolicyStatus = getCancelledPolicyStatuses(policyStatus as string, t);
-    const isDeathClaimNotApplicable =  deathClaimNotApplicableStatuses.includes(policyStatus);
+    const isDeathClaimStatusApplicable = deathClaimApplicableStatuses.includes(policyStatus);
 
     useEffect(() => {
         const checkIsNewDeathClaim = async () => {
-            setIsCheckingdeathClaim(true);
             const response = await initialDeathClaimExists(policy.policyNumber, policy?.carrierId);
             if (response?.isNewRequest) {
                 setIsNewDeathClaim(response.isNewRequest);
@@ -285,12 +283,11 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                 setIsNewDeathClaim(response?.isNewRequest || null);
                 setZlCaseId(response?.zlCaseId || null);
             }
-            setIsCheckingdeathClaim(false);
         };
-        if (policyStatus && !isDeathClaimNotApplicable) {
+        if (policyStatus && isDeathClaimStatusApplicable) { // isDeathClaimNotApplicable) {
             checkIsNewDeathClaim();
         }
-    }, [policy.policyNumber, policy?.carrierId, policyStatus, isDeathClaimNotApplicable]);
+    }, [policy.policyNumber, policy?.carrierId, policyStatus, isDeathClaimStatusApplicable]);
 
     return (
         <div className={styles.bannerContainer}>
@@ -340,8 +337,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                     }}
                 />
             )}
-
-            {isNewDeathClaimEnabled && !isNewDeathClaim && zlCaseId && isNullEmptyOrUndefined(cancelledPolicyStatus) && (
+            {isNewDeathClaimEnabled && !isNewDeathClaim && zlCaseId && isDeathClaimStatusApplicable && (
                 <BannerAlert
                     variant={BannerVariant.Warning}
                     cta={{
@@ -351,13 +347,7 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                     bodyText={t('dashboard.search.results.policySummaryCard.initialDeathNotification')}
                 />
             )}
-            {isNewDeathClaimEnabled && !isCheckingdeathClaim && !isNewDeathClaim && !zlCaseId && policyStatus && existingDeathClaimStatuses.includes(policyStatus) && (
-                <BannerAlert
-                    variant={BannerVariant.Warning}
-                    bodyText={t('dashboard.search.results.policySummaryCard.deathClaimExists')}
-                />
-            )}
-            {isNewDeathClaimEnabled && policyStatus && isDeathClaimNotApplicable && !isNullEmptyOrUndefined(cancelledPolicyStatus) && (
+            {isNewDeathClaimEnabled && policyStatus && !isDeathClaimStatusApplicable && !isNullEmptyOrUndefined(cancelledPolicyStatus) && (
                 <BannerAlert
                     variant={BannerVariant.Warning}
                     bodyText={cancelledPolicyStatus}

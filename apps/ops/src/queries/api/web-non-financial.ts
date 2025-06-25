@@ -52,6 +52,7 @@ export const initialDeathClaimExists = async (contractNumber: string | undefined
         browserLogInfo('webNonFinancial::Checked existence of initial death claim', {
             params: { contractNumber, clientId },
             url,
+            data,
             function: 'webnonfinancial.initialDeathClaimExists',
         });
         return data;

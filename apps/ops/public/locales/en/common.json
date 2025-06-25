@@ -818,6 +818,7 @@
                     "unableToProceedWithDeathClaimPolicyPendingFunds": "Unable to proceed with the death claim as the policy is pending over funds.",
                     "unableToProceedWithDeathClaimPolicyRejected": "Unable to proceed with the death claim as the policy is rejected.",
                     "unableToProceedWithDeathClaimPolicyWithdrawn": "Unable to proceed with the death claim as the policy is withdrawn.",
+                    "deathClaimNotApplicable": "Death claim processing is not applicable for the current policy status.",
                     "NONQUALIFIED": "Non-Qualified Investment Account",
                     "INDIVIDUALRETIREMENTACCOUNTREGULAR": "Traditional IRA",
                     "INDIVIDUALRETIREMENTACCOUNTSPOUSAL": "Spousal IRA",

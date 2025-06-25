@@ -2,12 +2,6 @@ import { TFunction } from 'next-i18next';
 
 import { PolicyStatus } from '@deps/models/policy/sor-policy';
 
-export const existingDeathClaimStatuses: any[] = [
-    PolicyStatus.DEATHCLAIMPENDING,
-    PolicyStatus.LIVINGCLAIMPENDING,
-    PolicyStatus.PAYOUTPARTCLM,
-];
-
 export const deathClaimNotApplicableStatuses: any[] = [
     PolicyStatus.CANCELEDNOPREMIUM,
     PolicyStatus.COMMUTED,
@@ -21,6 +15,19 @@ export const deathClaimNotApplicableStatuses: any[] = [
     PolicyStatus.PNDAWAITFUNDS,
     PolicyStatus.REJECTED,
     PolicyStatus.TERMINATED,
+    PolicyStatus.DEATHCLAIMPENDING,
+    PolicyStatus.LIVINGCLAIMPENDING,
+    PolicyStatus.PAYOUTPARTCLM
+];
+
+export const deathClaimApplicableStatuses: any[] = [
+    PolicyStatus.ACTIVE,
+    PolicyStatus.HARDSHIP,
+    PolicyStatus.MATURED,
+    PolicyStatus.EXTENDEDFREEL,
+    PolicyStatus.ACTIVEGUARANTEE,
+    PolicyStatus.NONLIFEPAYOUT,
+    PolicyStatus.RESTRICTION
 ];
 
 export const getCancelledPolicyStatuses = (policyStatus: string, t: TFunction) => {
@@ -50,6 +57,6 @@ export const getCancelledPolicyStatuses = (policyStatus: string, t: TFunction) =
         case PolicyStatus.TERMINATED:
             return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyWithdrawn');
         default:
-            return null;
+            return t('dashboard.search.results.policySummaryCard.deathClaimNotApplicable');
     }
 };
