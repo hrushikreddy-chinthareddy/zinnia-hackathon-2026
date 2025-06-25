@@ -62,6 +62,8 @@
         "costBasis": "Cost basis",
         "totalPremiumAmount": "YTD premium",
         "cumulativePremiumSinceIssue": "All-time premium",
+        "unearnedPremiumAmount": "Unearned premium",
+        "annualizedPremiumAmount": "Annualized premium",
         "amountRemainingUntilCurrentGuidelineLimit": "Amount remaining until current guideline limit",
         "guidelineBasis": "Guideline basis",
         "amountRemainingUntilCurrentSevenPayLimit": "Amount remaining until current 7-pay limit",

@@ -21,6 +21,8 @@ export interface PolicyViewDetailsDto {
     availableDecrease: number;
     costBasis: number;
     totalPremiumAmount: number;
+    unearnedPremiumAmount?: number;
+    annualizedPremiumAmount?: number;
     cumulativePremiumSinceIssue: number;
     amountRemainingUntilCurrentGuidelineLimit: number;
     guidelineBasis: number;
@@ -107,6 +109,52 @@ export const toPolicyViewDetailsDto = (policy: Policy): PolicyViewDetailsDto => 
         }
     );
 };
+export const toTermLifeViewDetailsDto = (policy: Policy): Partial<PolicyViewDetailsDto> => {
+    if (!policy) return {} as Partial<PolicyViewDetailsDto>;
+
+    const { accountValues, coverage, policyFeatures, policyDates, testValues, product } = policy;
+
+    const freeLookFeature = (policyFeatures ?? []).find(feature => feature.featureType === FeatureType.FREELOOK);
+
+    const baseDeathBenefit = coverage?.coverageLayers?.[0]?.currentAmount ?? 0;
+    const minCoverageAmount = coverage?.coverageLayers?.[0]?.minimumCoverageAmount ?? 0;
+    const maxCoverageAmount = coverage?.coverageLayers?.[0]?.maximumCoverageAmount ?? 0;
+    const availableDecrease = baseDeathBenefit - minCoverageAmount;
+    const availableIncrease = maxCoverageAmount - baseDeathBenefit;
+    const guidelineBasis =
+            (policy?.accountValues?.cumulativePremiumSinceIssue || 0) - (policy?.withdrawalValues?.totalWithdrawalAmount || 0);
+
+    return Object.assign(
+        {},
+        {
+            issueDate: policyDates?.issueDate || '',
+            freeLookExpirationDate: freeLookFeature?.endDate || '',
+            maturityDate: policyDates?.maturityDate || '',
+            contestabilityPeriodStartDate: policyDates?.contestabilityStartDate || '',
+            contestabilityPeriodEndDate: policyDates?.contestabilityEndDate || '',
+            faceAmount: coverage?.totalCoverageAmount || 0,
+            minCoverageAmount: coverage?.minimumCoverageAmount || 0,
+            maxCoverageAmount: coverage?.maximumCoverageAmount || 0,
+            availableIncrease: availableIncrease || 0,
+            availableDecrease: availableDecrease || 0,
+            totalPremiumAmount: accountValues?.totalYearToDatePremiumAmount || 0,
+            unearnedPremiumAmount: accountValues?.unearnedPremium || 0,
+            annualizedPremiumAmount: accountValues?.annualizedPremium || 0,
+            cumulativePremiumSinceIssue: accountValues?.cumulativePremiumSinceIssue || 0,
+            amountRemainingUntilCurrentGuidelineLimit:
+                (policy?.testValues?.guidelinePremium?.guidelineSinglePremium || 0) - guidelineBasis || 0,
+            guidelineBasis: guidelineBasis || 0,
+            amountRemainingUntilCurrentSevenPayLimit:
+                (testValues?.modifiedEndowmentContract?.sevenPayLimit || 0) -
+                    (testValues?.modifiedEndowmentContract?.sevenPayTestBasis || 0) || 0,
+            sevenPayPremiumBasis: testValues?.modifiedEndowmentContract?.sevenPayTestBasis || 0,
+            planCode: product?.planCode || '',
+            productName: product?.planName || '',
+            generalLedgerPlanCode: product?.generalLedgerPlanCode || '',
+        }
+    );
+};
+
 
 export const PolicyDetailsViewInfo = (): DataDefinition<PolicyViewDetailsDto>[] => {
     return [
@@ -327,3 +375,132 @@ export const PolicyDetailsViewInfo = (): DataDefinition<PolicyViewDetailsDto>[] 
         },
     ];
 };
+
+export const TermLifeDetailsViewInfo = (): DataDefinition<Partial<PolicyViewDetailsDto>>[] => {
+      return [
+        {
+            key: 'issueDate',
+            label: 'Issue date',
+            format: convertKebabedDateString,
+            group: 'policy_details',
+        },
+        {
+            key: 'freeLookExpirationDate',
+            label: 'Free look expiration date',
+            format: convertKebabedDateString,
+            group: 'policy_details',
+        },
+        {
+            key: 'maturityDate',
+            label: 'Maturity date',
+            format: convertKebabedDateString,
+            group: 'policy_details',
+        },
+        {
+            key: 'contestabilityPeriodStartDate',
+            label: 'Contestability period start date',
+            format: convertKebabedDateString,
+            group: 'policy_details',
+        },
+        {
+            key: 'contestabilityPeriodEndDate',
+            label: 'Contestability period end date',
+            format: convertKebabedDateString,
+            group: 'policy_details',
+        },
+        {
+            key: 'faceAmount',
+            label: 'Base death benefit',
+            format: numberFormatify,
+            group: 'policy_coverage',
+        },
+        {
+            key: 'minCoverageAmount',
+            label: 'Min coverage amount',
+            format: numberFormatify,
+            group: 'policy_coverage',
+        },
+        {
+            key: 'maxCoverageAmount',
+            label: 'Max coverage amount',
+            format: numberFormatify,
+            group: 'policy_coverage',
+        },
+        {
+            key: 'availableIncrease',
+            label: 'Available increase',
+            format: numberFormatify,
+            group: 'policy_coverage',
+        },
+        {
+            key: 'availableDecrease',
+            label: 'Available decrease',
+            format: numberFormatify,
+            group: 'policy_coverage',
+        },
+        {
+            key: 'cumulativePremiumSinceIssue',
+            label: 'All-time premium',
+            format: numberFormatify,
+            group: 'premium',
+        },
+        {
+            key: 'totalPremiumAmount',
+            label: 'YTD premium',
+            format: numberFormatify,
+            group: 'premium',
+        },
+        {
+            key: 'unearnedPremiumAmount',
+            label: 'Unearned premium',
+            format: numberFormatify,
+            group: 'premium',
+        },
+        {
+            key: 'annualizedPremiumAmount',
+            label: 'Annualized premium',
+            format: numberFormatify,
+            group: 'premium',
+        },
+        {
+            key: 'amountRemainingUntilCurrentGuidelineLimit',
+            label: 'Amount remaining until current guideline limit',
+            format: numberFormatify,
+            group: 'premium',
+        },
+        {
+            key: 'guidelineBasis',
+            label: 'Guideline basis',
+            format: numberFormatify,
+            group: 'premium',
+        },
+        {
+            key: 'amountRemainingUntilCurrentSevenPayLimit',
+            label: 'Amount remaining unitl current 7-pay limit',
+            format: numberFormatify,
+            group: 'premium',
+        },
+        {
+            key: 'sevenPayPremiumBasis',
+            label: '7-pay premium basis',
+            format: numberFormatify,
+            group: 'premium',
+        },
+        {
+            key: 'planCode',
+            label: 'Plan code',
+            group: 'product',
+        },
+        {
+            key: 'productName',
+            label: 'Product name',
+            group: 'product',
+        },
+        {
+            key: 'generalLedgerPlanCode',
+            label: 'GL product code',
+            group: 'product',
+        },
+    ];
+}
+

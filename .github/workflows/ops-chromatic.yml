@@ -1,7 +1,8 @@
 name: 'Chromatic OPS'
 
+# TODO: Renanble it to workflow_call when we fix the js memory issue
 on:
-  workflow_call:
+  workflow_dispatch:
   # push:
   # paths:
   # - 'apps/ops/**'

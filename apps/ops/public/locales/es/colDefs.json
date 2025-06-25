@@ -60,6 +60,8 @@
         "costBasis": "Base de costo",
         "totalPremiumAmount": "Prima acumulada del año",
         "cumulativePremiumSinceIssue": "Prima acumulada desde la emisión",
+        "unearnedPremiumAmount": "Prima no devengada",
+        "annualizedPremiumAmount": "Prima anualizada",
         "amountRemainingUntilCurrentGuidelineLimit": "Monto restante hasta el límite de la directriz actual",
         "guidelineBasis": "Base de la directriz",
         "amountRemainingUntilCurrentSevenPayLimit": "Monto restante hasta el límite de siete pagos actual",

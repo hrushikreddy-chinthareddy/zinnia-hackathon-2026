@@ -39,8 +39,8 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { AnnuityDetailsViewInfo, AnnuityViewDetailsDto } from '@deps/data/annuity-details-view';
-import { generatePolicyAnnuityDetailsDto } from '@deps/data/details-view';
-import { PolicyDetailsViewInfo, PolicyViewDetailsDto } from '@deps/data/policy-details-view';
+import { generatePolicyAnnuityDetailsDto , isTermLifeProduct } from '@deps/data/details-view';
+import { PolicyDetailsViewInfo, PolicyViewDetailsDto, TermLifeDetailsViewInfo } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -208,7 +208,8 @@ function KeyValuesBar({ policy, loadingPolicyDetails = false }: KeyValuesBarProp
     const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
     const { partyId: userPartyId, sessionId } = usePermissionsContext();
     const searchableDetailsDto = generatePolicyAnnuityDetailsDto(policy);
-    const colDefFunction = policy.product?.lineOfBusiness === LineOfBusiness.LIFE ? PolicyDetailsViewInfo : AnnuityDetailsViewInfo;
+    const colDefFunction = policy.product?.lineOfBusiness === LineOfBusiness.LIFE ? isTermLifeProduct(policy)? TermLifeDetailsViewInfo
+      : PolicyDetailsViewInfo: AnnuityDetailsViewInfo;
     const searchableDetailsData = fillColDefs<PolicyViewDetailsDto | AnnuityViewDetailsDto>(
         searchableDetailsDto,
         colDefFunction(),

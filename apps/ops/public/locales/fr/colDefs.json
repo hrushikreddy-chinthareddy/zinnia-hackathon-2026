@@ -62,6 +62,8 @@
         "cumulativePremiumSinceIssue": "Prime de tous les temps",
         "amountRemainingUntilCurrentGuidelineLimit": "Montant restant jusqu'à la limite actuelle de la directive",
         "guidelineBasis": "Base de référence",
+        "unearnedPremiumAmount": "Prime non acquise",
+        "annualizedPremiumAmount": "Prime annualisée",
         "amountRemainingUntilCurrentSevenPayLimit": "Montant restant jusqu'à la limite actuelle de 7 paiements",
         "sevenPayPremiumBasis": "Base de prime à 7 salaires",
         "planCode": "Code du régime",

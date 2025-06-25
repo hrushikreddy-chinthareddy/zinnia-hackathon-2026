@@ -8,8 +8,8 @@ import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { AnnuityDetailsViewInfo, AnnuityViewDetailsDto } from '@deps/data/annuity-details-view';
-import { generatePolicyAnnuityDetailsDto } from '@deps/data/details-view';
-import { PolicyDetailsViewInfo, PolicyViewDetailsDto } from '@deps/data/policy-details-view';
+import { generatePolicyAnnuityDetailsDto, isTermLifeProduct } from '@deps/data/details-view';
+import { PolicyDetailsViewInfo, PolicyViewDetailsDto, TermLifeDetailsViewInfo } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
@@ -40,7 +40,8 @@ const ContentContainer = ({ children, policy, openSideSheet, hideSearch, showJoi
     const jointOwner = policy?.parties?.find(party => party.partyId === jointOwnerId);
 
     const searchableDetailsDto = generatePolicyAnnuityDetailsDto(policy);
-    const colDefFunction = policy.product?.lineOfBusiness === LineOfBusiness.LIFE ? PolicyDetailsViewInfo : AnnuityDetailsViewInfo;
+    const colDefFunction = policy.product?.lineOfBusiness === LineOfBusiness.LIFE ? isTermLifeProduct(policy)? TermLifeDetailsViewInfo
+          : PolicyDetailsViewInfo: AnnuityDetailsViewInfo;
     const searchableDetailsData = fillColDefs<PolicyViewDetailsDto | AnnuityViewDetailsDto>(
         searchableDetailsDto,
         colDefFunction(),
