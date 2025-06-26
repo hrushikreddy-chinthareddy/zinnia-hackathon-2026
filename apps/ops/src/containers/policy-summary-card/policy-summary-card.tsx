@@ -39,7 +39,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { AnnuityDetailsViewInfo, AnnuityViewDetailsDto } from '@deps/data/annuity-details-view';
-import { generatePolicyAnnuityDetailsDto , isTermLifeProduct } from '@deps/data/details-view';
+import { generatePolicyAnnuityDetailsDto, isTermLifeProduct } from '@deps/data/details-view';
 import { PolicyDetailsViewInfo, PolicyViewDetailsDto, TermLifeDetailsViewInfo } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { getTotalMinRequiredAmount, policyDataToGlobalValues } from '@deps/helpers/global-values';
@@ -66,7 +66,7 @@ import { ActiveQuickView } from './active-quick-view/active-quick-view';
 import AnnuityQuickView from './active-quick-view/annuity';
 import { LapseQuickView } from './lapse-quick-view';
 import { PendingLapseQuickView } from './pending-lapse-quick-view';
-import { deathClaimApplicableStatuses, getCancelledPolicyStatuses } from './policy-summary-card.helpers';
+import { deathClaimApplicableStatuses } from './policy-summary-card.helpers';
 import { default as styles } from './policy-summary-card.module.css';
 import { OwnerInfoSkeleton, QuickViewSkeleton } from './skeletons';
 import { TermQuickView } from './term-quick-view';
@@ -272,7 +272,6 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
 
     const [isNewDeathClaim, setIsNewDeathClaim] = useState(null);
     const [zlCaseId, setZlCaseId] = useState(null);
-    const cancelledPolicyStatus = getCancelledPolicyStatuses(policyStatus as string, t);
     const isDeathClaimStatusApplicable = deathClaimApplicableStatuses.includes(policyStatus);
 
     useEffect(() => {
@@ -346,12 +345,6 @@ const StatusBanner = ({ policy, casesTotal }: BasePolicyComponentArgs & { casesT
                         text: t('dashboard.search.results.policySummaryCard.initialDeathNotificationLink'),
                     }}
                     bodyText={t('dashboard.search.results.policySummaryCard.initialDeathNotification')}
-                />
-            )}
-            {isNewDeathClaimEnabled && policyStatus && !isDeathClaimStatusApplicable && cancelledPolicyStatus && (
-                <BannerAlert
-                    variant={BannerVariant.Warning}
-                    bodyText={cancelledPolicyStatus}
                 />
             )}
         </div>
