@@ -50,7 +50,7 @@ export class Coverage {
     }
 
     public get baseDeathBenefit(): number | undefined {
-        return this.coverage.totalCoverageAmount;
+        return this.coverage.cumulativeGrossDeathBenefitAmount;
     }
 
     public get faceValue(): number | undefined {

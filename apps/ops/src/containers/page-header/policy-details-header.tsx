@@ -14,7 +14,7 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
         keyPrefix: 'policy.detailCards.policyDetails',
     });
     const currencyFormat: Intl.NumberFormatOptions = { currency: policy.currency ?? 'USD', style: 'currency' };
-    const { accountValue, costBasis, faceValue, surrenderValue } = policy;
+    const { accountValue, costBasis, baseDeathBenefit, surrenderValue } = policy;
     const transactionCards = buildTransactionCards(policy, t);
 
     const title = t(`${policy.isAnnuity ? 'contractDetails' : 'policyDetails'}`);
@@ -29,7 +29,7 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
                         tooltipTitle={t(`baseDeathBenefit`)}
                         variant={LabelVariant.FieldLabel}
                     />
-                    <Content details={numberFormatify(faceValue as number, currencyFormat)} variant={ContentVariant.Value} />
+                    <Content details={numberFormatify(baseDeathBenefit as number, currencyFormat)} variant={ContentVariant.Value} />
                 </div>
                 <div>
                     <Label
