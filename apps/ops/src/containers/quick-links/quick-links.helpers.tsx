@@ -6,7 +6,6 @@ import { getPolicyVisibility } from '@deps/helpers/policy-visibility/policy-visi
 
 import { QuickLinksProps } from './quick-links';
 
-
 export const getPolicyQuickLinks = async (t: TFunction, policy: PolicyDetails): Promise<QuickLinksProps['links']> => {
     const { policyNumber, planCode, isAnnuity } = policy;
     const { showFundsAndAccounts, showLoans, showWithdrawals, detailLinkType } = await getPolicyVisibility(policy);
@@ -36,34 +35,34 @@ export const getPolicyQuickLinks = async (t: TFunction, policy: PolicyDetails): 
                 ...(showFundsAndAccounts
                     ? [
                           {
-                            name: t('site.navLinks.funds.text'),
-                            href: t('site.navLinks.funds.link', { id: policyNumber, planCode }) || '',
-                        },
+                              name: t('site.navLinks.funds.text'),
+                              href: t('site.navLinks.funds.link', { id: policyNumber, planCode }) || '',
+                          },
                       ]
                     : []),
-                
+
                 {
                     name: t('site.navLinks.transactions.premiums.text'),
                     href: t('site.navLinks.transactions.premiums.href', { id: policyNumber, planCode }) || '',
                 },
-                ...(showLoans
+                ...(showLoans && !isAnnuity
                     ? [
                           {
-                            name: t('site.navLinks.transactions.loans.text'),
-                            href: t('site.navLinks.transactions.loans.href', { id: policyNumber, planCode }) || '',
-                        },
+                              name: t('site.navLinks.transactions.loans.text'),
+                              href: t('site.navLinks.transactions.loans.href', { id: policyNumber, planCode }) || '',
+                          },
                       ]
                     : []),
-                
+
                 ...(showWithdrawals
                     ? [
                           {
-                            name: t('site.navLinks.transactions.withdrawals.text'),
-                            href: t('site.navLinks.transactions.withdrawals.href', { id: policyNumber, planCode }) || '',
-                        },
+                              name: t('site.navLinks.transactions.withdrawals.text'),
+                              href: t('site.navLinks.transactions.withdrawals.href', { id: policyNumber, planCode }) || '',
+                          },
                       ]
                     : []),
-                
+
                 ...(isAnnuity
                     ? [
                           {
