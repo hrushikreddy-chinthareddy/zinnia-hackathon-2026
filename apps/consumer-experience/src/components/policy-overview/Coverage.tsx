@@ -58,16 +58,16 @@ export const Coverage = async ({
     </p>
   );
 
-  const nonTermCaption =
+  const dateInterval =
     policyStartDate && maturityDate
       ? `${standardDateMonthDayYear(policyStartDate)} - ${standardDateMonthDayYear(maturityDate)}`
       : '';
-  const termCaption = `${policyTerm} year term length (${elapsedYears} years left)`;
+  const timeLeft = `${policyTerm} year term length (${elapsedYears} years left)`;
 
   const caption =
     policyProductType === ExtendedPolicyProductType.TERM
-      ? termCaption
-      : nonTermCaption;
+      ? timeLeft
+      : dateInterval;
 
   return (
     <ClickableCardContainer>

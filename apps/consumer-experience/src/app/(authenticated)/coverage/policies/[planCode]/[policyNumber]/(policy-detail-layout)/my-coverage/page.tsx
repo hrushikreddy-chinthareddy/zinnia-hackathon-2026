@@ -11,6 +11,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getCoverage } from '@/services/policy';
 import { ExtendedPolicyProductType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 const pageTitle = getPageTitle(RouteKey.MY_COVERAGE);
@@ -52,12 +53,19 @@ export default async function Coverage({
     policyTerm,
     policyProductType,
     policyStartDate,
+    maturityDate,
   } = data;
 
   const CURRENT_COVERAGE = 'Current Coverage';
-
   const elapsedYears = yearsLeft(policyStartDate, policyTerm);
-  const caption = `${policyTerm} year term length (${elapsedYears} years left)`;
+
+  const dateInterval =
+    policyStartDate && maturityDate
+      ? `${standardDateMonthDayYear(policyStartDate)} - ${standardDateMonthDayYear(maturityDate)} `
+      : '';
+
+  const caption = `${dateInterval}(${elapsedYears} years left)`
+
 
   const coverageContent = (amount: number | null | undefined) => {
     if (amount && typeof amount === 'number') {
@@ -91,6 +99,22 @@ export default async function Coverage({
           >
             {coverageContent(totalCoverageAmount)}
           </FieldData>
+
+          {policyProductType === ExtendedPolicyProductType.TERM && (
+            <FieldData caption={caption} Label={<Label>{'Term length'}</Label>}>
+              {!Number.isNaN(policyTerm) ? (
+                <p className='typography-content-value'>
+                  {policyTerm} years
+                </p>
+
+              ) : (
+                <p className="typography-content-body-sm">
+                  {DEFAULT_UNAVAILABLE_STRING}
+                </p>
+              )}
+
+            </FieldData>
+          )}
 
           {/* Removing this for now because it should consider all of a users policies under one carrier
           and right now the data value is only based on the single policy being used */}
