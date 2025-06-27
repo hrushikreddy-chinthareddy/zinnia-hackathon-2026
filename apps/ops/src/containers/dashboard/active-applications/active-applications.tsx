@@ -4,7 +4,6 @@ import { FC } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { ActiveAging } from '@deps/components/dashboard/sections/active-aging/active-aging';
-import { NigoOpenTransactions } from '@deps/components/dashboard/sections/nigo-open-transactions/nigo-open-transactions';
 import SankeyChart from '@deps/components/dashboard/sections/sankey-chart/sankey-chart';
 import { SubmissionType } from '@deps/components/dashboard/sections/submission-type/submission-type';
 import CardContainer from '@deps/containers/card-container/card-container';
@@ -58,9 +57,6 @@ export const ActiveApplications: FC = () => {
                 </div>
                 <div className={sharedStyles.dashboardCard}>
                     <SubmissionType />
-                </div>
-                <div className={sharedStyles.dashboardCard}>
-                    <NigoOpenTransactions />
                 </div>
             </div>
         </>
