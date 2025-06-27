@@ -3,7 +3,10 @@ import { Meta, StoryObj } from '@storybook/react';
 import { ReactComponent as DocumentReportIcon } from '@deps/styles/elements/icons/files/document-report.svg';
 import { generateBankDetails } from '@deps/utils/mock/mockBankDetails';
 import { generateAdditionalCharges } from '@deps/utils/mock/mockPolicyValues';
-import { iconArgTypes, storybookContainerDecorator } from '@deps/utils/storybook';
+import {
+    iconArgTypes,
+    storybookContainerDecorator,
+} from '@deps/utils/storybook';
 
 import UpcomingPaymentCard from './card-upcoming-payment';
 import { UpcomingPaymentCardProps } from './card-upcoming-payment.types';
@@ -77,13 +80,22 @@ export const Inactive: StoryType = {
 
 export const ThreeLinks: StoryType = {
     args: {
-        footerLinks: [...manageBarLabels, { text: 'Start a new loan', href: '#' }],
+        footerLinks: [
+            ...manageBarLabels,
+            { text: 'Start a new loan', href: '#' },
+        ],
     },
 };
 
 export const CustomIcon: StoryType = {
     args: {
-        icon: <DocumentReportIcon width={24} height={24} className="text-primary" />,
+        icon: (
+            <DocumentReportIcon
+                width={24}
+                height={24}
+                className="text-primary"
+            />
+        ),
     },
 };
 

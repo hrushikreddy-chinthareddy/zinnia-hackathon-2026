@@ -1,8 +1,14 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '@deps/components/fields/field-date-select/field-date-select';
 import { RMDProgramType } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -24,7 +30,9 @@ export interface ProgramProps {
     isFormStateReadOnly: boolean;
 }
 export function Program({ program, isFormStateReadOnly }: ProgramProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.rmdMethod' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.rmdMethod',
+    });
 
     return (
         <div className="readonly pointer-events-none grid grid-cols-auto-4 gap-2">
@@ -34,9 +42,20 @@ export function Program({ program, isFormStateReadOnly }: ProgramProps) {
                 isFutureDateDisabled={false}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
-                variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={
+                    isFormStateReadOnly
+                        ? FieldVariant.Inactive
+                        : FieldVariant.Default
+                }
                 onChange={noop}
-                value={program.startDate ? dayjs(program.startDate, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT) : ''}
+                value={
+                    program.startDate
+                        ? dayjs(
+                              program.startDate,
+                              ZAHARA_API_DATE_FORMAT
+                          ).format(DATE_PICKER_FORMAT)
+                        : ''
+                }
                 disabled={isFormStateReadOnly}
             />
 
@@ -46,9 +65,20 @@ export function Program({ program, isFormStateReadOnly }: ProgramProps) {
                 isFutureDateDisabled={false}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
-                variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={
+                    isFormStateReadOnly
+                        ? FieldVariant.Inactive
+                        : FieldVariant.Default
+                }
                 onChange={noop}
-                value={program.nextDate ? dayjs(program.nextDate, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT) : ''}
+                value={
+                    program.nextDate
+                        ? dayjs(
+                              program.nextDate,
+                              ZAHARA_API_DATE_FORMAT
+                          ).format(DATE_PICKER_FORMAT)
+                        : ''
+                }
                 disabled={isFormStateReadOnly}
             />
 
@@ -57,7 +87,11 @@ export function Program({ program, isFormStateReadOnly }: ProgramProps) {
                 value={program.duration}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
-                variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={
+                    isFormStateReadOnly
+                        ? FieldVariant.Inactive
+                        : FieldVariant.Default
+                }
                 onChange={noop}
             />
 
@@ -67,7 +101,11 @@ export function Program({ program, isFormStateReadOnly }: ProgramProps) {
                 size={FieldSize.Small}
                 leading={<div>$</div>}
                 type={FieldType.BaseActive}
-                variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={
+                    isFormStateReadOnly
+                        ? FieldVariant.Inactive
+                        : FieldVariant.Default
+                }
                 onChange={noop}
             />
         </div>

@@ -11,7 +11,11 @@ interface PolicyLengthProps {
     policyYearsLeft: string | null;
 }
 
-const PolicyLength = ({ productType, policyLength, policyYearsLeft }: PolicyLengthProps) => {
+const PolicyLength = ({
+    productType,
+    policyLength,
+    policyYearsLeft,
+}: PolicyLengthProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'policy.detailCards.policyTimeline',
     });
@@ -29,9 +33,18 @@ const PolicyLength = ({ productType, policyLength, policyYearsLeft }: PolicyLeng
                 tooltipTitle={t('policyLength')}
                 variant={LabelVariant.FieldLabel}
             />
-            <Content details={displayLifetimeCopy ? `${t('lifetime')}` : policyLength} variant={ContentVariant.BodySm} />
+            <Content
+                details={
+                    displayLifetimeCopy ? `${t('lifetime')}` : policyLength
+                }
+                variant={ContentVariant.BodySm}
+            />
             {policyYearsLeft && !displayLifetimeCopy && (
-                <Content className="text-gray-600" details={policyYearsLeft} variant={ContentVariant.Caption} />
+                <Content
+                    className="text-gray-600"
+                    details={policyYearsLeft}
+                    variant={ContentVariant.Caption}
+                />
             )}
         </div>
     );

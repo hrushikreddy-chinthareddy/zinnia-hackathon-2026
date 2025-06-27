@@ -1,9 +1,15 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { EmergencyOption, RestrictionOption } from '@deps/models/case/withdrawal/case';
+import {
+    EmergencyOption,
+    RestrictionOption,
+} from '@deps/models/case/withdrawal/case';
 
 import { Description } from './description';
 import { ReasonDate } from './reason-date';
@@ -21,17 +27,25 @@ describe('Distribution-reason component', () => {
     it('should not render a date when selected RestrictionOption.Age595', () => {
         const formRestriction = {
             emergency: [],
-            restrictions: [{ text: RestrictionOption.Age595, selectionOptions: {} }],
+            restrictions: [
+                { text: RestrictionOption.Age595, selectionOptions: {} },
+            ],
             hardship: [],
         };
         let callbackVariable;
-        const setFormRestriction = jest.fn(cb => {
+        const setFormRestriction = jest.fn((cb) => {
             callbackVariable = cb(formRestriction);
             return callbackVariable;
         });
 
         render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, formRestriction, setFormRestriction }}>
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    formRestriction,
+                    setFormRestriction,
+                }}
+            >
                 <ReasonDate />
             </FormDataContext.Provider>
         );
@@ -53,17 +67,25 @@ describe('Distribution-reason component', () => {
     it('should render a date when selected RestrictionOption.Severance', () => {
         const formRestriction = {
             emergency: [],
-            restrictions: [{ text: RestrictionOption.Severance, selectionOptions: {} }],
+            restrictions: [
+                { text: RestrictionOption.Severance, selectionOptions: {} },
+            ],
             hardship: [],
         };
         let callbackVariable;
-        const setFormRestriction = jest.fn(cb => {
+        const setFormRestriction = jest.fn((cb) => {
             callbackVariable = cb(formRestriction);
             return callbackVariable;
         });
 
         render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, formRestriction, setFormRestriction }}>
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    formRestriction,
+                    setFormRestriction,
+                }}
+            >
                 <ReasonDate />
             </FormDataContext.Provider>
         );
@@ -93,22 +115,32 @@ describe('Distribution-reason component', () => {
 
     it('should not render a textarea when selected EmergencyOption.LossOfProperty', () => {
         const formRestriction = {
-            emergency: [{ text: EmergencyOption.LossOfProperty, selectionOptions: {} }],
+            emergency: [
+                { text: EmergencyOption.LossOfProperty, selectionOptions: {} },
+            ],
             restrictions: [],
             hardship: [],
         };
         let callbackVariable;
-        const setFormRestriction = jest.fn(cb => {
+        const setFormRestriction = jest.fn((cb) => {
             callbackVariable = cb(formRestriction);
             return callbackVariable;
         });
 
         render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, formRestriction, setFormRestriction }}>
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    formRestriction,
+                    setFormRestriction,
+                }}
+            >
                 <Description />
             </FormDataContext.Provider>
         );
-        const descriptionElement = screen.queryByTestId('data-testid-detailed-description') as HTMLInputElement;
+        const descriptionElement = screen.queryByTestId(
+            'data-testid-detailed-description'
+        ) as HTMLInputElement;
         expect(descriptionElement).not.toBeInTheDocument();
 
         expect(setFormRestriction).toHaveReturnedWith({
@@ -123,25 +155,37 @@ describe('Distribution-reason component', () => {
     });
     it('should render a textarea when selected EmergencyOption.BeyondControl', () => {
         const formRestriction = {
-            emergency: [{ text: EmergencyOption.BeyondControl, selectionOptions: {} }],
+            emergency: [
+                { text: EmergencyOption.BeyondControl, selectionOptions: {} },
+            ],
             restrictions: [],
             hardship: [],
         };
         let callbackVariable;
-        const setFormRestriction = jest.fn(cb => {
+        const setFormRestriction = jest.fn((cb) => {
             callbackVariable = cb(formRestriction);
             return callbackVariable;
         });
 
         render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, formRestriction, setFormRestriction }}>
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    formRestriction,
+                    setFormRestriction,
+                }}
+            >
                 <Description />
             </FormDataContext.Provider>
         );
-        const descriptionElement = screen.getByTestId('data-testid-detailed-description') as HTMLInputElement;
+        const descriptionElement = screen.getByTestId(
+            'data-testid-detailed-description'
+        ) as HTMLInputElement;
         expect(descriptionElement).toBeInTheDocument();
 
-        fireEvent.change(descriptionElement, { target: { value: 'Lorem ipsum' } });
+        fireEvent.change(descriptionElement, {
+            target: { value: 'Lorem ipsum' },
+        });
         expect(descriptionElement.value).toBe('Lorem ipsum');
 
         expect(setFormRestriction).toHaveReturnedWith({

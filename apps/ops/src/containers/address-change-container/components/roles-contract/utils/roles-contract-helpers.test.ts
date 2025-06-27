@@ -1,4 +1,7 @@
-import { partyRoleOrder, TitleCasedPartyRole } from '@deps/constants/party-roles';
+import {
+    partyRoleOrder,
+    TitleCasedPartyRole,
+} from '@deps/constants/party-roles';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
 import { groupPartiesByAddress } from './roles-contract-helpers';
@@ -21,7 +24,12 @@ describe.skip('RolesAndContract helper', () => {
         });
         // TODO: Add test cases
         it.skip('groupPartiesByAddress', () => {
-            groupPartiesByAddress(mockPolicy?.partyRoles ?? [], mockPolicy?.parties ?? [], mockPolicy?.qualificationType ?? '', mockTFunction);
+            groupPartiesByAddress(
+                mockPolicy?.partyRoles ?? [],
+                mockPolicy?.parties ?? [],
+                mockPolicy?.qualificationType ?? '',
+                mockTFunction
+            );
         });
     });
 });

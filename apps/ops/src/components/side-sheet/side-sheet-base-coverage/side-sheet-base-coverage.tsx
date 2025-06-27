@@ -1,11 +1,17 @@
 import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
-import CardColumns, { CardColumnsVariant } from '@deps/components/card/card-columns/card-columns';
+import CardColumns, {
+    CardColumnsVariant,
+} from '@deps/components/card/card-columns/card-columns';
 import DescriptionLists from '@deps/components/description-list/description-lists';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 
-import { SideSheetCoverageColDto, toSideSheetCoverageDto, getSideSheetCoverageColDefs } from '../../../data/side-sheet-coverage-details';
+import {
+    SideSheetCoverageColDto,
+    toSideSheetCoverageDto,
+    getSideSheetCoverageColDefs,
+} from '../../../data/side-sheet-coverage-details';
 
 const BASE_KEY = 'policy.detailCards.baseCoverage';
 
@@ -13,7 +19,9 @@ export interface SideSheetPolicyItemProps {
     policy: Policy;
 }
 
-export default function SideSheetCoverage({ policy }: SideSheetPolicyItemProps) {
+export default function SideSheetCoverage({
+    policy,
+}: SideSheetPolicyItemProps) {
     const { t } = useTranslation();
 
     const policySummaryDto = toSideSheetCoverageDto(policy);

@@ -18,10 +18,14 @@ const isEqual = (a: any, b: any): boolean => {
     return JSON.stringify(a) === JSON.stringify(b);
 };
 
-export const getUpdatedTaskFromFormData = (prevTask: any, formData: any, uiSchema: UiSchema) => {
+export const getUpdatedTaskFromFormData = (
+    prevTask: any,
+    formData: any,
+    uiSchema: UiSchema
+) => {
     const updatedTask = structuredClone(prevTask);
 
-    Object.keys(formData).forEach(field => {
+    Object.keys(formData).forEach((field) => {
         const dataPath = uiSchema[field]?.['ui:dataPath'];
         if (!dataPath) return;
 
@@ -33,7 +37,9 @@ export const getUpdatedTaskFromFormData = (prevTask: any, formData: any, uiSchem
         const prevValue = refPrev[lastKey];
 
         if (!isEqual(prevValue, currentValue)) {
-            ref[lastKey] = Array.isArray(currentValue) ? [...currentValue] : currentValue;
+            ref[lastKey] = Array.isArray(currentValue)
+                ? [...currentValue]
+                : currentValue;
         }
     });
 
@@ -44,14 +50,16 @@ export const extractFormData = (data: any, uiSchema: UiSchema, schema: any) => {
     const formData: any = {};
     const requiredFields = new Set(schema?.required || []);
 
-    Object.keys(uiSchema).forEach(field => {
+    Object.keys(uiSchema).forEach((field) => {
         const dataPath = uiSchema[field]?.['ui:dataPath'];
         if (!dataPath) return;
 
         let ref = data;
         for (let i = 0; i < dataPath.length; i++) {
             if (ref == null) {
-                browserLogWarn(`Path broken at ${dataPath[i]}, skipping ${field}`);
+                browserLogWarn(
+                    `Path broken at ${dataPath[i]}, skipping ${field}`
+                );
                 return;
             }
             ref = ref[dataPath[i]];
@@ -80,7 +88,11 @@ export const normalizeFormData = (formData: any) => {
         }
     }
     function isArrayOfStringifiedObjects(arr: string[]) {
-        return Array.isArray(arr) && arr.length > 0 && arr.every(item => isStringifiedObject(item));
+        return (
+            Array.isArray(arr) &&
+            arr.length > 0 &&
+            arr.every((item) => isStringifiedObject(item))
+        );
     }
 
     function traverse(formData: any) {
@@ -95,7 +107,8 @@ export const normalizeFormData = (formData: any) => {
             }
         } else if (typeof formData === 'object' && formData !== null) {
             for (const key in formData) {
-                if (!Object.prototype.hasOwnProperty.call(formData, key)) continue;
+                if (!Object.prototype.hasOwnProperty.call(formData, key))
+                    continue;
                 const value = formData[key];
 
                 if (isArrayOfStringifiedObjects(value)) {

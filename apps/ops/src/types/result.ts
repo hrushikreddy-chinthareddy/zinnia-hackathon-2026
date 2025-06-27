@@ -8,7 +8,7 @@ export class Success<_A, B> {
         this.value = value;
     }
 }
-  
+
 export class Failure<A, _B> {
     public readonly success = false;
     public readonly error: A;
@@ -19,9 +19,9 @@ export class Failure<A, _B> {
 }
 
 export function success<B>(value: B): Result<never, B> {
-return new Success(value);
+    return new Success(value);
 }
 
 export function failure<A>(error: A): Result<A, never> {
-return new Failure(error);
+    return new Failure(error);
 }

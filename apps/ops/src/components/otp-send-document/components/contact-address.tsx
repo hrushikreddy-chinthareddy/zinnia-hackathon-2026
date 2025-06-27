@@ -17,9 +17,16 @@ type ContactCenterAddressProps = {
     policy: Policy;
     setAddress: (val: PaperMail) => void;
 };
-const ContactCenterAddress = ({ policy, setAddress }: ContactCenterAddressProps) => {
-    const { t: addressChangeT } = useTranslation(undefined, { keyPrefix: 'addressChange' });
-    const { t: contactCenterT } = useTranslation(undefined, { keyPrefix: 'sendDocument.correspondence' });
+const ContactCenterAddress = ({
+    policy,
+    setAddress,
+}: ContactCenterAddressProps) => {
+    const { t: addressChangeT } = useTranslation(undefined, {
+        keyPrefix: 'addressChange',
+    });
+    const { t: contactCenterT } = useTranslation(undefined, {
+        keyPrefix: 'sendDocument.correspondence',
+    });
 
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
     const sideSheet = useSideSheetContext();
@@ -33,18 +40,39 @@ const ContactCenterAddress = ({ policy, setAddress }: ContactCenterAddressProps)
         return false;
     });
 
-    const roleTypes = useMemo(() => (checkCustodialContract ? [PartyRole.INSURED] : AllowedRoleTypes), [checkCustodialContract]);
+    const roleTypes = useMemo(
+        () => (checkCustodialContract ? [PartyRole.INSURED] : AllowedRoleTypes),
+        [checkCustodialContract]
+    );
 
     const extractedPartyRoles = useMemo(
-        () => policy?.partyRoles?.filter(role => roleTypes.includes(role?.partyRole ?? '')) || [],
+        () =>
+            policy?.partyRoles?.filter((role) =>
+                roleTypes.includes(role?.partyRole ?? '')
+            ) || [],
         [policy?.partyRoles, roleTypes]
     );
     const [selectedNewAddress, setSelectedNewAddress] = useState(false);
-    const qualificationType = React.useMemo(() => policy?.qualificationType ?? '', [policy]);
+    const qualificationType = React.useMemo(
+        () => policy?.qualificationType ?? '',
+        [policy]
+    );
 
     const partyCardsData: PartyAddressCard[] = useMemo(
-        () => groupPartiesByAddress(extractedPartyRoles, extractedParties, qualificationType, addressChangeT, false),
-        [extractedPartyRoles, extractedParties, qualificationType, addressChangeT]
+        () =>
+            groupPartiesByAddress(
+                extractedPartyRoles,
+                extractedParties,
+                qualificationType,
+                addressChangeT,
+                false
+            ),
+        [
+            extractedPartyRoles,
+            extractedParties,
+            qualificationType,
+            addressChangeT,
+        ]
     );
 
     function handleClick(id: number): void {
@@ -78,12 +106,26 @@ const ContactCenterAddress = ({ policy, setAddress }: ContactCenterAddressProps)
             sideSheet.handleOpen(false);
             return;
         }
-        const { firstName, lastName, addressType, addressId, country, zipCodeExtension, ...address } = val;
+        const {
+            firstName,
+            lastName,
+            addressType,
+            addressId,
+            country,
+            zipCodeExtension,
+            ...address
+        } = val;
 
         partyCardsData.push({
             firstName,
             lastName,
-            address: { ...address, addressType, addressId, country, zipCodeExtension },
+            address: {
+                ...address,
+                addressType,
+                addressId,
+                country,
+                zipCodeExtension,
+            },
             partyRoles: [],
             roleIdentifiers: [],
             tags: [],
@@ -95,8 +137,16 @@ const ContactCenterAddress = ({ policy, setAddress }: ContactCenterAddressProps)
     };
 
     function addDifferentAddress(): void {
-        const content = <DifferentAddress carrierId={policy?.carrierId ?? ''} handleClose={handleSelectedAddress} />;
-        sideSheet.changeSideSheetContent(contactCenterT('mailDetails.sendToDifferentAddress'), content);
+        const content = (
+            <DifferentAddress
+                carrierId={policy?.carrierId ?? ''}
+                handleClose={handleSelectedAddress}
+            />
+        );
+        sideSheet.changeSideSheetContent(
+            contactCenterT('mailDetails.sendToDifferentAddress'),
+            content
+        );
         sideSheet.handleOpen(true);
     }
 
@@ -114,7 +164,8 @@ const ContactCenterAddress = ({ policy, setAddress }: ContactCenterAddressProps)
                     classes={clsx(
                         'flex w-min items-center justify-center py-4',
                         {
-                            'border-primary hover:border-primary ': selectedAddress === partyCardsData.length,
+                            'border-primary hover:border-primary ':
+                                selectedAddress === partyCardsData.length,
                         },
                         'min-h-[120px] min-w-[300px]'
                     )}

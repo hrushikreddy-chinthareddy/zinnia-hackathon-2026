@@ -13,7 +13,8 @@ describe('Field Data', () => {
             children: value,
         };
     });
-    const renderComponent = () => render(<FieldData {...props}>{value}</FieldData>);
+    const renderComponent = () =>
+        render(<FieldData {...props}>{value}</FieldData>);
 
     it('renders without crashing', () => {
         const { getByTestId } = renderComponent();
@@ -21,7 +22,7 @@ describe('Field Data', () => {
         const label = getByTestId(FieldDataTest.Label);
         const value = getByTestId(FieldDataTest.Value);
         const requiredElements = [container, label, value];
-        requiredElements.map(element => expect(element).toBeInTheDocument());
+        requiredElements.map((element) => expect(element).toBeInTheDocument());
     });
 
     describe('design reqs', () => {

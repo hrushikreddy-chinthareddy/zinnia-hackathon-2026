@@ -2,7 +2,9 @@ import { ArrangementType, FeatureType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
-import CardSection, { FooterContent } from '@deps/components/card/card-section/card-section';
+import CardSection, {
+    FooterContent,
+} from '@deps/components/card/card-section/card-section';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import FieldData from '@deps/components/fields/field-data/field-data';
 import ResponsiveFlex from '@deps/components/responsive-flex/responsive-flex';
@@ -18,7 +20,10 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { TransactionResponseStatus, checkEligibilitySystematicPrograms } from '@deps/queries/api/bpm';
+import {
+    TransactionResponseStatus,
+    checkEligibilitySystematicPrograms,
+} from '@deps/queries/api/bpm';
 
 import { AnnuitizationPageHeader } from './annuitization-page-header';
 
@@ -28,27 +33,51 @@ export const AnnuitizationSubPage = () => {
         keyPrefix: 'annuitization',
     });
     const [isEligibleManagePayout, setIsEligibleManagePayout] = useState(false);
-    const [ineligibleManagePayoutReason, setIneligibleManagePayoutReason] = useState('');
+    const [ineligibleManagePayoutReason, setIneligibleManagePayoutReason] =
+        useState('');
 
-    const { parties, planCode, features, policyNumber, systematicPrograms } = policyDetails;
-    const upcomingPayout = useMemo(() => systematicPrograms.getNextProgramByType('PAYMENT' as ArrangementType), [systematicPrograms]);
-    const annuitizationFeature = features.getFirstFeatureByType(FeatureType.ANNUITIZATION);
+    const { parties, planCode, features, policyNumber, systematicPrograms } =
+        policyDetails;
+    const upcomingPayout = useMemo(
+        () =>
+            systematicPrograms.getNextProgramByType(
+                'PAYMENT' as ArrangementType
+            ),
+        [systematicPrograms]
+    );
+    const annuitizationFeature = features.getFirstFeatureByType(
+        FeatureType.ANNUITIZATION
+    );
 
     // BPB - this is assuming there's one payee per systematic program.  If not, we need to figure out how to handle multiple payees
     const payeeInfo = upcomingPayout?.party?.[0];
 
     const payeeParty = parties.getPartyById(payeeInfo?.partyId || '');
-    const payeeBankDetails = payeeParty?.banks?.getById(payeeInfo?.bankId || '');
+    const payeeBankDetails = payeeParty?.banks?.getById(
+        payeeInfo?.bankId || ''
+    );
 
     useEffect(() => {
         const checkManageAutopayEligibility = async () => {
             const arrangementId = upcomingPayout?.arrangementId || '';
-            const manageAutopayEligibility = await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId);
+            const manageAutopayEligibility =
+                await checkEligibilitySystematicPrograms(
+                    planCode,
+                    policyNumber,
+                    arrangementId
+                );
 
-            if (manageAutopayEligibility?.status === TransactionResponseStatus.Success) {
+            if (
+                manageAutopayEligibility?.status ===
+                TransactionResponseStatus.Success
+            ) {
                 setIsEligibleManagePayout(true);
             } else {
-                setIneligibleManagePayoutReason(formatValidationResult(manageAutopayEligibility?.validationResult));
+                setIneligibleManagePayoutReason(
+                    formatValidationResult(
+                        manageAutopayEligibility?.validationResult
+                    )
+                );
             }
         };
 
@@ -66,7 +95,10 @@ export const AnnuitizationSubPage = () => {
 
     return (
         <>
-            <AnnuitizationPageHeader policy={policy} policyDetails={policyDetails} />
+            <AnnuitizationPageHeader
+                policy={policy}
+                policyDetails={policyDetails}
+            />
             <hr className="border-t-2 border-t-background" />
             <UpcomingPaymentCard
                 bankDetails={payeeBankDetails}
@@ -76,10 +108,20 @@ export const AnnuitizationSubPage = () => {
                 autopayAmount={upcomingPayout?.amount}
                 paymentText={t('upcoming.payoutAmount') as string}
                 paymentDate={upcomingPayout?.nextProgramDate}
-                paymentDateText={(!!upcomingPayout?.nextProgramDate && t('upcoming.payoutDateText')) || undefined}
+                paymentDateText={
+                    (!!upcomingPayout?.nextProgramDate &&
+                        t('upcoming.payoutDateText')) ||
+                    undefined
+                }
                 title={t('upcoming.title') as string}
             />
-            <CardSection headerContent={<h2 className="font-primary headline-2">{t('details.header')}</h2>}>
+            <CardSection
+                headerContent={
+                    <h2 className="font-primary headline-2">
+                        {t('details.header')}
+                    </h2>
+                }
+            >
                 <ResponsiveFlex
                     layoutDirection={LayoutDirection.Horizontal}
                     horizontalResizing={HorizontalResizing.Hug}
@@ -88,13 +130,29 @@ export const AnnuitizationSubPage = () => {
                     itemSpacing={ItemSpacing.XSmall}
                     className="md:gap-6 lg:gap-8"
                 >
-                    <FieldData label={t('details.paymentAmount')}>{numberFormatify(annuitizationFeature?.paymentAmount)}</FieldData>
-                    <FieldData label={t('details.startDate')}>{convertKebabedDateString(annuitizationFeature?.startDate)}</FieldData>
-                    <FieldData label={t('details.endDate')}>{convertKebabedDateString(annuitizationFeature?.endDate)}</FieldData>
-                    <FieldData label={t('details.totalPaymentAmount')}>
-                        {numberFormatify(annuitizationFeature?.totalPaymentAmount)}
+                    <FieldData label={t('details.paymentAmount')}>
+                        {numberFormatify(annuitizationFeature?.paymentAmount)}
                     </FieldData>
-                    <FieldData label={t('details.ytdPaymentAmount')}>{numberFormatify(annuitizationFeature?.totalPaymentAmount)}</FieldData>
+                    <FieldData label={t('details.startDate')}>
+                        {convertKebabedDateString(
+                            annuitizationFeature?.startDate
+                        )}
+                    </FieldData>
+                    <FieldData label={t('details.endDate')}>
+                        {convertKebabedDateString(
+                            annuitizationFeature?.endDate
+                        )}
+                    </FieldData>
+                    <FieldData label={t('details.totalPaymentAmount')}>
+                        {numberFormatify(
+                            annuitizationFeature?.totalPaymentAmount
+                        )}
+                    </FieldData>
+                    <FieldData label={t('details.ytdPaymentAmount')}>
+                        {numberFormatify(
+                            annuitizationFeature?.totalPaymentAmount
+                        )}
+                    </FieldData>
                 </ResponsiveFlex>
             </CardSection>
         </>

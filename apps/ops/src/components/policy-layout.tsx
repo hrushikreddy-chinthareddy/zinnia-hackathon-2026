@@ -36,14 +36,24 @@ const PolicyLayout: React.FC<PageLayoutProps> = ({
     const openSideSheet = () => {
         if (globalValuesData) {
             sideSheet.changeSideSheetContent(
-                <PolicyInfo tooltipPlacements={PopoverPlacement.BottomLeft} {...globalValuesData} openSideSheet={undefined} />,
+                <PolicyInfo
+                    tooltipPlacements={PopoverPlacement.BottomLeft}
+                    {...globalValuesData}
+                    openSideSheet={undefined}
+                />,
                 <SideSheetProductDetails globalValues={globalValuesData} />
             );
             sideSheet.handleOpen(true);
         }
     };
 
-    const globalValuesData = useMemo(() => (policyDetails.policyNumber ? policyDataToGlobalValues(policy, t) : null), [policy, t]);
+    const globalValuesData = useMemo(
+        () =>
+            policyDetails.policyNumber
+                ? policyDataToGlobalValues(policy, t)
+                : null,
+        [policy, t]
+    );
 
     return (
         <StaticContentProvider policy={policyDetails}>

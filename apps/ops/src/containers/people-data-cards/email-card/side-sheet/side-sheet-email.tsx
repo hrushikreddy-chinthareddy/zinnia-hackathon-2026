@@ -1,12 +1,25 @@
-import { Email, EmailType, Party, PreferredCommunicationType, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    Email,
+    EmailType,
+    Party,
+    PreferredCommunicationType,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
-import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
+import CaseDocumentSelect, {
+    CaseDocumentOption,
+    SetStateCaseId,
+} from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import AlertState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/alert-state';
@@ -51,8 +64,18 @@ export type SideSheetEmailProps = {
     updateEmail?: Email;
 };
 
-const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, setCurrentEmails, updateEmail }: SideSheetEmailProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.email' });
+const SideSheetEmail = ({
+    isOnlyEmail,
+    onCancel,
+    party,
+    planCode,
+    policyNumber,
+    setCurrentEmails,
+    updateEmail,
+}: SideSheetEmailProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.sideSheet.email',
+    });
     const { t: defaultT } = useTranslation();
 
     const INITIAL_EMAIL: Email = {
@@ -66,14 +89,22 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
         reverseInitiator: false,
     };
 
-    const [action, setAction] = useState(updateEmail ? NonFinancialTransactionActions.Edit : NonFinancialTransactionActions.Add);
+    const [action, setAction] = useState(
+        updateEmail
+            ? NonFinancialTransactionActions.Edit
+            : NonFinancialTransactionActions.Add
+    );
     const [body, setBody] = useState(INITIAL_BODY);
-    const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
+    const [caseDocumentOptions, setCaseDocumentOptions] = useState<
+        CaseDocumentOption[]
+    >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
     const [email, setEmail] = useState<Email>(updateEmail ?? INITIAL_EMAIL);
     const [newCaseId, setNewCaseId] = useState<string>();
 
-    const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+    const [validationResults, setValidationResults] = useState<
+        ValidationResult[]
+    >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
 
     const { emailAddress, emailType = EmailType.PERSONAL } = email;
@@ -81,11 +112,19 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
 
     const isAdd = action === NonFinancialTransactionActions.Add;
     const isDelete = action === NonFinancialTransactionActions.Delete;
-    const stopLoading = currentErrors === undefined ? true : !!Object.entries(currentErrors).length;
+    const stopLoading =
+        currentErrors === undefined
+            ? true
+            : !!Object.entries(currentErrors).length;
 
     const emailTypes = getEmailTypes({ t: defaultT });
-    const emailTypeTranslation = mapEmailTypeToTranslation(emailType, defaultT).toLowerCase();
-    const mainCtaText = isAdd ? t('mainCta.add', { type: emailTypeTranslation }) : t('mainCta.update', { type: emailTypeTranslation });
+    const emailTypeTranslation = mapEmailTypeToTranslation(
+        emailType,
+        defaultT
+    ).toLowerCase();
+    const mainCtaText = isAdd
+        ? t('mainCta.add', { type: emailTypeTranslation })
+        : t('mainCta.update', { type: emailTypeTranslation });
 
     const handleDelete = async () => {
         const response = await editNonFinancialTransaction({
@@ -111,7 +150,11 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
         if (Object.keys(errors).length > 0) return;
 
         if (isDelete) {
-            if (party?.preferredCommunicationType === PreferredCommunicationType.EMAIL && isOnlyEmail) {
+            if (
+                party?.preferredCommunicationType ===
+                    PreferredCommunicationType.EMAIL &&
+                isOnlyEmail
+            ) {
                 setViewState(ViewState.Alert);
                 return;
             }
@@ -147,14 +190,21 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
             });
         }
 
-        handleResponse({ response, setViewState, setValidationResults, setNewCaseId });
+        handleResponse({
+            response,
+            setViewState,
+            setValidationResults,
+            setNewCaseId,
+        });
     };
 
     switch (viewState) {
         case ViewState.Loading:
             return <LoadingState />;
         case ViewState.Alert:
-            return <AlertState ctaAction={() => setViewState(ViewState.Default)} />;
+            return (
+                <AlertState ctaAction={() => setViewState(ViewState.Default)} />
+            );
         case ViewState.BpmError:
             return (
                 <BpmErrorState
@@ -189,7 +239,12 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
                 />
             );
         case ViewState.Success:
-            updateOptimistically({ action, idKey: NonFinancialTransactionIdKeys.Email, newItem: email, setState: setCurrentEmails });
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Email,
+                newItem: email,
+                setState: setCurrentEmails,
+            });
 
             return (
                 <SuccessState
@@ -227,7 +282,12 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
                         aria-label={t('labels.type') as string}
                         items={emailTypes}
                         label={t('labels.type') as string}
-                        onChange={event => setEmail(prevState => ({ ...prevState, emailType: event.target.value as EmailType }))}
+                        onChange={(event) =>
+                            setEmail((prevState) => ({
+                                ...prevState,
+                                emailType: event.target.value as EmailType,
+                            }))
+                        }
                         value={emailType}
                     />
                 )}
@@ -236,17 +296,26 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
                     aria-label={t('labels.email') as string}
                     label={t('labels.email') as string}
                     message={currentErrors?.emailAddress}
-                    onChange={event => {
-                        setCurrentErrors(prevState => {
+                    onChange={(event) => {
+                        setCurrentErrors((prevState) => {
                             const { emailAddress, ...errors } = prevState ?? {};
                             return errors;
                         });
-                        setEmail(prevState => ({ ...prevState, emailAddress: event.target.value }));
+                        setEmail((prevState) => ({
+                            ...prevState,
+                            emailAddress: event.target.value,
+                        }));
                     }}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={emailAddress}
-                    variant={isDelete ? FieldVariant.Inactive : currentErrors?.emailAddress ? FieldVariant.Error : FieldVariant.Default}
+                    variant={
+                        isDelete
+                            ? FieldVariant.Inactive
+                            : currentErrors?.emailAddress
+                            ? FieldVariant.Error
+                            : FieldVariant.Default
+                    }
                 />
             </div>
 
@@ -254,8 +323,12 @@ const SideSheetEmail = ({ isOnlyEmail, onCancel, party, planCode, policyNumber, 
                 <CheckboxText
                     checked={isDelete}
                     label={t('labels.removeEmail')}
-                    onChange={e => {
-                        setAction(e ? NonFinancialTransactionActions.Delete : NonFinancialTransactionActions.Edit);
+                    onChange={(e) => {
+                        setAction(
+                            e
+                                ? NonFinancialTransactionActions.Delete
+                                : NonFinancialTransactionActions.Edit
+                        );
                     }}
                 />
             )}

@@ -1,4 +1,9 @@
-import { AddressType, Country, Policy, State } from '@zinnia/api-types/types/sor';
+import {
+    AddressType,
+    Country,
+    Policy,
+    State,
+} from '@zinnia/api-types/types/sor';
 
 export enum ContactTypes {
     Address = 'address',

@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
+import {
+    deStringifyTrueFalseNull,
+    stringifyTrueFalseNull,
+} from '@deps/helpers/string.helpers';
 import { PolicyWaiver, SelectOption } from '@deps/models/case/withdrawal/case';
 
 import { WaiverItemConfig } from './form-waivers';
@@ -20,9 +23,19 @@ export type WaiverItemProps = WaiverItemConfig & {
     onChange: (val: StatusData) => void;
 };
 
-export const FormWaiverItem = ({ id, title, optionTitle, options, selectedOption, isFormStateReadOnly, onChange }: WaiverItemProps) => {
+export const FormWaiverItem = ({
+    id,
+    title,
+    optionTitle,
+    options,
+    selectedOption,
+    isFormStateReadOnly,
+    onChange,
+}: WaiverItemProps) => {
     const [isVisible, setIsVisible] = useState(!!selectedOption || false);
-    const [waiverStatus, setWaiverStatus] = useState(stringifyTrueFalseNull(selectedOption?.isValid?.text));
+    const [waiverStatus, setWaiverStatus] = useState(
+        stringifyTrueFalseNull(selectedOption?.isValid?.text)
+    );
 
     useEffect(() => {
         onChange({
@@ -30,7 +43,9 @@ export const FormWaiverItem = ({ id, title, optionTitle, options, selectedOption
             action: isVisible ? 'ADD' : 'REMOVE',
             selectionOptions: {
                 isValid: {
-                    text: deStringifyTrueFalseNull(waiverStatus) as boolean | null,
+                    text: deStringifyTrueFalseNull(waiverStatus) as
+                        | boolean
+                        | null,
                 },
             },
         });
@@ -52,7 +67,7 @@ export const FormWaiverItem = ({ id, title, optionTitle, options, selectedOption
                     data-testid={`${id}-buttongroup`}
                     activeValue={waiverStatus}
                     groupLabel={optionTitle}
-                    toggle={val => {
+                    toggle={(val) => {
                         setWaiverStatus(val);
                     }}
                     labels={options}

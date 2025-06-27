@@ -1,22 +1,33 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { BankingFields, DisbursementFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
+import {
+    BankingFields,
+    DisbursementFields,
+} from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
 import { DocumentData } from '@deps/models/case/document';
-import { BankUpdateType, ChannelType, ContributionType } from '@deps/models/case/enums';
+import {
+    BankUpdateType,
+    ChannelType,
+    ContributionType,
+} from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
+import {
+    CreateTaskBody,
+    TaskSource,
+    TaskV2Payload,
+} from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import {
     AccountType,
     ActiveWithdrawalCase,
     Carrier,
     FormSignature,
-    PartyRoles
+    PartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -94,15 +105,20 @@ export const BankUpdateFieldConfigs = (t: TFunction, clientCode: string) => {
                 isVoidCheckFieldApplicable(clientCode)
                     ? {
                           fieldName: BankingFields.IsVoidCheckAttached,
-                          fieldLabel: t('distributionMethod.isVoidCheckAttached'),
+                          fieldLabel: t(
+                              'distributionMethod.isVoidCheckAttached'
+                          ),
                           component: DisbursementFields.BankBooleanButtonGroup,
                           classNames: 'col-start-1',
                       }
                     : null,
                 isSecurityRequirementsFieldApplicable(clientCode)
                     ? {
-                          fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                          fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                          fieldName:
+                              BankingFields.DoesCheckMeetSecurityRequirements,
+                          fieldLabel: t(
+                              'distributionMethod.doesCheckMeetSecurityRequirements'
+                          ),
                           component: DisbursementFields.BankBooleanButtonGroup,
                       }
                     : null,
@@ -129,7 +145,10 @@ export const BankUpdateFieldConfigs = (t: TFunction, clientCode: string) => {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -142,11 +161,16 @@ export const BankUpdateFieldConfigs = (t: TFunction, clientCode: string) => {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -164,7 +188,7 @@ export const BankUpdateFieldConfigs = (t: TFunction, clientCode: string) => {
         },
     ];
 
-    return formFields[0].fields.filter(item => item);
+    return formFields[0].fields.filter((item) => item);
 };
 
 export const signaturesConfig = [
@@ -212,7 +236,9 @@ export const signaturesConfig = [
         ],
         signatureType: SignatureValidationTypeWithdrawal.JointOwner,
         shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-            return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+            return !!formParty?.parties?.find(
+                (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+            );
         },
     },
     {
@@ -264,13 +290,18 @@ export const getBankUpdatePayload = (
                 bankName: bankUpdateDetails.bankName,
                 nameOnBankAccount: bankUpdateDetails.accountHolder,
                 routingNumber: bankUpdateDetails.bankRoutingNumber,
-                bankType: bankUpdateDetails.bankType ?? ContributionType.Disbursement,
+                bankType:
+                    bankUpdateDetails.bankType ?? ContributionType.Disbursement,
             },
         ],
-        doesCheckMeetSecRequiremnt: isSecurityRequirementsFieldApplicable(initialForm.carrier)
+        doesCheckMeetSecRequiremnt: isSecurityRequirementsFieldApplicable(
+            initialForm.carrier
+        )
             ? bankUpdateDetails.doesCheckMeetSecurityRequirements
             : null,
-        voidCheck: isVoidCheckFieldApplicable(initialForm.carrier) ? bankUpdateDetails.isVoidCheckAttached : null,
+        voidCheck: isVoidCheckFieldApplicable(initialForm.carrier)
+            ? bankUpdateDetails.isVoidCheckAttached
+            : null,
         programs: null,
     };
 
@@ -279,8 +310,14 @@ export const getBankUpdatePayload = (
             text: document.source,
         },
         businessKey: document.documentNumber,
-        receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
-        receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
+        receivedDate: dayjs(
+            document.dateReceived,
+            'M/D/YYYY hh:mm:ss A'
+        ).format(ZAHARA_API_DATE_FORMAT),
+        receivedDateTime: dayjs(
+            document.dateReceived,
+            'M/D/YYYY hh:mm:ss A'
+        ).format('YYYY-MM-DDTHH:mm:ss:Z'),
         sourceSysId: 'ONBASE',
     };
 
@@ -309,7 +346,8 @@ export const getBankUpdatePayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: documentSource !== ChannelType.Phone ? formSignature : null,
+            formSignature:
+                documentSource !== ChannelType.Phone ? formSignature : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,
@@ -333,6 +371,12 @@ export const bankUpdateFormData = (
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
-        data: getBankUpdatePayload(initialForm, bankUpdateDetails, formSignature, document, bankUpdateType) as any,
+        data: getBankUpdatePayload(
+            initialForm,
+            bankUpdateDetails,
+            formSignature,
+            document,
+            bankUpdateType
+        ) as any,
     };
 };

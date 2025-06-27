@@ -2,7 +2,13 @@ import { AxiosResponse } from 'axios';
 
 import { UserPermission } from '@deps/models/user-profile';
 import { ApiResponse } from '@deps/types/api-response';
-import { CheckTupleResponse, Tuple, GetCarrierListQuery, TupleRequest, TupleResponse } from '@deps/types/fga';
+import {
+    CheckTupleResponse,
+    Tuple,
+    GetCarrierListQuery,
+    TupleRequest,
+    TupleResponse,
+} from '@deps/types/fga';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 
@@ -12,9 +18,14 @@ import { client } from '../api-utils/client';
 const baseUrl = baseAppUrl + '/api/fga/v1';
 const bulkCheckUrl = baseUrl + '/bulk-check';
 
-export const bulkCheckResponseClient = async (body?: TupleRequest): Promise<ApiResponse<TupleResponse>> => {
+export const bulkCheckResponseClient = async (
+    body?: TupleRequest
+): Promise<ApiResponse<TupleResponse>> => {
     try {
-        const bulkCheckRequest = await client.post<TupleRequest, AxiosResponse<TupleResponse>>(bulkCheckUrl, body);
+        const bulkCheckRequest = await client.post<
+            TupleRequest,
+            AxiosResponse<TupleResponse>
+        >(bulkCheckUrl, body);
         const response: ApiResponse<TupleResponse> = {
             data: bulkCheckRequest.data,
             error: null,
@@ -28,16 +39,30 @@ export const bulkCheckResponseClient = async (body?: TupleRequest): Promise<ApiR
         }
         return response;
     } catch (e) {
-        browserLogError('bulkCheckResponse::An error occurred while calling bulk check endpoint', {
-            file: 'queries/api/fga',
-            function: 'bulkCheckResponse',
-            url: bulkCheckUrl,
-        });
-        return { data: null, error: { status: 500, message: (e as Error)?.message, name: 'Error checking tuples' } };
+        browserLogError(
+            'bulkCheckResponse::An error occurred while calling bulk check endpoint',
+            {
+                file: 'queries/api/fga',
+                function: 'bulkCheckResponse',
+                url: bulkCheckUrl,
+            }
+        );
+        return {
+            data: null,
+            error: {
+                status: 500,
+                message: (e as Error)?.message,
+                name: 'Error checking tuples',
+            },
+        };
     }
 };
 
-export const checkTuple = async (partyId: string, relation: string, tupleObject: string): Promise<ApiResponse<boolean>> => {
+export const checkTuple = async (
+    partyId: string,
+    relation: string,
+    tupleObject: string
+): Promise<ApiResponse<boolean>> => {
     const tuple = {
         user: `party:${partyId}`,
         relation,
@@ -47,7 +72,10 @@ export const checkTuple = async (partyId: string, relation: string, tupleObject:
 
     if (cachedResult) return cachedResult;
 
-    const fgaCheck = await client.post<Tuple, AxiosResponse<CheckTupleResponse>>(`${baseUrl}/check`, tuple);
+    const fgaCheck = await client.post<
+        Tuple,
+        AxiosResponse<CheckTupleResponse>
+    >(`${baseUrl}/check`, tuple);
     const allowed = fgaCheck?.data?.allowed;
 
     const response: ApiResponse<boolean> = {
@@ -58,7 +86,11 @@ export const checkTuple = async (partyId: string, relation: string, tupleObject:
     if (fgaCheck.status === 200) {
         writeToCache('checkTuple', tuple, response);
     } else {
-        response.error = { status: fgaCheck.status, message: fgaCheck.statusText, name: 'Error checking tuple' };
+        response.error = {
+            status: fgaCheck.status,
+            message: fgaCheck.statusText,
+            name: 'Error checking tuple',
+        };
     }
 
     return response;
@@ -87,27 +119,50 @@ export const getCarrierList = async (
         const cachedResult = pullFromCache('getCarrierList', query);
         if (cachedResult) return cachedResult;
 
-        const carrierListCheck = await client.post<GetCarrierListQuery, AxiosResponse>(url, query);
-        const response: ApiResponse<string[]> = { data: carrierListCheck?.data?.carriers || [], error: null };
+        const carrierListCheck = await client.post<
+            GetCarrierListQuery,
+            AxiosResponse
+        >(url, query);
+        const response: ApiResponse<string[]> = {
+            data: carrierListCheck?.data?.carriers || [],
+            error: null,
+        };
 
         if (carrierListCheck.status === 200) {
             writeToCache('getCarrierList', query, response, 10);
         } else {
-            browserLogWarn('getCarrierList::An error occurred while getting the carrier list', {
-                file: 'queries/api/fga',
-                function: 'getCarrierList',
-                url,
-            });
-            response.error = { status: carrierListCheck.status, message: carrierListCheck.statusText, name: 'Error getting carrier list' };
+            browserLogWarn(
+                'getCarrierList::An error occurred while getting the carrier list',
+                {
+                    file: 'queries/api/fga',
+                    function: 'getCarrierList',
+                    url,
+                }
+            );
+            response.error = {
+                status: carrierListCheck.status,
+                message: carrierListCheck.statusText,
+                name: 'Error getting carrier list',
+            };
         }
 
         return response;
     } catch (error: any) {
-        browserLogWarn('getCarrierList::An error occurred while getting the carrier list', {
-            file: 'queries/api/fga',
-            function: 'getCarrierList',
-            url,
-        });
-        return { data: [], error: { status: 500, message: error.message, name: 'Error getting carrier list' } };
+        browserLogWarn(
+            'getCarrierList::An error occurred while getting the carrier list',
+            {
+                file: 'queries/api/fga',
+                function: 'getCarrierList',
+                url,
+            }
+        );
+        return {
+            data: [],
+            error: {
+                status: 500,
+                message: error.message,
+                name: 'Error getting carrier list',
+            },
+        };
     }
 };

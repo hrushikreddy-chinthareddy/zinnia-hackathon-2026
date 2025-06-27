@@ -9,10 +9,17 @@ import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css
 import { CaseTimingContext } from '@deps/components/dashboard/sections/case-timing/context/case-timing-context';
 import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-filters';
 import { CaseTimingHeader } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-header';
-import { generateLabel, generateSeries, generateTooltip, getDaysFromSeconds } from '@deps/components/dashboard/sections/case-timing/utils';
+import {
+    generateLabel,
+    generateSeries,
+    generateTooltip,
+    getDaysFromSeconds,
+} from '@deps/components/dashboard/sections/case-timing/utils';
 import { generateCarouselDataLengths } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
@@ -21,17 +28,23 @@ import { chunkArray } from '@deps/utils/array';
 import styles from './case-timing-chart.module.css';
 
 export const CaseTimingChart: FC = () => {
-    const { caseTimingData, caseTimingDataFetching, caseTimingDataError } = useContext(CaseTimingContext);
+    const { caseTimingData, caseTimingDataFetching, caseTimingDataError } =
+        useContext(CaseTimingContext);
 
     // get 5 items for each slide
-    const chunkedResponse: CompletedCaseTimeOutputLevel1[][] = chunkArray(caseTimingData || [], 5);
+    const chunkedResponse: CompletedCaseTimeOutputLevel1[][] = chunkArray(
+        caseTimingData || [],
+        5
+    );
 
     // When generating the time axis, we take raw time in seconds, but we convert the seconds to hours or days and display that on the chart.
-    const chartConfig = chunkedResponse.map(chunk => {
-        const xAxis = chunk.map(item => item.name);
+    const chartConfig = chunkedResponse.map((chunk) => {
+        const xAxis = chunk.map((item) => item.name);
         const series = generateSeries(chunk);
-        const isSeriesShowingDays = getDaysFromSeconds(series[0]?.data?.[0]?.y) >= 1;
-        const baseChartConfiguration = caseChartHelpers.getBaseBarChartConfiguration();
+        const isSeriesShowingDays =
+            getDaysFromSeconds(series[0]?.data?.[0]?.y) >= 1;
+        const baseChartConfiguration =
+            caseChartHelpers.getBaseBarChartConfiguration();
         return {
             ...Highcharts.merge(baseChartConfiguration, {
                 legend: {
@@ -54,7 +67,9 @@ export const CaseTimingChart: FC = () => {
                     },
                 },
                 tooltip: {
-                    formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+                    formatter: function (
+                        this: Highcharts.TooltipFormatterContextObject
+                    ) {
                         return generateTooltip(this);
                     },
                     useHtml: true,
@@ -64,7 +79,9 @@ export const CaseTimingChart: FC = () => {
                     tickAmount: 5,
 
                     labels: {
-                        formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
+                        formatter: function (
+                            this: Highcharts.AxisLabelsFormatterContextObject
+                        ) {
                             return generateLabel(this, isSeriesShowingDays);
                         },
                     },
@@ -75,8 +92,10 @@ export const CaseTimingChart: FC = () => {
     });
 
     // Pass to the carousel to say which number of items you're currently viewing out of total
-    const chunkedResponseLengths = chunkedResponse.map(chunk => chunk.length);
-    const eachChunkPortionOfTotal = generateCarouselDataLengths(chunkedResponseLengths);
+    const chunkedResponseLengths = chunkedResponse.map((chunk) => chunk.length);
+    const eachChunkPortionOfTotal = generateCarouselDataLengths(
+        chunkedResponseLengths
+    );
 
     return (
         <CardContainer fullWidth={false}>
@@ -85,42 +104,70 @@ export const CaseTimingChart: FC = () => {
                 <div className=" flex bg-[--color-base-surface-surface-primary">
                     {caseTimingDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'Something went wrong fetching insights, please try again by refreshing the page'}
+                                {
+                                    'Something went wrong fetching insights, please try again by refreshing the page'
+                                }
                             </Typography>
                         </div>
                     ) : (
                         <>
-                            <div className={clsx(sharedStyles.chartContainer, sharedStyles.noBorder)}>
+                            <div
+                                className={clsx(
+                                    sharedStyles.chartContainer,
+                                    sharedStyles.noBorder
+                                )}
+                            >
                                 <CaseTimingFilters />
                                 {caseTimingData?.length === 0 ? (
                                     <div className=" h-[19rem] flex flex-col gap-2 items-center justify-center">
                                         <>
-                                            <ChartBarsIcon height={'24px'} width={'24px'} />
-                                            <Typography variant={TypographyVariant.BodyBold}>
-                                                There is no data for this selection
+                                            <ChartBarsIcon
+                                                height={'24px'}
+                                                width={'24px'}
+                                            />
+                                            <Typography
+                                                variant={
+                                                    TypographyVariant.BodyBold
+                                                }
+                                            >
+                                                There is no data for this
+                                                selection
                                             </Typography>
                                         </>
                                     </div>
                                 ) : (
                                     <Carousel
                                         slideStyle="my-8 pt-6"
-                                        slides={chartConfig.map((chartConfig, index) => {
-                                            return (
-                                                <HighchartsReact
-                                                    key={`submission-type-slide-${index}`}
-                                                    highcharts={Highcharts}
-                                                    options={chartConfig}
-                                                />
-                                            );
-                                        })}
+                                        slides={chartConfig.map(
+                                            (chartConfig, index) => {
+                                                return (
+                                                    <HighchartsReact
+                                                        key={`submission-type-slide-${index}`}
+                                                        highcharts={Highcharts}
+                                                        options={chartConfig}
+                                                    />
+                                                );
+                                            }
+                                        )}
                                         bottomContent={
                                             <div className={styles.legend}>
-                                                <p className={'typography-labels-label-sm'}>Processing time</p>
+                                                <p
+                                                    className={
+                                                        'typography-labels-label-sm'
+                                                    }
+                                                >
+                                                    Processing time
+                                                </p>
                                             </div>
                                         }
-                                        slideItemsCount={eachChunkPortionOfTotal}
+                                        slideItemsCount={
+                                            eachChunkPortionOfTotal
+                                        }
                                     />
                                 )}
                             </div>

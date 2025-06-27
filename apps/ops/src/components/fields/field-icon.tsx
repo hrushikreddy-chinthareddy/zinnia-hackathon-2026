@@ -9,14 +9,20 @@ export type FieldIconProps = {
     className?: string;
 };
 
-export default function FieldIcon({ icon, variant, className }: FieldIconProps) {
+export default function FieldIcon({
+    icon,
+    variant,
+    className,
+}: FieldIconProps) {
     if (!icon) return null;
 
     const classes = clsx(
         {
             'text-gray-300': variant === FieldVariant.Inactive,
             'text-semantic-error': variant === FieldVariant.Error,
-            'text-link': variant !== FieldVariant.Inactive && variant !== FieldVariant.Error,
+            'text-link':
+                variant !== FieldVariant.Inactive &&
+                variant !== FieldVariant.Error,
         },
         className
     );

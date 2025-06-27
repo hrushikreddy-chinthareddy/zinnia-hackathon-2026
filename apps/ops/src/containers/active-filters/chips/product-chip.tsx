@@ -19,7 +19,9 @@ const ProductChip = ({
 
     return (
         <ChipX
-            ariaLabel={t('ariaLabel.clearFilter', { filter: productCode }) as string}
+            ariaLabel={
+                t('ariaLabel.clearFilter', { filter: productCode }) as string
+            }
             label={toTitleCase(productCode)}
             onDelete={() => handleRemoveFilter({ products: newProducts })}
         />

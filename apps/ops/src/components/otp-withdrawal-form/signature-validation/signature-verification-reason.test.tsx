@@ -2,9 +2,15 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 
 import getMassMutualRmdConfig from '@deps/containers/otp/rmd-forms/mm-rmd-form.helpers';
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { CaseStatus, SignVerificationReason } from '@deps/models/case/withdrawal/case';
+import {
+    CaseStatus,
+    SignVerificationReason,
+} from '@deps/models/case/withdrawal/case';
 
 import SignatureVerificationReasons from './signature-verification-reason';
 
@@ -30,11 +36,16 @@ describe('Signature Verification component', () => {
 
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                    <SignatureVerificationReasons checkedItems={[]} config={current.signVerificationReasonConfig} />
+                    <SignatureVerificationReasons
+                        checkedItems={[]}
+                        config={current.signVerificationReasonConfig}
+                    />
                 </FormDataContext.Provider>
             );
 
-            const singleCheckboxElement = screen.getByTestId(`verification-reason-test-id-${SignVerificationReason.Single}`);
+            const singleCheckboxElement = screen.getByTestId(
+                `verification-reason-test-id-${SignVerificationReason.Single}`
+            );
             expect(singleCheckboxElement).toBeInTheDocument();
 
             const marriedWithoutERISACheckboxElement = screen.getByTestId(
@@ -55,13 +66,18 @@ describe('Signature Verification component', () => {
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
                     <SignatureVerificationReasons
-                        checkedItems={[SignVerificationReason.Single, SignVerificationReason.MarriedWithoutERISA]}
+                        checkedItems={[
+                            SignVerificationReason.Single,
+                            SignVerificationReason.MarriedWithoutERISA,
+                        ]}
                         config={current.signVerificationReasonConfig}
                     />
                 </FormDataContext.Provider>
             );
 
-            const singleCheckboxElement = screen.getByTestId(`verification-reason-test-id-${SignVerificationReason.Single}`);
+            const singleCheckboxElement = screen.getByTestId(
+                `verification-reason-test-id-${SignVerificationReason.Single}`
+            );
             expect(singleCheckboxElement).toBeInTheDocument();
             expect(singleCheckboxElement).toBeChecked();
 
@@ -78,12 +94,23 @@ describe('Signature Verification component', () => {
             } = renderHook(() => getMassMutualRmdConfig(t));
             const setFormSignature = jest.fn();
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, setFormSignature }}>
-                    <SignatureVerificationReasons checkedItems={[]} config={current.signVerificationReasonConfig} />
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        setFormSignature,
+                    }}
+                >
+                    <SignatureVerificationReasons
+                        checkedItems={[]}
+                        config={current.signVerificationReasonConfig}
+                    />
                 </FormDataContext.Provider>
             );
 
-            const singleCheckboxElement = screen.getByTestId(`verification-reason-test-id-${SignVerificationReason.Single}`);
+            const singleCheckboxElement = screen.getByTestId(
+                `verification-reason-test-id-${SignVerificationReason.Single}`
+            );
             expect(singleCheckboxElement).toBeInTheDocument();
             fireEvent.click(singleCheckboxElement);
             expect(setFormSignature).toBeCalled();
@@ -93,17 +120,26 @@ describe('Signature Verification component', () => {
             const {
                 result: { current },
             } = renderHook(() => getMassMutualRmdConfig(t));
-            const prevSignatureState = { formSignature: { ...defaultFormDataContext.formSignature } };
+            const prevSignatureState = {
+                formSignature: { ...defaultFormDataContext.formSignature },
+            };
             let nextState;
-            const mockSetter = jest.fn().mockImplementation(callback => {
+            const mockSetter = jest.fn().mockImplementation((callback) => {
                 nextState = callback(prevSignatureState);
             });
 
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, setFormSignature: mockSetter }}
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        setFormSignature: mockSetter,
+                    }}
                 >
-                    <SignatureVerificationReasons checkedItems={[]} config={current.signVerificationReasonConfig} />
+                    <SignatureVerificationReasons
+                        checkedItems={[]}
+                        config={current.signVerificationReasonConfig}
+                    />
                 </FormDataContext.Provider>
             );
 

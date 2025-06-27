@@ -23,12 +23,19 @@ interface StaticContentProviderProps extends PropsWithChildren {
     policy: Policy;
 }
 
-export const StaticContentProvider = ({ children, policy }: StaticContentProviderProps) => {
+export const StaticContentProvider = ({
+    children,
+    policy,
+}: StaticContentProviderProps) => {
     const { t } = useTranslation();
 
     const globalValuesData = useMemo(() => {
         return policyDataToGlobalValues(new PolicyDetails(policy), t);
     }, [policy, t]);
 
-    return <StaticContentContext.Provider value={{ globalValuesData }}>{children}</StaticContentContext.Provider>;
+    return (
+        <StaticContentContext.Provider value={{ globalValuesData }}>
+            {children}
+        </StaticContentContext.Provider>
+    );
 };

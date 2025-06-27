@@ -1,7 +1,10 @@
 import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
+import {
+    getBadgeStatus,
+    getBadgeStatusVariant,
+} from '@deps/components/badge/badge.helpers';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -9,20 +12,38 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-export const getTotalMinRequiredAmount = (policy: PolicyDetails): number | string => {
-    const foundFeature = policy.features?.getFirstFeatureByType(FeatureType.LAPSEASSESSMENT);
+export const getTotalMinRequiredAmount = (
+    policy: PolicyDetails
+): number | string => {
+    const foundFeature = policy.features?.getFirstFeatureByType(
+        FeatureType.LAPSEASSESSMENT
+    );
     return foundFeature?.totalMinimumRequiredAmount || DEFAULT_ERROR_STRING;
 };
 
-export const policyDataToGlobalValues = (policy: PolicyDetails, t: TFunction) => {
+export const policyDataToGlobalValues = (
+    policy: PolicyDetails,
+    t: TFunction
+) => {
     const policyId = policy?.policyNumber;
-    const { generalLedgerPlanCode, marketingName, productType, planCode, planName, policyStatus, issueDate } = policy;
+    const {
+        generalLedgerPlanCode,
+        marketingName,
+        productType,
+        planCode,
+        planName,
+        policyStatus,
+        issueDate,
+    } = policy;
 
     const totalMinRequiredAmount = getTotalMinRequiredAmount(policy);
 
-    const pendingLapse = policy.features?.getFirstFeatureByType(FeatureType.LAPSEASSESSMENT);
+    const pendingLapse = policy.features?.getFirstFeatureByType(
+        FeatureType.LAPSEASSESSMENT
+    );
     const tooltipDate =
-        policyStatus === PolicyStatus.LAPSE || policyStatus === PolicyStatus.PENDINGLAPSE
+        policyStatus === PolicyStatus.LAPSE ||
+        policyStatus === PolicyStatus.PENDINGLAPSE
             ? formatDate(pendingLapse?.endDate)
             : formatDate(issueDate);
 

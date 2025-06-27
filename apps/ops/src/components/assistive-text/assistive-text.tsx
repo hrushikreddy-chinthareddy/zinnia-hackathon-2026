@@ -23,28 +23,76 @@ export type AssistiveTextProps = {
     iconOverride?: React.ReactNode;
 } & HTMLAttributes<HTMLParagraphElement>;
 
-const determineIcon = (variant?: AssistiveTextVariant, iconOverride?: React.ReactNode) => {
+const determineIcon = (
+    variant?: AssistiveTextVariant,
+    iconOverride?: React.ReactNode
+) => {
     if (iconOverride) return iconOverride;
 
     const classes = 'shrink-0 mt-[0.5px]';
     switch (variant) {
         case AssistiveTextVariant.Error:
-            return <HexExclamationIcon role= "presentation" className={classes} data-testid={'hex-exclamation-icon'} width={16} height={16} />;
+            return (
+                <HexExclamationIcon
+                    role="presentation"
+                    className={classes}
+                    data-testid={'hex-exclamation-icon'}
+                    width={16}
+                    height={16}
+                />
+            );
         case AssistiveTextVariant.Info:
-            return <AlertExclamationIcon role= "presentation" className={classes} data-testid={'alert-exclamation-icon'} width={16} height={16} />;
+            return (
+                <AlertExclamationIcon
+                    role="presentation"
+                    className={classes}
+                    data-testid={'alert-exclamation-icon'}
+                    width={16}
+                    height={16}
+                />
+            );
         case AssistiveTextVariant.Success:
-            return <CircleCheckIcon role= "presentation" className={classes} data-testid={'circle-check-icon'} width={16} height={16} />;
+            return (
+                <CircleCheckIcon
+                    role="presentation"
+                    className={classes}
+                    data-testid={'circle-check-icon'}
+                    width={16}
+                    height={16}
+                />
+            );
         case AssistiveTextVariant.Warning:
-            return <CircleInfoIcon role= "presentation" className={classes} data-testid={'circle-info-icon'} width={16} height={16} />;
+            return (
+                <CircleInfoIcon
+                    role="presentation"
+                    className={classes}
+                    data-testid={'circle-info-icon'}
+                    width={16}
+                    height={16}
+                />
+            );
         case AssistiveTextVariant.Brand:
         case AssistiveTextVariant.Default:
         case AssistiveTextVariant.Inactive:
         default:
-            return <CheckIcon role= "presentation" className={classes} data-testid={'check-icon'} width={16} height={16} />;
+            return (
+                <CheckIcon
+                    role="presentation"
+                    className={classes}
+                    data-testid={'check-icon'}
+                    width={16}
+                    height={16}
+                />
+            );
     }
 };
 
-export default function AssistiveText({ text, variant, iconOverride, ...rest }: AssistiveTextProps) {
+export default function AssistiveText({
+    text,
+    variant,
+    iconOverride,
+    ...rest
+}: AssistiveTextProps) {
     const { className, ...newRest } = rest;
 
     const icon = determineIcon(variant, iconOverride);

@@ -10,12 +10,18 @@ import { BrokerDealerFilter } from '@deps/components/dashboard/header-components
 import styles from '@deps/components/dashboard/header-components/filters-header/filters-header.module.css';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { CarrierListItem } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { useDashboardStore } from '@deps/store/store';
-import { getCarrierNameByClientId, getClientIdsByCarrierName, getCarrierListItem } from '@deps/utils/carriers';
+import {
+    getCarrierNameByClientId,
+    getClientIdsByCarrierName,
+    getCarrierListItem,
+} from '@deps/utils/carriers';
 interface FiltersHeaderProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
@@ -23,11 +29,13 @@ interface FiltersHeaderProps {
     carrierHeaderEntry?: IntersectionObserverEntry;
 }
 
-const getUniqueCarrierFilterItems = (carrierFilterItems: MultiselectOption[]): MultiselectOption[] => {
+const getUniqueCarrierFilterItems = (
+    carrierFilterItems: MultiselectOption[]
+): MultiselectOption[] => {
     const carrierLabels = new Set();
 
     const uniqueCarrierFilterItems = (
-        carrierFilterItems.filter(item => {
+        carrierFilterItems.filter((item) => {
             if (carrierLabels.has(item.displayText)) {
                 return false;
             }
@@ -35,21 +43,37 @@ const getUniqueCarrierFilterItems = (carrierFilterItems: MultiselectOption[]): M
             carrierLabels.add(item.displayText);
             return true;
         }) as typeof carrierFilterItems
-    ).sort((item1, item2) => item1.displayText.localeCompare(item2.displayText));
+    ).sort((item1, item2) =>
+        item1.displayText.localeCompare(item2.displayText)
+    );
     return uniqueCarrierFilterItems;
 };
 
 const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
-    ({ authorizedCarriers, brokerDealersSSR, carrierHeaderIsIntersecting, carrierHeaderEntry }, ref) => {
+    (
+        {
+            authorizedCarriers,
+            brokerDealersSSR,
+            carrierHeaderIsIntersecting,
+            carrierHeaderEntry,
+        },
+        ref
+    ) => {
         const { t } = useTranslation(TranslationFiles.COMMON);
 
         const carrierFilterItems = useMemo(
             () =>
                 authorizedCarriers.map((carrierCode: string) => {
-                    const valueAndDisplay = getCarrierNameByClientId(carrierCode) || carrierCode.toUpperCase();
+                    const valueAndDisplay =
+                        getCarrierNameByClientId(carrierCode) ||
+                        carrierCode.toUpperCase();
 
                     return {
-                        value: getClientIdsByCarrierName(authorizedCarriers, valueAndDisplay) || carrierCode.toUpperCase(),
+                        value:
+                            getClientIdsByCarrierName(
+                                authorizedCarriers,
+                                valueAndDisplay
+                            ) || carrierCode.toUpperCase(),
                         displayText: valueAndDisplay,
                         label: getCarrierListItem(carrierCode),
                     };
@@ -57,18 +81,32 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             [authorizedCarriers]
         );
 
-        const { updateSelectedCarriers, updateSelectedBrokerDealers, selectedCarriers, selectedBrokerDealers } = useDashboardStore(
-            state => state
-        );
+        const {
+            updateSelectedCarriers,
+            updateSelectedBrokerDealers,
+            selectedCarriers,
+            selectedBrokerDealers,
+        } = useDashboardStore((state) => state);
 
-        const [brokerDealers, setBrokerDealers] = useState<DashboardResponseData[]>(brokerDealersSSR || []);
+        const [brokerDealers, setBrokerDealers] = useState<
+            DashboardResponseData[]
+        >(brokerDealersSSR || []);
 
-        const [placeholderSelectedCarriers, setPlaceholderSelectedCarriers] = useState<CarrierListItem>(
-            carrierFilterItems.length === 1 ? { [carrierFilterItems[0].value]: carrierFilterItems[0].displayText } : {}
-        );
-        const [placeholderSelectedBrokerDealers, setSelectedBrokerDealers] = useState<CarrierListItem>(
-            brokerDealers?.length === 1 ? { [brokerDealers[0].key]: brokerDealers[0].name } : {}
-        );
+        const [placeholderSelectedCarriers, setPlaceholderSelectedCarriers] =
+            useState<CarrierListItem>(
+                carrierFilterItems.length === 1
+                    ? {
+                          [carrierFilterItems[0].value]:
+                              carrierFilterItems[0].displayText,
+                      }
+                    : {}
+            );
+        const [placeholderSelectedBrokerDealers, setSelectedBrokerDealers] =
+            useState<CarrierListItem>(
+                brokerDealers?.length === 1
+                    ? { [brokerDealers[0].key]: brokerDealers[0].name }
+                    : {}
+            );
 
         const options = useMemo(() => {
             return getUniqueCarrierFilterItems(carrierFilterItems);
@@ -77,19 +115,24 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
         // if user only has access to one broker dealer, update zustand with it
         useEffect(() => {
             if (brokerDealers.length === 1) {
-                updateSelectedBrokerDealers({ [brokerDealers[0].key]: brokerDealers[0].name });
+                updateSelectedBrokerDealers({
+                    [brokerDealers[0].key]: brokerDealers[0].name,
+                });
             }
         }, [brokerDealers, updateSelectedBrokerDealers]);
 
         // if user only has access to one carrier, update zustand with it
         useEffect(() => {
             if (carrierFilterItems.length === 1) {
-                updateSelectedCarriers({ [carrierFilterItems[0].value]: carrierFilterItems[0].displayText });
+                updateSelectedCarriers({
+                    [carrierFilterItems[0].value]:
+                        carrierFilterItems[0].displayText,
+                });
             }
         }, [carrierFilterItems, updateSelectedCarriers]);
 
         const updateCarrierFilters = (value: string, displayText: string) => {
-            setPlaceholderSelectedCarriers(prevSelectedCarriers => {
+            setPlaceholderSelectedCarriers((prevSelectedCarriers) => {
                 const copy = { ...prevSelectedCarriers };
                 if (copy[value]) {
                     delete copy[value];
@@ -100,8 +143,11 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             });
         };
 
-        const updateBrokerDealerFilters = (value: string, displayText: string) => {
-            setSelectedBrokerDealers(prevSelectedAgents => {
+        const updateBrokerDealerFilters = (
+            value: string,
+            displayText: string
+        ) => {
+            setSelectedBrokerDealers((prevSelectedAgents) => {
                 const copy = { ...prevSelectedAgents };
                 if (copy[value]) {
                     delete copy[value];
@@ -114,7 +160,12 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
 
         const handleOnOpenChangeCarrier = (open: boolean) => {
             if (!open) {
-                if (!areObjectsEqual(selectedCarriers, placeholderSelectedCarriers)) {
+                if (
+                    !areObjectsEqual(
+                        selectedCarriers,
+                        placeholderSelectedCarriers
+                    )
+                ) {
                     updateSelectedCarriers(placeholderSelectedCarriers);
                 }
             }
@@ -122,8 +173,15 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
 
         const handleOnOpenChangeBroker = (open: boolean) => {
             if (!open) {
-                if (!areObjectsEqual(selectedBrokerDealers, placeholderSelectedBrokerDealers)) {
-                    updateSelectedBrokerDealers(placeholderSelectedBrokerDealers);
+                if (
+                    !areObjectsEqual(
+                        selectedBrokerDealers,
+                        placeholderSelectedBrokerDealers
+                    )
+                ) {
+                    updateSelectedBrokerDealers(
+                        placeholderSelectedBrokerDealers
+                    );
                 }
             }
         };
@@ -135,17 +193,28 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             updateSelectedCarriers({});
         };
 
-        const clearFiltersDisabled = Object.keys({ ...placeholderSelectedCarriers, ...placeholderSelectedBrokerDealers }).length === 0;
+        const clearFiltersDisabled =
+            Object.keys({
+                ...placeholderSelectedCarriers,
+                ...placeholderSelectedBrokerDealers,
+            }).length === 0;
 
         return (
             <div
                 ref={ref}
                 id="carrier-header"
                 className={clsx('flex-wrap', styles.filtersHeader, {
-                    [styles.pinned as string]: carrierHeaderIsIntersecting || Number(carrierHeaderEntry?.boundingClientRect.bottom) < 64,
+                    [styles.pinned as string]:
+                        carrierHeaderIsIntersecting ||
+                        Number(carrierHeaderEntry?.boundingClientRect.bottom) <
+                            64,
                 })}
             >
-                <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid="header-text">
+                <Typography
+                    className="flex items-center"
+                    variant={TypographyVariant.H1}
+                    data-testid="header-text"
+                >
                     {t('caseStatsDashboardTitle')}
                 </Typography>
                 <div className="flex justify-between items-center">
@@ -165,11 +234,19 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                         <div className="w-52">
                             <BrokerDealerFilter
                                 brokerDealers={brokerDealers}
-                                selectedBrokerDealers={placeholderSelectedBrokerDealers}
-                                selectedCarriers={Object.keys(placeholderSelectedCarriers)}
+                                selectedBrokerDealers={
+                                    placeholderSelectedBrokerDealers
+                                }
+                                selectedCarriers={Object.keys(
+                                    placeholderSelectedCarriers
+                                )}
                                 setSelectedBrokerDealers={setBrokerDealers}
-                                updateBrokerDealerFilters={updateBrokerDealerFilters}
-                                handleOnOpenChangeBroker={handleOnOpenChangeBroker}
+                                updateBrokerDealerFilters={
+                                    updateBrokerDealerFilters
+                                }
+                                handleOnOpenChangeBroker={
+                                    handleOnOpenChangeBroker
+                                }
                             />
                         </div>
                         <div>
@@ -180,7 +257,12 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                                 size={ButtonSize.Small}
                                 onClick={clearFilters}
                             >
-                                <Icon width={16} height={16} type={IconType.CLOSE} /> clear
+                                <Icon
+                                    width={16}
+                                    height={16}
+                                    type={IconType.CLOSE}
+                                />{' '}
+                                clear
                             </Button>
                         </div>
                     </div>

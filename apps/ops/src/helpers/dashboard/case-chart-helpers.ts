@@ -87,7 +87,9 @@ const caseChartHelpers = {
                 const allSeries = this.series.chart.series;
                 const thisIndex = thisPoint.index;
                 const pointDate = new Date(Number(this.point.category));
-                let returnString = `<b>${pointDate.getMonth() + 1}/${pointDate.getDate()}/${pointDate.getFullYear()}</b><br/>`;
+                let returnString = `<b>${
+                    pointDate.getMonth() + 1
+                }/${pointDate.getDate()}/${pointDate.getFullYear()}</b><br/>`;
                 allSeries.forEach(function (ser) {
                     if (ser.options.stack === thisPoint.series.options.stack) {
                         returnString += `${ser.name} ${ser.points[thisIndex].y}<br/>`;
@@ -114,7 +116,9 @@ const caseChartHelpers = {
                 style: {
                     color: '#999',
                 },
-                formatter: function (this: Highcharts.AxisLabelsFormatterContextObject): string {
+                formatter: function (
+                    this: Highcharts.AxisLabelsFormatterContextObject
+                ): string {
                     return new Date(Number(this.value)).getDate().toString();
                 },
             },
@@ -245,9 +249,15 @@ const caseChartHelpers = {
                     textAlign: 'right',
                 },
                 step: 1,
-                formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
+                formatter: function (
+                    this: Highcharts.AxisLabelsFormatterContextObject
+                ) {
                     //use formatter to break word.
-                    return '<div align="center" style="word-wrap: break-word;width:150px">' + this.value + '</div>';
+                    return (
+                        '<div align="center" style="word-wrap: break-word;width:150px">' +
+                        this.value +
+                        '</div>'
+                    );
                 },
             },
         } as XAxisOptions,

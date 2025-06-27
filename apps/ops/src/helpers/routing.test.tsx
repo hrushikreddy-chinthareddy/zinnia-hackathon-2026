@@ -33,7 +33,8 @@ describe('Routing Helper', () => {
 
         const mockTFunction = jest.fn().mockReturnValue(mockTitle);
 
-        const getTitle = (testUrl: string) => getBreadcrumbText(mockTFunction, mockTitle, testUrl);
+        const getTitle = (testUrl: string) =>
+            getBreadcrumbText(mockTFunction, mockTitle, testUrl);
 
         describe('general behavior', () => {
             it('returns the title in sentence case for any URL', () => {

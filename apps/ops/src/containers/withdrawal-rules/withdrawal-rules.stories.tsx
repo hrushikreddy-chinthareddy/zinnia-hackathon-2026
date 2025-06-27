@@ -8,7 +8,7 @@ import WithdrawalRules from './withdrawal-rules';
 const meta: Meta<typeof WithdrawalRules> = {
     title: 'Containers/WithdrawalRules',
     component: WithdrawalRules,
-    decorators: Story => (
+    decorators: (Story) => (
         <div className="p-6">
             <Story />
         </div>

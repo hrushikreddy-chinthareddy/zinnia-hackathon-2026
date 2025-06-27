@@ -9,7 +9,13 @@ describe('CaseType component', () => {
     const subType = 'INCOMING TRANSFER';
 
     test('renders NewBusiness with table-column variant', () => {
-        render(<CaseType caseType={Processes.NewBusiness} subType={subType} variant="table-column" />);
+        render(
+            <CaseType
+                caseType={Processes.NewBusiness}
+                subType={subType}
+                variant="table-column"
+            />
+        );
 
         const caseTypeLabel = screen.getByText(/caseType.newBusiness/i);
         const subTypeTest = screen.getByText(toTitleCase(subType));
@@ -19,7 +25,9 @@ describe('CaseType component', () => {
     });
 
     test('renders NewBusiness with horizontal variant', () => {
-        render(<CaseType caseType={Processes.NewBusiness} variant="horizontal" />);
+        render(
+            <CaseType caseType={Processes.NewBusiness} variant="horizontal" />
+        );
 
         const caseTypeLabel = screen.getByText(/caseType.newBusiness/i);
 
@@ -27,7 +35,9 @@ describe('CaseType component', () => {
     });
 
     test('renders Redemption with table-column variant', () => {
-        render(<CaseType caseType={Processes.Redemption} variant="table-column" />);
+        render(
+            <CaseType caseType={Processes.Redemption} variant="table-column" />
+        );
 
         const caseTypeLabel = screen.getByText(/caseType.redemption/i);
 
@@ -35,7 +45,13 @@ describe('CaseType component', () => {
     });
 
     test('renders Redemption with horizontal variant', () => {
-        render(<CaseType caseType={Processes.Redemption} subType={subType} variant="horizontal" />);
+        render(
+            <CaseType
+                caseType={Processes.Redemption}
+                subType={subType}
+                variant="horizontal"
+            />
+        );
 
         const caseTypeLabel = screen.getByText(/caseType.redemption/i);
         const subTypeTest = screen.getByText(toTitleCase(subType));
@@ -45,7 +61,9 @@ describe('CaseType component', () => {
     });
 
     test('renders Renewal with table-column variant', () => {
-        render(<CaseType caseType={Processes.Renewal} variant="table-column" />);
+        render(
+            <CaseType caseType={Processes.Renewal} variant="table-column" />
+        );
 
         const caseTypeLabel = screen.getByText(/caseType.renewal/i);
 
@@ -53,7 +71,13 @@ describe('CaseType component', () => {
     });
 
     test('renders Renewal with horizontal variant', () => {
-        render(<CaseType caseType={Processes.Renewal} subType={subType} variant="horizontal" />);
+        render(
+            <CaseType
+                caseType={Processes.Renewal}
+                subType={subType}
+                variant="horizontal"
+            />
+        );
 
         const caseTypeLabel = screen.getByText(/caseType.renewal/i);
         const subTypeTest = screen.getByText(toTitleCase(subType));
@@ -63,7 +87,9 @@ describe('CaseType component', () => {
     });
 
     test('renders Withdrawal with table-column variant', () => {
-        render(<CaseType caseType={Processes.Withdrawal} variant="table-column" />);
+        render(
+            <CaseType caseType={Processes.Withdrawal} variant="table-column" />
+        );
 
         const caseTypeLabel = screen.getByText(/caseType.withdrawal/i);
 
@@ -71,7 +97,13 @@ describe('CaseType component', () => {
     });
 
     test('renders Withdrawal with horizontal variant', () => {
-        render(<CaseType caseType={Processes.Withdrawal} subType={subType} variant="horizontal" />);
+        render(
+            <CaseType
+                caseType={Processes.Withdrawal}
+                subType={subType}
+                variant="horizontal"
+            />
+        );
 
         const caseTypeLabel = screen.getByText(/caseType.withdrawal/i);
         const subTypeTest = screen.getByText(toTitleCase(subType));

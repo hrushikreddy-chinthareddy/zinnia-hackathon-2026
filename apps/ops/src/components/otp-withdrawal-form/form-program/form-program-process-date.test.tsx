@@ -1,12 +1,21 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { AmountType, CaseStatus, ProcessRequestType } from '@deps/models/case/withdrawal/case';
+import {
+    AmountType,
+    CaseStatus,
+    ProcessRequestType,
+} from '@deps/models/case/withdrawal/case';
 
 import AsOfDateComponent from './as-of-date';
-import FormProgramProcessDate, { SelectOneOption } from './form-program-process-date';
+import FormProgramProcessDate, {
+    SelectOneOption,
+} from './form-program-process-date';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({
@@ -88,13 +97,21 @@ describe('Process Request Type component', () => {
                 label: 'whenTheContractIsNoLongerSubjectToWithdrawalCharges',
                 value: ProcessRequestType.NoLongerSubject,
             },
-            { label: 'asOfThisDate', value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+            {
+                label: 'asOfThisDate',
+                value: ProcessRequestType.AsOfDate,
+                subElement: <AsOfDateComponent />,
+            },
         ];
 
         it('should render process request options ', async () => {
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, formProgram: fullFormProgram, currentFormState: CaseStatus.Pending }}
+                    value={{
+                        ...defaultFormDataContext,
+                        formProgram: fullFormProgram,
+                        currentFormState: CaseStatus.Pending,
+                    }}
                 >
                     <FormProgramProcessDate options={selectOneOptions} />
                 </FormDataContext.Provider>
@@ -104,12 +121,16 @@ describe('Process Request Type component', () => {
                 const immediatelyElement = screen.getByLabelText('immediately');
                 expect(immediatelyElement).toBeInTheDocument();
 
-                const whenTheContractIsNoLongerSubjectToWithdrawalChargesElement = screen.getByLabelText(
-                    'whenTheContractIsNoLongerSubjectToWithdrawalCharges'
-                );
-                expect(whenTheContractIsNoLongerSubjectToWithdrawalChargesElement).toBeInTheDocument();
+                const whenTheContractIsNoLongerSubjectToWithdrawalChargesElement =
+                    screen.getByLabelText(
+                        'whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+                    );
+                expect(
+                    whenTheContractIsNoLongerSubjectToWithdrawalChargesElement
+                ).toBeInTheDocument();
 
-                const asOfThisDateElement = screen.getByLabelText('asOfThisDate');
+                const asOfThisDateElement =
+                    screen.getByLabelText('asOfThisDate');
                 expect(asOfThisDateElement).toBeInTheDocument();
             });
         });
@@ -117,7 +138,11 @@ describe('Process Request Type component', () => {
         it('should render the date when asOfThisDate selected', async () => {
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formProgram: fullFormProgram }}
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        formProgram: fullFormProgram,
+                    }}
                 >
                     <FormProgramProcessDate options={selectOneOptions} />
                 </FormDataContext.Provider>
@@ -125,7 +150,10 @@ describe('Process Request Type component', () => {
 
             const asOfThisDateElement = screen.getByLabelText('asOfThisDate');
             expect(asOfThisDateElement).toBeInTheDocument();
-            fireEvent.keyDown(asOfThisDateElement, { key: 'Enter', keyCode: 13 });
+            fireEvent.keyDown(asOfThisDateElement, {
+                key: 'Enter',
+                keyCode: 13,
+            });
             await waitFor(() => {
                 expect(asOfThisDateElement).toBeChecked();
             });
@@ -151,7 +179,10 @@ describe('Process Request Type component', () => {
 
             const asOfThisDateElement = screen.getByLabelText('asOfThisDate');
             expect(asOfThisDateElement).toBeInTheDocument();
-            fireEvent.keyDown(asOfThisDateElement, { key: 'Enter', keyCode: 13 });
+            fireEvent.keyDown(asOfThisDateElement, {
+                key: 'Enter',
+                keyCode: 13,
+            });
             await waitFor(() => {
                 expect(asOfThisDateElement).toBeChecked();
             });
@@ -185,7 +216,9 @@ describe('Process Request Type component', () => {
                 </FormDataContext.Provider>
             );
 
-            const contractElement = screen.getByLabelText('whenTheContractIsNoLongerSubjectToWithdrawalCharges');
+            const contractElement = screen.getByLabelText(
+                'whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+            );
             expect(contractElement).toBeInTheDocument();
             fireEvent.keyDown(contractElement, { key: 'Enter', keyCode: 13 });
             await waitFor(() => {
@@ -219,7 +252,10 @@ describe('Process Request Type component', () => {
 
             const immediatelyElement = screen.getByLabelText('immediately');
             expect(immediatelyElement).toBeInTheDocument();
-            fireEvent.keyDown(immediatelyElement, { key: 'Enter', keyCode: 13 });
+            fireEvent.keyDown(immediatelyElement, {
+                key: 'Enter',
+                keyCode: 13,
+            });
             await waitFor(() => {
                 expect(immediatelyElement).toBeChecked();
             });
@@ -290,12 +326,21 @@ describe('Process Request Type component', () => {
                 label: 'whenTheContractIsNoLongerSubjectToWithdrawalCharges',
                 value: ProcessRequestType.NoLongerSubject,
             },
-            { label: 'asOfThisDate', value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+            {
+                label: 'asOfThisDate',
+                value: ProcessRequestType.AsOfDate,
+                subElement: <AsOfDateComponent />,
+            },
         ];
 
         it('should render process request options ', async () => {
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, formProgram: partialFormProgram }}>
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        formProgram: partialFormProgram,
+                    }}
+                >
                     <FormProgramProcessDate options={selectOneOptions} />
                 </FormDataContext.Provider>
             );
@@ -304,10 +349,13 @@ describe('Process Request Type component', () => {
                 const immediatelyElement = screen.getByLabelText('immediately');
                 expect(immediatelyElement).toBeInTheDocument();
 
-                const contractElement = screen.getByLabelText('whenTheContractIsNoLongerSubjectToWithdrawalCharges');
+                const contractElement = screen.getByLabelText(
+                    'whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+                );
                 expect(contractElement).toBeInTheDocument();
 
-                const asOfThisDateElement = screen.getByLabelText('asOfThisDate');
+                const asOfThisDateElement =
+                    screen.getByLabelText('asOfThisDate');
                 expect(asOfThisDateElement).toBeInTheDocument();
             });
         });

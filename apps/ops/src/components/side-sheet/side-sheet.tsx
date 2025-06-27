@@ -73,7 +73,9 @@ export default function SideSheet({
     const isRight = location === SideSheetLocation.Right;
     const isLeft = location === SideSheetLocation.Left;
 
-    const handleCloseOnOutsideClick = closeOnOutsideClick ? handleClose : undefined;
+    const handleCloseOnOutsideClick = closeOnOutsideClick
+        ? handleClose
+        : undefined;
 
     const innerTransitionClasses = clsx(
         'pointer-events-auto fixed top-0 h-full w-screen transform bg-gradient-to-r from-accent1 to-accent2 pt-2 transition duration-300 ease-in-out sm:w-[500px]',
@@ -88,7 +90,12 @@ export default function SideSheet({
 
     // TODO: the side-sheet needs to accept and accessible name for the modal
     return (
-        <div className="absolute z-20" role="dialog" aria-modal="true" aria-label={t('ariaLabel.sideSheet') as string}>
+        <div
+            className="absolute z-20"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('ariaLabel.sideSheet') as string}
+        >
             <Transition show={open}>
                 <FocusLock returnFocus={true}>
                     <Transition.Child
@@ -99,7 +106,10 @@ export default function SideSheet({
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <div onClick={handleCloseOnOutsideClick} className="fixed inset-0 overflow-hidden bg-gray-500 bg-opacity-75" />
+                        <div
+                            onClick={handleCloseOnOutsideClick}
+                            className="fixed inset-0 overflow-hidden bg-gray-500 bg-opacity-75"
+                        />
                     </Transition.Child>
 
                     <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -110,20 +120,42 @@ export default function SideSheet({
                                         <div className="min-w-content ml-4 flex h-7 shrink-0 transition-all duration-300 ease-in-out">
                                             <IconButton
                                                 onClick={handleClose}
-                                                aria-label={t('ariaLabel.closeSideSheet') as string}
+                                                aria-label={
+                                                    t(
+                                                        'ariaLabel.closeSideSheet'
+                                                    ) as string
+                                                }
                                                 data-testid="close-button"
                                             >
-                                                <CancelIcon width={24} height={24} />
+                                                <CancelIcon
+                                                    width={24}
+                                                    height={24}
+                                                />
                                             </IconButton>
                                         </div>
                                         <div className="grow-1 flex min-w-0">
                                             {headerElement ? (
                                                 headerElement
                                             ) : (
-                                                <PopoverOnTruncate title={`${header}${displayItemCount ? ' items.length' : ''}`}>
+                                                <PopoverOnTruncate
+                                                    title={`${header}${
+                                                        displayItemCount
+                                                            ? ' items.length'
+                                                            : ''
+                                                    }`}
+                                                >
                                                     <div className="text-left">
-                                                        <Typography variant={TypographyVariant.H2} className="text-gray-900">
-                                                            {`${header}${displayItemCount ? ' items.length' : ''}`}
+                                                        <Typography
+                                                            variant={
+                                                                TypographyVariant.H2
+                                                            }
+                                                            className="text-gray-900"
+                                                        >
+                                                            {`${header}${
+                                                                displayItemCount
+                                                                    ? ' items.length'
+                                                                    : ''
+                                                            }`}
                                                         </Typography>
                                                     </div>
                                                 </PopoverOnTruncate>
@@ -131,7 +163,11 @@ export default function SideSheet({
                                         </div>
                                     </div>
                                 </div>
-                                {children && <div className="z-10 h-full overflow-y-scroll">{children}</div>}
+                                {children && (
+                                    <div className="z-10 h-full overflow-y-scroll">
+                                        {children}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

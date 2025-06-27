@@ -5,7 +5,11 @@ import React from 'react';
 import { TooltipTest } from '@deps/jest/constants/test-id-constants';
 
 import { PopoverPlacement } from '../popover/popover';
-import { getPlacementProps, commonPopoverClasses, commonTriggerClasses } from '../popover/popover.helpers';
+import {
+    getPlacementProps,
+    commonPopoverClasses,
+    commonTriggerClasses,
+} from '../popover/popover.helpers';
 
 export { PopoverPlacement } from '../popover/popover';
 
@@ -18,7 +22,14 @@ interface Props {
     isTabbable?: boolean;
 }
 
-const Tooltip = ({ children, placement, body, triggerClassName, popoverClassName, isTabbable = true }: Props) => {
+const Tooltip = ({
+    children,
+    placement,
+    body,
+    triggerClassName,
+    popoverClassName,
+    isTabbable = true,
+}: Props) => {
     const { side, align } = getPlacementProps(placement);
 
     const tooltipContent = (
@@ -38,7 +49,12 @@ const Tooltip = ({ children, placement, body, triggerClassName, popoverClassName
                     {children}
                 </ReactTooltip.Trigger>
                 <ReactTooltip.Portal>
-                    <ReactTooltip.Content side={side} align={align} className="z-20 my-0.5" data-testid={TooltipTest.Body}>
+                    <ReactTooltip.Content
+                        side={side}
+                        align={align}
+                        className="z-20 my-0.5"
+                        data-testid={TooltipTest.Body}
+                    >
                         {tooltipContent}
                     </ReactTooltip.Content>
                 </ReactTooltip.Portal>

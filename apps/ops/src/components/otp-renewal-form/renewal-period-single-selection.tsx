@@ -6,17 +6,29 @@ import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { TargetFundAllocation } from '@deps/models/case/task';
 
 import FieldLabel from '../fields/field-label';
-import Radio, { RadioItem, RadioOrientation, RadioVariant } from '../radio/radio';
+import Radio, {
+    RadioItem,
+    RadioOrientation,
+    RadioVariant,
+} from '../radio/radio';
 import Typography, { TypographyVariant } from '../typography/typography';
 interface RenewalPeriodSingleSectionProps {
     options: RadioItem[];
     isFormStateReadOnly: boolean;
 }
-export default function RenewalPeriodSingleSection({ options, isFormStateReadOnly }: RenewalPeriodSingleSectionProps) {
-    const { setSubsequentTargetFunds, formErrors, subsequentTargetFunds } = useContext(RenewalFormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
+export default function RenewalPeriodSingleSection({
+    options,
+    isFormStateReadOnly,
+}: RenewalPeriodSingleSectionProps) {
+    const { setSubsequentTargetFunds, formErrors, subsequentTargetFunds } =
+        useContext(RenewalFormDataContext);
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseRenewal.request',
+    });
 
-    const [fundAllocations, setFundAllocations] = useState<TargetFundAllocation[]>(subsequentTargetFunds || []);
+    const [fundAllocations, setFundAllocations] = useState<
+        TargetFundAllocation[]
+    >(subsequentTargetFunds || []);
 
     /*const setFundAllocation = (fundName: string, value: string) => {
         setFundAllocations([{ fundName, value }]);
@@ -33,12 +45,24 @@ export default function RenewalPeriodSingleSection({ options, isFormStateReadOnl
 
     return (
         <>
-            <Typography variant={TypographyVariant.H3} className="mb-2 flex flex-wrap gap-5">
+            <Typography
+                variant={TypographyVariant.H3}
+                className="mb-2 flex flex-wrap gap-5"
+            >
                 {t(`period`)}
             </Typography>
             <div className="flex">
-                <FieldLabel classNames="mr-2" label={t('pleaseCheck') as string} />
-                <div className={formErrors?.period ? 'border-2 border-solid border-semantic-error p-2' : 'p2'}>
+                <FieldLabel
+                    classNames="mr-2"
+                    label={t('pleaseCheck') as string}
+                />
+                <div
+                    className={
+                        formErrors?.period
+                            ? 'border-2 border-solid border-semantic-error p-2'
+                            : 'p2'
+                    }
+                >
                     <Radio
                         items={options}
                         onChange={(e: any) => {
@@ -46,7 +70,11 @@ export default function RenewalPeriodSingleSection({ options, isFormStateReadOnl
                         }}
                         orientation={RadioOrientation.Horizontal}
                         value={fundAllocations?.[0]?.fundName || ''}
-                        variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? RadioVariant.Inactive
+                                : RadioVariant.Default
+                        }
                     />
                 </div>
             </div>

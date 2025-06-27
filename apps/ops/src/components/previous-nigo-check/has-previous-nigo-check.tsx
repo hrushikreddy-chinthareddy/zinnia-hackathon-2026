@@ -12,14 +12,27 @@ interface HasPreviousNigoProps {
     onIsNigoChange: React.Dispatch<React.SetStateAction<FormProgram>>;
 }
 
-const HasPreviousNigo = ({ isFormStateReadOnly, t, isNigoChecked, onIsNigoChange }: HasPreviousNigoProps) => {
+const HasPreviousNigo = ({
+    isFormStateReadOnly,
+    t,
+    isNigoChecked,
+    onIsNigoChange,
+}: HasPreviousNigoProps) => {
     return (
-        <CardContainer containerClassNames="border-b-2 border-gray-100" classNames="w-full">
+        <CardContainer
+            containerClassNames="border-b-2 border-gray-100"
+            classNames="w-full"
+        >
             <div className="flex-1 mt-5">
                 <CheckboxText
                     label={t('hasPreviousNigo')}
                     checked={isNigoChecked}
-                    onChange={() => onIsNigoChange(pv => ({ ...pv, isPrevNigoChecked: !pv?.isPrevNigoChecked }))}
+                    onChange={() =>
+                        onIsNigoChange((pv) => ({
+                            ...pv,
+                            isPrevNigoChecked: !pv?.isPrevNigoChecked,
+                        }))
+                    }
                     isDisabled={isFormStateReadOnly}
                 />
             </div>

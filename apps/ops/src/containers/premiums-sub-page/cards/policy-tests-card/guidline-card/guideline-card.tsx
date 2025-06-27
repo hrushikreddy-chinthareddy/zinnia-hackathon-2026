@@ -9,12 +9,17 @@ interface GuidelineCardProps {
 }
 
 const GuidelineCard = ({ policy }: GuidelineCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'premium.policyTestsCard.guideline' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'premium.policyTestsCard.guideline',
+    });
     const guideline = {
-        compare: (policy?.accountValues?.cumulativePremiumSinceIssue || 0) - (policy?.withdrawalValues?.totalWithdrawalAmount || 0),
+        compare:
+            (policy?.accountValues?.cumulativePremiumSinceIssue || 0) -
+            (policy?.withdrawalValues?.totalWithdrawalAmount || 0),
         total: Math.max(
             policy?.testValues?.guidelinePremium?.guidelineSinglePremium || 0,
-            policy?.testValues?.guidelinePremium?.totalGuidelineLevelPremiumSinceIssue || 0
+            policy?.testValues?.guidelinePremium
+                ?.totalGuidelineLevelPremiumSinceIssue || 0
         ),
     };
 

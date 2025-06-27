@@ -2,7 +2,9 @@ import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
@@ -10,9 +12,15 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { Statuses } from '@deps/models/case/case';
-import { TransactionResponseStatus, submitOneTimePremium } from '@deps/queries/api/bpm';
+import {
+    TransactionResponseStatus,
+    submitOneTimePremium,
+} from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { TransactionContinueClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import {
+    TransactionContinueClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 
 import { buildNewPremiumRequestBody } from '../new-premium.helpers';
 
@@ -21,7 +29,9 @@ interface ConfirmProps {
 }
 
 const Confirm = ({ policy }: ConfirmProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newPremium.confirm' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'newPremium.confirm',
+    });
     const { t: defaultT } = useTranslation();
 
     const { premium } = usePremium();
@@ -29,23 +39,41 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const [submitNigo, setSubmitNigo] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const { sessionId, partyId } = usePermissionsContext();
-    const { paymentBankId, caseId, effectiveDate, paymentAmount, payorFullName, payorPartyId, validationResponse, reverseInitiator } =
-        premium;
+    const {
+        paymentBankId,
+        caseId,
+        effectiveDate,
+        paymentAmount,
+        payorFullName,
+        payorPartyId,
+        validationResponse,
+        reverseInitiator,
+    } = premium;
     const [newCaseId, setNewCaseId] = useState<string | undefined>(caseId);
 
-    const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
+    const validationSucceeded = useMemo(
+        () => validationResponse?.status === TransactionResponseStatus.Success,
+        [validationResponse]
+    );
 
     const submit = useCallback(async () => {
         const query = buildNewPremiumRequestBody(premium);
 
-        const response = await submitOneTimePremium(policy.product?.planCode, policy.policyNumber, query);
+        const response = await submitOneTimePremium(
+            policy.product?.planCode,
+            policy.policyNumber,
+            query
+        );
 
-        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
-            session_id: sessionId,
-            userId: partyId,
-            type: TransactionType.ONE_TIME_PREMIUM,
-            correlationId: query.correlationId,
-        });
+        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
+            SegmentTrackedEventName.TransactionContinueClicked,
+            {
+                session_id: sessionId,
+                userId: partyId,
+                type: TransactionType.ONE_TIME_PREMIUM,
+                correlationId: query.correlationId,
+            }
+        );
 
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);

@@ -12,17 +12,25 @@ describe('Features', () => {
 
     describe('Features Class', () => {
         it('should getFeaturesByType', () => {
-            expect(features.getFeaturesByType(FeatureType.FREELOOK)).toHaveLength(1);
+            expect(
+                features.getFeaturesByType(FeatureType.FREELOOK)
+            ).toHaveLength(1);
         });
 
         it('should getFirstFeatureByType', () => {
-            expect(features.getFirstFeatureByType(FeatureType.FREELOOK)).toBeTruthy();
+            expect(
+                features.getFirstFeatureByType(FeatureType.FREELOOK)
+            ).toBeTruthy();
         });
 
         it('should not blow up if no features are passed in', () => {
             const noFeatures = new Features(undefined);
-            expect(noFeatures.getFeaturesByType(FeatureType.FREELOOK)).toHaveLength(0);
-            expect(noFeatures.getFirstFeatureByType(FeatureType.FREELOOK)).toBeUndefined();
+            expect(
+                noFeatures.getFeaturesByType(FeatureType.FREELOOK)
+            ).toHaveLength(0);
+            expect(
+                noFeatures.getFirstFeatureByType(FeatureType.FREELOOK)
+            ).toBeUndefined();
         });
     });
 });

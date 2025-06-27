@@ -5,7 +5,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import TransactionDocumentSelection from '@deps/containers/nigo-entry-container/components/steps/form-selection.tsx/transaction-document-selection';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { AvailableFormsTransaction, SendDocumentFormParts, SendDocumentFormPartsAdditionData } from '@deps/models/case/send-document';
+import {
+    AvailableFormsTransaction,
+    SendDocumentFormParts,
+    SendDocumentFormPartsAdditionData,
+} from '@deps/models/case/send-document';
 
 import { Policy } from '@zinnia/api-types/types/sor';
 
@@ -14,12 +18,19 @@ import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
-import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
-import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '../assistive-text/assistive-text';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '../nav-element/nav-element';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 
-const mapIdToFormDetails = (value: SendDocumentFormParts[]): SendDocumentFormPartsAdditionData[] => {
-    return value.map(formDetail => {
+const mapIdToFormDetails = (
+    value: SendDocumentFormParts[]
+): SendDocumentFormPartsAdditionData[] => {
+    return value.map((formDetail) => {
         return {
             ...formDetail,
             id: uuidv4(),
@@ -40,7 +51,9 @@ type FormSelectionProps = {
     correlationId?: string;
     availableFormsTransactions: AvailableFormsTransaction[];
     formDetails: SendDocumentFormParts[];
-    setFormDetails: React.Dispatch<React.SetStateAction<SendDocumentFormParts[]>>;
+    setFormDetails: React.Dispatch<
+        React.SetStateAction<SendDocumentFormParts[]>
+    >;
 };
 
 function FormSelection({
@@ -57,7 +70,9 @@ function FormSelection({
     const [error, setError] = useState<string>('');
 
     const handleContinue = async () => {
-        const selectedForms = forms.filter(form => form.document.selected !== null).map(({ id, ...rest }) => rest);
+        const selectedForms = forms
+            .filter((form) => form.document.selected !== null)
+            .map(({ id, ...rest }) => rest);
         if (!selectedForms.length) {
             return setError(t('errors.formId') as string);
         }
@@ -66,7 +81,9 @@ function FormSelection({
     };
 
     useEffect(() => {
-        const selectedForms = forms.filter(form => form.document.selected !== null).map(({ id, ...rest }) => rest);
+        const selectedForms = forms
+            .filter((form) => form.document.selected !== null)
+            .map(({ id, ...rest }) => rest);
         if (selectedForms.length > 0) {
             setError('');
         }
@@ -77,17 +94,22 @@ function FormSelection({
     };
 
     const addNewFilter = () => {
-        setForms(prevForms => [...prevForms, { ...DefaultFormDetail, id: uuidv4() }]);
+        setForms((prevForms) => [
+            ...prevForms,
+            { ...DefaultFormDetail, id: uuidv4() },
+        ]);
     };
 
     const removeFilter = (id: string) => {
-        setForms(fs => {
-            return [...fs.filter(sig => sig.id !== id)];
+        setForms((fs) => {
+            return [...fs.filter((sig) => sig.id !== id)];
         });
     };
 
     const updateFormDetails = (value: SendDocumentFormPartsAdditionData) => {
-        const updatedDetails = forms.map(form => (form.id === value.id ? { ...form, ...value } : form));
+        const updatedDetails = forms.map((form) =>
+            form.id === value.id ? { ...form, ...value } : form
+        );
 
         setForms(updatedDetails);
     };
@@ -98,7 +120,9 @@ function FormSelection({
                 <SendDocumentNavigationButtons
                     handleContinue={handleContinue}
                     handleCancel={handleCancel}
-                    trackEventProps={{ type: ContactCenterTransactionType.DOCUMENT }}
+                    trackEventProps={{
+                        type: ContactCenterTransactionType.DOCUMENT,
+                    }}
                 />
             }
         >
@@ -107,10 +131,14 @@ function FormSelection({
                     <div className="grow">
                         <TransactionDocumentSelection
                             formDetails={form}
-                            setFormDetails={val => updateFormDetails({ ...val, id: form.id })}
+                            setFormDetails={(val) =>
+                                updateFormDetails({ ...val, id: form.id })
+                            }
                             policy={policy}
                             ctiCallNumber={ctiCallNumber}
-                            availableFormsTransactions={availableFormsTransactions}
+                            availableFormsTransactions={
+                                availableFormsTransactions
+                            }
                             key={form.id}
                             correlationId={correlationId}
                         />
@@ -120,7 +148,9 @@ function FormSelection({
                             <NavElement
                                 size={NavElementSize.Small}
                                 type={NavElementType.Button}
-                                startIcon={<TrashDocumentIcon width={20} height={20} />}
+                                startIcon={
+                                    <TrashDocumentIcon width={20} height={20} />
+                                }
                                 onClick={() => removeFilter(form.id)}
                             ></NavElement>
                         </div>
@@ -139,7 +169,13 @@ function FormSelection({
                     {t(`formSelection.addNewDocument`) as string}
                 </NavElement>
             </div>
-            {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
+            {error && (
+                <AssistiveText
+                    text={error}
+                    variant={AssistiveTextVariant.Error}
+                    className="mt-2"
+                />
+            )}
         </WorkflowCard>
     );
 }

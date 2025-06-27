@@ -8,12 +8,16 @@ export interface BaseCardModel {
     t: TFunction;
 }
 
-export type TransactionSideSheetBaseModel = TransactionSideSheetValues | WithdrawalSideSheetValues;
+export type TransactionSideSheetBaseModel =
+    | TransactionSideSheetValues
+    | WithdrawalSideSheetValues;
 
 export interface BaseTransactionSideSheetValues {
     cancelCta?: string;
     reverseCta?: string;
-    getAsyncSideSheetValues?: () => Promise<Partial<TransactionSideSheetValues | WithdrawalSideSheetValues>>;
+    getAsyncSideSheetValues?: () => Promise<
+        Partial<TransactionSideSheetValues | WithdrawalSideSheetValues>
+    >;
     refreshTransactions?: () => void;
     reversalTransactionId?: string | null;
     transactionId?: string;
@@ -21,7 +25,8 @@ export interface BaseTransactionSideSheetValues {
     transactionValue?: number;
 }
 
-export interface TransactionSideSheetValues extends BaseTransactionSideSheetValues {
+export interface TransactionSideSheetValues
+    extends BaseTransactionSideSheetValues {
     appliedAmount?: number | string;
     submittedAmount?: number;
     totalPayment?: number;

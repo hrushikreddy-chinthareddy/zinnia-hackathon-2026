@@ -7,13 +7,21 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useEffect, useState, useMemo } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import OtpLayout from '@deps/components/otp-layout';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
-import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import WithdrawalDrawer, {
+    SidebarContent,
+} from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
@@ -31,10 +39,17 @@ import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { determineFormToRender } from '@deps/helpers/form-selector.helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helpers';
-import { TransactionType, TypeDesc, useTransactionsHistory } from '@deps/hooks/otp-withdrawal/transaction-history';
+import {
+    TransactionType,
+    TypeDesc,
+    useTransactionsHistory,
+} from '@deps/hooks/otp-withdrawal/transaction-history';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
@@ -43,19 +58,48 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
-import { ActiveWithdrawalCase, Carrier, QualTypes, SortOrder, FASTQualTypes, TransactionStatus } from '@deps/models/case/withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    Carrier,
+    QualTypes,
+    SortOrder,
+    FASTQualTypes,
+    TransactionStatus,
+} from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
-import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
-import { SCREEN_BREAKPOINTS, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    getPolicyDetailsSsr,
+    getPolicyPartiesSSR,
+    searchPolicySSR,
+} from '@deps/queries/api/policies';
+import {
+    SCREEN_BREAKPOINTS,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { isFastFeatureEnabled, isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    isFastFeatureEnabled,
+    isFormFeatureEnabled,
+} from '@deps/utils/optimizely/utils';
+import {
+    logError,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
 
@@ -104,18 +148,28 @@ export default function WithdrawalCase({
     partyRoles,
     planCode,
 }: WithdrawalCaseProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const router = useRouter();
     const { clientId, clientIdOverride, getLastSaved } = router.query;
-    const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
+    const clientForFormDetermination = isNonProductionEnvironment()
+        ? clientIdOverride || clientId
+        : clientId;
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
     const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
 
     const accountInfo = useAccountInfo(document.contract, clientId as string);
-    const contractAccountInfo = useContractAccountInfo(document.contract, planCode as string);
-    const { issueState, qualType, issueDate } = isLC ? accountInfo : contractAccountInfo;
+    const contractAccountInfo = useContractAccountInfo(
+        document.contract,
+        planCode as string
+    );
+    const { issueState, qualType, issueDate } = isLC
+        ? accountInfo
+        : contractAccountInfo;
 
-    const showTransactions = featureFlagDecisions?.[FEATURE_FLAGS.TRANSACTION_HISTORY];
+    const showTransactions =
+        featureFlagDecisions?.[FEATURE_FLAGS.TRANSACTION_HISTORY];
 
     const { transactions } = useTransactionsHistory({
         contract: document.contract,
@@ -123,7 +177,11 @@ export default function WithdrawalCase({
         typeDesc: TypeDesc.Withdrawal,
         transactionType: TransactionType.Withdrawals,
         fromDate: dayjs(document.documentDate).format(ZAHARA_API_DATE_FORMAT),
-        filter: { count: 5, sortBy: SortOrder.Desc, statuses: [TransactionStatus.Done, TransactionStatus.Pending] },
+        filter: {
+            count: 5,
+            sortBy: SortOrder.Desc,
+            statuses: [TransactionStatus.Done, TransactionStatus.Pending],
+        },
     });
 
     useSegmentPageTracker(user, SegmentPageName.WithdrawalCase, {
@@ -132,16 +190,24 @@ export default function WithdrawalCase({
         transactions: JSON.stringify(transactions),
     });
 
-    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(DefaultSidebarContent);
+    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
+        DefaultSidebarContent
+    );
     const [isOpenOverride, setIsOpenOverride] = useState<null | boolean>(null);
     const [taskApiError, setTaskApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const initialForm = form;
-    const isLastSaved = deStringifyTrueFalseNull(((getLastSaved as string) || '').toLowerCase());
-    const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+    const isLastSaved = deStringifyTrueFalseNull(
+        ((getLastSaved as string) || '').toLowerCase()
+    );
+    const shouldShowNewExperience =
+        featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isUsedLastSaved = shouldShowNewExperience && isLastSaved;
 
-    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType, isLC, planCode));
+    const formParts = determineFormToRender(
+        clientForFormDetermination as string,
+        getFormComponentMap(qualType, isLC, planCode)
+    );
     if (!formParts) {
         console.error('WithdrawalCase::No form parts', {
             documentNumber: document?.documentNumber,
@@ -149,7 +215,9 @@ export default function WithdrawalCase({
             contract: document?.contract,
             isNonProdEnv: isNonProductionEnvironment(),
         });
-        router.push(`/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_FORM_CREATION}`);
+        router.push(
+            `/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_FORM_CREATION}`
+        );
     }
 
     useEffect(() => {
@@ -163,7 +231,15 @@ export default function WithdrawalCase({
             qualType,
             issueDate,
         });
-    }, [qualType, document, form, transactions, clientId, issueDate, showTransactions]);
+    }, [
+        qualType,
+        document,
+        form,
+        transactions,
+        clientId,
+        issueDate,
+        showTransactions,
+    ]);
 
     useEffect(() => {
         if (!document) {
@@ -192,13 +268,18 @@ export default function WithdrawalCase({
         policyNum: document.contract || '',
     };
 
-    const formTitle = clientId ? t(`formTitles.${(clientId as string).toLowerCase()}`) : t(`formTitles.defaultTitle`);
+    const formTitle = clientId
+        ? t(`formTitles.${(clientId as string).toLowerCase()}`)
+        : t(`formTitles.defaultTitle`);
 
     return (
         <>
             <PageHead titleKey="createCaseWithdrawal" />
             <DiaryNotesProvider caseDetails={caseDetailsData}>
-                <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
+                <OtpLayout
+                    contractNumber={document.contract}
+                    clientId={clientId as string}
+                >
                     <div className={classes}>
                         <WithdrawalDrawer
                             content={transactionDetail}
@@ -208,11 +289,15 @@ export default function WithdrawalCase({
                         />
                         <div>
                             <header className="px-5 pt-2">
-                                <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
+                                <Typography variant={TypographyVariant.H1}>
+                                    {formTitle}
+                                </Typography>
                             </header>
                             {isLoading && (
                                 <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                                    <PageLoader variant={PageLoaderVariant.Center} />
+                                    <PageLoader
+                                        variant={PageLoaderVariant.Center}
+                                    />
                                 </div>
                             )}
                             <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0">
@@ -221,31 +306,46 @@ export default function WithdrawalCase({
                                         form={form}
                                         initialForm={initialForm}
                                         issueState={issueState}
-                                        isOpenNigo={(isUsedLastSaved as boolean) && isNigoCase}
-                                        featureFlagDecisions={featureFlagDecisions}
+                                        isOpenNigo={
+                                            (isUsedLastSaved as boolean) &&
+                                            isNigoCase
+                                        }
+                                        featureFlagDecisions={
+                                            featureFlagDecisions
+                                        }
                                         parties={parties}
                                         partyRoles={partyRoles}
                                     >
                                         {
                                             <>
-                                                {isUsedLastSaved && isNigoCase && (
-                                                    <div className="flex flex-col">
-                                                        <AssistiveText
-                                                            text={t('openNigoExists')}
-                                                            variant={AssistiveTextVariant.Error}
-                                                            className="mt-2"
-                                                        />
-                                                    </div>
-                                                )}
+                                                {isUsedLastSaved &&
+                                                    isNigoCase && (
+                                                        <div className="flex flex-col">
+                                                            <AssistiveText
+                                                                text={t(
+                                                                    'openNigoExists'
+                                                                )}
+                                                                variant={
+                                                                    AssistiveTextVariant.Error
+                                                                }
+                                                                className="mt-2"
+                                                            />
+                                                        </div>
+                                                    )}
                                                 {formParts}
                                                 <NoteSection />
-                                                <FormErrors t={t} taskApiError={taskApiError}></FormErrors>
+                                                <FormErrors
+                                                    t={t}
+                                                    taskApiError={taskApiError}
+                                                ></FormErrors>
                                                 <FormControls
                                                     document={document}
                                                     t={t}
                                                     isLoading={isLoading}
                                                     setIsLoading={setIsLoading}
-                                                    setTaskApiError={setTaskApiError}
+                                                    setTaskApiError={
+                                                        setTaskApiError
+                                                    }
                                                 ></FormControls>
                                             </>
                                         }
@@ -264,8 +364,18 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const {
+                locale = DEFAULT_LOCALE,
+                params,
+                query,
+                res,
+                req,
+            } = context;
             let accessToken;
 
             try {
@@ -278,11 +388,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -301,10 +412,19 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const [translations, document] = await Promise.all([
                 serverSideTranslations(locale, [TranslationFiles.COMMON]),
-                getDocumentV2SSR(documentNumber, DocumentType.Redemption, clientId.toUpperCase(), accessToken, loggingContext),
+                getDocumentV2SSR(
+                    documentNumber,
+                    DocumentType.Redemption,
+                    clientId.toUpperCase(),
+                    accessToken,
+                    loggingContext
+                ),
             ]);
             if (!document?.contract) {
-                logError('create-case/withdrawal/:id::Error getting document', loggingContext);
+                logError(
+                    'create-case/withdrawal/:id::Error getting document',
+                    loggingContext
+                );
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
@@ -314,19 +434,33 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             let isNigoCase = false;
-            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-            const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
+            const shouldShowNewExperience =
+                featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            const isUsedLastSaved =
+                shouldShowNewExperience &&
+                deStringifyTrueFalseNull(getLastSaved.toLowerCase());
             if (shouldShowNewExperience && action !== 'readonly') {
-                logInfo('create-case/withdrawal/:id:Checking NIGO', loggingContext);
-                isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
+                logInfo(
+                    'create-case/withdrawal/:id:Checking NIGO',
+                    loggingContext
+                );
+                isNigoCase = await checkNigoExistsSSR(
+                    clientId.toUpperCase(),
+                    document.caseId,
+                    accessToken,
+                    loggingContext
+                );
 
                 if (isNigoCase && !isUsedLastSaved) {
                     if (action !== 'readonly') {
-                        logInfo('create-case/withdrawal/:id::Nigo exists for case', {
-                            ...loggingContext,
-                            caseId: document.caseId,
-                            lob: document?.lob,
-                        });
+                        logInfo(
+                            'create-case/withdrawal/:id::Nigo exists for case',
+                            {
+                                ...loggingContext,
+                                caseId: document.caseId,
+                                lob: document?.lob,
+                            }
+                        );
                         return {
                             redirect: {
                                 destination: `/create-case/error?errorCode=${ERROR_CODES.NIGO_EXISTS}`,
@@ -336,11 +470,23 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                 }
             } else {
-                logInfo('create-case/withdrawal/:id:Skipping NIGO check', loggingContext);
+                logInfo(
+                    'create-case/withdrawal/:id:Skipping NIGO check',
+                    loggingContext
+                );
             }
             // If feature flag is not enabled, redirect to error page
-            if (!isFormFeatureEnabled(ProcessType.WITHDRAWAL, clientId, featureFlagDecisions)) {
-                logWarn('create-case/withdrawal/:id::feature flag not enabled', loggingContext);
+            if (
+                !isFormFeatureEnabled(
+                    ProcessType.WITHDRAWAL,
+                    clientId,
+                    featureFlagDecisions
+                )
+            ) {
+                logWarn(
+                    'create-case/withdrawal/:id::feature flag not enabled',
+                    loggingContext
+                );
                 return {
                     redirect: {
                         destination: '/403',
@@ -364,10 +510,13 @@ export const getServerSideProps = withPageAuthAndLogging(
             });
 
             if (!form) {
-                logError('create-case/withdrawal/:id::Error initializing task withdrawal form', {
-                    ...loggingContext,
-                    contract: document?.contract,
-                });
+                logError(
+                    'create-case/withdrawal/:id::Error initializing task withdrawal form',
+                    {
+                        ...loggingContext,
+                        contract: document?.contract,
+                    }
+                );
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_TASK_INITIALIZATION}`,
@@ -376,11 +525,19 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
+            const isLC = !isFastFeatureEnabled(
+                form?.taskType,
+                featureFlagDecisions
+            );
 
             if (isLC) {
                 const parties = document?.contract
-                    ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                    ? await getPolicyPartiesSSR(
+                          document?.contract,
+                          clientId,
+                          accessToken as string,
+                          loggingContext
+                      )
                     : [];
 
                 return {
@@ -407,7 +564,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
                 const planCode = policies?.[0]?.planCode || null;
                 if (!planCode) {
-                    logInfo('create-case/withdrawal/:id::Plan code not found', loggingContext);
+                    logInfo(
+                        'create-case/withdrawal/:id::Plan code not found',
+                        loggingContext
+                    );
                     return {
                         redirect: {
                             destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
@@ -415,11 +575,23 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-                logInfo('create-case/withdrawal/:id::Plan code found', { ...loggingContext, planCode: planCode });
+                logInfo('create-case/withdrawal/:id::Plan code found', {
+                    ...loggingContext,
+                    planCode: planCode,
+                });
 
-                const policy = await getPolicyDetailsSsr(document?.contract, planCode, accessToken, loggingContext, true);
+                const policy = await getPolicyDetailsSsr(
+                    document?.contract,
+                    planCode,
+                    accessToken,
+                    loggingContext,
+                    true
+                );
                 if (!policy) {
-                    logInfo('create-case/withdrawal/:id::Policy not found', loggingContext);
+                    logInfo(
+                        'create-case/withdrawal/:id::Policy not found',
+                        loggingContext
+                    );
                     return {
                         redirect: {
                             destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
@@ -427,7 +599,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-                logInfo('create-case/withdrawal/:id::Policy details found', loggingContext);
+                logInfo(
+                    'create-case/withdrawal/:id::Policy details found',
+                    loggingContext
+                );
 
                 const { parties, partyRoles = [] } = policy ?? {};
 
@@ -448,5 +623,9 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
         },
     },
-    { file: 'create-case/withdrawal/:id/index', function: 'getServerSideProps', page: 'create-case/withdrawal/:id' }
+    {
+        file: 'create-case/withdrawal/:id/index',
+        function: 'getServerSideProps',
+        page: 'create-case/withdrawal/:id',
+    }
 );

@@ -26,11 +26,15 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
     const { planCode } = product ?? {};
 
     const selectedPolicyParty = useMemo(() => {
-        return parties?.find(pr => pr.partyId === partyId);
+        return parties?.find((pr) => pr.partyId === partyId);
     }, [parties, partyId]);
 
     const selectedPolicyPartyRoles = useMemo(() => {
-        return partyRoles?.filter(pr => pr.partyId === selectedPolicyParty?.partyId) || [];
+        return (
+            partyRoles?.filter(
+                (pr) => pr.partyId === selectedPolicyParty?.partyId
+            ) || []
+        );
     }, [partyRoles, selectedPolicyParty?.partyId]);
 
     const agentId = selectedPolicyParty?.agentExternalId;
@@ -38,7 +42,12 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
 
     const fetchAgentData = useCallback(async () => {
         try {
-            const result = await getAgentData({ clientCode, id: agentId, policyNumber, planCode });
+            const result = await getAgentData({
+                clientCode,
+                id: agentId,
+                policyNumber,
+                planCode,
+            });
             setAgentData(new AgentParty(result, selectedPolicyParty));
         } catch (error) {
             console.error('Unable to fetch agent details', error);
@@ -73,10 +82,16 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                     <FirmInformationCard selectedPolicyParty={agentData} />
 
                     <hr className=" h-0.5 border-none bg-gray-100" />
-                    <AllocationCard allocation={agentData?.party?.agentPercentage} deathBenefit={null} />
+                    <AllocationCard
+                        allocation={agentData?.party?.agentPercentage}
+                        deathBenefit={null}
+                    />
 
                     <hr className=" h-0.5 border-none bg-gray-100" />
-                    <IdentificationCard selectedPolicyParty={agentData} isAnnuity={policyDetails.isAnnuity} />
+                    <IdentificationCard
+                        selectedPolicyParty={agentData}
+                        isAnnuity={policyDetails.isAnnuity}
+                    />
 
                     <hr className="h-0.5 border-none bg-gray-100" />
                     <PhoneCard

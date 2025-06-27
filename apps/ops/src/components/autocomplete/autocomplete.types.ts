@@ -31,4 +31,7 @@ export type SimpleSelectProps = {
     value?: string;
 };
 
-export type SelectProps = SimpleSelectProps & { disabled?: boolean } & Omit<FieldProps, 'onChange' | 'value'>;
+export type SelectProps = SimpleSelectProps & { disabled?: boolean } & Omit<
+        FieldProps,
+        'onChange' | 'value'
+    >;

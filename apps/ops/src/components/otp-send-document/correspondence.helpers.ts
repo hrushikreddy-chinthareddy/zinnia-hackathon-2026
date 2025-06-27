@@ -1,8 +1,15 @@
 import { UserProfile } from '@auth0/nextjs-auth0/client';
 import { Policy } from '@zinnia/api-types/types/sor';
 
-import { AttachmentDetails, CorrespondenceFormParts, SendCommunicationRequestBody } from '@deps/models/case/correspondence';
-import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
+import {
+    AttachmentDetails,
+    CorrespondenceFormParts,
+    SendCommunicationRequestBody,
+} from '@deps/models/case/correspondence';
+import {
+    CommunicationTypes,
+    SendDocumentFormType,
+} from '@deps/models/case/send-document';
 
 export const generateCommunicationRequest = (
     policy: Policy,
@@ -34,7 +41,10 @@ export const generateCommunicationRequest = (
             deliveryType: communicationType,
             recipientList: state.correspondence?.recipients ?? [],
             ccList: state.correspondence?.ccList ?? [],
-            mailDetails: communicationType === CommunicationTypes.Mail ? state.correspondence?.mailDetails : undefined,
+            mailDetails:
+                communicationType === CommunicationTypes.Mail
+                    ? state.correspondence?.mailDetails
+                    : undefined,
         },
     };
 };

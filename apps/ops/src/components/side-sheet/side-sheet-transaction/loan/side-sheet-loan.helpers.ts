@@ -1,27 +1,50 @@
-import { AccountType, Policy, Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
+import {
+    AccountType,
+    Policy,
+    Transaction,
+    TransactionStatus,
+} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { getLoanInterestRate } from '@deps/queries/api/product-rate';
 
-import { calculateProcessDate, calculateProcessedAmount } from './side-sheet-new-loan-transaction.helpers';
+import {
+    calculateProcessDate,
+    calculateProcessedAmount,
+} from './side-sheet-new-loan-transaction.helpers';
 import { NewLoanTransactionSideSheetValues } from './types';
 import { PayeePaymentDetails } from '../types';
 
-const getLoanPayeePaymentDetails = (policy: Policy, transaction: Transaction): PayeePaymentDetails[] => {
+const getLoanPayeePaymentDetails = (
+    policy: Policy,
+    transaction: Transaction
+): PayeePaymentDetails[] => {
     const results: PayeePaymentDetails[] = [];
 
     const { payeeOrBeneficiaries, transactionAmounts, status } = transaction;
 
-    const partyIds = payeeOrBeneficiaries?.map(item => item.partyId).filter(id => id !== undefined) || [];
-    const bankIds = payeeOrBeneficiaries?.map(item => item.bankId).filter(id => id !== undefined) || [];
+    const partyIds =
+        payeeOrBeneficiaries
+            ?.map((item) => item.partyId)
+            .filter((id) => id !== undefined) || [];
+    const bankIds =
+        payeeOrBeneficiaries
+            ?.map((item) => item.bankId)
+            .filter((id) => id !== undefined) || [];
 
-    partyIds.forEach(partyId => {
-        const party = policy.parties?.find(party => party.partyId === partyId);
+    partyIds.forEach((partyId) => {
+        const party = policy.parties?.find(
+            (party) => party.partyId === partyId
+        );
         if (party) {
-            const bankDetails = party.bankDetails?.find(bank => bankIds.includes(bank.bankId as string));
-            const payee = payeeOrBeneficiaries?.filter(party => party.partyId === partyId)[0];
+            const bankDetails = party.bankDetails?.find((bank) =>
+                bankIds.includes(bank.bankId as string)
+            );
+            const payee = payeeOrBeneficiaries?.filter(
+                (party) => party.partyId === partyId
+            )[0];
 
             results.push({
                 allocationPercentage: payee?.allocationPercentage,
@@ -31,7 +54,10 @@ const getLoanPayeePaymentDetails = (policy: Policy, transaction: Transaction): P
                     accountNumber: bankDetails?.accountNumber as string,
                     accountType: bankDetails?.accountType as AccountType,
                 },
-                disbursementAmount: status === TransactionStatus.PENDING ? transactionAmounts?.requestedAmount : payee?.disbursementAmount,
+                disbursementAmount:
+                    status === TransactionStatus.PENDING
+                        ? transactionAmounts?.requestedAmount
+                        : payee?.disbursementAmount,
                 partyId: party.partyId as string,
             });
         }
@@ -40,8 +66,18 @@ const getLoanPayeePaymentDetails = (policy: Policy, transaction: Transaction): P
     return results;
 };
 
-export const getNewLoanSideSheetValues = (policy: Policy, transaction: Transaction, t: TFunction): NewLoanTransactionSideSheetValues => {
-    const { effectiveDate, processDate, status, transactionAmounts, transactionId } = transaction;
+export const getNewLoanSideSheetValues = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction
+): NewLoanTransactionSideSheetValues => {
+    const {
+        effectiveDate,
+        processDate,
+        status,
+        transactionAmounts,
+        transactionId,
+    } = transaction;
     const { requestedAmount, loanInterestType } = transactionAmounts ?? {};
 
     const isPending = status === ('Pending' as TransactionStatus);
@@ -49,10 +85,17 @@ export const getNewLoanSideSheetValues = (policy: Policy, transaction: Transacti
 
     return {
         effectiveDate: convertKebabedDateString(effectiveDate),
-        cancelCta: isPending ? (t('policy.history.sidesheet.cancelLoan') as string) : undefined,
-        fundDisbursementType: t('policy.history.newLoanSideSheet.proRata') as string,
+        cancelCta: isPending
+            ? (t('policy.history.sidesheet.cancelLoan') as string)
+            : undefined,
+        fundDisbursementType: t(
+            'policy.history.newLoanSideSheet.proRata'
+        ) as string,
         getAsyncSideSheetValues: async () => {
-            const interestRate = await getLoanInterestRate(new PolicyDetails(policy), policy?.policyDates?.issueDate);
+            const interestRate = await getLoanInterestRate(
+                new PolicyDetails(policy),
+                policy?.policyDates?.issueDate
+            );
 
             return {
                 interestRate: interestRate as number,

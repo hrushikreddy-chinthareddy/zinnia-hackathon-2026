@@ -3,9 +3,13 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import xss from 'xss';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import Content, { ContentVariant } from '@deps/components/content/content';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 
 import AllocationField from './allocation-field';
 import {
@@ -45,22 +49,27 @@ const BeneficiaryAllocator: React.FC<BeneficiaryAllocatorProps> = ({
 
     const [shouldValidate, setShouldValidate] = useState(false);
     const [totalPercent, setTotalPercent] = useState(100);
-    const [error, setError] = useState({ hasError: false, failedValidation: false, message: '' });
+    const [error, setError] = useState({
+        hasError: false,
+        failedValidation: false,
+        message: '',
+    });
 
-    const setBeneficiaryPercentage = (partyId: string | undefined) => (e: any) => {
-        setBenefitPercentages((prevState: BennyPercent): BennyPercent => {
-            const prevValue = prevState[partyId as string];
-            let currentValue = Number(xss(e?.target?.value));
-            // this isn't ideal, we're changing the input
-            // the user should know where the cursor is
-            // and adjust accordingly
-            // if it was a 0, trim the trailing 0
-            if (prevValue === 0) {
-                currentValue = Number(String(currentValue)[0]);
-            }
-            return { ...prevState, [partyId as string]: currentValue };
-        });
-    };
+    const setBeneficiaryPercentage =
+        (partyId: string | undefined) => (e: any) => {
+            setBenefitPercentages((prevState: BennyPercent): BennyPercent => {
+                const prevValue = prevState[partyId as string];
+                let currentValue = Number(xss(e?.target?.value));
+                // this isn't ideal, we're changing the input
+                // the user should know where the cursor is
+                // and adjust accordingly
+                // if it was a 0, trim the trailing 0
+                if (prevValue === 0) {
+                    currentValue = Number(String(currentValue)[0]);
+                }
+                return { ...prevState, [partyId as string]: currentValue };
+            });
+        };
 
     const validate = (override = false) => {
         // don't show an error message unless we should be validating
@@ -83,7 +92,9 @@ const BeneficiaryAllocator: React.FC<BeneficiaryAllocatorProps> = ({
             setError({
                 hasError: true,
                 failedValidation: true,
-                message: t('sideSheet.allocation.allocationsTotalMustEqual100Pct'),
+                message: t(
+                    'sideSheet.allocation.allocationsTotalMustEqual100Pct'
+                ),
             });
             return;
         }
@@ -101,13 +112,20 @@ const BeneficiaryAllocator: React.FC<BeneficiaryAllocatorProps> = ({
     useEffect(() => {
         const validateSelections = () => {
             const totalPercentageIs100 = totalPercent === 100;
-            const noPercantageIs0 = Object.values(benefitPercentages).every(percentage => percentage > 0);
+            const noPercantageIs0 = Object.values(benefitPercentages).every(
+                (percentage) => percentage > 0
+            );
             return totalPercentageIs100 && noPercantageIs0;
         };
         const totalPercent = calculateTotalPercent(benefitPercentages);
         setTotalPercent(totalPercent);
 
-        onChange(convertBenefitPercentagesToAllocationPercentages(benefitPercentages), validateSelections());
+        onChange(
+            convertBenefitPercentagesToAllocationPercentages(
+                benefitPercentages
+            ),
+            validateSelections()
+        );
     }, [benefitPercentages]);
 
     useEffect(() => {
@@ -117,7 +135,10 @@ const BeneficiaryAllocator: React.FC<BeneficiaryAllocatorProps> = ({
         }
     }, [needsValidation]);
 
-    const { focusedParty, otherParties } = getBeneficiariesByFocusedParty(beneficiaries, focusedPartyId);
+    const { focusedParty, otherParties } = getBeneficiariesByFocusedParty(
+        beneficiaries,
+        focusedPartyId
+    );
 
     const title =
         partyRole === PartyRole.PRIMARYBENEFICIARY
@@ -135,7 +156,9 @@ const BeneficiaryAllocator: React.FC<BeneficiaryAllocatorProps> = ({
                 <>
                     <AllocationField
                         key={`allocationField-${partyRole}-${focusedParty.partyId}`}
-                        beneficiaryPercentage={benefitPercentages[focusedParty.partyId as string]}
+                        beneficiaryPercentage={
+                            benefitPercentages[focusedParty.partyId as string]
+                        }
                         className="border-b-2 border-gray-100 pb-6"
                         isFirst={true}
                         partyLabelVariant={TypographyVariant.LabelLgAlt}
@@ -143,23 +166,37 @@ const BeneficiaryAllocator: React.FC<BeneficiaryAllocatorProps> = ({
                         onBlur={() => {
                             validate();
                         }}
-                        onChange={setBeneficiaryPercentage(focusedParty.partyId as string)}
+                        onChange={setBeneficiaryPercentage(
+                            focusedParty.partyId as string
+                        )}
                         partyId={focusedParty.partyId}
                     />
                     <div className="mb-4 mt-6">
-                        <Typography variant={TypographyVariant.LabelLg}>{contingentTitle}</Typography>
+                        <Typography variant={TypographyVariant.LabelLg}>
+                            {contingentTitle}
+                        </Typography>
                     </div>
                 </>
             )}
             <div className="flex flex-col justify-between gap-6">
-                {!focusedParty && <Typography variant={TypographyVariant.LabelLg}>{title}</Typography>}
+                {!focusedParty && (
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {title}
+                    </Typography>
+                )}
                 {!!otherParties?.length &&
                     otherParties.map(({ firstLastName, partyId }, index) => (
                         <AllocationField
                             key={`allocationField-${partyRole}-${partyId}`}
-                            beneficiaryPercentage={benefitPercentages[partyId as string]}
+                            beneficiaryPercentage={
+                                benefitPercentages[partyId as string]
+                            }
                             isFirst={!index && !focusedParty}
-                            partyLabelVariant={focusedParty ? TypographyVariant.LabelMdAlt : TypographyVariant.LabelLgAlt}
+                            partyLabelVariant={
+                                focusedParty
+                                    ? TypographyVariant.LabelMdAlt
+                                    : TypographyVariant.LabelLgAlt
+                            }
                             firstLastName={firstLastName}
                             onBlur={() => {
                                 validate();
@@ -171,10 +208,14 @@ const BeneficiaryAllocator: React.FC<BeneficiaryAllocatorProps> = ({
             </div>
             <div className="mt-8 flex w-full justify-between">
                 <div>
-                    <Typography variant={TypographyVariant.LabelLg}>{t('general.total')}</Typography>
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {t('general.total')}
+                    </Typography>
                 </div>
                 <Content
-                    className={error.hasError ? 'text-semantic-error' : 'text-gray-900'}
+                    className={
+                        error.hasError ? 'text-semantic-error' : 'text-gray-900'
+                    }
                     variant={ContentVariant.Value}
                     details={`${totalPercent}%`}
                 />
@@ -183,8 +224,18 @@ const BeneficiaryAllocator: React.FC<BeneficiaryAllocatorProps> = ({
                 <div>
                     <AssistiveText
                         className="py-2"
-                        text={error.hasError ? error.message : t('sideSheet.allocation.totalAllocationsEqual100Pct')}
-                        variant={error.hasError ? AssistiveTextVariant.Error : AssistiveTextVariant.Success}
+                        text={
+                            error.hasError
+                                ? error.message
+                                : t(
+                                      'sideSheet.allocation.totalAllocationsEqual100Pct'
+                                  )
+                        }
+                        variant={
+                            error.hasError
+                                ? AssistiveTextVariant.Error
+                                : AssistiveTextVariant.Success
+                        }
                     />
                 </div>
             )}

@@ -22,13 +22,13 @@ export const TimeFilter: FC<TimeFilterProps> = ({
     handleTimerangeChange,
 }) => {
     const options = timeframeOptions
-        ? Object.values(timeframeOptions).map(option => ({
+        ? Object.values(timeframeOptions).map((option) => ({
               label: option ?? '',
               ariaLabel: option ?? '',
               value: option ?? '',
               displayText: option ?? '',
           }))
-        : Object.values(TimeframeFilterOptions).map(option => ({
+        : Object.values(TimeframeFilterOptions).map((option) => ({
               label: option ?? '',
               ariaLabel: option ?? '',
               value: option ?? '',
@@ -37,7 +37,10 @@ export const TimeFilter: FC<TimeFilterProps> = ({
 
     return (
         <div>
-            <CustomDateRange timerange={timerange} handleTimerangeChange={handleTimerangeChange} />
+            <CustomDateRange
+                timerange={timerange}
+                handleTimerangeChange={handleTimerangeChange}
+            />
             <ChipRadio
                 id="timeframe-select"
                 options={options}

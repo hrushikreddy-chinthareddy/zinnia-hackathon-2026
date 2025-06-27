@@ -7,7 +7,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useMemo } from 'react';
 
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import PolicyLayout from '@deps/components/policy-layout';
 import { TranslationFiles } from '@deps/config/translations';
@@ -29,20 +31,37 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
 import Custom404Page from '@deps/pages/404s';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
-import { getPolicyQuery, getPolicyQueryKey } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import {
+    getPolicyQuery,
+    getPolicyQueryKey,
+} from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    logError,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
@@ -54,7 +73,9 @@ interface PolicyPageProps extends SegmentTrackedPageProps {
     selectedPolicyParty?: Party;
 }
 
-const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps) => {
+const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
+    user,
+}: PolicyPageProps) => {
     const router = useRouter();
     const { query } = router;
     const { id, slug, planCode } = query;
@@ -74,13 +95,18 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
     } = useQuery({
         queryKey: [getPolicyQueryKey, id, planCode],
         queryFn: () => getPolicyQuery(id as string, planCode as string),
-        placeholderData: previousData => previousData,
+        placeholderData: (previousData) => previousData,
     });
 
     const { data: canEditPolicy } = useQuery({
         queryKey: ['canEditPolicy', id, planCode, partyId],
-        queryFn: () => hasPermissionQuery(UserPermission.AllowEditPolicy, `policy:${id}_${planCode}`, partyId),
-        placeholderData: previousData => previousData,
+        queryFn: () =>
+            hasPermissionQuery(
+                UserPermission.AllowEditPolicy,
+                `policy:${id}_${planCode}`,
+                partyId
+            ),
+        placeholderData: (previousData) => previousData,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
@@ -96,7 +122,10 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
         );
     }
 
-    const isAnnuityForbiddenPage = policyDetails.isAnnuity && slug?.[0] === 'policy' && ['coverage', 'loans'].includes(slug?.[1]);
+    const isAnnuityForbiddenPage =
+        policyDetails.isAnnuity &&
+        slug?.[0] === 'policy' &&
+        ['coverage', 'loans'].includes(slug?.[1]);
 
     // If there is no policy or an error occurs, route to the 404 page.
     // Do not redirect to /404, as it no longer exists as a standalone page.
@@ -117,7 +146,11 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
         switch (slug[0]) {
             case 'people':
                 // policies/id/people/personId or policies/id/people
-                subPageContent = slug[1] ? <PersonSubPage editable={canEditPolicy} partyId={slug[1]} /> : <PeopleSubPage />;
+                subPageContent = slug[1] ? (
+                    <PersonSubPage editable={canEditPolicy} partyId={slug[1]} />
+                ) : (
+                    <PeopleSubPage />
+                );
                 subPageTitleKey = slug[1] ? 'partyDetails' : 'people';
                 break;
             case 'transactions':
@@ -133,7 +166,9 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
                 }
 
                 // policy-extras is an old link.  Leaving it here for backwards compatibility
-                if (['riders-and-features', 'policy-extras'].includes(slug[1])) {
+                if (
+                    ['riders-and-features', 'policy-extras'].includes(slug[1])
+                ) {
                     subPageContent = <RidersAndFeaturesSubPage />;
                     subPageTitleKey = 'ridersAndFeatures';
                 }
@@ -180,7 +215,13 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({ user }: PolicyPageProps)
     return (
         <BlurOverlayLoader loading={isFetching}>
             <PolicyLayout policyDetails={policy}>
-                <PolicyData.Provider value={{ policy, policyDetails: new PolicyDetails(policy), refreshPolicy: refetchPolicy }}>
+                <PolicyData.Provider
+                    value={{
+                        policy,
+                        policyDetails: new PolicyDetails(policy),
+                        refreshPolicy: refetchPolicy,
+                    }}
+                >
                     {/* Only the sub pages re-render on filter changes */}
                     <PeopleRolesFilterProvider>
                         <PageHead titleKey={subPageTitleKey} />
@@ -208,11 +249,31 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]
-                ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY, loggingContext)
-                : await doesUserHavePagePermissions(context, UserPermission.AllowReadPolicyAdmin, loggingContext);
-            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[
+                FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
+            ]
+                ? await checkTuplePage(
+                      context,
+                      FgaRelation.UiAccess,
+                      FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
+                      loggingContext
+                  )
+                : await doesUserHavePagePermissions(
+                      context,
+                      UserPermission.AllowReadPolicyAdmin,
+                      loggingContext
+                  );
+            const isAdvisorsExcel = await checkTuplePage(
+                context,
+                FgaRelation.Party,
+                AE_FGA_ROLE,
+                loggingContext
+            );
 
             if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
                 return {
@@ -253,7 +314,11 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
         },
     },
-    { file: 'policies/[id]/[...slug]', function: 'getServerSideProps', page: 'policies/:planCode/:id/:...slug' }
+    {
+        file: 'policies/[id]/[...slug]',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/:...slug',
+    }
 );
 
 export default PolicyDetailsPage;

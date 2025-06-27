@@ -8,14 +8,19 @@ export type FootnoteProps = {
     productType?: ProductType;
 };
 
-export default function Footnote({ productMarketingName, productType }: FootnoteProps) {
+export default function Footnote({
+    productMarketingName,
+    productType,
+}: FootnoteProps) {
     const { t } = useTranslation();
 
     const copy =
-        productMarketingName && mapProductTypeToTranslation(productType, t).label
+        productMarketingName &&
+        mapProductTypeToTranslation(productType, t).label
             ? t('footnote.withProduct', {
                   productMarketingName,
-                  productType: mapProductTypeToTranslation(productType, t).label,
+                  productType: mapProductTypeToTranslation(productType, t)
+                      .label,
               })
             : t('footnote.default');
 

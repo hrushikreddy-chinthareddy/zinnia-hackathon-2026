@@ -18,10 +18,17 @@ export const WithdrawalInfo = ({ amount }: WithdrawalInfoProps) => {
                     <Label
                         variant={LabelVariant.FieldLabel}
                         label={t('withdrawals.requestedWithdrawal.label')}
-                        tooltipTitle={t('withdrawals.requestedWithdrawal.label')}
-                        tooltipBody={t('withdrawals.requestedWithdrawal.tooltip')}
+                        tooltipTitle={t(
+                            'withdrawals.requestedWithdrawal.label'
+                        )}
+                        tooltipBody={t(
+                            'withdrawals.requestedWithdrawal.tooltip'
+                        )}
                     />
-                    <Content variant={ContentVariant.Value} details={numberFormatify(amount)} />
+                    <Content
+                        variant={ContentVariant.Value}
+                        details={numberFormatify(amount)}
+                    />
                 </div>
                 {/* this should be conditional showing on step 4 */}
                 <div className="flex flex-col gap-[5px]">
@@ -31,7 +38,10 @@ export const WithdrawalInfo = ({ amount }: WithdrawalInfoProps) => {
                         tooltipTitle={t('withdrawals.totalPayment.label')}
                         tooltipBody={t('withdrawals.totalPayment.tooltip')}
                     />
-                    <Content variant={ContentVariant.Value} details={numberFormatify(amount)} />
+                    <Content
+                        variant={ContentVariant.Value}
+                        details={numberFormatify(amount)}
+                    />
                 </div>
             </div>
         </div>

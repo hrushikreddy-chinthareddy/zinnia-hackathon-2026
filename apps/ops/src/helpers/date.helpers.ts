@@ -7,12 +7,18 @@ interface DateRange {
 }
 type AnythingWithDates = Record<string, any> & DateRange;
 
-export function isCurrentDated({ startDate, endDate }: AnythingWithDates): boolean {
+export function isCurrentDated({
+    startDate,
+    endDate,
+}: AnythingWithDates): boolean {
     return isCurrentStartDate(startDate) && !isEndDated(endDate);
 }
 
 // Is the current date after the start date
-export function isCurrentStartDate(startDate: string | undefined, treatNoStartAsCurrent: boolean = true): boolean {
+export function isCurrentStartDate(
+    startDate: string | undefined,
+    treatNoStartAsCurrent: boolean = true
+): boolean {
     if (!startDate) return treatNoStartAsCurrent;
     return dayjs(startDate).isAfter(dayjs());
 }
@@ -22,7 +28,11 @@ export function isEndDated(endDate: string | undefined): boolean {
     return true;
 }
 
-export const getArrayIndexFromDate = (date: string, startDate: string, unitOfTime: 'month' | 'week' | 'day' = 'day'): number => {
+export const getArrayIndexFromDate = (
+    date: string,
+    startDate: string,
+    unitOfTime: 'month' | 'week' | 'day' = 'day'
+): number => {
     const dateToStart = dayjs(startDate, 'YYYY-M-D').startOf(unitOfTime);
 
     return dayjs(date, 'YYYY-M-D').diff(dateToStart, unitOfTime);

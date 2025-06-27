@@ -6,15 +6,21 @@ interface HighlighterProps {
     renderTextFunction?: (text: string) => string | JSX.Element[];
 }
 
-const highlightText = ({ text, highlights, renderTextFunction = text => text }: HighlighterProps) => {
+const highlightText = ({
+    text,
+    highlights,
+    renderTextFunction = (text) => text,
+}: HighlighterProps) => {
     // lowercase items in the highlights array
-    highlights = highlights.map(v => v.toLowerCase());
+    highlights = highlights.map((v) => v.toLowerCase());
 
     // need a separate escaped array so the regex works correctly and so we can still match on the orginal values.
-    const escaped = highlights.map(v => escapeRegExp(v));
+    const escaped = highlights.map((v) => escapeRegExp(v));
 
     // the .filter(Boolean) filters out empty string the regex returns for whole string matches ['', 'Hello world', '']
-    const parts = text?.split(new RegExp(`(${escaped.join('|')})`, 'gi')).filter(Boolean);
+    const parts = text
+        ?.split(new RegExp(`(${escaped.join('|')})`, 'gi'))
+        .filter(Boolean);
 
     return parts?.map((part, index) => {
         return highlights.includes(part.toLowerCase()) ? (
@@ -27,7 +33,11 @@ const highlightText = ({ text, highlights, renderTextFunction = text => text }: 
     });
 };
 
-const Highlighter = ({ text, highlights, renderTextFunction = (text: string) => text }: HighlighterProps) => {
+const Highlighter = ({
+    text,
+    highlights,
+    renderTextFunction = (text: string) => text,
+}: HighlighterProps) => {
     if (!text) {
         return <></>;
     }

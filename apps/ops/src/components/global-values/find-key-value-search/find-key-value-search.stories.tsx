@@ -6,7 +6,7 @@ export default {
     title: 'Components/GlobalValues/FindKeyValueSearch',
     component: FindKeyValueSearchComponent,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen bg-white">
                 <Story />
             </div>
@@ -14,4 +14,6 @@ export default {
     ],
 } as Meta<typeof FindKeyValueSearchComponent>;
 
-export const FindKeyValueSearch = () => <FindKeyValueSearchComponent policyNumber="AU22029654" />;
+export const FindKeyValueSearch = () => (
+    <FindKeyValueSearchComponent policyNumber="AU22029654" />
+);

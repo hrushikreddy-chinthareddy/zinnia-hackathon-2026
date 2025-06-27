@@ -4,10 +4,20 @@ import React, { useEffect, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 import { Loader } from '@deps/components/page-loader';
-import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { DocumentDisplayCode, PolicyDocument, PolicyDocuments } from '@deps/models/case/document';
-import { StatementStartYear, StatementTypes } from '@deps/models/case/send-statement';
+import {
+    DocumentDisplayCode,
+    PolicyDocument,
+    PolicyDocuments,
+} from '@deps/models/case/document';
+import {
+    StatementStartYear,
+    StatementTypes,
+} from '@deps/models/case/send-statement';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { Policy } from '@zinnia/api-types/types/sor';
@@ -22,18 +32,30 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import StatementListing from './components/statement-listing';
-import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '../assistive-text/assistive-text';
 import CheckboxText from '../checkbox/checkbox-text/checkbox-text';
-import { DatePickerTypes, getQuarter, Quarter, quarters } from '../date-picker/date-picker';
+import {
+    DatePickerTypes,
+    getQuarter,
+    Quarter,
+    quarters,
+} from '../date-picker/date-picker';
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
 
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
-const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispatch<React.SetStateAction<StatementTypes[]>>) => {
+const toggleStatement = (
+    val: StatementTypes,
+    SetSelectedStatements: React.Dispatch<
+        React.SetStateAction<StatementTypes[]>
+    >
+) => {
     return (shouldHaveStatement: boolean) => {
-        SetSelectedStatements(statements => {
+        SetSelectedStatements((statements) => {
             const hasActiveStatement = statements.includes(val);
 
             if (!hasActiveStatement && shouldHaveStatement) {
@@ -41,7 +63,7 @@ const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispa
             }
 
             if (hasActiveStatement && !shouldHaveStatement) {
-                return statements.filter(statement => statement !== val);
+                return statements.filter((statement) => statement !== val);
             }
 
             return statements;
@@ -51,23 +73,39 @@ const toggleStatement = (val: StatementTypes, SetSelectedStatements: React.Dispa
 
 const getDayjsDate = (date: string): Dayjs => {
     const [_year, _quarter] = date.split('-');
-    const month = quarters.find(quarter => quarter.value === (_quarter as Quarter))?.month ?? 1;
+    const month =
+        quarters.find((quarter) => quarter.value === (_quarter as Quarter))
+            ?.month ?? 1;
 
     return dayjs().year(Number(_year)).month(month).date(1);
 };
 
-const getSelectedYearQuarters = (startDate: string, endDate: string, selectedStatements: StatementTypes[]) => {
+const getSelectedYearQuarters = (
+    startDate: string,
+    endDate: string,
+    selectedStatements: StatementTypes[]
+) => {
     const [startYear, startQuarter] = startDate.split('-');
     const [endYear, endQuarter] = endDate.split('-');
-    const startQuarterIndex = quarters.findIndex(item => item.value === startQuarter);
-    const endQuarterIndex = quarters.findIndex(item => item.value === endQuarter);
+    const startQuarterIndex = quarters.findIndex(
+        (item) => item.value === startQuarter
+    );
+    const endQuarterIndex = quarters.findIndex(
+        (item) => item.value === endQuarter
+    );
 
     if (startYear === endYear) {
         return [
             {
                 periodYear: Number(startYear),
                 periodQuarters:
-                    quarters.filter((_, index) => index >= startQuarterIndex && index <= endQuarterIndex).map(item => item.value) || [],
+                    quarters
+                        .filter(
+                            (_, index) =>
+                                index >= startQuarterIndex &&
+                                index <= endQuarterIndex
+                        )
+                        .map((item) => item.value) || [],
             },
         ];
     } else {
@@ -76,15 +114,21 @@ const getSelectedYearQuarters = (startDate: string, endDate: string, selectedSta
         const periodQuarters = Array.from({ length: years + 1 }, (_, i) => {
             const periodYear = Number(startYear) + i;
             let periodQuarters: Quarter[];
-            if (selectedStatements.includes(StatementTypes.AnniversaryStatement)) {
+            if (
+                selectedStatements.includes(StatementTypes.AnniversaryStatement)
+            ) {
                 return { periodYear, periodQuarters: [] };
             }
             if (i === 0) {
-                periodQuarters = quarters.slice(startQuarterIndex).map(item => item.value);
+                periodQuarters = quarters
+                    .slice(startQuarterIndex)
+                    .map((item) => item.value);
             } else if (i === years) {
-                periodQuarters = quarters.slice(0, endQuarterIndex + 1).map(item => item.value);
+                periodQuarters = quarters
+                    .slice(0, endQuarterIndex + 1)
+                    .map((item) => item.value);
             } else {
-                periodQuarters = quarters.map(item => item.value);
+                periodQuarters = quarters.map((item) => item.value);
             }
             return { periodYear, periodQuarters };
         });
@@ -113,27 +157,41 @@ const ownerCopyStatements = (statements: PolicyDocument[]) => {
     }
 
     return statements
-        ?.filter(statement => statement.displayCode === DocumentDisplayCode.Owner)
+        ?.filter(
+            (statement) => statement.displayCode === DocumentDisplayCode.Owner
+        )
         ?.sort((a, b) => {
             return dayjs(b.documentDate).isBefore(a.documentDate) ? 1 : -1;
         });
 };
 
-function StatementSelection({ policy, applicableStatement, statements, setStatements }: StatementSelectionProps) {
+function StatementSelection({
+    policy,
+    applicableStatement,
+    statements,
+    setStatements,
+}: StatementSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'contactCenter' });
     const { goToNext } = useWorkflow();
 
-    const statementStartYear = policy.policyDates?.issueDate || StatementStartYear;
-    const [selectedStatementType, setSelectedStatementType] = useState<StatementTypes[]>(applicableStatement);
+    const statementStartYear =
+        policy.policyDates?.issueDate || StatementStartYear;
+    const [selectedStatementType, setSelectedStatementType] =
+        useState<StatementTypes[]>(applicableStatement);
     const currentYear = dayjs().year().toString();
     const currentQuarter = `${currentYear}-Q${getQuarter(dayjs())}`;
     const defaultDate =
-        applicableStatement.length === 1 && applicableStatement[0] === StatementTypes.AnniversaryStatement ? currentYear : currentQuarter;
+        applicableStatement.length === 1 &&
+        applicableStatement[0] === StatementTypes.AnniversaryStatement
+            ? currentYear
+            : currentQuarter;
     const [startDate, setStartDate] = useState(defaultDate);
     const [endDate, setEndDate] = useState(defaultDate);
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
-    const [datePickerType, setdatePickerType] = useState(getDatePickerType(selectedStatementType));
+    const [datePickerType, setdatePickerType] = useState(
+        getDatePickerType(selectedStatementType)
+    );
     const { featureFlagVariables } = useOptimizely();
 
     const useV3 = isFeatureFlagVariableActive(
@@ -189,18 +247,33 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     setError({});
                     setStatements(() => []);
                     if (selectedStatementType.length === 0) {
-                        setError({ statementType: t('errors.statementType') as string });
+                        setError({
+                            statementType: t('errors.statementType') as string,
+                        });
                         return;
                     } else {
-                        const selectedYearQuarters = getSelectedYearQuarters(startDate, endDate, selectedStatementType);
+                        const selectedYearQuarters = getSelectedYearQuarters(
+                            startDate,
+                            endDate,
+                            selectedStatementType
+                        );
                         //  adding ANNSTM & ANN to the document type filter if anniversary statement is selected
-                        const documentTypes = applicableStatement.find(statement => statement === StatementTypes.AnniversaryStatement)
-                            ? [...applicableStatement, StatementTypes.AnnualStatement]
+                        const documentTypes = applicableStatement.find(
+                            (statement) =>
+                                statement ===
+                                StatementTypes.AnniversaryStatement
+                        )
+                            ? [
+                                  ...applicableStatement,
+                                  StatementTypes.AnnualStatement,
+                              ]
                             : applicableStatement;
 
                         const optionalParams = {
                             documentType: documentTypes.join(','),
-                            periods: encodeURIComponent(JSON.stringify(selectedYearQuarters)),
+                            periods: encodeURIComponent(
+                                JSON.stringify(selectedYearQuarters)
+                            ),
                         };
 
                         browserLogInfo('contactCenterGetStatements', {
@@ -218,7 +291,9 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                         if (useV3) {
                             const searchBody = {
                                 parentCarrierCode: policy?.carrierId || '',
-                                documentClassification: SearchRequest.documentClassification.OUTBOUND,
+                                documentClassification:
+                                    SearchRequest.documentClassification
+                                        .OUTBOUND,
                                 policyNumber: policy?.policyNumber || '',
                                 documentType: optionalParams.documentType,
                                 periods: selectedYearQuarters,
@@ -234,7 +309,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                             }
 
                             const statements: PolicyDocument[] =
-                                data?.documents?.map(document => ({
+                                data?.documents?.map((document) => ({
                                     ...document,
                                     caseId: '',
                                     contractNumber: policy?.policyNumber || '',
@@ -247,7 +322,8 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                                     documentType: document.documentType || '',
                                     source: document.source || '',
                                     fileType: document.fileType || '',
-                                    periodYear: document.periodYear?.toString() || '',
+                                    periodYear:
+                                        document.periodYear?.toString() || '',
                                     periodQuarter: document.periodQuarter,
                                     documentID: document.documentId,
                                 })) || [];
@@ -264,13 +340,20 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                                 return;
                             }
                             const statements: PolicyDocuments = response.data;
-                            setStatements(ownerCopyStatements(statements.items));
+                            setStatements(
+                                ownerCopyStatements(statements.items)
+                            );
                         }
                     }
                 } catch (error) {
                     browserLogError('contactCenterGetStatements', {
                         ...parseErrorInformation(error),
-                        payload: { contractNumber: policy?.policyNumber, startDate, endDate, planCode: policy?.product?.planCode || '' },
+                        payload: {
+                            contractNumber: policy?.policyNumber,
+                            startDate,
+                            endDate,
+                            planCode: policy?.product?.planCode || '',
+                        },
                         function: 'documents.getCorrespondenceDocs',
                     });
                 } finally {
@@ -297,7 +380,9 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                 <SendDocumentNavigationButtons
                     handleContinue={handleContinue}
                     handleCancel={handleCancel}
-                    trackEventProps={{ type: ContactCenterTransactionType.STATEMENT }}
+                    trackEventProps={{
+                        type: ContactCenterTransactionType.STATEMENT,
+                    }}
                 />
             }
         >
@@ -306,10 +391,20 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     return (
                         <div key={`select-${value}`}>
                             <CheckboxText
-                                checked={isChecked(value, selectedStatementType)}
+                                checked={isChecked(
+                                    value,
+                                    selectedStatementType
+                                )}
                                 label={label}
-                                onChange={toggleStatement(value, setSelectedStatementType)}
-                                isDisabled={applicableStatement?.includes(value) ? false : true}
+                                onChange={toggleStatement(
+                                    value,
+                                    setSelectedStatementType
+                                )}
+                                isDisabled={
+                                    applicableStatement?.includes(value)
+                                        ? false
+                                        : true
+                                }
                             />
                         </div>
                     );
@@ -320,7 +415,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     label={t('sendStatement.startDate') as string}
                     id="start-date"
                     isFutureDateDisabled={true}
-                    onChange={e => {
+                    onChange={(e) => {
                         setStartDate(e.target.value);
                     }}
                     size={FieldSize.Small}
@@ -329,7 +424,9 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     disableFormat={true}
                     showMonths={false}
                     datePickerType={datePickerType}
-                    isDateAllowed={date => handleIsDateAllowed(date, statementStartYear)}
+                    isDateAllowed={(date) =>
+                        handleIsDateAllowed(date, statementStartYear)
+                    }
                     readOnly={true}
                 />
 
@@ -337,7 +434,7 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     label={t('sendStatement.endDate') as string}
                     id="end-date"
                     isFutureDateDisabled={true}
-                    onChange={e => {
+                    onChange={(e) => {
                         setEndDate(e.target.value);
                     }}
                     size={FieldSize.Small}
@@ -346,7 +443,9 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
                     disableFormat={true}
                     showMonths={false}
                     datePickerType={datePickerType}
-                    isDateAllowed={date => handleIsDateAllowed(date, startDate)}
+                    isDateAllowed={(date) =>
+                        handleIsDateAllowed(date, startDate)
+                    }
                     readOnly={true}
                 />
             </div>
@@ -356,13 +455,28 @@ function StatementSelection({ policy, applicableStatement, statements, setStatem
             ) : (
                 startDate &&
                 endDate &&
-                !Object.keys(error).length && <StatementListing statements={statements} carrierId={policy?.carrierId || ''} />
+                !Object.keys(error).length && (
+                    <StatementListing
+                        statements={statements}
+                        carrierId={policy?.carrierId || ''}
+                    />
+                )
             )}
             {error && (
                 <div className="flex flex-col mt-2">
-                    {error.statementType && <AssistiveText text={error.statementType} variant={AssistiveTextVariant.Error} />}
+                    {error.statementType && (
+                        <AssistiveText
+                            text={error.statementType}
+                            variant={AssistiveTextVariant.Error}
+                        />
+                    )}
 
-                    {error.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} />}
+                    {error.submit && (
+                        <AssistiveText
+                            text={error?.submit}
+                            variant={AssistiveTextVariant.Error}
+                        />
+                    )}
                 </div>
             )}
         </WorkflowCard>

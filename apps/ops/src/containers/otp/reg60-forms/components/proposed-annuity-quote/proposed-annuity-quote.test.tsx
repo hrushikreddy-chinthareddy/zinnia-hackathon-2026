@@ -8,13 +8,31 @@ describe('ProposedAnnuityQuote', () => {
             fields: {
                 proposedAnnuityQuote: { title: 'Proposed Annuity Quote' },
                 annuitizationQuote: { title: 'Annuitization Quote' },
-                annuityPaymentAmount: { fieldLabel: 'Annuity Payment Amount', isRequired: true },
-                firstPaymentDate: { fieldLabel: 'First Payment Date', isRequired: true },
-                paymentFrequency: { fieldLabel: 'Payment Frequency', isRequired: true },
-                paymentFrequencyText: { fieldLabel: 'Payment Frequency Text', isRequired: true },
+                annuityPaymentAmount: {
+                    fieldLabel: 'Annuity Payment Amount',
+                    isRequired: true,
+                },
+                firstPaymentDate: {
+                    fieldLabel: 'First Payment Date',
+                    isRequired: true,
+                },
+                paymentFrequency: {
+                    fieldLabel: 'Payment Frequency',
+                    isRequired: true,
+                },
+                paymentFrequencyText: {
+                    fieldLabel: 'Payment Frequency Text',
+                    isRequired: true,
+                },
                 incomeOption: { fieldLabel: 'Income Option', isRequired: true },
-                incomeOptionText: { fieldLabel: 'Income Option Text', isRequired: true },
-                periodCertainYears: { fieldLabel: 'Period Certain Years', isRequired: true },
+                incomeOptionText: {
+                    fieldLabel: 'Income Option Text',
+                    isRequired: true,
+                },
+                periodCertainYears: {
+                    fieldLabel: 'Period Certain Years',
+                    isRequired: true,
+                },
                 typeOfPayment: {
                     fieldLabel: 'Type of Payment',
                     isRequired: true,
@@ -45,7 +63,10 @@ describe('ProposedAnnuityQuote', () => {
         } as any;
         const formConfig = {
             fields: {
-                firstPaymentDate: { fieldLabel: 'First Payment Date', isRequired: true },
+                firstPaymentDate: {
+                    fieldLabel: 'First Payment Date',
+                    isRequired: true,
+                },
             },
         };
         render(
@@ -57,7 +78,12 @@ describe('ProposedAnnuityQuote', () => {
             />
         );
 
-        fireEvent.change(screen.getByLabelText(formConfig.fields.firstPaymentDate.fieldLabel), { target: { value: 'invalid-date' } });
+        fireEvent.change(
+            screen.getByLabelText(
+                formConfig.fields.firstPaymentDate.fieldLabel
+            ),
+            { target: { value: 'invalid-date' } }
+        );
 
         expect(onAnnuityQuoteChange).not.toHaveBeenCalledWith(
             expect.objectContaining({

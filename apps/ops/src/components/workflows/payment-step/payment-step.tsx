@@ -4,9 +4,13 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
@@ -15,12 +19,21 @@ import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/a
 import { PaymentMethodType, PaymentStepProps } from './types';
 import WorkflowCard from '../workflow-card/workflow-card';
 
-const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTransaction, trackEventProps }: PaymentStepProps) => {
+const PaymentStep = ({
+    parentPage,
+    policy,
+    setState,
+    state,
+    subtitle,
+    validateTransaction,
+    trackEventProps,
+}: PaymentStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
     const router = useRouter();
 
-    const { parties, policyNumber, product, systematicPrograms } = policy as Policy;
+    const { parties, policyNumber, product, systematicPrograms } =
+        policy as Policy;
     const {
         paymentBankId,
         paymentAccountNumber: currentPaymentAccountNumber,
@@ -31,12 +44,16 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
     const [formError, setFormError] = useState(false);
 
     const payPartyId = payeePartyId || payorPartyId;
-    const party = parties?.find(party => party.partyId === payPartyId);
+    const party = parties?.find((party) => party.partyId === payPartyId);
 
     const paymentProgram = systematicPrograms?.find(
-        program => program.arrangementType === arrangementType && program.status === Status.ACTIVE
+        (program) =>
+            program.arrangementType === arrangementType &&
+            program.status === Status.ACTIVE
     );
-    const programBankId = paymentProgram?.party?.find(party => party.partyId === payPartyId);
+    const programBankId = paymentProgram?.party?.find(
+        (party) => party.partyId === payPartyId
+    );
     const bankDetails = useMemo(() => {
         const currentBankDetails = party?.bankDetails?.filter((bank: any) => {
             return !isEndDated(bank?.endDate);
@@ -58,9 +75,11 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
             return;
         }
 
-        const selectedBank = bankDetails.find(bank => bank.bankId === paymentBankId) || bankDetails[0];
+        const selectedBank =
+            bankDetails.find((bank) => bank.bankId === paymentBankId) ||
+            bankDetails[0];
 
-        setState(prevState => ({
+        setState((prevState) => ({
             ...prevState,
             paymentAccountNumber: selectedBank?.accountNumber,
             paymentBankId: selectedBank?.bankId,
@@ -84,16 +103,33 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
 
         const response = await validateTransaction();
 
-        setState(prevState => ({ ...prevState, validationResponse: response }));
+        setState((prevState) => ({
+            ...prevState,
+            validationResponse: response,
+        }));
 
         goToNext();
     };
 
-    const handleSelection = ({ paymentAccountNumber, paymentBranchName, paymentBankId }: PaymentMethodType) => {
+    const handleSelection = ({
+        paymentAccountNumber,
+        paymentBranchName,
+        paymentBankId,
+    }: PaymentMethodType) => {
         if (paymentAccountNumber === currentPaymentAccountNumber) {
-            setState(prevState => ({ ...prevState, paymentAccountNumber: '', paymentBranchName: '', paymentBankId: '' }));
+            setState((prevState) => ({
+                ...prevState,
+                paymentAccountNumber: '',
+                paymentBranchName: '',
+                paymentBankId: '',
+            }));
         } else {
-            setState(prevState => ({ ...prevState, paymentAccountNumber, paymentBranchName, paymentBankId }));
+            setState((prevState) => ({
+                ...prevState,
+                paymentAccountNumber,
+                paymentBranchName,
+                paymentBankId,
+            }));
             setFormError(false);
         }
     };
@@ -106,7 +142,9 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
     const secondaryCta = {
         text: t('general.leaveTransaction'),
         onClick: () => {
-            router.push(`/policies/${product?.planCode}/${policyNumber}/policy/${parentPage}`);
+            router.push(
+                `/policies/${product?.planCode}/${policyNumber}/policy/${parentPage}`
+            );
         },
     };
 
@@ -116,30 +154,46 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
         <WorkflowCard
             title={t('workflows.paymentStep.heading')}
             footerContent={
-                <TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} trackEventProps={trackEventProps} />
+                <TransactionCta
+                    mainCta={mainCta}
+                    secondaryCta={secondaryCta}
+                    stopLoading={stopLoading}
+                    trackEventProps={trackEventProps}
+                />
             }
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
-                    <Typography variant={TypographyVariant.LabelLg}>{subtitle}</Typography>
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {subtitle}
+                    </Typography>
 
                     <div className="flex flex-col gap-4">
-                        <Typography variant={TypographyVariant.LabelLg}>{t('workflows.paymentStep.label')}</Typography>
+                        <Typography variant={TypographyVariant.LabelLg}>
+                            {t('workflows.paymentStep.label')}
+                        </Typography>
 
-                        <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3" data-testid="payment-methods">
-                            {bankDetails?.map(details => (
+                        <div
+                            className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3"
+                            data-testid="payment-methods"
+                        >
+                            {bankDetails?.map((details) => (
                                 <BankDataCard
                                     bankDetails={details}
                                     onCardClick={() => {
                                         handleSelection({
-                                            paymentAccountNumber: details.accountNumber,
+                                            paymentAccountNumber:
+                                                details.accountNumber,
                                             paymentBankId: details.bankId,
-                                            paymentBranchName: details.branchName,
+                                            paymentBranchName:
+                                                details.branchName,
                                         });
                                     }}
                                     key={details.accountNumber}
                                     selectedId={currentPaymentAccountNumber}
-                                    accessibilityClickText={t('ariaLabel.select')}
+                                    accessibilityClickText={t(
+                                        'ariaLabel.select'
+                                    )}
                                 />
                             ))}
                             <div
@@ -147,7 +201,9 @@ const PaymentStep = ({ parentPage, policy, setState, state, subtitle, validateTr
                                 className="flex cursor-not-allowed items-center justify-center gap-1 rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-8 text-gray-300"
                             >
                                 <AddIcon height={24} width={24} />
-                                <p className="font-primary text-base font-semibold">{t('workflows.paymentStep.addBank')}</p>
+                                <p className="font-primary text-base font-semibold">
+                                    {t('workflows.paymentStep.addBank')}
+                                </p>
                             </div>
                         </div>
                     </div>

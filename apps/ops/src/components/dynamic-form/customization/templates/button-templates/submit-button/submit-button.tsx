@@ -1,12 +1,20 @@
-import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import {
+    FormContextType,
+    getUiOptions,
+    RJSFSchema,
+    StrictRJSFSchema,
+    SubmitButtonProps,
+} from '@rjsf/utils';
 import { Button } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import { ButtonSize } from '@deps/components/button/button';
 
-export default function SubmitButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    props: SubmitButtonProps<T, S, F>
-) {
+export default function SubmitButton<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+>(props: SubmitButtonProps<T, S, F>) {
     const { uiSchema, registry, ...buttonProps } = props;
     const { submitButtonOptions } = getUiOptions(uiSchema);
     const { t } = useTranslation(undefined, { keyPrefix: 'general' });
@@ -27,7 +35,12 @@ export default function SubmitButton<T = any, S extends StrictRJSFSchema = RJSFS
                 {submitButtonOptions?.submitText ?? t('submit')}
             </Button>
 
-            <Button aria-label={t('cancel') as string} mode="secondary" size={ButtonSize.Small} onClick={registry.formContext.onCancel}>
+            <Button
+                aria-label={t('cancel') as string}
+                mode="secondary"
+                size={ButtonSize.Small}
+                onClick={registry.formContext.onCancel}
+            >
                 {t('cancel')}
             </Button>
         </div>

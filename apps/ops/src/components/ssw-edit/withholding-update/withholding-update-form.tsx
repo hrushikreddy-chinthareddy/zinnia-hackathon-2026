@@ -2,28 +2,55 @@ import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import Button, {
+    ButtonSize,
+    ButtonType,
+    ButtonVariant,
+} from '@deps/components/button/button';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { FormSignature, FormTaxWithholding } from '@deps/models/case/withdrawal/case';
+import {
+    FormSignature,
+    FormTaxWithholding,
+} from '@deps/models/case/withdrawal/case';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
 import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helpers';
-import { signaturesConfig, taxWithholdingUpdateFormData } from './withholding-update.helpers';
+import {
+    signaturesConfig,
+    taxWithholdingUpdateFormData,
+} from './withholding-update.helpers';
 import Failed from '../Failed';
 import Success from '../Success';
 
 const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.withholdingUpdate' });
-    const { initialForm, formSignature, setFormErrors, formTaxWithholding, ownerStateOfResidence } = useContext(FormDataContext);
-    const [formSubmitted, setFormSubmitted] = useState({ success: false, failed: false });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.withholdingUpdate',
+    });
+    const {
+        initialForm,
+        formSignature,
+        setFormErrors,
+        formTaxWithholding,
+        ownerStateOfResidence,
+    } = useContext(FormDataContext);
+    const [formSubmitted, setFormSubmitted] = useState({
+        success: false,
+        failed: false,
+    });
     const [isLoading, setIsLoading] = useState(false);
     const source = getDocumentSource(initialForm?.data?.documentNumber);
     const [timer] = useState(performance.now());
@@ -33,23 +60,35 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
         router.back();
     };
 
-    const requestTaxWithholdingUpdate = async (formSignature: FormSignature, formTaxWithholding: FormTaxWithholding) => {
+    const requestTaxWithholdingUpdate = async (
+        formSignature: FormSignature,
+        formTaxWithholding: FormTaxWithholding
+    ) => {
         setIsLoading(true);
         const successfulCaseUpdate = await updateTask(
             initialForm.caseId,
             initialForm?.taskId,
-            taxWithholdingUpdateFormData(TaskStatus.Completed, initialForm, formSignature, formTaxWithholding, document),
+            taxWithholdingUpdateFormData(
+                TaskStatus.Completed,
+                initialForm,
+                formSignature,
+                formTaxWithholding,
+                document
+            ),
             timer
         );
         if (successfulCaseUpdate) {
             setIsLoading(false);
-            setFormSubmitted(pv => ({ ...pv, success: true }));
+            setFormSubmitted((pv) => ({ ...pv, success: true }));
         } else {
-            setFormSubmitted(pv => ({ ...pv, failed: true }));
+            setFormSubmitted((pv) => ({ ...pv, failed: true }));
         }
     };
 
-    const handleFormAction = async (formSignature: FormSignature, formTaxWithholding: FormTaxWithholding) => {
+    const handleFormAction = async (
+        formSignature: FormSignature,
+        formTaxWithholding: FormTaxWithholding
+    ) => {
         if (source !== ChannelType.Phone) {
             const formErr = sswEditFormValidator(formSignature, t);
             if (Object.keys(formErr).length > 0) {
@@ -78,20 +117,33 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
                         startIcon={<ChevronLeftIcon width={16} height={16} />}
                         onClick={handleBackRoute}
                     >
-                        <div className="font-bold text-md hover:underline">{t('back')}</div>
+                        <div className="font-bold text-md hover:underline">
+                            {t('back')}
+                        </div>
                     </NavElement>
-                    <TaxWithholdings isFormStateReadOnly={false} ownerStateOfResidence={ownerStateOfResidence} />
+                    <TaxWithholdings
+                        isFormStateReadOnly={false}
+                        ownerStateOfResidence={ownerStateOfResidence}
+                    />
 
                     <div>
                         {source !== ChannelType.Phone && formSignature && (
-                            <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
+                            <SignatureValidations
+                                isFormStateReadOnly={false}
+                                config={signaturesConfig}
+                            />
                         )}
 
                         <div className="flex flex-col p-4">
                             <div className="flex">
                                 <Button
                                     className="mr-4"
-                                    onClick={() => handleFormAction(formSignature, formTaxWithholding)}
+                                    onClick={() =>
+                                        handleFormAction(
+                                            formSignature,
+                                            formTaxWithholding
+                                        )
+                                    }
                                     size={ButtonSize.Small}
                                     variant={ButtonVariant.Default}
                                     disabled={isLoading}
@@ -126,7 +178,11 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
             )}
             {formSubmitted.failed && (
                 <div className="my-auto">
-                    <Failed errorTitle={t('failed')} errorMessage={t('errorMessage')} closeCallback={() => router.push('/create-case')} />
+                    <Failed
+                        errorTitle={t('failed')}
+                        errorMessage={t('errorMessage')}
+                        closeCallback={() => router.push('/create-case')}
+                    />
                 </div>
             )}
         </>

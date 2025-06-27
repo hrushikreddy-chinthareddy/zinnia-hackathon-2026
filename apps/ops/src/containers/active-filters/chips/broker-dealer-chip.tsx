@@ -13,7 +13,11 @@ const BrokerDealerChip = ({
 }) => {
     return (
         <ChipX
-            ariaLabel={t('ariaLabel.clearFilter', { filter: brokerDealerName }) as string}
+            ariaLabel={
+                t('ariaLabel.clearFilter', {
+                    filter: brokerDealerName,
+                }) as string
+            }
             label={brokerDealerName}
             onDelete={() => {
                 handleRemoveFilter({ brokerDealerName: '' });

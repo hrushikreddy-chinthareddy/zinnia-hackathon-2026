@@ -40,8 +40,14 @@ import { createValidator } from '../../utils/helper-utils';
 
 export default function getGlcoConfig(t: TFunction) {
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Prorata,
+        },
+        {
+            label: t('distributionInstruction.specifyFunds'),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [
@@ -107,7 +113,9 @@ export default function getGlcoConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -130,7 +138,8 @@ export default function getGlcoConfig(t: TFunction) {
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         },
     ];
 
@@ -225,7 +234,10 @@ export default function getGlcoConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
 
                 {
@@ -239,11 +251,16 @@ export default function getGlcoConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -253,21 +270,30 @@ export default function getGlcoConfig(t: TFunction) {
                     isBankingField: true,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -304,7 +330,8 @@ export default function getGlcoConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -319,7 +346,9 @@ export default function getGlcoConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -343,7 +372,10 @@ export default function getGlcoConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -355,11 +387,16 @@ export default function getGlcoConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -368,21 +405,30 @@ export default function getGlcoConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -419,7 +465,8 @@ export default function getGlcoConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -453,8 +500,15 @@ export default function getGlcoConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, upsAccount }: FormDisbursement) {
-                if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                upsAccount,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === FormDisbursementSelections.Check &&
+                    paymentMailType.text === PaymentMailType.ExpressCheck
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         accountNumber: upsAccount?.accountNumber?.text ?? '',
@@ -497,44 +551,62 @@ export default function getGlcoConfig(t: TFunction) {
             text: subType,
         },
         programFrequency: {
-            frequency: val.frequency.text === Frequency.None ? { text: '' as Frequency } : val.frequency,
+            frequency:
+                val.frequency.text === Frequency.None
+                    ? { text: '' as Frequency }
+                    : val.frequency,
             beginDate: val.startDate,
-            fixedPeriodYear: [SSWType.FixPeriod].includes(subType) ? val.depleteFundYears : { text: null },
-            duration: [SSWType.FixPeriod].includes(subType) ? { text: null } : val.duration,
+            fixedPeriodYear: [SSWType.FixPeriod].includes(subType)
+                ? val.depleteFundYears
+                : { text: null },
+            duration: [SSWType.FixPeriod].includes(subType)
+                ? { text: null }
+                : val.duration,
         },
-        ...(subType === SSWType.FixDollar && { programAmount: { text: val.amount?.text, amountType: AmountType.Dollar } }),
+        ...(subType === SSWType.FixDollar && {
+            programAmount: {
+                text: val.amount?.text,
+                amountType: AmountType.Dollar,
+            },
+        }),
     });
     const systematicWithdrawalOptions = [
         {
             label: t('sswProgram.sswOptions.fixedDollar'),
             value: SSWType.FixDollar,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixDollar),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.FixDollar),
         },
         {
             label: t('sswProgram.sswOptions.fixedPeriodIncome'),
             value: SSWType.FixPeriod,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixPeriod),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.FixPeriod),
         },
         {
             label: t('sswProgram.sswOptions.annualFreeWithdrawal'),
             value: SSWType.AnnualFree,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.AnnualFree),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.AnnualFree),
         },
         {
             label: t('sswProgram.sswOptions.percentageOfAccountValue'),
             value: SSWType.PercentOfAmountValue,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.PercentOfAmountValue),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.PercentOfAmountValue),
         },
 
         {
             label: t('sswProgram.sswOptions.singleLifetimeIncomeOption'),
             value: SSWType.SingleLifetimeIncomeOption,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
         },
         {
             label: t('sswProgram.sswOptions.jointLifetimeIncomeOption'),
             value: SSWType.JointLifetimeIncomeOption,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
         },
     ];
     const w4pSignaturesConfig = [
@@ -563,7 +635,8 @@ export default function getGlcoConfig(t: TFunction) {
     return {
         disbursementOptions,
         formPartyConfigs,
-        formValidation: (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values),
+        formValidation: (values: Partial<FormParts> = {}) =>
+            commonOftFormValidation(t, values),
         fundWithdrawnMethodOptions,
         signaturesConfig,
         w4pSignaturesConfig,

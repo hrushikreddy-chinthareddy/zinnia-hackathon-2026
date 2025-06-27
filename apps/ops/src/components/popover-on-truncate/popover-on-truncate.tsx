@@ -27,7 +27,10 @@ export default function PopoverOnTruncate({
             const element = ref.current;
 
             if (element) {
-                setIsOverflown(element.offsetWidth < element.scrollWidth || element.offsetHeight < element.scrollHeight);
+                setIsOverflown(
+                    element.offsetWidth < element.scrollWidth ||
+                        element.offsetHeight < element.scrollHeight
+                );
             }
         }
 
@@ -47,7 +50,12 @@ export default function PopoverOnTruncate({
 
     if (!isOverflown) return childrenClone;
     return (
-        <Tooltip tooltipClassName={popoverClassName} trigger={childrenClone} placement={placement} triggerClassName={triggerClassName}>
+        <Tooltip
+            tooltipClassName={popoverClassName}
+            trigger={childrenClone}
+            placement={placement}
+            triggerClassName={triggerClassName}
+        >
             {title}
         </Tooltip>
     );

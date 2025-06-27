@@ -5,7 +5,8 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 const useCaseInsightsPermission = () => {
     const { featureFlags } = useOptimizely();
     const permissions = usePermissionsContext();
-    const shouldShowCaseInsightsFlag = featureFlags?.[FEATURE_FLAGS.CASE_INSIGHTS];
+    const shouldShowCaseInsightsFlag =
+        featureFlags?.[FEATURE_FLAGS.CASE_INSIGHTS];
 
     return shouldShowCaseInsightsFlag && permissions.hasCaseInsightPermission;
 };

@@ -36,7 +36,10 @@ type UseIntersectionObserverOptions = {
      * @param {IntersectionObserverEntry} entry - The intersection observer Entry.
      * @default undefined
      */
-    onChange?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void;
+    onChange?: (
+        isIntersecting: boolean,
+        entry: IntersectionObserverEntry
+    ) => void;
     /**
      * The initial state of the intersection.
      * @default false
@@ -52,7 +55,11 @@ type UseIntersectionObserverOptions = {
  * @param {boolean} isIntersecting - A boolean indicating if the element is intersecting.
  * @param {IntersectionObserverEntry | undefined} entry - The intersection observer Entry.
  */
-type IntersectionReturn = [(node?: Element | null) => void, boolean, IntersectionObserverEntry | undefined] & {
+type IntersectionReturn = [
+    (node?: Element | null) => void,
+    boolean,
+    IntersectionObserverEntry | undefined
+] & {
     ref: (node?: Element | null) => void;
     isIntersecting: boolean;
     entry?: IntersectionObserverEntry;
@@ -111,10 +118,16 @@ export function useIntersectionObserver({
 
         const observer = new IntersectionObserver(
             (entries: IntersectionObserverEntry[]): void => {
-                const thresholds = Array.isArray(observer.thresholds) ? observer.thresholds : [observer.thresholds];
+                const thresholds = Array.isArray(observer.thresholds)
+                    ? observer.thresholds
+                    : [observer.thresholds];
 
-                entries.forEach(entry => {
-                    const isIntersecting = entry.isIntersecting && thresholds.some(threshold => entry.intersectionRatio >= threshold);
+                entries.forEach((entry) => {
+                    const isIntersecting =
+                        entry.isIntersecting &&
+                        thresholds.some(
+                            (threshold) => entry.intersectionRatio >= threshold
+                        );
 
                     setState({ isIntersecting, entry });
 
@@ -142,13 +155,26 @@ export function useIntersectionObserver({
     const prevRef = useRef<Element | null>(null);
 
     useEffect(() => {
-        if (!ref && state.entry?.target && !freezeOnceVisible && !frozen && prevRef.current !== state.entry.target) {
+        if (
+            !ref &&
+            state.entry?.target &&
+            !freezeOnceVisible &&
+            !frozen &&
+            prevRef.current !== state.entry.target
+        ) {
             prevRef.current = state.entry.target;
-            setState({ isIntersecting: initialIsIntersecting, entry: undefined });
+            setState({
+                isIntersecting: initialIsIntersecting,
+                entry: undefined,
+            });
         }
     }, [ref, state.entry, freezeOnceVisible, frozen, initialIsIntersecting]);
 
-    const result = [setRef, !!state.isIntersecting, state.entry] as IntersectionReturn;
+    const result = [
+        setRef,
+        !!state.isIntersecting,
+        state.entry,
+    ] as IntersectionReturn;
 
     // Support object destructuring, by adding the specific values.
     result.ref = result[0];

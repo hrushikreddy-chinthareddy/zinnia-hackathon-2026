@@ -1,4 +1,8 @@
-import { PartyRole, PartyType, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    PartyType,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
@@ -58,45 +62,70 @@ import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
 export default function useNasuConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({
+            formSignature,
+            formDisbursement,
+        }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
             const ownerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
             const jointOwnerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.JointOwner
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.JointOwner
             );
 
             const annuitantSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Annuitant
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Annuitant
             );
 
             // No choice made for signature
-            if (ownerSignature && ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                ownerSignature &&
+                ownerSignature?.isSigned !== false &&
+                !ownerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
 
-            if (jointOwnerSignature && jointOwnerSignature?.isSigned !== false && !jointOwnerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                jointOwnerSignature &&
+                jointOwnerSignature?.isSigned !== false &&
+                !jointOwnerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
-            if (annuitantSignature && annuitantSignature?.isSigned !== false && !annuitantSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Annuitant}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                annuitantSignature &&
+                annuitantSignature?.isSigned !== false &&
+                !annuitantSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Annuitant}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
 
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod) &&
+                [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                ) &&
                 formDisbursement?.bank[0].isDirectDeposit?.text
             ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
             }
 
             return errors;
@@ -149,7 +178,9 @@ export default function useNasuConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
     ];
@@ -190,7 +221,9 @@ export default function useNasuConfig(t: TFunction) {
         },
     ];
 
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
         const amount = formProgram?.partialAmount?.text || '';
 
@@ -214,14 +247,18 @@ export default function useNasuConfig(t: TFunction) {
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
         {
-            label: t('amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'),
+            label: t(
+                'amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'
+            ),
             value: ProgramType.TotalFreeAmt,
             generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -235,7 +272,10 @@ export default function useNasuConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Net },
                     programType: { text: ProgramType.NetWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                    partialNetAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -249,7 +289,10 @@ export default function useNasuConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.GrossWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -270,7 +313,9 @@ export default function useNasuConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.IsDirectDepositValid,
-                    fieldLabel: t('distributionMethod.isDirectDepositFormValid'),
+                    fieldLabel: t(
+                        'distributionMethod.isDirectDepositFormValid'
+                    ),
                     classNames: 'col-start-1',
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
@@ -308,7 +353,9 @@ export default function useNasuConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
                 {
@@ -324,22 +371,31 @@ export default function useNasuConfig(t: TFunction) {
                 },
             ],
 
-            getDefaultPayload({ paymentMethod, disbursmentConsent, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                disbursmentConsent,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    isDirectDepositValid: selectedBank?.isDirectDepositValid?.text ?? null,
+                    isDirectDepositValid:
+                        selectedBank?.isDirectDepositValid?.text ?? null,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
-                    consentAvailable: disbursmentConsent?.isConsent?.text ?? null,
+                    consentAvailable:
+                        disbursmentConsent?.isConsent?.text ?? null,
                 };
             },
             generatePayloadFromSelection: ({
@@ -370,7 +426,9 @@ export default function useNasuConfig(t: TFunction) {
                               bankFurtherCreditAccount,
                               bankFurtherCreditName,
                               isDirectDeposit: { text: true },
-                              isDirectDepositValid: { text: isDirectDepositValid },
+                              isDirectDepositValid: {
+                                  text: isDirectDepositValid,
+                              },
                           },
                       ]
                     : [
@@ -386,7 +444,10 @@ export default function useNasuConfig(t: TFunction) {
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
                     bank,
-                    disbursmentConsent: { ...defaultDisbursmentConsent, isConsent: { text: consentAvailable } },
+                    disbursmentConsent: {
+                        ...defaultDisbursmentConsent,
+                        isConsent: { text: consentAvailable },
+                    },
                 };
             },
         },
@@ -425,7 +486,9 @@ export default function useNasuConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
                 {
@@ -440,22 +503,31 @@ export default function useNasuConfig(t: TFunction) {
                 },
             ],
 
-            getDefaultPayload({ paymentMethod, disbursmentConsent, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                disbursmentConsent,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    isDirectDepositValid: selectedBank?.isDirectDepositValid?.text ?? null,
+                    isDirectDepositValid:
+                        selectedBank?.isDirectDepositValid?.text ?? null,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
-                    consentAvailable: disbursmentConsent?.isConsent?.text ?? null,
+                    consentAvailable:
+                        disbursmentConsent?.isConsent?.text ?? null,
                 };
             },
             generatePayloadFromSelection: ({
@@ -485,11 +557,16 @@ export default function useNasuConfig(t: TFunction) {
                             routingNumber: bankRoutingNumber,
                             bankFurtherCreditAccount,
                             bankFurtherCreditName,
-                            isDirectDepositValid: { text: isDirectDepositValid ?? null },
+                            isDirectDepositValid: {
+                                text: isDirectDepositValid ?? null,
+                            },
                         },
                     ],
 
-                    disbursmentConsent: { ...defaultDisbursmentConsent, isConsent: { text: consentAvailable } },
+                    disbursmentConsent: {
+                        ...defaultDisbursmentConsent,
+                        isConsent: { text: consentAvailable },
+                    },
                 };
             },
         },
@@ -530,7 +607,9 @@ export default function useNasuConfig(t: TFunction) {
                 },
             ],
             getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {
-                if (paymentMethod.text !== PaymentMethod.AlternatePayeeAddress) {
+                if (
+                    paymentMethod.text !== PaymentMethod.AlternatePayeeAddress
+                ) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
 
@@ -542,10 +621,16 @@ export default function useNasuConfig(t: TFunction) {
                     consentAvailable: false,
                 };
             },
-            generatePayloadFromSelection: ({ payeeName, address, taxId }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                taxId,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.AlternatePayeeAddress },
+                    paymentMethod: {
+                        text: PaymentMethod.AlternatePayeeAddress,
+                    },
                     payee: {
                         name: {
                             text: payeeName || null,
@@ -590,22 +675,56 @@ export default function useNasuConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Prorata,
+        },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.age595'), value: RestrictionOption.Age595 },
-        { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
-        { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
-        { label: t('distributionReason.reasonOptions.hardship'), value: RestrictionOption.Hardship },
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.age595'),
+            value: RestrictionOption.Age595,
+        },
+        {
+            label: t('distributionReason.reasonOptions.disabled'),
+            value: RestrictionOption.Disabled,
+        },
+        {
+            label: t('distributionReason.reasonOptions.severance'),
+            value: RestrictionOption.Severance,
+            subElement: <ReasonDate />,
+        },
+        {
+            label: t('distributionReason.reasonOptions.hardship'),
+            value: RestrictionOption.Hardship,
+        },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
 
     const cslnCheckStates = ['CA'];
@@ -616,7 +735,9 @@ export default function useNasuConfig(t: TFunction) {
 
     const fullWithdrawalOptions = [
         {
-            label: t('amountDetails.fullWithdrawal.withdrawTheEntireContractValue'),
+            label: t(
+                'amountDetails.fullWithdrawal.withdrawTheEntireContractValue'
+            ),
             value: AccountCloseReason.Surrender,
         },
         {
@@ -624,23 +745,38 @@ export default function useNasuConfig(t: TFunction) {
             value: AccountCloseReason.ContractAttached,
         },
         {
-            label: t('amountDetails.fullWithdrawal.contractHasBeenLostOrDestroyed'),
+            label: t(
+                'amountDetails.fullWithdrawal.contractHasBeenLostOrDestroyed'
+            ),
             value: AccountCloseReason.ContractLost,
         },
     ];
 
-    const handleShouldShowDOBInOl4573LC = (parties: LifeCadParty[] | undefined): boolean => {
+    const handleShouldShowDOBInOl4573LC = (
+        parties: LifeCadParty[] | undefined
+    ): boolean => {
         // CMW-21591 (Only applicable for NASU)
-        const partyDetails = parties?.find((party: LifeCadParty) => party.Role === LifeCadPartyRoles.PrimaryOwner);
+        const partyDetails = parties?.find(
+            (party: LifeCadParty) =>
+                party.Role === LifeCadPartyRoles.PrimaryOwner
+        );
 
-        const personTypeIndividual = partyDetails?.PersonType === LifeCadPartyPersonType.Individual;
+        const personTypeIndividual =
+            partyDetails?.PersonType === LifeCadPartyPersonType.Individual;
         return personTypeIndividual;
     };
 
-    const handleShouldShowDOBInOl4573 = (parties: any[] | undefined, partyRoles: PolicyPartyRoles[]): boolean => {
+    const handleShouldShowDOBInOl4573 = (
+        parties: any[] | undefined,
+        partyRoles: PolicyPartyRoles[]
+    ): boolean => {
         // CMW-21591 (Only applicable for NASU)
-        const owner = partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER);
-        const partyDetails = parties?.find(party => party?.partyRoleId === owner?.partyRoleId);
+        const owner = partyRoles?.find(
+            (pr) => pr.partyRole === PartyRole.OWNER
+        );
+        const partyDetails = parties?.find(
+            (party) => party?.partyRoleId === owner?.partyRoleId
+        );
         return partyDetails?.partyType === PartyType.INDIVIDUAL;
     };
 

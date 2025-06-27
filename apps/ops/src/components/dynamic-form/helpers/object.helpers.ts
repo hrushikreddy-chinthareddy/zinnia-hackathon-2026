@@ -11,7 +11,10 @@ export const extractNestedData = (
     options: FormContextOptions
 ): { minuendData: string; subtrahendData: string } | null => {
     try {
-        const data = formContext?.[options.keyName]?.[options.details]?.[options.mainObject];
+        const data =
+            formContext?.[options.keyName]?.[options.details]?.[
+                options.mainObject
+            ];
 
         if (!data) return null;
 
@@ -29,7 +32,10 @@ export const extractNestedData = (
         return null;
     }
 };
-export const calculateDifference = (formContext: any, options: FormContextOptions): number | null => {
+export const calculateDifference = (
+    formContext: any,
+    options: FormContextOptions
+): number | null => {
     const data = extractNestedData(formContext, options);
     if (!data) return null;
 

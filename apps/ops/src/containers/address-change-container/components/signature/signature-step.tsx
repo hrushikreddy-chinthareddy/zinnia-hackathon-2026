@@ -3,7 +3,9 @@ import { useTranslation } from 'next-i18next';
 import { useMemo, useCallback } from 'react';
 
 import SignatureValidationContainer from '@deps/components/otp-signature-container/component/otp-signature-conatiner';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useAddressChange } from '@deps/containers/address-change-container/address-change-provider';
@@ -14,35 +16,80 @@ import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 
 import { useSignatureStepConfig } from './signature-step-helpers';
 import { SignatureState } from '../../types/address-change-types';
-import { isAnnuitantSignatureRequired, isJointOwnerPresent } from '../../utils/address-change-helpers';
+import {
+    isAnnuitantSignatureRequired,
+    isJointOwnerPresent,
+} from '../../utils/address-change-helpers';
 
 export interface SignatureStepProps {
     policy: Policy;
 }
 
 export function SignatureStep({ policy }: SignatureStepProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange.signature' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'addressChange.signature',
+    });
 
     const { goToNext } = useWorkflow();
     // const isJointOwnerExistForPolicy = useMemo(() => isJointOwnerExist(policy?.partyRoles ?? []), [policy]);
-    const isJointOwnerExistForPolicy = useMemo(() => isJointOwnerPresent(policy?.partyRoles ?? []), [policy]);
-    const isAnnuitant = useMemo(() => isAnnuitantSignatureRequired(policy?.partyRoles ?? [], policy.parties ?? []), [policy]);
+    const isJointOwnerExistForPolicy = useMemo(
+        () => isJointOwnerPresent(policy?.partyRoles ?? []),
+        [policy]
+    );
+    const isAnnuitant = useMemo(
+        () =>
+            isAnnuitantSignatureRequired(
+                policy?.partyRoles ?? [],
+                policy.parties ?? []
+            ),
+        [policy]
+    );
 
-    const { signatureData, setSignatureData, formErrors, setFormErrors, submitSuccess } = useAddressChange();
-    const { signaturesConfig, formValidation } = useSignatureStepConfig(t, isJointOwnerExistForPolicy, isAnnuitant);
+    const {
+        signatureData,
+        setSignatureData,
+        formErrors,
+        setFormErrors,
+        submitSuccess,
+    } = useAddressChange();
+    const { signaturesConfig, formValidation } = useSignatureStepConfig(
+        t,
+        isJointOwnerExistForPolicy,
+        isAnnuitant
+    );
 
-    const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
-    const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
+    const policyOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.OWNER
+    )?.partyId;
+    const policyOwner = policy?.parties?.find(
+        (party) => party.partyId === policyOwnerId
+    );
 
-    const policyJointOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.JOINTOWNER)?.partyId;
-    const policyJointOwner = policy?.parties?.find(party => party.partyId === policyJointOwnerId);
+    const policyJointOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.JOINTOWNER
+    )?.partyId;
+    const policyJointOwner = policy?.parties?.find(
+        (party) => party.partyId === policyJointOwnerId
+    );
 
-    const policyAnnuitantId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.INSURED)?.partyId;
-    const policyAnnuitant = policy?.parties?.find(party => party.partyId === policyAnnuitantId);
+    const policyAnnuitantId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.INSURED
+    )?.partyId;
+    const policyAnnuitant = policy?.parties?.find(
+        (party) => party.partyId === policyAnnuitantId
+    );
 
-    const handleSignatureChange = (signatureType: SignatureValidationTypeWithdrawal, val: SignatureWithdrawal) => {
+    const handleSignatureChange = (
+        signatureType: SignatureValidationTypeWithdrawal,
+        val: SignatureWithdrawal
+    ) => {
         setSignatureData((fs: SignatureState) => ({
-            signatures: [...fs.signatures.filter(sig => sig.signType.text !== signatureType), val],
+            signatures: [
+                ...fs.signatures.filter(
+                    (sig) => sig.signType.text !== signatureType
+                ),
+                val,
+            ],
         }));
     };
 

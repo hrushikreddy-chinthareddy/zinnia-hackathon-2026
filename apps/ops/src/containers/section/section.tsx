@@ -7,7 +7,11 @@ interface SectionProps {
 }
 
 const Section = ({ classNames, children, testid }: SectionProps) => {
-    return <section data-testid={testid} className={`mt-4 w-full ${classNames}`}>{children}</section>;
+    return (
+        <section data-testid={testid} className={`mt-4 w-full ${classNames}`}>
+            {children}
+        </section>
+    );
 };
 
 export default Section;

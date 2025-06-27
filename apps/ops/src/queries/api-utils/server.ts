@@ -5,7 +5,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { ErrorResponse } from '@deps/types/api';
 import { SanitizerFn } from '@deps/utils/sanitizers';
-import { logError, LoggingContext, logTrace, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 import { serverApi } from './serverApiClient';
 
@@ -14,11 +20,16 @@ const sendRequest = <T>(
     res: NextApiResponse,
     { status, data }: AxiosResponse<T, any>,
     loggingContext: LoggingContext,
-    sanitizer: SanitizerFn<T> = x => x
+    sanitizer: SanitizerFn<T> = (x) => x
 ) => {
-    logTrace('server::sendRequest', { ...loggingContext, function: 'sendRequest', requestStatus: status });
+    logTrace('server::sendRequest', {
+        ...loggingContext,
+        function: 'sendRequest',
+        requestStatus: status,
+    });
     if (status === 200 || status === 201) {
-        const isDemoUser = getCookie('demouser', { res, req })?.toString() === 'true';
+        const isDemoUser =
+            getCookie('demouser', { res, req })?.toString() === 'true';
         res.json(
             sanitizer(data, {
                 isDemoUser: isDemoUser,
@@ -29,7 +40,11 @@ const sendRequest = <T>(
     }
 };
 
-const sendError = (res: NextApiResponse, ex: any, loggingContext: LoggingContext) => {
+const sendError = (
+    res: NextApiResponse,
+    ex: any,
+    loggingContext: LoggingContext
+) => {
     logWarn('server::sendError', {
         ...parseErrorInformation(ex),
         ...loggingContext,
@@ -43,7 +58,9 @@ const sendError = (res: NextApiResponse, ex: any, loggingContext: LoggingContext
 };
 
 const getBodyParams = (req: NextApiRequest) => {
-    return req.body && typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    return req.body && typeof req.body === 'string'
+        ? JSON.parse(req.body)
+        : req.body;
 };
 
 const postRequest = async <T>(
@@ -56,7 +73,12 @@ const postRequest = async <T>(
 ) => {
     try {
         const data = getBodyParams(req);
-        const result = await serverApi.post(url, data, { authorization: 'Bearer ' + accessToken }, loggingContext);
+        const result = await serverApi.post(
+            url,
+            data,
+            { authorization: 'Bearer ' + accessToken },
+            loggingContext
+        );
 
         sendRequest<T>(req, res, result, loggingContext, sanitizer);
     } catch (ex: any) {
@@ -73,7 +95,11 @@ const getRequest = async <T>(
     sanitizer?: SanitizerFn<T>
 ) => {
     try {
-        const result = await serverApi.get(url, { authorization: 'Bearer ' + accessToken }, loggingContext);
+        const result = await serverApi.get(
+            url,
+            { authorization: 'Bearer ' + accessToken },
+            loggingContext
+        );
         sendRequest(req, res, result, loggingContext, sanitizer);
     } catch (ex: any) {
         sendError(res, ex, loggingContext);
@@ -89,7 +115,12 @@ const putRequest = async (
 ) => {
     try {
         const data = getBodyParams(req);
-        const result = await serverApi.put(url, data, { authorization: 'Bearer ' + accessToken }, loggingContext);
+        const result = await serverApi.put(
+            url,
+            data,
+            { authorization: 'Bearer ' + accessToken },
+            loggingContext
+        );
         sendRequest(req, res, result, loggingContext);
     } catch (ex: any) {
         sendError(res, ex, loggingContext);
@@ -104,7 +135,11 @@ const deleteRequest = async (
     loggingContext: LoggingContext
 ) => {
     try {
-        const result = await serverApi.delete(url, { authorization: 'Bearer ' + accessToken }, loggingContext);
+        const result = await serverApi.delete(
+            url,
+            { authorization: 'Bearer ' + accessToken },
+            loggingContext
+        );
         sendRequest(req, res, result, loggingContext);
     } catch (ex: any) {
         sendError(res, ex, loggingContext);
@@ -128,10 +163,40 @@ export const requestHandler = async <T>(
         const accessToken = (await getAccessToken(req, res)).accessToken;
 
         try {
-            if (req.method === 'PUT') return await putRequest(url, req, res, accessToken, loggingContext);
-            if (req.method === 'GET') return await getRequest<T>(url, req, res, accessToken, loggingContext, sanitizer);
-            if (req.method === 'POST') return await postRequest<T>(url, req, res, accessToken, loggingContext, sanitizer);
-            if (req.method === 'DELETE') return await deleteRequest(url, req, res, accessToken, loggingContext);
+            if (req.method === 'PUT')
+                return await putRequest(
+                    url,
+                    req,
+                    res,
+                    accessToken,
+                    loggingContext
+                );
+            if (req.method === 'GET')
+                return await getRequest<T>(
+                    url,
+                    req,
+                    res,
+                    accessToken,
+                    loggingContext,
+                    sanitizer
+                );
+            if (req.method === 'POST')
+                return await postRequest<T>(
+                    url,
+                    req,
+                    res,
+                    accessToken,
+                    loggingContext,
+                    sanitizer
+                );
+            if (req.method === 'DELETE')
+                return await deleteRequest(
+                    url,
+                    req,
+                    res,
+                    accessToken,
+                    loggingContext
+                );
         } catch (err) {
             logError(`server::requestHandler::error`, {
                 ...parseErrorInformation(err),

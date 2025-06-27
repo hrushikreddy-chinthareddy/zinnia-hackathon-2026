@@ -1,4 +1,11 @@
-import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell } from '@zinnia/bloom/components';
+import {
+    Table,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+    TableBody,
+    TableCell,
+} from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
@@ -20,32 +27,53 @@ const StatementListing = ({ statements, carrierId }: StatementListingProps) => {
         <>
             {statements?.length > 0 ? (
                 <>
-                    <Content details={t('contactCenter.statementDetails.title') as string} variant={ContentVariant.BodyBold} />
+                    <Content
+                        details={
+                            t('contactCenter.statementDetails.title') as string
+                        }
+                        variant={ContentVariant.BodyBold}
+                    />
                     <Table className="my-4">
                         <TableHeader>
                             <TableRow>
                                 <TableHeaderCell>
                                     <Content
-                                        details={t('contactCenter.statementDetails.name') as string}
+                                        details={
+                                            t(
+                                                'contactCenter.statementDetails.name'
+                                            ) as string
+                                        }
                                         variant={ContentVariant.BodySmBold}
                                     />
                                 </TableHeaderCell>
 
                                 <TableHeaderCell>
                                     <Content
-                                        details={t('contactCenter.statementDetails.createdDate') as string}
+                                        details={
+                                            t(
+                                                'contactCenter.statementDetails.createdDate'
+                                            ) as string
+                                        }
                                         variant={ContentVariant.BodySmBold}
                                     />
                                 </TableHeaderCell>
                                 <TableHeaderCell>
                                     <Content
-                                        details={t('contactCenter.statementDetails.periodYear') as string}
+                                        details={
+                                            t(
+                                                'contactCenter.statementDetails.periodYear'
+                                            ) as string
+                                        }
                                         variant={ContentVariant.BodySmBold}
                                     />
                                 </TableHeaderCell>
                                 <TableHeaderCell>
                                     <Content
-                                        details={t('contactCenter.statementDetails.periodQuarter') as string}
+                                        details={
+                                            t(
+                                                'contactCenter.statementDetails.periodQuarter'
+                                            ) as string
+                                        }
                                         variant={ContentVariant.BodySmBold}
                                     />
                                 </TableHeaderCell>
@@ -59,24 +87,43 @@ const StatementListing = ({ statements, carrierId }: StatementListingProps) => {
                             {statements?.map((statement, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
-                                        <Content details={statement.displayName} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={statement.displayName}
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
 
                                     <TableCell>
                                         <Content
-                                            details={dayjs(statement.importDate).format(DEFAULT_EXTENDED_DATE_FORMAT)}
+                                            details={dayjs(
+                                                statement.importDate
+                                            ).format(
+                                                DEFAULT_EXTENDED_DATE_FORMAT
+                                            )}
                                             variant={ContentVariant.BodySm}
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        <Content details={statement.periodYear || ''} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={statement.periodYear || ''}
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
                                     <TableCell>
-                                        <Content details={statement.periodQuarter || ''} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={
+                                                statement.periodQuarter || ''
+                                            }
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
                                     <TableCell>
                                         {createAction(
-                                            { ...statement, documentSource: DocumentTypeView.Correspondence },
+                                            {
+                                                ...statement,
+                                                documentSource:
+                                                    DocumentTypeView.Correspondence,
+                                            },
                                             carrierId,
                                             t,
                                             'contactCenter.sendStatement.viewStatement'
@@ -87,12 +134,23 @@ const StatementListing = ({ statements, carrierId }: StatementListingProps) => {
                         </TableBody>
                     </Table>
                     <PiiWrapper className="mt-4">
-                        <span>{t('contactCenter.statementDetails.warning.0')}</span>{' '}
-                        <span>{t('contactCenter.statementDetails.warning.1')}</span>
+                        <span>
+                            {t('contactCenter.statementDetails.warning.0')}
+                        </span>{' '}
+                        <span>
+                            {t('contactCenter.statementDetails.warning.1')}
+                        </span>
                     </PiiWrapper>
                 </>
             ) : (
-                <Content details={t('contactCenter.statementDetails.noStatements') as string} variant={ContentVariant.BodySm} />
+                <Content
+                    details={
+                        t(
+                            'contactCenter.statementDetails.noStatements'
+                        ) as string
+                    }
+                    variant={ContentVariant.BodySm}
+                />
             )}
         </>
     );

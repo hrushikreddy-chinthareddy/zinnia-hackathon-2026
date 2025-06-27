@@ -29,9 +29,17 @@ describe('CardCaseDocument', () => {
             value: '12345-AB-67890',
         };
 
-        render(<CardCaseDocument caseDocumentOption={caseDocumentOption} isSelected={false} onChange={NOOP} />);
+        render(
+            <CardCaseDocument
+                caseDocumentOption={caseDocumentOption}
+                isSelected={false}
+                onChange={NOOP}
+            />
+        );
         expect(screen.getByText(caseDocumentOption.tag)).toBeInTheDocument();
-        expect(screen.getByText('workflows.start.documentNumber')).toBeInTheDocument();
+        expect(
+            screen.getByText('workflows.start.documentNumber')
+        ).toBeInTheDocument();
         expect(screen.getByText('12345-AB-67890')).toBeInTheDocument();
         expect(screen.getByText('CA0000403507')).toBeInTheDocument();
     });
@@ -43,7 +51,15 @@ describe('CardCaseDocument', () => {
             caseId: '',
         };
 
-        render(<CardCaseDocument caseDocumentOption={caseDocumentOption} isSelected={false} onChange={NOOP} />);
-        expect(screen.getByText('Process without document')).toBeInTheDocument();
+        render(
+            <CardCaseDocument
+                caseDocumentOption={caseDocumentOption}
+                isSelected={false}
+                onChange={NOOP}
+            />
+        );
+        expect(
+            screen.getByText('Process without document')
+        ).toBeInTheDocument();
     });
 });

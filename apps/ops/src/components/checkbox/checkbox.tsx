@@ -1,5 +1,12 @@
 import clsx from 'clsx';
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+    ChangeEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 import { CheckboxTextProps } from './checkbox-text/checkbox-text';
 
@@ -41,9 +48,13 @@ const Checkbox = ({
         }
     }, [checkboxRef, indeterminate]);
 
-    const isSelectedState = useMemo(() => isChecked === true || indeterminate, [isChecked]);
+    const isSelectedState = useMemo(
+        () => isChecked === true || indeterminate,
+        [isChecked]
+    );
 
-    const focusCheckboxClasses = 'focus:ring-2 focus:ring-offset-2 focus:ring-semantic-focus';
+    const focusCheckboxClasses =
+        'focus:ring-2 focus:ring-offset-2 focus:ring-semantic-focus';
 
     const checkboxClasses = clsx(
         'h-6 w-6 rounded border-2 text-white',

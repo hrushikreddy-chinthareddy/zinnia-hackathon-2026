@@ -4,7 +4,11 @@ import localData from 'dayjs/plugin/localeData';
 import React, { ChangeEvent, useRef, useState } from 'react';
 
 import DatePicker from '@deps/components/date-picker/date-picker';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { ReactComponent as CalendarIcon } from '@deps/styles/elements/icons/icons_outlined/calendar.svg';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
@@ -45,21 +49,44 @@ export default function FieldDateSelectRange({
 }: FieldDateSelectRangeProps) {
     const [open, setOpen] = useState(false);
 
-    const start = dayjs(startValue, NUMERIC_DATE_FORMAT, true).isValid() ? dayjs(startValue, NUMERIC_DATE_FORMAT).toDate() : null;
-    const end = dayjs(endValue, NUMERIC_DATE_FORMAT, true).isValid() ? dayjs(endValue, NUMERIC_DATE_FORMAT).toDate() : null;
+    const start = dayjs(startValue, NUMERIC_DATE_FORMAT, true).isValid()
+        ? dayjs(startValue, NUMERIC_DATE_FORMAT).toDate()
+        : null;
+    const end = dayjs(endValue, NUMERIC_DATE_FORMAT, true).isValid()
+        ? dayjs(endValue, NUMERIC_DATE_FORMAT).toDate()
+        : null;
 
     const determineSelectedValue = (newDate: Date) => {
         const isBeforeStart = dayjs(newDate).isBefore(start, 'day');
         const isAfterEnd = dayjs(newDate).isAfter(end, 'day');
 
-        if (!start && !end) return { start: dayjs(newDate).format(NUMERIC_DATE_FORMAT), end: '' };
+        if (!start && !end)
+            return {
+                start: dayjs(newDate).format(NUMERIC_DATE_FORMAT),
+                end: '',
+            };
 
         if (start && !end) {
-            if (isBeforeStart) return { start: dayjs(newDate).format(NUMERIC_DATE_FORMAT), end: endValue };
-            return { start: startValue, end: dayjs(newDate).format(NUMERIC_DATE_FORMAT) };
+            if (isBeforeStart)
+                return {
+                    start: dayjs(newDate).format(NUMERIC_DATE_FORMAT),
+                    end: endValue,
+                };
+            return {
+                start: startValue,
+                end: dayjs(newDate).format(NUMERIC_DATE_FORMAT),
+            };
         } else if (start && end) {
-            if (isBeforeStart) return { start: dayjs(newDate).format(NUMERIC_DATE_FORMAT), end: endValue };
-            if (isAfterEnd) return { start: startValue, end: dayjs(newDate).format(NUMERIC_DATE_FORMAT) };
+            if (isBeforeStart)
+                return {
+                    start: dayjs(newDate).format(NUMERIC_DATE_FORMAT),
+                    end: endValue,
+                };
+            if (isAfterEnd)
+                return {
+                    start: startValue,
+                    end: dayjs(newDate).format(NUMERIC_DATE_FORMAT),
+                };
         }
 
         return { start: dayjs(newDate).format(NUMERIC_DATE_FORMAT), end: '' };
@@ -99,7 +126,14 @@ export default function FieldDateSelectRange({
                     onChange={startOnChange}
                     formatOptions={{ format: '##/##/####' }}
                     label={startLabel}
-                    endIcon={<CalendarIcon width={22} height={22} className="my-auto" onClick={() => setOpen(!open)} />}
+                    endIcon={
+                        <CalendarIcon
+                            width={22}
+                            height={22}
+                            className="my-auto"
+                            onClick={() => setOpen(!open)}
+                        />
+                    }
                     type={FieldType.BaseActive}
                     placeholder={placeholder}
                     size={size}
@@ -113,16 +147,32 @@ export default function FieldDateSelectRange({
                     onChange={endOnChange}
                     formatOptions={{ format: '##/##/####' }}
                     label={endLabel}
-                    endIcon={<CalendarIcon width={22} height={22} className="my-auto" onClick={() => setOpen(!open)} />}
+                    endIcon={
+                        <CalendarIcon
+                            width={22}
+                            height={22}
+                            className="my-auto"
+                            onClick={() => setOpen(!open)}
+                        />
+                    }
                     type={FieldType.BaseActive}
                     placeholder={placeholder}
                     size={size}
-                    variant={startValue === '' ? FieldVariant.Inactive : endVariant}
+                    variant={
+                        startValue === '' ? FieldVariant.Inactive : endVariant
+                    }
                     message={endMessage}
                 />
             </div>
-            <div className="absolute top-[88px] z-20 w-full rounded-md bg-white shadow-elevation-light-16" ref={containerRef}>
-                <DatePicker open={open} date={{ start, end }} handleDateSelect={handleDateSelect} />
+            <div
+                className="absolute top-[88px] z-20 w-full rounded-md bg-white shadow-elevation-light-16"
+                ref={containerRef}
+            >
+                <DatePicker
+                    open={open}
+                    date={{ start, end }}
+                    handleDateSelect={handleDateSelect}
+                />
             </div>
         </div>
     );

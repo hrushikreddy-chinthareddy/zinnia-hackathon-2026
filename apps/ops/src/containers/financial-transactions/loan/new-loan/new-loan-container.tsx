@@ -2,11 +2,15 @@ import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
+import PayeesStep, {
+    PayeesStepSetState,
+} from '@deps/components/workflows/payees-step/payees-step';
 import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
 import PaymentStepMoneyOut from '@deps/components/workflows/payment-step/payment-step-money-out';
 import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
-import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import StartStep, {
+    StartStepSetState,
+} from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
@@ -27,11 +31,14 @@ type NewLoanContainerProps = {
 };
 
 const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newLoan' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'newLoan',
+    });
     const { newLoan, setNewLoan } = useNewLoan();
     const { featureFlags } = useOptimizely();
 
-    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.NEW_LOAN_WIRE_CHECK_PAYMENTS];
+    const wireCheckPaymentsEnabled =
+        featureFlags[FEATURE_FLAGS.NEW_LOAN_WIRE_CHECK_PAYMENTS];
     const startLabel = t('start.label');
     const amountLabel = t('amount.label');
     const payeeLabel = t('payee.label');
@@ -40,9 +47,16 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
     const confirmLabel = t('confirm.label');
 
     const validateCall = () => {
-        const query = buildNewLoanRequestBody(newLoan, wireCheckPaymentsEnabled);
+        const query = buildNewLoanRequestBody(
+            newLoan,
+            wireCheckPaymentsEnabled
+        );
 
-        return validateNewLoan(policy.product?.planCode, policy.policyNumber, query);
+        return validateNewLoan(
+            policy.product?.planCode,
+            policy.policyNumber,
+            query
+        );
     };
 
     const steps: Step[] = [
@@ -56,7 +70,10 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                     state={newLoan}
                     title={t('start.title') as string}
                     subtitle={t('start.subtitle') as string}
-                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Start }}
+                    trackEventProps={{
+                        type: TransactionType.NEW_LOAN,
+                        step: TransactionStep.Start,
+                    }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -76,7 +93,10 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                     policy={policy}
                     setState={setNewLoan as PayeesStepSetState}
                     state={newLoan}
-                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Payees }}
+                    trackEventProps={{
+                        type: TransactionType.NEW_LOAN,
+                        step: TransactionStep.Payees,
+                    }}
                 />
             ),
             screenReaderLabel: payeeLabel,

@@ -154,16 +154,23 @@ describe('getHeaderText', () => {
         }
 
         const { container } = render(result);
-        expect(container.textContent?.trim()).toBe('Prashant Kishor Singh-tc03 Jr');
+        expect(container.textContent?.trim()).toBe(
+            'Prashant Kishor Singh-tc03 Jr'
+        );
     });
 });
 
 describe('getPrefCommunicationType', () => {
     it('should return correct JSX for preferred communication type', () => {
-        const result: JSX.Element | null = getPrefCommunicationType(partyInfo, t);
+        const result: JSX.Element | null = getPrefCommunicationType(
+            partyInfo,
+            t
+        );
         if (result) {
             const { container } = render(result);
-            expect(container.textContent?.trim()).toContain('prashant.singh@gmail.com');
+            expect(container.textContent?.trim()).toContain(
+                'prashant.singh@gmail.com'
+            );
         } else {
             fail('Component did not render');
         }
@@ -172,9 +179,14 @@ describe('getPrefCommunicationType', () => {
 
 describe('getRelationshipToInsured', () => {
     it('should return correct relationship to insured', () => {
-        const relationshipToInsured = getRelationshipToInsured(RelationshipToParty.STEPFATHER, t);
+        const relationshipToInsured = getRelationshipToInsured(
+            RelationshipToParty.STEPFATHER,
+            t
+        );
 
-        expect(relationshipToInsured).toBe(t('relationshipToInsured.stepfather'));
+        expect(relationshipToInsured).toBe(
+            t('relationshipToInsured.stepfather')
+        );
     });
 });
 
@@ -182,7 +194,10 @@ describe('getBankAccountType', () => {
     it('should return correct account type', () => {
         let bankAccountType;
         if (partyInfo?.bankDetails) {
-            bankAccountType = getBankAccountType(partyInfo.bankDetails[0].accountType, t);
+            bankAccountType = getBankAccountType(
+                partyInfo.bankDetails[0].accountType,
+                t
+            );
         }
         expect(bankAccountType).toBe(t('bankAccountType.checking'));
     });
@@ -192,15 +207,24 @@ describe('getBankAccountTypeAndAccount', () => {
     it('should return correct account type with account string appended', () => {
         let bankAccountType;
         if (partyInfo?.bankDetails) {
-            bankAccountType = getBankAccountType(partyInfo.bankDetails[0].accountType, t, true);
+            bankAccountType = getBankAccountType(
+                partyInfo.bankDetails[0].accountType,
+                t,
+                true
+            );
         }
-        expect(bankAccountType).toBe(`${t('bankAccountType.checking')} ${t('account')}`);
+        expect(bankAccountType).toBe(
+            `${t('bankAccountType.checking')} ${t('account')}`
+        );
     });
 });
 
 describe('findCoverageParticipant', () => {
     it('should return correct coverage participant', () => {
-        const coverageParticipant = findCoverageParticipant(coverage, partyInfo.partyId);
+        const coverageParticipant = findCoverageParticipant(
+            coverage,
+            partyInfo.partyId
+        );
         expect(coverageParticipant?.partyId).toBe('Party_PI_1');
     });
 });
@@ -208,22 +232,35 @@ describe('findCoverageParticipant', () => {
 describe('getRiskClass', () => {
     it('should return correct risk class', () => {
         let riskClass;
-        const coverageParticipant = findCoverageParticipant(coverage, partyInfo.partyId);
+        const coverageParticipant = findCoverageParticipant(
+            coverage,
+            partyInfo.partyId
+        );
         if (coverageParticipant) {
             riskClass = getRiskClass(coverageParticipant.riskClass);
         }
-        expect(riskClass).toBe(t('people.card.underwritingInfo.riskClassOptions.standardTobacco'));
+        expect(riskClass).toBe(
+            t('people.card.underwritingInfo.riskClassOptions.standardTobacco')
+        );
     });
 });
 
 describe('getSubstandardRating', () => {
     it('should return correct substandard rating', () => {
         let substandardRating;
-        const coverageParticipant = findCoverageParticipant(coverage, partyInfo.partyId);
+        const coverageParticipant = findCoverageParticipant(
+            coverage,
+            partyInfo.partyId
+        );
         if (coverageParticipant) {
-            substandardRating = getSubstandardRating(coverageParticipant.substandardRating, t);
+            substandardRating = getSubstandardRating(
+                coverageParticipant.substandardRating,
+                t
+            );
         }
-        expect(substandardRating).toBe(t('people.card.underwritingInfo.substandardRatingOptions.none'));
+        expect(substandardRating).toBe(
+            t('people.card.underwritingInfo.substandardRatingOptions.none')
+        );
     });
 });
 
@@ -238,9 +275,14 @@ describe('getEmploymentStatus', () => {
     it('should return correct employment status', () => {
         let employmentStatus;
         if (partyInfo?.insured) {
-            employmentStatus = getEmploymentStatus(partyInfo?.insured.employmentStatus, t);
+            employmentStatus = getEmploymentStatus(
+                partyInfo?.insured.employmentStatus,
+                t
+            );
         }
-        expect(employmentStatus).toBe(t('people.card.underwritingInfo.employmentStatus.retired'));
+        expect(employmentStatus).toBe(
+            t('people.card.underwritingInfo.employmentStatus.retired')
+        );
     });
 });
 
@@ -248,7 +290,10 @@ describe('getAddressType', () => {
     it('should return correct address Type', () => {
         let addressType;
         if (partyInfo?.addresses) {
-            addressType = getAddressType(partyInfo?.addresses[0]?.addressType, t);
+            addressType = getAddressType(
+                partyInfo?.addresses[0]?.addressType,
+                t
+            );
         }
         expect(addressType).toBe(t('people.card.addressOptions.residence'));
     });

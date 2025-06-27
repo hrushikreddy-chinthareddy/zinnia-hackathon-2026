@@ -4,8 +4,14 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
@@ -20,8 +26,16 @@ interface ConfirmStepProps {
     ctaLink?: string;
     ctaText?: string;
 }
-const ConfirmStep = ({ taskType, taskInfoLink, isCta = false, ctaLink, ctaText }: ConfirmStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.confirmStep` });
+const ConfirmStep = ({
+    taskType,
+    taskInfoLink,
+    isCta = false,
+    ctaLink,
+    ctaText,
+}: ConfirmStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: `${convertToCamelCase(taskType)}.confirmStep`,
+    });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
 
@@ -59,7 +73,13 @@ const ConfirmStep = ({ taskType, taskInfoLink, isCta = false, ctaLink, ctaText }
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <CardInfo
-                icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                icon={
+                    <CircleCheckIcon
+                        className="text-semantic-success"
+                        height={50}
+                        width={50}
+                    />
+                }
                 subtitle={t('subTitle')}
                 title={t('title')}
                 cta={

@@ -21,17 +21,46 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { AttachmentType, CorrespondenceFormParts, TransactionSubTypes, TransactionTypes } from '@deps/models/case/correspondence';
-import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
-import { ALLOWED_TAX_YEARS, DisplayName, TaxForm, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
+import {
+    AttachmentType,
+    CorrespondenceFormParts,
+    TransactionSubTypes,
+    TransactionTypes,
+} from '@deps/models/case/correspondence';
+import {
+    CommunicationTypes,
+    SendDocumentFormType,
+} from '@deps/models/case/send-document';
+import {
+    ALLOWED_TAX_YEARS,
+    DisplayName,
+    TaxForm,
+    TaxFormSelectionDetails,
+} from '@deps/models/case/send-tax-forms';
 import { UserProfile } from '@deps/models/user-profile';
 import { sendCommunication } from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, getFeatureFlagByKey, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { FEATURE_FLAG_VARIABLES, FEATURE_VARIABLES_CORRESPONDENCE_KEYS } from '@deps/utils/optimizely/variables';
-import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    getFeatureFlagByKey,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    FEATURE_FLAG_VARIABLES,
+    FEATURE_VARIABLES_CORRESPONDENCE_KEYS,
+} from '@deps/utils/optimizely/variables';
+import {
+    logWarn,
+    logError,
+    parseErrorInformation,
+    logInfo,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendTaxFormsProps extends SegmentTrackedPageProps {
@@ -56,22 +85,36 @@ const SendTaxForms = ({
     const { ctiCallNumber, correlationId } = router.query;
 
     const currentYear = new Date().getFullYear();
-    const taxYears = Array.from({ length: ALLOWED_TAX_YEARS }, (_, i) => currentYear - i).reverse();
+    const taxYears = Array.from(
+        { length: ALLOWED_TAX_YEARS },
+        (_, i) => currentYear - i
+    ).reverse();
 
-    const taxYearOptions: MultiselectOption[] = taxYears.map(year => ({
+    const taxYearOptions: MultiselectOption[] = taxYears.map((year) => ({
         label: year.toString(),
         value: year.toString(),
         displayText: year.toString(),
     }));
 
-    const [taxFormSelectionDetails, setTaxFormSelectionDetails] = useState<TaxFormSelectionDetails>({} as TaxFormSelectionDetails);
+    const [taxFormSelectionDetails, setTaxFormSelectionDetails] =
+        useState<TaxFormSelectionDetails>({} as TaxFormSelectionDetails);
 
-    const [selectedYears, setSelectedYears] = useState<{ [key: string]: string }>({ [currentYear.toString()]: currentYear.toString() });
+    const [selectedYears, setSelectedYears] = useState<{
+        [key: string]: string;
+    }>({ [currentYear.toString()]: currentYear.toString() });
 
-    useSegmentPageTracker(user, SegmentPageName.SendTaxForms, { ctiCallNumber, correlationId, policyNumber: policy?.policyNumber });
+    useSegmentPageTracker(user, SegmentPageName.SendTaxForms, {
+        ctiCallNumber,
+        correlationId,
+        policyNumber: policy?.policyNumber,
+    });
 
-    const formSelectionLabel = t('contactCenter.sendTaxForms.tabs.taxFormsSelection');
-    const CorrespondenceLabel = t('contactCenter.sendTaxForms.tabs.correspondence');
+    const formSelectionLabel = t(
+        'contactCenter.sendTaxForms.tabs.taxFormsSelection'
+    );
+    const CorrespondenceLabel = t(
+        'contactCenter.sendTaxForms.tabs.correspondence'
+    );
     const confirmLabel = t('contactCenter.sendTaxForms.tabs.confirm');
 
     const communicationTypes = useMemo(
@@ -96,18 +139,23 @@ const SendTaxForms = ({
     );
 
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
-        const attachments = taxFormSelectionDetails?.selectedTaxForms?.map(formDetail => {
-            return {
-                transactionType: TransactionTypes.TaxForms,
-                transactionSubType: TransactionSubTypes.TaxForms,
-                attachmentType: AttachmentType.TaxForms,
-                displayName: DisplayName.TaxForms,
-                formId: formDetail?.formId ?? '',
-                formName: DisplayName.TaxForms,
-                taxYear: formDetail?.taxYear ?? '',
-                fChar: (formDetail as TaxForm)?.fChar ?? (formDetail as TaxformResponse)?.fchar ?? '',
-            };
-        });
+        const attachments = taxFormSelectionDetails?.selectedTaxForms?.map(
+            (formDetail) => {
+                return {
+                    transactionType: TransactionTypes.TaxForms,
+                    transactionSubType: TransactionSubTypes.TaxForms,
+                    attachmentType: AttachmentType.TaxForms,
+                    displayName: DisplayName.TaxForms,
+                    formId: formDetail?.formId ?? '',
+                    formName: DisplayName.TaxForms,
+                    taxYear: formDetail?.taxYear ?? '',
+                    fChar:
+                        (formDetail as TaxForm)?.fChar ??
+                        (formDetail as TaxformResponse)?.fchar ??
+                        '',
+                };
+            }
+        );
         const requestBody = generateCommunicationRequest(
             policy,
             state?.correspondence?.type as CommunicationTypes,
@@ -147,13 +195,24 @@ const SendTaxForms = ({
             text: formSelectionLabel,
         },
         {
-            component: <Correspondence communicationOptions={communicationTypes} policy={policy} submitRequest={handleSubmitRequest} />,
+            component: (
+                <Correspondence
+                    communicationOptions={communicationTypes}
+                    policy={policy}
+                    submitRequest={handleSubmitRequest}
+                />
+            ),
             screenReaderLabel: CorrespondenceLabel,
             index: 1,
             text: CorrespondenceLabel,
         },
         {
-            component: <ConfirmComponent shouldShowCaseButton={shouldShowCaseButton} formNames={['']} />,
+            component: (
+                <ConfirmComponent
+                    shouldShowCaseButton={shouldShowCaseButton}
+                    formNames={['']}
+                />
+            ),
             screenReaderLabel: confirmLabel,
             index: 2,
             text: confirmLabel,
@@ -164,7 +223,10 @@ const SendTaxForms = ({
         <>
             <PageHead titleKey="sendTaxForm" />
             <CorrespondenceProvider>
-                <TabGroupContainer steps={steps} policy={new PolicyDetails(policy)}></TabGroupContainer>
+                <TabGroupContainer
+                    steps={steps}
+                    policy={new PolicyDetails(policy)}
+                ></TabGroupContainer>
             </CorrespondenceProvider>
         </>
     );
@@ -182,16 +244,26 @@ export const getServerSideProps = withPageAuthAndLogging(
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
-                logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
-                    ...parseErrorInformation(e),
-                    ...loggingContext,
-                });
+                logWarn(
+                    'getServerSidePropsPolicyDetailsPage::Access token expired',
+                    {
+                        ...parseErrorInformation(e),
+                        ...loggingContext,
+                    }
+                );
                 return serverSidePropsLogout();
             }
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
 
             //  const shouldShowSendTaxFormsPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS];
-            const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_TAX_FORMS_SHOW_CASE_BUTTON];
+            const shouldShowCaseButton =
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.SEND_TAX_FORMS_SHOW_CASE_BUTTON
+                ];
 
             const translations = await serverSideTranslations(
                 locale,
@@ -200,10 +272,19 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
             try {
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
+                const policy = await getPolicyDetailsSsr(
+                    policyNumber,
+                    planCode,
+                    accessToken,
+                    loggingContext,
+                    true
+                );
                 const carrierId = policy?.carrierId?.toLowerCase() || '';
                 if (!policy || !carrierId) {
-                    logInfo('contact-center/send-taxforms/policy-not-found', loggingContext);
+                    logInfo(
+                        'contact-center/send-taxforms/policy-not-found',
+                        loggingContext
+                    );
                     return {
                         redirect: {
                             destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
@@ -212,7 +293,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const [shouldShowMailOption, shouldShowEmailOption, shouldShowFaxOption] = await Promise.all([
+                const [
+                    shouldShowMailOption,
+                    shouldShowEmailOption,
+                    shouldShowFaxOption,
+                ] = await Promise.all([
                     getFeatureFlagByKey(
                         FEATURE_FLAG_VARIABLES.SEND_TAX_FORM,
                         FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
@@ -248,14 +333,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             } catch (error) {
-                logError('getServerSidePropsSendTaxFormsPage', { ...parseErrorInformation(error), ...loggingContext });
+                logError('getServerSidePropsSendTaxFormsPage', {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                });
                 return {
                     props: {},
                 };
             }
         },
     },
-    { file: 'contact-center/send-taxform/index', function: 'getServerSideProps', page: 'contact-center/send-taxform' }
+    {
+        file: 'contact-center/send-taxform/index',
+        function: 'getServerSideProps',
+        page: 'contact-center/send-taxform',
+    }
 );
 
 export default SendTaxForms;

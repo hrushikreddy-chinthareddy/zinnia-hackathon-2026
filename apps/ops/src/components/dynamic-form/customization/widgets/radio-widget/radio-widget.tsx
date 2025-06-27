@@ -1,4 +1,10 @@
-import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import {
+    FormContextType,
+    getUiOptions,
+    RJSFSchema,
+    StrictRJSFSchema,
+    WidgetProps,
+} from '@rjsf/utils';
 import { IconType } from '@zinnia/bloom/components';
 import { useMemo } from 'react';
 
@@ -11,7 +17,13 @@ import { SingleCard } from '../../templates/card-templates/card-template';
 import { HyperLink } from '../hyper-link-widget/hyper-link-widget';
 const baseUrl = baseAppUrl + '/api/';
 
-const renderSubElement = (option: any, properties: any, cardType: any, icon: any, sectionTitle: string) => {
+const renderSubElement = (
+    option: any,
+    properties: any,
+    cardType: any,
+    icon: any,
+    sectionTitle: string
+) => {
     switch (cardType) {
         case CardTypes.Hyperlink:
             return (
@@ -38,15 +50,32 @@ const renderSubElement = (option: any, properties: any, cardType: any, icon: any
     }
 };
 
-export type RadioWidgetProps<T, S extends StrictRJSFSchema, F extends FormContextType> = WidgetProps<T, S, F>;
-function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    widgetProps: RadioWidgetProps<T, S, F>
-) {
-    const { options, value, disabled, onChange, id, uiSchema, formContext, readonly } = widgetProps;
+export type RadioWidgetProps<
+    T,
+    S extends StrictRJSFSchema,
+    F extends FormContextType
+> = WidgetProps<T, S, F>;
+function RadioWidget<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+>(widgetProps: RadioWidgetProps<T, S, F>) {
+    const {
+        options,
+        value,
+        disabled,
+        onChange,
+        id,
+        uiSchema,
+        formContext,
+        readonly,
+    } = widgetProps;
     const { enumOptions, enumDisabled } = options;
-    const { customOptions, props, properties, cardType, icon, sectionTitle } = getUiOptions<T, S, F>(uiSchema);
+    const { customOptions, props, properties, cardType, icon, sectionTitle } =
+        getUiOptions<T, S, F>(uiSchema);
 
-    const apiProps = typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
+    const apiProps =
+        typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
     const currentOptions = useMemo(() => {
         return enumOptions || customOptions || [];
@@ -58,19 +87,35 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
                   label: option.label,
                   value: option.value,
                   disabled: enumDisabled?.includes(option.value) || false,
-                  subElement: option.subElement && renderSubElement(option.subElement, properties, cardType, icon, sectionTitle as string),
+                  subElement:
+                      option.subElement &&
+                      renderSubElement(
+                          option.subElement,
+                          properties,
+                          cardType,
+                          icon,
+                          sectionTitle as string
+                      ),
               }))
             : [];
     }, [currentOptions]);
 
     async function fetchDetails(value: string) {
-        csrApiHelper(apiProps, { ...formContext?.customData, value }).then(response => {
-            if (apiProps.responseType === ApiResponseTypes.FormData) {
-                formContext?.setCustomData && formContext.setCustomData({ [apiProps?.dataKey]: response });
-            } else {
-                formContext?.updateSchema && formContext.updateSchema({ [apiProps?.dataKey]: response });
+        csrApiHelper(apiProps, { ...formContext?.customData, value }).then(
+            (response) => {
+                if (apiProps.responseType === ApiResponseTypes.FormData) {
+                    formContext?.setCustomData &&
+                        formContext.setCustomData({
+                            [apiProps?.dataKey]: response,
+                        });
+                } else {
+                    formContext?.updateSchema &&
+                        formContext.updateSchema({
+                            [apiProps?.dataKey]: response,
+                        });
+                }
             }
-        });
+        );
     }
 
     const handleOnChange = (event: any) => {
@@ -80,7 +125,10 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
         }
     };
 
-    if (readonly) return <>{enumOptions?.find(option => option.value === value)?.label}</>;
+    if (readonly)
+        return (
+            <>{enumOptions?.find((option) => option.value === value)?.label}</>
+        );
 
     return (
         <div>

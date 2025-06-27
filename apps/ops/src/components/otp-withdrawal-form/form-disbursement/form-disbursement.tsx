@@ -1,14 +1,29 @@
-import { BankAccountBase, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    BankAccountBase,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getBankingDetails, getBankingDetailsLC, isExistingBank, isExistingBankLC } from '@deps/helpers/bank.helpers';
+import {
+    getBankingDetails,
+    getBankingDetailsLC,
+    isExistingBank,
+    isExistingBankLC,
+} from '@deps/helpers/bank.helpers';
 import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
-import { FormDisbursement as FormDisbursementType, PaymentMailType, PaymentMethod } from '@deps/models/case/withdrawal/case';
+import {
+    FormDisbursement as FormDisbursementType,
+    PaymentMailType,
+    PaymentMethod,
+} from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementConfig,
@@ -20,43 +35,65 @@ import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import AutofillAccountToggle from './form-disbursement-parts/autofill-account-toggle';
 import { ConsentAvailable } from './form-disbursement-parts/consent-available';
-import MaskedAccountNumberToggle, { BankInfoType } from './form-disbursement-parts/masked-account-toggle';
+import MaskedAccountNumberToggle, {
+    BankInfoType,
+} from './form-disbursement-parts/masked-account-toggle';
 import { SelectedBankContext } from './form-disbursement-parts/pre-populate-banking-details';
 import FormDisbursementSection from './form-disbursement-section';
 import { BankingFields } from './form-disbursement.helpers';
 
 // Selection options for payment method
-export const FormDisbursementSelections = { ...PaymentMethod, ...PaymentMailType, SimpleBrokerage: 'SimpleBrokerage' };
+export const FormDisbursementSelections = {
+    ...PaymentMethod,
+    ...PaymentMailType,
+    SimpleBrokerage: 'SimpleBrokerage',
+};
 export type FormDisbursementSelections = typeof FormDisbursementSelections;
 
-const getSelected = (formDisbursement: FormDisbursementType): PaymentMailType | PaymentMethod | null => {
+const getSelected = (
+    formDisbursement: FormDisbursementType
+): PaymentMailType | PaymentMethod | null => {
     const paymentMethod = formDisbursement?.paymentMethod?.text;
     const paymentMailType = formDisbursement?.paymentMailType?.text;
-    return paymentMethod === PaymentMailType.Check && paymentMailType === PaymentMailType.ExpressCheck
+    return paymentMethod === PaymentMailType.Check &&
+        paymentMailType === PaymentMailType.ExpressCheck
         ? FormDisbursementSelections.ExpressCheck
         : paymentMethod;
 };
 
-export const getBankFieldsList = (fields: DisbursementConfig[] | null, existingBankSelected: boolean, isFormStateReadOnly: boolean) => {
+export const getBankFieldsList = (
+    fields: DisbursementConfig[] | null,
+    existingBankSelected: boolean,
+    isFormStateReadOnly: boolean
+) => {
     let finalBankList = fields;
 
     if (isFormStateReadOnly || existingBankSelected) {
         finalBankList =
             fields &&
             fields?.filter(
-                field => ![BankingFields.ReEnterAccountNumber, BankingFields.ReEnterBankRoutingNumber].includes(field.fieldName)
+                (field) =>
+                    ![
+                        BankingFields.ReEnterAccountNumber,
+                        BankingFields.ReEnterBankRoutingNumber,
+                    ].includes(field.fieldName)
             );
     }
 
     return finalBankList;
 };
 
-export type FormDisbursementSelectionsType = FormDisbursementSelections[keyof FormDisbursementSelections] | null | undefined;
+export type FormDisbursementSelectionsType =
+    | FormDisbursementSelections[keyof FormDisbursementSelections]
+    | null
+    | undefined;
 
 type FormDisbursementProps = {
     options: PaymentMethodOption[];
     title?: string;
-    selectionIdentifier?: (val: FormDisbursementType) => FormDisbursementSelectionsType;
+    selectionIdentifier?: (
+        val: FormDisbursementType
+    ) => FormDisbursementSelectionsType;
     isFormStateReadOnly?: boolean;
     defaultValue?: PaymentMethod | PaymentMailType;
 };
@@ -73,63 +110,113 @@ export default function FormDisbursement({
     isFormStateReadOnly = false,
     defaultValue,
 }: FormDisbursementProps) {
-    const { initialForm, formDisbursement, parties, partyRoles, setFormErrors, setFormDisbursement, featureFlagDecisions } =
-        useContext(FormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.distributionMethod' });
-    const [selected, setSelected] = useState(selectionIdentifier(formDisbursement) || defaultValue || null);
-    const [supplementaryFields, setSupplementaryFields] = useState<DisbursementConfig[] | null>(null);
-    const [additionalOptions, setAdditionalOptions] = useState<PaymentMethodAdditionalOptions | null>(null);
-    const [disbursementInformation, setDisbursementInformation] = useState<DisbursementParts>(DEFAULT_DISBURSEMENT_UPDATE);
+    const {
+        initialForm,
+        formDisbursement,
+        parties,
+        partyRoles,
+        setFormErrors,
+        setFormDisbursement,
+        featureFlagDecisions,
+    } = useContext(FormDataContext);
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.distributionMethod',
+    });
+    const [selected, setSelected] = useState(
+        selectionIdentifier(formDisbursement) || defaultValue || null
+    );
+    const [supplementaryFields, setSupplementaryFields] = useState<
+        DisbursementConfig[] | null
+    >(null);
+    const [additionalOptions, setAdditionalOptions] =
+        useState<PaymentMethodAdditionalOptions | null>(null);
+    const [disbursementInformation, setDisbursementInformation] =
+        useState<DisbursementParts>(DEFAULT_DISBURSEMENT_UPDATE);
     const [isBankSelected, setBankSelected] = useState(false);
-    const selectedOption = options.find(val => val.value === selected);
-    const selectedBankInfoOption = disbursementInformation?.isDirectDeposit ? BankInfoType.Full : BankInfoType.Masked;
-    const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
+    const selectedOption = options.find((val) => val.value === selected);
+    const selectedBankInfoOption = disbursementInformation?.isDirectDeposit
+        ? BankInfoType.Full
+        : BankInfoType.Masked;
+    const isLC = !isFastFeatureEnabled(
+        initialForm?.taskType,
+        featureFlagDecisions
+    );
 
     const bankingDetails = useMemo(() => {
         return isLC
             ? getBankingDetailsLC(parties as LifeCadParty[])
-            : getBankingDetails(parties as Party[], partyRoles as PolicyPartyRoles[]);
+            : getBankingDetails(
+                  parties as Party[],
+                  partyRoles as PolicyPartyRoles[]
+              );
     }, [isLC, parties, partyRoles]);
 
     const existingBankSelected = isLC
-        ? isExistingBankLC(bankingDetails as LifeCadBanking[], formDisbursement.bank[0].bankName || '')
-        : isExistingBank(bankingDetails as BankAccountBase[], formDisbursement.bank[0].bankName || '');
+        ? isExistingBankLC(
+              bankingDetails as LifeCadBanking[],
+              formDisbursement.bank[0].bankName || ''
+          )
+        : isExistingBank(
+              bankingDetails as BankAccountBase[],
+              formDisbursement.bank[0].bankName || ''
+          );
 
     useEffect(() => {
-        selected && setDisbursementOption(selected as PaymentMailType | PaymentMethod);
+        selected &&
+            setDisbursementOption(selected as PaymentMailType | PaymentMethod);
     }, []);
 
     useEffect(() => {
-        const selectedOption = options.find(val => val.value === selected);
+        const selectedOption = options.find((val) => val.value === selected);
         if (selectedOption) {
             // remove re-enter fields in case of completed form status/form state is readonly
-            setSupplementaryFields(getBankFieldsList(selectedOption?.fields, existingBankSelected, isFormStateReadOnly));
+            setSupplementaryFields(
+                getBankFieldsList(
+                    selectedOption?.fields,
+                    existingBankSelected,
+                    isFormStateReadOnly
+                )
+            );
         }
     }, [isFormStateReadOnly, existingBankSelected, options, selected]);
 
-    const setDisbursementOption = (selected: PaymentMailType | PaymentMethod) => {
+    const setDisbursementOption = (
+        selected: PaymentMailType | PaymentMethod
+    ) => {
         setSelected(selected);
 
         setBankSelected(false);
         setFormErrors({});
 
-        const selectedOption = options.find(val => val.value === selected);
+        const selectedOption = options.find((val) => val.value === selected);
         if (selectedOption) {
-            setSupplementaryFields(getBankFieldsList(selectedOption?.fields, existingBankSelected, isFormStateReadOnly));
+            setSupplementaryFields(
+                getBankFieldsList(
+                    selectedOption?.fields,
+                    existingBankSelected,
+                    isFormStateReadOnly
+                )
+            );
             const additionalOptions = selectedOption.additionalOptions;
-            setDisbursementInformation(selectedOption.getDefaultPayload(initialForm?.data?.formRequest?.formDisbursement));
+            setDisbursementInformation(
+                selectedOption.getDefaultPayload(
+                    initialForm?.data?.formRequest?.formDisbursement
+                )
+            );
             setAdditionalOptions(additionalOptions ?? null);
         }
     };
 
     useEffect(() => {
-        const selectedOption = options.find(val => val.value === selected);
+        const selectedOption = options.find((val) => val.value === selected);
 
         if (selectedOption?.generatePayloadFromSelection) {
-            setFormDisbursement(oldVal => {
+            setFormDisbursement((oldVal) => {
                 return {
                     ...oldVal,
-                    ...selectedOption.generatePayloadFromSelection(disbursementInformation),
+                    ...selectedOption.generatePayloadFromSelection(
+                        disbursementInformation
+                    ),
                 };
             });
         }
@@ -137,7 +224,9 @@ export default function FormDisbursement({
 
     const getDisbursementSection = (isFormDisabled: boolean = false) => {
         return (
-            <SelectedBankContext.Provider value={{ isBankSelected, setBankSelected }}>
+            <SelectedBankContext.Provider
+                value={{ isBankSelected, setBankSelected }}
+            >
                 <FormDisbursementSection
                     fields={supplementaryFields}
                     disbursementInformation={disbursementInformation}
@@ -155,7 +244,9 @@ export default function FormDisbursement({
                 return (
                     <MaskedAccountNumberToggle
                         selectedBankInfoOption={selectedBankInfoOption}
-                        maskedAccountNumber={disbursementInformation.maskedAccountNumber}
+                        maskedAccountNumber={
+                            disbursementInformation.maskedAccountNumber
+                        }
                         setDisbursementInformation={setDisbursementInformation}
                         disabled={isFormStateReadOnly}
                     >
@@ -165,13 +256,19 @@ export default function FormDisbursement({
             }
             case DisbursementToggleType.AutoFillInfoToggle:
                 return (
-                    <SelectedBankContext.Provider value={{ isBankSelected, setBankSelected }}>
+                    <SelectedBankContext.Provider
+                        value={{ isBankSelected, setBankSelected }}
+                    >
                         <AutofillAccountToggle
-                            toggleOptions={additionalOptions?.toggleOptions ?? []}
+                            toggleOptions={
+                                additionalOptions?.toggleOptions ?? []
+                            }
                             preFillBankInfo={disbursementInformation}
                             supplementaryFields={supplementaryFields}
                             initialFormDisbursement={disbursementInformation}
-                            setDisbursementInformation={setDisbursementInformation}
+                            setDisbursementInformation={
+                                setDisbursementInformation
+                            }
                             isFormStateReadOnly={isFormStateReadOnly}
                             carrier={initialForm?.carrier}
                         ></AutofillAccountToggle>
@@ -185,13 +282,17 @@ export default function FormDisbursement({
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <Typography variant={TypographyVariant.H3}>{title || t('distributionMethod')}</Typography>
+            <Typography variant={TypographyVariant.H3}>
+                {title || t('distributionMethod')}
+            </Typography>
             <div className="mt-4">
                 <ButtonGrp
                     activeValue={selected as string}
                     groupLabel={t('paymentMethod')}
-                    toggle={val => {
-                        setDisbursementOption(val as PaymentMailType | PaymentMethod);
+                    toggle={(val) => {
+                        setDisbursementOption(
+                            val as PaymentMailType | PaymentMethod
+                        );
                     }}
                     labels={options}
                     disabled={isFormStateReadOnly}
@@ -200,7 +301,10 @@ export default function FormDisbursement({
                 {formDisbursement?.disbursmentConsent?.isConsent?.text &&
                 selectedOption?.consentAvailableConfig &&
                 selectedBankInfoOption !== BankInfoType.Masked ? (
-                    <ConsentAvailable signatureFields={selectedOption?.consentAvailableConfig} isFormStateReadOnly={isFormStateReadOnly} />
+                    <ConsentAvailable
+                        signatureFields={selectedOption?.consentAvailableConfig}
+                        isFormStateReadOnly={isFormStateReadOnly}
+                    />
                 ) : null}
             </div>
         </CardContainer>

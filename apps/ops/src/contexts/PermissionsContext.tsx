@@ -16,7 +16,10 @@ import { createContext, ReactNode, useContext } from 'react';
 import { UserPermission } from '@deps/models/user-profile';
 import { checkTuple } from '@deps/queries/api/fga';
 import { getPartyMetadataById } from '@deps/queries/api/parties';
-import { bulkCheckPermissionsQuery, doesUserHavePagePermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
+import {
+    bulkCheckPermissionsQuery,
+    doesUserHavePagePermissionQuery,
+} from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { isWellabeAgent } from '@deps/utils/agent-helpers';
@@ -42,7 +45,9 @@ export interface PermissionsContextProps {
     hasHomeExperience: boolean;
 }
 
-export const PermissionContext = createContext<PermissionsContextProps>({} as PermissionsContextProps);
+export const PermissionContext = createContext<PermissionsContextProps>(
+    {} as PermissionsContextProps
+);
 
 export const usePermissionsContext = () => {
     return useContext(PermissionContext);
@@ -57,54 +62,89 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { data: homeCheck, isLoading: homeCheckLoading } = useQuery({
         queryKey: ['isAllowHomeExperience', partyId],
         queryFn: () => {
-            return checkTuple(partyId, FgaRelation.UiAccess, FgaUiEntity.ZinniaLiveHomeExerience);
+            return checkTuple(
+                partyId,
+                FgaRelation.UiAccess,
+                FgaUiEntity.ZinniaLiveHomeExerience
+            );
         },
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
-    const { data: isAllowReadCaseManagement, isLoading: caseManagementLoading } = useQuery({
-        queryKey: ['isAllowReadCaseManagement', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]],
+    const {
+        data: isAllowReadCaseManagement,
+        isLoading: caseManagementLoading,
+    } = useQuery({
+        queryKey: [
+            'isAllowReadCaseManagement',
+            partyId,
+            featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE],
+        ],
         queryFn: async () => {
             if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
-                return await checkTuple(partyId, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY);
+                return await checkTuple(
+                    partyId,
+                    FgaRelation.UiAccess,
+                    FgaRoles.CASE_MANAGEMENT_ZL_ENTITY
+                );
             }
-            return await doesUserHavePagePermissionQuery(UserPermission.AllowReadCaseManagement, partyId);
+            return await doesUserHavePagePermissionQuery(
+                UserPermission.AllowReadCaseManagement,
+                partyId
+            );
         },
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
-    const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } = useQuery({
-        queryKey: ['isAllowReadPolicyAdmin', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]],
-        queryFn: async () => {
-            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
-                return await checkTuple(partyId, FgaRelation.UiAccess, FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY);
-            }
-            return await doesUserHavePagePermissionQuery(UserPermission.AllowReadPolicyAdmin, partyId);
-        },
-        enabled: !!partyId,
-        staleTime: FIFTEEN_MINUTES_IN_MS,
-    });
+    const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } =
+        useQuery({
+            queryKey: [
+                'isAllowReadPolicyAdmin',
+                partyId,
+                featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY],
+            ],
+            queryFn: async () => {
+                if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
+                    return await checkTuple(
+                        partyId,
+                        FgaRelation.UiAccess,
+                        FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY
+                    );
+                }
+                return await doesUserHavePagePermissionQuery(
+                    UserPermission.AllowReadPolicyAdmin,
+                    partyId
+                );
+            },
+            enabled: !!partyId,
+            staleTime: FIFTEEN_MINUTES_IN_MS,
+        });
 
-    const { data: isAllowReadOtpRenewals, isLoading: otpRenewalsLoading } = useQuery({
-        queryKey: ['isAllowReadOtpRenewals', partyId],
-        queryFn: () => {
-            return doesUserHavePagePermissionQuery(UserPermission.AllowReadOtpRenewals, partyId);
-        },
-        enabled: !!partyId,
-        staleTime: FIFTEEN_MINUTES_IN_MS,
-    });
+    const { data: isAllowReadOtpRenewals, isLoading: otpRenewalsLoading } =
+        useQuery({
+            queryKey: ['isAllowReadOtpRenewals', partyId],
+            queryFn: () => {
+                return doesUserHavePagePermissionQuery(
+                    UserPermission.AllowReadOtpRenewals,
+                    partyId
+                );
+            },
+            enabled: !!partyId,
+            staleTime: FIFTEEN_MINUTES_IN_MS,
+        });
 
-    const { data: showToppanMerrill, isLoading: showToppanMerrillLoading } = useQuery({
-        queryKey: ['partyReferenceMetaData', partyId],
-        queryFn: () => getPartyMetadataById(partyId),
-        enabled: !!partyId,
-        select: (response: any) => {
-            const partyRefData = response?.data as PartyReferenceDataModel;
-            return isWellabeAgent(partyRefData);
-        },
-    });
+    const { data: showToppanMerrill, isLoading: showToppanMerrillLoading } =
+        useQuery({
+            queryKey: ['partyReferenceMetaData', partyId],
+            queryFn: () => getPartyMetadataById(partyId),
+            enabled: !!partyId,
+            select: (response: any) => {
+                const partyRefData = response?.data as PartyReferenceDataModel;
+                return isWellabeAgent(partyRefData);
+            },
+        });
 
     const {
         data: fgaRoleData,
@@ -114,13 +154,19 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     } = useQuery({
         queryKey: ['fgaRoles', partyId],
         queryFn: async () => {
-            const data = await bulkCheckPermissionsQuery(createBulkCheckBodyRequest(partyId));
+            const data = await bulkCheckPermissionsQuery(
+                createBulkCheckBodyRequest(partyId)
+            );
 
             const superAdmin = checkIfUserIsSuperAdmin(data);
             const hasDashboard = checkIfUserHasDashboardAccess(data);
             const hasCaseInsight = checkIfUserHasCaseInsightsAccess(data);
             const hasAdvisorsExcel = checkIfUserHasAdvisorsExcel(data);
-            const isCallLogAudioPermitted = !!checkRelation(data, FgaRoles.CALL_LOG_ACCESS, FgaRelation.UiAccess);
+            const isCallLogAudioPermitted = !!checkRelation(
+                data,
+                FgaRoles.CALL_LOG_ACCESS,
+                FgaRelation.UiAccess
+            );
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
@@ -151,7 +197,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isSuperAdmin: !!fgaRoleData?.isSuperAdmin,
                 fgaRolesData: fgaRoleData?.fgaRoles || [],
                 hasDashboardPermission: !!fgaRoleData?.hasDashboardPermission,
-                hasCaseInsightPermission: !!fgaRoleData?.hasCaseInsightPermission,
+                hasCaseInsightPermission:
+                    !!fgaRoleData?.hasCaseInsightPermission,
                 isAllowReadCaseManagement: !!isAllowReadCaseManagement,
                 isAllowReadPolicyAdmin: !!isAllowReadPolicyAdmin,
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,

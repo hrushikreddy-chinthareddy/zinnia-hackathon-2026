@@ -13,7 +13,10 @@ import {
     setYearFilter,
 } from '@deps/components/history/filters/filter.helpers';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 import {
     AllFilters,
@@ -36,10 +39,15 @@ interface DismissableFiltersProps {
     isSideSheetOpen: boolean;
 }
 
-export const DismissableFilters = ({ isSideSheetOpen }: DismissableFiltersProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
+export const DismissableFilters = ({
+    isSideSheetOpen,
+}: DismissableFiltersProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'policy.history.filter',
+    });
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
-    const [historyFiltersCopy, setHistoryFiltersCopy] = useState<HistoryFilters>(historyFilters);
+    const [historyFiltersCopy, setHistoryFiltersCopy] =
+        useState<HistoryFilters>(historyFilters);
 
     useEffect(() => {
         if (!isSideSheetOpen) setHistoryFiltersCopy(historyFilters);
@@ -51,7 +59,8 @@ export const DismissableFilters = ({ isSideSheetOpen }: DismissableFiltersProps)
 
     if (!hasActiveFilter) return null;
 
-    const [filterName, subfilterName] = Object.entries(eventFilter ?? {})[0] ?? [];
+    const [filterName, subfilterName] =
+        Object.entries(eventFilter ?? {})[0] ?? [];
     const filterNameTranslation = t(filterName);
     const subfilterNameTranslation = t(subfilterName);
 
@@ -59,7 +68,9 @@ export const DismissableFilters = ({ isSideSheetOpen }: DismissableFiltersProps)
         <div className="flex flex-wrap content-center items-center gap-2 lg:hidden">
             {hasFilter(yearFilter) && (
                 <ChipX
-                    aria-label={t('clearFilter', { filter: yearFilter }) as string}
+                    aria-label={
+                        t('clearFilter', { filter: yearFilter }) as string
+                    }
                     label={yearFilter as string}
                     onDelete={() => setYearFilter(setHistoryFilters, 'all')}
                 />
@@ -67,17 +78,25 @@ export const DismissableFilters = ({ isSideSheetOpen }: DismissableFiltersProps)
 
             {hasFilter(filterName) && (
                 <ChipX
-                    aria-label={t('clearFilter', { filter: filterNameTranslation }) as string}
+                    aria-label={
+                        t('clearFilter', {
+                            filter: filterNameTranslation,
+                        }) as string
+                    }
                     label={filterNameTranslation as string}
                     onDelete={() => removeEventFilter(setHistoryFilters)}
                 />
             )}
             {hasFilter(subfilterName) && (
                 <ChipX
-                    aria-label={t('clearFilter', { filter: subfilterNameTranslation }) as string}
+                    aria-label={
+                        t('clearFilter', {
+                            filter: subfilterNameTranslation,
+                        }) as string
+                    }
                     label={subfilterNameTranslation as string}
                     onDelete={() => {
-                        setHistoryFilters(prevState => ({
+                        setHistoryFilters((prevState) => ({
                             ...prevState,
                             eventFilter: {
                                 [filterName]: 'all',
@@ -88,7 +107,11 @@ export const DismissableFilters = ({ isSideSheetOpen }: DismissableFiltersProps)
             )}
 
             {hasActiveFilter && (
-                <NavElement onClick={() => removeAllFilters(setHistoryFilters)} size={NavElementSize.Small} type={NavElementType.Button}>
+                <NavElement
+                    onClick={() => removeAllFilters(setHistoryFilters)}
+                    size={NavElementSize.Small}
+                    type={NavElementType.Button}
+                >
                     {t('clearAllFilters')}
                 </NavElement>
             )}
@@ -96,8 +119,15 @@ export const DismissableFilters = ({ isSideSheetOpen }: DismissableFiltersProps)
     );
 };
 
-const FilterChips = ({ label, filters, selectedChip, selectionCallback }: FilterChipsProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
+const FilterChips = ({
+    label,
+    filters,
+    selectedChip,
+    selectionCallback,
+}: FilterChipsProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'policy.history.filter',
+    });
 
     return (
         <div className="flex flex-col gap-2">
@@ -106,12 +136,18 @@ const FilterChips = ({ label, filters, selectedChip, selectionCallback }: Filter
                 <RadioGroup.Root
                     aria-label={label}
                     className="flex flex-wrap gap-2"
-                    onValueChange={(filter: AllFilters) => selectionCallback(filter)}
+                    onValueChange={(filter: AllFilters) =>
+                        selectionCallback(filter)
+                    }
                     value={selectedChip}
                 >
-                    {filters.map(filter => {
+                    {filters.map((filter) => {
                         return (
-                            <RadioGroup.Item className="chip" key={filter} value={filter}>
+                            <RadioGroup.Item
+                                className="chip"
+                                key={filter}
+                                value={filter}
+                            >
                                 {t(filter)}
                             </RadioGroup.Item>
                         );
@@ -123,7 +159,9 @@ const FilterChips = ({ label, filters, selectedChip, selectionCallback }: Filter
 };
 
 const Subfilter = () => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'policy.history.filter',
+    });
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
 
     const { eventFilter } = historyFilters;
@@ -154,7 +192,7 @@ const Subfilter = () => {
             filters={filters}
             label={label}
             selectedChip={subfilterName}
-            selectionCallback={filter => {
+            selectionCallback={(filter) => {
                 setFilter(setHistoryFilters, filterName, filter);
             }}
         />
@@ -162,7 +200,9 @@ const Subfilter = () => {
 };
 
 const TypeFilters = () => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'policy.history.filter',
+    });
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
 
     const { eventFilter } = historyFilters;
@@ -174,10 +214,15 @@ const TypeFilters = () => {
                 filters={Object.values(EventFilterKeys)}
                 label={t('byEvent') as string}
                 selectedChip={filterName ?? EventFilterKeys.All}
-                selectionCallback={filter => {
+                selectionCallback={(filter) => {
                     if (filter === EventFilterKeys.All) {
                         removeEventFilter(setHistoryFilters);
-                    } else setFilter(setHistoryFilters, filter as EventFilterKeys, EventFilterKeys.All);
+                    } else
+                        setFilter(
+                            setHistoryFilters,
+                            filter as EventFilterKeys,
+                            EventFilterKeys.All
+                        );
                 }}
             />
 

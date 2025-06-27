@@ -21,11 +21,17 @@ interface BranchNameAndTypeProps {
     bankAccountType: string;
 }
 
-const BranchNameAndType = ({ bankDetails, bankAccountType }: BranchNameAndTypeProps) => {
+const BranchNameAndType = ({
+    bankDetails,
+    bankAccountType,
+}: BranchNameAndTypeProps) => {
     const { branchName } = bankDetails;
 
     return (
-        <div className="mb-4 flex flex-col items-start" data-testid="branch-name-and-type">
+        <div
+            className="mb-4 flex flex-col items-start"
+            data-testid="branch-name-and-type"
+        >
             <Label
                 pii={true}
                 className="text-gray-900"
@@ -33,12 +39,19 @@ const BranchNameAndType = ({ bankDetails, bankAccountType }: BranchNameAndTypePr
                 sentenceCase={false}
                 variant={LabelVariant.LabelLg}
             />
-            <Label pii={true} className="leading-4.5 text-gray-600" label={bankAccountType} variant={LabelVariant.LabelSmAlt} />
+            <Label
+                pii={true}
+                className="leading-4.5 text-gray-600"
+                label={bankAccountType}
+                variant={LabelVariant.LabelSmAlt}
+            />
         </div>
     );
 };
 
-const AccountNumber = ({ bankDetails }: Pick<BankDataCardProps, 'bankDetails'>) => {
+const AccountNumber = ({
+    bankDetails,
+}: Pick<BankDataCardProps, 'bankDetails'>) => {
     const { accountNumber, internationalBankAccountNumber } = bankDetails;
     const { t } = useTranslation();
 
@@ -55,7 +68,10 @@ const AccountNumber = ({ bankDetails }: Pick<BankDataCardProps, 'bankDetails'>) 
                 pii={true}
                 details={
                     t('workflows.paymentStep.bankDataCard.endingIn') +
-                    (formatAccountNumber(internationalBankAccountNumber ?? accountNumber, true) ?? DEFAULT_ERROR_STRING)
+                    (formatAccountNumber(
+                        internationalBankAccountNumber ?? accountNumber,
+                        true
+                    ) ?? DEFAULT_ERROR_STRING)
                 }
                 variant={ContentVariant.BodySm}
             />
@@ -63,7 +79,12 @@ const AccountNumber = ({ bankDetails }: Pick<BankDataCardProps, 'bankDetails'>) 
     );
 };
 
-const BankDataCard = ({ bankDetails, accessibilityClickText = '', onCardClick, selectedId }: BankDataCardProps) => {
+const BankDataCard = ({
+    bankDetails,
+    accessibilityClickText = '',
+    onCardClick,
+    selectedId,
+}: BankDataCardProps) => {
     const { t } = useTranslation();
     const { branchName, accountType } = bankDetails;
     const upperCaseBranchName = branchName?.toUpperCase();
@@ -86,7 +107,10 @@ const BankDataCard = ({ bankDetails, accessibilityClickText = '', onCardClick, s
             onClick={handleClick}
             ariaLabel={`${accessibilityClickText} ${upperCaseBranchName} ${bankAccountType}`}
         >
-            <BranchNameAndType bankDetails={bankDetails} bankAccountType={bankAccountType} />
+            <BranchNameAndType
+                bankDetails={bankDetails}
+                bankAccountType={bankAccountType}
+            />
             <div className="flex">
                 <AccountNumber bankDetails={bankDetails} />
             </div>

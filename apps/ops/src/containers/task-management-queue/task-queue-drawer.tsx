@@ -4,17 +4,26 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
+import Button, {
+    ButtonSize,
+    ButtonType,
+    ButtonVariant,
+} from '@deps/components/button/button';
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import CustomLoader from '@deps/components/loader/customLoader';
 import SelectSimple from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PendingReasonOptions } from '@deps/models/case/enums';
 import { TaskSource, TaskType } from '@deps/models/case/task';
-import { TaskQueueDrawerProps, TaskStatus } from '@deps/models/case/task-instance';
+import {
+    TaskQueueDrawerProps,
+    TaskStatus,
+} from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
@@ -25,7 +34,14 @@ import GlobalTaskSideSheet from '../../components/side-sheet/task-details-sidesh
 
 dayjs.extend(utc);
 
-function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescription, taskName }: TaskQueueDrawerProps) {
+function TaskQueueDrawer({
+    onClose,
+    taskId,
+    taskStatus,
+    getTasks,
+    taskDescription,
+    taskName,
+}: TaskQueueDrawerProps) {
     const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
     const [date, setDate] = useState(tomorrow);
     const [startLoader, setStartLoader] = useState(false);
@@ -45,22 +61,37 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
     const pendingReasonOptions = [
         {
             value: PendingReasonOptions.AwaitingAdditionalInformation,
-            label: t('taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingAdditionalInformation'),
+            label: t(
+                'taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingAdditionalInformation'
+            ),
         },
         {
             value: PendingReasonOptions.AwaitingApproval,
-            label: t('taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingApproval'),
+            label: t(
+                'taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingApproval'
+            ),
         },
         {
             value: PendingReasonOptions.AwaitingApplication,
-            label: t('taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingApplication'),
+            label: t(
+                'taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingApplication'
+            ),
         },
     ];
 
     const openGlobalSideSheet = () => {
-        const content = <GlobalTaskSideSheet taskId={taskId} taskDescription={taskDescription as TaskType} />;
+        const content = (
+            <GlobalTaskSideSheet
+                taskId={taskId}
+                taskDescription={taskDescription as TaskType}
+            />
+        );
         sideSheet.changeSideSheetContent(
-            `${taskName ? `${t('sideSheet.task.taskHeading')}: ${taskName}` : t('sideSheet.task.taskHeading')}`,
+            `${
+                taskName
+                    ? `${t('sideSheet.task.taskHeading')}: ${taskName}`
+                    : t('sideSheet.task.taskHeading')
+            }`,
             content
         );
         sideSheet.handleOpen(true);
@@ -74,24 +105,31 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
             browserLogError('task-queue:handleStartTask::Missing taskId', {
                 taskStatus: taskStatus,
             });
-            router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
+            router.push(
+                `/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`
+            );
             return;
         }
 
         const taskData = await getTaskInstance({ taskId });
         try {
-
             setStartLoader(true);
             if (!taskData) {
-                browserLogError('task-queue:handleStartTask::Error retrieving task data', {
-                    taskId: taskId,
-                    taskStatus: taskStatus,
-                });
-                router.push(`/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`);
+                browserLogError(
+                    'task-queue:handleStartTask::Error retrieving task data',
+                    {
+                        taskId: taskId,
+                        taskStatus: taskStatus,
+                    }
+                );
+                router.push(
+                    `/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`
+                );
                 return;
             }
-            const formattedDate = dayjs.utc(date, NUMERIC_DATE_FORMAT).toISOString();
-
+            const formattedDate = dayjs
+                .utc(date, NUMERIC_DATE_FORMAT)
+                .toISOString();
 
             const body = {
                 ...taskData,
@@ -101,15 +139,23 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
                 scheduledDate: formattedDate,
             };
 
-            const response = await updateTask(taskData.caseId, taskData.id, body, timer);
+            const response = await updateTask(
+                taskData.caseId,
+                taskData.id,
+                body,
+                timer
+            );
 
             if (response) {
-                browserLogInfo('task-queue:handleStartTask::Successfully updated task to in-progress', {
-                    taskId: taskData.id,
-                    documentNumber: taskData?.data?.documentNumber,
-                    clientCode: taskData?.carrier,
-                    process: taskData?.process,
-                });
+                browserLogInfo(
+                    'task-queue:handleStartTask::Successfully updated task to in-progress',
+                    {
+                        taskId: taskData.id,
+                        documentNumber: taskData?.data?.documentNumber,
+                        clientCode: taskData?.carrier,
+                        process: taskData?.process,
+                    }
+                );
                 removeFromCache('getTaskInstance', { taskId: taskData.id });
                 handleClose();
                 getTasks && getTasks();
@@ -118,15 +164,15 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
             }
         } catch (error) {
             console.log(error);
-        }
-        finally {
+        } finally {
             setStartLoader(false);
         }
     };
 
     function handleIsDateAllowed(date: Dayjs): boolean {
         const currentDate = dayjs();
-        if (date.isBefore(currentDate) || date.isSame(currentDate)) return false;
+        if (date.isBefore(currentDate) || date.isSame(currentDate))
+            return false;
         return true;
     }
 
@@ -142,29 +188,50 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
 
     return (
         <div className="m-10 flex flex-col gap-5">
-            <Typography variant={TypographyVariant.H4}>{t(`${'taskManagementQueue.updateTaskStatusDrawer.setTaskAsPending'}`)}</Typography>
+            <Typography variant={TypographyVariant.H4}>
+                {t(
+                    `${'taskManagementQueue.updateTaskStatusDrawer.setTaskAsPending'}`
+                )}
+            </Typography>
             <FieldDateSelect
-                label={t(`taskManagementQueue.updateTaskStatusDrawer.followUpDate`) as string}
+                label={
+                    t(
+                        `taskManagementQueue.updateTaskStatusDrawer.followUpDate`
+                    ) as string
+                }
                 onChange={handleDateChange}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
                 value={date}
                 isFutureDateDisabled={false}
-                isDateAllowed={date => handleIsDateAllowed(date)}
+                isDateAllowed={(date) => handleIsDateAllowed(date)}
             />
             <SelectSimple
                 className="max-w-lg placeholder:text-gray-400"
-                label={t('taskManagementQueue.updateTaskStatusDrawer.reason') as string}
+                label={
+                    t(
+                        'taskManagementQueue.updateTaskStatusDrawer.reason'
+                    ) as string
+                }
                 options={pendingReasonOptions}
                 onChange={handleReasonChange}
                 size={FieldSize.Small}
-                placeholder={t('taskManagementQueue.updateTaskStatusDrawer.selectReason') as string}
+                placeholder={
+                    t(
+                        'taskManagementQueue.updateTaskStatusDrawer.selectReason'
+                    ) as string
+                }
                 value={pendingReason}
                 name="form-type"
             />
 
             <div className="flex justify-end align-middle">
-                <Button className="mr-4" onClick={handleCancel} size={ButtonSize.Small} type={ButtonType.Secondary}>
+                <Button
+                    className="mr-4"
+                    onClick={handleCancel}
+                    size={ButtonSize.Small}
+                    type={ButtonType.Secondary}
+                >
                     {t('cancel')}
                 </Button>
 
@@ -172,12 +239,26 @@ function TaskQueueDrawer({ onClose, taskId, taskStatus, getTasks, taskDescriptio
                     className="mr-4"
                     onClick={updateTaskStatus}
                     size={startLoader ? ButtonSize.Default : ButtonSize.Small}
-                    variant={!pendingReason || !date ? ButtonVariant.Inactive : ButtonVariant.Default}
+                    variant={
+                        !pendingReason || !date
+                            ? ButtonVariant.Inactive
+                            : ButtonVariant.Default
+                    }
                     disabled={!pendingReason || !date || startLoader}
-                    aria-label={t('taskManagementQueue.updateTaskStatusDrawer.updateStatus') as string}
+                    aria-label={
+                        t(
+                            'taskManagementQueue.updateTaskStatusDrawer.updateStatus'
+                        ) as string
+                    }
                     type={ButtonType.Primary}
                 >
-                    {!startLoader ? t('taskManagementQueue.updateTaskStatusDrawer.updateStatus') : <CustomLoader />}
+                    {!startLoader ? (
+                        t(
+                            'taskManagementQueue.updateTaskStatusDrawer.updateStatus'
+                        )
+                    ) : (
+                        <CustomLoader />
+                    )}
                 </Button>
             </div>
         </div>

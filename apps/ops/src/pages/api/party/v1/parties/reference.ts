@@ -3,7 +3,12 @@ import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -34,17 +39,23 @@ export default withAuthAndLogging(
                 loggingContext
             );
             // const data = await serverApi.get(baseUrl, config);
-            logTrace('parties/reference::success::Successfully retrieved assigned tasks', {
-                ...loggingContext,
-                duration: performance.now() - now,
-            });
+            logTrace(
+                'parties/reference::success::Successfully retrieved assigned tasks',
+                {
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                }
+            );
             return res.json(data);
         } catch (error) {
-            logWarn('parties/reference::error::something went wrong while retrieving the party metatdata', {
-                ...parseErrorInformation(error),
-                ...loggingContext,
-                duration: performance.now() - now,
-            });
+            logWarn(
+                'parties/reference::error::something went wrong while retrieving the party metatdata',
+                {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                }
+            );
             res.status(500).json(null);
         }
     },

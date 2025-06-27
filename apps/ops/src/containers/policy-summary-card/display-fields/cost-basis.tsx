@@ -14,8 +14,14 @@ const CostBasis = ({ costBasis }: CostBasisProps) => {
 
     return (
         <div>
-            <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.costBasis')} />
-            <Content details={numberFormatify(costBasis)} variant={ContentVariant.BodySm} />
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={t('colDefs:policySummary.costBasis')}
+            />
+            <Content
+                details={numberFormatify(costBasis)}
+                variant={ContentVariant.BodySm}
+            />
         </div>
     );
 };

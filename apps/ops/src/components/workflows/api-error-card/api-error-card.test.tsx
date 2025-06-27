@@ -11,7 +11,12 @@ jest.mock('next/router', () => ({
 
 describe('ApiErrorCard', () => {
     it('renders correctly', () => {
-        render(<ApiErrorCard leaveRoute="/" submit={{ action: () => {}, text: 'Submit' }} />);
+        render(
+            <ApiErrorCard
+                leaveRoute="/"
+                submit={{ action: () => {}, text: 'Submit' }}
+            />
+        );
 
         expect(screen.getByText('title')).toBeInTheDocument();
         expect(screen.getByText('subtitle')).toBeInTheDocument();
@@ -22,7 +27,12 @@ describe('ApiErrorCard', () => {
     it('calls submit function when "submit" button is clicked', async () => {
         const submitMock = jest.fn();
 
-        render(<ApiErrorCard leaveRoute="/" submit={{ action: submitMock, text: 'Submit' }} />);
+        render(
+            <ApiErrorCard
+                leaveRoute="/"
+                submit={{ action: submitMock, text: 'Submit' }}
+            />
+        );
 
         fireEvent.click(screen.getByText('Submit'));
 
@@ -32,18 +42,33 @@ describe('ApiErrorCard', () => {
     });
 
     it('navigates to correct route when "leaveTransaction" button is clicked', async () => {
-        render(<ApiErrorCard leaveRoute="/policies/ABC/123/policy/premiums" submit={{ action: () => {}, text: 'Submit' }} />);
+        render(
+            <ApiErrorCard
+                leaveRoute="/policies/ABC/123/policy/premiums"
+                submit={{ action: () => {}, text: 'Submit' }}
+            />
+        );
 
         fireEvent.click(screen.getByText('leaveTransaction'));
 
         await waitFor(() => {
-            expect(pushMock).toHaveBeenCalledWith('/policies/ABC/123/policy/premiums');
+            expect(pushMock).toHaveBeenCalledWith(
+                '/policies/ABC/123/policy/premiums'
+            );
         });
     });
 
     it('displays correct subtitle with help desk link', () => {
-        render(<ApiErrorCard leaveRoute="/" submit={{ action: () => {}, text: 'Submit' }} />);
+        render(
+            <ApiErrorCard
+                leaveRoute="/"
+                submit={{ action: () => {}, text: 'Submit' }}
+            />
+        );
 
-        expect(screen.getByText('helpDesk.text')).toHaveAttribute('href', 'helpDesk.link');
+        expect(screen.getByText('helpDesk.text')).toHaveAttribute(
+            'href',
+            'helpDesk.link'
+        );
     });
 });

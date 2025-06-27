@@ -4,9 +4,14 @@ import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
@@ -21,9 +26,16 @@ interface BeneficiaryListingProps {
     policy: Policy;
 }
 
-export default function BeneficiaryListing({ policy, parties, carrierId }: BeneficiaryListingProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.beneficiaryListing' });
-    const { formData, setFormData, setBeneData, beneData, setDeletedBene } = useBeneChange();
+export default function BeneficiaryListing({
+    policy,
+    parties,
+    carrierId,
+}: BeneficiaryListingProps) {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails.beneficiaryListing',
+    });
+    const { formData, setFormData, setBeneData, beneData, setDeletedBene } =
+        useBeneChange();
 
     const primary: string[] = useMemo(() => {
         const primaryArr: string[] = [];
@@ -41,7 +53,9 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
         const contingentArr: string[] = [];
         beneData?.map((item: any) => {
             if (item.action === 'ADD') {
-                if (item.partyRole.partyRole === PartyRole.CONTINGENTBENEFICIARY) {
+                if (
+                    item.partyRole.partyRole === PartyRole.CONTINGENTBENEFICIARY
+                ) {
                     contingentArr.push(item.index);
                 }
             }
@@ -49,17 +63,27 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
         return contingentArr;
     }, [beneData]);
 
-    const [primaryCount, setPrimaryCount] = useState<string[]>(primary.length > 0 ? primary : []);
-    const [contingentCount, setContingentCount] = useState<string[]>(contingent.length > 0 ? contingent : []);
+    const [primaryCount, setPrimaryCount] = useState<string[]>(
+        primary.length > 0 ? primary : []
+    );
+    const [contingentCount, setContingentCount] = useState<string[]>(
+        contingent.length > 0 ? contingent : []
+    );
 
     const handlePrimaryBeneInfoOnFile = (value: boolean) => {
         if (value) {
             const deletedBenes: any = [];
             setBeneData((prevState: any) => {
                 const contingentBeneItems = prevState.filter(
-                    (element: any) => element.partyRole.partyRole === PartyRole.CONTINGENTBENEFICIARY
+                    (element: any) =>
+                        element.partyRole.partyRole ===
+                        PartyRole.CONTINGENTBENEFICIARY
                 );
-                const primaryBeneItems = prevState.filter((element: any) => element.partyRole.partyRole === PartyRole.PRIMARYBENEFICIARY);
+                const primaryBeneItems = prevState.filter(
+                    (element: any) =>
+                        element.partyRole.partyRole ===
+                        PartyRole.PRIMARYBENEFICIARY
+                );
 
                 const formattedPrimaryBeneItems = primaryBeneItems
                     .map((item: any) => {
@@ -86,9 +110,15 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
             const undoDeletedBenes: any = [];
             setBeneData((prevState: any) => {
                 const contingentBeneItems = prevState.filter(
-                    (element: any) => element.partyRole.partyRole === PartyRole.CONTINGENTBENEFICIARY
+                    (element: any) =>
+                        element.partyRole.partyRole ===
+                        PartyRole.CONTINGENTBENEFICIARY
                 );
-                const primaryBeneItems = prevState.filter((element: any) => element.partyRole.partyRole === PartyRole.PRIMARYBENEFICIARY);
+                const primaryBeneItems = prevState.filter(
+                    (element: any) =>
+                        element.partyRole.partyRole ===
+                        PartyRole.PRIMARYBENEFICIARY
+                );
 
                 const formattedPrimaryBeneItems = primaryBeneItems
                     .map((item: any) => {
@@ -101,7 +131,9 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                 return [...formattedPrimaryBeneItems, ...contingentBeneItems];
             });
             setDeletedBene((prevState: any) => {
-                const newState = prevState.filter((item: any) => !undoDeletedBenes.includes(item));
+                const newState = prevState.filter(
+                    (item: any) => !undoDeletedBenes.includes(item)
+                );
                 return newState;
             });
         }
@@ -112,9 +144,15 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
             const deletedBenes: any = [];
             setBeneData((prevState: any) => {
                 const contingentBeneItems = prevState.filter(
-                    (element: any) => element.partyRole.partyRole === PartyRole.CONTINGENTBENEFICIARY
+                    (element: any) =>
+                        element.partyRole.partyRole ===
+                        PartyRole.CONTINGENTBENEFICIARY
                 );
-                const primaryBeneItems = prevState.filter((element: any) => element.partyRole.partyRole === PartyRole.PRIMARYBENEFICIARY);
+                const primaryBeneItems = prevState.filter(
+                    (element: any) =>
+                        element.partyRole.partyRole ===
+                        PartyRole.PRIMARYBENEFICIARY
+                );
 
                 const formattedContingentBeneItems = contingentBeneItems
                     .map((item: any) => {
@@ -140,9 +178,15 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
         } else {
             const undoDeletedBenes: any = [];
             setBeneData((prevState: any) => {
-                const primaryBeneItems = prevState.filter((element: any) => element.partyRole.partyRole === PartyRole.PRIMARYBENEFICIARY);
+                const primaryBeneItems = prevState.filter(
+                    (element: any) =>
+                        element.partyRole.partyRole ===
+                        PartyRole.PRIMARYBENEFICIARY
+                );
                 const contingentBeneItems = prevState.filter(
-                    (element: any) => element.partyRole.partyRole === PartyRole.CONTINGENTBENEFICIARY
+                    (element: any) =>
+                        element.partyRole.partyRole ===
+                        PartyRole.CONTINGENTBENEFICIARY
                 );
 
                 const formattedContingentBeneItems = contingentBeneItems
@@ -156,28 +200,36 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                 return [...formattedContingentBeneItems, ...primaryBeneItems];
             });
             setDeletedBene((prevState: any) => {
-                const newState = prevState.filter((item: any) => !undoDeletedBenes.includes(item));
+                const newState = prevState.filter(
+                    (item: any) => !undoDeletedBenes.includes(item)
+                );
                 return newState;
             });
         }
     };
 
     const handlePrimaryBeneficiaryClick = (id: string) => {
-        setPrimaryCount(prevState => [...prevState, id]);
+        setPrimaryCount((prevState) => [...prevState, id]);
     };
 
     const handleContingentBeneficiaryClick = (id: string) => {
-        setContingentCount(prevState => [...prevState, id]);
+        setContingentCount((prevState) => [...prevState, id]);
     };
 
     const handlePrimaryBeneficiaryCancelClick = (id: string) => {
-        setPrimaryCount(prevState => prevState?.filter(state => state !== id));
+        setPrimaryCount((prevState) =>
+            prevState?.filter((state) => state !== id)
+        );
 
         setBeneData((prevState: any) => {
-            const position = prevState.map((element: any) => element.index).indexOf(id);
+            const position = prevState
+                .map((element: any) => element.index)
+                .indexOf(id);
             if (position > -1) {
                 prevState.splice(position, 1);
-                const newState = prevState.filter((element: any) => element !== undefined);
+                const newState = prevState.filter(
+                    (element: any) => element !== undefined
+                );
                 return [...newState];
             } else {
                 return [...prevState];
@@ -186,12 +238,18 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
     };
 
     const handleContingentBeneficiaryCancelClick = (id: string) => {
-        setContingentCount(prevState => prevState?.filter(state => state !== id));
+        setContingentCount((prevState) =>
+            prevState?.filter((state) => state !== id)
+        );
         setBeneData((prevState: any) => {
-            const position = prevState.map((element: any) => element.index).indexOf(id);
+            const position = prevState
+                .map((element: any) => element.index)
+                .indexOf(id);
             if (position > -1) {
                 prevState.splice(position, 1);
-                const newState = prevState.filter((element: any) => element !== undefined);
+                const newState = prevState.filter(
+                    (element: any) => element !== undefined
+                );
                 return [...newState];
             } else {
                 return [...prevState];
@@ -209,11 +267,17 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
 
     const toggleSelection = (role: PartyRole, value: string) => {
         if (role === PartyRole.PRIMARYBENEFICIARY) {
-            setFormData((prevState: any) => ({ ...prevState, isPrimaryBeneInfoOnFile: value === 'true' }));
+            setFormData((prevState: any) => ({
+                ...prevState,
+                isPrimaryBeneInfoOnFile: value === 'true',
+            }));
             handlePrimaryBeneInfoOnFile(value === 'true');
         }
         if (role === PartyRole.CONTINGENTBENEFICIARY) {
-            setFormData((prevState: any) => ({ ...prevState, isContingentBeneInfoOnFile: value === 'true' }));
+            setFormData((prevState: any) => ({
+                ...prevState,
+                isContingentBeneInfoOnFile: value === 'true',
+            }));
             handleContingentBeneInfoOnFile(value === 'true');
         }
     };
@@ -222,21 +286,36 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
         <>
             <div>
                 <div className="mb-3 flex">
-                    <Typography variant={TypographyVariant.H3}>{t('primaryBeneficiaries')}</Typography>
+                    <Typography variant={TypographyVariant.H3}>
+                        {t('primaryBeneficiaries')}
+                    </Typography>
                 </div>
                 <div className="border-2 border-gray-100 p-4 font-primary">
-                    <p className="mb-2 text-base">{t('requestAddPrimaryBeneficiaryLabel') as string}</p>
+                    <p className="mb-2 text-base">
+                        {t('requestAddPrimaryBeneficiaryLabel') as string}
+                    </p>
                     <Radio
                         items={options.selectOptions}
-                        onChange={event => toggleSelection(PartyRole.PRIMARYBENEFICIARY, event.target.value)}
-                        value={formData.isPrimaryBeneInfoOnFile ? 'true' : 'false'}
+                        onChange={(event) =>
+                            toggleSelection(
+                                PartyRole.PRIMARYBENEFICIARY,
+                                event.target.value
+                            )
+                        }
+                        value={
+                            formData.isPrimaryBeneInfoOnFile ? 'true' : 'false'
+                        }
                         variant={RadioVariant.Default}
                     />
                 </div>
 
                 {parties?.map((item, index) => {
-                    if (item?.partyRoles?.includes(PartyRole.PRIMARYBENEFICIARY)) {
-                        const beneIndex = item?.partyRoles?.indexOf(PartyRole.PRIMARYBENEFICIARY);
+                    if (
+                        item?.partyRoles?.includes(PartyRole.PRIMARYBENEFICIARY)
+                    ) {
+                        const beneIndex = item?.partyRoles?.indexOf(
+                            PartyRole.PRIMARYBENEFICIARY
+                        );
                         return (
                             <BeneficiaryListingItem
                                 selectedParty={item}
@@ -247,13 +326,15 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                                 key={`listing-item-${index}`}
                                 setBeneData={setBeneData}
                                 policy={policy}
-                                isBeneInfoOnFile={formData.isPrimaryBeneInfoOnFile}
+                                isBeneInfoOnFile={
+                                    formData.isPrimaryBeneInfoOnFile
+                                }
                             />
                         );
                     }
                 })}
 
-                {primaryCount.map(item => {
+                {primaryCount.map((item) => {
                     return (
                         <div
                             key={item}
@@ -270,9 +351,15 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                                     isNonEditable={false}
                                 />
                                 <button
-                                    aria-label={t('beneficiaryListing.cancel') as string}
+                                    aria-label={
+                                        t('beneficiaryListing.cancel') as string
+                                    }
                                     className="default-focus-icons flex justify-start rounded-xl"
-                                    onClick={() => handlePrimaryBeneficiaryCancelClick(item)}
+                                    onClick={() =>
+                                        handlePrimaryBeneficiaryCancelClick(
+                                            item
+                                        )
+                                    }
                                 >
                                     <CancelIcon height={24} width={24} />
                                 </button>
@@ -293,7 +380,9 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                         leaveTo="opacity-0"
                     >
                         <NavElement
-                            onClick={() => handlePrimaryBeneficiaryClick(uuidV4())}
+                            onClick={() =>
+                                handlePrimaryBeneficiaryClick(uuidV4())
+                            }
                             size={NavElementSize.Small}
                             startIcon={<AddIcon height={20} width={20} />}
                             type={NavElementType.Button}
@@ -307,22 +396,41 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
 
             <div className="my-6">
                 <div className="my-3 border-2 border-gray-100 p-4 font-primary">
-                    <p className="mb-2 text-base">{t('requestAddContingentBeneficiaryLabel')}</p>
+                    <p className="mb-2 text-base">
+                        {t('requestAddContingentBeneficiaryLabel')}
+                    </p>
                     <Radio
                         items={options.selectOptions}
-                        onChange={event => toggleSelection(PartyRole.CONTINGENTBENEFICIARY, event.target.value)}
-                        value={formData.isContingentBeneInfoOnFile ? 'true' : 'false'}
+                        onChange={(event) =>
+                            toggleSelection(
+                                PartyRole.CONTINGENTBENEFICIARY,
+                                event.target.value
+                            )
+                        }
+                        value={
+                            formData.isContingentBeneInfoOnFile
+                                ? 'true'
+                                : 'false'
+                        }
                         variant={RadioVariant.Default}
                     />
                 </div>
 
                 <div>
-                    <Typography variant={TypographyVariant.H2}>{t('contingentBeneficiaries')}</Typography>
+                    <Typography variant={TypographyVariant.H2}>
+                        {t('contingentBeneficiaries')}
+                    </Typography>
                 </div>
 
                 {parties?.map((item, index) => {
-                    if (item?.partyRoles?.includes(PartyRole.CONTINGENTBENEFICIARY)) {
-                        const beneIndex = item?.partyRoles?.indexOf(PartyRole.CONTINGENTBENEFICIARY);
+                    if (
+                        item?.partyRoles?.includes(
+                            PartyRole.CONTINGENTBENEFICIARY
+                        )
+                    ) {
+                        const beneIndex = item?.partyRoles?.indexOf(
+                            PartyRole.CONTINGENTBENEFICIARY
+                        );
                         return (
                             <BeneficiaryListingItem
                                 selectedParty={item}
@@ -333,15 +441,20 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                                 key={`listing-item-${index}`}
                                 setBeneData={setBeneData}
                                 policy={policy}
-                                isBeneInfoOnFile={formData.isContingentBeneInfoOnFile}
+                                isBeneInfoOnFile={
+                                    formData.isContingentBeneInfoOnFile
+                                }
                             />
                         );
                     }
                 })}
 
-                {contingentCount.map(item => {
+                {contingentCount.map((item) => {
                     return (
-                        <div key={item} className="my-4 flex w-full  rounded-sm border-2 p-8 ">
+                        <div
+                            key={item}
+                            className="my-4 flex w-full  rounded-sm border-2 p-8 "
+                        >
                             <div className="flex justify-start">
                                 <BeneficiaryDetails
                                     partyRole={PartyRole.CONTINGENTBENEFICIARY}
@@ -354,9 +467,13 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                                 />
                             </div>
                             <button
-                                aria-label={t('beneficiaryListing.cancel') as string}
+                                aria-label={
+                                    t('beneficiaryListing.cancel') as string
+                                }
                                 className="default-focus-icons flex justify-start rounded-xl"
-                                onClick={() => handleContingentBeneficiaryCancelClick(item)}
+                                onClick={() =>
+                                    handleContingentBeneficiaryCancelClick(item)
+                                }
                             >
                                 <CancelIcon height={24} width={24} />
                             </button>
@@ -376,7 +493,9 @@ export default function BeneficiaryListing({ policy, parties, carrierId }: Benef
                         leaveTo="opacity-0"
                     >
                         <NavElement
-                            onClick={() => handleContingentBeneficiaryClick(uuidV4())}
+                            onClick={() =>
+                                handleContingentBeneficiaryClick(uuidV4())
+                            }
                             size={NavElementSize.Small}
                             startIcon={<AddIcon height={20} width={20} />}
                             type={NavElementType.Button}

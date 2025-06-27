@@ -13,7 +13,7 @@ export default {
     title: 'Components/CardDetails',
     component: DetailsCard,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>
@@ -24,7 +24,12 @@ export default {
 const [info, summary] = mockPolicyData();
 const header = (
     <>
-        <CardBarPolicyHolder label="Policy Number" value={'11000781'} status={Status.ACTIVE} variant={BadgeVariant.Positive} />
+        <CardBarPolicyHolder
+            label="Policy Number"
+            value={'11000781'}
+            status={Status.ACTIVE}
+            variant={BadgeVariant.Positive}
+        />
         <div>
             <EverlyLogo height={'32px'} width={'96px'} />
         </div>
@@ -32,5 +37,10 @@ const header = (
 );
 
 export const PolicyCardDetails = () => (
-    <DetailsCard variant={CardInfoVariant.DEFAULT} titles={['Owner Info', 'Policy Summary']} items={[info, summary]} header={header} />
+    <DetailsCard
+        variant={CardInfoVariant.DEFAULT}
+        titles={['Owner Info', 'Policy Summary']}
+        items={[info, summary]}
+        header={header}
+    />
 );

@@ -10,13 +10,17 @@ describe('PageLoader', () => {
 
     it('should not have a text', () => {
         render(<PageLoader />);
-        const loadingText = screen.queryByText('caseManagementDashboard.search.loading.title');
+        const loadingText = screen.queryByText(
+            'caseManagementDashboard.search.loading.title'
+        );
         expect(loadingText).not.toBeInTheDocument();
     });
 
     it('should have a text', () => {
         render(<PageLoader showText={true} />);
-        const loadingText = screen.getByText('caseManagementDashboard.search.loading.title');
+        const loadingText = screen.getByText(
+            'caseManagementDashboard.search.loading.title'
+        );
         expect(loadingText).toBeInTheDocument();
     });
 });

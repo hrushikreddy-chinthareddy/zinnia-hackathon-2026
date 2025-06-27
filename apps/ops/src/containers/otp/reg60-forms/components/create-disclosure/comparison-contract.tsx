@@ -9,15 +9,31 @@ import FieldDateSelect from '@deps/components/fields/field-date-select/field-dat
 import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import SelectSimple from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    NUMERIC_DATE_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 
-import { Benefit, ComparisonContractProps, ComparisonType, ContractComparisonTableConfig } from './create-disclosure.types';
+import {
+    Benefit,
+    ComparisonContractProps,
+    ComparisonType,
+    ContractComparisonTableConfig,
+} from './create-disclosure.types';
 import getMassMutualReg60Config from '../../mass-mutual/mass-mutual-reg60-form-helpers';
-import { FIVE_YEAR, SURRENDER_BENEFITS, TEN_YEAR, amountFormat, numberFormat } from '../../utils/reg60-constants';
+import {
+    FIVE_YEAR,
+    SURRENDER_BENEFITS,
+    TEN_YEAR,
+    amountFormat,
+    numberFormat,
+} from '../../utils/reg60-constants';
 import AppliedCharges from '../applied-charges/applied-charges';
 import BenefitsTable from '../comparison-benefits/benefits-table';
 import { RowConfig } from '../comparison-benefits/benefits-table.types';
@@ -26,10 +42,22 @@ import ProposedAnnuityQuote from '../proposed-annuity-quote/proposed-annuity-quo
 import { AnnuityQuote } from '../proposed-annuity-quote/proposed-annuity-quote.types';
 
 const getComparisonTypeOptions = (t: TFunction) => [
-    { label: t('comparisonTypes.veriableToFixed'), value: ComparisonType.VARIABLE_TO_FIXED },
-    { label: t('comparisonTypes.VeriableToImmediate'), value: ComparisonType.VARIABLE_TO_IMMEDIATE },
-    { label: t('comparisonTypes.fixedToFixed'), value: ComparisonType.FIXED_TO_FIXED },
-    { label: t('comparisonTypes.fixedToImmediate'), value: ComparisonType.FIXED_TO_IMMEDIATE },
+    {
+        label: t('comparisonTypes.veriableToFixed'),
+        value: ComparisonType.VARIABLE_TO_FIXED,
+    },
+    {
+        label: t('comparisonTypes.VeriableToImmediate'),
+        value: ComparisonType.VARIABLE_TO_IMMEDIATE,
+    },
+    {
+        label: t('comparisonTypes.fixedToFixed'),
+        value: ComparisonType.FIXED_TO_FIXED,
+    },
+    {
+        label: t('comparisonTypes.fixedToImmediate'),
+        value: ComparisonType.FIXED_TO_IMMEDIATE,
+    },
 ];
 
 const ComparisonContract = ({
@@ -39,14 +67,20 @@ const ComparisonContract = ({
     formErrors = {},
     onComparisonContractChange,
 }: ComparisonContractProps) => {
-    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, {
+        keyPrefix: 'caseReg60.request',
+    });
     const { annuitizationQuoteConfig } = getMassMutualReg60Config(t);
-    const { disclosureAuthorization, isFormStateReadOnly } = useContext(Reg60FormContext);
+    const { disclosureAuthorization, isFormStateReadOnly } =
+        useContext(Reg60FormContext);
     const { field } = formConfigs;
 
     const handleBenefitTableChange = (tableData: RowConfig[], key: string) => {
         const comparisonClone = { ...comparisonContract };
-        const updatedTable = tableData.map((table, i) => ({ ...table, period: `${i === 0 ? FIVE_YEAR : TEN_YEAR}` }));
+        const updatedTable = tableData.map((table, i) => ({
+            ...table,
+            period: `${i === 0 ? FIVE_YEAR : TEN_YEAR}`,
+        }));
         if (key === SURRENDER_BENEFITS) {
             comparisonClone.carrierBenefits.surrenderBenefit = updatedTable;
         } else {
@@ -56,7 +90,9 @@ const ComparisonContract = ({
     };
 
     const handleIssueDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const formattedDate = dayjs(e.target.value, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
+        const formattedDate = dayjs(e.target.value, NUMERIC_DATE_FORMAT).format(
+            ZAHARA_API_DATE_FORMAT
+        );
         if (dayjs(formattedDate).isValid()) {
             onComparisonContractChange({
                 ...comparisonContract,
@@ -68,7 +104,8 @@ const ComparisonContract = ({
     const handleAnnuitizationValueReceived = () => {
         onComparisonContractChange({
             ...comparisonContract,
-            annuitizationValueReceived: !comparisonContract.annuitizationValueReceived,
+            annuitizationValueReceived:
+                !comparisonContract.annuitizationValueReceived,
             annuitizationQuote: {
                 annuityPaymentAmount: '',
                 firstPaymentDate: '',
@@ -88,7 +125,8 @@ const ComparisonContract = ({
     };
 
     const showAnnuitizationValueReceived = !!(
-        disclosureAuthorization.product === Products.retireEase || disclosureAuthorization.product === Products.retireEaseChoice
+        disclosureAuthorization.product === Products.retireEase ||
+        disclosureAuthorization.product === Products.retireEaseChoice
     );
 
     return (
@@ -106,8 +144,11 @@ const ComparisonContract = ({
                                 disabled={isFormStateReadOnly}
                                 label={field.comparisonType.fieldLabel}
                                 value={comparisonContract.comparisonType}
-                                onChange={val =>
-                                    onComparisonContractChange({ ...comparisonContract, comparisonType: val as ComparisonType })
+                                onChange={(val) =>
+                                    onComparisonContractChange({
+                                        ...comparisonContract,
+                                        comparisonType: val as ComparisonType,
+                                    })
                                 }
                                 options={getComparisonTypeOptions(t)}
                                 size={FieldSize.Small}
@@ -124,7 +165,11 @@ const ComparisonContract = ({
                             label={field.partialRequest.fieldLabel}
                             checked={comparisonContract.partialRequest}
                             onClick={() =>
-                                onComparisonContractChange({ ...comparisonContract, partialRequest: !comparisonContract.partialRequest })
+                                onComparisonContractChange({
+                                    ...comparisonContract,
+                                    partialRequest:
+                                        !comparisonContract.partialRequest,
+                                })
                             }
                         />
                     </div>
@@ -135,11 +180,14 @@ const ComparisonContract = ({
                         <CheckboxText
                             isDisabled={isFormStateReadOnly}
                             label={field.goodFaithEstimateRequired.fieldLabel}
-                            checked={comparisonContract.goodFaithEstimateRequired}
+                            checked={
+                                comparisonContract.goodFaithEstimateRequired
+                            }
                             onClick={() =>
                                 onComparisonContractChange({
                                     ...comparisonContract,
-                                    goodFaithEstimateRequired: !comparisonContract.goodFaithEstimateRequired,
+                                    goodFaithEstimateRequired:
+                                        !comparisonContract.goodFaithEstimateRequired,
                                 })
                             }
                         />
@@ -147,11 +195,17 @@ const ComparisonContract = ({
                             <Popover
                                 triggerClassName="mb-4"
                                 title={t('contractComparison.info') as string}
-                                body={t('contractComparison.goodFaithEstimateInfo')}
+                                body={t(
+                                    'contractComparison.goodFaithEstimateInfo'
+                                )}
                                 placement={PopoverPlacement.TopRight}
                             >
                                 <span className="block p-[5px]">
-                                    <CircleInfoIcon height={'16px'} width={'16px'} className="text-primary" />
+                                    <CircleInfoIcon
+                                        height={'16px'}
+                                        width={'16px'}
+                                        className="text-primary"
+                                    />
                                 </span>
                             </Popover>
                         </div>
@@ -161,9 +215,17 @@ const ComparisonContract = ({
                     {field.companyName && (
                         <div className="col-span-2 mb-4 basis-80">
                             <Field
-                                className={formErrors?.companyName && 'border-2 border-solid border-semantic-error'}
+                                className={
+                                    formErrors?.companyName &&
+                                    'border-2 border-solid border-semantic-error'
+                                }
                                 label={field.companyName.fieldLabel}
-                                onChange={e => onComparisonContractChange({ ...comparisonContract, companyName: e.target.value })}
+                                onChange={(e) =>
+                                    onComparisonContractChange({
+                                        ...comparisonContract,
+                                        companyName: e.target.value,
+                                    })
+                                }
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={comparisonContract.companyName}
@@ -181,8 +243,12 @@ const ComparisonContract = ({
                         <div className="mb-4 max-w-xs ">
                             <Field
                                 label={field.companyPhoneNumber.fieldLabel}
-                                onChange={e =>
-                                    onComparisonContractChange({ ...comparisonContract, companyPhoneNumber: e.target.value as string })
+                                onChange={(e) =>
+                                    onComparisonContractChange({
+                                        ...comparisonContract,
+                                        companyPhoneNumber: e.target
+                                            .value as string,
+                                    })
                                 }
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
@@ -202,9 +268,17 @@ const ComparisonContract = ({
                 {field.contractNumber && (
                     <div className="mb-4 max-w-xs">
                         <Field
-                            className={formErrors?.contractNumber && 'border-2 border-solid border-semantic-error'}
+                            className={
+                                formErrors?.contractNumber &&
+                                'border-2 border-solid border-semantic-error'
+                            }
                             label={field.contractNumber.fieldLabel}
-                            onChange={e => onComparisonContractChange({ ...comparisonContract, contractNumber: e.target.value })}
+                            onChange={(e) =>
+                                onComparisonContractChange({
+                                    ...comparisonContract,
+                                    contractNumber: e.target.value,
+                                })
+                            }
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={comparisonContract.contractNumber}
@@ -221,14 +295,20 @@ const ComparisonContract = ({
                 {field.issueDate && (
                     <div className="mb-4 max-w-xs">
                         <FieldDateSelect
-                            className={formErrors?.issueDate && 'border-2 border-solid border-semantic-error'}
+                            className={
+                                formErrors?.issueDate &&
+                                'border-2 border-solid border-semantic-error'
+                            }
                             label={field.issueDate.fieldLabel}
                             onChange={handleIssueDateChange}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={
                                 comparisonContract.issueDate
-                                    ? dayjs(comparisonContract.issueDate, 'YYYY-MM-DD').format(NUMERIC_DATE_FORMAT)
+                                    ? dayjs(
+                                          comparisonContract.issueDate,
+                                          'YYYY-MM-DD'
+                                      ).format(NUMERIC_DATE_FORMAT)
                                     : ''
                             }
                             message={formErrors?.issueDate}
@@ -245,13 +325,25 @@ const ComparisonContract = ({
                 {field.accountValue && (
                     <div className="mb-4 max-w-xs">
                         <Field
-                            className={formErrors?.accountValue && 'border-2 border-solid border-semantic-error'}
+                            className={
+                                formErrors?.accountValue &&
+                                'border-2 border-solid border-semantic-error'
+                            }
                             label={field.accountValue.fieldLabel}
                             leading={<div>$</div>}
-                            onChange={e => onComparisonContractChange({ ...comparisonContract, accountValue: e.target.value })}
+                            onChange={(e) =>
+                                onComparisonContractChange({
+                                    ...comparisonContract,
+                                    accountValue: e.target.value,
+                                })
+                            }
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
-                            value={isNaN(comparisonContract.accountValue as number) ? '' : (comparisonContract.accountValue as string)}
+                            value={
+                                isNaN(comparisonContract.accountValue as number)
+                                    ? ''
+                                    : (comparisonContract.accountValue as string)
+                            }
                             message={formErrors?.accountValue}
                             variant={selectVarientByConfig({
                                 value: String(comparisonContract.accountValue),
@@ -266,16 +358,30 @@ const ComparisonContract = ({
                 {field.surrenderChargeApplies && (
                     <div className="mb-4 max-w-xs">
                         <AppliedCharges
-                            className={formErrors?.surrenderCharge && 'border-2 border-solid border-semantic-error'}
-                            checkboxLabel={field.surrenderChargeApplies.fieldLabel || ''}
-                            textInputLabel={t('contractComparison.surrenderChargeAmount')}
-                            amountValue={comparisonContract.surrenderCharge?.amount}
+                            className={
+                                formErrors?.surrenderCharge &&
+                                'border-2 border-solid border-semantic-error'
+                            }
+                            checkboxLabel={
+                                field.surrenderChargeApplies.fieldLabel || ''
+                            }
+                            textInputLabel={t(
+                                'contractComparison.surrenderChargeAmount'
+                            )}
+                            amountValue={
+                                comparisonContract.surrenderCharge?.amount
+                            }
                             formError={formErrors?.surrenderCharge}
-                            onDataChange={val => {
-                                onComparisonContractChange({ ...comparisonContract, surrenderCharge: val });
+                            onDataChange={(val) => {
+                                onComparisonContractChange({
+                                    ...comparisonContract,
+                                    surrenderCharge: val,
+                                });
                             }}
                             required
-                            isChecked={comparisonContract.surrenderCharge?.applicable}
+                            isChecked={
+                                comparisonContract.surrenderCharge?.applicable
+                            }
                             isFormStateReadOnly={isFormStateReadOnly}
                         />
                     </div>
@@ -284,14 +390,20 @@ const ComparisonContract = ({
                 {field.mvaApplies && (
                     <div className="mb-4 max-w-xs">
                         <AppliedCharges
-                            className={formErrors?.mvaAmount && 'border-2 border-solid border-semantic-error'}
+                            className={
+                                formErrors?.mvaAmount &&
+                                'border-2 border-solid border-semantic-error'
+                            }
                             checkboxLabel={field.mvaApplies.fieldLabel || ''}
                             textInputLabel={t('contractComparison.mvaAmount')}
                             amountValue={comparisonContract?.mvaAmount?.amount}
                             formError={formErrors?.mvaAmount}
                             required
-                            onDataChange={val => {
-                                onComparisonContractChange({ ...comparisonContract, mvaAmount: val });
+                            onDataChange={(val) => {
+                                onComparisonContractChange({
+                                    ...comparisonContract,
+                                    mvaAmount: val,
+                                });
                             }}
                             isChecked={comparisonContract.mvaAmount?.applicable}
                             isFormStateReadOnly={isFormStateReadOnly}
@@ -302,16 +414,32 @@ const ComparisonContract = ({
                 {field.surrenderValue && (
                     <div className="max-w-xs">
                         <Field
-                            className={formErrors?.surrenderValue && 'border-2 border-solid border-semantic-error'}
+                            className={
+                                formErrors?.surrenderValue &&
+                                'border-2 border-solid border-semantic-error'
+                            }
                             leading={<div>$</div>}
                             label={field.surrenderValue.fieldLabel}
-                            onChange={e => onComparisonContractChange({ ...comparisonContract, surrenderValue: e.target.value })}
+                            onChange={(e) =>
+                                onComparisonContractChange({
+                                    ...comparisonContract,
+                                    surrenderValue: e.target.value,
+                                })
+                            }
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
-                            value={isNaN(comparisonContract.surrenderValue as number) ? '' : (comparisonContract.surrenderValue as string)}
+                            value={
+                                isNaN(
+                                    comparisonContract.surrenderValue as number
+                                )
+                                    ? ''
+                                    : (comparisonContract.surrenderValue as string)
+                            }
                             message={formErrors?.surrenderValue}
                             variant={selectVarientByConfig({
-                                value: String(comparisonContract.surrenderValue),
+                                value: String(
+                                    comparisonContract.surrenderValue
+                                ),
                                 isFormStateReadOnly,
                                 error: formErrors?.surrenderValue,
                             })}
@@ -320,16 +448,21 @@ const ComparisonContract = ({
                         />
                     </div>
                 )}
-                {field.annuitizationValueReceived && showAnnuitizationValueReceived && (
-                    <div className="my-5 max-w-xs">
-                        <CheckboxText
-                            isDisabled={isFormStateReadOnly}
-                            checked={comparisonContract.annuitizationValueReceived}
-                            label={field.annuitizationValueReceived.fieldLabel}
-                            onClick={handleAnnuitizationValueReceived}
-                        />
-                    </div>
-                )}
+                {field.annuitizationValueReceived &&
+                    showAnnuitizationValueReceived && (
+                        <div className="my-5 max-w-xs">
+                            <CheckboxText
+                                isDisabled={isFormStateReadOnly}
+                                checked={
+                                    comparisonContract.annuitizationValueReceived
+                                }
+                                label={
+                                    field.annuitizationValueReceived.fieldLabel
+                                }
+                                onClick={handleAnnuitizationValueReceived}
+                            />
+                        </div>
+                    )}
                 {comparisonContract.annuitizationValueReceived && (
                     <ProposedAnnuityQuote
                         annuityQuote={comparisonContract?.annuitizationQuote}
@@ -340,41 +473,65 @@ const ComparisonContract = ({
                 )}
             </div>
             {formConfigs?.table &&
-                formConfigs?.table?.map((item: ContractComparisonTableConfig) => {
-                    const columnSpecs =
-                        comparisonContract.comparisonType === ComparisonType.FIXED_TO_FIXED ||
-                        comparisonContract.comparisonType === ComparisonType.FIXED_TO_IMMEDIATE
-                            ? item?.colConfigFixed
-                            : item.colConfigVariable;
-                    let columnSpecsClone = columnSpecs;
-                    if (isFormStateReadOnly) columnSpecsClone = columnSpecs.map(item => ({ ...item, editable: !isFormStateReadOnly }));
+                formConfigs?.table?.map(
+                    (item: ContractComparisonTableConfig) => {
+                        const columnSpecs =
+                            comparisonContract.comparisonType ===
+                                ComparisonType.FIXED_TO_FIXED ||
+                            comparisonContract.comparisonType ===
+                                ComparisonType.FIXED_TO_IMMEDIATE
+                                ? item?.colConfigFixed
+                                : item.colConfigVariable;
+                        let columnSpecsClone = columnSpecs;
+                        if (isFormStateReadOnly)
+                            columnSpecsClone = columnSpecs.map((item) => ({
+                                ...item,
+                                editable: !isFormStateReadOnly,
+                            }));
 
-                    const benefitType = item.key;
-                    const initialData = comparisonContract?.carrierBenefits[benefitType]?.map((value: Benefit, i: number) => ({
-                        ...value,
-                        period: item.rowConfig[i].period,
-                        editable: !isFormStateReadOnly,
-                    }));
-                    return (
-                        <div key={item.title} data-testid="benefits-table">
-                            <div key={item.title} className="my-3 mt-8">
-                                <Typography className="mb-4" variant={TypographyVariant.H3}>
-                                    {item.title}
-                                </Typography>
+                        const benefitType = item.key;
+                        const initialData = comparisonContract?.carrierBenefits[
+                            benefitType
+                        ]?.map((value: Benefit, i: number) => ({
+                            ...value,
+                            period: item.rowConfig[i].period,
+                            editable: !isFormStateReadOnly,
+                        }));
+                        return (
+                            <div key={item.title} data-testid="benefits-table">
+                                <div key={item.title} className="my-3 mt-8">
+                                    <Typography
+                                        className="mb-4"
+                                        variant={TypographyVariant.H3}
+                                    >
+                                        {item.title}
+                                    </Typography>
+                                </div>
+                                <BenefitsTable
+                                    rowConfig={item?.rowConfig}
+                                    colConfig={columnSpecsClone}
+                                    initialData={initialData}
+                                    onBenefitTableChange={(
+                                        tableData: RowConfig[]
+                                    ) =>
+                                        handleBenefitTableChange(
+                                            tableData,
+                                            item.key
+                                        )
+                                    }
+                                    tableWrapperClassName={clsx({
+                                        'h-[130px] w-[602px]':
+                                            comparisonContract.comparisonType ===
+                                            ComparisonType.FIXED_TO_FIXED,
+                                        'h-[135px] w-[800px]':
+                                            comparisonContract.comparisonType !==
+                                            ComparisonType.FIXED_TO_FIXED,
+                                    })}
+                                />
                             </div>
-                            <BenefitsTable
-                                rowConfig={item?.rowConfig}
-                                colConfig={columnSpecsClone}
-                                initialData={initialData}
-                                onBenefitTableChange={(tableData: RowConfig[]) => handleBenefitTableChange(tableData, item.key)}
-                                tableWrapperClassName={clsx({
-                                    'h-[130px] w-[602px]': comparisonContract.comparisonType === ComparisonType.FIXED_TO_FIXED,
-                                    'h-[135px] w-[800px]': comparisonContract.comparisonType !== ComparisonType.FIXED_TO_FIXED,
-                                })}
-                            />
-                        </div>
-                    );
-                })}
+                        );
+                    }
+                )}
         </>
     );
 };

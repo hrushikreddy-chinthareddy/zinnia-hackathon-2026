@@ -9,7 +9,7 @@ export default {
     title: 'Containers/CardBarPolicyHolder',
     container: CardBarPolicyHolder,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>
@@ -25,6 +25,11 @@ export const CardBarPolicyHolderDefault = () => (
 
 export const CardBarPolicyHolderWithState = () => (
     <>
-        <CardBarPolicyHolder label="Policy Number" value="11000781" status={Status.ACTIVE} variant={BadgeVariant.Positive} />
+        <CardBarPolicyHolder
+            label="Policy Number"
+            value="11000781"
+            status={Status.ACTIVE}
+            variant={BadgeVariant.Positive}
+        />
     </>
 );

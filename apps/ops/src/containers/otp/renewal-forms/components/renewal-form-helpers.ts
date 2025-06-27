@@ -5,8 +5,10 @@ export const OWNER_TYPES = ['Primary', 'Joint'];
 export const DEFAULT_TRANS_OPTION = '2';
 
 export const getOwnerInfo = (owners: LifeCadParty[]) => {
-    return owners.map(owner => {
-        const ownerType = owner?.SrcRoleOptionIdDesc?.includes('Joint') ? 'Joint' : owner.SrcRoleOptionIdDesc;
+    return owners.map((owner) => {
+        const ownerType = owner?.SrcRoleOptionIdDesc?.includes('Joint')
+            ? 'Joint'
+            : owner.SrcRoleOptionIdDesc;
         return {
             firstName: owner.FirstName || null,
             middleName: owner.MiddleName || null,

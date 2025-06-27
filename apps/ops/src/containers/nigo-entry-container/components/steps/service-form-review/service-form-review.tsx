@@ -35,10 +35,17 @@ export const ServiceFormReview = ({
     nigoExpection,
     nigoSubExceptions,
 }: SetFormReviewProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.serviceFormReview' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'nigoEntry.serviceFormReview',
+    });
     const NIGO_EXCEPTION: SelOptionType = nigoExpection?.value;
     const { sectionOption, setSectionOption, setExceptions } = useNigoEntry();
-    const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
+    const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(
+        policyNumber,
+        clientCode,
+        docType,
+        documentNumber
+    );
     const { displayName } = workingDocument || {};
 
     const sectionOptions =
@@ -78,16 +85,18 @@ export const ServiceFormReview = ({
     const onOptionSelection = (value: SelOptionType) => {
         setSectionOption(value);
         if (value === NIGO_EXCEPTION) {
-            setExceptions(prevState => {
+            setExceptions((prevState) => {
                 let newState = [];
                 newState = [...prevState, value];
                 return newState;
             });
         } else {
-            setExceptions(prevState => {
+            setExceptions((prevState) => {
                 let newState = [];
                 prevState.splice(prevState.indexOf(value), 1);
-                newState = prevState.filter((element: any) => element !== undefined);
+                newState = prevState.filter(
+                    (element: any) => element !== undefined
+                );
                 return [...newState];
             });
         }
@@ -99,17 +108,29 @@ export const ServiceFormReview = ({
                 {!loading && workingDocument && (
                     <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
                         <div>
-                            <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
+                            <Icon
+                                width={20}
+                                height={20}
+                                type={IconType.DOCUMENT_TEXT}
+                            />{' '}
                         </div>
                         <div>
                             <div className="text-sm font-bold">
                                 <PiiWrapper>{displayName}</PiiWrapper>
                             </div>
                             <div className="flex items-center text-sm font-normal text-gray-300">
-                                <PiiWrapper>{t('documentId') + ': ' + documentNumber}</PiiWrapper>
+                                <PiiWrapper>
+                                    {t('documentId') + ': ' + documentNumber}
+                                </PiiWrapper>
                             </div>
                         </div>
-                        <div className="flex items-center">{createAction(workingDocument, clientCode?.toUpperCase(), t)}</div>
+                        <div className="flex items-center">
+                            {createAction(
+                                workingDocument,
+                                clientCode?.toUpperCase(),
+                                t
+                            )}
+                        </div>
                     </div>
                 )}
                 {!loading && !workingDocument && (
@@ -122,10 +143,14 @@ export const ServiceFormReview = ({
                 <Radio
                     items={sectionOptions}
                     label={''}
-                    onChange={event => onOptionSelection(event.target.value as SelOptionType)}
+                    onChange={(event) =>
+                        onOptionSelection(event.target.value as SelOptionType)
+                    }
                     value={sectionOption || SelOptionType.DATA_ENTRY}
                 />
-                {sectionOption === SelOptionType.DOC_INDEXING && <DocumentIndexingInfo />}
+                {sectionOption === SelOptionType.DOC_INDEXING && (
+                    <DocumentIndexingInfo />
+                )}
                 {sectionOption === NIGO_EXCEPTION && (
                     <NigoOptionDetails
                         selNigoExpetion={nigoExpection.value}

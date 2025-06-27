@@ -27,20 +27,38 @@ const calculatePercentage = (compareValue: number, total: number): number => {
     return ONE_HUNDRED;
 };
 
-const ProgressBar = ({ compareValue, total, label, labelPopover }: ProgressBarProps) => {
+const ProgressBar = ({
+    compareValue,
+    total,
+    label,
+    labelPopover,
+}: ProgressBarProps) => {
     const percentage = calculatePercentage(compareValue, total);
-    const classes = clsx('h-full rounded-l rounded-r', compareValue > total ? 'bg-semantic-error' : 'bg-semantic-success');
+    const classes = clsx(
+        'h-full rounded-l rounded-r',
+        compareValue > total ? 'bg-semantic-error' : 'bg-semantic-success'
+    );
     const formattedCompareValue = numberFormatify(compareValue);
     const formattedTotal = numberFormatify(total);
 
     return (
         <div>
-            <div className="h-2 w-full rounded bg-gray-200" data-testid={ProgressBarTest.PROGRESSBAR}>
-                <div className={classes} style={{ width: `${percentage}%` }}></div>
+            <div
+                className="h-2 w-full rounded bg-gray-200"
+                data-testid={ProgressBarTest.PROGRESSBAR}
+            >
+                <div
+                    className={classes}
+                    style={{ width: `${percentage}%` }}
+                ></div>
             </div>
 
             <div className="mt-4 flex justify-between">
-                <Content variant={ContentVariant.Value} details={formattedCompareValue} data-testid={ProgressBarTest.COMPAREVALUE} />
+                <Content
+                    variant={ContentVariant.Value}
+                    details={formattedCompareValue}
+                    data-testid={ProgressBarTest.COMPAREVALUE}
+                />
                 <div className="flex justify-end">
                     <Label
                         variant={LabelVariant.LabelMd}
@@ -50,11 +68,27 @@ const ProgressBar = ({ compareValue, total, label, labelPopover }: ProgressBarPr
                     />
                 </div>
             </div>
-            <div className="flex items-center justify-end" data-testid={ProgressBarTest.LABEL}>
-                <Content variant={ContentVariant.Caption} details={label} popoverBody={labelPopover} contentClassName="flex mr-1" />
+            <div
+                className="flex items-center justify-end"
+                data-testid={ProgressBarTest.LABEL}
+            >
+                <Content
+                    variant={ContentVariant.Caption}
+                    details={label}
+                    popoverBody={labelPopover}
+                    contentClassName="flex mr-1"
+                />
                 {label && labelPopover && (
-                    <Popover placement={PopoverPlacement.BottomLeft} body={labelPopover} title={label}>
-                        <CircleInfoIcon height={'13px'} width={'13px'} className="text-primary" />
+                    <Popover
+                        placement={PopoverPlacement.BottomLeft}
+                        body={labelPopover}
+                        title={label}
+                    >
+                        <CircleInfoIcon
+                            height={'13px'}
+                            width={'13px'}
+                            className="text-primary"
+                        />
                     </Popover>
                 )}
             </div>

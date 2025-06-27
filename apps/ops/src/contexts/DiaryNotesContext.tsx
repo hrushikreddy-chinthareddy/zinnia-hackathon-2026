@@ -27,16 +27,22 @@ export const useDiaryNotesContext = () => {
     return useContext(DiaryNotesContext);
 };
 
-export const DiaryNotesContext = createContext<DiaryNotesContextProps>({} as DiaryNotesContextProps);
+export const DiaryNotesContext = createContext<DiaryNotesContextProps>(
+    {} as DiaryNotesContextProps
+);
 
-export const DiaryNotesProvider = ({ children, caseDetails }: DiaryNotesProviderProps) => {
+export const DiaryNotesProvider = ({
+    children,
+    caseDetails,
+}: DiaryNotesProviderProps) => {
     const [areDiaryNotesViewed, setAreDiaryNotesViewed] = useState(true);
-    const { diaryNotes, setDiaryNotes, isLoading, setIsLoading, totalLogs } = useDiaryNotes(
-        caseDetails?.policyNum || caseDetails?.policyNumber || '',
-        caseDetails?.clientId || caseDetails?.carrierId || '',
-        0,
-        10
-    );
+    const { diaryNotes, setDiaryNotes, isLoading, setIsLoading, totalLogs } =
+        useDiaryNotes(
+            caseDetails?.policyNum || caseDetails?.policyNumber || '',
+            caseDetails?.clientId || caseDetails?.carrierId || '',
+            0,
+            10
+        );
 
     useEffect(() => {
         if (Array.isArray(diaryNotes) && diaryNotes.length >= 1) {
@@ -46,7 +52,15 @@ export const DiaryNotesProvider = ({ children, caseDetails }: DiaryNotesProvider
 
     return (
         <DiaryNotesContext.Provider
-            value={{ diaryNotes, setDiaryNotes, isLoading, setIsLoading, totalLogs, areDiaryNotesViewed, setAreDiaryNotesViewed }}
+            value={{
+                diaryNotes,
+                setDiaryNotes,
+                isLoading,
+                setIsLoading,
+                totalLogs,
+                areDiaryNotesViewed,
+                setAreDiaryNotesViewed,
+            }}
         >
             {children}
         </DiaryNotesContext.Provider>

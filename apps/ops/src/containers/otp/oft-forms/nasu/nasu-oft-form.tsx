@@ -17,7 +17,9 @@ import { Carrier } from '@deps/models/case/withdrawal/case';
 import getNasuOftConfig from './nasu-oft-form.helpers';
 
 export default function NasuOftWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -53,9 +55,13 @@ export default function NasuOftWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.NASU}_OFT_DIGITAL_FORM`,
+            formExtName: `${
+                initialForm?.carrier || Carrier.NASU
+            }_OFT_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.NASU}_OFT_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.NASU
+                }_OFT_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -69,21 +75,35 @@ export default function NasuOftWithdrawalForm() {
         }
     }, [formParty, ownerStateOfResidence]);
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
+    const hasTpaAuthorization =
+        formTpaAuthorization &&
+        !Object.values(formTpaAuthorization).every((val) => val === null);
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
-                title={t('amountDetails.surrenderingInstructions.title') as string}
+                title={
+                    t('amountDetails.surrenderingInstructions.title') as string
+                }
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -92,13 +112,17 @@ export default function NasuOftWithdrawalForm() {
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                title={t('distributionMethod.cedingCompanyDistribution') as string}
+                title={
+                    t('distributionMethod.cedingCompanyDistribution') as string
+                }
                 defaultValue={defaultValues.disbursementOption}
             />
 
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

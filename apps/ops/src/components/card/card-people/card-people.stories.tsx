@@ -21,7 +21,7 @@ export default {
         },
     },
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -68,7 +68,12 @@ export const WithoutAllocation = (args: any) => {
 export const WithAllocation = (args: any) => {
     return (
         <div className="flex max-w-[500px] flex-col">
-            <CardPeople name={name} tags={tags} allocation={allocation} {...args} />
+            <CardPeople
+                name={name}
+                tags={tags}
+                allocation={allocation}
+                {...args}
+            />
         </div>
     );
 };
@@ -77,7 +82,12 @@ export const WithLongName = (args: any) => {
     const longName = 'This is a very long name that should be truncated';
     return (
         <div className="flex max-w-[500px] flex-col">
-            <CardPeople name={longName} tags={tags} allocation={allocation} {...args} />
+            <CardPeople
+                name={longName}
+                tags={tags}
+                allocation={allocation}
+                {...args}
+            />
         </div>
     );
 };
@@ -85,7 +95,12 @@ export const WithLongName = (args: any) => {
 export const WithMultipleTags = (args: any) => {
     return (
         <div className="flex max-w-[500px] flex-col">
-            <CardPeople name={name} tags={multipleTags} allocation={allocation} {...args} />
+            <CardPeople
+                name={name}
+                tags={multipleTags}
+                allocation={allocation}
+                {...args}
+            />
         </div>
     );
 };
@@ -94,7 +109,12 @@ export const WithLongNameAndMultipleTags = (args: any) => {
     const longName = 'This is a very long name that should be truncated';
     return (
         <div className="flex max-w-[500px] flex-col">
-            <CardPeople name={longName} tags={multipleTags} allocation={allocation} {...args} />
+            <CardPeople
+                name={longName}
+                tags={multipleTags}
+                allocation={allocation}
+                {...args}
+            />
         </div>
     );
 };
@@ -102,7 +122,13 @@ export const WithLongNameAndMultipleTags = (args: any) => {
 export const SelectedTags = (args: any) => {
     return (
         <div className="flex max-w-[500px] flex-col">
-            <CardPeople name={name} tags={multipleTags} selectedTags={['owner', 'payor']} allocation={allocation} {...args} />
+            <CardPeople
+                name={name}
+                tags={multipleTags}
+                selectedTags={['owner', 'payor']}
+                allocation={allocation}
+                {...args}
+            />
         </div>
     );
 };

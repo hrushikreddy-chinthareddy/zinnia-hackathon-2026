@@ -17,11 +17,16 @@ const AllocationColorBar: React.FC<AllocationColorBarProps> = ({ colors }) => {
     const colorLength = colors.length;
 
     return (
-        <div className="flex h-2 w-full rounded-md" data-testid={AllocationColorBarTest.AllocationColorBar}>
+        <div
+            className="flex h-2 w-full rounded-md"
+            data-testid={AllocationColorBarTest.AllocationColorBar}
+        >
             {colors.map((color, index) => {
                 const firstElementClasses = index === 0 ? 'rounded-l-lg' : '';
-                const lastElementClasses = index === colors.length - 1 ? 'rounded-r-lg' : '';
-                const elementsBeforeLastClasses = index < colorLength - 1 ? 'mr-0.5' : '';
+                const lastElementClasses =
+                    index === colors.length - 1 ? 'rounded-r-lg' : '';
+                const elementsBeforeLastClasses =
+                    index < colorLength - 1 ? 'mr-0.5' : '';
 
                 return (
                     <div

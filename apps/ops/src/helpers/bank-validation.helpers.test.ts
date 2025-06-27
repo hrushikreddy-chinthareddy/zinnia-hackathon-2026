@@ -1,4 +1,7 @@
-import { isAccountNumberValid, isRoutingNumberValid } from './bank-validation.helpers';
+import {
+    isAccountNumberValid,
+    isRoutingNumberValid,
+} from './bank-validation.helpers';
 
 describe('Bank Validation Helper', () => {
     describe('isAccountNumberValid', () => {

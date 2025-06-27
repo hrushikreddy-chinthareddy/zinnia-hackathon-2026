@@ -8,11 +8,19 @@ import { ReactComponent as ShieldExclamationIcon } from '@deps/styles/elements/i
 import { DataDefinition, KeyObjectDef } from '@deps/types/data';
 import { SearchParams } from '@deps/types/search';
 
-export const filterOnSearchHandler = <T extends object>(data: DataDefinition<T>[], params?: SearchParams) => {
+export const filterOnSearchHandler = <T extends object>(
+    data: DataDefinition<T>[],
+    params?: SearchParams
+) => {
     if (!data || !data.length) return data;
     if (!params) return data;
 
-    const { searchValue = '', operation = 'partial', sort = '', order = 'desc' } = params;
+    const {
+        searchValue = '',
+        operation = 'partial',
+        sort = '',
+        order = 'desc',
+    } = params;
 
     let filteredResults = data;
 
@@ -20,10 +28,16 @@ export const filterOnSearchHandler = <T extends object>(data: DataDefinition<T>[
         filteredResults = data.filter(({ label }) => {
             switch (operation) {
                 case 'partial':
-                    return label?.toString().toLocaleLowerCase().includes(searchValue.toLocaleLowerCase());
+                    return label
+                        ?.toString()
+                        .toLocaleLowerCase()
+                        .includes(searchValue.toLocaleLowerCase());
                 default:
                 case 'equals':
-                    return label?.toString().toLocaleLowerCase() === searchValue.toLocaleLowerCase();
+                    return (
+                        label?.toString().toLocaleLowerCase() ===
+                        searchValue.toLocaleLowerCase()
+                    );
             }
         });
     }
@@ -40,7 +54,13 @@ export const filterOnSearchHandler = <T extends object>(data: DataDefinition<T>[
 };
 
 export const groupValues = (list: KeyObjectDef[], key: string) =>
-    list.reduce((hash, obj) => ({ ...hash, [obj[key]]: (hash[obj[key]] || []).concat(obj) }), {});
+    list.reduce(
+        (hash, obj) => ({
+            ...hash,
+            [obj[key]]: (hash[obj[key]] || []).concat(obj),
+        }),
+        {}
+    );
 
 export const mapGroupToIcon = (group: string) => {
     switch (group) {

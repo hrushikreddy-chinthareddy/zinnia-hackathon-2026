@@ -13,10 +13,17 @@ import { PieChart } from '../../charts/pie-charts/pie-chart';
 import { createBaseQuery } from '../../utils';
 
 export const NIGOTransactions: FC = () => {
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
 
     const filter = {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted, Statuses.Inprogress],
+        caseStatus: [
+            Statuses.InProgress,
+            Statuses.Exception,
+            Statuses.NotStarted,
+            Statuses.Inprogress,
+        ],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         createdDateStart: oneYearAgoISO,
@@ -29,17 +36,23 @@ export const NIGOTransactions: FC = () => {
     } = useQuery({
         queryKey: ['totalOpenCaseCount', filter],
         queryFn: async () => {
-            const response = await createBaseQuery(filter, [CaseCountGroupByEnum.CASE_STATUS]);
+            const response = await createBaseQuery(filter, [
+                CaseCountGroupByEnum.CASE_STATUS,
+            ]);
             return {
-                nigoCount: response.data.filter(item => item.name === Statuses.Exception)[0].count,
+                nigoCount: response.data.filter(
+                    (item) => item.name === Statuses.Exception
+                )[0].count,
                 totalOpenCaseCount: response.totalElements,
             };
         },
-        placeholderData: previousData => previousData,
+        placeholderData: (previousData) => previousData,
         enabled: Object.keys(filter).length > 0,
     });
 
-    const percentNigoOfTotal = ((caseCount?.nigoCount || 1) / (caseCount?.totalOpenCaseCount || 1)) * 100;
+    const percentNigoOfTotal =
+        ((caseCount?.nigoCount || 1) / (caseCount?.totalOpenCaseCount || 1)) *
+        100;
     const pieSeries = [
         {
             name: 'open cases',
@@ -64,13 +77,27 @@ export const NIGOTransactions: FC = () => {
                 <div className={styles.titleContainer}>
                     <h2 className="typography-titles-subtitle">Total Cases</h2>
                     <div className={styles.countContainer}>
-                        <p className={styles.title}>{caseCount?.nigoCount?.toLocaleString()}</p>
-                        <p className={clsx('typography-titles-subtitle', styles.totalPercent)}>
-                            {Math.round(percentNigoOfTotal)}% of open cases are not in good order (NIGO)
+                        <p className={styles.title}>
+                            {caseCount?.nigoCount?.toLocaleString()}
+                        </p>
+                        <p
+                            className={clsx(
+                                'typography-titles-subtitle',
+                                styles.totalPercent
+                            )}
+                        >
+                            {Math.round(percentNigoOfTotal)}% of open cases are
+                            not in good order (NIGO)
                         </p>
                     </div>
                 </div>
-                {totalCaseCountLoading ? null : <PieChart series={pieSeries} colors={['#00628B', '#ABDCFB']} showPercentage={true} />}
+                {totalCaseCountLoading ? null : (
+                    <PieChart
+                        series={pieSeries}
+                        colors={['#00628B', '#ABDCFB']}
+                        showPercentage={true}
+                    />
+                )}
             </div>
         </BlurOverlayLoader>
     );

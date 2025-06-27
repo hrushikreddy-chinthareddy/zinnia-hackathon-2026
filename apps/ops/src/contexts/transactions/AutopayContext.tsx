@@ -1,12 +1,28 @@
-import { ArrangementType, FilingStatus, Frequency, PaymentForm, Reason } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    FilingStatus,
+    Frequency,
+    PaymentForm,
+    Reason,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
+import {
+    Dispatch,
+    PropsWithChildren,
+    SetStateAction,
+    createContext,
+    useContext,
+    useState,
+} from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
 import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 import { PayorType } from '@deps/components/workflows/payor-step/payor-step';
-import { AmountType, ReverseInitiatorType } from '@deps/containers/financial-transactions/autopay/amount/amount';
+import {
+    AmountType,
+    ReverseInitiatorType,
+} from '@deps/containers/financial-transactions/autopay/amount/amount';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 // ACH is the only supported payment type for MVP
@@ -20,7 +36,13 @@ type AutopayDynamicProps = {
     translationKeyPrefix: string;
 };
 
-export interface Autopay extends AmountType, PayorType, PayeesType, PaymentMethodType, ReverseInitiatorType, AutopayDynamicProps {
+export interface Autopay
+    extends AmountType,
+        PayorType,
+        PayeesType,
+        PaymentMethodType,
+        ReverseInitiatorType,
+        AutopayDynamicProps {
     caseId?: string;
 }
 

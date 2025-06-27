@@ -3,7 +3,10 @@ import React, { ReactElement } from 'react';
 import PageNumbers from '@deps/components/pagination/page-numbers/page-numbers';
 import Truncate from '@deps/components/pagination/truncate/truncate';
 
-const calculateSmLimits = (currentPage: number, totalPages: number): { smStart: number; smEnd: number } => {
+const calculateSmLimits = (
+    currentPage: number,
+    totalPages: number
+): { smStart: number; smEnd: number } => {
     let smStart = Math.max(currentPage - 1, 1);
     let smEnd = Math.min(currentPage + 1, totalPages);
 
@@ -26,7 +29,10 @@ const calculateSmLimits = (currentPage: number, totalPages: number): { smStart: 
     };
 };
 
-const calculateMdLimits = (currentPage: number, totalPages: number): { mdStart: number; mdEnd: number } => {
+const calculateMdLimits = (
+    currentPage: number,
+    totalPages: number
+): { mdStart: number; mdEnd: number } => {
     let mdStart = Math.max(currentPage - 3, 1);
     let mdEnd = Math.min(currentPage + 3, totalPages);
 

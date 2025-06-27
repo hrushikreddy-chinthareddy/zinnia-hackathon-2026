@@ -3,9 +3,19 @@ import { useRouter } from 'next/router';
 import { TFunction } from 'next-i18next';
 import { FormEvent, useContext, useEffect, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import Button, {
+    ButtonSize,
+    ButtonType,
+    ButtonVariant,
+} from '@deps/components/button/button';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { DiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
@@ -31,18 +41,34 @@ export type FormControlsProps = {
     setTaskApiError: (error: string) => void;
 };
 
-export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, document }: FormControlsProps) {
+export function FormControls({
+    t,
+    isLoading,
+    setIsLoading,
+    setTaskApiError,
+    document,
+}: FormControlsProps) {
     const [timer] = useState(performance.now());
     const router = useRouter();
     const { action } = router.query;
     const formState = useContext(FormDataContext);
     const { areDiaryNotesViewed } = useContext(DiaryNotesContext);
 
-    const shouldShowNewExperience = formState.featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-    const isFormStateReadOnly = shouldShowNewExperience ? action === 'readonly' || formState.isFormStateReadOnly : false;
+    const shouldShowNewExperience =
+        formState.featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+    const isFormStateReadOnly = shouldShowNewExperience
+        ? action === 'readonly' || formState.isFormStateReadOnly
+        : false;
 
-    const taskStatusList: string[] = [CaseStatus.Draft, CaseStatus.Pending, TaskStatus.New, TaskStatus.InProgress];
-    const isCancelActionDisabled = !taskStatusList.includes(formState.currentFormState);
+    const taskStatusList: string[] = [
+        CaseStatus.Draft,
+        CaseStatus.Pending,
+        TaskStatus.New,
+        TaskStatus.InProgress,
+    ];
+    const isCancelActionDisabled = !taskStatusList.includes(
+        formState.currentFormState
+    );
 
     useEffect(() => {
         const { formSource, setFormSource } = formState;
@@ -52,8 +78,14 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
                 text: document.source,
             },
             businessKey: document.documentNumber,
-            receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
-            receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
+            receivedDate: dayjs(
+                document.dateReceived,
+                'M/D/YYYY hh:mm:ss A'
+            ).format(ZAHARA_API_DATE_FORMAT),
+            receivedDateTime: dayjs(
+                document.dateReceived,
+                'M/D/YYYY hh:mm:ss A'
+            ).format('YYYY-MM-DDTHH:mm:ss:Z'),
             sourceSysId: 'ONBASE',
         });
     }, [document]);
@@ -115,12 +147,17 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
         setTaskApiError('');
 
         let successfulCaseUpdate;
-        if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2) {
+        if (
+            TaskApiVersionMapper[formState.initialForm.taskType] ===
+            ApiVersion.v2
+        ) {
             successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm?.taskId,
                 buildFormV2(
-                    formState.currentFormState === TaskStatus.InProgress ? TaskStatus.InProgress : TaskStatus.New,
+                    formState.currentFormState === TaskStatus.InProgress
+                        ? TaskStatus.InProgress
+                        : TaskStatus.New,
                     document,
                     formState
                 ),
@@ -146,7 +183,10 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
         setTaskApiError('');
         if (validateForm() && areDiaryNotesViewed) {
             let successfulCaseUpdate;
-            if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2) {
+            if (
+                TaskApiVersionMapper[formState.initialForm.taskType] ===
+                ApiVersion.v2
+            ) {
                 successfulCaseUpdate = await updateTask(
                     formState.initialForm.caseId,
                     formState.initialForm?.taskId,
@@ -165,7 +205,10 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
                 if (isLocalStorageEnabled()) {
                     const successMessage = t(
                         `createTaskSuccess.${
-                            TaskTypeTranslation[formState?.initialForm?.data?.taskType as keyof typeof TaskTypeTranslation]
+                            TaskTypeTranslation[
+                                formState?.initialForm?.data
+                                    ?.taskType as keyof typeof TaskTypeTranslation
+                            ]
                         }`,
                         {
                             contractNumber: document?.contract,
@@ -174,7 +217,10 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
                     );
 
                     localStorage.setItem(
-                        FormSuccessMessageKey[formState?.initialForm?.data?.taskType as keyof typeof FormSuccessMessageKey],
+                        FormSuccessMessageKey[
+                            formState?.initialForm?.data
+                                ?.taskType as keyof typeof FormSuccessMessageKey
+                        ],
                         successMessage
                     );
                 }
@@ -195,7 +241,10 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
         if (confirmCancel) {
             setIsLoading(true);
             setTaskApiError('');
-            if (TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2) {
+            if (
+                TaskApiVersionMapper[formState.initialForm.taskType] ===
+                ApiVersion.v2
+            ) {
                 router.push('/create-case/');
             } else {
                 const successfulCaseUpdate = await putCaseTask(
@@ -221,7 +270,11 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
                     className="mr-4"
                     onClick={handleFormSubmit}
                     size={ButtonSize.Small}
-                    variant={isFormStateReadOnly || isLoading ? ButtonVariant.Inactive : ButtonVariant.Default}
+                    variant={
+                        isFormStateReadOnly || isLoading
+                            ? ButtonVariant.Inactive
+                            : ButtonVariant.Default
+                    }
                     disabled={isFormStateReadOnly || isLoading}
                     type={ButtonType.Primary}
                 >
@@ -231,7 +284,11 @@ export function FormControls({ t, isLoading, setIsLoading, setTaskApiError, docu
                     className="mr-4"
                     onClick={handleDraftFormSubmit}
                     size={ButtonSize.Small}
-                    variant={isFormStateReadOnly || isLoading ? ButtonVariant.Inactive : ButtonVariant.Default}
+                    variant={
+                        isFormStateReadOnly || isLoading
+                            ? ButtonVariant.Inactive
+                            : ButtonVariant.Default
+                    }
                     disabled={isFormStateReadOnly || isLoading}
                     type={ButtonType.Primary}
                 >

@@ -11,16 +11,44 @@ import dayjs from 'dayjs';
 
 import { PaginationParams } from '@deps/components/pagination/pagination';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { Carrier, SpecialProgram, TransactionHistory } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    SpecialProgram,
+    TransactionHistory,
+} from '@deps/models/case/withdrawal/case';
 import { VariableQuoteResponse } from '@deps/models/case/withdrawal/rmd';
 import { client } from '@deps/queries/api-utils/client';
-import { isMockPolicyDetailsRequestEnabled, isMockPolicySearchRequestEnabled } from '@deps/services/api-config';
-import { mockPolicy, mockPolicySearchResult } from '@deps/services/mocks/sor-policy';
+import {
+    isMockPolicyDetailsRequestEnabled,
+    isMockPolicySearchRequestEnabled,
+} from '@deps/services/api-config';
+import {
+    mockPolicy,
+    mockPolicySearchResult,
+} from '@deps/services/mocks/sor-policy';
 import { CheckTupleResponse } from '@deps/types/fga';
-import { PolicyReferenceSearchResponse, SearchViewQuery } from '@deps/types/search';
-import { browserLogError, browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
-import { fullyMaskPolicyResponse, lcPartyResponseSanitizer, policySanitizer, policySanitizerWithoutSSN } from '@deps/utils/sanitizers';
-import { logError, LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    PolicyReferenceSearchResponse,
+    SearchViewQuery,
+} from '@deps/types/search';
+import {
+    browserLogError,
+    browserLogInfo,
+    browserLogWarn,
+} from '@deps/utils/browser-logging';
+import {
+    fullyMaskPolicyResponse,
+    lcPartyResponseSanitizer,
+    policySanitizer,
+    policySanitizerWithoutSSN,
+} from '@deps/utils/sanitizers';
+import {
+    logError,
+    LoggingContext,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl, policyApiBaseUrl } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
@@ -86,7 +114,10 @@ export interface PolicyNotesInfoResponse {
 
 const baseUrl = baseAppUrl + '/api/policy/v1/policies';
 
-export const searchPolicy = async (query: SearchViewQuery, pagination?: PaginationParams): Promise<PolicyReferenceSearchResponse> => {
+export const searchPolicy = async (
+    query: SearchViewQuery,
+    pagination?: PaginationParams
+): Promise<PolicyReferenceSearchResponse> => {
     const queries = new URLSearchParams();
     if (isMockPolicySearchRequestEnabled()) {
         return {
@@ -106,17 +137,20 @@ export const searchPolicy = async (query: SearchViewQuery, pagination?: Paginati
     }
 
     if (Object.keys(query).length >= 0) {
-        const { data } = await client.post<SearchViewQuery, AxiosResponse<PolicyReferenceSearchResponse>>(
-            `${baseAppUrl}/api/policies/search?${queries.toString()}`,
-            query
-        );
+        const { data } = await client.post<
+            SearchViewQuery,
+            AxiosResponse<PolicyReferenceSearchResponse>
+        >(`${baseAppUrl}/api/policies/search?${queries.toString()}`, query);
         return data;
     }
 
     return {} as PolicyReferenceSearchResponse;
 };
 
-export const fetchPolicy = async (id?: string, planCode?: string): Promise<Policy | null> => {
+export const fetchPolicy = async (
+    id?: string,
+    planCode?: string
+): Promise<Policy | null> => {
     if (isMockPolicyDetailsRequestEnabled()) {
         return mockPolicy;
     }
@@ -139,9 +173,10 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
         return null;
     }
     try {
-        const { data } = await client.get<any, AxiosResponse<GetPolicyResponse>>(
-            `${baseAppUrl}/api/policies/${planCode}/${id}?viewDetails=true`
-        );
+        const { data } = await client.get<
+            any,
+            AxiosResponse<GetPolicyResponse>
+        >(`${baseAppUrl}/api/policies/${planCode}/${id}?viewDetails=true`);
 
         if (!data.data) {
             browserLogInfo('fetchPolicy::Policy data not', {
@@ -169,7 +204,11 @@ export const fetchPolicy = async (id?: string, planCode?: string): Promise<Polic
     }
 };
 
-export const fetchVersionedPolicy = async (id: string, planCode: string, version: number | null = null): Promise<Policy | null> => {
+export const fetchVersionedPolicy = async (
+    id: string,
+    planCode: string,
+    version: number | null = null
+): Promise<Policy | null> => {
     if (!id) {
         console.error('No policyNumber to fetch versioned policy');
         return null;
@@ -181,7 +220,10 @@ export const fetchVersionedPolicy = async (id: string, planCode: string, version
     }
 
     try {
-        const { data } = await client.get<any, AxiosResponse<GetPolicyResponse>>(
+        const { data } = await client.get<
+            any,
+            AxiosResponse<GetPolicyResponse>
+        >(
             `${baseAppUrl}/api/policies/${planCode}/${id}/versions/${version}?viewDetails=true`
         );
 
@@ -211,19 +253,28 @@ export const getPolicyDetailsSsr = async (
     };
 
     if (!id) {
-        logWarn('getPolicyDetailsSSR:no policyNumber to fetch policy', loggingContext);
+        logWarn(
+            'getPolicyDetailsSSR:no policyNumber to fetch policy',
+            loggingContext
+        );
 
         return null;
     }
 
     if (!planCode) {
-        logWarn('getPolicyDetailsSSR::no planCode to fetch policy', loggingContext);
+        logWarn(
+            'getPolicyDetailsSSR::no planCode to fetch policy',
+            loggingContext
+        );
 
         return null;
     }
 
     if (!accessToken) {
-        logWarn('getPolicyDetailsSSR::No accessToken to fetch policy', loggingContext);
+        logWarn(
+            'getPolicyDetailsSSR::No accessToken to fetch policy',
+            loggingContext
+        );
 
         return null;
     }
@@ -237,14 +288,24 @@ export const getPolicyDetailsSsr = async (
 
         logInfo('getPolicyDetailsSSR', { ...loggingContext, url });
 
-        const unmaskingRequest = serverApi.post<any, AxiosResponse<CheckTupleResponse>>(
+        const unmaskingRequest = serverApi.post<
+            any,
+            AxiosResponse<CheckTupleResponse>
+        >(
             `${apiServerBaseUrl}/fga/v1/check`,
-            { user: `party:${logCtx?.user?.partyId}`, relation: 'unmask_pii', object: `policy:${id}_${planCode}` },
+            {
+                user: `party:${logCtx?.user?.partyId}`,
+                relation: 'unmask_pii',
+                object: `policy:${id}_${planCode}`,
+            },
             { authorization: 'Bearer ' + accessToken },
             loggingContext
         );
 
-        const policyRequest = serverApi.get<SearchViewQuery, AxiosResponse<GetPolicyResponse>>(
+        const policyRequest = serverApi.get<
+            SearchViewQuery,
+            AxiosResponse<GetPolicyResponse>
+        >(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -258,16 +319,25 @@ export const getPolicyDetailsSsr = async (
             loggingContext
         );
 
-        const [unmaskingResponse, policyResponse] = await Promise.all([unmaskingRequest, policyRequest]);
+        const [unmaskingResponse, policyResponse] = await Promise.all([
+            unmaskingRequest,
+            policyRequest,
+        ]);
 
         // Do not show ANY PII if the user is not authorized to view it for the policy in question
         if (!unmaskingResponse.data?.allowed) {
             return fullyMaskPolicyResponse(policyResponse.data)?.data;
         }
 
-        return nonSanitizedSSN ? policySanitizerWithoutSSN(policyResponse?.data?.data) : policySanitizer(policyResponse?.data?.data);
+        return nonSanitizedSSN
+            ? policySanitizerWithoutSSN(policyResponse?.data?.data)
+            : policySanitizer(policyResponse?.data?.data);
     } catch (error: any) {
-        logError('getPolicyDetailsSSR', { ...parseErrorInformation(error), id, ...loggingContext });
+        logError('getPolicyDetailsSSR', {
+            ...parseErrorInformation(error),
+            id,
+            ...loggingContext,
+        });
 
         return null;
     }
@@ -288,8 +358,16 @@ export const getPolicyPartiesSSR = async (
     };
     try {
         const url = `${apiServerBaseUrl}/policy/v1/policies/party?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        logInfo('getPolicyPartiesSSR', { ...loggingContext, url, policyNumber, clientCode });
-        const { data } = await serverApi.get<LifeCadParty[], AxiosResponse<LifeCadParty[]>>(
+        logInfo('getPolicyPartiesSSR', {
+            ...loggingContext,
+            url,
+            policyNumber,
+            clientCode,
+        });
+        const { data } = await serverApi.get<
+            LifeCadParty[],
+            AxiosResponse<LifeCadParty[]>
+        >(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -305,26 +383,53 @@ export const getPolicyPartiesSSR = async (
 
         return lcPartyResponseSanitizer(data);
     } catch (error: any) {
-        logWarn('getPolicyPartiesSSR', { ...parseErrorInformation(error), policyNumber, clientCode, ...loggingContext });
+        logWarn('getPolicyPartiesSSR', {
+            ...parseErrorInformation(error),
+            policyNumber,
+            clientCode,
+            ...loggingContext,
+        });
         return null;
     }
 };
 
-export const getPolicyParties = async (policyNumber: string, clientCode: string): Promise<LifeCadParty[] | null> => {
-    const loggingContext = { file: 'queries/api/policies', function: 'getPolicyParties' };
+export const getPolicyParties = async (
+    policyNumber: string,
+    clientCode: string
+): Promise<LifeCadParty[] | null> => {
+    const loggingContext = {
+        file: 'queries/api/policies',
+        function: 'getPolicyParties',
+    };
     try {
         const url = `${baseUrl}/party?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        browserLogInfo('getPolicyParties', { url, policyNumber, clientCode, ...loggingContext });
-        const { data } = await client.get<LifeCadParty[], AxiosResponse<LifeCadParty[]>>(url);
+        browserLogInfo('getPolicyParties', {
+            url,
+            policyNumber,
+            clientCode,
+            ...loggingContext,
+        });
+        const { data } = await client.get<
+            LifeCadParty[],
+            AxiosResponse<LifeCadParty[]>
+        >(url);
 
         return lcPartyResponseSanitizer(data);
     } catch (error: any) {
-        browserLogError('getPolicyParties', { error, policyNumber, clientCode, ...loggingContext });
+        browserLogError('getPolicyParties', {
+            error,
+            policyNumber,
+            clientCode,
+            ...loggingContext,
+        });
         return null;
     }
 };
 
-export const getPolicyAccountInfo = async (policyNumber: string, clientCode: string): Promise<AccountInfo | null> => {
+export const getPolicyAccountInfo = async (
+    policyNumber: string,
+    clientCode: string
+): Promise<AccountInfo | null> => {
     try {
         if (!policyNumber) {
             throw new Error('no policy number provided');
@@ -332,7 +437,10 @@ export const getPolicyAccountInfo = async (policyNumber: string, clientCode: str
         if (!clientCode) {
             throw new Error('no client code provided');
         }
-        const { data } = await client.get<AccountInfo | null, AxiosResponse<AccountInfo>>(
+        const { data } = await client.get<
+            AccountInfo | null,
+            AxiosResponse<AccountInfo>
+        >(
             `${baseUrl}/accountInfo?policyNumber=${policyNumber}&clientCode=${clientCode}`
         );
 
@@ -390,7 +498,10 @@ export const getPolicyNotesInfo = async ({
     limit = 10,
 }: PolicyNotesQuery): Promise<PolicyNotesInfoResponse | null> => {
     try {
-        const { data } = await client.get<PolicyNotesInfoResponse, AxiosResponse<PolicyNotesInfoResponse>>(
+        const { data } = await client.get<
+            PolicyNotesInfoResponse,
+            AxiosResponse<PolicyNotesInfoResponse>
+        >(
             `${baseUrl}/notesinfo?clientCode=${clientCode}&policyNumber=${policyNumber}&offset=${offset}&limit=${limit}`
         );
         return data;
@@ -418,7 +529,10 @@ export const getPolicyTransactionHistorySSR = async (
     try {
         const url = `${apiServerBaseUrl}/policy/v1/policies/transactionHistory?policyNumber=${policyNumber}&TransactionType=${transactionType}&TypeDesc=${typeDesc}&clientCode=${clientCode}&limit=1000`;
         logInfo('getPolicyTransactionHistorySSR', { ...loggingContext, url });
-        const { data } = await serverApi.get<TransactionHistory, AxiosResponse<TransactionHistory>>(
+        const { data } = await serverApi.get<
+            TransactionHistory,
+            AxiosResponse<TransactionHistory>
+        >(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -451,20 +565,43 @@ export const getPolicyTransactionHistory = async (
     fromDate: string,
     userInfo: object = {}
 ): Promise<TransactionHistory | null> => {
-    if (!policyNumber || !clientCode || !typeDesc || !transactionType || !fromDate) {
-        console.error('queries/api/policies::getPolicyTransactionHistory::missing-args', {
+    if (
+        !policyNumber ||
+        !clientCode ||
+        !typeDesc ||
+        !transactionType ||
+        !fromDate
+    ) {
+        console.error(
+            'queries/api/policies::getPolicyTransactionHistory::missing-args',
+            {
+                policyNumber,
+                clientCode,
+                typeDesc,
+                transactionType,
+            }
+        );
+        return null;
+    }
+    const loggingContext = {
+        file: 'queries/api/policies',
+        function: 'getPolicyTransactionHistory',
+        ...userInfo,
+    };
+    try {
+        const url = `${baseUrl}/transactionHistory?policyNumber=${policyNumber}&TransactionType=${transactionType}&TypeDesc=${typeDesc}&clientCode=${clientCode}&fromDate=${fromDate}&limit=1000`;
+        browserLogInfo('getPolicyTransactionHistory', {
+            url,
             policyNumber,
             clientCode,
             typeDesc,
             transactionType,
+            ...loggingContext,
         });
-        return null;
-    }
-    const loggingContext = { file: 'queries/api/policies', function: 'getPolicyTransactionHistory', ...userInfo };
-    try {
-        const url = `${baseUrl}/transactionHistory?policyNumber=${policyNumber}&TransactionType=${transactionType}&TypeDesc=${typeDesc}&clientCode=${clientCode}&fromDate=${fromDate}&limit=1000`;
-        browserLogInfo('getPolicyTransactionHistory', { url, policyNumber, clientCode, typeDesc, transactionType, ...loggingContext });
-        const { data } = await client.get<TransactionHistory, AxiosResponse<TransactionHistory>>(url);
+        const { data } = await client.get<
+            TransactionHistory,
+            AxiosResponse<TransactionHistory>
+        >(url);
 
         return data;
     } catch (error: any) {
@@ -495,7 +632,10 @@ export const getSpecialProgramsSSR = async (
 
     try {
         const url = `${apiServerBaseUrl}/policy/v1/policies/specialprogramdetails?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        const { data } = await serverApi.get<SpecialProgram | null, AxiosResponse<SpecialProgram>>(
+        const { data } = await serverApi.get<
+            SpecialProgram | null,
+            AxiosResponse<SpecialProgram>
+        >(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -521,7 +661,10 @@ export const getSpecialProgramsSSR = async (
 };
 
 // This hits a Spectrum API to get Special programs
-export const getSpecialPrograms = async (policyNumber: string, clientCode: string): Promise<SpecialProgram | null> => {
+export const getSpecialPrograms = async (
+    policyNumber: string,
+    clientCode: string
+): Promise<SpecialProgram | null> => {
     try {
         if (!policyNumber) {
             throw new Error('no policy number provided');
@@ -530,7 +673,10 @@ export const getSpecialPrograms = async (policyNumber: string, clientCode: strin
             throw new Error('no client code provided');
         }
         const url = `${baseUrl}/specialprogramdetails?policyNumber=${policyNumber}&clientCode=${clientCode}`;
-        const { data } = await client.get<SpecialProgram | null, AxiosResponse<SpecialProgram>>(url);
+        const { data } = await client.get<
+            SpecialProgram | null,
+            AxiosResponse<SpecialProgram>
+        >(url);
         return data;
     } catch (e) {
         console.error('An error occurred while getting special programs', e);
@@ -539,14 +685,23 @@ export const getSpecialPrograms = async (policyNumber: string, clientCode: strin
 };
 
 // get more information about a single transaction
-export const getPolicyTransaction = async (planCode: string, policyNumber: string, transactionId: string): Promise<Transaction | null> => {
+export const getPolicyTransaction = async (
+    planCode: string,
+    policyNumber: string,
+    transactionId: string
+): Promise<Transaction | null> => {
     if (!planCode || !policyNumber || !transactionId) {
-        console.error('queries/api/policies::getPolicyTransaction::missing-args', { planCode, policyNumber, transactionId });
+        console.error(
+            'queries/api/policies::getPolicyTransaction::missing-args',
+            { planCode, policyNumber, transactionId }
+        );
         return null;
     }
 
     try {
-        const { data } = await client.get(`${baseUrl}/${planCode}/${policyNumber}/transactions/${transactionId}`);
+        const { data } = await client.get(
+            `${baseUrl}/${planCode}/${policyNumber}/transactions/${transactionId}`
+        );
         return data.data;
     } catch (e) {
         console.error('queries/api/policies::getPolicyTransaction::error', e);
@@ -631,14 +786,23 @@ export const policyWithdrawalQuote = async (
                 ? WithdrawalQuoteEndpointType.FullSurrender
                 : WithdrawalQuoteEndpointType.PartialWithdrawalOneTime;
 
-        const { data } = await client.post<any, AxiosResponse<FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse>>(
+        const { data } = await client.post<
+            any,
+            AxiosResponse<
+                | FullSurrenderQuoteResponse
+                | PartialWithdrawalOneTimeQuoteResponse
+            >
+        >(
             `${baseAppUrl}/api/policy/v1/policies/${planCode}/${policyNumber}/${type}/quote`,
             requestBody
         );
 
         return data;
     } catch (error: any) {
-        console.error('policyWithdrawalQuote::an error occurred during policy withdrawal quote', error);
+        console.error(
+            'policyWithdrawalQuote::an error occurred during policy withdrawal quote',
+            error
+        );
 
         return error?.data;
     }
@@ -661,7 +825,9 @@ export const getVariableQuote = async ({
         const query = `?contractNumber=${contractNumber}&clientCode=${clientCode}&enableDefaultConfig=${enableDefaultConfig}&valuationDate=${valuationDate}`;
 
         const url = `${baseUrl}/getVariableQuote${query}`;
-        const response = await client.get<VariableQuoteResponse, AxiosResponse>(url);
+        const response = await client.get<VariableQuoteResponse, AxiosResponse>(
+            url
+        );
 
         return response.data;
     } catch (error: any) {
@@ -707,7 +873,10 @@ export const searchPolicySSR = async (
         );
 
         if (!searchResponse.results) {
-            logInfo('searchPolicySSR::Policy search result not found', { ...loggingContext, url: searchUrl });
+            logInfo('searchPolicySSR::Policy search result not found', {
+                ...loggingContext,
+                url: searchUrl,
+            });
             return null;
         }
         logInfo('searchPolicySSR::Completed policy search', {
@@ -718,12 +887,20 @@ export const searchPolicySSR = async (
         });
         return searchResponse.results;
     } catch (e) {
-        logInfo('searchPolicySSR::Policy search failed', { ...loggingContext, url: searchUrl, ...parseErrorInformation(e) });
+        logInfo('searchPolicySSR::Policy search failed', {
+            ...loggingContext,
+            url: searchUrl,
+            ...parseErrorInformation(e),
+        });
         return null;
     }
 };
 
-export const getAssociatedAddresses = async (planCode: string, id: string, partyId?: string | null): Promise<any> => {
+export const getAssociatedAddresses = async (
+    planCode: string,
+    id: string,
+    partyId?: string | null
+): Promise<any> => {
     try {
         let url = `${baseAppUrl}/api/policies/${planCode}/${id}/addressDetails`;
         if (partyId) {
@@ -733,7 +910,10 @@ export const getAssociatedAddresses = async (planCode: string, id: string, party
 
         return data;
     } catch (error: any) {
-        console.error('getAssociatedAddresses::An error occurred while getting associated party addresses', error);
+        console.error(
+            'getAssociatedAddresses::An error occurred while getting associated party addresses',
+            error
+        );
         return error.response;
     }
 };

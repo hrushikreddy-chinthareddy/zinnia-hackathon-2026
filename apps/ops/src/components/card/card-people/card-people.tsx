@@ -5,7 +5,10 @@ import ClickContainer from '@deps/components/click-container/click-container';
 import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Title, { TitleVariant } from '@deps/components/title/title';
-import { getBeneficiaryColor, getContigentColor } from '@deps/containers/people-card-container/people-card-container.helpers';
+import {
+    getBeneficiaryColor,
+    getContigentColor,
+} from '@deps/containers/people-card-container/people-card-container.helpers';
 import { BeneficiaryType } from '@deps/containers/people-card-container/people-card-container.types';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TagKey } from '@deps/types/components';
@@ -40,7 +43,9 @@ const PREFERRED_TAG_ORDER = {
 } as { [key: string]: number };
 
 const getBeneficiaryColorByType = (type: BeneficiaryType, index: number) => {
-    return type === BeneficiaryType.PRIMARY ? getBeneficiaryColor(index) : getContigentColor(index);
+    return type === BeneficiaryType.PRIMARY
+        ? getBeneficiaryColor(index)
+        : getContigentColor(index);
 };
 
 const sortTags = (tags?: TagKey[]) => {
@@ -48,8 +53,10 @@ const sortTags = (tags?: TagKey[]) => {
 
     // sort by preferred tag order retaining any unlisted tags at the end
     const sortedArray = [...tags].sort((a, b) => {
-        const indexA = PREFERRED_TAG_ORDER[a.text ?? ''] ?? Number.MAX_SAFE_INTEGER;
-        const indexB = PREFERRED_TAG_ORDER[b.text ?? ''] ?? Number.MAX_SAFE_INTEGER;
+        const indexA =
+            PREFERRED_TAG_ORDER[a.text ?? ''] ?? Number.MAX_SAFE_INTEGER;
+        const indexB =
+            PREFERRED_TAG_ORDER[b.text ?? ''] ?? Number.MAX_SAFE_INTEGER;
         return indexA - indexB;
     });
 
@@ -72,7 +79,9 @@ const CardPeople = ({
     partyStatus,
 }: CardPeopleProps) => {
     const hasAllocation = !isNullEmptyOrUndefined(allocation || '');
-    const allocationBgClasses = hasAllocation ? getBeneficiaryColorByType(beneficiaryType, index) : '';
+    const allocationBgClasses = hasAllocation
+        ? getBeneficiaryColorByType(beneficiaryType, index)
+        : '';
 
     const ref = useRef<HTMLDivElement>(null);
 
@@ -86,7 +95,9 @@ const CardPeople = ({
 
     return (
         <ClickContainer
-            ariaLabel={`${accessibilityClickText}, ${sortedTags?.map(tag => tag.text).join(', ')}`}
+            ariaLabel={`${accessibilityClickText}, ${sortedTags
+                ?.map((tag) => tag.text)
+                .join(', ')}`}
             classes="h-fit"
             divRef={ref}
             isSelected={isSelected}
@@ -96,7 +107,11 @@ const CardPeople = ({
             {sortedTags && (
                 <div className="flex flex-wrap gap-1">
                     {sortedTags.map((tag, index) => {
-                        const isSelected = selectedTags?.length > 0 && selectedTags.indexOf(tag.text?.toLocaleLowerCase() ?? '') > -1;
+                        const isSelected =
+                            selectedTags?.length > 0 &&
+                            selectedTags.indexOf(
+                                tag.text?.toLocaleLowerCase() ?? ''
+                            ) > -1;
 
                         return (
                             <PartyTag
@@ -110,15 +125,21 @@ const CardPeople = ({
                 </div>
             )}
             <div className="prose flex content-center justify-between">
-                <Title variant={TitleVariant.SubTitleAlt} className="mt-2 text-start leading-[27px]">
+                <Title
+                    variant={TitleVariant.SubTitleAlt}
+                    className="mt-2 text-start leading-[27px]"
+                >
                     <PiiWrapper>{name}</PiiWrapper>
                 </Title>
 
                 {hasAllocation && (
                     <div className="flex gap-2" data-testid="allocation">
-                        <div className={`${allocationBgClasses} h-[16px] w-[16px] self-center rounded`}></div>
+                        <div
+                            className={`${allocationBgClasses} h-[16px] w-[16px] self-center rounded`}
+                        ></div>
                         <p className="front-bold self-center text-[18px] leading-8">
-                            {allocation}%<span className="sr-only">{accessibilityText}</span>
+                            {allocation}%
+                            <span className="sr-only">{accessibilityText}</span>
                         </p>
                     </div>
                 )}

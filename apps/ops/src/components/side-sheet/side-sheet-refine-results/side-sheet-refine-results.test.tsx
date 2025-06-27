@@ -5,7 +5,9 @@ import { PolicySearchFiltersProvider } from '@deps/contexts/PolicySearchFilters'
 
 import SideSheetRefineResults from './side-sheet-refine-results';
 
-const permissionsObject: { [key: string]: string[] } = { testing: ['policy:read'] };
+const permissionsObject: { [key: string]: string[] } = {
+    testing: ['policy:read'],
+};
 const baseFilters = {
     processTypes: new Set([]),
     requestSubType: new Set([]),
@@ -35,18 +37,62 @@ describe.skip('Refine Results Sidesheet', () => {
             </PermissionsProvider>
         );
 
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.carrier')).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.carrier'
+            )
+        ).toBeInTheDocument();
         expect(screen.getByText('TESTING')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.processType')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsFilters.caseType.New Business')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsFilters.caseType.Renewal')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsFilters.caseType.Withdrawal')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.createdStart')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.createdEnd')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.updatedStart')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.updatedEnd')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.selectDayRange')).toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.clearAll')).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.processType'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsFilters.caseType.New Business'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsFilters.caseType.Renewal'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsFilters.caseType.Withdrawal'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.createdStart'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.createdEnd'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.updatedStart'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.updatedEnd'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.selectDayRange'
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.clearAll'
+            )
+        ).toBeInTheDocument();
     });
     it('disables the pre-populated carrier dropdown with only one carrier', () => {
         render(
@@ -63,9 +109,17 @@ describe.skip('Refine Results Sidesheet', () => {
         );
 
         expect(screen.getByText('TESTING')).toBeInTheDocument();
-        expect(screen.queryByText('caseManagementDashboard.refineResultsOptions.selectCarrier')).not.toBeInTheDocument();
-        expect(screen.getByTestId('carrier-dropdown-btn')).toHaveAttribute('data-disabled');
-        expect(screen.getByTestId('carrier-dropdown-btn')).toHaveAttribute('disabled');
+        expect(
+            screen.queryByText(
+                'caseManagementDashboard.refineResultsOptions.selectCarrier'
+            )
+        ).not.toBeInTheDocument();
+        expect(screen.getByTestId('carrier-dropdown-btn')).toHaveAttribute(
+            'data-disabled'
+        );
+        expect(screen.getByTestId('carrier-dropdown-btn')).toHaveAttribute(
+            'disabled'
+        );
     });
 
     it('enables the carrier dropdown with more than one carrier', () => {
@@ -85,8 +139,16 @@ describe.skip('Refine Results Sidesheet', () => {
         );
 
         expect(screen.queryByText('TESTING')).not.toBeInTheDocument();
-        expect(screen.getByText('caseManagementDashboard.refineResultsOptions.selectCarrier')).toBeInTheDocument();
-        expect(screen.getByTestId('carrier-dropdown-btn')).not.toHaveAttribute('data-disabled');
-        expect(screen.getByTestId('carrier-dropdown-btn')).not.toHaveAttribute('disabled');
+        expect(
+            screen.getByText(
+                'caseManagementDashboard.refineResultsOptions.selectCarrier'
+            )
+        ).toBeInTheDocument();
+        expect(screen.getByTestId('carrier-dropdown-btn')).not.toHaveAttribute(
+            'data-disabled'
+        );
+        expect(screen.getByTestId('carrier-dropdown-btn')).not.toHaveAttribute(
+            'disabled'
+        );
     });
 });

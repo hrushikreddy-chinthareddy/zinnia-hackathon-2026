@@ -1,8 +1,12 @@
 import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -17,8 +21,13 @@ type AddressChangeSummaryStep = {
     isSignatureSummaryRequired: boolean;
 };
 
-export const SummaryStep = ({ policy, isSignatureSummaryRequired }: AddressChangeSummaryStep) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange' });
+export const SummaryStep = ({
+    policy,
+    isSignatureSummaryRequired,
+}: AddressChangeSummaryStep) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'addressChange',
+    });
     const { signatureData, submitSuccess } = useAddressChange();
     const dataRows = signatureData?.signatures ?? [];
 
@@ -50,8 +59,12 @@ export const SummaryStep = ({ policy, isSignatureSummaryRequired }: AddressChang
                     <ContactDetailsSummary policy={policy} />
                 </div>
 
-                <ApplicableRolesContractSummary policy={policy}></ApplicableRolesContractSummary>
-                {isSignatureSummaryRequired && dataRows.length ? <SignatureSummary dataRows={dataRows} /> : null}
+                <ApplicableRolesContractSummary
+                    policy={policy}
+                ></ApplicableRolesContractSummary>
+                {isSignatureSummaryRequired && dataRows.length ? (
+                    <SignatureSummary dataRows={dataRows} />
+                ) : null}
             </>
         </WorkflowCard>
     );

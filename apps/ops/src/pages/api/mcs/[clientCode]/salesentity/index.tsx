@@ -5,35 +5,66 @@ import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { CheckTupleResponse } from '@deps/types/fga';
-import { fullyMaskMcsResponse, mcsResponseSanitizer } from '@deps/utils/sanitizers';
+import {
+    fullyMaskMcsResponse,
+    mcsResponseSanitizer,
+} from '@deps/utils/sanitizers';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 
 export default withAuthAndLogging(
     async (req, res, loggingContext) => {
         const session = await getSession(req, res);
-        const { clientCode, idType, id, parentIdType, parentId, skip, take, policyNumber, planCode, IsClientChild } = req.query;
+        const {
+            clientCode,
+            idType,
+            id,
+            parentIdType,
+            parentId,
+            skip,
+            take,
+            policyNumber,
+            planCode,
+            IsClientChild,
+        } = req.query;
 
         const url = `${apiServerBaseUrl}/api/${clientCode}/salesentity`;
         const queryParams = new URLSearchParams();
         if (idType) queryParams.append('idType', idType as string);
         if (id) queryParams.append('id', id as string);
-        if (parentIdType) queryParams.append('parentIdType', parentIdType as string);
+        if (parentIdType)
+            queryParams.append('parentIdType', parentIdType as string);
         if (parentId) queryParams.append('parentId', parentId as string);
         if (skip) queryParams.append('skip', skip as string);
         if (take) queryParams.append('take', take as string);
-        if (IsClientChild) queryParams.append('IsClientChild', IsClientChild as string);
+        if (IsClientChild)
+            queryParams.append('IsClientChild', IsClientChild as string);
         const proxyUrl = `${url}?${queryParams.toString()}`;
 
         // BPB - Using policyNumber and planCode to determine pii masking capabilities since we don't have any other way to determine this yet.
-        const unmaskingResponse = await serverApi.post<any, AxiosResponse<CheckTupleResponse>>(
+        const unmaskingResponse = await serverApi.post<
+            any,
+            AxiosResponse<CheckTupleResponse>
+        >(
             `${apiServerBaseUrl}/fga/v1/check`,
-            { user: `party:${session?.user?.partyId}`, relation: 'unmask_pii', object: `policy:${policyNumber}_${planCode}` },
+            {
+                user: `party:${session?.user?.partyId}`,
+                relation: 'unmask_pii',
+                object: `policy:${policyNumber}_${planCode}`,
+            },
             { authorization: 'Bearer ' + session?.accessToken },
             loggingContext
         );
 
-        const masker = unmaskingResponse.data?.allowed ? mcsResponseSanitizer : fullyMaskMcsResponse;
-        return await requestHandler<any>(proxyUrl, req, res, loggingContext, masker);
+        const masker = unmaskingResponse.data?.allowed
+            ? mcsResponseSanitizer
+            : fullyMaskMcsResponse;
+        return await requestHandler<any>(
+            proxyUrl,
+            req,
+            res,
+            loggingContext,
+            masker
+        );
     },
     { file: 'api/:clientCode/salesentity', function: 'routeHandler' }
 );

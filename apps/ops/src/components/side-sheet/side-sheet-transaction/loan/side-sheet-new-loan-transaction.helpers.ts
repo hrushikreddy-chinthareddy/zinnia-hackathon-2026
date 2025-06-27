@@ -1,9 +1,15 @@
-import { DisbursementType, Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
+import {
+    DisbursementType,
+    Transaction,
+    TransactionStatus,
+} from '@zinnia/api-types/types/sor';
 
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-export const calculateProcessedAmount = (transaction: Transaction): number | undefined | null => {
+export const calculateProcessedAmount = (
+    transaction: Transaction
+): number | undefined | null => {
     const { charges, status, transactionAmounts } = transaction;
 
     const totalCharges = charges
@@ -24,7 +30,10 @@ export const calculateProcessedAmount = (transaction: Transaction): number | und
     }
 };
 
-export const calculateProcessDate = (processDate: string, status?: TransactionStatus) => {
+export const calculateProcessDate = (
+    processDate: string,
+    status?: TransactionStatus
+) => {
     if (status === TransactionStatus.PENDING) {
         return DEFAULT_ERROR_STRING;
     }

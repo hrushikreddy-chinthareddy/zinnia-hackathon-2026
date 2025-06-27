@@ -3,7 +3,10 @@ import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import Button from '@deps/components/button/button';
-import { SideSheetProvider, useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import {
+    SideSheetProvider,
+    useSideSheetContext,
+} from '@deps/contexts/SideSheetContext';
 import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
 import { ReactComponent as PaperClipIcon } from '@deps/styles/elements/icons/communications/paper-clip.svg';
 import { ReactComponent as PhoneIcon } from '@deps/styles/elements/icons/communications/phone.svg';
@@ -14,7 +17,7 @@ export default {
     title: 'Components/SideSheet',
     component: SideSheetEmpty,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <SideSheetProvider>
                     <Story />
@@ -31,7 +34,13 @@ export const DocumentEmpty = () => {
         sideSheet.changeSideSheetContent(
             'Documents (0)',
             <SideSheetEmpty
-                icon={<PaperClipIcon width={50} height={50} className="text-gray-300" />}
+                icon={
+                    <PaperClipIcon
+                        width={50}
+                        height={50}
+                        className="text-gray-300"
+                    />
+                }
                 header={t('sideSheet.documentsEmptyTitle')}
                 text={t('sideSheet.documentsEmptyText')}
             />
@@ -55,7 +64,13 @@ export const NoteEmpty = () => {
         sideSheet.changeSideSheetContent(
             'Notes (0)',
             <SideSheetEmpty
-                icon={<AnnotationsIcon width={50} height={50} className="text-gray-300" />}
+                icon={
+                    <AnnotationsIcon
+                        width={50}
+                        height={50}
+                        className="text-gray-300"
+                    />
+                }
                 header={t('sideSheet.notesEmptyTitle')}
                 text={t('sideSheet.notesEmptyText')}
             />
@@ -79,7 +94,14 @@ export const CallsEmpty = () => {
         sideSheet.changeSideSheetContent(
             'Calls (0)',
             <SideSheetEmpty
-                icon={<PhoneIcon width={50} height={50} className="text-gray-300" data-testid="call-logs-empty-icon" />}
+                icon={
+                    <PhoneIcon
+                        width={50}
+                        height={50}
+                        className="text-gray-300"
+                        data-testid="call-logs-empty-icon"
+                    />
+                }
                 header={t('sideSheet.callLogsEmptyTitle')}
                 text={t('sideSheet.callLogsEmptyText')}
             />

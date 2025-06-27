@@ -3,10 +3,20 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import xss from 'xss';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '@deps/components/fields/field-date-select/field-date-select';
 import SelectSimple from '@deps/components/select/select';
-import { AmountType, Frequency, SSWType } from '@deps/models/case/withdrawal/case';
+import {
+    AmountType,
+    Frequency,
+    SSWType,
+} from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SSWProgramOptions } from './ssw-program';
@@ -28,10 +38,19 @@ interface SystematicWithdrawalRowProps {
     isReadOnly?: boolean;
 }
 
-export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOptions, onDataChange }: SystematicWithdrawalRowProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
+export default function SystematicWithdrawalRow({
+    isReadOnly,
+    sswData,
+    sswTypeOptions,
+    onDataChange,
+}: SystematicWithdrawalRowProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.sswProgram',
+    });
     const formStartDate = sswData?.startDate?.text
-        ? dayjs(sswData?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
+        ? dayjs(sswData?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(
+              DATE_PICKER_FORMAT
+          )
         : '';
     const [startDate, setStartDate] = useState(formStartDate);
 
@@ -45,7 +64,13 @@ export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOp
     useEffect(() => {
         onDataChange((fs: SSWProgram) => ({
             ...fs,
-            startDate: { text: startDate ? dayjs(startDate, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) : '' },
+            startDate: {
+                text: startDate
+                    ? dayjs(startDate, DATE_PICKER_FORMAT).format(
+                          ZAHARA_API_DATE_FORMAT
+                      )
+                    : '',
+            },
         }));
     }, [startDate, onDataChange]);
 
@@ -76,11 +101,15 @@ export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOp
         <>
             <div className="grid grid-cols-5 gap-4">
                 <FieldDateSelect
-                    variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                    variant={
+                        isReadOnly
+                            ? FieldVariant.Inactive
+                            : FieldVariant.Default
+                    }
                     label={t('startDate') as string}
                     id="startDate"
                     isFutureDateDisabled={false}
-                    onChange={e => {
+                    onChange={(e) => {
                         setStartDate(e.target.value);
                     }}
                     size={FieldSize.Small}
@@ -93,7 +122,9 @@ export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOp
                     className="max-w-lg"
                     label={t('sswTypes') as string}
                     options={sswTypeOptions}
-                    onChange={(val: string) => setSSWData(val as SSWType, 'programSubType')}
+                    onChange={(val: string) =>
+                        setSSWData(val as SSWType, 'programSubType')
+                    }
                     size={FieldSize.Small}
                     value={sswData.programSubType.text || ''}
                     name="sswType"
@@ -103,7 +134,9 @@ export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOp
                     className="max-w-lg"
                     label={t('frequency') as string}
                     options={frequencyOptions}
-                    onChange={(val: string) => setSSWData(val as Frequency, 'frequency')}
+                    onChange={(val: string) =>
+                        setSSWData(val as Frequency, 'frequency')
+                    }
                     size={FieldSize.Small}
                     value={sswData.frequency.text || ''}
                     name="frequency"
@@ -112,9 +145,13 @@ export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOp
 
                 {sswData.programSubType.text !== SSWType.FixPeriod && (
                     <Field
-                        variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         label={t(`duration`) as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setSSWData(xss(e?.target?.value), 'duration');
                         }}
                         value={sswData.duration.text || ''}
@@ -132,14 +169,18 @@ export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOp
                 {sswData.programSubType.text === SSWType.FixDollar && (
                     <Field
                         label={t(`amount`) as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setSSWData(xss(e?.target?.value), 'amount');
                         }}
                         value={sswData.amount.text || ''}
                         size={FieldSize.Small}
                         leading={<div>$</div>}
                         type={FieldType.BaseActive}
-                        variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         data-testid={`amount`}
                         formatOptions={{
                             format: '',
@@ -149,18 +190,23 @@ export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOp
                     />
                 )}
 
-                {sswData.programSubType.text === SSWType.PercentOfAmountValue && (
+                {sswData.programSubType.text ===
+                    SSWType.PercentOfAmountValue && (
                     <Field
                         disabled={isReadOnly}
                         label={t(`percent`) as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setSSWData(xss(e?.target?.value), 'percent');
                         }}
                         value={sswData.percent.text || ''}
                         size={FieldSize.Small}
                         trailing={<div>%</div>}
                         type={FieldType.BaseActive}
-                        variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         data-testid={`percent`}
                         formatOptions={{
                             format: '',
@@ -174,13 +220,20 @@ export default function SystematicWithdrawalRow({ isReadOnly, sswData, sswTypeOp
                     <Field
                         disabled={isReadOnly}
                         label={t(`depleteFundYears`) as string}
-                        onChange={e => {
-                            setSSWData(xss(e?.target?.value), 'depleteFundYears');
+                        onChange={(e) => {
+                            setSSWData(
+                                xss(e?.target?.value),
+                                'depleteFundYears'
+                            );
                         }}
                         value={sswData.depleteFundYears.text || ''}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
-                        variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         data-testid={`depleteFundYears`}
                         formatOptions={{
                             format: '',

@@ -25,7 +25,10 @@ describe('Typography', () => {
     });
     it('renders h2acc with correct class name and children', () => {
         const { getByText } = render(
-            <Typography variant={TypographyVariant.H2acc} className="custom-class">
+            <Typography
+                variant={TypographyVariant.H2acc}
+                className="custom-class"
+            >
                 Heading 2 Accented
             </Typography>
         );
@@ -45,7 +48,11 @@ describe('Typography', () => {
     });
     it('renders a correctly styled h2 with label styling', () => {
         const { getByText } = render(
-            <Typography variant={TypographyVariant.LabelAlt} className="custom-class" asTag="h2">
+            <Typography
+                variant={TypographyVariant.LabelAlt}
+                className="custom-class"
+                asTag="h2"
+            >
                 Heading 2
             </Typography>
         );

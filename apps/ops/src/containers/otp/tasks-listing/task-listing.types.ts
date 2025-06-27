@@ -18,6 +18,6 @@ export interface TasksListingProps {
     caseId: string;
     caseType: string;
     documentNumber: string;
-    clientId: string
-    config: any
+    clientId: string;
+    config: any;
 }

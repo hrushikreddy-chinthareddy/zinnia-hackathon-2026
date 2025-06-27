@@ -1,4 +1,9 @@
-import { AssistiveText, AssistiveTextVariant, Button, Checkbox } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Button,
+    Checkbox,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -6,7 +11,10 @@ import { ButtonSize } from '@deps/components/button/button';
 import Select from '@deps/components/select/select';
 import { EDSDocumentRequestBody } from '@deps/models/case/document';
 import { getDocumentMetadataV3 } from '@deps/queries/api/client/documents/v3/metadata';
-import { DocumentAccessLevel, DocumentMetadata } from '@deps/types/documents-v3';
+import {
+    DocumentAccessLevel,
+    DocumentMetadata,
+} from '@deps/types/documents-v3';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -16,13 +24,20 @@ export type FileAttachmentComponentProps = {
     onSubmit: (data: EDSDocumentRequestBody) => void;
 };
 
-const FileAttachmentComponent = ({ carrier, onSubmit, onClose }: FileAttachmentComponentProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'general.fileUpload' });
+const FileAttachmentComponent = ({
+    carrier,
+    onSubmit,
+    onClose,
+}: FileAttachmentComponentProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'general.fileUpload',
+    });
     const [metadata, setMetadata] = useState<DocumentMetadata[]>([]);
     const [categoryOptions, setCategoryOptions] = useState<any>([]);
     const [documentTypeOptions, setDocumentTypeOptions] = useState<any>([]);
     const [formNumberOptions, setFormNumberOptions] = useState<any>([]);
-    const [currentFormData, setCurrentFormData] = useState<EDSDocumentRequestBody>({} as EDSDocumentRequestBody);
+    const [currentFormData, setCurrentFormData] =
+        useState<EDSDocumentRequestBody>({} as EDSDocumentRequestBody);
     const [restricted, setRestricted] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const limit = 100;
@@ -31,11 +46,11 @@ const FileAttachmentComponent = ({ carrier, onSubmit, onClose }: FileAttachmentC
     useEffect(() => {
         const seen = new Set();
         const options = metadata
-            .map(doc => ({
+            .map((doc) => ({
                 label: doc.documentCategory,
                 value: doc.documentCategoryKey,
             }))
-            .filter(option => {
+            .filter((option) => {
                 const key = option.value;
                 if (seen.has(key)) return false;
                 seen.add(key);
@@ -73,7 +88,12 @@ const FileAttachmentComponent = ({ carrier, onSubmit, onClose }: FileAttachmentC
 
     const handleDocTypeSelection = (value: string) => {
         const seen = new Set();
-        setCurrentFormData({ ...currentFormData, docCategory: value, documentType: '', formNumber: '' });
+        setCurrentFormData({
+            ...currentFormData,
+            docCategory: value,
+            documentType: '',
+            formNumber: '',
+        });
 
         setDocumentTypeOptions(
             metadata
@@ -93,20 +113,34 @@ const FileAttachmentComponent = ({ carrier, onSubmit, onClose }: FileAttachmentC
         setCurrentFormData({ ...currentFormData, documentType: value });
 
         const formNumberOptions = metadata
-            .filter((option: any) => option.documentType === value && option.formNumber !== '')
-            ?.map((option: any) => ({ label: option.formNumber, value: option.formNumber }));
+            .filter(
+                (option: any) =>
+                    option.documentType === value && option.formNumber !== ''
+            )
+            ?.map((option: any) => ({
+                label: option.formNumber,
+                value: option.formNumber,
+            }));
         setFormNumberOptions(formNumberOptions || []);
     };
 
     const handleFormNumberSelection = (value: string) => {
-        const documentTypeDescription = metadata.find((option: any) => option.formNumber === value)?.documentTypeDescription;
-        setCurrentFormData({ ...currentFormData, formNumber: value, documentTypeDescription });
+        const documentTypeDescription = metadata.find(
+            (option: any) => option.formNumber === value
+        )?.documentTypeDescription;
+        setCurrentFormData({
+            ...currentFormData,
+            formNumber: value,
+            documentTypeDescription,
+        });
     };
 
     useEffect(() => {
         setCurrentFormData({
             ...currentFormData,
-            docAccessLevel: restricted ? DocumentAccessLevel.CARRIER_ONLY : DocumentAccessLevel.CLIENT_COPY,
+            docAccessLevel: restricted
+                ? DocumentAccessLevel.CARRIER_ONLY
+                : DocumentAccessLevel.CLIENT_COPY,
         });
     }, [restricted, currentFormData]);
 
@@ -144,14 +178,21 @@ const FileAttachmentComponent = ({ carrier, onSubmit, onClose }: FileAttachmentC
                     />
                 )}
 
-                <Checkbox id="restricted" onClick={handleRestrictedChange} isCheckedByDefault={restricted}>
+                <Checkbox
+                    id="restricted"
+                    onClick={handleRestrictedChange}
+                    isCheckedByDefault={restricted}
+                >
                     {t('restricted') as string}
                 </Checkbox>
 
                 <div className="flex gap-2">
                     <Button
                         aria-label={t('continue') as string}
-                        disabled={currentFormData?.docCategory === '' || currentFormData?.documentType === ''}
+                        disabled={
+                            currentFormData?.docCategory === '' ||
+                            currentFormData?.documentType === ''
+                        }
                         mode="primary"
                         size={ButtonSize.Small}
                         type="submit"
@@ -160,12 +201,23 @@ const FileAttachmentComponent = ({ carrier, onSubmit, onClose }: FileAttachmentC
                         {t('upload')}
                     </Button>
 
-                    <Button aria-label={t('cancel') as string} mode="secondary" size={ButtonSize.Small} onClick={onClose}>
+                    <Button
+                        aria-label={t('cancel') as string}
+                        mode="secondary"
+                        size={ButtonSize.Small}
+                        onClick={onClose}
+                    >
                         {t('cancel')}
                     </Button>
                 </div>
 
-                {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
+                {error && (
+                    <AssistiveText
+                        text={error}
+                        variant={AssistiveTextVariant.Error}
+                        className="mt-2"
+                    />
+                )}
             </div>
         </div>
     );

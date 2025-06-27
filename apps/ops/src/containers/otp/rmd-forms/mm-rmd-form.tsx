@@ -26,8 +26,12 @@ type MassMutualRmdWithdrawalFormProps = {
     qualType: QualTypes | '';
 };
 
-export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdWithdrawalFormProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+export default function MassMutualRmdWithdrawalForm({
+    qualType,
+}: MassMutualRmdWithdrawalFormProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         getSignaturesConfig,
         formPartyConfigs,
@@ -84,17 +88,29 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
     const verificationReason = formSignature?.signVerificationReason ?? [];
     const isKeogh = qualType === QualTypes.KEOGHHR10;
     const signaturesConfig = getSignaturesConfig(isKeogh);
-    const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
+    const isMaritalStatusAllowances = contractIssueState
+        ? validateMaritalStatusAllowances(contractIssueState as USStates)
+        : false;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
+            <JointLifeExpectancy
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={jointLifeExpectancyConfigs}
+            />
             <FormDistribution
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                title={
+                    t(
+                        'distributionInstruction.investmentSelectionForDistribution'
+                    ) as string
+                }
                 isFormStateReadOnly={isFormStateReadOnly}
             />
             <TaxWithholdings
@@ -102,22 +118,44 @@ export default function MassMutualRmdWithdrawalForm({ qualType }: MassMutualRmdW
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
                 specifiedView={true}
             />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
 
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig}>
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            >
                 {isKeogh ? (
                     <SignatureVerificationReasons
                         isFormStateReadOnly={isFormStateReadOnly}
                         config={signVerificationReasonConfig}
-                        checkedItems={verificationReason.length ? verificationReason.map(signReason => signReason.text) : []}
+                        checkedItems={
+                            verificationReason.length
+                                ? verificationReason.map(
+                                      (signReason) => signReason.text
+                                  )
+                                : []
+                        }
                     ></SignatureVerificationReasons>
                 ) : null}
             </SignatureValidations>
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

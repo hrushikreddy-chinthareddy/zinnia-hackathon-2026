@@ -65,39 +65,61 @@ const getStandardYesNoOptions = (t: TFunction) => [
 
 export default function useMassSSWConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({
+            formSignature,
+            formDisbursement,
+        }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
             const ownerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
-            if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (
+                [PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                )
+            ) {
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                    formDisbursement?.bank[0].accountNumber !==
+                        formDisbursement?.bank[0].reEnterAccountNumber
                 ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterAccountNumber] = t(
+                        'formValidation.accountNumberDoesNotMatch'
+                    );
                 }
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                    formDisbursement?.bank[0].routingNumber !==
+                        formDisbursement?.bank[0].reEnterBankRoutingNumber
                 ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                        'formValidation.routingNumberDoesNotMatch'
+                    );
                 }
             }
 
             // No choice made for signature
-            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                ownerSignature?.isSigned !== false &&
+                !ownerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
 
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+                [PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                )
             ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
             }
 
             return errors;
@@ -105,26 +127,56 @@ export default function useMassSSWConfig(t: TFunction) {
         [t]
     );
 
-    const sswFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
+    const sswFormValidation = ({
+        formParty,
+        formSignature,
+        formDisbursement,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = formValidation({
+            formParty,
+            formSignature,
+            formDisbursement,
+        });
 
         return errors;
     };
 
     const validateMaritalStatusAllowances = (issueState: USStates) => {
-        return [USStates.GEORGIA, USStates.MINNESOTA, USStates['SOUTH CAROLINA']].includes(issueState);
+        return [
+            USStates.GEORGIA,
+            USStates.MINNESOTA,
+            USStates['SOUTH CAROLINA'],
+        ].includes(issueState);
     };
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.age595'), value: RestrictionOption.Age595 },
-        { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
-        { label: t('distributionReason.reasonOptions.planTermination'), value: RestrictionOption.PlanTermination },
-        { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
         {
-            label: t('distributionReason.reasonOptions.otherEligibleDistributedPermittedPlan'),
+            label: t('distributionReason.reasonOptions.age595'),
+            value: RestrictionOption.Age595,
+        },
+        {
+            label: t('distributionReason.reasonOptions.severance'),
+            value: RestrictionOption.Severance,
+            subElement: <ReasonDate />,
+        },
+        {
+            label: t('distributionReason.reasonOptions.planTermination'),
+            value: RestrictionOption.PlanTermination,
+        },
+        {
+            label: t('distributionReason.reasonOptions.disabled'),
+            value: RestrictionOption.Disabled,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.otherEligibleDistributedPermittedPlan'
+            ),
             value: RestrictionOption.EligibleDistribution,
         },
-        { label: t('distributionReason.reasonOptions.qualifiedReservist'), value: RestrictionOption.QualifiedReservist },
+        {
+            label: t('distributionReason.reasonOptions.qualifiedReservist'),
+            value: RestrictionOption.QualifiedReservist,
+        },
     ];
 
     const disbursementOptions: PaymentMethodOption[] = [
@@ -145,7 +197,9 @@ export default function useMassSSWConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -171,7 +225,10 @@ export default function useMassSSWConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -184,11 +241,16 @@ export default function useMassSSWConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -204,18 +266,25 @@ export default function useMassSSWConfig(t: TFunction) {
                     classNames: 'col-start-2',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
                 };
@@ -250,7 +319,8 @@ export default function useMassSSWConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -293,7 +363,9 @@ export default function useMassSSWConfig(t: TFunction) {
                 },
             ],
             getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {
-                if (paymentMethod.text !== PaymentMethod.AlternatePayeeAddress) {
+                if (
+                    paymentMethod.text !== PaymentMethod.AlternatePayeeAddress
+                ) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
 
@@ -304,10 +376,16 @@ export default function useMassSSWConfig(t: TFunction) {
                     taxId: payee?.taxId?.text ?? '',
                 };
             },
-            generatePayloadFromSelection: ({ payeeName, address, taxId }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                taxId,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.AlternatePayeeAddress },
+                    paymentMethod: {
+                        text: PaymentMethod.AlternatePayeeAddress,
+                    },
                     payee: {
                         name: {
                             text: payeeName || null,
@@ -432,7 +510,10 @@ export default function useMassSSWConfig(t: TFunction) {
             value: FundWithdrawnMethod.Prorata,
             disabled: sswType === SSWType.PercentOfAmountValue,
         },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const generateSSWPayload = (val: SSWProgram, subType: SSWType) => ({
@@ -444,7 +525,10 @@ export default function useMassSSWConfig(t: TFunction) {
             text: subType,
         },
         programFrequency: {
-            frequency: val.frequency.text === Frequency.None ? { text: '' as Frequency } : val.frequency,
+            frequency:
+                val.frequency.text === Frequency.None
+                    ? { text: '' as Frequency }
+                    : val.frequency,
             beginDate: val.startDate,
             fixedPeriodYear: [
                 SSWType.FixPeriod,
@@ -457,25 +541,38 @@ export default function useMassSSWConfig(t: TFunction) {
                 : { text: val.duration.text },
             duration: val.duration,
         },
-        ...(subType === SSWType.FixDollar && { programAmount: { text: val.amount?.text, amountType: AmountType.Dollar } }),
-        ...(subType === SSWType.PercentOfAmountValue && { partialPercent: { text: val.percent?.text, amountType: AmountType.Percent } }),
+        ...(subType === SSWType.FixDollar && {
+            programAmount: {
+                text: val.amount?.text,
+                amountType: AmountType.Dollar,
+            },
+        }),
+        ...(subType === SSWType.PercentOfAmountValue && {
+            partialPercent: {
+                text: val.percent?.text,
+                amountType: AmountType.Percent,
+            },
+        }),
     });
 
     const systematicWithdrawalOptions = [
         {
             label: t('sswProgram.sswOptions.fixedDollar'),
             value: SSWType.FixDollar,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixDollar),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.FixDollar),
         },
         {
             label: t('sswProgram.sswOptions.annualFreeWithdrawal'),
             value: SSWType.AnnualFree,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.AnnualFree),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.AnnualFree),
         },
         {
             label: t('sswProgram.sswOptions.percentageOfAccountValue'),
             value: SSWType.PercentOfAmountValue,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.PercentOfAmountValue),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.PercentOfAmountValue),
         },
     ];
 
@@ -483,7 +580,9 @@ export default function useMassSSWConfig(t: TFunction) {
         {
             id: PolicyWaiver.NURSING_HOME_AND_HOSPITAL,
             title: t('additionalWaivers.nursingAndHospitalBenefits'),
-            optionTitle: t('additionalWaivers.isNursingAndHospitalBenefitValid'),
+            optionTitle: t(
+                'additionalWaivers.isNursingAndHospitalBenefitValid'
+            ),
             options: getStandardYesNoOptions(t),
         },
         {
@@ -505,7 +604,9 @@ export default function useMassSSWConfig(t: TFunction) {
         },
     ];
 
-    const getSignaturesConfig = (isKeogh: boolean): SignatureValidationConfig[] => [
+    const getSignaturesConfig = (
+        isKeogh: boolean
+    ): SignatureValidationConfig[] => [
         {
             key: `sig-val-owner`,
             fields: [
@@ -550,7 +651,9 @@ export default function useMassSSWConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -569,10 +672,15 @@ export default function useMassSSWConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ formSignature }: OtpWithdrawalFormState): boolean => {
-                const isMarriedSelected = !!formSignature.signVerificationReason?.some(
-                    reason => reason.text === SignVerificationReason.MarriedWithERISA
-                );
+            shouldDisplay: ({
+                formSignature,
+            }: OtpWithdrawalFormState): boolean => {
+                const isMarriedSelected =
+                    !!formSignature.signVerificationReason?.some(
+                        (reason) =>
+                            reason.text ===
+                            SignVerificationReason.MarriedWithERISA
+                    );
                 return isKeogh && isMarriedSelected;
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
@@ -585,7 +693,9 @@ export default function useMassSSWConfig(t: TFunction) {
             value: SignVerificationReason.Single,
         },
         {
-            label: t('signatureValidation.validationReasons.marriedWithoutERISA'),
+            label: t(
+                'signatureValidation.validationReasons.marriedWithoutERISA'
+            ),
             value: SignVerificationReason.MarriedWithoutERISA,
         },
         {
@@ -595,7 +705,9 @@ export default function useMassSSWConfig(t: TFunction) {
     ];
 
     const getFundWithdrawalDefaultSelection = (sswType: string) => {
-        return sswType === SSWType.PercentOfAmountValue ? undefined : FundWithdrawnMethod.Prorata;
+        return sswType === SSWType.PercentOfAmountValue
+            ? undefined
+            : FundWithdrawnMethod.Prorata;
     };
 
     const eSignatureFieldConfig = {

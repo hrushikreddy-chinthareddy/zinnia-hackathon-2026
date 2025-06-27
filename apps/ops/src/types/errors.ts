@@ -4,4 +4,4 @@ export class CreateCaseError extends Error {
 
 export class NotFoundError extends Error {
     readonly tag = 'NotFoundError';
-  }
+}

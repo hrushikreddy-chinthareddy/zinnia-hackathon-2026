@@ -25,7 +25,10 @@ export const deleteCommunication = async ({
 
         return response;
     } catch (error: any) {
-        console.error(`deleteCommunication::${communicationType} error: `, error);
+        console.error(
+            `deleteCommunication::${communicationType} error: `,
+            error
+        );
 
         return error;
     }
@@ -33,7 +36,9 @@ export const deleteCommunication = async ({
 
 export const getPartyMetadata = async (): Promise<AxiosResponse> => {
     try {
-        const response = await client.get<void, AxiosResponse>(`${baseAppUrl}/api/party/v1/parties/reference`);
+        const response = await client.get<void, AxiosResponse>(
+            `${baseAppUrl}/api/party/v1/parties/reference`
+        );
 
         return response;
     } catch (error: any) {
@@ -43,9 +48,13 @@ export const getPartyMetadata = async (): Promise<AxiosResponse> => {
     }
 };
 
-export const getPartyMetadataById = async (partyId: string): Promise<AxiosResponse> => {
+export const getPartyMetadataById = async (
+    partyId: string
+): Promise<AxiosResponse> => {
     try {
-        const response = await client.get<void, AxiosResponse>(`${baseAppUrl}/api/party/v1/parties/${partyId}/reference`);
+        const response = await client.get<void, AxiosResponse>(
+            `${baseAppUrl}/api/party/v1/parties/${partyId}/reference`
+        );
         return response;
     } catch (error: any) {
         console.error('getPartyMetadata::an error occurred', error);

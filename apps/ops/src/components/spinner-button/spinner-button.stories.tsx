@@ -1,5 +1,7 @@
 import { ButtonSize } from '@deps/components/button/button';
-import SpinnerButton, { SpinnerButtonProps } from '@deps/components/spinner-button/spinner-button';
+import SpinnerButton, {
+    SpinnerButtonProps,
+} from '@deps/components/spinner-button/spinner-button';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

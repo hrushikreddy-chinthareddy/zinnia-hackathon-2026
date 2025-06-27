@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
 
 import { DEFAULT_NOTIFIER_PARTY } from '@deps/containers/death-claim-container/death-claim.helpers';
-import { DeceasedParty, NotificationMethod, NotifierParty } from '@deps/containers/death-claim-container/death-claim.types';
+import {
+    DeceasedParty,
+    NotificationMethod,
+    NotifierParty,
+} from '@deps/containers/death-claim-container/death-claim.types';
 import { Correspondence } from '@deps/models/case/correspondence';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
@@ -16,14 +20,16 @@ export type DeathClaimFormState = {
     caseId: string;
     onbaseCaseId: string;
     onbaseDocumentNumber: string;
-    isDocumentSelected: boolean,
+    isDocumentSelected: boolean;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
     setCorrespondence: React.Dispatch<React.SetStateAction<Correspondence>>;
     setNotifiers: React.Dispatch<React.SetStateAction<NotifierParty>>;
     setOwners: React.Dispatch<React.SetStateAction<DeceasedParty[]>>;
-    setBeneficiaries: React.Dispatch<React.SetStateAction<NotificationMethod[]>>;
+    setBeneficiaries: React.Dispatch<
+        React.SetStateAction<NotificationMethod[]>
+    >;
     setCaseId: React.Dispatch<React.SetStateAction<string>>;
     setOnbaseCaseId: React.Dispatch<React.SetStateAction<string>>;
     setOnbaseDocumentNumber: React.Dispatch<React.SetStateAction<string>>;
@@ -37,9 +43,9 @@ export const DeathClaimDefaultValues = {
     formErrors: {} as FormValidationErrors,
     submitFailed: false,
     correspondence: {} as Correspondence,
-    notifiers:  {} as NotifierParty,
+    notifiers: {} as NotifierParty,
     owners: [] as DeceasedParty[],
-    beneficiaries:  [] as NotificationMethod[],
+    beneficiaries: [] as NotificationMethod[],
     caseId: '' as string,
     onbaseCaseId: '' as string,
     onbaseDocumentNumber: '' as string,
@@ -57,27 +63,36 @@ export const DeathClaimDefaultValues = {
     setIsDocumentSelected: noop,
 };
 
-export const DeathClaimContext = createContext<DeathClaimFormState>(DeathClaimDefaultValues);
+export const DeathClaimContext = createContext<DeathClaimFormState>(
+    DeathClaimDefaultValues
+);
 
 type DeathClaimProviderProps = {
     children: React.ReactNode;
 };
 
-const INITIAL_FORM_DATA: any = {
-};
+const INITIAL_FORM_DATA: any = {};
 
 export const DeathClaimProvider = ({ children }: DeathClaimProviderProps) => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [submitFailed, setSubmitFailed] = useState<boolean>(false);
-    const [correspondence, setCorrespondence] = useState<Correspondence>({} as Correspondence);
-    const [notifiers, setNotifiers] = useState<NotifierParty>(DEFAULT_NOTIFIER_PARTY as NotifierParty);
+    const [correspondence, setCorrespondence] = useState<Correspondence>(
+        {} as Correspondence
+    );
+    const [notifiers, setNotifiers] = useState<NotifierParty>(
+        DEFAULT_NOTIFIER_PARTY as NotifierParty
+    );
     const [owners, setOwners] = useState<DeceasedParty[]>([]);
-    const [beneficiaries, setBeneficiaries] = useState<NotificationMethod[]>([]);
+    const [beneficiaries, setBeneficiaries] = useState<NotificationMethod[]>(
+        []
+    );
     const [caseId, setCaseId] = useState<string>('');
-    const [onbaseCaseId, setOnbaseCaseId] =  useState<string>('');
-    const [onbaseDocumentNumber, setOnbaseDocumentNumber] =  useState<string>('');
-    const [isDocumentSelected, setIsDocumentSelected] =  useState<boolean>(false);
+    const [onbaseCaseId, setOnbaseCaseId] = useState<string>('');
+    const [onbaseDocumentNumber, setOnbaseDocumentNumber] =
+        useState<string>('');
+    const [isDocumentSelected, setIsDocumentSelected] =
+        useState<boolean>(false);
 
     return (
         <DeathClaimContext.Provider
@@ -103,7 +118,7 @@ export const DeathClaimProvider = ({ children }: DeathClaimProviderProps) => {
                 setCaseId,
                 setOnbaseCaseId,
                 setOnbaseDocumentNumber,
-                setIsDocumentSelected
+                setIsDocumentSelected,
             }}
         >
             {children}
@@ -115,7 +130,9 @@ export const useDeathClaim = () => {
     const context = useContext(DeathClaimContext);
 
     if (!context) {
-        throw new Error('useDeathClaim must be used within a DeathClaimProvider');
+        throw new Error(
+            'useDeathClaim must be used within a DeathClaimProvider'
+        );
     }
     return context;
 };

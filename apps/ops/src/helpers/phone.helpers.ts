@@ -8,7 +8,10 @@ export function formatPhoneNumber(phone: Phone): string {
         formattedNumber += `(${phone.areaCode}) `;
     }
     if (phone.dialNumber) {
-        formattedNumber += `${phone.dialNumber.substring(0, 3)}-${phone.dialNumber.substring(3, 8)}`;
+        formattedNumber += `${phone.dialNumber.substring(
+            0,
+            3
+        )}-${phone.dialNumber.substring(3, 8)}`;
     }
     return formattedNumber;
 }
@@ -33,7 +36,10 @@ export function formatPhoneNumberWithCountryCode(phone: Phone): string {
         formattedNumber += ` (${phone.areaCode}) `;
     }
     if (phone.dialNumber) {
-        formattedNumber += `${phone.dialNumber.substring(0, 3)}-${phone.dialNumber.substring(3, 8)}`;
+        formattedNumber += `${phone.dialNumber.substring(
+            0,
+            3
+        )}-${phone.dialNumber.substring(3, 8)}`;
     }
     return formattedNumber;
 }
@@ -47,7 +53,10 @@ export function formatPhoneNumberWithExtension(phone: Phone): string {
         formattedNumber += ` (${phone.areaCode}) `;
     }
     if (phone.dialNumber) {
-        formattedNumber += `${phone.dialNumber.substring(0, 3)}-${phone.dialNumber.substring(3, 8)}`;
+        formattedNumber += `${phone.dialNumber.substring(
+            0,
+            3
+        )}-${phone.dialNumber.substring(3, 8)}`;
     }
     if (phone.extension) {
         formattedNumber += ` ext. ${phone.extension}`;
@@ -64,14 +73,27 @@ export interface BestAvailableContactNumberResponse {
     phoneType: PhoneType | null;
 }
 
-export function bestAvailableContactNumber({ party }: BestAvailableContactNumberProps): BestAvailableContactNumberResponse {
-    const contactNumbers = party?.phones?.filter(phone => phone.dialNumber !== null && !isEndDated(phone.endDate)) || [];
-    const bestFitOrder = [PhoneType.MOBILE, PhoneType.HOME, PhoneType.BUSINESS, PhoneType.OTHER, PhoneType.FAX];
+export function bestAvailableContactNumber({
+    party,
+}: BestAvailableContactNumberProps): BestAvailableContactNumberResponse {
+    const contactNumbers =
+        party?.phones?.filter(
+            (phone) => phone.dialNumber !== null && !isEndDated(phone.endDate)
+        ) || [];
+    const bestFitOrder = [
+        PhoneType.MOBILE,
+        PhoneType.HOME,
+        PhoneType.BUSINESS,
+        PhoneType.OTHER,
+        PhoneType.FAX,
+    ];
 
     let bestAvailable;
     let phoneTypeBestFit = null;
     for (let i = 0; i < bestFitOrder.length; i++) {
-        const potentials = contactNumbers?.filter(phone => phone.phoneType === bestFitOrder[i]);
+        const potentials = contactNumbers?.filter(
+            (phone) => phone.phoneType === bestFitOrder[i]
+        );
         if (potentials.length) {
             bestAvailable = potentials[0];
             phoneTypeBestFit = bestFitOrder[i];

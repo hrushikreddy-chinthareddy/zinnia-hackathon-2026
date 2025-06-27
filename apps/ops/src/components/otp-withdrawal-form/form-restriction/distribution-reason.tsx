@@ -2,12 +2,20 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { EmergencyOption, HardshipOption, RestrictionOption } from '@deps/models/case/withdrawal/case';
+import {
+    EmergencyOption,
+    HardshipOption,
+    RestrictionOption,
+} from '@deps/models/case/withdrawal/case';
 
-import RestrictionOptionComponent, { OptionComponentProps } from './restriction-option-component';
+import RestrictionOptionComponent, {
+    OptionComponentProps,
+} from './restriction-option-component';
 
 // This was the solution to generic typing a method.
 
@@ -27,13 +35,17 @@ export default function DistributionReason({
     isFormStateReadOnly,
 }: distributionReasonProps) {
     const { formRestriction, setFormRestriction } = useContext(FormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.distributionReason' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.distributionReason',
+    });
     const [reason, setReason] = useState(formRestriction?.restrictions ?? []);
     const [hardship, setHardship] = useState(formRestriction?.hardship ?? []);
-    const [unforeseeableEmergency, setUnforeseeableEmergency] = useState(formRestriction?.emergency ?? []);
+    const [unforeseeableEmergency, setUnforeseeableEmergency] = useState(
+        formRestriction?.emergency ?? []
+    );
 
     useEffect(() => {
-        setFormRestriction(restrictions => ({
+        setFormRestriction((restrictions) => ({
             ...restrictions,
             restrictions: reason,
             hardship: hardship,
@@ -43,7 +55,10 @@ export default function DistributionReason({
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <Typography variant={TypographyVariant.H3} data-testid="data-testid-distribution-reason-title">
+            <Typography
+                variant={TypographyVariant.H3}
+                data-testid="data-testid-distribution-reason-title"
+            >
                 {t('distributionReasonDetails')}
             </Typography>
             <div className="mt-4 flex flex-col gap-4">

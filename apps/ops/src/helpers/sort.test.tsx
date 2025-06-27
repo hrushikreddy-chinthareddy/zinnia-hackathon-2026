@@ -1,6 +1,11 @@
 import { DataDefinition } from '@deps/types/data';
 
-import { orderObjectsByFirstString, orderObjectsByString, sort, sortByAndThenBy } from './sort.helpers';
+import {
+    orderObjectsByFirstString,
+    orderObjectsByString,
+    sort,
+    sortByAndThenBy,
+} from './sort.helpers';
 
 describe('Sort Helper', () => {
     describe('> sort', () => {
@@ -33,7 +38,11 @@ describe('Sort Helper', () => {
 
         it('should order objects based on the ordered set of strings', () => {
             const orderedSet = ['Bob', 'John', 'Alice', 'David'];
-            const orderedObjects = orderObjectsByString(objects, orderedSet, 'firstName');
+            const orderedObjects = orderObjectsByString(
+                objects,
+                orderedSet,
+                'firstName'
+            );
 
             expect(orderedObjects).toEqual([
                 { id: 3, firstName: 'Bob' },
@@ -45,7 +54,11 @@ describe('Sort Helper', () => {
 
         it('should place objects with strings not in the ordered set at the end', () => {
             const orderedSet = ['Bob', 'Alice'];
-            const orderedObjects = orderObjectsByString(objects, orderedSet, 'firstName');
+            const orderedObjects = orderObjectsByString(
+                objects,
+                orderedSet,
+                'firstName'
+            );
 
             expect(orderedObjects).toEqual([
                 { id: 3, firstName: 'Bob' },
@@ -57,12 +70,20 @@ describe('Sort Helper', () => {
 
         it('should return an empty array if either the ordered set or objects array is empty', () => {
             const emptyOrderedSet: string[] = [];
-            const emptyOrderedObjects = orderObjectsByString(objects, emptyOrderedSet, 'firstName');
+            const emptyOrderedObjects = orderObjectsByString(
+                objects,
+                emptyOrderedSet,
+                'firstName'
+            );
 
             expect(emptyOrderedObjects).toEqual([]);
 
             const emptyObjects: string[] = [];
-            const emptyObjectsArray = orderObjectsByString(emptyObjects, ['Alice', 'Bob'], 'firstName');
+            const emptyObjectsArray = orderObjectsByString(
+                emptyObjects,
+                ['Alice', 'Bob'],
+                'firstName'
+            );
 
             expect(emptyObjectsArray).toEqual([]);
         });
@@ -77,7 +98,11 @@ describe('Sort Helper', () => {
                 { id: 4, firstName: 'Alice', beneficiaryPercentage: 35 },
             ];
 
-            const sortedObjects = sortByAndThenBy(objects, 'firstName', 'beneficiaryPercentage');
+            const sortedObjects = sortByAndThenBy(
+                objects,
+                'firstName',
+                'beneficiaryPercentage'
+            );
 
             expect(sortedObjects).toEqual([
                 { id: 2, firstName: 'Alice', beneficiaryPercentage: 30 },
@@ -95,7 +120,11 @@ describe('Sort Helper', () => {
                 { id: 4, firstName: 'Bob', beneficiaryPercentage: 35 },
             ];
 
-            const sortedObjects = sortByAndThenBy(objectsWithSameName, 'firstName', 'beneficiaryPercentage');
+            const sortedObjects = sortByAndThenBy(
+                objectsWithSameName,
+                'firstName',
+                'beneficiaryPercentage'
+            );
 
             expect(sortedObjects).toEqual([
                 { id: 3, firstName: 'Alice', beneficiaryPercentage: 20 },
@@ -107,19 +136,64 @@ describe('Sort Helper', () => {
 
         it('should handle primary key and secondary key and tertiary key having the same values', () => {
             const objectsWithSameName = [
-                { id: 1, firstName: 'John', lastName: 'Smith', beneficiaryPercentage: 25 },
-                { id: 2, firstName: 'Alice', lastName: 'Jones', beneficiaryPercentage: 25 },
-                { id: 3, firstName: 'Alice', lastName: 'Green', beneficiaryPercentage: 25 },
-                { id: 4, firstName: 'Bob', lastName: 'Adams', beneficiaryPercentage: 25 },
+                {
+                    id: 1,
+                    firstName: 'John',
+                    lastName: 'Smith',
+                    beneficiaryPercentage: 25,
+                },
+                {
+                    id: 2,
+                    firstName: 'Alice',
+                    lastName: 'Jones',
+                    beneficiaryPercentage: 25,
+                },
+                {
+                    id: 3,
+                    firstName: 'Alice',
+                    lastName: 'Green',
+                    beneficiaryPercentage: 25,
+                },
+                {
+                    id: 4,
+                    firstName: 'Bob',
+                    lastName: 'Adams',
+                    beneficiaryPercentage: 25,
+                },
             ];
 
-            const sortedObjects = sortByAndThenBy(objectsWithSameName, 'beneficiaryPercentage', 'firstName', 'lastName');
+            const sortedObjects = sortByAndThenBy(
+                objectsWithSameName,
+                'beneficiaryPercentage',
+                'firstName',
+                'lastName'
+            );
 
             expect(sortedObjects).toEqual([
-                { id: 3, firstName: 'Alice', lastName: 'Green', beneficiaryPercentage: 25 },
-                { id: 2, firstName: 'Alice', lastName: 'Jones', beneficiaryPercentage: 25 },
-                { id: 4, firstName: 'Bob', lastName: 'Adams', beneficiaryPercentage: 25 },
-                { id: 1, firstName: 'John', lastName: 'Smith', beneficiaryPercentage: 25 },
+                {
+                    id: 3,
+                    firstName: 'Alice',
+                    lastName: 'Green',
+                    beneficiaryPercentage: 25,
+                },
+                {
+                    id: 2,
+                    firstName: 'Alice',
+                    lastName: 'Jones',
+                    beneficiaryPercentage: 25,
+                },
+                {
+                    id: 4,
+                    firstName: 'Bob',
+                    lastName: 'Adams',
+                    beneficiaryPercentage: 25,
+                },
+                {
+                    id: 1,
+                    firstName: 'John',
+                    lastName: 'Smith',
+                    beneficiaryPercentage: 25,
+                },
             ]);
         });
     });
@@ -134,7 +208,11 @@ describe('Sort Helper', () => {
 
         it('should order objects based on the ordered set of strings', () => {
             const orderedSet = ['Bob', 'John', 'Alice', 'David'];
-            const orderedObjects = orderObjectsByFirstString(objects, orderedSet, 'firstName');
+            const orderedObjects = orderObjectsByFirstString(
+                objects,
+                orderedSet,
+                'firstName'
+            );
 
             expect(orderedObjects).toEqual([
                 { id: 3, firstName: [{ text: 'Bob' }] },
@@ -146,7 +224,11 @@ describe('Sort Helper', () => {
 
         it('should place objects with first strings not in the ordered set at the end', () => {
             const orderedSet = ['Bob', 'Alice'];
-            const orderedObjects = orderObjectsByFirstString(objects, orderedSet, 'firstName');
+            const orderedObjects = orderObjectsByFirstString(
+                objects,
+                orderedSet,
+                'firstName'
+            );
 
             expect(orderedObjects).toEqual([
                 { id: 3, firstName: [{ text: 'Bob' }] },
@@ -158,12 +240,20 @@ describe('Sort Helper', () => {
 
         it('should return the original array if the ordered set is empty', () => {
             const emptyOrderedSet: string[] = [];
-            const orderedObjects = orderObjectsByFirstString(objects, emptyOrderedSet, 'firstName');
+            const orderedObjects = orderObjectsByFirstString(
+                objects,
+                emptyOrderedSet,
+                'firstName'
+            );
 
             expect(orderedObjects).toEqual(objects);
 
             const emptyObjects: any[] = [];
-            const orderedEmptyObjects = orderObjectsByFirstString(emptyObjects, ['Alice', 'Bob'], 'firstName');
+            const orderedEmptyObjects = orderObjectsByFirstString(
+                emptyObjects,
+                ['Alice', 'Bob'],
+                'firstName'
+            );
 
             expect(orderedEmptyObjects).toEqual([]);
         });

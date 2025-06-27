@@ -5,9 +5,19 @@ import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
+import {
+    CreateTaskBody,
+    TaskSource,
+    TaskV2Payload,
+} from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, FormSignature, FormValidationErrors, Frequency, RMDProgramType } from '@deps/models/case/withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    FormSignature,
+    FormValidationErrors,
+    Frequency,
+    RMDProgramType,
+} from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SignatureFieldNames } from '../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -62,11 +72,19 @@ const getSswEditPayload = (
             {
                 programType: existingProg.programType,
                 allocationId: existingProg.allocationId,
-                amount: isTerminate ? existingProg.amount : updateProgram.amount ?? existingProg.amount,
-                duration: isTerminate ? existingProg.duration : updateProgram.duration ?? existingProg.duration,
-                frequency: isTerminate ? existingProg.frequency : updateProgram.frequency ?? existingProg.frequency,
+                amount: isTerminate
+                    ? existingProg.amount
+                    : updateProgram.amount ?? existingProg.amount,
+                duration: isTerminate
+                    ? existingProg.duration
+                    : updateProgram.duration ?? existingProg.duration,
+                frequency: isTerminate
+                    ? existingProg.frequency
+                    : updateProgram.frequency ?? existingProg.frequency,
                 nextDate: {
-                    text: isTerminate ? existingProg.nextDate : updateProgram.nextDate ?? existingProg.nextDate,
+                    text: isTerminate
+                        ? existingProg.nextDate
+                        : updateProgram.nextDate ?? existingProg.nextDate,
                 },
             },
         ],
@@ -86,8 +104,14 @@ const getSswEditPayload = (
             text: document.source,
         },
         businessKey: document.documentNumber,
-        receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
-        receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
+        receivedDate: dayjs(
+            document.dateReceived,
+            'M/D/YYYY hh:mm:ss A'
+        ).format(ZAHARA_API_DATE_FORMAT),
+        receivedDateTime: dayjs(
+            document.dateReceived,
+            'M/D/YYYY hh:mm:ss A'
+        ).format('YYYY-MM-DDTHH:mm:ss:Z'),
         sourceSysId: 'ONBASE',
     };
 
@@ -107,7 +131,10 @@ const getSswEditPayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: documentSource !== ChannelType.Phone ? structuredClone(formSign) : null,
+            formSignature:
+                documentSource !== ChannelType.Phone
+                    ? structuredClone(formSign)
+                    : null,
             formTaxWithholding: null,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,
@@ -132,7 +159,14 @@ export const buildSSWFormData = (
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
-        data: getSswEditPayload(initialForm, formSignature, existingProg, updateProgram, document, operationType) as any,
+        data: getSswEditPayload(
+            initialForm,
+            formSignature,
+            existingProg,
+            updateProgram,
+            document,
+            operationType
+        ) as any,
     };
 };
 
@@ -144,14 +178,20 @@ export const getFullFrequency = (mode: string) => {
     return '';
 };
 
-export const sswEditFormValidator = (formSignature: FormSignature, t: TFunction) => {
+export const sswEditFormValidator = (
+    formSignature: FormSignature,
+    t: TFunction
+) => {
     const errors = {} as FormValidationErrors;
-    const ownerSignature = formSignature?.signatures?.find(sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner);
+    const ownerSignature = formSignature?.signatures?.find(
+        (sigInfo) =>
+            sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+    );
 
     if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-        errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-            'formValidation.signaturePresentOptionMustBeSelected'
-        );
+        errors[
+            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+        ] = t('formValidation.signaturePresentOptionMustBeSelected');
     }
     return errors;
 };

@@ -9,7 +9,13 @@ export const CaseListEmptyState = () => {
     return (
         <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-semantic-warning bg-white shadow-sm">
             <CardInfo
-                icon={<CircleExclamationIcon className="text-semantic-error" height={50} width={50} />}
+                icon={
+                    <CircleExclamationIcon
+                        className="text-semantic-error"
+                        height={50}
+                        width={50}
+                    />
+                }
                 title={t('caseManagementDashboard.search.empty.title')}
                 subtitle={t('caseManagementDashboard.search.empty.paragraph')}
             />

@@ -16,7 +16,11 @@ const popoverChild = <p data-testid={popoverChildTestId}>Popover Child Test</p>;
 describe('Popover Component', () => {
     it('should correctly display the title', async () => {
         render(
-            <Popover placement={PopoverPlacement.TopRight} title={popoverTitle} body={popoverBody}>
+            <Popover
+                placement={PopoverPlacement.TopRight}
+                title={popoverTitle}
+                body={popoverBody}
+            >
                 {popoverChild}
             </Popover>
         );
@@ -32,7 +36,11 @@ describe('Popover Component', () => {
 
     it('should correctly display the body', async () => {
         render(
-            <Popover placement={PopoverPlacement.TopRight} title={popoverTitle} body={popoverBody}>
+            <Popover
+                placement={PopoverPlacement.TopRight}
+                title={popoverTitle}
+                body={popoverBody}
+            >
                 {popoverChild}
             </Popover>
         );
@@ -47,7 +55,11 @@ describe('Popover Component', () => {
 
     it('should correctly render the children', () => {
         render(
-            <Popover placement={PopoverPlacement.TopRight} title={popoverTitle} body={popoverBody}>
+            <Popover
+                placement={PopoverPlacement.TopRight}
+                title={popoverTitle}
+                body={popoverBody}
+            >
                 {popoverChild}
             </Popover>
         );
@@ -58,7 +70,11 @@ describe('Popover Component', () => {
 
     it('should close the popover when the (x) is clicked', async () => {
         render(
-            <Popover placement={PopoverPlacement.TopRight} title={popoverTitle} body={popoverBody}>
+            <Popover
+                placement={PopoverPlacement.TopRight}
+                title={popoverTitle}
+                body={popoverBody}
+            >
                 {popoverChild}
             </Popover>
         );
@@ -93,21 +109,27 @@ describe('Popover helpers', () => {
         });
 
         it(`returns the right side and align values for ${PopoverPlacement.TopRight}`, () => {
-            const { side, align } = getPlacementProps(PopoverPlacement.TopRight);
+            const { side, align } = getPlacementProps(
+                PopoverPlacement.TopRight
+            );
 
             expect(side).toEqual('top');
             expect(align).toEqual('start');
         });
 
         it(`returns the right side and align values for ${PopoverPlacement.BottomLeft}`, () => {
-            const { side, align } = getPlacementProps(PopoverPlacement.BottomLeft);
+            const { side, align } = getPlacementProps(
+                PopoverPlacement.BottomLeft
+            );
 
             expect(side).toEqual('bottom');
             expect(align).toEqual('end');
         });
 
         it(`returns the right side and align values for ${PopoverPlacement.BottomRight}`, () => {
-            const { side, align } = getPlacementProps(PopoverPlacement.BottomRight);
+            const { side, align } = getPlacementProps(
+                PopoverPlacement.BottomRight
+            );
 
             expect(side).toEqual('bottom');
             expect(align).toEqual('start');

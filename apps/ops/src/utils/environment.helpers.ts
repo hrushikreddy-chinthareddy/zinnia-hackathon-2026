@@ -37,19 +37,31 @@ export const isHttpsEnvironment = () => {
 };
 
 export const isProd = () => {
-    return process.env.NEXT_PUBLIC_BACKEND_URL === environmentUrls[ENVIRONMENT_NAME.PROD];
+    return (
+        process.env.NEXT_PUBLIC_BACKEND_URL ===
+        environmentUrls[ENVIRONMENT_NAME.PROD]
+    );
 };
 
 export const isUat = () => {
-    return process.env.NEXT_PUBLIC_BACKEND_URL === environmentUrls[ENVIRONMENT_NAME.UAT];
+    return (
+        process.env.NEXT_PUBLIC_BACKEND_URL ===
+        environmentUrls[ENVIRONMENT_NAME.UAT]
+    );
 };
 
 export const isQA = () => {
-    return process.env.NEXT_PUBLIC_BACKEND_URL === environmentUrls[ENVIRONMENT_NAME.QA];
+    return (
+        process.env.NEXT_PUBLIC_BACKEND_URL ===
+        environmentUrls[ENVIRONMENT_NAME.QA]
+    );
 };
 
 export const isDev = () => {
-    return process.env.NEXT_PUBLIC_BACKEND_URL === environmentUrls[ENVIRONMENT_NAME.DEV];
+    return (
+        process.env.NEXT_PUBLIC_BACKEND_URL ===
+        environmentUrls[ENVIRONMENT_NAME.DEV]
+    );
 };
 
 export const logDataDog = () => {

@@ -19,7 +19,13 @@ interface TaskListingContainerProps {
     documentNumber: string;
 }
 
-const TaskListingContainer = ({ t, caseData, caseType, documentNumber, clientId }: TaskListingContainerProps) => {
+const TaskListingContainer = ({
+    t,
+    caseData,
+    caseType,
+    documentNumber,
+    clientId,
+}: TaskListingContainerProps) => {
     const [tasks, setTasks] = useState<Task[] | undefined>(undefined);
     const [showLoader, setShowLoader] = useState(false);
     const { taskTableConfig } = getCreateCaseConfig(t);
@@ -31,9 +37,15 @@ const TaskListingContainer = ({ t, caseData, caseType, documentNumber, clientId 
                 const tasks = await fetchTasks(caseData.id, caseType);
                 setTasks(tasks || undefined);
                 setShowLoader(false);
-                if (caseData.caseStatus !== Statuses.Completed && tasks && tasks.length === 0) {
+                if (
+                    caseData.caseStatus !== Statuses.Completed &&
+                    tasks &&
+                    tasks.length === 0
+                ) {
                     const route = getSlug(caseType) + '/' + caseData.id;
-                    router.push(`/create-case/${route}?doc=${documentNumber}&clientId=${clientId}`);
+                    router.push(
+                        `/create-case/${route}?doc=${documentNumber}&clientId=${clientId}`
+                    );
                 }
             }
         };
@@ -46,7 +58,9 @@ const TaskListingContainer = ({ t, caseData, caseType, documentNumber, clientId 
             <TasksListing
                 t={t}
                 isHeaderHidden={true}
-                isTaskCreationSupported={caseData.caseStatus !== Statuses.Completed}
+                isTaskCreationSupported={
+                    caseData.caseStatus !== Statuses.Completed
+                }
                 tasks={tasks}
                 caseId={caseData.id}
                 caseType={caseType}

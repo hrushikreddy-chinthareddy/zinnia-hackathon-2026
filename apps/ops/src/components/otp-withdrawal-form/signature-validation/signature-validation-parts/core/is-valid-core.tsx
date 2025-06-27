@@ -1,9 +1,16 @@
 import { TFunction } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
-import { SignValidated, SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import {
+    SignValidated,
+    SignatureValidationTypeWithdrawal,
+} from '@deps/models/case/renewal/signature-validation';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { SignatureFieldNames, SignaturePartProps } from '../signature-parts';
@@ -14,7 +21,9 @@ export type SignatureIsValidCoreProps = {
     signType: {
         text: SignatureValidationTypeWithdrawal | null;
     };
-    setIsSignatureValid: React.Dispatch<React.SetStateAction<boolean | null | undefined>>;
+    setIsSignatureValid: React.Dispatch<
+        React.SetStateAction<boolean | null | undefined>
+    >;
     fieldName: SignatureFieldNames;
     signValidatedOptions: { label: string; value: SignValidated }[];
     label: string;
@@ -43,7 +52,11 @@ export default function SignatureIsValidCore({
     disabled = false,
 }: SignatureIsValidCoreProps) {
     const [signValid, setSignValid] = useState(
-        isSignatureValid ? SignValidated.Yes : isSignatureValid === false ? SignValidated.No : SignValidated.Unselected
+        isSignatureValid
+            ? SignValidated.Yes
+            : isSignatureValid === false
+            ? SignValidated.No
+            : SignValidated.Unselected
     );
 
     useEffect(() => {
@@ -70,7 +83,7 @@ export default function SignatureIsValidCore({
             label={label}
             data-testid={`${signType?.text}-${testId}`}
             message={errors[fieldName]}
-            onChange={val => setSignValid(val as SignValidated)}
+            onChange={(val) => setSignValid(val as SignValidated)}
             options={signValidatedOptions}
             size={FieldSize.Small}
             type={FieldType.BaseActive}

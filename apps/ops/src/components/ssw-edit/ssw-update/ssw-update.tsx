@@ -18,7 +18,13 @@ import Amount from './steps/amount';
 import Start from './steps/start';
 import Summary from './steps/summary';
 import TabGroupContainer from './tab-group-container';
-import { buildSSWFormData, getDocumentSource, sswEditFormValidator, SswUpdateType, UpdatedProgram } from '../ssw-edit-helpers';
+import {
+    buildSSWFormData,
+    getDocumentSource,
+    sswEditFormValidator,
+    SswUpdateType,
+    UpdatedProgram,
+} from '../ssw-edit-helpers';
 import Signature from './steps/signature';
 
 type SswUpdateContainerProps = {
@@ -28,7 +34,12 @@ type SswUpdateContainerProps = {
     programType: string;
 };
 
-const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContainerProps) => {
+const SswUpdate = ({
+    policy,
+    document,
+    programs,
+    programType,
+}: SswUpdateContainerProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
     const router = useRouter();
     const [updateProgram, setUpdateProgram] = useState<UpdatedProgram>({});
@@ -42,10 +53,16 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     let oldProgram: Program[] = [];
 
     if (updateProgram) {
-        oldProgram = programs.filter(item => item.allocationId === updateProgram.allocationId);
+        oldProgram = programs.filter(
+            (item) => item.allocationId === updateProgram.allocationId
+        );
     }
 
-    const handleFormAction = async (item: Program, operationType: SswUpdateType, formSign: FormSignature) => {
+    const handleFormAction = async (
+        item: Program,
+        operationType: SswUpdateType,
+        formSign: FormSignature
+    ) => {
         if (source !== ChannelType.Phone) {
             const formErr = sswEditFormValidator(formSign, t);
             if (Object.keys(formErr).length > 0) {
@@ -61,7 +78,15 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             res = await updateTask(
                 initialForm.caseId,
                 initialForm?.taskId,
-                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, item, updateProgram, document, operationType),
+                buildSSWFormData(
+                    TaskStatus.Completed,
+                    initialForm,
+                    formSign,
+                    item,
+                    updateProgram,
+                    document,
+                    operationType
+                ),
                 timer
             );
         }
@@ -69,7 +94,15 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
             res = await updateTask(
                 initialForm.caseId,
                 initialForm?.taskId,
-                buildSSWFormData(TaskStatus.Completed, initialForm, formSign, item, updateProgram, document, operationType),
+                buildSSWFormData(
+                    TaskStatus.Completed,
+                    initialForm,
+                    formSign,
+                    item,
+                    updateProgram,
+                    document,
+                    operationType
+                ),
                 timer
             );
         }
@@ -86,14 +119,22 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     const steps = useMemo(
         () => [
             {
-                component: <Start parentPage={ParentPage.CreateCase} policy={policy} />,
+                component: (
+                    <Start parentPage={ParentPage.CreateCase} policy={policy} />
+                ),
                 screenReaderLabel: t('tabs.start.tabTitle'),
                 index: 0,
                 text: t('tabs.start.tabTitle'),
                 isVisible: () => true,
             },
             {
-                component: <Amount updateProgram={updateProgram} onProgramUpdate={setUpdateProgram} isReadOnly={false} />,
+                component: (
+                    <Amount
+                        updateProgram={updateProgram}
+                        onProgramUpdate={setUpdateProgram}
+                        isReadOnly={false}
+                    />
+                ),
                 screenReaderLabel: t('tabs.amount.tabTitle'),
                 index: 1,
                 text: t('tabs.amount.tabTitle'),
@@ -107,7 +148,13 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
                 text: t('signTabTitle'),
             },
             {
-                component: <Summary currentProgram={oldProgram?.[0]} updatedProgram={updateProgram} onContinue={handleFormAction} />,
+                component: (
+                    <Summary
+                        currentProgram={oldProgram?.[0]}
+                        updatedProgram={updateProgram}
+                        onContinue={handleFormAction}
+                    />
+                ),
                 screenReaderLabel: t('tabs.summary.tabTitle'),
                 index: 3,
                 text: t('tabs.summary.tabTitle'),
@@ -125,7 +172,10 @@ const SswUpdate = ({ policy, document, programs, programType }: SswUpdateContain
     );
 
     const filteredSteps: Step[] = useMemo(
-        () => steps.filter(item => item.isVisible?.()).map((item, index: number) => ({ ...item, index })),
+        () =>
+            steps
+                .filter((item) => item.isVisible?.())
+                .map((item, index: number) => ({ ...item, index })),
         [steps]
     );
 

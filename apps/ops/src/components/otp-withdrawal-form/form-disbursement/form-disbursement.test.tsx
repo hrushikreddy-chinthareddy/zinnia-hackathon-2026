@@ -4,7 +4,10 @@ import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
 import getFlicConfig from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import {
     AccountType,
@@ -33,7 +36,8 @@ afterEach(() => {
 });
 describe('Form Disbursment Updated Component', () => {
     describe('FLIC Form', () => {
-        const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+        const t: TFunction = (key: string | string[]) =>
+            key as unknown as TFunctionDetailedResult<string>;
 
         const flicCOnfiguration = getFlicConfig(t, QualTypes.CustInhIRA);
         const generateEFTPayload = jest.fn(() => {
@@ -53,7 +57,10 @@ describe('Form Disbursment Updated Component', () => {
             {
                 label: 'caseWithdrawal.request.distributionMethod.eft',
                 value: PaymentMethod.EFT,
-                fields: flicCOnfiguration.disbursementOptions.find(option => option.value === PaymentMethod.EFT)?.fields || null,
+                fields:
+                    flicCOnfiguration.disbursementOptions.find(
+                        (option) => option.value === PaymentMethod.EFT
+                    )?.fields || null,
                 generatePayloadFromSelection: generateEFTPayload,
                 getDefaultPayload: jest.fn(),
             },
@@ -61,7 +68,10 @@ describe('Form Disbursment Updated Component', () => {
                 label: 'caseWithdrawal.request.distributionMethod.wire',
                 value: PaymentMethod.Wire,
                 getDefaultPayload: jest.fn(),
-                fields: flicCOnfiguration.disbursementOptions.find(option => option.value === PaymentMethod.Wire)?.fields || null,
+                fields:
+                    flicCOnfiguration.disbursementOptions.find(
+                        (option) => option.value === PaymentMethod.Wire
+                    )?.fields || null,
 
                 generatePayloadFromSelection: generateWirePayload,
             },
@@ -69,14 +79,21 @@ describe('Form Disbursment Updated Component', () => {
                 label: 'caseWithdrawal.request.distributionMethod.sendCheck',
                 value: PaymentMailType.Check,
                 getDefaultPayload: jest.fn(),
-                fields: flicCOnfiguration.disbursementOptions.find(option => option.value === PaymentMailType.Check)?.fields || null,
+                fields:
+                    flicCOnfiguration.disbursementOptions.find(
+                        (option) => option.value === PaymentMailType.Check
+                    )?.fields || null,
                 generatePayloadFromSelection: generateCheckPayload,
             },
             {
                 label: 'caseWithdrawal.request.distributionMethod.overnightCheck',
                 value: PaymentMailType.ExpressCheck,
                 getDefaultPayload: jest.fn(),
-                fields: flicCOnfiguration.disbursementOptions.find(option => option.value === PaymentMailType.ExpressCheck)?.fields || null,
+                fields:
+                    flicCOnfiguration.disbursementOptions.find(
+                        (option) =>
+                            option.value === PaymentMailType.ExpressCheck
+                    )?.fields || null,
                 generatePayloadFromSelection: generateExpressCheckPayload,
             },
         ];
@@ -131,7 +148,7 @@ describe('Form Disbursment Updated Component', () => {
                 isWireApprovalPresent: { text: false },
             };
             let setMethodArgs;
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 setMethodArgs = cb(formDisbursement);
                 return setMethodArgs;
             });
@@ -246,7 +263,12 @@ describe('Form Disbursment Updated Component', () => {
 
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, formDisbursement, setFormDisbursement: setMockData, parties }}
+                    value={{
+                        ...defaultFormDataContext,
+                        formDisbursement,
+                        setFormDisbursement: setMockData,
+                        parties,
+                    }}
                 >
                     <FormDisbursement options={disbursementOptions} />
                 </FormDataContext.Provider>
@@ -307,7 +329,7 @@ describe('Form Disbursment Updated Component', () => {
                 isWireApprovalPresent: { text: false },
             };
             let setMethodArgs;
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 setMethodArgs = cb(formDisbursement);
                 return setMethodArgs;
             });
@@ -432,37 +454,53 @@ describe('Form Disbursment Updated Component', () => {
                     <FormDisbursement options={disbursementOptions} />
                 </FormDataContext.Provider>
             );
-            const eftOptionElement = screen.getByText('caseWithdrawal.request.distributionMethod.eft');
+            const eftOptionElement = screen.getByText(
+                'caseWithdrawal.request.distributionMethod.eft'
+            );
             expect(eftOptionElement).toBeInTheDocument();
 
-            const wireOptionElement = screen.getByText('caseWithdrawal.request.distributionMethod.wire');
+            const wireOptionElement = screen.getByText(
+                'caseWithdrawal.request.distributionMethod.wire'
+            );
             expect(wireOptionElement).toBeInTheDocument();
 
-            const sendCheckOptionElement = screen.getByText('caseWithdrawal.request.distributionMethod.sendCheck');
+            const sendCheckOptionElement = screen.getByText(
+                'caseWithdrawal.request.distributionMethod.sendCheck'
+            );
             expect(sendCheckOptionElement).toBeInTheDocument();
 
-            const expressCheckOptionElement = screen.getByText('caseWithdrawal.request.distributionMethod.overnightCheck');
+            const expressCheckOptionElement = screen.getByText(
+                'caseWithdrawal.request.distributionMethod.overnightCheck'
+            );
             expect(expressCheckOptionElement).toBeInTheDocument();
             // bank details should not load
-            const isVoidCheckAttachedElement = screen.queryByText(`isVoidCheckAttached`);
+            const isVoidCheckAttachedElement =
+                screen.queryByText(`isVoidCheckAttached`);
             expect(isVoidCheckAttachedElement).not.toBeInTheDocument();
 
-            const sectionTitle = screen.queryByText(`doesCheckMeetSecurityRequirements`);
+            const sectionTitle = screen.queryByText(
+                `doesCheckMeetSecurityRequirements`
+            );
             expect(sectionTitle).not.toBeInTheDocument();
 
             const bankNameElement = screen.queryByTestId(`bankName`);
             expect(bankNameElement).not.toBeInTheDocument();
 
-            const bankRoutingNumberElement = screen.queryByTestId(`bankRoutingNumber`);
+            const bankRoutingNumberElement =
+                screen.queryByTestId(`bankRoutingNumber`);
             expect(bankRoutingNumberElement).not.toBeInTheDocument();
 
             const accountNumberElement = screen.queryByTestId(`accountNumber`);
             expect(accountNumberElement).not.toBeInTheDocument();
 
-            const furtherAcNameElement = screen.queryByTestId('bankFurtherCreditAccount');
+            const furtherAcNameElement = screen.queryByTestId(
+                'bankFurtherCreditAccount'
+            );
             expect(furtherAcNameElement).not.toBeInTheDocument();
 
-            const furtherAcNumberElement = screen.queryByTestId('bankFurtherCreditName');
+            const furtherAcNumberElement = screen.queryByTestId(
+                'bankFurtherCreditName'
+            );
             expect(furtherAcNumberElement).not.toBeInTheDocument();
         });
 
@@ -516,7 +554,7 @@ describe('Form Disbursment Updated Component', () => {
                 isWireApprovalPresent: { text: false },
             };
             let setMethodArgs;
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 setMethodArgs = cb(formDisbursement);
                 return setMethodArgs;
             });
@@ -593,7 +631,7 @@ describe('Form Disbursment Updated Component', () => {
                 isWireApprovalPresent: { text: false },
             };
             let setMethodArgs;
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 setMethodArgs = cb(formDisbursement);
                 return setMethodArgs;
             });
@@ -623,48 +661,87 @@ describe('Form Disbursment Updated Component', () => {
         it('should return all fields when isFormStateReadOnly is false and existingBankSelected is false', () => {
             const fields = [
                 { fieldName: BankingFields.BankName, component: <></> },
-                { fieldName: BankingFields.BankRoutingNumber, component: <></> },
-                { fieldName: BankingFields.ReEnterBankRoutingNumber, component: <></> },
+                {
+                    fieldName: BankingFields.BankRoutingNumber,
+                    component: <></>,
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    component: <></>,
+                },
                 { fieldName: BankingFields.AccountNumber, component: <></> },
-                { fieldName: BankingFields.ReEnterAccountNumber, component: <></> },
+                {
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    component: <></>,
+                },
             ];
 
             const existingBankSelected = false;
             const isFormStateReadOnly = false;
 
-            const result = getBankFieldsList(fields as any, existingBankSelected, isFormStateReadOnly);
+            const result = getBankFieldsList(
+                fields as any,
+                existingBankSelected,
+                isFormStateReadOnly
+            );
             expect(result).toEqual(fields);
         });
 
         it('should return less fields when isFormStateReadOnly is true', () => {
             const fields = [
                 { fieldName: BankingFields.BankName, component: <></> },
-                { fieldName: BankingFields.BankRoutingNumber, component: <></> },
-                { fieldName: BankingFields.ReEnterBankRoutingNumber, component: <></> },
+                {
+                    fieldName: BankingFields.BankRoutingNumber,
+                    component: <></>,
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    component: <></>,
+                },
                 { fieldName: BankingFields.AccountNumber, component: <></> },
-                { fieldName: BankingFields.ReEnterAccountNumber, component: <></> },
+                {
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    component: <></>,
+                },
             ];
 
             const existingBankSelected = false;
             const isFormStateReadOnly = true;
 
-            const result = getBankFieldsList(fields as any, existingBankSelected, isFormStateReadOnly);
+            const result = getBankFieldsList(
+                fields as any,
+                existingBankSelected,
+                isFormStateReadOnly
+            );
             expect(result).not.toEqual(fields);
         });
 
         it('should return less fields when existingBankSelected is true', () => {
             const fields = [
                 { fieldName: BankingFields.BankName, component: <></> },
-                { fieldName: BankingFields.BankRoutingNumber, component: <></> },
-                { fieldName: BankingFields.ReEnterBankRoutingNumber, component: <></> },
+                {
+                    fieldName: BankingFields.BankRoutingNumber,
+                    component: <></>,
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    component: <></>,
+                },
                 { fieldName: BankingFields.AccountNumber, component: <></> },
-                { fieldName: BankingFields.ReEnterAccountNumber, component: <></> },
+                {
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    component: <></>,
+                },
             ];
 
             const existingBankSelected = true;
             const isFormStateReadOnly = false;
 
-            const result = getBankFieldsList(fields as any, existingBankSelected, isFormStateReadOnly);
+            const result = getBankFieldsList(
+                fields as any,
+                existingBankSelected,
+                isFormStateReadOnly
+            );
             expect(result).not.toEqual(fields);
         });
     });

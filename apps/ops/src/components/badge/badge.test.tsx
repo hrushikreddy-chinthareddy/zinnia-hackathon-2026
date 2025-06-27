@@ -20,17 +20,23 @@ describe('Badge Component', () => {
     });
 
     it('should have the correct styling based on the variant prop', () => {
-        const { rerender } = render(<Badge variant={BadgeVariant.Info} label="Test Label" />);
+        const { rerender } = render(
+            <Badge variant={BadgeVariant.Info} label="Test Label" />
+        );
         let badge = screen.getByTestId(BadgeTest.Badge);
         expect(badge).toHaveClass('border-semantic-info text-semantic-info');
 
         rerender(<Badge variant={BadgeVariant.Positive} label="Test Label" />);
         badge = screen.getByTestId(BadgeTest.Badge);
-        expect(badge).toHaveClass('border-semantic-success text-semantic-success');
+        expect(badge).toHaveClass(
+            'border-semantic-success text-semantic-success'
+        );
 
         rerender(<Badge variant={BadgeVariant.Warning} label="Test Label" />);
         badge = screen.getByTestId(BadgeTest.Badge);
-        expect(badge).toHaveClass('border-semantic-warning text-semantic-warning');
+        expect(badge).toHaveClass(
+            'border-semantic-warning text-semantic-warning'
+        );
 
         rerender(<Badge variant={BadgeVariant.Negative} label="Test Label" />);
         badge = screen.getByTestId(BadgeTest.Badge);
@@ -47,17 +53,27 @@ describe('Badge Component', () => {
 
     it('should display an icon if provided', () => {
         const icon = <i data-testid="test-icon" className="icon-test" />;
-        render(<Badge variant={BadgeVariant.Info} label="Test Label" icon={icon} />);
+        render(
+            <Badge variant={BadgeVariant.Info} label="Test Label" icon={icon} />
+        );
         const testIcon = screen.getByTestId('test-icon');
         expect(testIcon).toBeInTheDocument();
     });
 
     it('should have the correct rounded or non-rounded styling based on the rounded prop', () => {
-        const { rerender } = render(<Badge variant={BadgeVariant.Info} label="Test Label" rounded />);
+        const { rerender } = render(
+            <Badge variant={BadgeVariant.Info} label="Test Label" rounded />
+        );
         let badge = screen.getByTestId(BadgeTest.Badge);
         expect(badge).toHaveClass('rounded-full');
 
-        rerender(<Badge variant={BadgeVariant.Info} label="Test Label" rounded={false} />);
+        rerender(
+            <Badge
+                variant={BadgeVariant.Info}
+                label="Test Label"
+                rounded={false}
+            />
+        );
         badge = screen.getByTestId(BadgeTest.Badge);
         expect(badge).toHaveClass('rounded');
     });

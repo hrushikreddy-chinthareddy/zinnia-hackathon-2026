@@ -85,7 +85,9 @@
                                                                     "title": "Last name"
                                                                 }
                                                             },
-                                                            "required": ["firstName"]
+                                                            "required": [
+                                                                "firstName"
+                                                            ]
                                                         },
                                                         "govtIdInfo": {
                                                             "type": "array",
@@ -171,7 +173,9 @@
                                                                         ]
                                                                     }
                                                                 },
-                                                                "required": ["partyType"]
+                                                                "required": [
+                                                                    "partyType"
+                                                                ]
                                                             },
                                                             "then": {
                                                                 "properties": {
@@ -184,7 +188,9 @@
                                                                                 "title": "Name"
                                                                             }
                                                                         },
-                                                                        "required": ["lastName"]
+                                                                        "required": [
+                                                                            "lastName"
+                                                                        ]
                                                                     }
                                                                 }
                                                             },
@@ -227,12 +233,19 @@
                                                                                 "$ref": "#/definitions/martialStatusEnum"
                                                                             }
                                                                         },
-                                                                        "required": ["firstName", "gender", "age", "martialStatus"]
+                                                                        "required": [
+                                                                            "firstName",
+                                                                            "gender",
+                                                                            "age",
+                                                                            "martialStatus"
+                                                                        ]
                                                                     },
                                                                     "employment": {
                                                                         "type": "object",
                                                                         "title": "Employment Information",
-                                                                        "required": ["employmentStatus"],
+                                                                        "required": [
+                                                                            "employmentStatus"
+                                                                        ],
                                                                         "properties": {
                                                                             "employmentStatus": {
                                                                                 "type": "string",
@@ -348,7 +361,11 @@
                                             "title": "Annual payment amount"
                                         }
                                     },
-                                    "required": ["lineOfBusiness", "qualPlanType", "annualPaymentAmt"],
+                                    "required": [
+                                        "lineOfBusiness",
+                                        "qualPlanType",
+                                        "annualPaymentAmt"
+                                    ],
                                     "dependentRequired": {
                                         "productCode": ["productType"],
                                         "productType": ["productCode"]
@@ -387,7 +404,11 @@
                                                     "title": "Please share any additional information and/or changes in circumstances that you have considered in making the decision to purchase this annuity contract:"
                                                 }
                                             },
-                                            "required": ["soldPoliciesToApplicant", "pastReplacement", "coverageExpenseConsideration"]
+                                            "required": [
+                                                "soldPoliciesToApplicant",
+                                                "pastReplacement",
+                                                "coverageExpenseConsideration"
+                                            ]
                                         }
                                     },
                                     "required": ["replacementInd"],
@@ -407,7 +428,9 @@
                                                         "title": "Replacement purchase reason"
                                                     }
                                                 },
-                                                "required": ["replacementReason"]
+                                                "required": [
+                                                    "replacementReason"
+                                                ]
                                             }
                                         }
                                     }
@@ -501,7 +524,11 @@
                                                                     "title": "Number of Years"
                                                                 }
                                                             },
-                                                            "required": ["changeType", "numberOfYears", "amount"]
+                                                            "required": [
+                                                                "changeType",
+                                                                "numberOfYears",
+                                                                "amount"
+                                                            ]
                                                         }
                                                     }
                                                 }
@@ -550,7 +577,11 @@
                                                                 "title": "Number of Years"
                                                             }
                                                         },
-                                                        "required": ["type", "amount", "numberOfYears"]
+                                                        "required": [
+                                                            "type",
+                                                            "amount",
+                                                            "numberOfYears"
+                                                        ]
                                                     }
                                                 }
                                             }
@@ -572,7 +603,9 @@
                                                         "title": "Other source of funds"
                                                     }
                                                 },
-                                                "required": ["sourceOfFundsOthers"]
+                                                "required": [
+                                                    "sourceOfFundsOthers"
+                                                ]
                                             }
                                         }
                                     ]
@@ -614,7 +647,9 @@
                                                                     {
                                                                         "properties": {
                                                                             "assetType": {
-                                                                                "enum": ["LIQUID_ASSET"]
+                                                                                "enum": [
+                                                                                    "LIQUID_ASSET"
+                                                                                ]
                                                                             },
                                                                             "productType": {
                                                                                 "type": "string",
@@ -632,12 +667,16 @@
                                                                                 ]
                                                                             }
                                                                         },
-                                                                        "required": ["productType"]
+                                                                        "required": [
+                                                                            "productType"
+                                                                        ]
                                                                     },
                                                                     {
                                                                         "properties": {
                                                                             "assetType": {
-                                                                                "enum": ["NON_LIQUID_ASSET"]
+                                                                                "enum": [
+                                                                                    "NON_LIQUID_ASSET"
+                                                                                ]
                                                                             },
                                                                             "productType": {
                                                                                 "type": "string",
@@ -653,12 +692,17 @@
                                                                                 ]
                                                                             }
                                                                         },
-                                                                        "required": ["productType"]
+                                                                        "required": [
+                                                                            "productType"
+                                                                        ]
                                                                     }
                                                                 ]
                                                             }
                                                         },
-                                                        "required": ["assetType", "amount"]
+                                                        "required": [
+                                                            "assetType",
+                                                            "amount"
+                                                        ]
                                                     }
                                                 },
                                                 "totalAsset": {
@@ -679,7 +723,10 @@
                                                                 "title": "Amount"
                                                             }
                                                         },
-                                                        "required": ["assetType", "amount"]
+                                                        "required": [
+                                                            "assetType",
+                                                            "amount"
+                                                        ]
                                                     }
                                                 }
                                             }
@@ -717,11 +764,16 @@
                                                                     "title": "Description"
                                                                 }
                                                             },
-                                                            "required": ["description"]
+                                                            "required": [
+                                                                "description"
+                                                            ]
                                                         }
                                                     }
                                                 },
-                                                "required": ["productName", "year"]
+                                                "required": [
+                                                    "productName",
+                                                    "year"
+                                                ]
                                             }
                                         }
                                     },
@@ -754,7 +806,9 @@
                                                         "title": "Risk tolerance description"
                                                     }
                                                 },
-                                                "required": ["riskToleranceDesc"]
+                                                "required": [
+                                                    "riskToleranceDesc"
+                                                ]
                                             }
                                         }
                                     },
@@ -827,11 +881,17 @@
                                                         "title": "Opted years"
                                                     }
                                                 },
-                                                "required": ["distributionMethods", "optedYears"]
+                                                "required": [
+                                                    "distributionMethods",
+                                                    "optedYears"
+                                                ]
                                             }
                                         }
                                     },
-                                    "required": ["planToHoldAnnuity", "surrenderChargeConsentUnderAge"]
+                                    "required": [
+                                        "planToHoldAnnuity",
+                                        "surrenderChargeConsentUnderAge"
+                                    ]
                                 },
                                 "agentAcknowledgment": {
                                     "type": "object",
@@ -869,7 +929,7 @@
                                                             "if": {
                                                                 "properties": {
                                                                     "byAgent": {
-                                                                        "contains":{
+                                                                        "contains": {
                                                                             "const": "OTHERS"
                                                                         }
                                                                     }
@@ -882,14 +942,16 @@
                                                                         "title": "Other reason"
                                                                     }
                                                                 },
-                                                                "required": ["byAgentOther"]
+                                                                "required": [
+                                                                    "byAgentOther"
+                                                                ]
                                                             }
                                                         },
                                                         {
                                                             "if": {
                                                                 "properties": {
                                                                     "byApplicant": {
-                                                                        "contains":{
+                                                                        "contains": {
                                                                             "const": "OTHERS"
                                                                         }
                                                                     }
@@ -902,7 +964,9 @@
                                                                         "title": "Other reason"
                                                                     }
                                                                 },
-                                                                "required": ["byApplicantOther"]
+                                                                "required": [
+                                                                    "byApplicantOther"
+                                                                ]
                                                             }
                                                         }
                                                     ]
@@ -942,7 +1006,9 @@
                                                         "enum": ["NO"]
                                                     }
                                                 },
-                                                "required": ["extraFundAvailable"]
+                                                "required": [
+                                                    "extraFundAvailable"
+                                                ]
                                             },
                                             "then": {
                                                 "properties": {
@@ -951,7 +1017,9 @@
                                                         "title": "Extra fund available details"
                                                     }
                                                 },
-                                                "required": ["extraFundAvailableDetails"]
+                                                "required": [
+                                                    "extraFundAvailableDetails"
+                                                ]
                                             }
                                         }
                                     },
@@ -986,7 +1054,11 @@
                                                 "title": "Signature date"
                                             }
                                         },
-                                        "required": ["signatureRoleCode", "signatoryName", "signatureDate"]
+                                        "required": [
+                                            "signatureRoleCode",
+                                            "signatoryName",
+                                            "signatureDate"
+                                        ]
                                     }
                                 }
                             },
@@ -1015,7 +1087,9 @@
                                                             "type": "array",
                                                             "contains": {
                                                                 "type": "object",
-                                                                "required": ["state"],
+                                                                "required": [
+                                                                    "state"
+                                                                ],
                                                                 "properties": {
                                                                     "state": {
                                                                         "const": "CA"
@@ -1029,7 +1103,9 @@
                                         }
                                     },
                                     "then": {
-                                        "required": ["californiaResidentQuestions"],
+                                        "required": [
+                                            "californiaResidentQuestions"
+                                        ],
                                         "properties": {
                                             "californiaResidentQuestions": {
                                                 "type": "object",
@@ -1072,7 +1148,9 @@
                                                             "type": "array",
                                                             "contains": {
                                                                 "type": "object",
-                                                                "required": ["state"],
+                                                                "required": [
+                                                                    "state"
+                                                                ],
                                                                 "properties": {
                                                                     "state": {
                                                                         "const": "MA"
@@ -1147,7 +1225,9 @@
                                                                 }
                                                             }
                                                         },
-                                                        "required": ["soldPoliciesToApplicant"]
+                                                        "required": [
+                                                            "soldPoliciesToApplicant"
+                                                        ]
                                                     }
                                                 }
                                             }
@@ -1163,7 +1243,14 @@
                             "enum": ["PERSON", "ORGANIZATION", "OTHERS"]
                         },
                         "roleTypeEnum": {
-                            "enum": ["OWNER", "JOINT_OWNER", "AGENT", "PRIMARY_WRITING_AGENT", "PRIMARY_SERVICING_AGENT", "BROKER_DEALER"]
+                            "enum": [
+                                "OWNER",
+                                "JOINT_OWNER",
+                                "AGENT",
+                                "PRIMARY_WRITING_AGENT",
+                                "PRIMARY_SERVICING_AGENT",
+                                "BROKER_DEALER"
+                            ]
                         },
                         "genderEnum": {
                             "enum": ["MALE", "FEMALE", "TRANSGENDER", "OTHER"]
@@ -1235,10 +1322,22 @@
                             ]
                         },
                         "govtIdTypeEnum": {
-                            "enum": ["SSN", "PASSPORT", "DRIVER_LICENSE", "ARMED_FORCEID"]
+                            "enum": [
+                                "SSN",
+                                "PASSPORT",
+                                "DRIVER_LICENSE",
+                                "ARMED_FORCEID"
+                            ]
                         },
                         "addressTypeEnum": {
-                            "enum": ["RESIDENCE", "MAILING", "BUSINESS", "PRIMARY_ADDRESS", "VACATION", "BILLING_MAILING"]
+                            "enum": [
+                                "RESIDENCE",
+                                "MAILING",
+                                "BUSINESS",
+                                "PRIMARY_ADDRESS",
+                                "VACATION",
+                                "BILLING_MAILING"
+                            ]
                         },
                         "employmentStatusEnum": {
                             "enum": ["YES", "RETIRED", "NO"]
@@ -1276,7 +1375,11 @@
                             "enum": ["YES", "NO"]
                         },
                         "surrPeriodMaterialChangeDetails_changeTypeEnum": {
-                            "enum": ["LIVING_EXPENSE_INCREASE", "LIVING_EXPENSE_DECREASE", "LIVING_ASSET_DECREASE"]
+                            "enum": [
+                                "LIVING_EXPENSE_INCREASE",
+                                "LIVING_EXPENSE_DECREASE",
+                                "LIVING_ASSET_DECREASE"
+                            ]
                         },
                         "isApplicableEnum": {
                             "enum": ["YES", "NO"]
@@ -1301,7 +1404,16 @@
                             ]
                         },
                         "fedralIncomeTaxEnum": {
-                            "enum": ["0", "10", "12", "22", "24", "32", "35", "37"]
+                            "enum": [
+                                "0",
+                                "10",
+                                "12",
+                                "22",
+                                "24",
+                                "32",
+                                "35",
+                                "37"
+                            ]
                         },
                         "financialProducts_assetsDistribution_assetType": {
                             "enum": ["LIQUID_ASSET", "NON_LIQUID_ASSET"]
@@ -1332,13 +1444,31 @@
                             "enum": ["LIQUID_ASSET", "NON_LIQUID_ASSET"]
                         },
                         "financialProductOwnership_productName": {
-                            "enum": ["CERTIFICATE_OF_DEPOSITE", "FIXED_ANNUITIES", "STOCKS_BONDS_MF", "OTHERS"]
+                            "enum": [
+                                "CERTIFICATE_OF_DEPOSITE",
+                                "FIXED_ANNUITIES",
+                                "STOCKS_BONDS_MF",
+                                "OTHERS"
+                            ]
                         },
                         "investProduct_riskToleranceEnum": {
-                            "enum": ["CONSERVATIVE", "MODERATE_CONSERVATIVE", "MODERATE", "MODERATE_AGGRESSIVE", "AGGRESSIVE"]
+                            "enum": [
+                                "CONSERVATIVE",
+                                "MODERATE_CONSERVATIVE",
+                                "MODERATE",
+                                "MODERATE_AGGRESSIVE",
+                                "AGGRESSIVE"
+                            ]
                         },
                         "financialObjectives_purchaseReasonEnum": {
-                            "enum": ["INCOME", "TAX_DEFERRAL", "GURANTEES", "GROWTH", "PRINCIPAL_PROTECTION", "OTHERS"]
+                            "enum": [
+                                "INCOME",
+                                "TAX_DEFERRAL",
+                                "GURANTEES",
+                                "GROWTH",
+                                "PRINCIPAL_PROTECTION",
+                                "OTHERS"
+                            ]
                         },
                         "liquidityOptions_distributionOptionEnum": {
                             "enum": [
@@ -1429,7 +1559,13 @@
                             ]
                         },
                         "signatureInfo_signatoryDesignationEnum": {
-                            "enum": ["TRUSTEE", "EXECUTOR", "CUSTODIAN", "GUARDIAN", "ATTORNEY_IN_FACT"]
+                            "enum": [
+                                "TRUSTEE",
+                                "EXECUTOR",
+                                "CUSTODIAN",
+                                "GUARDIAN",
+                                "ATTORNEY_IN_FACT"
+                            ]
                         },
                         "productConsDiscussed_byAgentEnum": {
                             "enum": [
@@ -1504,7 +1640,11 @@
                                 "partyType": {
                                     "ui:options": {
                                         "help": "Applicant's type",
-                                        "enumNames": ["Person", "Organization", "Others"]
+                                        "enumNames": [
+                                            "Person",
+                                            "Organization",
+                                            "Others"
+                                        ]
                                     }
                                 },
                                 "roleType": {
@@ -1543,7 +1683,12 @@
                                     "lastName": {},
                                     "gender": {
                                         "ui:options": {
-                                            "enumNames": ["Male", "Female", "Transgender", "Other"]
+                                            "enumNames": [
+                                                "Male",
+                                                "Female",
+                                                "Transgender",
+                                                "Other"
+                                            ]
                                         }
                                     },
                                     "age": {
@@ -1555,7 +1700,12 @@
                                     },
                                     "martialStatus": {
                                         "ui:options": {
-                                            "enumNames": ["Single", "Married", "Divorced", "Widowed"]
+                                            "enumNames": [
+                                                "Single",
+                                                "Married",
+                                                "Divorced",
+                                                "Widowed"
+                                            ]
                                         }
                                     }
                                 },
@@ -1571,7 +1721,12 @@
                                         },
                                         "govtIdType": {
                                             "ui:options": {
-                                                "enumNames": ["SSN", "Passport", "Driver license", "Armed forceid"]
+                                                "enumNames": [
+                                                    "SSN",
+                                                    "Passport",
+                                                    "Driver license",
+                                                    "Armed forceid"
+                                                ]
                                             }
                                         },
                                         "govtIdExpDate": {
@@ -1689,7 +1844,11 @@
                                     "employmentStatus": {
                                         "ui:options": {
                                             "label": true,
-                                            "enumNames": ["Yes", "Retired", "No"]
+                                            "enumNames": [
+                                                "Yes",
+                                                "Retired",
+                                                "No"
+                                            ]
                                         }
                                     },
                                     "occupation": {
@@ -1728,7 +1887,11 @@
                             }
                         },
                         "applicationInfo": {
-                            "ui:order": ["replacementInd", "replacementReason", "additionalInformation"],
+                            "ui:order": [
+                                "replacementInd",
+                                "replacementReason",
+                                "additionalInformation"
+                            ],
                             "ui:options": {
                                 "expandable": true
                             },
@@ -1906,7 +2069,16 @@
                             "federalTaxBand": {
                                 "label": true,
                                 "ui:options": {
-                                    "enumNames": ["0", "10", "12", "22", "24", "32", "35", "37"]
+                                    "enumNames": [
+                                        "0",
+                                        "10",
+                                        "12",
+                                        "22",
+                                        "24",
+                                        "32",
+                                        "35",
+                                        "37"
+                                    ]
                                 }
                             }
                         },
@@ -1922,7 +2094,11 @@
                             "financialProducts": {
                                 "assetsDistribution": {
                                     "items": {
-                                        "ui:order": ["assetType", "productType", "amount"],
+                                        "ui:order": [
+                                            "assetType",
+                                            "productType",
+                                            "amount"
+                                        ],
                                         "ui:options": {
                                             "title": "asset distribution",
                                             "minItems": 1,
@@ -1930,7 +2106,10 @@
                                         },
                                         "assetType": {
                                             "ui:options": {
-                                                "enumNames": ["Liquid Asset", "Non Liquid Asset"]
+                                                "enumNames": [
+                                                    "Liquid Asset",
+                                                    "Non Liquid Asset"
+                                                ]
                                             }
                                         },
                                         "productType": {},
@@ -1950,7 +2129,10 @@
                                         },
                                         "assetType": {
                                             "ui:options": {
-                                                "enumNames": ["Liquid Asset", "Non Liquid QUID Asset"]
+                                                "enumNames": [
+                                                    "Liquid Asset",
+                                                    "Non Liquid QUID Asset"
+                                                ]
                                             }
                                         },
                                         "amount": {
@@ -1970,7 +2152,12 @@
                                     },
                                     "productName": {
                                         "ui:options": {
-                                            "enumNames": ["Certificates of Deposit", "Fixed/variable annuity", "Stocks/Bonds/MF", "Others"]
+                                            "enumNames": [
+                                                "Certificates of Deposit",
+                                                "Fixed/variable annuity",
+                                                "Stocks/Bonds/MF",
+                                                "Others"
+                                            ]
                                         }
                                     }
                                 }
@@ -1983,7 +2170,13 @@
                             "riskTolerance": {
                                 "ui:options": {
                                     "inline": true,
-                                    "enumNames": ["Conservative", "Moderate conversative", "Moderate", "Moderate aggressive", "Aggressive"]
+                                    "enumNames": [
+                                        "Conservative",
+                                        "Moderate conversative",
+                                        "Moderate",
+                                        "Moderate aggressive",
+                                        "Aggressive"
+                                    ]
                                 }
                             },
                             "riskToleranceDesc": {}
@@ -2013,7 +2206,12 @@
                             },
                             "planToHoldAnnuity": {
                                 "ui:options": {
-                                    "enumNames": ["0-2 Years", "3-4 Years", "5-6 Years", "7+ Years"],
+                                    "enumNames": [
+                                        "0-2 Years",
+                                        "3-4 Years",
+                                        "5-6 Years",
+                                        "7+ Years"
+                                    ],
                                     "label": true
                                 }
                             },
@@ -2048,7 +2246,10 @@
                             }
                         },
                         "agentAcknowledgment": {
-                            "ui:order": ["maApplicationQuestionnaire", "disclosureAcknowledgement"],
+                            "ui:order": [
+                                "maApplicationQuestionnaire",
+                                "disclosureAcknowledgement"
+                            ],
                             "ui:options": {
                                 "expandable": true
                             },
@@ -2079,7 +2280,12 @@
                             },
                             "disclosureAcknowledgement": {
                                 "productConsDiscussed": {
-                                    "ui:order":["byAgent", "byAgentOther", "byApplicant", "byApplicantOther"],
+                                    "ui:order": [
+                                        "byAgent",
+                                        "byAgentOther",
+                                        "byApplicant",
+                                        "byApplicantOther"
+                                    ],
                                     "byAgent": {
                                         "ui:options": {
                                             "label": "true",
@@ -2095,7 +2301,7 @@
                                             ]
                                         }
                                     },
-                                    "byAgentOther":{},
+                                    "byAgentOther": {},
                                     "byApplicant": {
                                         "ui:options": {
                                             "label": "true",
@@ -2111,7 +2317,7 @@
                                             ]
                                         }
                                     },
-                                    "byApplicantOther":{}
+                                    "byApplicantOther": {}
                                 }
                             }
                         },
@@ -2236,7 +2442,13 @@
                                 },
                                 "signatoryDesignation": {
                                     "ui:options": {
-                                        "enumNames": ["Trustee", "Executor", "Custodian", "Guardian", "Attorney in fact"]
+                                        "enumNames": [
+                                            "Trustee",
+                                            "Executor",
+                                            "Custodian",
+                                            "Guardian",
+                                            "Attorney in fact"
+                                        ]
                                     }
                                 }
                             }

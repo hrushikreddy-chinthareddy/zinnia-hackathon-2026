@@ -13,7 +13,14 @@ describe('Radio Component', () => {
 
     it('renders Radio component correctly', () => {
         const onChangeMock = jest.fn();
-        const { getByTestId } = render(<Radio label="Radio Options" items={items} value="option1" onChange={onChangeMock} />);
+        const { getByTestId } = render(
+            <Radio
+                label="Radio Options"
+                items={items}
+                value="option1"
+                onChange={onChangeMock}
+            />
+        );
         const radioComponent = getByTestId(RadioTest.Radio);
 
         expect(radioComponent).toBeInTheDocument();
@@ -21,16 +28,33 @@ describe('Radio Component', () => {
 
     it('calls onChange when a radio button is selected using Enter key', () => {
         const onChangeMock = jest.fn();
-        const { getByLabelText } = render(<Radio label="Radio Options" items={items} value="option1" onChange={onChangeMock} />);
+        const { getByLabelText } = render(
+            <Radio
+                label="Radio Options"
+                items={items}
+                value="option1"
+                onChange={onChangeMock}
+            />
+        );
 
-        fireEvent.keyDown(getByLabelText('Option 3'), { key: 'Enter', keyCode: 13 });
+        fireEvent.keyDown(getByLabelText('Option 3'), {
+            key: 'Enter',
+            keyCode: 13,
+        });
 
         expect(onChangeMock).toBeCalledTimes(1);
     });
 
     it('calls onChange when a radio button is clicked', () => {
         const onChangeMock = jest.fn();
-        const { getByLabelText } = render(<Radio label="Radio Options" items={items} value="option1" onChange={onChangeMock} />);
+        const { getByLabelText } = render(
+            <Radio
+                label="Radio Options"
+                items={items}
+                value="option1"
+                onChange={onChangeMock}
+            />
+        );
 
         fireEvent.click(getByLabelText('Option 2'));
 

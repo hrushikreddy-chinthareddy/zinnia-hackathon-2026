@@ -353,12 +353,13 @@ export type GetLpsPayload200CoverageValue = {
     attributes?: GetLpsPayload200CoverageValueAttributes;
 };
 
-export type GetLpsPayload200CoveragesItemParticipantsItemFlatExtraItemAttributes = {
-    flatExtraAmount?: string;
-    flatExtraDuration?: string;
-    flatExtraStartDate?: string;
-    flatExtraType?: string;
-};
+export type GetLpsPayload200CoveragesItemParticipantsItemFlatExtraItemAttributes =
+    {
+        flatExtraAmount?: string;
+        flatExtraDuration?: string;
+        flatExtraStartDate?: string;
+        flatExtraType?: string;
+    };
 
 export type GetLpsPayload200CoveragesItemParticipantsItemFlatExtraItem = {
     attributes?: GetLpsPayload200CoveragesItemParticipantsItemFlatExtraItemAttributes;
@@ -494,10 +495,11 @@ export type GetLpsPayload200ArrangementsItemPaymentsItem = {
     attributes?: GetLpsPayload200ArrangementsItemPaymentsItemAttributes;
 };
 
-export type GetLpsPayload200ArrangementsItemMatchSegmentFinancialActivityAttributes = {
-    amount?: string;
-    interestPostingRate?: string;
-};
+export type GetLpsPayload200ArrangementsItemMatchSegmentFinancialActivityAttributes =
+    {
+        amount?: string;
+        interestPostingRate?: string;
+    };
 
 export type GetLpsPayload200ArrangementsItemMatchSegmentFinancialActivity = {
     attributes?: GetLpsPayload200ArrangementsItemMatchSegmentFinancialActivityAttributes;
@@ -524,14 +526,16 @@ export type GetLpsPayload200ArrangementsItem = {
     taxWithholdings?: GetLpsPayload200ArrangementsItemTaxWithholdingsItem[];
 };
 
-export type GetLpsPayload200ArrangementsItemLoanSegmentsItemFinancialActivityAttributes = {
-    amount?: string;
-    interestPostingRate?: string;
-};
+export type GetLpsPayload200ArrangementsItemLoanSegmentsItemFinancialActivityAttributes =
+    {
+        amount?: string;
+        interestPostingRate?: string;
+    };
 
-export type GetLpsPayload200ArrangementsItemLoanSegmentsItemFinancialActivity = {
-    attributes?: GetLpsPayload200ArrangementsItemLoanSegmentsItemFinancialActivityAttributes;
-};
+export type GetLpsPayload200ArrangementsItemLoanSegmentsItemFinancialActivity =
+    {
+        attributes?: GetLpsPayload200ArrangementsItemLoanSegmentsItemFinancialActivityAttributes;
+    };
 
 export type GetLpsPayload200ArrangementsItemLoanSegmentsItemAttributes = {
     requestedAmount?: string;
@@ -602,24 +606,28 @@ export type GetLpsPayload200ArrangementsItemArrangementSourcesItem = {
     segments?: GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItem[];
 };
 
-export type GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemFinancialActivityAttributes = {
-    amount?: string;
-    interestPostingRate?: string;
-};
+export type GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemFinancialActivityAttributes =
+    {
+        amount?: string;
+        interestPostingRate?: string;
+    };
 
-export type GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemFinancialActivity = {
-    attributes?: GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemFinancialActivityAttributes;
-};
+export type GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemFinancialActivity =
+    {
+        attributes?: GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemFinancialActivityAttributes;
+    };
 
-export type GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemAttributes = {
-    requestedAmount?: string;
-    segmentId?: string;
-};
+export type GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemAttributes =
+    {
+        requestedAmount?: string;
+        segmentId?: string;
+    };
 
-export type GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItem = {
-    attributes?: GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemAttributes;
-    financialActivity?: GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemFinancialActivity;
-};
+export type GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItem =
+    {
+        attributes?: GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemAttributes;
+        financialActivity?: GetLpsPayload200ArrangementsItemArrangementSourcesItemSegmentsItemFinancialActivity;
+    };
 
 export type GetLpsPayload200ArrangementsItemArrangementSourcesItemAttributes = {
     fundId?: string;
@@ -709,7 +717,8 @@ export type GetPartiesForPolicy200ItemAllOf = {
     version?: number;
 };
 
-export type GetPartiesForPolicy200Item = Party & GetPartiesForPolicy200ItemAllOf;
+export type GetPartiesForPolicy200Item = Party &
+    GetPartiesForPolicy200ItemAllOf;
 
 export type GetTransactionsForPolicyStatusItem =
     (typeof GetTransactionsForPolicyStatusItem)[keyof typeof GetTransactionsForPolicyStatusItem];
@@ -724,7 +733,8 @@ export const GetTransactionsForPolicyStatusItem = {
     PendingReversal: 'PendingReversal',
 } as const;
 
-export type GetTransactionsForPolicySortField = (typeof GetTransactionsForPolicySortField)[keyof typeof GetTransactionsForPolicySortField];
+export type GetTransactionsForPolicySortField =
+    (typeof GetTransactionsForPolicySortField)[keyof typeof GetTransactionsForPolicySortField];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetTransactionsForPolicySortField = {
@@ -733,7 +743,8 @@ export const GetTransactionsForPolicySortField = {
     REVERSALDATE: 'REVERSALDATE',
 } as const;
 
-export type GetTransactionsForPolicySortOrder = (typeof GetTransactionsForPolicySortOrder)[keyof typeof GetTransactionsForPolicySortOrder];
+export type GetTransactionsForPolicySortOrder =
+    (typeof GetTransactionsForPolicySortOrder)[keyof typeof GetTransactionsForPolicySortOrder];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetTransactionsForPolicySortOrder = {
@@ -891,7 +902,8 @@ export interface Transactions {
 /**
  * The type of transaction added and processed
  */
-export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType];
+export type TransactionType =
+    (typeof TransactionType)[keyof typeof TransactionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TransactionType = {
@@ -968,7 +980,8 @@ export type TransactionErrorResponseAllOf = {
     details?: Details;
 };
 
-export type TransactionErrorResponse = ErrorResponse & TransactionErrorResponseAllOf;
+export type TransactionErrorResponse = ErrorResponse &
+    TransactionErrorResponseAllOf;
 
 export interface TransactionResponse {
     correlationId?: string;
@@ -983,7 +996,8 @@ export interface TransactionFundAllocation {
 /**
  * Charge Type
  */
-export type TransactionChargeType = (typeof TransactionChargeType)[keyof typeof TransactionChargeType];
+export type TransactionChargeType =
+    (typeof TransactionChargeType)[keyof typeof TransactionChargeType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TransactionChargeType = {
@@ -1018,7 +1032,8 @@ export type TransactionAmountsAllOf = {
     totalChargeAmount?: number;
 };
 
-export type TransactionAmounts = AdhocTransactionAmount & TransactionAmountsAllOf;
+export type TransactionAmounts = AdhocTransactionAmount &
+    TransactionAmountsAllOf;
 
 export interface TransactionPayor {
     /** Pending Review by Product Team */
@@ -1032,7 +1047,8 @@ export interface TransactionPayor {
 /**
  * Tax Withholding Types
  */
-export type TransactionStatus = (typeof TransactionStatus)[keyof typeof TransactionStatus];
+export type TransactionStatus =
+    (typeof TransactionStatus)[keyof typeof TransactionStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TransactionStatus = {
@@ -1056,7 +1072,8 @@ export interface Parties {
 /**
  * Optional Reason for this transaction
  */
-export type TransactionReason = (typeof TransactionReason)[keyof typeof TransactionReason];
+export type TransactionReason =
+    (typeof TransactionReason)[keyof typeof TransactionReason];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TransactionReason = {
@@ -1086,7 +1103,8 @@ export type TransactionPayeeOrBeneficiariesItemAllOf = {
     payeeGrossAmount?: number;
 };
 
-export type TransactionPayeeOrBeneficiariesItem = PayeeOrBeneficiary & TransactionPayeeOrBeneficiariesItemAllOf;
+export type TransactionPayeeOrBeneficiariesItem = PayeeOrBeneficiary &
+    TransactionPayeeOrBeneficiariesItemAllOf;
 
 export type TransactionChargesItemAllOf = {
     /** Calculated by LPS */
@@ -1200,7 +1218,8 @@ export interface TestValues {
 /**
  * Tax Withholding Types
  */
-export type TaxWithholdingType = (typeof TaxWithholdingType)[keyof typeof TaxWithholdingType];
+export type TaxWithholdingType =
+    (typeof TaxWithholdingType)[keyof typeof TaxWithholdingType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TaxWithholdingType = {
@@ -1322,7 +1341,8 @@ export const Suffix = {
 /**
  * Sub Standard Rating
  */
-export type SubStandardRating = (typeof SubStandardRating)[keyof typeof SubStandardRating];
+export type SubStandardRating =
+    (typeof SubStandardRating)[keyof typeof SubStandardRating];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SubStandardRating = {
@@ -1528,7 +1548,8 @@ export interface Rider {
 /**
  * Option available for Owner, Payor, TPD and Beneficiary
  */
-export type RelationshipToInsured = (typeof RelationshipToInsured)[keyof typeof RelationshipToInsured];
+export type RelationshipToInsured =
+    (typeof RelationshipToInsured)[keyof typeof RelationshipToInsured];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RelationshipToInsured = {
@@ -1644,7 +1665,8 @@ export interface SystematicProgram {
 /**
  * The type of transaction added and processed
  */
-export type QualificationType = (typeof QualificationType)[keyof typeof QualificationType];
+export type QualificationType =
+    (typeof QualificationType)[keyof typeof QualificationType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QualificationType = {
@@ -1655,7 +1677,8 @@ export const QualificationType = {
 /**
  * If proof of death Is received or not
  */
-export type ProofOfDeathReceived = (typeof ProofOfDeathReceived)[keyof typeof ProofOfDeathReceived];
+export type ProofOfDeathReceived =
+    (typeof ProofOfDeathReceived)[keyof typeof ProofOfDeathReceived];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProofOfDeathReceived = {
@@ -1732,7 +1755,8 @@ export const Prefix = {
 /**
  * The preference of communication such as phone, email or mail
  */
-export type PreferredCommunicationType = (typeof PreferredCommunicationType)[keyof typeof PreferredCommunicationType];
+export type PreferredCommunicationType =
+    (typeof PreferredCommunicationType)[keyof typeof PreferredCommunicationType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PreferredCommunicationType = {
@@ -1963,7 +1987,8 @@ export type PolicySummaryAccountValues = {
 /**
  * The current status of the contract
  */
-export type RestrictStatus = (typeof RestrictStatus)[keyof typeof RestrictStatus];
+export type RestrictStatus =
+    (typeof RestrictStatus)[keyof typeof RestrictStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RestrictStatus = {
@@ -2074,7 +2099,8 @@ export interface PolicyInformation {
 /**
  * Feature type
  */
-export type PolicyFeatureFeatureType = (typeof PolicyFeatureFeatureType)[keyof typeof PolicyFeatureFeatureType];
+export type PolicyFeatureFeatureType =
+    (typeof PolicyFeatureFeatureType)[keyof typeof PolicyFeatureFeatureType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PolicyFeatureFeatureType = {
@@ -2158,7 +2184,8 @@ export interface PolicyDates {
 /**
  * Loan Interest Type - Selected by user from dropdown values, default to Fixed
  */
-export type PolicyDataLoanInterestType = (typeof PolicyDataLoanInterestType)[keyof typeof PolicyDataLoanInterestType];
+export type PolicyDataLoanInterestType =
+    (typeof PolicyDataLoanInterestType)[keyof typeof PolicyDataLoanInterestType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PolicyDataLoanInterestType = {
@@ -2411,7 +2438,8 @@ export interface PolicyCoverage {
 /**
  * Charge Type
  */
-export type PolicyChargeType = (typeof PolicyChargeType)[keyof typeof PolicyChargeType];
+export type PolicyChargeType =
+    (typeof PolicyChargeType)[keyof typeof PolicyChargeType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PolicyChargeType = {
@@ -2667,7 +2695,8 @@ export type PartyChangeRequestPartyAllOf = {
     startDate?: string;
 };
 
-export type PartyChangeRequestParty = PartyPayload & PartyChangeRequestPartyAllOf;
+export type PartyChangeRequestParty = PartyPayload &
+    PartyChangeRequestPartyAllOf;
 
 export interface PartyChangeRequest {
     /** The unique ID to track transaction request across all systems */
@@ -2778,7 +2807,8 @@ export type PartialWithdrawalOneTimeQuoteResponsePayeeOrBeneficiaryItemAllOf = {
     payeeGrossAmount?: number;
 };
 
-export type PartialWithdrawalOneTimeQuoteResponsePayeeOrBeneficiaryItem = PartialWithdrawalOneTimeQuoteResponsePayeeOrBeneficiaryItemAllOf;
+export type PartialWithdrawalOneTimeQuoteResponsePayeeOrBeneficiaryItem =
+    PartialWithdrawalOneTimeQuoteResponsePayeeOrBeneficiaryItemAllOf;
 
 export interface PartialWithdrawalOneTimeQuoteResponse {
     charges?: Charge;
@@ -2972,7 +3002,9 @@ export type NewLoanRequestTaxWithholdingInstructionsItemAllOf = {
     partyRole?: PartyRole;
 };
 
-export type NewLoanRequestTaxWithholdingInstructionsItem = TaxWithholdingInstructions & NewLoanRequestTaxWithholdingInstructionsItemAllOf;
+export type NewLoanRequestTaxWithholdingInstructionsItem =
+    TaxWithholdingInstructions &
+        NewLoanRequestTaxWithholdingInstructionsItemAllOf;
 
 export interface NewLoanRequest {
     /** The unique ID to track transaction request across all systems */
@@ -3202,7 +3234,8 @@ export interface LoanRepaymentOneTimeRequest {
 /**
  * TBD
  */
-export type LoanRepaymentType = (typeof LoanRepaymentType)[keyof typeof LoanRepaymentType];
+export type LoanRepaymentType =
+    (typeof LoanRepaymentType)[keyof typeof LoanRepaymentType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LoanRepaymentType = {
@@ -3213,7 +3246,8 @@ export const LoanRepaymentType = {
 /**
  * Defines when the loan interest is paid, in advance or in arrears
  */
-export type LoanInterestMethod = (typeof LoanInterestMethod)[keyof typeof LoanInterestMethod];
+export type LoanInterestMethod =
+    (typeof LoanInterestMethod)[keyof typeof LoanInterestMethod];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LoanInterestMethod = {
@@ -3266,7 +3300,8 @@ export interface Loan {
 /**
  * Line of business of the insurance
  */
-export type LineOfBusiness = (typeof LineOfBusiness)[keyof typeof LineOfBusiness];
+export type LineOfBusiness =
+    (typeof LineOfBusiness)[keyof typeof LineOfBusiness];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LineOfBusiness = {
@@ -3309,7 +3344,8 @@ export const IssueType = {
 /**
  * TBD
  */
-export type InvestmentType = (typeof InvestmentType)[keyof typeof InvestmentType];
+export type InvestmentType =
+    (typeof InvestmentType)[keyof typeof InvestmentType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InvestmentType = {
@@ -3431,7 +3467,8 @@ export interface Identifier {
 /**
  * Type of method used to uniquely identify each party
  */
-export type IdentificationType = (typeof IdentificationType)[keyof typeof IdentificationType];
+export type IdentificationType =
+    (typeof IdentificationType)[keyof typeof IdentificationType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IdentificationType = {
@@ -3649,7 +3686,8 @@ export type FullSurrenderQuotePayeeOrBeneficiaryAllOf = {
     payeeGrossAmount?: number;
 };
 
-export type FullSurrenderQuotePayeeOrBeneficiary = PayeeOrBeneficiary & FullSurrenderQuotePayeeOrBeneficiaryAllOf;
+export type FullSurrenderQuotePayeeOrBeneficiary = PayeeOrBeneficiary &
+    FullSurrenderQuotePayeeOrBeneficiaryAllOf;
 
 export interface FullSurrenderQuoteTransactionAmounts {
     amountType?: AmountType;
@@ -3804,7 +3842,8 @@ export interface FastDataBackup {
 /**
  * Defines the content type of data field
  */
-export type EventDatacontenttype = (typeof EventDatacontenttype)[keyof typeof EventDatacontenttype];
+export type EventDatacontenttype =
+    (typeof EventDatacontenttype)[keyof typeof EventDatacontenttype];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EventDatacontenttype = {
@@ -3842,7 +3881,8 @@ export interface ErrorResponse {
 /**
  * TBD
  */
-export type EmploymentStatus = (typeof EmploymentStatus)[keyof typeof EmploymentStatus];
+export type EmploymentStatus =
+    (typeof EmploymentStatus)[keyof typeof EmploymentStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EmploymentStatus = {
@@ -3933,7 +3973,8 @@ export interface DistributionHistory {
 /**
  * Type of distribution channel. A high level description of the distribution channel
  */
-export type DistributionType = (typeof DistributionType)[keyof typeof DistributionType];
+export type DistributionType =
+    (typeof DistributionType)[keyof typeof DistributionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DistributionType = {
@@ -3954,7 +3995,8 @@ export const DistributionType = {
 /**
  * Detailed explanation of each distribution code, highlighting specific scenarios and use cases.
  */
-export type DistributionCode = (typeof DistributionCode)[keyof typeof DistributionCode];
+export type DistributionCode =
+    (typeof DistributionCode)[keyof typeof DistributionCode];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DistributionCode = {
@@ -3998,7 +4040,8 @@ export interface Details {
 /**
  * The type of amount for systematic withdrawal such as Gross or Net
  */
-export type DisbursementType = (typeof DisbursementType)[keyof typeof DisbursementType];
+export type DisbursementType =
+    (typeof DisbursementType)[keyof typeof DisbursementType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DisbursementType = {
@@ -4010,7 +4053,8 @@ export const DisbursementType = {
 /**
  * The type of disbursement method such as DTCC,EFT or credit card.Default EFT.
  */
-export type DisbursementPaymentForm = (typeof DisbursementPaymentForm)[keyof typeof DisbursementPaymentForm];
+export type DisbursementPaymentForm =
+    (typeof DisbursementPaymentForm)[keyof typeof DisbursementPaymentForm];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DisbursementPaymentForm = {
@@ -4072,7 +4116,8 @@ export interface DeliveryDateSetupRequest {
 /**
  * TBD
  */
-export type DefinitionOfLifeInsurance = (typeof DefinitionOfLifeInsurance)[keyof typeof DefinitionOfLifeInsurance];
+export type DefinitionOfLifeInsurance =
+    (typeof DefinitionOfLifeInsurance)[keyof typeof DefinitionOfLifeInsurance];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DefinitionOfLifeInsurance = {
@@ -4083,7 +4128,8 @@ export const DefinitionOfLifeInsurance = {
 /**
  * Payout option to the beficiary when the insured dies. Can be Level (Option A) or Increasing (Option B)
  */
-export type DeathBenefitOptionType = (typeof DeathBenefitOptionType)[keyof typeof DeathBenefitOptionType];
+export type DeathBenefitOptionType =
+    (typeof DeathBenefitOptionType)[keyof typeof DeathBenefitOptionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DeathBenefitOptionType = {
@@ -4111,7 +4157,8 @@ export const DeathBenefitInterestCalculatedFromDate = {
 /**
  * Cause Of Death
  */
-export type DeathDetailCauseOfDeath = (typeof DeathDetailCauseOfDeath)[keyof typeof DeathDetailCauseOfDeath];
+export type DeathDetailCauseOfDeath =
+    (typeof DeathDetailCauseOfDeath)[keyof typeof DeathDetailCauseOfDeath];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DeathDetailCauseOfDeath = {
@@ -4268,7 +4315,8 @@ export type DeathClaimPayeeOrBeneficiaryItemAllOf = {
     partyRole?: PartyRole;
 };
 
-export type DeathClaimPayeeOrBeneficiaryItem = PayeeOrBeneficiary & DeathClaimPayeeOrBeneficiaryItemAllOf;
+export type DeathClaimPayeeOrBeneficiaryItem = PayeeOrBeneficiary &
+    DeathClaimPayeeOrBeneficiaryItemAllOf;
 
 export interface DeathClaim {
     /** The unique ID to track transaction request across all systems */
@@ -4723,7 +4771,8 @@ export interface CommunicationPreference {
 /**
  * Communication Type
  */
-export type CommunicationType = (typeof CommunicationType)[keyof typeof CommunicationType];
+export type CommunicationType =
+    (typeof CommunicationType)[keyof typeof CommunicationType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CommunicationType = {
@@ -4739,7 +4788,8 @@ export const CommunicationType = {
 /**
  * Chart of account type
  */
-export type ChartOfAccountsAccountType = (typeof ChartOfAccountsAccountType)[keyof typeof ChartOfAccountsAccountType];
+export type ChartOfAccountsAccountType =
+    (typeof ChartOfAccountsAccountType)[keyof typeof ChartOfAccountsAccountType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChartOfAccountsAccountType = {
@@ -4811,7 +4861,8 @@ export interface ChartOfAccount {
 /**
  * Charge Waiver Indicator
  */
-export type ChargeWaiverIndicator = (typeof ChargeWaiverIndicator)[keyof typeof ChargeWaiverIndicator];
+export type ChargeWaiverIndicator =
+    (typeof ChargeWaiverIndicator)[keyof typeof ChargeWaiverIndicator];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChargeWaiverIndicator = {
@@ -4942,7 +4993,8 @@ export interface BranchAddress {
 /**
  * The type of transaction added and processed
  */
-export type BasePolicyQualificationType = (typeof BasePolicyQualificationType)[keyof typeof BasePolicyQualificationType];
+export type BasePolicyQualificationType =
+    (typeof BasePolicyQualificationType)[keyof typeof BasePolicyQualificationType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const BasePolicyQualificationType = {
@@ -4953,7 +5005,8 @@ export const BasePolicyQualificationType = {
 /**
  * Coverage layers/ Face amount bands
  */
-export type BasePolicyBanding = (typeof BasePolicyBanding)[keyof typeof BasePolicyBanding];
+export type BasePolicyBanding =
+    (typeof BasePolicyBanding)[keyof typeof BasePolicyBanding];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const BasePolicyBanding = {
@@ -5039,7 +5092,9 @@ export type BeneficiaryInformationStateCode = { [key: string]: any };
 
 export type BeneficiaryInformationState = { [key: string]: any };
 
-export type BeneficiaryInformationPreferredCommunication = { [key: string]: any };
+export type BeneficiaryInformationPreferredCommunication = {
+    [key: string]: any;
+};
 
 export type BeneficiaryInformationGender = { [key: string]: any };
 
@@ -5159,7 +5214,8 @@ export type BankAccount = BankAccountBase & BankAccountAllOf;
 /**
  * The type of payment such as fixed or flexible
  */
-export type ArrangementType = (typeof ArrangementType)[keyof typeof ArrangementType];
+export type ArrangementType =
+    (typeof ArrangementType)[keyof typeof ArrangementType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ArrangementType = {
@@ -5192,7 +5248,8 @@ export interface AllTransactions {
 /**
  * Defines the format of how the funds are removed, i.e. dollar, percentage, pro-rata, etc.
  */
-export type AllocationOption = (typeof AllocationOption)[keyof typeof AllocationOption];
+export type AllocationOption =
+    (typeof AllocationOption)[keyof typeof AllocationOption];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AllocationOption = {
@@ -5225,7 +5282,8 @@ export const AgentType = {
     ASSOCIATEAGENCYMANAGER: 'ASSOCIATEAGENCYMANAGER',
     ASSOCIATEFINANCIALPLANNER: 'ASSOCIATEFINANCIALPLANNER',
     ASSOCIATEOFFICERMANAGER: 'ASSOCIATEOFFICERMANAGER',
-    ASSOCIATESALEDEVELOPMENTMANAGERINTRAINING: 'ASSOCIATESALEDEVELOPMENTMANAGERINTRAINING',
+    ASSOCIATESALEDEVELOPMENTMANAGERINTRAINING:
+        'ASSOCIATESALEDEVELOPMENTMANAGERINTRAINING',
     ASSOCIATESALESDEVELOPMENTMANAGER: 'ASSOCIATESALESDEVELOPMENTMANAGER',
     BANK: 'BANK',
     BANKEMPLOYEE: 'BANKEMPLOYEE',
@@ -5249,7 +5307,8 @@ export const AgentType = {
     SALESDEVELOPMENTMANAGER: 'SALESDEVELOPMENTMANAGER',
     SECONDLINEMANAGER: 'SECONDLINEMANAGER',
     SENIORADMINISTRATIVECONSULTANT: 'SENIORADMINISTRATIVECONSULTANT',
-    SENIORADVANCEDUNDERWRITINGCONSULTANT: 'SENIORADVANCEDUNDERWRITINGCONSULTANT',
+    SENIORADVANCEDUNDERWRITINGCONSULTANT:
+        'SENIORADVANCEDUNDERWRITINGCONSULTANT',
     SENIORFINANCIALPLANNER: 'SENIORFINANCIALPLANNER',
     SENIORGROUPACCOUNTEXECUTIVE: 'SENIORGROUPACCOUNTEXECUTIVE',
     SENIORGROUPSALESREPRESENTATIVE: 'SENIORGROUPSALESREPRESENTATIVE',
@@ -5299,7 +5358,9 @@ export type AdhocFundTransferFromFundFundSegmentsItemAllOf = {
     segmentId?: string;
 };
 
-export type AdhocFundTransferFromFundFundSegmentsItem = AdhocFundTransferFromFundFundSegmentsItemAllOf & AdhocFundTransferFundSegment;
+export type AdhocFundTransferFromFundFundSegmentsItem =
+    AdhocFundTransferFromFundFundSegmentsItemAllOf &
+        AdhocFundTransferFundSegment;
 
 export interface AdhocFundTransferFromFund {
     fundId?: string;
@@ -5322,7 +5383,8 @@ export type AdhocTaxWithholdingInstructionsAllOf = {
     partyRole?: PartyRole;
 };
 
-export type AdhocTaxWithholdingInstructions = TaxWithholdingInstructions & AdhocTaxWithholdingInstructionsAllOf;
+export type AdhocTaxWithholdingInstructions = TaxWithholdingInstructions &
+    AdhocTaxWithholdingInstructionsAllOf;
 
 export interface AdhocSystematicProgram {
     /** Requested amount value */
@@ -5573,7 +5635,8 @@ export interface AccountValuebyPolicyYear {
 /**
  * Account Type
  */
-export type FundAccountType = (typeof FundAccountType)[keyof typeof FundAccountType];
+export type FundAccountType =
+    (typeof FundAccountType)[keyof typeof FundAccountType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FundAccountType = {
@@ -5587,7 +5650,8 @@ export const FundAccountType = {
 /**
  * Chart of accounts account type short form names
  */
-export type AccountTypeCode = (typeof AccountTypeCode)[keyof typeof AccountTypeCode];
+export type AccountTypeCode =
+    (typeof AccountTypeCode)[keyof typeof AccountTypeCode];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AccountTypeCode = {
@@ -5631,21 +5695,28 @@ export const Account = {
 /**
  * @summary Fetches all carriers
  */
-export const getAllCarriers = <TData = AxiosResponse<Carrier[]>>(options?: AxiosRequestConfig): Promise<TData> => {
+export const getAllCarriers = <TData = AxiosResponse<Carrier[]>>(
+    options?: AxiosRequestConfig
+): Promise<TData> => {
     return axios.get(`/v1/carriers`, options);
 };
 
 /**
  * @summary Fetches carrier details
  */
-export const getCarrier = <TData = AxiosResponse<Carrier>>(carrierId: string, options?: AxiosRequestConfig): Promise<TData> => {
+export const getCarrier = <TData = AxiosResponse<Carrier>>(
+    carrierId: string,
+    options?: AxiosRequestConfig
+): Promise<TData> => {
     return axios.get(`/v1/carriers/${carrierId}`, options);
 };
 
 /**
  * @summary Fetches all third party administrators
  */
-export const getAllThirdPartyAdministrators = <TData = AxiosResponse<ThirdPartyAdministrator[]>>(
+export const getAllThirdPartyAdministrators = <
+    TData = AxiosResponse<ThirdPartyAdministrator[]>
+>(
     options?: AxiosRequestConfig
 ): Promise<TData> => {
     return axios.get(`/v1/thirdpartyadministrators`, options);
@@ -5654,17 +5725,24 @@ export const getAllThirdPartyAdministrators = <TData = AxiosResponse<ThirdPartyA
 /**
  * @summary Fetches Third Party Administrator details
  */
-export const getThirdPartyAdministratorDetails = <TData = AxiosResponse<ThirdPartyAdministrator>>(
+export const getThirdPartyAdministratorDetails = <
+    TData = AxiosResponse<ThirdPartyAdministrator>
+>(
     thirdPartyAdministratorId: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/thirdpartyadministrators/${thirdPartyAdministratorId}`, options);
+    return axios.get(
+        `/v1/thirdpartyadministrators/${thirdPartyAdministratorId}`,
+        options
+    );
 };
 
 /**
  * @summary Fetches all account entry rules values
  */
-export const getAllAccountingEntryRules = <TData = AxiosResponse<AccountingEntryRules[]>>(
+export const getAllAccountingEntryRules = <
+    TData = AxiosResponse<AccountingEntryRules[]>
+>(
     params: GetAllAccountingEntryRulesParams,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
@@ -5677,11 +5755,17 @@ export const getAllAccountingEntryRules = <TData = AxiosResponse<AccountingEntry
 /**
  * @summary A chart Of Accounts
  */
-export const createAccountEntryRules = <TData = AxiosResponse<AccountEntryRuleRequestFields | void>>(
+export const createAccountEntryRules = <
+    TData = AxiosResponse<AccountEntryRuleRequestFields | void>
+>(
     accountEntryRuleRequestFields: AccountEntryRuleRequestFields,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/accountentryrules`, accountEntryRuleRequestFields, options);
+    return axios.post(
+        `/v1/accountentryrules`,
+        accountEntryRuleRequestFields,
+        options
+    );
 };
 
 /**
@@ -5700,17 +5784,25 @@ export const getAllChartOfAccounts = <TData = AxiosResponse<ChartOfAccount[]>>(
 /**
  * @summary A chart Of Accounts
  */
-export const createChartOfAccount = <TData = AxiosResponse<ChartOfAccountRequestFields | void>>(
+export const createChartOfAccount = <
+    TData = AxiosResponse<ChartOfAccountRequestFields | void>
+>(
     chartOfAccountRequestFields: ChartOfAccountRequestFields,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/chartofaccounts`, chartOfAccountRequestFields, options);
+    return axios.post(
+        `/v1/chartofaccounts`,
+        chartOfAccountRequestFields,
+        options
+    );
 };
 
 /**
  * @summary Disbursements from Disbursement Transaction
  */
-export const getAllDisbursements = <TData = AxiosResponse<Disbursement[] | void>>(
+export const getAllDisbursements = <
+    TData = AxiosResponse<Disbursement[] | void>
+>(
     params?: GetAllDisbursementsParams,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
@@ -5723,7 +5815,9 @@ export const getAllDisbursements = <TData = AxiosResponse<Disbursement[] | void>
 /**
  * @summary Fetches all accounting entry values
  */
-export const getAllAccountingEntries = <TData = AxiosResponse<AccountingEntries[]>>(
+export const getAllAccountingEntries = <
+    TData = AxiosResponse<AccountingEntries[]>
+>(
     params: GetAllAccountingEntriesParams,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
@@ -5736,7 +5830,10 @@ export const getAllAccountingEntries = <TData = AxiosResponse<AccountingEntries[
 /**
  * @summary Fetches all events
  */
-export const getAllEvents = <TData = AxiosResponse<Event[]>>(params?: GetAllEventsParams, options?: AxiosRequestConfig): Promise<TData> => {
+export const getAllEvents = <TData = AxiosResponse<Event[]>>(
+    params?: GetAllEventsParams,
+    options?: AxiosRequestConfig
+): Promise<TData> => {
     return axios.get(`/v1/events`, {
         ...options,
         params: { ...params, ...options?.params },
@@ -5746,7 +5843,10 @@ export const getAllEvents = <TData = AxiosResponse<Event[]>>(params?: GetAllEven
 /**
  * @summary Fetches data for a specific event
  */
-export const getEvent = <TData = AxiosResponse<Event>>(eventId: string, options?: AxiosRequestConfig): Promise<TData> => {
+export const getEvent = <TData = AxiosResponse<Event>>(
+    eventId: string,
+    options?: AxiosRequestConfig
+): Promise<TData> => {
     return axios.get(`/v1/events/${eventId}`, options);
 };
 
@@ -5789,7 +5889,10 @@ export const getPolicyForVersion = <TData = AxiosResponse<Policy>>(
     version: number,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/policies/${planCode}/${policyNumber}/versions/${version}`, options);
+    return axios.get(
+        `/v1/policies/${planCode}/${policyNumber}/versions/${version}`,
+        options
+    );
 };
 
 /**
@@ -5816,18 +5919,26 @@ export const getPolicyTransactionById = <TData = AxiosResponse<Transaction>>(
     transactionId: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/policies/${planCode}/${policyNumber}/transactions/${transactionId}`, options);
+    return axios.get(
+        `/v1/policies/${planCode}/${policyNumber}/transactions/${transactionId}`,
+        options
+    );
 };
 
 /**
  * @summary Fetches Systematic Program information for a policy
  */
-export const getSystematicProgramsForPolicy = <TData = AxiosResponse<SystematicProgram[]>>(
+export const getSystematicProgramsForPolicy = <
+    TData = AxiosResponse<SystematicProgram[]>
+>(
     planCode: string,
     policyNumber: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/policies/${planCode}/${policyNumber}/systematicPrograms`, options);
+    return axios.get(
+        `/v1/policies/${planCode}/${policyNumber}/systematicPrograms`,
+        options
+    );
 };
 
 /**
@@ -5838,18 +5949,26 @@ export const getRidersForPolicy = <TData = AxiosResponse<Rider[]>>(
     policyNumber: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/policies/${planCode}/${policyNumber}/riders`, options);
+    return axios.get(
+        `/v1/policies/${planCode}/${policyNumber}/riders`,
+        options
+    );
 };
 
 /**
  * @summary Fetches parties information for a policy
  */
-export const getPartiesForPolicy = <TData = AxiosResponse<GetPartiesForPolicy200Item[]>>(
+export const getPartiesForPolicy = <
+    TData = AxiosResponse<GetPartiesForPolicy200Item[]>
+>(
     planCode: string,
     policyNumber: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/policies/${planCode}/${policyNumber}/parties`, options);
+    return axios.get(
+        `/v1/policies/${planCode}/${policyNumber}/parties`,
+        options
+    );
 };
 
 /**
@@ -5860,18 +5979,26 @@ export const getLpsPayload = <TData = AxiosResponse<GetLpsPayload200 | void>>(
     policyNumber: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/policies/${planCode}/${policyNumber}/lpspayload`, options);
+    return axios.get(
+        `/v1/policies/${planCode}/${policyNumber}/lpspayload`,
+        options
+    );
 };
 
 /**
  * @summary Fetches Policy Feature information for a policy
  */
-export const getPolicyFeatureForPolicy = <TData = AxiosResponse<PolicyFeature[]>>(
+export const getPolicyFeatureForPolicy = <
+    TData = AxiosResponse<PolicyFeature[]>
+>(
     planCode: string,
     policyNumber: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/policies/${planCode}/${policyNumber}/features`, options);
+    return axios.get(
+        `/v1/policies/${planCode}/${policyNumber}/features`,
+        options
+    );
 };
 
 /**
@@ -5897,7 +6024,10 @@ export const getCoverageForPolicy = <TData = AxiosResponse<PolicyCoverage>>(
     policyNumber: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.get(`/v1/policies/${planCode}/${policyNumber}/coverage`, options);
+    return axios.get(
+        `/v1/policies/${planCode}/${policyNumber}/coverage`,
+        options
+    );
 };
 
 /**
@@ -5909,7 +6039,11 @@ export const metrics = <TData = AxiosResponse<PolicyMetricsResponse>>(
     policyMetricsRequest: PolicyMetricsRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/metrics`, policyMetricsRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/metrics`,
+        policyMetricsRequest,
+        options
+    );
 };
 
 /**
@@ -5921,7 +6055,11 @@ export const cancelTransaction = <TData = AxiosResponse<TransactionResponse>>(
     cancelTransactionBody: CancelTransactionBody,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/canceltransaction`, cancelTransactionBody, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/canceltransaction`,
+        cancelTransactionBody,
+        options
+    );
 };
 
 /**
@@ -5933,7 +6071,11 @@ export const lifeCycle = <TData = AxiosResponse<unknown>>(
     scheduledTime: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/lifecycle/${planCode}/${policyNumber}/${scheduledTime}`, undefined, options);
+    return axios.post(
+        `/v1/lifecycle/${planCode}/${policyNumber}/${scheduledTime}`,
+        undefined,
+        options
+    );
 };
 
 /**
@@ -5945,7 +6087,11 @@ export const reverseRecreate = <TData = AxiosResponse<TransactionResponse>>(
     reverseRecreateBody: ReverseRecreateBody,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/reverserecreate`, reverseRecreateBody, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/reverserecreate`,
+        reverseRecreateBody,
+        options
+    );
 };
 
 /**
@@ -5954,11 +6100,21 @@ export const reverseRecreate = <TData = AxiosResponse<TransactionResponse>>(
 export const addParty = <TData = AxiosResponse<TransactionResponse>>(
     planCode: string,
     policyNumber: string,
-    partyRole: 'Payee' | 'Payor' | 'Owner' | 'ThirdPartyDesignee' | 'PrimaryBeneficiary' | 'ContingentBeneficiary',
+    partyRole:
+        | 'Payee'
+        | 'Payor'
+        | 'Owner'
+        | 'ThirdPartyDesignee'
+        | 'PrimaryBeneficiary'
+        | 'ContingentBeneficiary',
     partyChangeRequest: PartyChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/parties/${partyRole}`, partyChangeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyRole}`,
+        partyChangeRequest,
+        options
+    );
 };
 
 /**
@@ -5968,11 +6124,21 @@ export const updateParty = <TData = AxiosResponse<TransactionResponse>>(
     planCode: string,
     policyNumber: string,
     partyId: string,
-    partyRole: 'Payee' | 'Payor' | 'Owner' | 'ThirdPartyDesignee' | 'PrimaryBeneficiary' | 'ContingentBeneficiary',
+    partyRole:
+        | 'Payee'
+        | 'Payor'
+        | 'Owner'
+        | 'ThirdPartyDesignee'
+        | 'PrimaryBeneficiary'
+        | 'ContingentBeneficiary',
     partyChangeRequest: PartyChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.put(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/${partyRole}`, partyChangeRequest, options);
+    return axios.put(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/${partyRole}`,
+        partyChangeRequest,
+        options
+    );
 };
 
 /**
@@ -5982,10 +6148,19 @@ export const removeParty = <TData = AxiosResponse<TransactionResponse>>(
     planCode: string,
     policyNumber: string,
     partyId: string,
-    partyRole: 'Payee' | 'Payor' | 'Owner' | 'ThirdPartyDesignee' | 'PrimaryBeneficiary' | 'ContingentBeneficiary',
+    partyRole:
+        | 'Payee'
+        | 'Payor'
+        | 'Owner'
+        | 'ThirdPartyDesignee'
+        | 'PrimaryBeneficiary'
+        | 'ContingentBeneficiary',
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.delete(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/${partyRole}`, options);
+    return axios.delete(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/${partyRole}`,
+        options
+    );
 };
 
 /**
@@ -5998,7 +6173,11 @@ export const addPhoneNumber = <TData = AxiosResponse<TransactionResponse>>(
     phoneChangeRequest: PhoneChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/phone`, phoneChangeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/phone`,
+        phoneChangeRequest,
+        options
+    );
 };
 
 /**
@@ -6012,7 +6191,11 @@ export const updatePhoneNumber = <TData = AxiosResponse<TransactionResponse>>(
     phoneChangeRequest: PhoneChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.put(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/phone/${phoneId}`, phoneChangeRequest, options);
+    return axios.put(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/phone/${phoneId}`,
+        phoneChangeRequest,
+        options
+    );
 };
 
 /**
@@ -6025,7 +6208,10 @@ export const deletePhoneNumber = <TData = AxiosResponse<TransactionResponse>>(
     phoneId: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.delete(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/phone/${phoneId}`, options);
+    return axios.delete(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/phone/${phoneId}`,
+        options
+    );
 };
 
 /**
@@ -6038,7 +6224,11 @@ export const addNewEmailAddress = <TData = AxiosResponse<TransactionResponse>>(
     emailChangeRequest: EmailChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/emailaddress`, emailChangeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/emailaddress`,
+        emailChangeRequest,
+        options
+    );
 };
 
 /**
@@ -6052,7 +6242,11 @@ export const updateEmailAddress = <TData = AxiosResponse<TransactionResponse>>(
     emailChangeRequest: EmailChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.put(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/emailaddress/${emailId}`, emailChangeRequest, options);
+    return axios.put(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/emailaddress/${emailId}`,
+        emailChangeRequest,
+        options
+    );
 };
 
 /**
@@ -6065,7 +6259,10 @@ export const deleteEmailAddress = <TData = AxiosResponse<TransactionResponse>>(
     emailId: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.delete(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/emailaddress/${emailId}`, options);
+    return axios.delete(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/emailaddress/${emailId}`,
+        options
+    );
 };
 
 /**
@@ -6078,7 +6275,11 @@ export const addBankAccount = <TData = AxiosResponse<TransactionResponse>>(
     bankAccountChangeRequest: BankAccountChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/bankaccount`, bankAccountChangeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/bankaccount`,
+        bankAccountChangeRequest,
+        options
+    );
 };
 
 /**
@@ -6109,7 +6310,10 @@ export const endDateBankAccount = <TData = AxiosResponse<TransactionResponse>>(
     bankId: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.delete(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/bankaccount/${bankId}`, options);
+    return axios.delete(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/bankaccount/${bankId}`,
+        options
+    );
 };
 
 /**
@@ -6122,7 +6326,11 @@ export const addNewAddress = <TData = AxiosResponse<TransactionResponse>>(
     addressChangeRequest: AddressChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/address`, addressChangeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/address`,
+        addressChangeRequest,
+        options
+    );
 };
 
 /**
@@ -6136,7 +6344,11 @@ export const updateAddress = <TData = AxiosResponse<TransactionResponse>>(
     addressChangeRequest: AddressChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.put(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/address/${addressId}`, addressChangeRequest, options);
+    return axios.put(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/address/${addressId}`,
+        addressChangeRequest,
+        options
+    );
 };
 
 /**
@@ -6149,19 +6361,28 @@ export const deleteAddress = <TData = AxiosResponse<TransactionResponse>>(
     addressId: string,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.delete(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/address/${addressId}`, options);
+    return axios.delete(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/address/${addressId}`,
+        options
+    );
 };
 
 /**
  * @summary Submit request for Delivery Date
  */
-export const submitFinalizedDeliveryDateSetupRequest = <TData = AxiosResponse<TransactionResponse>>(
+export const submitFinalizedDeliveryDateSetupRequest = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     deliveryDateSetupRequest: DeliveryDateSetupRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/deliverydatesetup`, deliveryDateSetupRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/deliverydatesetup`,
+        deliveryDateSetupRequest,
+        options
+    );
 };
 
 /**
@@ -6174,13 +6395,19 @@ export const addPartyName = <TData = AxiosResponse<TransactionResponse>>(
     partyNameChangeRequest: PartyNameChangeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/partyname`, partyNameChangeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/parties/${partyId}/partyname`,
+        partyNameChangeRequest,
+        options
+    );
 };
 
 /**
  * @summary Update Communication Preference based on request
  */
-export const updateCommunicationPreference = <TData = AxiosResponse<TransactionResponse>>(
+export const updateCommunicationPreference = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     partyId: string,
@@ -6197,55 +6424,81 @@ export const updateCommunicationPreference = <TData = AxiosResponse<TransactionR
 /**
  * @summary Submit request for Initial Premium
  */
-export const submitFinalizedInitialPremiumRequest = <TData = AxiosResponse<TransactionResponse>>(
+export const submitFinalizedInitialPremiumRequest = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     initialPremiumRequest: InitialPremiumRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/initialpremium`, initialPremiumRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/initialpremium`,
+        initialPremiumRequest,
+        options
+    );
 };
 
 /**
  * @summary Submit request for Freelook Cancellation
  */
-export const submitFinalizedFreeLookCancellationRequest = <TData = AxiosResponse<TransactionResponse>>(
+export const submitFinalizedFreeLookCancellationRequest = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     freeLookCancellationRequest: FreeLookCancellationRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/freelookcancellation`, freeLookCancellationRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/freelookcancellation`,
+        freeLookCancellationRequest,
+        options
+    );
 };
 
 /**
  * @summary Submit request for Fund Transfer
  */
-export const submitFinalizedFundTransferRequest = <TData = AxiosResponse<TransactionResponse>>(
+export const submitFinalizedFundTransferRequest = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     fundTransferRequest: FundTransferRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/fundtransfer`, fundTransferRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/fundtransfer`,
+        fundTransferRequest,
+        options
+    );
 };
 
 /**
  * @summary Systematic Program Setup
  */
-export const systematicProgramSetup = <TData = AxiosResponse<TransactionResponse>>(
+export const systematicProgramSetup = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     systematicProgramSetupRequest: SystematicProgramSetupRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/systematicprograms`, systematicProgramSetupRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/systematicprograms`,
+        systematicProgramSetupRequest,
+        options
+    );
 };
 
 /**
  * @summary Systematic means that happens regularly on a frequency (Monthly, Annual, SemiAnnual etc) programs - like payment, withdrawal and loanrepayment.
  */
-export const systematicProgramUpdate = <TData = AxiosResponse<TransactionResponse>>(
+export const systematicProgramUpdate = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     arrangementId: string,
@@ -6262,49 +6515,73 @@ export const systematicProgramUpdate = <TData = AxiosResponse<TransactionRespons
 /**
  * @summary Submit request for Partial Withdrawal One Time
  */
-export const partialWithdrawalOneTime = <TData = AxiosResponse<TransactionResponse>>(
+export const partialWithdrawalOneTime = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     partialWithdrawalOneTimeRequest: PartialWithdrawalOneTimeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/partialwithdrawalonetime`, partialWithdrawalOneTimeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/partialwithdrawalonetime`,
+        partialWithdrawalOneTimeRequest,
+        options
+    );
 };
 
 /**
  * @summary Submit request for Partial Withdrawal One Time - Quote
  */
-export const partialWithdrawalOneTimeQuote = <TData = AxiosResponse<PartialWithdrawalOneTimeQuoteResponse>>(
+export const partialWithdrawalOneTimeQuote = <
+    TData = AxiosResponse<PartialWithdrawalOneTimeQuoteResponse>
+>(
     planCode: string,
     policyNumber: string,
     partialWithdrawalOneTimeRequest: PartialWithdrawalOneTimeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/partialwithdrawalonetime/quote`, partialWithdrawalOneTimeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/partialwithdrawalonetime/quote`,
+        partialWithdrawalOneTimeRequest,
+        options
+    );
 };
 
 /**
  * @summary Submit request for One Time Premium
  */
-export const submitFinalizedOneTimePremium = <TData = AxiosResponse<TransactionResponse>>(
+export const submitFinalizedOneTimePremium = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     oneTimePremiumRequest: OneTimePremiumRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/onetimepremium`, oneTimePremiumRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/onetimepremium`,
+        oneTimePremiumRequest,
+        options
+    );
 };
 
 /**
  * @summary Submit request for One Time Premium - Quote
  */
-export const oneTimePremiumQuote = <TData = AxiosResponse<OneTimePremiumQuoteResponse>>(
+export const oneTimePremiumQuote = <
+    TData = AxiosResponse<OneTimePremiumQuoteResponse>
+>(
     planCode: string,
     policyNumber: string,
     oneTimePremiumRequest: OneTimePremiumRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/onetimepremium/quote`, oneTimePremiumRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/onetimepremium/quote`,
+        oneTimePremiumRequest,
+        options
+    );
 };
 
 /**
@@ -6316,19 +6593,29 @@ export const newLoanRequest = <TData = AxiosResponse<TransactionResponse>>(
     newLoanRequest: NewLoanRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/newloan`, newLoanRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/newloan`,
+        newLoanRequest,
+        options
+    );
 };
 
 /**
  * @summary Create a new loan request
  */
-export const newLoanRequestQuote = <TData = AxiosResponse<NewLoanRequestQuote200>>(
+export const newLoanRequestQuote = <
+    TData = AxiosResponse<NewLoanRequestQuote200>
+>(
     planCode: string,
     policyNumber: string,
     newLoanRequest: NewLoanRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/newloan/quote`, newLoanRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/newloan/quote`,
+        newLoanRequest,
+        options
+    );
 };
 
 /**
@@ -6340,55 +6627,83 @@ export const loanRepayment = <TData = AxiosResponse<TransactionResponse>>(
     loanRepaymentOneTimeRequest: LoanRepaymentOneTimeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/loanrepaymentonetime`, loanRepaymentOneTimeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/loanrepaymentonetime`,
+        loanRepaymentOneTimeRequest,
+        options
+    );
 };
 
 /**
  * @summary Loan Repayment One Time Request Quote
  */
-export const loanRepaymentQuote = <TData = AxiosResponse<LoanRepaymentOneTimeQuoteResponse>>(
+export const loanRepaymentQuote = <
+    TData = AxiosResponse<LoanRepaymentOneTimeQuoteResponse>
+>(
     planCode: string,
     policyNumber: string,
     loanRepaymentOneTimeRequest: LoanRepaymentOneTimeRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/loanrepaymentonetime/quote`, loanRepaymentOneTimeRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/loanrepaymentonetime/quote`,
+        loanRepaymentOneTimeRequest,
+        options
+    );
 };
 
 /**
  * @summary Create new full surrender based on request
  */
-export const addNewFullSurrenderRequest = <TData = AxiosResponse<TransactionResponse>>(
+export const addNewFullSurrenderRequest = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     fullSurrenderRequest: FullSurrenderRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/fullsurrender`, fullSurrenderRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/fullsurrender`,
+        fullSurrenderRequest,
+        options
+    );
 };
 
 /**
  * @summary Preview full surrender based on request
  */
-export const addNewFullSurrenderRequestQuote = <TData = AxiosResponse<FullSurrenderQuoteResponse>>(
+export const addNewFullSurrenderRequestQuote = <
+    TData = AxiosResponse<FullSurrenderQuoteResponse>
+>(
     planCode: string,
     policyNumber: string,
     fullSurrenderRequest: FullSurrenderRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/fullsurrender/quote`, fullSurrenderRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/fullsurrender/quote`,
+        fullSurrenderRequest,
+        options
+    );
 };
 
 /**
  * @summary Generate death claim notification
  */
-export const addNewDeathClaimNotification = <TData = AxiosResponse<TransactionResponse>>(
+export const addNewDeathClaimNotification = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     deathClaimNotification: DeathClaimNotification,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/deathclaimnotification`, deathClaimNotification, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/deathclaimnotification`,
+        deathClaimNotification,
+        options
+    );
 };
 
 /**
@@ -6400,43 +6715,65 @@ export const addNewDeathClaim = <TData = AxiosResponse<TransactionResponse>>(
     deathClaim: DeathClaim,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/deathclaim`, deathClaim, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/deathclaim`,
+        deathClaim,
+        options
+    );
 };
 
 /**
  * @summary Create a new Reinstatement
  */
-export const addNewReinstatementApproval = <TData = AxiosResponse<TransactionResponse>>(
+export const addNewReinstatementApproval = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     reinstatementApproved: ReinstatementApproved,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/reinstatementapproved`, reinstatementApproved, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/reinstatementapproved`,
+        reinstatementApproved,
+        options
+    );
 };
 
 /**
  * @summary Create a new Reinstatement Request
  */
-export const newReinstatementApprovalRequest = <TData = AxiosResponse<ReinstatementApprovedQuoteResponse>>(
+export const newReinstatementApprovalRequest = <
+    TData = AxiosResponse<ReinstatementApprovedQuoteResponse>
+>(
     planCode: string,
     policyNumber: string,
     reinstatementApproved: ReinstatementApproved,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/reinstatementrequest/quote`, reinstatementApproved, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/reinstatementrequest/quote`,
+        reinstatementApproved,
+        options
+    );
 };
 
 /**
  * @summary Create a Value adjustment request
  */
-export const addNewValueAdjustmentRequest = <TData = AxiosResponse<TransactionResponse>>(
+export const addNewValueAdjustmentRequest = <
+    TData = AxiosResponse<TransactionResponse>
+>(
     planCode: string,
     policyNumber: string,
     valueAdjustmentRequest: ValueAdjustmentRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
-    return axios.post(`/v1/policies/${planCode}/${policyNumber}/valueadjustment`, valueAdjustmentRequest, options);
+    return axios.post(
+        `/v1/policies/${planCode}/${policyNumber}/valueadjustment`,
+        valueAdjustmentRequest,
+        options
+    );
 };
 
 /**
@@ -6452,7 +6789,9 @@ export const uploadAcordXml = <TData = AxiosResponse<UploadAcordXml201>>(
 /**
  * @summary Publish a new request for policy conversion
  */
-export const createNewConversionRequest = <TData = AxiosResponse<ConversionCreateRequest>>(
+export const createNewConversionRequest = <
+    TData = AxiosResponse<ConversionCreateRequest>
+>(
     conversionCreateRequest: ConversionCreateRequest,
     options?: AxiosRequestConfig
 ): Promise<TData> => {
@@ -6462,14 +6801,20 @@ export const createNewConversionRequest = <TData = AxiosResponse<ConversionCreat
 /**
  * @summary Get all policies with a short summary
  */
-export const getPolicies = <TData = AxiosResponse<PolicySummarySnapshot>>(options?: AxiosRequestConfig): Promise<TData> => {
+export const getPolicies = <TData = AxiosResponse<PolicySummarySnapshot>>(
+    options?: AxiosRequestConfig
+): Promise<TData> => {
     return axios.get(`/v1/policies`, options);
 };
 
 /**
  * @summary Fetches conversion status for queried policy numbers
  */
-export const getAllConversionStatus = <TData = AxiosResponse<ConversionStatus[]>>(options?: AxiosRequestConfig): Promise<TData> => {
+export const getAllConversionStatus = <
+    TData = AxiosResponse<ConversionStatus[]>
+>(
+    options?: AxiosRequestConfig
+): Promise<TData> => {
     return axios.get(`/v1/conversion/status`, options);
 };
 
@@ -6488,12 +6833,19 @@ export const getFastDataByDate = <TData = AxiosResponse<FastDataBackup[]>>(
 
 export type GetAllCarriersResult = AxiosResponse<Carrier[]>;
 export type GetCarrierResult = AxiosResponse<Carrier>;
-export type GetAllThirdPartyAdministratorsResult = AxiosResponse<ThirdPartyAdministrator[]>;
-export type GetThirdPartyAdministratorDetailsResult = AxiosResponse<ThirdPartyAdministrator>;
-export type GetAllAccountingEntryRulesResult = AxiosResponse<AccountingEntryRules[]>;
-export type CreateAccountEntryRulesResult = AxiosResponse<AccountEntryRuleRequestFields | void>;
+export type GetAllThirdPartyAdministratorsResult = AxiosResponse<
+    ThirdPartyAdministrator[]
+>;
+export type GetThirdPartyAdministratorDetailsResult =
+    AxiosResponse<ThirdPartyAdministrator>;
+export type GetAllAccountingEntryRulesResult = AxiosResponse<
+    AccountingEntryRules[]
+>;
+export type CreateAccountEntryRulesResult =
+    AxiosResponse<AccountEntryRuleRequestFields | void>;
 export type GetAllChartOfAccountsResult = AxiosResponse<ChartOfAccount[]>;
-export type CreateChartOfAccountResult = AxiosResponse<ChartOfAccountRequestFields | void>;
+export type CreateChartOfAccountResult =
+    AxiosResponse<ChartOfAccountRequestFields | void>;
 export type GetAllDisbursementsResult = AxiosResponse<Disbursement[] | void>;
 export type GetAllAccountingEntriesResult = AxiosResponse<AccountingEntries[]>;
 export type GetAllEventsResult = AxiosResponse<Event[]>;
@@ -6503,9 +6855,13 @@ export type GetVersionForPolicyResult = AxiosResponse<PolicyEvent[]>;
 export type GetPolicyForVersionResult = AxiosResponse<Policy>;
 export type GetTransactionsForPolicyResult = AxiosResponse<Transaction[]>;
 export type GetPolicyTransactionByIdResult = AxiosResponse<Transaction>;
-export type GetSystematicProgramsForPolicyResult = AxiosResponse<SystematicProgram[]>;
+export type GetSystematicProgramsForPolicyResult = AxiosResponse<
+    SystematicProgram[]
+>;
 export type GetRidersForPolicyResult = AxiosResponse<Rider[]>;
-export type GetPartiesForPolicyResult = AxiosResponse<GetPartiesForPolicy200Item[]>;
+export type GetPartiesForPolicyResult = AxiosResponse<
+    GetPartiesForPolicy200Item[]
+>;
 export type GetLpsPayloadResult = AxiosResponse<GetLpsPayload200 | void>;
 export type GetPolicyFeatureForPolicyResult = AxiosResponse<PolicyFeature[]>;
 export type GetDistributionForPolicyResult = AxiosResponse<Distribution[]>;
@@ -6529,31 +6885,47 @@ export type EndDateBankAccountResult = AxiosResponse<TransactionResponse>;
 export type AddNewAddressResult = AxiosResponse<TransactionResponse>;
 export type UpdateAddressResult = AxiosResponse<TransactionResponse>;
 export type DeleteAddressResult = AxiosResponse<TransactionResponse>;
-export type SubmitFinalizedDeliveryDateSetupRequestResult = AxiosResponse<TransactionResponse>;
+export type SubmitFinalizedDeliveryDateSetupRequestResult =
+    AxiosResponse<TransactionResponse>;
 export type AddPartyNameResult = AxiosResponse<TransactionResponse>;
-export type UpdateCommunicationPreferenceResult = AxiosResponse<TransactionResponse>;
-export type SubmitFinalizedInitialPremiumRequestResult = AxiosResponse<TransactionResponse>;
-export type SubmitFinalizedFreeLookCancellationRequestResult = AxiosResponse<TransactionResponse>;
-export type SubmitFinalizedFundTransferRequestResult = AxiosResponse<TransactionResponse>;
+export type UpdateCommunicationPreferenceResult =
+    AxiosResponse<TransactionResponse>;
+export type SubmitFinalizedInitialPremiumRequestResult =
+    AxiosResponse<TransactionResponse>;
+export type SubmitFinalizedFreeLookCancellationRequestResult =
+    AxiosResponse<TransactionResponse>;
+export type SubmitFinalizedFundTransferRequestResult =
+    AxiosResponse<TransactionResponse>;
 export type SystematicProgramSetupResult = AxiosResponse<TransactionResponse>;
 export type SystematicProgramUpdateResult = AxiosResponse<TransactionResponse>;
 export type PartialWithdrawalOneTimeResult = AxiosResponse<TransactionResponse>;
-export type PartialWithdrawalOneTimeQuoteResult = AxiosResponse<PartialWithdrawalOneTimeQuoteResponse>;
-export type SubmitFinalizedOneTimePremiumResult = AxiosResponse<TransactionResponse>;
-export type OneTimePremiumQuoteResult = AxiosResponse<OneTimePremiumQuoteResponse>;
+export type PartialWithdrawalOneTimeQuoteResult =
+    AxiosResponse<PartialWithdrawalOneTimeQuoteResponse>;
+export type SubmitFinalizedOneTimePremiumResult =
+    AxiosResponse<TransactionResponse>;
+export type OneTimePremiumQuoteResult =
+    AxiosResponse<OneTimePremiumQuoteResponse>;
 export type NewLoanRequestResult = AxiosResponse<TransactionResponse>;
 export type NewLoanRequestQuoteResult = AxiosResponse<NewLoanRequestQuote200>;
 export type LoanRepaymentResult = AxiosResponse<TransactionResponse>;
-export type LoanRepaymentQuoteResult = AxiosResponse<LoanRepaymentOneTimeQuoteResponse>;
-export type AddNewFullSurrenderRequestResult = AxiosResponse<TransactionResponse>;
-export type AddNewFullSurrenderRequestQuoteResult = AxiosResponse<FullSurrenderQuoteResponse>;
-export type AddNewDeathClaimNotificationResult = AxiosResponse<TransactionResponse>;
+export type LoanRepaymentQuoteResult =
+    AxiosResponse<LoanRepaymentOneTimeQuoteResponse>;
+export type AddNewFullSurrenderRequestResult =
+    AxiosResponse<TransactionResponse>;
+export type AddNewFullSurrenderRequestQuoteResult =
+    AxiosResponse<FullSurrenderQuoteResponse>;
+export type AddNewDeathClaimNotificationResult =
+    AxiosResponse<TransactionResponse>;
 export type AddNewDeathClaimResult = AxiosResponse<TransactionResponse>;
-export type AddNewReinstatementApprovalResult = AxiosResponse<TransactionResponse>;
-export type NewReinstatementApprovalRequestResult = AxiosResponse<ReinstatementApprovedQuoteResponse>;
-export type AddNewValueAdjustmentRequestResult = AxiosResponse<TransactionResponse>;
+export type AddNewReinstatementApprovalResult =
+    AxiosResponse<TransactionResponse>;
+export type NewReinstatementApprovalRequestResult =
+    AxiosResponse<ReinstatementApprovedQuoteResponse>;
+export type AddNewValueAdjustmentRequestResult =
+    AxiosResponse<TransactionResponse>;
 export type UploadAcordXmlResult = AxiosResponse<UploadAcordXml201>;
-export type CreateNewConversionRequestResult = AxiosResponse<ConversionCreateRequest>;
+export type CreateNewConversionRequestResult =
+    AxiosResponse<ConversionCreateRequest>;
 export type GetPoliciesResult = AxiosResponse<PolicySummarySnapshot>;
 export type GetAllConversionStatusResult = AxiosResponse<ConversionStatus[]>;
 export type GetFastDataByDateResult = AxiosResponse<FastDataBackup[]>;

@@ -20,11 +20,17 @@ function transformErrors({ errors, t }: TransformErrorsProps) {
                 error.message = t('formValidations.patternNoSpecial');
             }
         } else if (error.name === 'minLength') {
-            error.message = t('formValidations.minLength', { limit: error.params.limit });
+            error.message = t('formValidations.minLength', {
+                limit: error.params.limit,
+            });
         } else if (error.name === 'minItems') {
-            error.message = t('formValidations.minItems', { limit: error.params.limit }); // Corrected key
+            error.message = t('formValidations.minItems', {
+                limit: error.params.limit,
+            }); // Corrected key
         } else if (error.name === 'maxLength') {
-            error.message = t('formValidations.maxLength', { limit: error.params.limit }); // Corrected key
+            error.message = t('formValidations.maxLength', {
+                limit: error.params.limit,
+            }); // Corrected key
         } else if (error.name === 'if') {
             error.message = '';
         }

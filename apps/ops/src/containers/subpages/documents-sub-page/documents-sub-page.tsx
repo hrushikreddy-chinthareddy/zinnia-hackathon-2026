@@ -1,6 +1,9 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuery } from '@tanstack/react-query';
-import { SearchRequest, TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+import {
+    SearchRequest,
+    TaxformResponse,
+} from '@zinnia/api-types/types/documents-v3';
 import { Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -14,14 +17,20 @@ import SelectSimple from '@deps/components/select/select';
 import { SimpleOption } from '@deps/components/select/select.helpers';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import { PolicyDocument } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import { DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    DEFAULT_ERROR_STRING,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
@@ -33,7 +42,9 @@ type DocumentsSubPageProps = {
     policy: Policy;
 };
 
-export type DocumentWithSource = PolicyDocument & { documentSource: DocumentTypeView };
+export type DocumentWithSource = PolicyDocument & {
+    documentSource: DocumentTypeView;
+};
 
 // This is the maximum number of years retrievable by the API
 const maxTaxYears = 5;
@@ -44,7 +55,10 @@ const getYearOptions = (policy: Policy): SimpleOption[] => {
         ? dayjs(policy?.policyDates?.applicationDate, ZAHARA_API_DATE_FORMAT)
         : dayjs().year(dayjs().year() - 99);
     const range = determineRange(dayjs().year(), earliestPolicyDate.year() - 1);
-    return [defaultOption, ...range.map(year => ({ label: `${year}`, value: `${year}` }))];
+    return [
+        defaultOption,
+        ...range.map((year) => ({ label: `${year}`, value: `${year}` })),
+    ];
 };
 
 const NormalDocs = ({
@@ -72,11 +86,19 @@ const NormalDocs = ({
     const searchParams = useMemo<SearchRequest | null>(() => {
         let optionalParams = {};
         if (yearSelection !== 'all') {
-            const startDate = dayjs().year(Number(yearSelection)).month(0).date(1);
+            const startDate = dayjs()
+                .year(Number(yearSelection))
+                .month(0)
+                .date(1);
             const documentStartDate = isFirstYearSelected
-                ? startDate.add(1, 'year').subtract(1100, 'days').format(ZAHARA_API_DATE_FORMAT) // this is the maximum range allowed
+                ? startDate
+                      .add(1, 'year')
+                      .subtract(1100, 'days')
+                      .format(ZAHARA_API_DATE_FORMAT) // this is the maximum range allowed
                 : startDate.format(ZAHARA_API_DATE_FORMAT);
-            const documentEndDate = startDate.add(1, 'year').format(ZAHARA_API_DATE_FORMAT);
+            const documentEndDate = startDate
+                .add(1, 'year')
+                .format(ZAHARA_API_DATE_FORMAT);
 
             optionalParams = { documentEndDate, documentStartDate };
         }
@@ -105,9 +127,17 @@ const NormalDocs = ({
         setOffset(0);
     }, [yearSelection, documentType]);
 
-    const { data: { data: policyDocuments = [], status, total: totalPolicyDocuments = 0 } = {}, isLoading } = useQuery({
+    const {
+        data: {
+            data: policyDocuments = [],
+            status,
+            total: totalPolicyDocuments = 0,
+        } = {},
+        isLoading,
+    } = useQuery({
         queryKey: ['documentSearch', searchParams, limit, offset, useV3],
-        queryFn: () => getDocumentSearchResultsQuery(searchParams, limit, offset, useV3),
+        queryFn: () =>
+            getDocumentSearchResultsQuery(searchParams, limit, offset, useV3),
         enabled: !!policy?.policyNumber,
     });
 
@@ -117,7 +147,9 @@ const NormalDocs = ({
     if (isLoading) {
         return (
             <div className="mx-auto flex items-center justify-center gap-2">
-                <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                <EventsLoader
+                    message={t('policy.documents.loadingDocuments')}
+                />
             </div>
         );
     }
@@ -125,7 +157,9 @@ const NormalDocs = ({
     return (
         <>
             {isLoading ? (
-                <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                <EventsLoader
+                    message={t('policy.documents.loadingDocuments')}
+                />
             ) : (
                 <DocumentsResultsTable
                     carrierCode={policy.carrierId ?? ''}
@@ -227,7 +261,9 @@ const TaxDocs = ({
                     )}
                     {loading && (
                         <div className="mx-auto flex items-center justify-center gap-2">
-                            <EventsLoader message={t('policy.documents.loadingDocuments')} />
+                            <EventsLoader
+                                message={t('policy.documents.loadingDocuments')}
+                            />
                         </div>
                     )}
                     <DocumentResultsPagination
@@ -247,10 +283,14 @@ const TaxDocs = ({
 export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     const { t } = useTranslation();
 
-    const [documentType, setDocumentType] = useState(DocumentTypeView.Policy as string);
+    const [documentType, setDocumentType] = useState(
+        DocumentTypeView.Policy as string
+    );
 
     const yearOptions = getYearOptions(policy);
-    const [yearSelection, setYearSelection] = useState<string>(dayjs().year().toString());
+    const [yearSelection, setYearSelection] = useState<string>(
+        dayjs().year().toString()
+    );
 
     const isFirstYearSelected = useMemo(() => {
         return yearSelection === yearOptions?.[yearOptions?.length - 1]?.value;
@@ -264,7 +304,9 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     return (
         <>
             <div className="flex self-stretch border-b-2 border-gray-200">
-                <PageHeader headerText={t('pageHeader.documents.headerText') as string} />
+                <PageHeader
+                    headerText={t('pageHeader.documents.headerText') as string}
+                />
             </div>
             <CardContainer>
                 <div className="max-w-[200px]">
@@ -276,17 +318,27 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                     />
                 </div>
                 <div className="w-fulls mt-4">
-                    <FieldLabel label={t('policy.documents.filterByCategory') as string} />
+                    <FieldLabel
+                        label={t('policy.documents.filterByCategory') as string}
+                    />
                     <RadioGroup.Root
-                        aria-label={t('policy.documents.filterByCategory') as string}
+                        aria-label={
+                            t('policy.documents.filterByCategory') as string
+                        }
                         className="flex gap-2"
                         onValueChange={setDocumentType}
                         value={documentType}
                     >
-                        <RadioGroup.Item className="chip" value={DocumentTypeView.Policy}>
+                        <RadioGroup.Item
+                            className="chip"
+                            value={DocumentTypeView.Policy}
+                        >
                             {t('policy.documents.received') as string}
                         </RadioGroup.Item>
-                        <RadioGroup.Item className="chip" value={DocumentTypeView.Correspondence}>
+                        <RadioGroup.Item
+                            className="chip"
+                            value={DocumentTypeView.Correspondence}
+                        >
                             {t('policy.documents.sent') as string}
                         </RadioGroup.Item>
                         <RadioGroup.Item className="chip" value={'tax-forms'}>
@@ -302,7 +354,11 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                         isFirstYearSelected={isFirstYearSelected}
                     />
                 ) : (
-                    <TaxDocs yearSelection={yearSelection} policy={policy} isFirstYearSelected={isFirstYearSelected} />
+                    <TaxDocs
+                        yearSelection={yearSelection}
+                        policy={policy}
+                        isFirstYearSelected={isFirstYearSelected}
+                    />
                 )}
             </CardContainer>
         </>

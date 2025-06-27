@@ -13,7 +13,11 @@ interface HandleResponse {
     setValidationResults: Dispatch<SetStateAction<ValidationResult[]>>;
 }
 
-export const handleResponse = ({ response, setViewState, setValidationResults }: HandleResponse) => {
+export const handleResponse = ({
+    response,
+    setViewState,
+    setValidationResults,
+}: HandleResponse) => {
     switch (response?.status) {
         case StatusCode.Accepted:
         case StatusCode.Okay:

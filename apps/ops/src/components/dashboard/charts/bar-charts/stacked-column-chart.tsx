@@ -10,7 +10,13 @@ interface StackedColumnChartProps {
     yAxisTitle: string;
 }
 
-export const StackedColumnChart: FC<StackedColumnChartProps> = ({ series, categories, title, colors, yAxisTitle }) => {
+export const StackedColumnChart: FC<StackedColumnChartProps> = ({
+    series,
+    categories,
+    title,
+    colors,
+    yAxisTitle,
+}) => {
     const chartOptions: Highcharts.Options = useMemo(
         () => ({
             chart: {
@@ -52,7 +58,8 @@ export const StackedColumnChart: FC<StackedColumnChartProps> = ({ series, catego
                 },
             },
             tooltip: {
-                headerFormat: '<span style="font-size:11px">{series.name}</span><br />',
+                headerFormat:
+                    '<span style="font-size:11px">{series.name}</span><br />',
             },
             series,
         }),

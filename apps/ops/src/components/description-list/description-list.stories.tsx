@@ -2,7 +2,11 @@ import { Meta } from '@storybook/react';
 import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
-import { PolicySummaryColDto, getPolicySummaryColDefs, toPolicySummaryColDto } from '@deps/data/policy-summary';
+import {
+    PolicySummaryColDto,
+    getPolicySummaryColDefs,
+    toPolicySummaryColDto,
+} from '@deps/data/policy-summary';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 
 import DescriptionList from './description-list';
@@ -12,7 +16,7 @@ export default {
     title: 'Components/DescriptionList',
     component: DescriptionList,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>
@@ -28,7 +32,11 @@ export const DescriptionListDefault = () => (
 
 export const DescriptionListWithTooltip = () => (
     <>
-        <DescriptionList label="Label" text="Field Value" tooltip="Here is a tooltip" />
+        <DescriptionList
+            label="Label"
+            text="Field Value"
+            tooltip="Here is a tooltip"
+        />
     </>
 );
 
@@ -36,7 +44,10 @@ export const DescriptionListsWithTooltips = () => {
     const { t } = useTranslation();
 
     const policySummaryDto = toPolicySummaryColDto({} as Policy);
-    const policySummaryColDefs = fillColDefs<PolicySummaryColDto>(policySummaryDto, getPolicySummaryColDefs(t));
+    const policySummaryColDefs = fillColDefs<PolicySummaryColDto>(
+        policySummaryDto,
+        getPolicySummaryColDefs(t)
+    );
 
     return (
         <>

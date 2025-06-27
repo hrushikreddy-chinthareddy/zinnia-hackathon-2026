@@ -15,22 +15,37 @@ import { ComparisonColumnChart } from '../../charts/bar-charts/comparison-column
 import { defaultDateFormat, friendlyDateFormat } from '../../utils';
 
 export const TotalExceptions: FC = () => {
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
 
     //One week ago values
-    const oneWeekStartDate = dayjs().subtract(7, 'day').format(defaultDateFormat);
-    const friendlyOneWeekStartDate = dayjs(oneWeekStartDate).format(friendlyDateFormat);
+    const oneWeekStartDate = dayjs()
+        .subtract(7, 'day')
+        .format(defaultDateFormat);
+    const friendlyOneWeekStartDate =
+        dayjs(oneWeekStartDate).format(friendlyDateFormat);
     const oneWeekEndDate = dayjs().format(defaultDateFormat);
-    const friendlyOneWeekEndDate = dayjs(oneWeekEndDate).format(friendlyDateFormat);
+    const friendlyOneWeekEndDate =
+        dayjs(oneWeekEndDate).format(friendlyDateFormat);
 
     //Two week ago values
-    const twoWeekStartDate = dayjs().subtract(15, 'day').format(defaultDateFormat);
-    const friendlyTwoWeekStartDate = dayjs(twoWeekStartDate).format(friendlyDateFormat);
+    const twoWeekStartDate = dayjs()
+        .subtract(15, 'day')
+        .format(defaultDateFormat);
+    const friendlyTwoWeekStartDate =
+        dayjs(twoWeekStartDate).format(friendlyDateFormat);
     const twoWeekEndDate = dayjs().subtract(8, 'day').format(defaultDateFormat);
-    const friendlyTwoWeekEndDate = dayjs(twoWeekEndDate).format(friendlyDateFormat);
+    const friendlyTwoWeekEndDate =
+        dayjs(twoWeekEndDate).format(friendlyDateFormat);
 
     const thisWeekFilter = {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted, Statuses.Inprogress],
+        caseStatus: [
+            Statuses.InProgress,
+            Statuses.Exception,
+            Statuses.NotStarted,
+            Statuses.Inprogress,
+        ],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         exceptionCreatedDateStart: oneWeekStartDate,
@@ -38,7 +53,12 @@ export const TotalExceptions: FC = () => {
     };
 
     const lastWeekFilter = {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted, Statuses.Inprogress],
+        caseStatus: [
+            Statuses.InProgress,
+            Statuses.Exception,
+            Statuses.NotStarted,
+            Statuses.Inprogress,
+        ],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         exceptionCreatedDateStart: twoWeekStartDate,
@@ -52,10 +72,12 @@ export const TotalExceptions: FC = () => {
     } = useQuery({
         queryKey: ['thisWeekExceptions', thisWeekFilter],
         queryFn: async () => {
-            const response = await getExceptionCountQuery(thisWeekFilter, [ExceptionCountGroupByEnum.CASE_STATUS]);
+            const response = await getExceptionCountQuery(thisWeekFilter, [
+                ExceptionCountGroupByEnum.CASE_STATUS,
+            ]);
             return response.totalElements;
         },
-        placeholderData: previousData => previousData,
+        placeholderData: (previousData) => previousData,
         enabled: Object.keys(thisWeekFilter).length > 0,
     });
 
@@ -66,22 +88,33 @@ export const TotalExceptions: FC = () => {
     } = useQuery({
         queryKey: ['lastWeekExceptions', lastWeekFilter],
         queryFn: async () => {
-            const response = await getExceptionCountQuery(lastWeekFilter, [ExceptionCountGroupByEnum.CASE_STATUS]);
+            const response = await getExceptionCountQuery(lastWeekFilter, [
+                ExceptionCountGroupByEnum.CASE_STATUS,
+            ]);
             return response.totalElements;
         },
-        placeholderData: previousData => previousData,
+        placeholderData: (previousData) => previousData,
         enabled: Object.keys(lastWeekFilter).length > 0,
     });
 
-    const greaterThanLastWeek = (thisWeekExceptions || 0) > (lastWeekExceptions || 0);
+    const greaterThanLastWeek =
+        (thisWeekExceptions || 0) > (lastWeekExceptions || 0);
     let percentDifferent;
 
     if (lastWeekExceptions === 0) {
-        percentDifferent = thisWeekExceptions ? (thisWeekExceptions * 100).toFixed() : '0';
+        percentDifferent = thisWeekExceptions
+            ? (thisWeekExceptions * 100).toFixed()
+            : '0';
     } else {
-        percentDifferent = ((((thisWeekExceptions || 0) - (lastWeekExceptions || 0)) / (lastWeekExceptions || 1)) * 100).toFixed();
+        percentDifferent = (
+            (((thisWeekExceptions || 0) - (lastWeekExceptions || 0)) /
+                (lastWeekExceptions || 1)) *
+            100
+        ).toFixed();
     }
-    const legendFormatter: Highcharts.FormatterCallbackFunction<Point | Series> = function (this) {
+    const legendFormatter: Highcharts.FormatterCallbackFunction<
+        Point | Series
+    > = function (this) {
         const dateString = this.name;
 
         const dates = dateString.split(' - ');
@@ -99,9 +132,18 @@ export const TotalExceptions: FC = () => {
                 <div className={styles.titleContainer}>
                     <h2 className="typography-titles-subtitle">Total Issues</h2>
                     <div className={styles.countContainer}>
-                        <p className={styles.title}>{thisWeekExceptions?.toLocaleString()}</p>
-                        <p className={clsx('typography-titles-subtitle', styles.totalPercent)}>
-                            {percentDifferent}% {greaterThanLastWeek ? 'more' : 'less'} issues than last week
+                        <p className={styles.title}>
+                            {thisWeekExceptions?.toLocaleString()}
+                        </p>
+                        <p
+                            className={clsx(
+                                'typography-titles-subtitle',
+                                styles.totalPercent
+                            )}
+                        >
+                            {percentDifferent}%{' '}
+                            {greaterThanLastWeek ? 'more' : 'less'} issues than
+                            last week
                         </p>
                     </div>
                 </div>

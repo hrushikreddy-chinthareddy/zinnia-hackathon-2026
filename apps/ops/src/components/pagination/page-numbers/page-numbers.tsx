@@ -8,7 +8,11 @@ export interface PageNumberProps {
     onClick: (pageNumber: number) => void;
 }
 
-const handleKeyDown = (e: React.KeyboardEvent, onClick: (pageNumber: number) => void, pageNumber: number) => {
+const handleKeyDown = (
+    e: React.KeyboardEvent,
+    onClick: (pageNumber: number) => void,
+    pageNumber: number
+) => {
     if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault(); // Prevent scrolling when pressing Spacebar
 
@@ -18,14 +22,22 @@ const handleKeyDown = (e: React.KeyboardEvent, onClick: (pageNumber: number) => 
     }
 };
 
-const PageNumber: React.FC<PageNumberProps> = ({ pageNumber, currentPage, onClick }) => {
+const PageNumber: React.FC<PageNumberProps> = ({
+    pageNumber,
+    currentPage,
+    onClick,
+}) => {
     const isSelected = pageNumber === currentPage;
 
     return (
         <button
-            className={clsx(styles.paginationItem, styles.pageNumber, isSelected && styles.selected)}
+            className={clsx(
+                styles.paginationItem,
+                styles.pageNumber,
+                isSelected && styles.selected
+            )}
             onClick={() => !isSelected && onClick(pageNumber)}
-            onKeyDown={e => handleKeyDown(e, onClick, pageNumber)}
+            onKeyDown={(e) => handleKeyDown(e, onClick, pageNumber)}
             aria-label={`Page ${pageNumber}`}
             aria-current={isSelected ? 'page' : undefined}
             data-testid="page-number"

@@ -6,7 +6,12 @@ export default withAuthAndLogging(
     async (req, res, loggingContext) => {
         try {
             const proxyUrl = `${apiServerBaseUrl}/bpm/onboarding/v1/producer`;
-            return await requestHandler(proxyUrl as string, req, res, loggingContext);
+            return await requestHandler(
+                proxyUrl as string,
+                req,
+                res,
+                loggingContext
+            );
         } catch (error) {
             // TODO: we should add logging here probably
             res.status(500).json({ message: 'Could not create producer' });

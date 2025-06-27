@@ -6,7 +6,10 @@ import {
     ContractUpdateOptions,
     SignatureState,
 } from '@deps/containers/address-change-container/types/address-change-types';
-import { Address, FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import {
+    Address,
+    FormValidationErrors,
+} from '@deps/models/case/withdrawal/case';
 
 //TODO: Update all any with the types, we get from api response
 export type AddressChangeFormState = {
@@ -22,7 +25,9 @@ export type AddressChangeFormState = {
     selectedIds: number[];
     submitSuccess: boolean;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
-    setContractUpdateOption: React.Dispatch<React.SetStateAction<ContractUpdateOptions>>;
+    setContractUpdateOption: React.Dispatch<
+        React.SetStateAction<ContractUpdateOptions>
+    >;
     setRoleIdentifier: React.Dispatch<React.SetStateAction<PolicyPartyRoles>>;
     setApplyToRoles: React.Dispatch<React.SetStateAction<ApplyToRolesState[]>>;
     setSignatureData: React.Dispatch<React.SetStateAction<SignatureState>>;
@@ -61,4 +66,6 @@ export const addressChangeDefaultValues = {
     setSubmitSuccess: noop,
 };
 
-export const AddressChangeContext = createContext<AddressChangeFormState>(addressChangeDefaultValues);
+export const AddressChangeContext = createContext<AddressChangeFormState>(
+    addressChangeDefaultValues
+);

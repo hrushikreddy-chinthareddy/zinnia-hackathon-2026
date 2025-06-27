@@ -1,4 +1,8 @@
-import { CoverageLayer, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    CoverageLayer,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 export enum ConfiguredSettingId {
     BorrowingInterestRate = 'pBorrIntRate',

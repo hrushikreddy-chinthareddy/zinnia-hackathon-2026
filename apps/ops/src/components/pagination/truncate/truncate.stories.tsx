@@ -7,7 +7,7 @@ export default {
     title: 'Components/Pagination/Truncate',
     component: TruncateComponent,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen w-screen p-10">
                 <Story />
             </div>

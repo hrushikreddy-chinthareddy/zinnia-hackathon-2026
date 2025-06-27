@@ -7,7 +7,10 @@ import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import {
+    WorkflowProvider,
+    useWorkflow,
+} from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
@@ -22,17 +25,35 @@ interface WorkflowContainerProps {
     stepWidth?: number;
 }
 
-const WorkflowContent = ({ policy, steps, stepWidth = DEFAULT_STEP_WIDTH }: WorkflowContainerProps) => {
+const WorkflowContent = ({
+    policy,
+    steps,
+    stepWidth = DEFAULT_STEP_WIDTH,
+}: WorkflowContainerProps) => {
     const { t } = useTranslation();
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const sideSheet = useSideSheetContext();
-    const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
+    const globalValuesData = useMemo(
+        () => policyDataToGlobalValues(new PolicyDetails(policy), t),
+        [policy, t]
+    );
 
-    const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
+    const {
+        marketingName,
+        planCode,
+        policyNumber,
+        productType,
+        status,
+        tooltip,
+        variant,
+    } = globalValuesData;
 
     const openProductDetailsSideSheet = () => {
         sideSheet.changeSideSheetContent(
-            <GlobalPolicyInfo tooltipPlacements={PopoverPlacement.BottomLeft} {...globalValuesData} />,
+            <GlobalPolicyInfo
+                tooltipPlacements={PopoverPlacement.BottomLeft}
+                {...globalValuesData}
+            />,
             <SideSheetProductDetails globalValues={globalValuesData} />
         );
         sideSheet.handleOpen(true);
@@ -44,8 +65,12 @@ const WorkflowContent = ({ policy, steps, stepWidth = DEFAULT_STEP_WIDTH }: Work
         setCurrentStepIndex(step.index);
     };
 
-    const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
-    const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
+    const policyOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.OWNER
+    )?.partyId;
+    const policyOwner = policy?.parties?.find(
+        (party) => party.partyId === policyOwnerId
+    );
 
     return (
         <div>
@@ -62,17 +87,32 @@ const WorkflowContent = ({ policy, steps, stepWidth = DEFAULT_STEP_WIDTH }: Work
                 variant={variant}
             />
             <div className={styles.contentContainer}>
-                <ProgressBarSteps currentStepIndex={Number(currentStepIndex)} onClick={handleClick} steps={steps} stepWidth={stepWidth} />
-                <div className={styles.stepsContainer}>{steps[currentStepIndex].component}</div>
+                <ProgressBarSteps
+                    currentStepIndex={Number(currentStepIndex)}
+                    onClick={handleClick}
+                    steps={steps}
+                    stepWidth={stepWidth}
+                />
+                <div className={styles.stepsContainer}>
+                    {steps[currentStepIndex].component}
+                </div>
             </div>
         </div>
     );
 };
 
-const WorkflowContainer = ({ policy, steps, stepWidth }: WorkflowContainerProps) => {
+const WorkflowContainer = ({
+    policy,
+    steps,
+    stepWidth,
+}: WorkflowContainerProps) => {
     return (
         <WorkflowProvider>
-            <WorkflowContent policy={policy} steps={steps} stepWidth={stepWidth} />
+            <WorkflowContent
+                policy={policy}
+                steps={steps}
+                stepWidth={stepWidth}
+            />
         </WorkflowProvider>
     );
 };

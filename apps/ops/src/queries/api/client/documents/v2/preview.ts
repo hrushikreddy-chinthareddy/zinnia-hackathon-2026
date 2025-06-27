@@ -14,7 +14,9 @@ export const getDocumentPreviewV2 = async (
 ): Promise<DocumentDownloadV2 | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/${documentNumber}/preview?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-        const { data } = await client.get<DocumentDownloadV2, AxiosResponse>(url);
+        const { data } = await client.get<DocumentDownloadV2, AxiosResponse>(
+            url
+        );
 
         return data;
     } catch (error: any) {

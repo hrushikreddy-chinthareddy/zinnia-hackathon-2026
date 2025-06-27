@@ -1,6 +1,11 @@
 import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
-import { formatPhoneNumber, formatPhoneNumberWithExtension, formatPhoneNumberRaw, formatPhoneNumberWithCountryCode } from './phone.helpers';
+import {
+    formatPhoneNumber,
+    formatPhoneNumberWithExtension,
+    formatPhoneNumberRaw,
+    formatPhoneNumberWithCountryCode,
+} from './phone.helpers';
 
 describe('Phone Formatter', () => {
     it('should format phone number correctly', () => {
@@ -30,7 +35,9 @@ describe('Phone Formatter', () => {
             bestTime: '',
         };
 
-        expect(formatPhoneNumberWithCountryCode(phone)).toEqual('+1 (415) 555-1234');
+        expect(formatPhoneNumberWithCountryCode(phone)).toEqual(
+            '+1 (415) 555-1234'
+        );
     });
 
     it('should format phone number with extension correctly', () => {
@@ -45,7 +52,9 @@ describe('Phone Formatter', () => {
             bestTime: '',
         };
 
-        expect(formatPhoneNumberWithExtension(phone)).toEqual('+1 (415) 555-1234 ext. 321');
+        expect(formatPhoneNumberWithExtension(phone)).toEqual(
+            '+1 (415) 555-1234 ext. 321'
+        );
     });
 
     it('should format phone number to raw correctly', () => {

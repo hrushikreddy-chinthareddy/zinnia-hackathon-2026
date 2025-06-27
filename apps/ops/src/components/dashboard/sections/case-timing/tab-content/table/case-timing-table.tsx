@@ -20,11 +20,18 @@ import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timi
 import { CaseTimingHeader } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-header';
 import { generateTableTimeRange } from '@deps/components/dashboard/sections/case-timing/utils';
 import { generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { SortOrder, useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import {
+    SortOrder,
+    useTableOptions,
+} from '@deps/hooks/dashboard/useTableOptions';
 import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
@@ -41,12 +48,22 @@ export const CaseTimingTable = () => {
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const { timerange, caseTimingData, selectedProcess, caseTimingDataError, caseTimingDataFetching, filter } =
-        useContext(CaseTimingContext);
+    const {
+        timerange,
+        caseTimingData,
+        selectedProcess,
+        caseTimingDataError,
+        caseTimingDataFetching,
+        filter,
+    } = useContext(CaseTimingContext);
 
     // Filter by search
     const searchedData = useMemo(() => {
-        return caseTimingData?.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase())) || [];
+        return (
+            caseTimingData?.filter((item) =>
+                item.name.toLowerCase().includes(searchText.toLowerCase())
+            ) || []
+        );
     }, [caseTimingData, searchText]);
 
     const { handleSort, sortedData } = useTableOptions({
@@ -81,7 +98,7 @@ export const CaseTimingTable = () => {
                 <FieldData
                     fieldSize={FieldSize.Small}
                     placeholder={`Search by case subtype`}
-                    onChange={e => setSearchText(e.target.value)}
+                    onChange={(e) => setSearchText(e.target.value)}
                 />
             </div>
             <CaseTimingFilters />
@@ -89,14 +106,22 @@ export const CaseTimingTable = () => {
                 <BlurOverlayLoader loading={caseTimingDataFetching}>
                     {caseTimingDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'Something went wrong fetching the application types, please try again by refreshing the page'}
+                                {
+                                    'Something went wrong fetching the application types, please try again by refreshing the page'
+                                }
                             </Typography>
                         </div>
                     ) : searchedData?.length === 0 ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
                                 {'There is no data for this selection'}
                             </Typography>
@@ -105,7 +130,12 @@ export const CaseTimingTable = () => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.NAME)
+                                        }
+                                        sortable
+                                    >
                                         Case subtype
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -115,7 +145,14 @@ export const CaseTimingTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SECOND_MEDIAN)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(
+                                                SortByOptions.SECOND_MEDIAN
+                                            )
+                                        }
+                                        sortable
+                                    >
                                         Median processing time
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -125,7 +162,14 @@ export const CaseTimingTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SECOND_HIGH)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(
+                                                SortByOptions.SECOND_HIGH
+                                            )
+                                        }
+                                        sortable
+                                    >
                                         Max processing time
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -135,7 +179,12 @@ export const CaseTimingTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SECOND_LOW)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.SECOND_LOW)
+                                        }
+                                        sortable
+                                    >
                                         Min processing time
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -145,7 +194,12 @@ export const CaseTimingTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.COUNT)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.COUNT)
+                                        }
+                                        sortable
+                                    >
                                         Total cases
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -159,28 +213,57 @@ export const CaseTimingTable = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {paginatedData.map(item => {
+                                {paginatedData.map((item) => {
                                     return (
-                                        <TableRow key={`${item.name}-${item.key}`}>
-                                            <TableCell className={sharedStyles.tableCellMaxWidth}>{item.name}</TableCell>
-                                            <TableCell>{generateTableTimeRange(item.secondMedian)}</TableCell>
-                                            <TableCell>{generateTableTimeRange(item.secondHigh)}</TableCell>
-                                            <TableCell>{generateTableTimeRange(item.secondLow)}</TableCell>
-                                            <TableCell>{item.count.toLocaleString()}</TableCell>
+                                        <TableRow
+                                            key={`${item.name}-${item.key}`}
+                                        >
+                                            <TableCell
+                                                className={
+                                                    sharedStyles.tableCellMaxWidth
+                                                }
+                                            >
+                                                {item.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                {generateTableTimeRange(
+                                                    item.secondMedian
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {generateTableTimeRange(
+                                                    item.secondHigh
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {generateTableTimeRange(
+                                                    item.secondLow
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {item.count.toLocaleString()}
+                                            </TableCell>
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
                                                     target="_blank"
                                                     className="underline"
                                                     href={generateCaseLink({
-                                                        process: selectedProcess,
-                                                        carrierOrProductName: item.name,
-                                                        startDate: timerange.from,
+                                                        process:
+                                                            selectedProcess,
+                                                        carrierOrProductName:
+                                                            item.name,
+                                                        startDate:
+                                                            timerange.from,
                                                         endDate: timerange.to,
-                                                        groupBy: CaseCountGroupByEnum.PROCESS_SUB_TYPE,
-                                                        status: [Statuses.Completed],
+                                                        groupBy:
+                                                            CaseCountGroupByEnum.PROCESS_SUB_TYPE,
+                                                        status: [
+                                                            Statuses.Completed,
+                                                        ],
                                                         carrier: filter.carrier,
-                                                        brokerDealer: filter.brokerDealerName,
+                                                        brokerDealer:
+                                                            filter.brokerDealerName,
                                                     })}
                                                     rel="noreferrer"
                                                 >
@@ -193,11 +276,18 @@ export const CaseTimingTable = () => {
                             </TableBody>
                         </Table>
                     )}
-                    {!caseTimingDataError && searchedData?.length > 0 && searchedData.length > limit && (
-                        <div className={sharedStyles.paginationContainer}>
-                            <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
-                        </div>
-                    )}
+                    {!caseTimingDataError &&
+                        searchedData?.length > 0 &&
+                        searchedData.length > limit && (
+                            <div className={sharedStyles.paginationContainer}>
+                                <Pagination
+                                    limit={limit}
+                                    offset={offset}
+                                    total={searchedData?.length || 0}
+                                    goToPage={goToPage}
+                                />
+                            </div>
+                        )}
                 </BlurOverlayLoader>
             </div>
         </CardContainer>

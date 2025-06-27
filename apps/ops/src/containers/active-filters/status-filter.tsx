@@ -5,7 +5,10 @@ import Select from '@deps/components/select/select';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { Statuses } from '@deps/models/case/case';
-import { DropdownClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import {
+    DropdownClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 
 export default function StatusFilter({
     caseTotals = {},
@@ -24,27 +27,37 @@ export default function StatusFilter({
     const statusOptions = useMemo(
         () => [
             {
-                label: `${t('status.notStarted')} (${wholeNumberFormatify(caseTotals[Statuses.NotStarted] ?? 0)})`,
+                label: `${t('status.notStarted')} (${wholeNumberFormatify(
+                    caseTotals[Statuses.NotStarted] ?? 0
+                )})`,
                 displayText: t('status.notStarted'),
                 value: Statuses.NotStarted,
             },
             {
-                label: `${t('status.inProgress')} (${wholeNumberFormatify(caseTotals[Statuses.InProgress] ?? 0)})`,
+                label: `${t('status.inProgress')} (${wholeNumberFormatify(
+                    caseTotals[Statuses.InProgress] ?? 0
+                )})`,
                 displayText: t('status.inProgress'),
                 value: Statuses.InProgress,
             },
             {
-                label: `${t('status.exception')} (${wholeNumberFormatify(caseTotals[Statuses.Exception] ?? 0)})`,
+                label: `${t('status.exception')} (${wholeNumberFormatify(
+                    caseTotals[Statuses.Exception] ?? 0
+                )})`,
                 displayText: t('status.exception'),
                 value: Statuses.Exception,
             },
             {
-                label: `${t('status.completed')} (${wholeNumberFormatify(caseTotals[Statuses.Completed] ?? 0)})`,
+                label: `${t('status.completed')} (${wholeNumberFormatify(
+                    caseTotals[Statuses.Completed] ?? 0
+                )})`,
                 displayText: t('status.completed'),
                 value: Statuses.Completed,
             },
             {
-                label: `${t('status.canceled')} (${wholeNumberFormatify(caseTotals[Statuses.Canceled] ?? 0)})`,
+                label: `${t('status.canceled')} (${wholeNumberFormatify(
+                    caseTotals[Statuses.Canceled] ?? 0
+                )})`,
                 displayText: t('status.canceled'),
                 value: Statuses.Canceled,
             },
@@ -69,7 +82,7 @@ export default function StatusFilter({
 
         const prevSelected = new Set(Object.keys(selected));
         const newSelectedSet = new Set(Object.keys(newSelected));
-        newSelectedSet.forEach(val => {
+        newSelectedSet.forEach((val) => {
             if (prevSelected.has(val)) {
                 prevSelected.delete(val);
                 newSelectedSet.delete(val);
@@ -82,7 +95,7 @@ export default function StatusFilter({
     }, [values]);
 
     const handleSelection = (selectedValue: string, displayText: string) => {
-        setSelected(prev => {
+        setSelected((prev) => {
             const newSelections = { ...prev };
             if (newSelections[selectedValue]) {
                 delete newSelections[selectedValue];
@@ -96,24 +109,31 @@ export default function StatusFilter({
     const handleOpenChange = useCallback(
         (isOpen: boolean) => {
             if (!isOpen) {
-                segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
-                    dropdownName: 'Case Status Filter',
-                    selectedItemName:
-                        statusOptions.reduce((acc, option) => {
-                            if (selected[option.value]) {
-                                return `${acc}${acc.length ? ', ' : ''}${option.value}`;
-                            } else return acc;
-                        }, '') ?? 'All',
-                    session_id: sessionId,
-                    userId,
-                });
+                segmentAnalyticsTrackEvent<DropdownClickedEvent>(
+                    SegmentTrackedEventName.DropdownClicked,
+                    {
+                        dropdownName: 'Case Status Filter',
+                        selectedItemName:
+                            statusOptions.reduce((acc, option) => {
+                                if (selected[option.value]) {
+                                    return `${acc}${acc.length ? ', ' : ''}${
+                                        option.value
+                                    }`;
+                                } else return acc;
+                            }, '') ?? 'All',
+                        session_id: sessionId,
+                        userId,
+                    }
+                );
             }
         },
         [selected, statusOptions, sessionId, userId]
     );
 
     useEffect(() => {
-        onChange(Object.keys(selected).filter(key => selected[key]) as Statuses[]);
+        onChange(
+            Object.keys(selected).filter((key) => selected[key]) as Statuses[]
+        );
     }, [selected]);
 
     return (
@@ -124,7 +144,9 @@ export default function StatusFilter({
                 value={selected}
                 onChange={handleSelection}
                 onOpenChange={handleOpenChange}
-                placeholder={t('caseManagementDashboard.selectStatus') as string}
+                placeholder={
+                    t('caseManagementDashboard.selectStatus') as string
+                }
             />
         </div>
     );

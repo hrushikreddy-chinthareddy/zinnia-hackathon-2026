@@ -10,8 +10,16 @@ export interface GlobalValuesBarNbProps {
     caseId: string;
 }
 
-const GlobalValuesNbBar = ({ children, carrierId, isNavDrawerOpen, caseId }: GlobalValuesBarNbProps) => {
-    const headerClasses = clsx('flex w-full flex-col pb-4 md:pb-6 lg:pb-8', isNavDrawerOpen ? 'lg:flex-col xl:flex-row' : 'lg:flex-row');
+const GlobalValuesNbBar = ({
+    children,
+    carrierId,
+    isNavDrawerOpen,
+    caseId,
+}: GlobalValuesBarNbProps) => {
+    const headerClasses = clsx(
+        'flex w-full flex-col pb-4 md:pb-6 lg:pb-8',
+        isNavDrawerOpen ? 'lg:flex-col xl:flex-row' : 'lg:flex-row'
+    );
 
     return (
         <div className={headerClasses}>

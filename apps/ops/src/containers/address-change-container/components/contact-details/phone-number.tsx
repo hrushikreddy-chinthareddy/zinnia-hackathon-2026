@@ -3,10 +3,19 @@ import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { countryOptions, frequentCountryOptions } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
+import {
+    countryOptions,
+    frequentCountryOptions,
+} from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 
 import { useAddressChange } from '../../address-change-provider';
@@ -20,15 +29,26 @@ interface PhoneNumberProps {
     label?: string;
 }
 
-const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true, label }: PhoneNumberProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'addressChange.contactDetails.phoneNumber' });
+const PhoneNumber = ({
+    country,
+    phone,
+    setCountry,
+    setPhone,
+    title = true,
+    label,
+}: PhoneNumberProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'addressChange.contactDetails.phoneNumber',
+    });
     const { formErrors } = useAddressChange();
 
     return (
         <>
             {title && (
                 <div className="flex flex-col">
-                    <Typography variant={TypographyVariant.LabelLg}>{t('title')}</Typography>
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {t('title')}
+                    </Typography>
                 </div>
             )}
             <FieldSelect
@@ -39,18 +59,19 @@ const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true, label
                 frequentOptions={frequentCountryOptions}
                 label={label ?? (t('fieldLabels.number') as string)}
                 leading={countries[country].emoji}
-                onChange={event => {
+                onChange={(event) => {
                     setPhone((prevState: any) => ({
                         ...prevState,
                         areaCode: event.target.value.substring(0, 3),
                         dialNumber: event.target.value.substring(3, 10),
                     }));
                 }}
-                onDropdownChange={value => {
+                onDropdownChange={(value) => {
                     setCountry(value as keyof typeof countries);
                     setPhone((prevState: any) => ({
                         ...prevState,
-                        countryCode: countries[value as keyof typeof countries].phone,
+                        countryCode:
+                            countries[value as keyof typeof countries].phone,
                     }));
                 }}
                 options={countryOptions}
@@ -58,7 +79,11 @@ const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true, label
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
                 value={formatPhoneNumberRaw(phone)}
-                variant={formErrors?.phoneNumber ? FieldVariant.Error : FieldVariant.Default}
+                variant={
+                    formErrors?.phoneNumber
+                        ? FieldVariant.Error
+                        : FieldVariant.Default
+                }
                 message={formErrors?.phoneNumber}
             />
             <Transition
@@ -77,7 +102,7 @@ const PhoneNumber = ({ country, phone, setCountry, setPhone, title = true, label
                     className="w-[120px]"
                     formatOptions={{ format: '####' }}
                     label={t('fieldLabels.extension') as string}
-                    onChange={event =>
+                    onChange={(event) =>
                         setPhone((prevState: any) => ({
                             ...prevState,
                             extension: event.target.value,

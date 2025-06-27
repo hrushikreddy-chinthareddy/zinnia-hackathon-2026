@@ -18,7 +18,9 @@ export const getMatchDocumentPaymentReviewSteps = ({
     let isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
 
     if (
-        [MatchingCase.NO_MATCH, MatchingCase.NOT_APPLICABLE].includes(task.data.matchingResult) &&
+        [MatchingCase.NO_MATCH, MatchingCase.NOT_APPLICABLE].includes(
+            task.data.matchingResult
+        ) &&
         task.taskType === TaskType.Standard_Document_Matching
     ) {
         isSubmit = true;
@@ -31,7 +33,13 @@ export const getMatchDocumentPaymentReviewSteps = ({
             <TaskFormStep
                 readonly={task.status === TaskStatus.Completed}
                 taskInfoLink={taskInfoLink}
-                isSubmit={task.status === TaskStatus.Completed ? false : index === 1 ? true : isSubmit}
+                isSubmit={
+                    task.status === TaskStatus.Completed
+                        ? false
+                        : index === 1
+                        ? true
+                        : isSubmit
+                }
                 taskMetadata={metadata}
                 key={`step_${index}`}
                 isContinueButtonEnabled={isContinueButtonEnabled}
@@ -47,7 +55,12 @@ export const getMatchDocumentPaymentReviewSteps = ({
     const staticSteps: Step[] = [
         {
             isVisible: () => true,
-            component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
+            component: (
+                <ConfirmStep
+                    taskType={taskType}
+                    taskInfoLink={taskInfoLink}
+                ></ConfirmStep>
+            ),
             text: t('confirm'),
             index: dynamicSteps.length,
             screenReaderLabel: t('confirm'),

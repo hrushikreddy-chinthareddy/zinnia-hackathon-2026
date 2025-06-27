@@ -91,7 +91,11 @@ const mockPendingLapsePolicy: Policy = {
 export const Active = () => {
     return (
         <div className="max-w-[1130px] p-6">
-            <PolicyQuickView policyDetails={new PolicyDetails(mockPolicy)} isLoading={false} caseData={undefined} />
+            <PolicyQuickView
+                policyDetails={new PolicyDetails(mockPolicy)}
+                isLoading={false}
+                caseData={undefined}
+            />
         </div>
     );
 };
@@ -99,7 +103,11 @@ export const Active = () => {
 export const Pending = () => {
     return (
         <div className="max-w-[1130px] p-6">
-            <PolicyQuickView policyDetails={new PolicyDetails(mockPendingLapsePolicy)} isLoading={false} caseData={undefined} />
+            <PolicyQuickView
+                policyDetails={new PolicyDetails(mockPendingLapsePolicy)}
+                isLoading={false}
+                caseData={undefined}
+            />
         </div>
     );
 };

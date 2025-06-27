@@ -8,7 +8,12 @@ export default withAuthAndLogging(
         const re = new RegExp('^.*?/api');
         const proxyUrl = req.url?.replace(re, se2ApiServerUrl as string);
 
-        return await requestHandler<CaseTaskSearchResponse>(proxyUrl as string, req, res, loggingContext);
+        return await requestHandler<CaseTaskSearchResponse>(
+            proxyUrl as string,
+            req,
+            res,
+            loggingContext
+        );
     },
     { file: 'tasks/search', function: 'routeHandler' }
 );

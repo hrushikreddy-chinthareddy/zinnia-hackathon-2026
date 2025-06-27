@@ -2,7 +2,9 @@ import { TestValues } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import PolicyTestCard from '@deps/containers/mec-card/policy-test-card/policy-test-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -18,7 +20,8 @@ interface SevenPayCardProps {
 }
 
 const getValues = (testValues: TestValues | undefined, t: TFunction) => {
-    const isMec = testValues?.modifiedEndowmentContract?.modifiedEndowmentContractStatus;
+    const isMec =
+        testValues?.modifiedEndowmentContract?.modifiedEndowmentContractStatus;
 
     if (isMec) {
         return {
@@ -38,8 +41,9 @@ const getValues = (testValues: TestValues | undefined, t: TFunction) => {
                 tooltipTitle: t('basis'),
             },
             mecClass:
-                Number(testValues.modifiedEndowmentContract?.sevenPayTestBasis) >
-                Number(testValues.modifiedEndowmentContract?.sevenPayLimit)
+                Number(
+                    testValues.modifiedEndowmentContract?.sevenPayTestBasis
+                ) > Number(testValues.modifiedEndowmentContract?.sevenPayLimit)
                     ? 'mec-over'
                     : 'mec-even',
             totalProps: {
@@ -58,7 +62,10 @@ const getValues = (testValues: TestValues | undefined, t: TFunction) => {
             badgeProps: {
                 label: t('isNotMec'),
                 tooltipBody: t('isNotMecTooltip', {
-                    mecTestDate: convertKebabedDateString(testValues?.modifiedEndowmentContract?.modifiedEndowmentContractTestDate ?? ''),
+                    mecTestDate: convertKebabedDateString(
+                        testValues?.modifiedEndowmentContract
+                            ?.modifiedEndowmentContractTestDate ?? ''
+                    ),
                 }),
                 variant: BadgeVariant.Success,
             },
@@ -69,19 +76,28 @@ const getValues = (testValues: TestValues | undefined, t: TFunction) => {
             },
             fieldDataValues: [
                 {
-                    caption: t('testPeriodCaption', { year: testValues?.modifiedEndowmentContract?.yearInPeriod }),
+                    caption: t('testPeriodCaption', {
+                        year: testValues?.modifiedEndowmentContract
+                            ?.yearInPeriod,
+                    }),
                     label: t('testPeriod'),
                     tooltipBody: t('testPeriodTooltip'),
                     tooltipTitle: t('testPeriod'),
                     value: `${convertKebabedDateString(
-                        testValues?.modifiedEndowmentContract?.sevenPayStartDate ?? ''
-                    )} - ${convertKebabedDateString(testValues?.modifiedEndowmentContract?.sevenPayPeriod ?? '')}`,
+                        testValues?.modifiedEndowmentContract
+                            ?.sevenPayStartDate ?? ''
+                    )} - ${convertKebabedDateString(
+                        testValues?.modifiedEndowmentContract?.sevenPayPeriod ??
+                            ''
+                    )}`,
                 },
                 {
                     label: t('annualPremium'),
                     tooltipBody: t('annualPremiumTooltip'),
                     tooltipTitle: t('annualPremium'),
-                    value: numberFormatify(testValues?.modifiedEndowmentContract?.sevenPayPremium),
+                    value: numberFormatify(
+                        testValues?.modifiedEndowmentContract?.sevenPayPremium
+                    ),
                 },
             ],
             mecClass: 'not-mec',
@@ -99,10 +115,14 @@ const InactiveCard = ({ sevenPayPeriod, t }: InactiveCardProps) => {
         <div className="responsive-padding flex flex-col gap-6 rounded border-2 border-dashed border-gray-100 bg-gray-50 text-gray-900">
             <div className="responsive-padding flex flex-col items-center gap-1 text-center">
                 <DateIcon className="text-gray-300" height={50} width={50} />
-                <Typography variant={TypographyVariant.H3}>{t('inactiveTitle')}</Typography>
+                <Typography variant={TypographyVariant.H3}>
+                    {t('inactiveTitle')}
+                </Typography>
                 <p className="font-secondary text-base font-normal">
                     {t('inactiveStartText')}
-                    <span className="font-bold">{convertKebabedDateString(sevenPayPeriod)}</span>
+                    <span className="font-bold">
+                        {convertKebabedDateString(sevenPayPeriod)}
+                    </span>
                     {t('inactiveEndText')}
                 </p>
             </div>
@@ -111,12 +131,31 @@ const InactiveCard = ({ sevenPayPeriod, t }: InactiveCardProps) => {
 };
 
 const SevenPayCard = ({ testValues }: SevenPayCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'premium.policyTestsCard.sevenPay' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'premium.policyTestsCard.sevenPay',
+    });
 
-    const { amountProps, badgeProps, basisProps, fieldDataValues, mecClass, totalProps } = getValues(testValues, t);
+    const {
+        amountProps,
+        badgeProps,
+        basisProps,
+        fieldDataValues,
+        mecClass,
+        totalProps,
+    } = getValues(testValues, t);
 
-    if (new Date() > new Date(testValues?.modifiedEndowmentContract?.sevenPayPeriod ?? '')) {
-        return <InactiveCard sevenPayPeriod={testValues?.modifiedEndowmentContract?.sevenPayPeriod} t={t} />;
+    if (
+        new Date() >
+        new Date(testValues?.modifiedEndowmentContract?.sevenPayPeriod ?? '')
+    ) {
+        return (
+            <InactiveCard
+                sevenPayPeriod={
+                    testValues?.modifiedEndowmentContract?.sevenPayPeriod
+                }
+                t={t}
+            />
+        );
     }
 
     return (
@@ -125,7 +164,9 @@ const SevenPayCard = ({ testValues }: SevenPayCardProps) => {
             badgeProps={badgeProps}
             basisProps={basisProps}
             classNames={mecClass}
-            compareValue={testValues?.modifiedEndowmentContract?.sevenPayTestBasis}
+            compareValue={
+                testValues?.modifiedEndowmentContract?.sevenPayTestBasis
+            }
             fieldDataValues={fieldDataValues}
             title={t('title')}
             total={testValues?.modifiedEndowmentContract?.sevenPayLimit}

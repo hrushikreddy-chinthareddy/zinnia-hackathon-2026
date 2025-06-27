@@ -7,10 +7,16 @@ export default {
     title: 'Components/Table',
     component: Table,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen bg-background p-10">
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@29.2.0/styles/ag-grid.css" />
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@29.2.0/styles/ag-theme-alpine.css" />
+                <link
+                    rel="stylesheet"
+                    href="https://cdn.jsdelivr.net/npm/ag-grid-community@29.2.0/styles/ag-grid.css"
+                />
+                <link
+                    rel="stylesheet"
+                    href="https://cdn.jsdelivr.net/npm/ag-grid-community@29.2.0/styles/ag-theme-alpine.css"
+                />
                 <Story />
             </div>
         ),

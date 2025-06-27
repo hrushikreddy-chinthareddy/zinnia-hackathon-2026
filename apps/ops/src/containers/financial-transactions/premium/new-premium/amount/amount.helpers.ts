@@ -3,7 +3,11 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-export const isDateAllowed = (dayjsDate: Dayjs, startDate?: Dayjs, endDate?: Dayjs) => {
+export const isDateAllowed = (
+    dayjsDate: Dayjs,
+    startDate?: Dayjs,
+    endDate?: Dayjs
+) => {
     const formattedDate = dayjs(dayjsDate, ZAHARA_API_DATE_FORMAT);
     const isStartDate = formattedDate.isSame(startDate, 'day');
     const isEndDate = formattedDate.isSame(endDate, 'day');
@@ -13,15 +17,22 @@ export const isDateAllowed = (dayjsDate: Dayjs, startDate?: Dayjs, endDate?: Day
     return isStartDate || isEndDate || (isAfterStartDate && isBeforeEndDate);
 };
 
-export const isPaymentAllowed = (payment: number | string, requiredPayment?: number) => {
+export const isPaymentAllowed = (
+    payment: number | string,
+    requiredPayment?: number
+) => {
     return !requiredPayment || Number(payment) >= requiredPayment;
 };
 
 export const getImportantDates = (policyFeatures?: PolicyFeature[]) => {
     const formatDate = (date?: string) => dayjs(date, ZAHARA_API_DATE_FORMAT);
 
-    const lapseFeatures = policyFeatures?.find(pf => pf.featureType === FeatureType.LAPSEASSESSMENT);
-    const reinstatementFeatures = policyFeatures?.find(pf => pf.featureType === FeatureType.REINSTATEMENT);
+    const lapseFeatures = policyFeatures?.find(
+        (pf) => pf.featureType === FeatureType.LAPSEASSESSMENT
+    );
+    const reinstatementFeatures = policyFeatures?.find(
+        (pf) => pf.featureType === FeatureType.REINSTATEMENT
+    );
 
     const hasReinstatement = !!(
         reinstatementFeatures?.underwritingDecision &&
@@ -29,7 +40,12 @@ export const getImportantDates = (policyFeatures?: PolicyFeature[]) => {
         reinstatementFeatures.endDate &&
         reinstatementFeatures.paymentAmount
     );
-    const hasLapse = !!(lapseFeatures?.status && lapseFeatures.startDate && lapseFeatures.endDate && lapseFeatures.paymentAmount);
+    const hasLapse = !!(
+        lapseFeatures?.status &&
+        lapseFeatures.startDate &&
+        lapseFeatures.endDate &&
+        lapseFeatures.paymentAmount
+    );
 
     let startDate: Dayjs | undefined;
     let endDate: Dayjs | undefined;

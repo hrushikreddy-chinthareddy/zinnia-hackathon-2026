@@ -2,7 +2,9 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Party } from '@deps/models/case/withdrawal/case';
 
@@ -10,8 +12,12 @@ interface SingleLifePersonDetailsProps {
     personDetails: Party;
 }
 
-const SingleLifePersonDetails = ({ personDetails }: SingleLifePersonDetailsProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+const SingleLifePersonDetails = ({
+    personDetails,
+}: SingleLifePersonDetailsProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const [isSelected, setIsSelected] = useState(false);
 
     const { setFormProgram } = useContext(FormDataContext);
@@ -25,7 +31,7 @@ const SingleLifePersonDetails = ({ personDetails }: SingleLifePersonDetailsProps
 
     useEffect(() => {
         if (isSelected) {
-            setFormProgram(oldVal => {
+            setFormProgram((oldVal) => {
                 return {
                     ...oldVal,
                     coveredPersonInfo: {
@@ -37,7 +43,7 @@ const SingleLifePersonDetails = ({ personDetails }: SingleLifePersonDetailsProps
                 };
             });
         } else {
-            setFormProgram(oldVal => {
+            setFormProgram((oldVal) => {
                 return {
                     ...oldVal,
                     coveredPersonInfo: null,
@@ -49,7 +55,9 @@ const SingleLifePersonDetails = ({ personDetails }: SingleLifePersonDetailsProps
     return (
         <>
             <div className="my-3">
-                <label className="font-primary text-md font-bold">{t('sswProgram.singleLifeTimeIncome.title')}</label>
+                <label className="font-primary text-md font-bold">
+                    {t('sswProgram.singleLifeTimeIncome.title')}
+                </label>
             </div>
             <div className="grid grid-cols-6 gap-2">
                 <label className={classes} data-testid={personDetails.taxId}>

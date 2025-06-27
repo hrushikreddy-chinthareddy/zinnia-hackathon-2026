@@ -1,9 +1,18 @@
-import { BankAccount, Policy, FeatureType, Reason } from '@zinnia/api-types/types/sor';
+import {
+    BankAccount,
+    Policy,
+    FeatureType,
+    Reason,
+} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getBankDetails, getParty } from '@deps/helpers/payments.helpers';
-import { convertKebabedDateString, isNullEmptyOrUndefined, translateYearOrYears } from '@deps/helpers/string.helpers';
+import {
+    convertKebabedDateString,
+    isNullEmptyOrUndefined,
+    translateYearOrYears,
+} from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { DataDefinition } from '@deps/types/data';
 
@@ -27,7 +36,10 @@ export interface IUpcomingPremium {
     bankAccount?: BankAccount;
 }
 
-export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySummaryColDto => {
+export const toPolicySummaryColDto = (
+    policy: Policy,
+    t?: TFunction
+): PolicySummaryColDto => {
     if (!policy) return policy;
     const {
         accountValues,
@@ -39,7 +51,9 @@ export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySumm
         parties = [],
         policyFeatures = [],
     } = policy;
-    const upcomingPremium = systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM);
+    const upcomingPremium = systematicPrograms?.find(
+        (sp) => sp.reason === Reason.PREMIUM
+    );
 
     const baseDeathBenefit = coverage?.coverageLayers?.[0]?.currentAmount;
 
@@ -47,19 +61,32 @@ export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySumm
     const payorParty = getParty(parties, upcomingPremium);
     const payorBankDetails = getBankDetails(payorParty, upcomingPremium);
 
-    const freeLookFeature = (policyFeatures ?? []).find(feature => ['freelook', FeatureType.FREELOOK].includes(feature.featureType || ''));
+    const freeLookFeature = (policyFeatures ?? []).find((feature) =>
+        ['freelook', FeatureType.FREELOOK].includes(feature.featureType || '')
+    );
 
-    const accountNumber = payorBankDetails?.accountNumber?.substring(payorBankDetails?.accountNumber.length - 4);
+    const accountNumber = payorBankDetails?.accountNumber?.substring(
+        payorBankDetails?.accountNumber.length - 4
+    );
     const fixedCostPeriodLeft =
-        !isNullEmptyOrUndefined(fixedCostPeriod as number) && !isNullEmptyOrUndefined(policyYear as number)
-            ? t && t('temporal.timeLeft', { timespan: translateYearOrYears((fixedCostPeriod as number) - Number(policyYear), t) })
+        !isNullEmptyOrUndefined(fixedCostPeriod as number) &&
+        !isNullEmptyOrUndefined(policyYear as number)
+            ? t &&
+              t('temporal.timeLeft', {
+                  timespan: translateYearOrYears(
+                      (fixedCostPeriod as number) - Number(policyYear),
+                      t
+                  ),
+              })
             : DEFAULT_ERROR_STRING;
 
     const result = {
         freeLookExpirationDate: freeLookFeature?.endDate,
-        upcomingMonthlyPremium: `${upcomingPremium?.amount},${convertKebabedDateString(paymentDate || '')},${accountNumber || 'empty'},${
-            payorBankDetails?.accountType
-        },${policy.policyNumber}`,
+        upcomingMonthlyPremium: `${
+            upcomingPremium?.amount
+        },${convertKebabedDateString(paymentDate || '')},${
+            accountNumber || 'empty'
+        },${payorBankDetails?.accountType},${policy.policyNumber}`,
         maturityDate: policyDates?.maturityDate,
         issueDate: convertKebabedDateString(policyDates?.issueDate),
         baseDeathBenefit: baseDeathBenefit,
@@ -78,7 +105,9 @@ export const toPolicySummaryColDto = (policy: Policy, t?: TFunction): PolicySumm
     return result;
 };
 
-export const getPolicySummaryColDefs = (t: TFunction): DataDefinition<PolicySummaryColDto>[] => [
+export const getPolicySummaryColDefs = (
+    t: TFunction
+): DataDefinition<PolicySummaryColDto>[] => [
     {
         key: 'upcomingMonthlyPremium',
         label: t('upcomingMonthlyPremium'),

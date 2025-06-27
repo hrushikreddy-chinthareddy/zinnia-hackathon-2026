@@ -1,15 +1,29 @@
-import { PartyRole, PartyStatus, PartyType, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    PartyStatus,
+    PartyType,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
+import TempNavInactive, {
+    isStillInactive,
+} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
 import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { calculateAgeNumber } from '@deps/helpers/age.helpers';
-import { getHeaderText, getPrefCommunicationType } from '@deps/helpers/party-info-helpers';
+import {
+    getHeaderText,
+    getPrefCommunicationType,
+} from '@deps/helpers/party-info-helpers';
 import { orderObjectsByString } from '@deps/helpers/sort.helpers';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
@@ -34,13 +48,18 @@ const InteriorPeoplePageHeaderContainer = ({
 }: InteriorPeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
-    const shouldShowEditCommunicationsPreferences = featureFlags[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
-    const selectedPartyRoles = selectedPolicyPartyRoles?.map(roleObject => {
+    const shouldShowEditCommunicationsPreferences =
+        featureFlags[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
+    const selectedPartyRoles = selectedPolicyPartyRoles?.map((roleObject) => {
         return roleObject.partyRole?.toLowerCase();
     });
     const isAgent =
-        selectedPartyRoles?.includes(PartyRole.PRIMARYWRITINGAGENT.toLowerCase()) ||
-        selectedPartyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT.toLowerCase());
+        selectedPartyRoles?.includes(
+            PartyRole.PRIMARYWRITINGAGENT.toLowerCase()
+        ) ||
+        selectedPartyRoles?.includes(
+            PartyRole.PRIMARYSERVICINGAGENT.toLowerCase()
+        );
 
     // for header text siblings group one
     // pronouns and edit button
@@ -53,7 +72,12 @@ const InteriorPeoplePageHeaderContainer = ({
         return (
             <div className="flex h-6 items-center gap-2 xs:mt-2 md:ml-4">
                 <p className="font-primary text-sm font-bold">{pronouns}</p>
-                <NavElement type={NavElementType.Button} size={NavElementSize.Small} tabIndex={0} className=" h-4">
+                <NavElement
+                    type={NavElementType.Button}
+                    size={NavElementSize.Small}
+                    tabIndex={0}
+                    className=" h-4"
+                >
                     <EditIcon height={16} />
                 </NavElement>
             </div>
@@ -62,22 +86,38 @@ const InteriorPeoplePageHeaderContainer = ({
 
     // for header text siblings group two
     // date of birth
-    const getDateOfBirth = (partyType: string | undefined, editable: boolean): JSX.Element | null => {
+    const getDateOfBirth = (
+        partyType: string | undefined,
+        editable: boolean
+    ): JSX.Element | null => {
         if (!partyType || partyType !== PartyType.INDIVIDUAL || isAgent) {
             return null;
         } else {
-            const ageInYears = calculateAgeNumber(selectedPolicyParty?.dateOfBirth);
+            const ageInYears = calculateAgeNumber(
+                selectedPolicyParty?.dateOfBirth
+            );
             return (
                 <div>
                     <span className="flex items-center gap-2 align-middle">
-                        <p className="typography-labels-field-label" id="people-birth-date">
+                        <p
+                            className="typography-labels-field-label"
+                            id="people-birth-date"
+                        >
                             {t('people.party.birthDate')}
                         </p>
                         {isStillInactive.interiorPeoplePageDOB ? (
                             // https://zinnia.atlassian.net/browse/DEPU-1936
-                            <TempNavInactive hideIcon tooltipBody={isStillInactive.interiorPeoplePageDOB} navElementClassName="!px-1">
+                            <TempNavInactive
+                                hideIcon
+                                tooltipBody={
+                                    isStillInactive.interiorPeoplePageDOB
+                                }
+                                navElementClassName="!px-1"
+                            >
                                 <EditIcon height={16} />
-                                <span className="sr-only">{t('people.card.edit')}</span>
+                                <span className="sr-only">
+                                    {t('people.card.edit')}
+                                </span>
                             </TempNavInactive>
                         ) : (
                             editable && (
@@ -89,18 +129,26 @@ const InteriorPeoplePageHeaderContainer = ({
                                     aria-describedby="people-birth-date"
                                 >
                                     <EditIcon height={16} />
-                                    <span className="sr-only">{t('people.card.edit')}</span>
+                                    <span className="sr-only">
+                                        {t('people.card.edit')}
+                                    </span>
                                 </NavElement>
                             )
                         )}
                     </span>
 
                     <p className="typography-content-body-sm">
-                        <PiiWrapper>{formatDate(selectedPolicyParty?.dateOfBirth)}</PiiWrapper>
+                        <PiiWrapper>
+                            {formatDate(selectedPolicyParty?.dateOfBirth)}
+                        </PiiWrapper>
                     </p>
                     {ageInYears !== undefined && (
                         <p className="typography-content-body-sm">
-                            <PiiWrapper>{t('policy.detailCards.coveredParty.yearsOld', { count: ageInYears })}</PiiWrapper>
+                            <PiiWrapper>
+                                {t('policy.detailCards.coveredParty.yearsOld', {
+                                    count: ageInYears,
+                                })}
+                            </PiiWrapper>
                         </p>
                     )}
                 </div>
@@ -110,15 +158,27 @@ const InteriorPeoplePageHeaderContainer = ({
 
     // for below header text children
     // header party roles and add/remove button
-    const getPartyRoles = (partyRoleTextsToConvert: PolicyPartyRoles[], t: TFunction) => {
-        const orderedTags: string[] = t('colDefs:people.orderedRoles', { returnObjects: true });
-        const convertedPartyRoles = (partyRoleTextsToConvert || []).map(partyRoleTextToConvert => ({
-            text: convertToChipText(partyRoleTextToConvert.partyRole, t),
-        }));
+    const getPartyRoles = (
+        partyRoleTextsToConvert: PolicyPartyRoles[],
+        t: TFunction
+    ) => {
+        const orderedTags: string[] = t('colDefs:people.orderedRoles', {
+            returnObjects: true,
+        });
+        const convertedPartyRoles = (partyRoleTextsToConvert || []).map(
+            (partyRoleTextToConvert) => ({
+                text: convertToChipText(partyRoleTextToConvert.partyRole, t),
+            })
+        );
         return orderObjectsByString(convertedPartyRoles, orderedTags, 'text');
     };
 
-    const tags = useMemo(() => selectedPolicyPartyRoles && getPartyRoles(selectedPolicyPartyRoles, t), [selectedPolicyPartyRoles, t]);
+    const tags = useMemo(
+        () =>
+            selectedPolicyPartyRoles &&
+            getPartyRoles(selectedPolicyPartyRoles, t),
+        [selectedPolicyPartyRoles, t]
+    );
 
     const partyRoleTags = (
         <div className="mt-1 flex xs:flex-col md:flex-row md:items-center md:align-middle">
@@ -155,17 +215,24 @@ const InteriorPeoplePageHeaderContainer = ({
 
     // props
     const headerText = getHeaderText(selectedPolicyParty);
-    const headerTextSiblingsGroupOne = getPronouns(selectedPolicyParty?.partyType);
-    const headerTextSiblingsGroupTwo = shouldShowEditCommunicationsPreferences ? (
-        <HeaderInfoCard t={t} selectedPolicyParty={selectedPolicyParty} editable={editable}>
-            {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
-        </HeaderInfoCard>
-    ) : (
-        <div className="flex items-start align-baseline">
-            {getPrefCommunicationType(selectedPolicyParty ?? null, t)}
-            {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
-        </div>
+    const headerTextSiblingsGroupOne = getPronouns(
+        selectedPolicyParty?.partyType
     );
+    const headerTextSiblingsGroupTwo =
+        shouldShowEditCommunicationsPreferences ? (
+            <HeaderInfoCard
+                t={t}
+                selectedPolicyParty={selectedPolicyParty}
+                editable={editable}
+            >
+                {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+            </HeaderInfoCard>
+        ) : (
+            <div className="flex items-start align-baseline">
+                {getPrefCommunicationType(selectedPolicyParty ?? null, t)}
+                {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+            </div>
+        );
     const belowHeaderTextChildren = partyRoleTags;
     const headerRowFlexClassNames = 'xs:flex-col lg:flex-row xs:gap-4 lg:gap-0';
     const groupOneFlexClassNames = 'flex xs:flex-col lg:flex-row';

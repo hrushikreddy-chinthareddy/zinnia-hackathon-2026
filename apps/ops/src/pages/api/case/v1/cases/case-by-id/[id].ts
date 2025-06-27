@@ -13,9 +13,18 @@ export default withAuthAndLogging(
         const { id } = req.query;
 
         const session = await getSession(req, res);
-        const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
+        const canUnmask = await canUnmaskPii(
+            session?.accessToken,
+            session?.user?.partyId
+        );
         const masker = canUnmask ? caseSanitizer : fullyMaskCase;
-        return await requestHandler<any>(`${ssrCasesUrl}/${id}`, req, res, loggingContext, masker);
+        return await requestHandler<any>(
+            `${ssrCasesUrl}/${id}`,
+            req,
+            res,
+            loggingContext,
+            masker
+        );
     },
     { file: 'case/v1/cases/case-by-id/:id', function: 'routeHandler' }
 );

@@ -21,9 +21,18 @@ export enum ExtendedProcesses {
     ALL = 'all',
 }
 
-export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, defaultProcess, caseStatus, value }) => {
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(defaultProcess);
+export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
+    onValueChange,
+    defaultProcess,
+    caseStatus,
+    value,
+}) => {
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
+    const [selectedProcess, setSelectedProcess] = useState<
+        Processes | ExtendedProcesses
+    >(defaultProcess);
 
     const processFilter = {
         caseStatus,
@@ -33,8 +42,9 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({ onValueChange, default
 
     const { data: processListOptions } = useQuery({
         queryKey: ['processListOptions', processFilter],
-        placeholderData: previousData => previousData,
-        queryFn: () => createBaseQuery(processFilter, [CaseCountGroupByEnum.PROCESS]),
+        placeholderData: (previousData) => previousData,
+        queryFn: () =>
+            createBaseQuery(processFilter, [CaseCountGroupByEnum.PROCESS]),
         select: ({ data }) => {
             const options = formatProcessListOptions(data);
             options.unshift({

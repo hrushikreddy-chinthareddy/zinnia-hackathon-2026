@@ -53,16 +53,22 @@ describe('TaxFormsSelection component', () => {
     });
 
     const currentYear = new Date().getFullYear();
-    const mockTaxYears = Array.from({ length: 5 }, (_, i) => currentYear - i).reverse();
+    const mockTaxYears = Array.from(
+        { length: 5 },
+        (_, i) => currentYear - i
+    ).reverse();
 
     const mockTaxFormSelectionDetails = {
         selectedTaxForms: [],
         taxForms: [],
     };
 
-    const taxYears = Array.from({ length: ALLOWED_TAX_YEARS }, (_, i) => currentYear - i).reverse();
+    const taxYears = Array.from(
+        { length: ALLOWED_TAX_YEARS },
+        (_, i) => currentYear - i
+    ).reverse();
 
-    const taxYearOptions: MultiselectOption[] = taxYears.map(year => ({
+    const taxYearOptions: MultiselectOption[] = taxYears.map((year) => ({
         label: year.toString(),
         value: year.toString(),
         displayText: year.toString(),
@@ -83,7 +89,9 @@ describe('TaxFormsSelection component', () => {
                 />
             </WorkflowProvider>
         );
-        expect(getByText('sendTaxForms.tabs.taxFormsSelection')).toBeInTheDocument();
+        expect(
+            getByText('sendTaxForms.tabs.taxFormsSelection')
+        ).toBeInTheDocument();
     });
 
     it('Should render tax year options', async () => {
@@ -107,14 +115,20 @@ describe('TaxFormsSelection component', () => {
 
         const checkboxOption = getByLabelText('sendTaxForms.selectTaxYear');
         await userEvent.click(checkboxOption);
-        await waitFor(() => mockTaxYears.map(year => expect(getByText(year.toString())).toBeInTheDocument()));
+        await waitFor(() =>
+            mockTaxYears.map((year) =>
+                expect(getByText(year.toString())).toBeInTheDocument()
+            )
+        );
     });
 
     it('should display a warning message when API returns an empty array response', async () => {
-        mockedSearchTaxForms.mockResolvedValue(Promise.resolve({ data: { count: 0, items: [] }, error: null }));
+        mockedSearchTaxForms.mockResolvedValue(
+            Promise.resolve({ data: { count: 0, items: [] }, error: null })
+        );
 
         let setMethodArgs;
-        const mockSetTaxFormSelectionDetails = jest.fn(cb => {
+        const mockSetTaxFormSelectionDetails = jest.fn((cb) => {
             setMethodArgs = cb(mockTaxFormSelectionDetails);
             return setMethodArgs;
         });
@@ -137,7 +151,9 @@ describe('TaxFormsSelection component', () => {
         const checkboxOption = getByLabelText('sendTaxForms.selectTaxYear');
         await userEvent.click(checkboxOption);
 
-        const lastYearOption = await findByText(currentYear.toString(), { ignore: 'option' });
+        const lastYearOption = await findByText(currentYear.toString(), {
+            ignore: 'option',
+        });
 
         expect(lastYearOption).toBeInTheDocument();
 
@@ -147,7 +163,9 @@ describe('TaxFormsSelection component', () => {
             [currentYear.toString()]: currentYear.toString(),
         });
 
-        expect(getByText('sendTaxForms.tabs.taxFormsSelection')).toBeInTheDocument();
+        expect(
+            getByText('sendTaxForms.tabs.taxFormsSelection')
+        ).toBeInTheDocument();
     });
 
     it('should display a tax forms list', async () => {
@@ -177,7 +195,7 @@ describe('TaxFormsSelection component', () => {
         );
 
         let setMethodArgs;
-        const mockSetTaxFormSelectionDetails = jest.fn(cb => {
+        const mockSetTaxFormSelectionDetails = jest.fn((cb) => {
             setMethodArgs = cb(mockTaxFormSelectionDetails);
             return setMethodArgs;
         });
@@ -200,7 +218,9 @@ describe('TaxFormsSelection component', () => {
         const checkboxOption = getByLabelText('sendTaxForms.selectTaxYear');
         await userEvent.click(checkboxOption);
 
-        const lastYearOption = await findByText(currentYear.toString(), { ignore: 'option' });
+        const lastYearOption = await findByText(currentYear.toString(), {
+            ignore: 'option',
+        });
 
         expect(lastYearOption).toBeInTheDocument();
 

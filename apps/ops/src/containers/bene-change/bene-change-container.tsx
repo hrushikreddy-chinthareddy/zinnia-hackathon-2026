@@ -23,8 +23,14 @@ interface BeneChangeContainerProps {
     planCode: string;
 }
 
-const BeneChangeContainer = ({ policy, document, planCode }: BeneChangeContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange' });
+const BeneChangeContainer = ({
+    policy,
+    document,
+    planCode,
+}: BeneChangeContainerProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange',
+    });
     const { isPeopleView, setIsPeopleView } = useBeneChange();
 
     const router = useRouter();
@@ -76,7 +82,14 @@ const BeneChangeContainer = ({ policy, document, planCode }: BeneChangeContainer
             {
                 ariaLabel: t('tabs.confirm'),
                 isVisible: () => true,
-                component: <ConfirmStep policy={policy} document={document} planCode={planCode} clientId={clientId as string} />,
+                component: (
+                    <ConfirmStep
+                        policy={policy}
+                        document={document}
+                        planCode={planCode}
+                        clientId={clientId as string}
+                    />
+                ),
                 screenReaderLabel: t('tabs.confirm'),
                 text: t('tabs.confirm'),
             },
@@ -85,12 +98,18 @@ const BeneChangeContainer = ({ policy, document, planCode }: BeneChangeContainer
     );
 
     const filteredSteps: Step[] = useMemo(
-        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        () =>
+            steps
+                .filter((item: any) => item.isVisible?.())
+                .map((item: any, index: number) => ({ ...item, index })),
         [steps]
     );
 
     return isPeopleView ? (
-        <ReRegPeopleView onManageBeneficiaryClick={onManageBeneficiaryClickHandler} policy={policy}></ReRegPeopleView>
+        <ReRegPeopleView
+            onManageBeneficiaryClick={onManageBeneficiaryClickHandler}
+            policy={policy}
+        ></ReRegPeopleView>
     ) : (
         <TabGroupContainer
             hideGlobalValueBar={true}

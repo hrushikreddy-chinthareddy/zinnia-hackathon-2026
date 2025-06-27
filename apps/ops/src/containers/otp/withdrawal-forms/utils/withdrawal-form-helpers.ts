@@ -2,11 +2,20 @@ import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext'
 import { DocumentData } from '@deps/models/case/document';
 import { CreateTaskBody, TaskSource } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, ActiveWithdrawalCaseData, Carrier, CaseStatus, PartyRoles } from '@deps/models/case/withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    ActiveWithdrawalCaseData,
+    Carrier,
+    CaseStatus,
+    PartyRoles,
+} from '@deps/models/case/withdrawal/case';
 
 import { OtpBuildFormProcess } from './build-form-process.helpers';
 
-const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: DocumentData) => {
+const getFormDataPayload = (
+    currentFormState: OtpWithdrawalFormState,
+    document: DocumentData
+) => {
     const {
         initialForm,
         formData,
@@ -35,18 +44,28 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
         formComment,
     } = currentFormState;
 
-    if (initialForm.carrier === Carrier.FLIC && initialForm.taskType.includes('SSW')) {
+    if (
+        initialForm.carrier === Carrier.FLIC &&
+        initialForm.taskType.includes('SSW')
+    ) {
         const hasCoveredLifePerson = !!formParty?.parties?.find(
-            item => item.partyRoleType === PartyRoles.GLWB_FIRST_COVERED_PERSON || item.partyRoleType === PartyRoles.GLWB_SEC_COVERED_PERSON
+            (item) =>
+                item.partyRoleType === PartyRoles.GLWB_FIRST_COVERED_PERSON ||
+                item.partyRoleType === PartyRoles.GLWB_SEC_COVERED_PERSON
         );
         let filteredParty;
         if (hasCoveredLifePerson) {
-            filteredParty = formParty.parties.filter(item => {
+            filteredParty = formParty.parties.filter((item) => {
                 if (
-                    item.partyRoleType === PartyRoles.GLWB_FIRST_COVERED_PERSON ||
+                    item.partyRoleType ===
+                        PartyRoles.GLWB_FIRST_COVERED_PERSON ||
                     item.partyRoleType === PartyRoles.GLWB_SEC_COVERED_PERSON
                 ) {
-                    return item.firstName !== '' || item.lastName !== '' || item.middleName !== '';
+                    return (
+                        item.firstName !== '' ||
+                        item.lastName !== '' ||
+                        item.middleName !== ''
+                    );
                 }
                 return true;
             });
@@ -91,7 +110,11 @@ const getFormDataPayload = (currentFormState: OtpWithdrawalFormState, document: 
     };
 };
 
-export const buildForm = (status: CaseStatus, document: DocumentData, formState: OtpWithdrawalFormState): ActiveWithdrawalCase => {
+export const buildForm = (
+    status: CaseStatus,
+    document: DocumentData,
+    formState: OtpWithdrawalFormState
+): ActiveWithdrawalCase => {
     const currentFormState = OtpBuildFormProcess(status, formState);
     const { initialForm } = currentFormState;
     return {

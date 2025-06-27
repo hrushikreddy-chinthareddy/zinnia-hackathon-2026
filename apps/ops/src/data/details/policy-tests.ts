@@ -4,7 +4,8 @@ import { DataDefinition } from '@deps/types/data';
 
 export type TestValuesDto = TestValues;
 
-export const toTestValuesDto = (policy: Policy): TestValuesDto => policy.testValues as TestValues;
+export const toTestValuesDto = (policy: Policy): TestValuesDto =>
+    policy.testValues as TestValues;
 
 export const PolicyTestsGPTInfo = (): DataDefinition<TestValuesDto>[] => [
     {

@@ -12,14 +12,30 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     status?: 'success' | 'error' | '';
     disabled?: boolean;
     placeholder?: string;
-    onChange: (value: any, es?: ErrorSchema<any> | undefined, id?: string) => void;
+    onChange: (
+        value: any,
+        es?: ErrorSchema<any> | undefined,
+        id?: string
+    ) => void;
     onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
     hideError?: boolean | undefined;
-};
+}
 
 const TextField = (props: TextFieldProps) => {
-    const { id, label, value, className, disabled, placeholder, onChange, onBlur, onFocus, onKeyDown, hideError } = props;
-    let { status } = props
+    const {
+        id,
+        label,
+        value,
+        className,
+        disabled,
+        placeholder,
+        onChange,
+        onBlur,
+        onFocus,
+        onKeyDown,
+        hideError,
+    } = props;
+    let { status } = props;
     if (hideError && status === 'error') {
         status = '';
     }
@@ -37,12 +53,14 @@ const TextField = (props: TextFieldProps) => {
                 id={id}
                 className={`${classes}`}
                 disabled={disabled}
-                onChange={e => onChange(e.target.value)}
+                onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder ?? label}
                 value={value}
                 onBlur={onBlur}
                 onFocus={onFocus}
-                onKeyDown={e => { e.key === 'Enter' ? e.preventDefault() : null }}
+                onKeyDown={(e) => {
+                    e.key === 'Enter' ? e.preventDefault() : null;
+                }}
             />
         </>
     );

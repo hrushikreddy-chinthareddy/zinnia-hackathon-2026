@@ -9,7 +9,7 @@ export default {
     title: 'Components/DatePicker',
     component: DatePicker,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="p-10">
                 <Story />
             </div>
@@ -26,14 +26,21 @@ export const DatePickerDefault = () => {
 
     return (
         <div className="w-[300px]">
-            <DatePicker open={open} date={selectedDate} handleDateSelect={handleDateSelect} />
+            <DatePicker
+                open={open}
+                date={selectedDate}
+                handleDateSelect={handleDateSelect}
+            />
         </div>
     );
 };
 
 export const DatePickerRange = () => {
     const [open] = useState(true);
-    const [selectedRange, setSelectedRange] = useState({ start: null, end: null } as DateRange);
+    const [selectedRange, setSelectedRange] = useState({
+        start: null,
+        end: null,
+    } as DateRange);
 
     const handleDateSelect = (_year: number, _month: number, _day: number) => {
         const newDate = dayjs().year(_year).month(_month).date(_day).toDate();
@@ -67,7 +74,11 @@ export const DatePickerRange = () => {
 
     return (
         <div className="w-[612px]">
-            <DatePicker open={open} date={selectedRange} handleDateSelect={handleDateSelect} />
+            <DatePicker
+                open={open}
+                date={selectedRange}
+                handleDateSelect={handleDateSelect}
+            />
         </div>
     );
 };

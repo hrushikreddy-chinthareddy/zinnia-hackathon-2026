@@ -68,7 +68,9 @@ describe('Select Component', () => {
                 />
             );
 
-            const placeholder = await screen.findByText('Pick a card, any card');
+            const placeholder = await screen.findByText(
+                'Pick a card, any card'
+            );
             expect(placeholder).toBeInTheDocument();
         });
 
@@ -84,7 +86,9 @@ describe('Select Component', () => {
                 />
             );
 
-            const errorMessage = await screen.findByText('This is an error message');
+            const errorMessage = await screen.findByText(
+                'This is an error message'
+            );
             expect(errorMessage).toBeInTheDocument();
         });
 
@@ -101,21 +105,34 @@ describe('Select Component', () => {
             const option1 = await screen.findByText('Sort: Newest');
             expect(option1).toBeInTheDocument();
 
-            const option2 = await screen.findByText('Option 2', { ignore: 'option' });
+            const option2 = await screen.findByText('Option 2', {
+                ignore: 'option',
+            });
             expect(option2).toBeInTheDocument();
 
-            const option3 = await screen.findByText('Option 3', { ignore: 'option' });
+            const option3 = await screen.findByText('Option 3', {
+                ignore: 'option',
+            });
             expect(option3).toBeInTheDocument();
         });
 
         it('selects an option when clicked', async () => {
             const onChange = jest.fn();
 
-            render(<SelectComponent label="Select Label" options={options} value="option1" onChange={onChange} />);
+            render(
+                <SelectComponent
+                    label="Select Label"
+                    options={options}
+                    value="option1"
+                    onChange={onChange}
+                />
+            );
 
             userEvent.click(screen.getByText('Option 1', { ignore: 'option' }));
 
-            const option2 = await screen.findByText('Option 2', { ignore: 'option' });
+            const option2 = await screen.findByText('Option 2', {
+                ignore: 'option',
+            });
             userEvent.click(option2);
 
             waitFor(() => {
@@ -124,32 +141,62 @@ describe('Select Component', () => {
         });
 
         it('renders the component as disabled', () => {
-            render(<SelectComponent label="Select Label" options={options} value="" onChange={() => {}} disabled={true} />);
+            render(
+                <SelectComponent
+                    label="Select Label"
+                    options={options}
+                    value=""
+                    onChange={() => {}}
+                    disabled={true}
+                />
+            );
 
             expect(screen.getByRole('button')).toBeDisabled();
         });
 
         it('opens the menu when the select is clicked', async () => {
-            render(<SelectComponent label="Select Label" options={options} value="option1" onChange={() => {}} />);
+            render(
+                <SelectComponent
+                    label="Select Label"
+                    options={options}
+                    value="option1"
+                    onChange={() => {}}
+                />
+            );
 
-            expect(screen.queryByText('Option 2', { ignore: 'option' })).toBeNull();
+            expect(
+                screen.queryByText('Option 2', { ignore: 'option' })
+            ).toBeNull();
 
             userEvent.click(screen.getByText('Option 1', { ignore: 'option' }));
 
-            const option2 = await screen.findByText('Option 2', { ignore: 'option' });
+            const option2 = await screen.findByText('Option 2', {
+                ignore: 'option',
+            });
             expect(option2).toBeVisible();
         });
 
         it('closes the menu when an option is selected', async () => {
-            render(<SelectComponent label="Select Label" options={options} value="option1" onChange={() => {}} />);
+            render(
+                <SelectComponent
+                    label="Select Label"
+                    options={options}
+                    value="option1"
+                    onChange={() => {}}
+                />
+            );
 
             userEvent.click(screen.getByText('Option 1', { ignore: 'option' }));
 
-            const option2 = await screen.findByText('Option 2', { ignore: 'option' });
+            const option2 = await screen.findByText('Option 2', {
+                ignore: 'option',
+            });
             userEvent.click(option2);
 
             waitFor(() => {
-                expect(screen.queryByText('Option 1', { ignore: 'option' })).toBeNull();
+                expect(
+                    screen.queryByText('Option 1', { ignore: 'option' })
+                ).toBeNull();
             });
         });
     });
@@ -183,12 +230,22 @@ describe('Select Component', () => {
                 />
             );
 
-            const placeholder = await screen.findByText('Pick a card, any card');
+            const placeholder = await screen.findByText(
+                'Pick a card, any card'
+            );
             expect(placeholder).toBeInTheDocument();
         });
 
         it('renders a Select component with options', async () => {
-            render(<SelectComponent label="Select Label" options={multiselectOptions} value={{}} onChange={() => null} isMultiselect />);
+            render(
+                <SelectComponent
+                    label="Select Label"
+                    options={multiselectOptions}
+                    value={{}}
+                    onChange={() => null}
+                    isMultiselect
+                />
+            );
 
             const select = screen.getByRole('button');
             expect(select).toBeInTheDocument();
@@ -215,11 +272,15 @@ describe('Select Component', () => {
                 />
             );
 
-            expect(screen.queryByText('Option 2', { ignore: 'option' })).toBeNull();
+            expect(
+                screen.queryByText('Option 2', { ignore: 'option' })
+            ).toBeNull();
 
             userEvent.click(screen.getByText('Option 1', { ignore: 'option' }));
 
-            const option2 = await screen.findByText('Option 2', { ignore: 'option' });
+            const option2 = await screen.findByText('Option 2', {
+                ignore: 'option',
+            });
             expect(option2).toBeVisible();
         });
 
@@ -234,13 +295,23 @@ describe('Select Component', () => {
                 />
             );
 
-            expect(screen.queryByText('Option 1', { ignore: 'option' })).toBeNull();
-            expect(screen.queryByText('Option 2', { ignore: 'option' })).toBeNull();
-            expect(screen.queryByText('Option 3', { ignore: 'option' })).toBeNull();
+            expect(
+                screen.queryByText('Option 1', { ignore: 'option' })
+            ).toBeNull();
+            expect(
+                screen.queryByText('Option 2', { ignore: 'option' })
+            ).toBeNull();
+            expect(
+                screen.queryByText('Option 3', { ignore: 'option' })
+            ).toBeNull();
 
-            userEvent.click(screen.getByText('Option 1, Option 2', { ignore: 'option' }));
+            userEvent.click(
+                screen.getByText('Option 1, Option 2', { ignore: 'option' })
+            );
 
-            const option3 = await screen.findByText('Option 3', { ignore: 'option' });
+            const option3 = await screen.findByText('Option 3', {
+                ignore: 'option',
+            });
             expect(option3).toBeVisible();
         });
 
@@ -256,24 +327,40 @@ describe('Select Component', () => {
                 />
             );
 
-            expect(screen.getByText('This is an error message')).toBeInTheDocument();
+            expect(
+                screen.getByText('This is an error message')
+            ).toBeInTheDocument();
         });
 
         it('selects an option when clicked', async () => {
             const onChange = jest.fn();
 
-            render(<SelectComponent label="Select Label" options={multiselectOptions} value={{}} onChange={onChange} isMultiselect />);
+            render(
+                <SelectComponent
+                    label="Select Label"
+                    options={multiselectOptions}
+                    value={{}}
+                    onChange={onChange}
+                    isMultiselect
+                />
+            );
 
             const select = screen.getByRole('button');
             expect(select).toBeInTheDocument();
 
             userEvent.click(select);
 
-            const option3 = await screen.findByText('Option 3', { ignore: 'option' });
+            const option3 = await screen.findByText('Option 3', {
+                ignore: 'option',
+            });
             userEvent.click(option3);
 
             await waitFor(() => {
-                expect(onChange).toHaveBeenCalledWith('option3', 'Option 3', true);
+                expect(onChange).toHaveBeenCalledWith(
+                    'option3',
+                    'Option 3',
+                    true
+                );
                 expect(onChange).toHaveBeenCalledTimes(1);
             });
         });
@@ -289,30 +376,46 @@ describe('Select Component', () => {
                 />
             );
 
-            expect(screen.queryByText('Option 2', { ignore: 'option' })).toBeNull();
-            expect(screen.queryByText('Option 3', { ignore: 'option' })).toBeNull();
+            expect(
+                screen.queryByText('Option 2', { ignore: 'option' })
+            ).toBeNull();
+            expect(
+                screen.queryByText('Option 3', { ignore: 'option' })
+            ).toBeNull();
 
             userEvent.click(screen.getByText('Option 1', { ignore: 'option' }));
 
-            const option2 = await screen.findByText('Option 2', { ignore: 'option' });
+            const option2 = await screen.findByText('Option 2', {
+                ignore: 'option',
+            });
             expect(option2).toBeInTheDocument();
 
-            const option3 = await screen.findByText('Option 3', { ignore: 'option' });
+            const option3 = await screen.findByText('Option 3', {
+                ignore: 'option',
+            });
             expect(option3).toBeInTheDocument();
 
             userEvent.click(option3);
 
-            const option2afterOption = await screen.findByText('Option 2', { ignore: 'option' });
+            const option2afterOption = await screen.findByText('Option 2', {
+                ignore: 'option',
+            });
             expect(option2afterOption).toBeInTheDocument();
 
-            const option3afterOption = await screen.findByText('Option 3', { ignore: 'option' });
+            const option3afterOption = await screen.findByText('Option 3', {
+                ignore: 'option',
+            });
             expect(option3afterOption).toBeInTheDocument();
 
             userEvent.keyboard('{esc}');
 
             waitFor(() => {
-                expect(screen.queryByText('Option 2', { ignore: 'option' })).toBeNull();
-                expect(screen.queryByText('Option 3', { ignore: 'option' })).toBeNull();
+                expect(
+                    screen.queryByText('Option 2', { ignore: 'option' })
+                ).toBeNull();
+                expect(
+                    screen.queryByText('Option 3', { ignore: 'option' })
+                ).toBeNull();
             });
         });
     });

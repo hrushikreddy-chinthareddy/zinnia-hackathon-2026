@@ -21,7 +21,9 @@ export const getSuitabilityReviewSteps = ({
             component: (
                 <TaskFormStep
                     readonly={readOnly}
-                    isSaveAsDraftEnabled={readOnly ? false : isSaveAsDraftEnabled}
+                    isSaveAsDraftEnabled={
+                        readOnly ? false : isSaveAsDraftEnabled
+                    }
                     isContinueButtonEnabled={isContinueButtonEnabled}
                     taskInfoLink={taskInfoLink}
                     isSubmit={readOnly ? false : true}
@@ -35,7 +37,12 @@ export const getSuitabilityReviewSteps = ({
         },
         {
             isVisible: () => true,
-            component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
+            component: (
+                <ConfirmStep
+                    taskType={taskType}
+                    taskInfoLink={taskInfoLink}
+                ></ConfirmStep>
+            ),
             text: t('confirm'),
             index: 1,
             screenReaderLabel: t('confirm'),

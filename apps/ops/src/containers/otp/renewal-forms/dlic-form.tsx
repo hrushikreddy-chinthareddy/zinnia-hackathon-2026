@@ -21,7 +21,9 @@ export enum DlicPlanCodes {
 }
 
 export default function DlicRenewalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseRenewal.request',
+    });
     const {
         channel,
         setFormValidator,
@@ -31,15 +33,26 @@ export default function DlicRenewalForm() {
         setRenewalRequestSignDate,
         planCode,
     } = useContext(RenewalFormDataContext);
-    const { formPartyConfigs, signatureConfigs, formValidation, periodRadioItems, transList } = getDlicConfig(t);
+    const {
+        formPartyConfigs,
+        signatureConfigs,
+        formValidation,
+        periodRadioItems,
+        transList,
+    } = getDlicConfig(t);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
     }, []);
 
     useEffect(() => {
-        const owner = ownerInformation?.find(owner => owner.type === 'Primary');
-        const renewalDate = channel === Channel.Form ? owner?.signature.signDate || 'NA' : renewalRequestSignDate;
+        const owner = ownerInformation?.find(
+            (owner) => owner.type === 'Primary'
+        );
+        const renewalDate =
+            channel === Channel.Form
+                ? owner?.signature.signDate || 'NA'
+                : renewalRequestSignDate;
 
         setRenewalRequestSignDate(renewalDate);
     }, [channel, ownerInformation, renewalRequestSignDate]);
@@ -49,16 +62,35 @@ export default function DlicRenewalForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <br />
             <GeneralInformation isFormStateReadOnly={isFormStateReadOnly} />
-            <OwnerInformation isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <OwnerInformation
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <hr className="my-4 h-0.5 border-none bg-gray-100 px-4" />
-            {Object.values(DlicPlanCodes).includes(planCode as DlicPlanCodes) ? (
-                <RenewalPeriodMultiSection isFormStateReadOnly={isFormStateReadOnly} options={transList} planCode={planCode} />
+            {Object.values(DlicPlanCodes).includes(
+                planCode as DlicPlanCodes
+            ) ? (
+                <RenewalPeriodMultiSection
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={transList}
+                    planCode={planCode}
+                />
             ) : (
-                <RenewalPeriodSingleSection isFormStateReadOnly={isFormStateReadOnly} options={periodRadioItems} />
+                <RenewalPeriodSingleSection
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={periodRadioItems}
+                />
             )}
             <hr className="my-4 h-0.5 border-none bg-gray-100 px-4" />
-            {channel === Channel.Phone && <CallReceiveDate isFormStateReadOnly={isFormStateReadOnly} />}
-            {channel === Channel.Form && <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} configs={signatureConfigs} />}
+            {channel === Channel.Phone && (
+                <CallReceiveDate isFormStateReadOnly={isFormStateReadOnly} />
+            )}
+            {channel === Channel.Form && (
+                <SignatureValidations
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    configs={signatureConfigs}
+                />
+            )}
         </>
     );
 }

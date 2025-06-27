@@ -7,7 +7,7 @@ export default {
     title: 'Components/ButtonGroup/ButtonGroupItem',
     component: ButtonGroupItem,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>

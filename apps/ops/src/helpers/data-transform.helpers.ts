@@ -6,7 +6,12 @@ import { DataDefinition, KeyObjectDef } from '@deps/types/data';
 import { percentFormatify } from './numbers.helpers';
 import { getObjDeepValue } from './objects.helpers';
 
-export const fillColDefs = <T extends object>(obj: T, colDef: DataDefinition<T>[], t?: TFunction, translationPath = 'common.default') => {
+export const fillColDefs = <T extends object>(
+    obj: T,
+    colDef: DataDefinition<T>[],
+    t?: TFunction,
+    translationPath = 'common.default'
+) => {
     if (!obj) return colDef;
 
     for (let colIndex = 0; colIndex < colDef.length; colIndex++) {
@@ -19,21 +24,34 @@ export const fillColDefs = <T extends object>(obj: T, colDef: DataDefinition<T>[
             value = emptyValue;
         }
 
-        colDef[colIndex].value = format && value !== emptyValue ? format(value) : value;
+        colDef[colIndex].value =
+            format && value !== emptyValue ? format(value) : value;
 
         if (t) {
             if (translationPath) {
-                colDef[colIndex].label = t(`${translationPath}.${accessKey ?? key}`);
+                colDef[colIndex].label = t(
+                    `${translationPath}.${accessKey ?? key}`
+                );
 
-                colDef[colIndex].tooltip = colDef[colIndex].tooltip ? t(`${translationPath}.${accessKey ?? key}Tooltip`) : '';
+                colDef[colIndex].tooltip = colDef[colIndex].tooltip
+                    ? t(`${translationPath}.${accessKey ?? key}Tooltip`)
+                    : '';
 
-                colDef[colIndex].tooltipBody = colDef[colIndex].tooltip ? t(`${translationPath}.${accessKey ?? key}TooltipBody`) : '';
+                colDef[colIndex].tooltipBody = colDef[colIndex].tooltip
+                    ? t(`${translationPath}.${accessKey ?? key}TooltipBody`)
+                    : '';
 
-                colDef[colIndex].groupLabel = colDef[colIndex].group ? t(`${translationPath}.groups.${colDef[colIndex].group}`) : '';
+                colDef[colIndex].groupLabel = colDef[colIndex].group
+                    ? t(`${translationPath}.groups.${colDef[colIndex].group}`)
+                    : '';
             } else {
                 colDef[colIndex].label = t(translationPath);
-                colDef[colIndex].tooltip = colDef[colIndex].tooltip ? t(translationPath) : '';
-                colDef[colIndex].groupLabel = colDef[colIndex].group ? t(translationPath) : '';
+                colDef[colIndex].tooltip = colDef[colIndex].tooltip
+                    ? t(translationPath)
+                    : '';
+                colDef[colIndex].groupLabel = colDef[colIndex].group
+                    ? t(translationPath)
+                    : '';
             }
         }
     }

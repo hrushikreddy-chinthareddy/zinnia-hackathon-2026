@@ -20,11 +20,22 @@ const DotContainer = ({
     dotRightSide,
     dotRightSideClassName,
 }: DotContainerProps) => {
-
-    const dotContainerClasses = clsx('dot-container flex items-baseline gap-2', dotContainerClassName);
-    const dotLeftSideClasses = clsx('dot-left-side w-fit', dotLeftSideClassName);
-    const dotRightSideClasses = clsx('dot-right-side flex', dotRightSideClassName);
-    const dotClasses = clsx('dot grow border-0 border-b-2 border-dotted border-gray-300', dotClassName);
+    const dotContainerClasses = clsx(
+        'dot-container flex items-baseline gap-2',
+        dotContainerClassName
+    );
+    const dotLeftSideClasses = clsx(
+        'dot-left-side w-fit',
+        dotLeftSideClassName
+    );
+    const dotRightSideClasses = clsx(
+        'dot-right-side flex',
+        dotRightSideClassName
+    );
+    const dotClasses = clsx(
+        'dot grow border-0 border-b-2 border-dotted border-gray-300',
+        dotClassName
+    );
 
     return (
         <div className={dotContainerClasses}>

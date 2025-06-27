@@ -29,18 +29,25 @@ export const DASHBOARD_REPLACE_LABELS = ['', null, undefined, 'NULL_VALUE'];
 
 export const DASHBOARD_DEFAULT_LABEL = '[UNKNOWN]';
 
-export const dashboardChartTitleFormat = (label: string, length?: number | boolean) => {
-    if (!label || DASHBOARD_REPLACE_LABELS.includes(label)) return DASHBOARD_DEFAULT_LABEL;
+export const dashboardChartTitleFormat = (
+    label: string,
+    length?: number | boolean
+) => {
+    if (!label || DASHBOARD_REPLACE_LABELS.includes(label))
+        return DASHBOARD_DEFAULT_LABEL;
     label = label.replace(/_/g, ' ');
     label = toTitleCase(label);
     label = getLabelSubString(label, length);
-    label = label.replace(/\bexceptions?\b/gi, match => {
+    label = label.replace(/\bexceptions?\b/gi, (match) => {
         return match.toLowerCase() === 'exception' ? 'NIGO' : 'NIGOs';
     });
     return label;
 };
 
-export const getLabelSubString = (label: string, length: number | boolean = 25) => {
+export const getLabelSubString = (
+    label: string,
+    length: number | boolean = 25
+) => {
     if (!label) {
         return '';
     }
@@ -53,7 +60,9 @@ export const getLabelSubString = (label: string, length: number | boolean = 25) 
     return label.length > length ? `${label.substring(0, length)}...` : label;
 };
 
-export const oneYearAgoISO = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString();
+export const oneYearAgoISO = new Date(
+    new Date().setFullYear(new Date().getFullYear() - 1)
+).toISOString();
 
 export const splitAndSentenceCase = (input: string): string => {
     // Split the string on uppercase letters

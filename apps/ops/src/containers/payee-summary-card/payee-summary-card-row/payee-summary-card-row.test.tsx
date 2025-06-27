@@ -28,7 +28,9 @@ describe('PayeeSummaryCardRow Component', () => {
             ...defaultProps,
             percentage: '50%',
         };
-        const { getByText } = render(<PayeeSummaryCardRow {...propsWithPercentage} />);
+        const { getByText } = render(
+            <PayeeSummaryCardRow {...propsWithPercentage} />
+        );
         const percentageElement = getByText('50%');
         expect(percentageElement).toBeInTheDocument();
     });
@@ -38,15 +40,21 @@ describe('PayeeSummaryCardRow Component', () => {
             ...defaultProps,
             isSumTotalRow: true,
         };
-        const { getByText } = render(<PayeeSummaryCardRow {...propsWithSumTotalRow} />);
+        const { getByText } = render(
+            <PayeeSummaryCardRow {...propsWithSumTotalRow} />
+        );
         const amountElement = getByText('100');
-        expect(amountElement).toHaveClass('tracking-normal no-underline font-primary text-xl font-medium leading-[24px]');
+        expect(amountElement).toHaveClass(
+            'tracking-normal no-underline font-primary text-xl font-medium leading-[24px]'
+        );
     });
 
     it('renders body variant if isSumTotalRow is false', () => {
         const { getByText } = render(<PayeeSummaryCardRow {...defaultProps} />);
         const amountElement = getByText('100');
-        expect(amountElement).toHaveClass('tracking-normal no-underline font-secondary text-base font-normal leading-[24px]');
+        expect(amountElement).toHaveClass(
+            'tracking-normal no-underline font-secondary text-base font-normal leading-[24px]'
+        );
     });
 
     it('Should have no accessibility violations', async () => {

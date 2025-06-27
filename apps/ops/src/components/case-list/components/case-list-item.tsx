@@ -17,7 +17,15 @@ type CaseListProps = {
     caseType: CaseType;
 };
 
-export const CaseListItem = ({ t, caseData, selectedCaseId, onCaseClick, clientId, caseType, index }: CaseListProps) => (
+export const CaseListItem = ({
+    t,
+    caseData,
+    selectedCaseId,
+    onCaseClick,
+    clientId,
+    caseType,
+    index,
+}: CaseListProps) => (
     <Section key={caseData.id} testid={`case-list-item-${index}`}>
         <Accordion
             isOpen={caseData.id === selectedCaseId}
@@ -36,7 +44,10 @@ export const CaseListItem = ({ t, caseData, selectedCaseId, onCaseClick, clientI
                     showOwnerInfo={false}
                     isCustomStyle={false}
                     showCaseId={true}
-                    documentNumber={getCaseIdentifierValue(caseData.identifiers, CaseIdentifier.DocumentNumber)}
+                    documentNumber={getCaseIdentifierValue(
+                        caseData.identifiers,
+                        CaseIdentifier.DocumentNumber
+                    )}
                 />
             }
         >
@@ -45,7 +56,10 @@ export const CaseListItem = ({ t, caseData, selectedCaseId, onCaseClick, clientI
                 caseData={caseData}
                 clientId={clientId}
                 caseType={caseType}
-                documentNumber={getCaseIdentifierValue(caseData.identifiers, CaseIdentifier.DocumentNumber)}
+                documentNumber={getCaseIdentifierValue(
+                    caseData.identifiers,
+                    CaseIdentifier.DocumentNumber
+                )}
             ></TaskListingContainer>
         </Accordion>
     </Section>

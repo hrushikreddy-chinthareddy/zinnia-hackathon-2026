@@ -2,7 +2,11 @@ import { TaskType } from '@deps/models/case/task';
 
 import { allowedTaskTypes } from './task-config';
 
-export async function applyDynamicOptions(task: any, accessToken: string = '', currentTaskMetadata: any) {
+export async function applyDynamicOptions(
+    task: any,
+    accessToken: string = '',
+    currentTaskMetadata: any
+) {
     const { taskType } = task;
 
     if (!Object.values(TaskType).includes(taskType as TaskType)) {
@@ -20,7 +24,8 @@ export async function applyDynamicOptions(task: any, accessToken: string = '', c
         const handlerModule = await import(`./tasks/${taskFileName}`);
         const handler = handlerModule.default;
 
-        if (!handler) throw new Error(`Handler not found for task: ${validatedTaskType}`);
+        if (!handler)
+            throw new Error(`Handler not found for task: ${validatedTaskType}`);
 
         // Pass the full task object to the handler so it can construct the correct payload
         const payload = handler.getPayload(task);

@@ -36,16 +36,32 @@ export default function BeneficiaryListingItem({
     isBeneInfoOnFile,
     partyRoleId,
 }: BeneficiaryListingItemProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.beneficiaryListing' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails.beneficiaryListing',
+    });
     const [showBeneficiary, setShowBeneficiary] = useState(false);
     const { deletedBene, setDeletedBene, beneData } = useBeneChange();
 
-    const relationshipToInsured = partyRoleId && policy?.partyRoles?.find(role => role?.partyRoleId === partyRoleId)?.relationshipToInsured;
-    const position = beneData.map((element: any) => element.index).indexOf(index);
+    const relationshipToInsured =
+        partyRoleId &&
+        policy?.partyRoles?.find((role) => role?.partyRoleId === partyRoleId)
+            ?.relationshipToInsured;
+    const position = beneData
+        .map((element: any) => element.index)
+        .indexOf(index);
     const [currentBene, setCurrentBene] = useState(
         position > -1
             ? beneData[position]
-            : getInitialBene(partyRole, index, selectedParty, relationshipToInsured, selectedParty?.partyId, true, 'NONE', partyRoleId)
+            : getInitialBene(
+                  partyRole,
+                  index,
+                  selectedParty,
+                  relationshipToInsured,
+                  selectedParty?.partyId,
+                  true,
+                  'NONE',
+                  partyRoleId
+              )
     );
     const [isNonEditable, setIsNonEditable] = useState<boolean>(true);
 
@@ -55,7 +71,9 @@ export default function BeneficiaryListingItem({
 
     useEffect(() => {
         setBeneData((prevState: any) => {
-            const position = prevState.map((element: any) => element.index).indexOf(index);
+            const position = prevState
+                .map((element: any) => element.index)
+                .indexOf(index);
             if (position > -1) {
                 prevState[position] = currentBene;
                 return [...prevState];
@@ -85,12 +103,23 @@ export default function BeneficiaryListingItem({
     });
 
     return (
-        <div className={!isCurrentRemoved ? 'my-4 w-full rounded-sm border-2 p-8' : 'my-4 w-full rounded-sm border-2 bg-gray-50 p-8'}>
+        <div
+            className={
+                !isCurrentRemoved
+                    ? 'my-4 w-full rounded-sm border-2 p-8'
+                    : 'my-4 w-full rounded-sm border-2 bg-gray-50 p-8'
+            }
+        >
             <div className="flex justify-between">
                 <div className="flex items-center gap-2">
                     <div className="font-primary text-xl">
-                        <span className={isCurrentRemoved ? 'text-gray-200' : ''}>
-                            {getName(selectedParty)} {!isCurrentRemoved ? ` (${selectedParty?.beneficiaryPercentage}) %` : '(--)%'}
+                        <span
+                            className={isCurrentRemoved ? 'text-gray-200' : ''}
+                        >
+                            {getName(selectedParty)}{' '}
+                            {!isCurrentRemoved
+                                ? ` (${selectedParty?.beneficiaryPercentage}) %`
+                                : '(--)%'}
                         </span>
                     </div>
                     {isNonEditable && (
@@ -114,18 +143,31 @@ export default function BeneficiaryListingItem({
                                 isDisabled={isBeneInfoOnFile}
                                 checked={isCurrentRemoved}
                                 onChange={() => {
-                                    handleChange(index, isCurrentRemoved ? false : true);
+                                    handleChange(
+                                        index,
+                                        isCurrentRemoved ? false : true
+                                    );
                                 }}
                             />
-                            <Content details={t('remove') as string} variant={ContentVariant.BodySm} contentClassName="items-center flex" />
+                            <Content
+                                details={t('remove') as string}
+                                variant={ContentVariant.BodySm}
+                                contentClassName="items-center flex"
+                            />
                         </label>
                     </div>
                     <div className={isCurrentRemoved ? 'invisible' : ''}>
-                        <div onClick={() => setShowBeneficiary(!showBeneficiary)} className="ml-6">
+                        <div
+                            onClick={() => setShowBeneficiary(!showBeneficiary)}
+                            className="ml-6"
+                        >
                             <ChevronDown
                                 height={24}
                                 width={24}
-                                className={'simple-transition  self-center text-secondary ' + (showBeneficiary ? 'flip180' : '')}
+                                className={
+                                    'simple-transition  self-center text-secondary ' +
+                                    (showBeneficiary ? 'flip180' : '')
+                                }
                             />
                         </div>
                     </div>

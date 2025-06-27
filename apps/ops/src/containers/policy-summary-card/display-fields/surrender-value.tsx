@@ -10,7 +10,10 @@ interface SurrenderValueProps {
 }
 
 const SurrenderValue = ({ surrenderValue }: SurrenderValueProps) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
     return (
         <div>
@@ -20,7 +23,10 @@ const SurrenderValue = ({ surrenderValue }: SurrenderValueProps) => {
                 tooltipTitle={t('colDefs:policySummary.surrenderValue')}
                 tooltipBody={t('colDefs:policySummary.surrenderValueTooltip')}
             />
-            <Content details={numberFormatify(surrenderValue)} variant={ContentVariant.BodySm} />
+            <Content
+                details={numberFormatify(surrenderValue)}
+                variant={ContentVariant.BodySm}
+            />
         </div>
     );
 };

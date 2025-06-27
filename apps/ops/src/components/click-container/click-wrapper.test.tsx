@@ -40,7 +40,11 @@ describe('ClickWrapper', () => {
     test('should not call onClick when disabled', () => {
         const onClickMock = jest.fn();
         const { getByText } = render(
-            <ClickWrapper isDisabled onClick={onClickMock} ariaLabel="Click Wrapper">
+            <ClickWrapper
+                isDisabled
+                onClick={onClickMock}
+                ariaLabel="Click Wrapper"
+            >
                 Click Me
             </ClickWrapper>
         );
@@ -51,7 +55,9 @@ describe('ClickWrapper', () => {
 
     test('should have correct role and aria-label', () => {
         const ariaLabel = 'Click Wrapper';
-        const { getByRole } = render(<ClickWrapper ariaLabel={ariaLabel}>Click Me</ClickWrapper>);
+        const { getByRole } = render(
+            <ClickWrapper ariaLabel={ariaLabel}>Click Me</ClickWrapper>
+        );
         const clickWrapperElement = getByRole('button');
         expect(clickWrapperElement).toBeInTheDocument();
         expect(clickWrapperElement).toHaveAttribute('aria-label', ariaLabel);

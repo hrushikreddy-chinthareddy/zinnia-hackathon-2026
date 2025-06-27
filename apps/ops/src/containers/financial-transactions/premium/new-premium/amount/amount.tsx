@@ -1,11 +1,19 @@
-import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useCallback, useState } from 'react';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '@deps/components/fields/field-date-select/field-date-select';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
@@ -15,7 +23,11 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
-import { isDateAllowed, isPaymentAllowed, getImportantDates } from './amount.helpers';
+import {
+    isDateAllowed,
+    isPaymentAllowed,
+    getImportantDates,
+} from './amount.helpers';
 
 interface AmountProps {
     policy: Policy;
@@ -36,7 +48,9 @@ type Errors = {
 };
 
 const Amount = ({ policy }: AmountProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newPremium.amount' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'newPremium.amount',
+    });
     const { premium, setPremium } = usePremium();
     const { goToNext } = useWorkflow();
     const [errors, setErrors] = useState<Errors>({});
@@ -44,10 +58,15 @@ const Amount = ({ policy }: AmountProps) => {
     const { policyNumber, product, policyFeatures } = policy;
     const { effectiveDate, paymentAmount } = premium;
 
-    const { startDate, endDate, requiredPayment, hasLapse, hasReinstatement } = getImportantDates(policyFeatures);
+    const { startDate, endDate, requiredPayment, hasLapse, hasReinstatement } =
+        getImportantDates(policyFeatures);
 
     const handleIsDateAllowed = useCallback(
-        (date: dayjs.Dayjs, startDate: dayjs.Dayjs | undefined, endDate: dayjs.Dayjs | undefined) => {
+        (
+            date: dayjs.Dayjs,
+            startDate: dayjs.Dayjs | undefined,
+            endDate: dayjs.Dayjs | undefined
+        ) => {
             if (!hasLapse && !hasReinstatement) {
                 return true;
             }
@@ -57,7 +76,9 @@ const Amount = ({ policy }: AmountProps) => {
         [hasLapse, hasReinstatement]
     );
 
-    const handleDateChange = ({ target: { value: dateValue } }: ChangeEvent<HTMLInputElement>) => {
+    const handleDateChange = ({
+        target: { value: dateValue },
+    }: ChangeEvent<HTMLInputElement>) => {
         const formattedDate = dayjs(dateValue, DATE_PICKER_FORMAT);
 
         if (!formattedDate.isValid()) return;
@@ -66,15 +87,30 @@ const Amount = ({ policy }: AmountProps) => {
 
         const today = new Date();
         const isReverseInitiator = formattedDate.isBefore(dayjs(today));
-        setPremium(oldPremium => ({ ...oldPremium, effectiveDate: dateValue, reverseInitiator: isReverseInitiator }));
+        setPremium((oldPremium) => ({
+            ...oldPremium,
+            effectiveDate: dateValue,
+            reverseInitiator: isReverseInitiator,
+        }));
     };
 
-    const handlePaymentAmountChange = ({ target: { value: paymentValue } }: ChangeEvent<HTMLInputElement>) => {
+    const handlePaymentAmountChange = ({
+        target: { value: paymentValue },
+    }: ChangeEvent<HTMLInputElement>) => {
         validateFields({ paymentAmount: paymentValue });
-        setPremium(oldPremium => ({ ...oldPremium, paymentAmount: paymentValue }));
+        setPremium((oldPremium) => ({
+            ...oldPremium,
+            paymentAmount: paymentValue,
+        }));
     };
 
-    const validateFields = ({ effectiveDate, paymentAmount }: { effectiveDate?: string; paymentAmount?: string }) => {
+    const validateFields = ({
+        effectiveDate,
+        paymentAmount,
+    }: {
+        effectiveDate?: string;
+        paymentAmount?: string;
+    }) => {
         const newErrors = { ...errors };
 
         // date errors
@@ -88,14 +124,24 @@ const Amount = ({ policy }: AmountProps) => {
                     newErrors.effectiveDate = `${t('invalidDateError')}`;
                 } else if (!isDateAllowed(formattedDate, startDate, endDate)) {
                     if (hasReinstatement) {
-                        newErrors.effectiveDate = `${t('pendingLapseDateError', {
-                            gracePeriodStartDate: startDate?.format(DEFAULT_EXTENDED_DATE_FORMAT),
-                            gracePeriodEndDate: endDate?.format(DEFAULT_EXTENDED_DATE_FORMAT),
-                        })}`;
+                        newErrors.effectiveDate = `${t(
+                            'pendingLapseDateError',
+                            {
+                                gracePeriodStartDate: startDate?.format(
+                                    DEFAULT_EXTENDED_DATE_FORMAT
+                                ),
+                                gracePeriodEndDate: endDate?.format(
+                                    DEFAULT_EXTENDED_DATE_FORMAT
+                                ),
+                            }
+                        )}`;
                     } else if (hasLapse) {
                         newErrors.effectiveDate = `${t('pendingLapseWarning', {
-                            gracePeriodEndDate: startDate?.format(DEFAULT_EXTENDED_DATE_FORMAT),
-                            minLapsePendingAmt: numberFormatify(requiredPayment),
+                            gracePeriodEndDate: startDate?.format(
+                                DEFAULT_EXTENDED_DATE_FORMAT
+                            ),
+                            minLapsePendingAmt:
+                                numberFormatify(requiredPayment),
                         })}`;
                     }
                 } else {
@@ -140,7 +186,10 @@ const Amount = ({ policy }: AmountProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     parentPage={ParentPage.Premiums}
-                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Amount }}
+                    trackEventProps={{
+                        type: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+                        step: TransactionStep.Amount,
+                    }}
                 />
             }
         >
@@ -149,13 +198,21 @@ const Amount = ({ policy }: AmountProps) => {
                     formatOptions={{ format: '##/##/####' }}
                     className="flex max-w-[160px]"
                     label={t('dateLabel') as string}
-                    value={dayjs(effectiveDate, DATE_PICKER_FORMAT).format(DATE_PICKER_FORMAT)}
+                    value={dayjs(effectiveDate, DATE_PICKER_FORMAT).format(
+                        DATE_PICKER_FORMAT
+                    )}
                     onChange={handleDateChange}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
-                    isDateAllowed={date => handleIsDateAllowed(date, startDate, endDate)}
+                    isDateAllowed={(date) =>
+                        handleIsDateAllowed(date, startDate, endDate)
+                    }
                     isFutureDateDisabled={false}
-                    variant={errors.effectiveDate ? FieldVariant.Error : FieldVariant.Default}
+                    variant={
+                        errors.effectiveDate
+                            ? FieldVariant.Error
+                            : FieldVariant.Default
+                    }
                     message={errors.effectiveDate || ''}
                 />
                 <Field
@@ -171,7 +228,11 @@ const Amount = ({ policy }: AmountProps) => {
                         format: '',
                         decimalPlaces: 2,
                     }}
-                    variant={errors.paymentAmount ? FieldVariant.Error : FieldVariant.Default}
+                    variant={
+                        errors.paymentAmount
+                            ? FieldVariant.Error
+                            : FieldVariant.Default
+                    }
                     message={errors.paymentAmount || ''}
                 />
             </div>

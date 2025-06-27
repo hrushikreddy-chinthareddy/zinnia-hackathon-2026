@@ -37,7 +37,13 @@ const CardContainer = ResponsiveFlex;
 const CardHeader = ResponsiveFlex;
 const CardBody = ResponsiveFlex;
 
-const SectionCard = ({ children, className, headerContent, footerContent, 'data-testid': testId }: SectionCardProps) => (
+const SectionCard = ({
+    children,
+    className,
+    headerContent,
+    footerContent,
+    'data-testid': testId,
+}: SectionCardProps) => (
     <CardContainer
         data-testid={testId || SectionCardTest.Container}
         layoutDirection={LayoutDirection.Vertical}
@@ -46,7 +52,10 @@ const SectionCard = ({ children, className, headerContent, footerContent, 'data-
         itemPadding={ItemPadding.XSmall}
         className={clsx('border-gray-100 bg-white md:p-6 lg:p-8', className)}
     >
-        <CardHeader horizontalResizing={HorizontalResizing.Hug} itemSpacing={ItemSpacing.XXSmall}>
+        <CardHeader
+            horizontalResizing={HorizontalResizing.Hug}
+            itemSpacing={ItemSpacing.XXSmall}
+        >
             {headerContent}
         </CardHeader>
         <CardBody
@@ -58,37 +67,59 @@ const SectionCard = ({ children, className, headerContent, footerContent, 'data-
         </CardBody>
         {footerContent && (
             <div className="flex flex-wrap gap-4 bg-gray-50 py-4 md:flex-row md:gap-8 md:pl-6 lg:w-auto lg:self-stretch lg:pl-8">
-                {footerContent.map(({ text, tempInactive, tooltip, href, isDisabled, onClick }) => (
-                    <span key={`${text}-wrapper`}>
-                        {tempInactive ? (
-                            <TempNavInactive key={`${text}-tooltip`} tooltipBody={tooltip}>
-                                {text}
-                            </TempNavInactive>
-                        ) : isDisabled ? (
-                            tooltip ? (
-                                <Tooltip placement={PopoverPlacement.TopRight} body={tooltip} key={`${text}-tooltip`}>
-                                    <span className="cursor-not-allowed font-primary  font-semibold text-gray-300" key={`${text}-link`}>
+                {footerContent.map(
+                    ({
+                        text,
+                        tempInactive,
+                        tooltip,
+                        href,
+                        isDisabled,
+                        onClick,
+                    }) => (
+                        <span key={`${text}-wrapper`}>
+                            {tempInactive ? (
+                                <TempNavInactive
+                                    key={`${text}-tooltip`}
+                                    tooltipBody={tooltip}
+                                >
+                                    {text}
+                                </TempNavInactive>
+                            ) : isDisabled ? (
+                                tooltip ? (
+                                    <Tooltip
+                                        placement={PopoverPlacement.TopRight}
+                                        body={tooltip}
+                                        key={`${text}-tooltip`}
+                                    >
+                                        <span
+                                            className="cursor-not-allowed font-primary  font-semibold text-gray-300"
+                                            key={`${text}-link`}
+                                        >
+                                            {text}
+                                        </span>
+                                    </Tooltip>
+                                ) : (
+                                    <span
+                                        className="cursor-not-allowed font-primary font-semibold text-gray-300"
+                                        key={`${text}-link`}
+                                    >
                                         {text}
                                     </span>
-                                </Tooltip>
+                                )
                             ) : (
-                                <span className="cursor-not-allowed font-primary font-semibold text-gray-300" key={`${text}-link`}>
+                                <a
+                                    href={href}
+                                    key={`${text}-link`}
+                                    className="font-primary text-links-sm font-semibold text-cerulean-600"
+                                    data-testid={text}
+                                    onClick={onClick}
+                                >
                                     {text}
-                                </span>
-                            )
-                        ) : (
-                            <a
-                                href={href}
-                                key={`${text}-link`}
-                                className="font-primary text-links-sm font-semibold text-cerulean-600"
-                                data-testid={text}
-                                onClick={onClick}
-                            >
-                                {text}
-                            </a>
-                        )}
-                    </span>
-                ))}
+                                </a>
+                            )}
+                        </span>
+                    )
+                )}
             </div>
         )}
     </CardContainer>

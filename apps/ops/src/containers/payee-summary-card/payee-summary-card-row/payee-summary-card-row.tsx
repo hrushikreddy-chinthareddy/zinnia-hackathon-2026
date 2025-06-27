@@ -59,11 +59,17 @@ const PayeeSummaryCardRow = ({
     const dotRightSide = (
         <>
             <div>
-                <Content details={amount ?? DEFAULT_ERROR_STRING} variant={valueContentVariant} />
+                <Content
+                    details={amount ?? DEFAULT_ERROR_STRING}
+                    variant={valueContentVariant}
+                />
             </div>
             {percentage && (
                 <div className="min-w-[50px] text-right">
-                    <Content details={percentage} variant={ContentVariant.Body} />
+                    <Content
+                        details={percentage}
+                        variant={ContentVariant.Body}
+                    />
                 </div>
             )}
         </>

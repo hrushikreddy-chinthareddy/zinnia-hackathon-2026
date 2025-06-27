@@ -20,7 +20,10 @@ export interface AddressDataCardProps {
     isSideSheet?: boolean;
 }
 let fullAddress: string | JSX.Element;
-export const formatAddressToContainer = (address: Address, skipCountryCode: boolean) => {
+export const formatAddressToContainer = (
+    address: Address,
+    skipCountryCode: boolean
+) => {
     let formatted = formatAddress(address);
     if (skipCountryCode) {
         formatted = formatAddressV2(address);
@@ -46,23 +49,43 @@ interface AddressTypeAndAddressProps {
     isSideSheet?: boolean;
 }
 
-export const AddressTypeAndAddress = ({ address, addressType, isAddressChange = false, isSideSheet = false }: AddressTypeAndAddressProps) => {
+export const AddressTypeAndAddress = ({
+    address,
+    addressType,
+    isAddressChange = false,
+    isSideSheet = false,
+}: AddressTypeAndAddressProps) => {
     const formattedAddress = formatAddressToContainer(address, isAddressChange);
 
     return (
-
-        <div className={`flex flex-col items-start text-gray-900 w-[200px] + ${isSideSheet && "w-[200px]"}`}>
+        <div
+            className={`flex flex-col items-start text-gray-900 w-[200px] + ${
+                isSideSheet && 'w-[200px]'
+            }`}
+        >
             {!isAddressChange && addressType && (
-                <Label className="h-6 leading-4.5" label={toTitleCase(addressType)} variant={LabelVariant.FieldLabel} />
+                <Label
+                    className="h-6 leading-4.5"
+                    label={toTitleCase(addressType)}
+                    variant={LabelVariant.FieldLabel}
+                />
             )}
-            {isAddressChange && addressType && <Tag text={toTitleCase(addressType)} className="my-1" />}
-            <div className={`leading-[18px] ${!addressType && 'pt-2'} text-bold`}>
+            {isAddressChange && addressType && (
+                <Tag text={toTitleCase(addressType)} className="my-1" />
+            )}
+            <div
+                className={`leading-[18px] ${!addressType && 'pt-2'} text-bold`}
+            >
                 {formattedAddress.map((line, index) => (
                     <Content
                         key={index}
                         truncate
                         details={line}
-                        variant={isAddressChange ? ContentVariant.BodySmBold : ContentVariant.BodySm}
+                        variant={
+                            isAddressChange
+                                ? ContentVariant.BodySmBold
+                                : ContentVariant.BodySm
+                        }
                         popoverBody={fullAddress}
                         popoverClassName="w-full "
                         pii={true}
@@ -83,7 +106,8 @@ const AddressDataCard = ({
     isSideSheet = false,
 }: AddressDataCardProps) => {
     const { t } = useTranslation();
-    const addressType = addressStatus || getAddressType(address?.addressType, t);
+    const addressType =
+        addressStatus || getAddressType(address?.addressType, t);
     const addressString = t('people.card.address');
 
     const handleClick = () => {
@@ -98,7 +122,11 @@ const AddressDataCard = ({
             'border-primary hover:border-primary ': isSelected,
         },
 
-        isAddressChange ? (isSideSheet ? 'min-w-[200px]' : 'min-w-[425px]') : 'min-w-[300px]'
+        isAddressChange
+            ? isSideSheet
+                ? 'min-w-[200px]'
+                : 'min-w-[425px]'
+            : 'min-w-[300px]'
     );
 
     return (
@@ -107,7 +135,12 @@ const AddressDataCard = ({
             onClick={handleClick}
             ariaLabel={`${accessibilityClickText} ${addressType} ${addressString}`}
         >
-            <AddressTypeAndAddress address={address} addressType={addressType || ''} isAddressChange={isAddressChange} isSideSheet={isSideSheet} />
+            <AddressTypeAndAddress
+                address={address}
+                addressType={addressType || ''}
+                isAddressChange={isAddressChange}
+                isSideSheet={isSideSheet}
+            />
         </ClickContainer>
     );
 };

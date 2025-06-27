@@ -4,7 +4,8 @@ import { TFunction } from 'next-i18next';
 import getMassMutualReg60Config from './mass-mutual-reg60-form-helpers';
 
 describe.only('#REG60 Mass Mutual form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
     const mmReg60Config = getMassMutualReg60Config(t);
 
     describe('#Config existence', () => {

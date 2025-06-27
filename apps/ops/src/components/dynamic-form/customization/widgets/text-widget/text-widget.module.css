@@ -1,6 +1,9 @@
 .iconInput {
     --iconSize: 24px;
-    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-spacing-padding-lg));
+    padding-left: calc(
+        var(--iconSize) + var(--measure-dimension-gap-lg) +
+            var(--measure-spacing-padding-lg)
+    );
     padding-right: calc(var(--iconSize) + var(--measure-spacing-padding-lg));
     width: 100%;
     border-radius: var(--measure-border-radius-radius-md);

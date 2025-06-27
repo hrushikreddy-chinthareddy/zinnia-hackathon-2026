@@ -1,12 +1,22 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import { oneYearAgoISO, sortAlphabetically } from '@deps/helpers/dashboard/dashboard-helpers';
+import {
+    oneYearAgoISO,
+    sortAlphabetically,
+} from '@deps/helpers/dashboard/dashboard-helpers';
 import { browserLogError } from '@deps/utils/browser-logging';
-import { logError, LoggingContext, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
 import { client } from '../api-utils/client';
-import { AxiosAuthRequestConfig, serverApi } from '../api-utils/serverApiClient';
+import {
+    AxiosAuthRequestConfig,
+    serverApi,
+} from '../api-utils/serverApiClient';
 
 export type DashboardRequestFilters = {
     createdDateStart?: string;
@@ -42,7 +52,10 @@ export const fetchDashboardStats = async (
 ): Promise<DashboardRequestAPIResponse> => {
     const url = `${baseAppUrl}/api/case/v1/dashboard/stats`;
     try {
-        const { data } = await client.post<DashboardRequestBody, AxiosResponse<DashboardRequestAPIResponse>>(url, body, config);
+        const { data } = await client.post<
+            DashboardRequestBody,
+            AxiosResponse<DashboardRequestAPIResponse>
+        >(url, body, config);
         if (Array.isArray(data?.data) && data?.data?.length > 0) {
             return data;
         }
@@ -65,10 +78,18 @@ export const fetchDashboardStatsSSR = async (
     fnName = 'fetchDashboardStatsSSR',
     config?: AxiosAuthRequestConfig
 ): Promise<DashboardRequestAPIResponse> => {
-    const loggingContext = { ...logCtx, function: fnName, file: 'queries/api/dashboard', inputs: { body } };
+    const loggingContext = {
+        ...logCtx,
+        function: fnName,
+        file: 'queries/api/dashboard',
+        inputs: { body },
+    };
     const url = new URL(`${baseDashboardUrlSSR}/stats`);
     try {
-        const { data } = await serverApi.post<DashboardRequestBody, AxiosResponse<DashboardRequestAPIResponse>>(
+        const { data } = await serverApi.post<
+            DashboardRequestBody,
+            AxiosResponse<DashboardRequestAPIResponse>
+        >(
             url.toString(),
             body,
             {
@@ -103,8 +124,13 @@ export const brokerDealerBody: DashboardRequestBody = {
     groupBy: ['brokerDealerName'],
 };
 
-export const fetchAgents = async (body = brokerDealerBody, config?: AxiosRequestConfig): Promise<DashboardResponseData[]> =>
-    fetchDashboardStats(body, 'fetchAgents', config).then(data => data.data.sort((a, b) => sortAlphabetically(a.name, b.name)));
+export const fetchAgents = async (
+    body = brokerDealerBody,
+    config?: AxiosRequestConfig
+): Promise<DashboardResponseData[]> =>
+    fetchDashboardStats(body, 'fetchAgents', config).then((data) =>
+        data.data.sort((a, b) => sortAlphabetically(a.name, b.name))
+    );
 
 export const fetchAgentsSSR = async (
     accessToken: string,
@@ -112,7 +138,13 @@ export const fetchAgentsSSR = async (
     body = brokerDealerBody,
     config?: AxiosAuthRequestConfig
 ): Promise<DashboardResponseData[]> =>
-    fetchDashboardStatsSSR(accessToken, loggingContext, body, 'fetchAgentsSSR', config).then(data =>
+    fetchDashboardStatsSSR(
+        accessToken,
+        loggingContext,
+        body,
+        'fetchAgentsSSR',
+        config
+    ).then((data) =>
         data.data.sort((a, b) => sortAlphabetically(a.name, b.name))
     );
 
@@ -136,12 +168,17 @@ export const fetchCompletedCasesByProcessSubTypeSSR = async (
         completedCasesByProcessSubtypeBody,
         'fetchCompletedCasesByProcessSubTypeSSR',
         config
-    ).then(data => data.data);
+    ).then((data) => data.data);
 
 export const fetchCompletedCasesByProcessSubType = async (
     body = completedCasesByProcessSubtypeBody,
     config?: AxiosAuthRequestConfig
-): Promise<DashboardResponseData[]> => fetchDashboardStats(body, 'fetchCompletedCasesByProcessSubType', config).then(data => data.data);
+): Promise<DashboardResponseData[]> =>
+    fetchDashboardStats(
+        body,
+        'fetchCompletedCasesByProcessSubType',
+        config
+    ).then((data) => data.data);
 
 export const top5ProductsBody = {
     filter: {
@@ -157,7 +194,18 @@ export const fetchTop5ProductsSSR = async (
     loggingContext: LoggingContext,
     config?: AxiosAuthRequestConfig
 ): Promise<DashboardResponseData[]> =>
-    fetchDashboardStatsSSR(accessToken, loggingContext, top5ProductsBody, 'fetchTop5ProductsSSR', config).then(data => data.data);
+    fetchDashboardStatsSSR(
+        accessToken,
+        loggingContext,
+        top5ProductsBody,
+        'fetchTop5ProductsSSR',
+        config
+    ).then((data) => data.data);
 
-export const fetchTop5Products = async (body = top5ProductsBody, config?: AxiosAuthRequestConfig): Promise<DashboardResponseData[]> =>
-    fetchDashboardStats(body, 'fetchTop5Products', config).then(data => data.data);
+export const fetchTop5Products = async (
+    body = top5ProductsBody,
+    config?: AxiosAuthRequestConfig
+): Promise<DashboardResponseData[]> =>
+    fetchDashboardStats(body, 'fetchTop5Products', config).then(
+        (data) => data.data
+    );

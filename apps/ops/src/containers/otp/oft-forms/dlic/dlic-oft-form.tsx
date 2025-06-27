@@ -23,7 +23,9 @@ type OftDlicFormProps = {
 };
 
 const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -56,7 +58,10 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
         setFormESignatureData,
     } = useContext(FormDataContext);
 
-    const isNonQualifiedOr403b = [QualTypes.b403, QualTypes.NonQualified].includes(qualType as QualTypes);
+    const isNonQualifiedOr403b = [
+        QualTypes.b403,
+        QualTypes.NonQualified,
+    ].includes(qualType as QualTypes);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -65,9 +70,13 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.DLIC}_OFT_DIGITAL_FORM`,
+            formExtName: `${
+                initialForm?.carrier || Carrier.DLIC
+            }_OFT_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.DLIC}_OFT_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.DLIC
+                }_OFT_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -86,11 +95,16 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
-                title={t('amountDetails.surrenderingInstructions.title') as string}
+                title={
+                    t('amountDetails.surrenderingInstructions.title') as string
+                }
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
                 showContractReplacement={showContractReplacement}
@@ -106,9 +120,16 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                title={
+                    t(
+                        'distributionInstruction.investmentSelectionForDistribution'
+                    ) as string
+                }
             />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -118,12 +139,16 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                title={t('distributionMethod.cedingCompanyDistribution') as string}
+                title={
+                    t('distributionMethod.cedingCompanyDistribution') as string
+                }
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

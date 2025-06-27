@@ -49,20 +49,38 @@ import { spousalSignatureStateCodes } from '../../withdrawal-forms/gdmn/gdmn-wit
 export default function getUlpcConfig(t: TFunction) {
     const { formValidation } = sbgcConfig(t);
 
-    const sswFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
-        if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+    const sswFormValidation = ({
+        formParty,
+        formSignature,
+        formDisbursement,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = formValidation({
+            formParty,
+            formSignature,
+            formDisbursement,
+        });
+        if (
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
             ) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
             }
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
             ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
             }
         }
 
@@ -102,7 +120,10 @@ export default function getUlpcConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -115,11 +136,16 @@ export default function getUlpcConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -134,18 +160,25 @@ export default function getUlpcConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
                 };
@@ -180,7 +213,8 @@ export default function getUlpcConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -297,8 +331,14 @@ export default function getUlpcConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t(`distributionInstruction.prorata`), value: FundWithdrawnMethod.Prorata },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t(`distributionInstruction.prorata`),
+            value: FundWithdrawnMethod.Prorata,
+        },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [
@@ -364,7 +404,9 @@ export default function getUlpcConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -387,9 +429,12 @@ export default function getUlpcConfig(t: TFunction) {
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
             shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
-                return isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[]);
+                return isIrrevocableBeneficiaryExistsLC(
+                    parties as LifeCadParty[]
+                );
             },
         },
         {
@@ -409,8 +454,15 @@ export default function getUlpcConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
+                return (
+                    !!ownerStateOfResidence &&
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
+                );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
@@ -422,45 +474,63 @@ export default function getUlpcConfig(t: TFunction) {
             text: subType,
         },
         programFrequency: {
-            frequency: val.frequency.text === Frequency.None ? { text: '' as Frequency } : val.frequency,
+            frequency:
+                val.frequency.text === Frequency.None
+                    ? { text: '' as Frequency }
+                    : val.frequency,
             beginDate: val.startDate,
-            fixedPeriodYear: [SSWType.FixPeriod].includes(subType) ? val.depleteFundYears : { text: null },
-            duration: [SSWType.FixPeriod].includes(subType) ? { text: null } : val.duration,
+            fixedPeriodYear: [SSWType.FixPeriod].includes(subType)
+                ? val.depleteFundYears
+                : { text: null },
+            duration: [SSWType.FixPeriod].includes(subType)
+                ? { text: null }
+                : val.duration,
         },
-        ...(subType === SSWType.FixDollar && { programAmount: { text: val.amount?.text, amountType: AmountType.Dollar } }),
+        ...(subType === SSWType.FixDollar && {
+            programAmount: {
+                text: val.amount?.text,
+                amountType: AmountType.Dollar,
+            },
+        }),
     });
 
     const systematicWithdrawalOptions = [
         {
             label: t('sswProgram.sswOptions.fixedDollar'),
             value: SSWType.FixDollar,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixDollar),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.FixDollar),
         },
         {
             label: t('sswProgram.sswOptions.fixedPeriodIncome'),
             value: SSWType.FixPeriod,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixPeriod),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.FixPeriod),
         },
         {
             label: t('sswProgram.sswOptions.annualFreeWithdrawal'),
             value: SSWType.AnnualFree,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.AnnualFree),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.AnnualFree),
         },
         {
             label: t('sswProgram.sswOptions.percentageOfAccountValue'),
             value: SSWType.PercentOfAmountValue,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.PercentOfAmountValue),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.PercentOfAmountValue),
         },
 
         {
             label: t('sswProgram.sswOptions.singleLifetimeIncomeOption'),
             value: SSWType.SingleLifetimeIncomeOption,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
         },
         {
             label: t('sswProgram.sswOptions.jointLifetimeIncomeOption'),
             value: SSWType.JointLifetimeIncomeOption,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
         },
     ];
     const w4pSignaturesConfig = [

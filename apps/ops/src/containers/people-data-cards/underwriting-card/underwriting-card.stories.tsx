@@ -1,5 +1,11 @@
 import { Meta } from '@storybook/react';
-import { EmploymentStatus, Gender, PolicyCoverage, RiskClass, SubStandardRating } from '@zinnia/api-types/types/sor';
+import {
+    EmploymentStatus,
+    Gender,
+    PolicyCoverage,
+    RiskClass,
+    SubStandardRating,
+} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import {
@@ -38,7 +44,10 @@ export const UnderwritingCardContainer = () => {
             },
         ],
     };
-    const coverageParticipant = findCoverageParticipant(coverage, policyPartyID);
+    const coverageParticipant = findCoverageParticipant(
+        coverage,
+        policyPartyID
+    );
     const sexAtBirth = Gender.MALE;
     const employed = true;
     const employmentStatus = EmploymentStatus.RETIRED;
@@ -47,7 +56,12 @@ export const UnderwritingCardContainer = () => {
         <div className="p-6">
             <UnderwritingCard
                 riskClass={getRiskClass(coverageParticipant?.riskClass) || '-'}
-                substandardRating={getSubstandardRating(coverageParticipant?.substandardRating, t) || '-'}
+                substandardRating={
+                    getSubstandardRating(
+                        coverageParticipant?.substandardRating,
+                        t
+                    ) || '-'
+                }
                 disabled={disabled}
                 disabilityStartDate={disabilityStartDate}
                 sexAtBirth={getSexAtBirth(sexAtBirth, t)}

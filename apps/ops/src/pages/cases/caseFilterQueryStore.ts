@@ -3,7 +3,10 @@ import { ParsedUrlQueryInput } from 'querystring';
 import { SetStateAction, useState } from 'react';
 
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
-import { CaseSearchAdditionalFilters, CaseSearchFilters } from '@deps/contexts/CaseManagementFilters';
+import {
+    CaseSearchAdditionalFilters,
+    CaseSearchFilters,
+} from '@deps/contexts/CaseManagementFilters';
 import { Statuses } from '@deps/models/case/case';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import useQueryFilters from '@deps/utils/queryStoreFilters';
@@ -29,7 +32,9 @@ export enum QueryKeys {
 
 // Convert query strings to filters used by case management search
 // Dev Note: Once the UI is updated to be more closely integrated with the API filters, we can make this a little more manageable.
-const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters => {
+const convertQueryToFilters = (
+    query: ParsedUrlQueryInput
+): CaseSearchFilters => {
     const additionalFilters: CaseSearchAdditionalFilters = {
         processTypes: new Set([]),
         requestSubType: new Set([]),
@@ -58,14 +63,20 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         const carrierNameToClientIds: { [key: string]: string } = {};
         const carrierFilters: { [key: string]: string } = {};
 
-        carriersList.forEach(carrier => {
+        carriersList.forEach((carrier) => {
             const clientId = carrier.toUpperCase();
             const carrierName = getCarrierNameByClientId(clientId) || clientId;
 
             // if we already have this carrier name, work magic
             if (carrierNameToClientIds[carrierName]) {
-                const currentCarrierFilterKey = carrierNameToClientIds[carrierName];
-                const clientIds = [...currentCarrierFilterKey.split(','), clientId].sort().join(',');
+                const currentCarrierFilterKey =
+                    carrierNameToClientIds[carrierName];
+                const clientIds = [
+                    ...currentCarrierFilterKey.split(','),
+                    clientId,
+                ]
+                    .sort()
+                    .join(',');
                 carrierNameToClientIds[carrierName] = clientIds;
                 delete carrierFilters[currentCarrierFilterKey];
                 carrierFilters[clientIds] = carrierName;
@@ -80,9 +91,13 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
 
     if (query[QueryKeys.caseStatus]) {
         if (Array.isArray(query[QueryKeys.caseStatus])) {
-            additionalFilters.caseStatus = query[QueryKeys.caseStatus] as Statuses[];
+            additionalFilters.caseStatus = query[
+                QueryKeys.caseStatus
+            ] as Statuses[];
         } else if (typeof query[QueryKeys.caseStatus] === 'string') {
-            additionalFilters.caseStatus = [query[QueryKeys.caseStatus] as Statuses];
+            additionalFilters.caseStatus = [
+                query[QueryKeys.caseStatus] as Statuses,
+            ];
         }
     }
 
@@ -102,13 +117,20 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
 
     if (query[QueryKeys.notInCaseStatus]) {
         if (Array.isArray(query[QueryKeys.notInCaseStatus])) {
-            additionalFilters.notInCaseStatus = query[QueryKeys.notInCaseStatus] as Statuses[];
+            additionalFilters.notInCaseStatus = query[
+                QueryKeys.notInCaseStatus
+            ] as Statuses[];
         } else if (typeof query[QueryKeys.notInCaseStatus] === 'string') {
-            additionalFilters.notInCaseStatus = [query[QueryKeys.notInCaseStatus] as Statuses];
+            additionalFilters.notInCaseStatus = [
+                query[QueryKeys.notInCaseStatus] as Statuses,
+            ];
         }
     }
 
-    if (query[QueryKeys.offset] && !isNaN(parseInt(query[QueryKeys.offset] as string))) {
+    if (
+        query[QueryKeys.offset] &&
+        !isNaN(parseInt(query[QueryKeys.offset] as string))
+    ) {
         caseFilters.offset = parseInt(query[QueryKeys.offset] as string);
     }
 
@@ -116,7 +138,9 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         if (Array.isArray(query[QueryKeys.process])) {
             additionalFilters.processTypes = new Set(query[QueryKeys.process]);
         } else if (typeof query[QueryKeys.process] === 'string') {
-            additionalFilters.processTypes = new Set([query[QueryKeys.process]]);
+            additionalFilters.processTypes = new Set([
+                query[QueryKeys.process],
+            ]);
         }
     }
 
@@ -124,23 +148,32 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         if (Array.isArray(query[QueryKeys.productName])) {
             additionalFilters.products = new Set(query[QueryKeys.productName]);
         } else if (typeof query[QueryKeys.productName] === 'string') {
-            additionalFilters.products = new Set([query[QueryKeys.productName]]);
+            additionalFilters.products = new Set([
+                query[QueryKeys.productName],
+            ]);
         }
     }
 
     if (query[QueryKeys.brokerDealerName]) {
         if (Array.isArray(query[QueryKeys.brokerDealerName])) {
-            additionalFilters.brokerDealerName = query[QueryKeys.brokerDealerName][0] as string;
+            additionalFilters.brokerDealerName = query[
+                QueryKeys.brokerDealerName
+            ][0] as string;
         } else if (typeof query[QueryKeys.brokerDealerName] === 'string') {
-            additionalFilters.brokerDealerName = query[QueryKeys.brokerDealerName];
+            additionalFilters.brokerDealerName =
+                query[QueryKeys.brokerDealerName];
         }
     }
 
     if (query[QueryKeys.requestSubType]) {
         if (Array.isArray(query[QueryKeys.requestSubType])) {
-            additionalFilters.requestSubType = new Set(query[QueryKeys.requestSubType]);
+            additionalFilters.requestSubType = new Set(
+                query[QueryKeys.requestSubType]
+            );
         } else if (typeof query[QueryKeys.requestSubType] === 'string') {
-            additionalFilters.requestSubType = new Set([query[QueryKeys.requestSubType]]);
+            additionalFilters.requestSubType = new Set([
+                query[QueryKeys.requestSubType],
+            ]);
         }
     }
 
@@ -155,7 +188,9 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
         typeof query[QueryKeys.sortDirection] === 'string' &&
         ['asc', 'desc'].includes(query[QueryKeys.sortDirection].toLowerCase())
     ) {
-        caseFilters.sortDirection = query[QueryKeys.sortDirection].toLowerCase() as 'asc' | 'desc';
+        caseFilters.sortDirection = query[
+            QueryKeys.sortDirection
+        ].toLowerCase() as 'asc' | 'desc';
     }
 
     if (query[QueryKeys.updatedDateEnd]) {
@@ -174,9 +209,12 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
 
     if (query[QueryKeys.policyNumber]) {
         if (Array.isArray(query[QueryKeys.policyNumber])) {
-            caseFilters.searchValue.policyNumber = query[QueryKeys.policyNumber][0] as string;
+            caseFilters.searchValue.policyNumber = query[
+                QueryKeys.policyNumber
+            ][0] as string;
         } else if (typeof query[QueryKeys.policyNumber] === 'string') {
-            caseFilters.searchValue.policyNumber = query[QueryKeys.policyNumber];
+            caseFilters.searchValue.policyNumber =
+                query[QueryKeys.policyNumber];
         }
     }
 
@@ -185,9 +223,12 @@ const convertQueryToFilters = (query: ParsedUrlQueryInput): CaseSearchFilters =>
 
 // Convert CaseSearchFilters to values supported by the case search api
 // Dev Note: This is hopefully a short-term solution until we update the UI to be more closely integrated with the API filter values.
-const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput => {
+const convertFilterToQuery = (
+    filters: CaseSearchFilters
+): ParsedUrlQueryInput => {
     const query: ParsedUrlQueryInput = {};
-    const { offset, sortBy, sortDirection, additionalFilters, searchValue } = filters;
+    const { offset, sortBy, sortDirection, additionalFilters, searchValue } =
+        filters;
     const {
         carriers,
         caseStatus,
@@ -212,11 +253,17 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
     }
 
     if (createdDateEnd) {
-        query[QueryKeys.createdDateEnd] = dayjs(createdDateEnd, DATE_PICKER_FORMAT).format();
+        query[QueryKeys.createdDateEnd] = dayjs(
+            createdDateEnd,
+            DATE_PICKER_FORMAT
+        ).format();
     }
 
     if (createdDateStart) {
-        query[QueryKeys.createdDateStart] = dayjs(createdDateStart, DATE_PICKER_FORMAT).format();
+        query[QueryKeys.createdDateStart] = dayjs(
+            createdDateStart,
+            DATE_PICKER_FORMAT
+        ).format();
     }
 
     if (notInCaseStatus) {
@@ -252,11 +299,17 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
     }
 
     if (updatedDateEnd) {
-        query[QueryKeys.updatedDateEnd] = dayjs(updatedDateEnd, DATE_PICKER_FORMAT).format();
+        query[QueryKeys.updatedDateEnd] = dayjs(
+            updatedDateEnd,
+            DATE_PICKER_FORMAT
+        ).format();
     }
 
     if (updatedDateStart) {
-        query[QueryKeys.updatedDateStart] = dayjs(updatedDateStart, DATE_PICKER_FORMAT).format();
+        query[QueryKeys.updatedDateStart] = dayjs(
+            updatedDateStart,
+            DATE_PICKER_FORMAT
+        ).format();
     }
 
     if (policyNumber) {
@@ -270,8 +323,11 @@ const convertFilterToQuery = (filters: CaseSearchFilters): ParsedUrlQueryInput =
 // Returns the current filters and search values as well as a function to update them.
 // Search Values, except for policy number, will not be added to query params as they are potentially PII
 export const useCaseFilterQueryStore = () => {
-    const [queryStoreFilter, setQueryStoreFilter] = useQueryFilters(Object.values(QueryKeys));
-    const [caseManagementFilters, setCaseManagementFilters] = useState<CaseSearchFilters>(convertQueryToFilters(queryStoreFilter));
+    const [queryStoreFilter, setQueryStoreFilter] = useQueryFilters(
+        Object.values(QueryKeys)
+    );
+    const [caseManagementFilters, setCaseManagementFilters] =
+        useState<CaseSearchFilters>(convertQueryToFilters(queryStoreFilter));
 
     const setFilters = (filters: SetStateAction<CaseSearchFilters>) => {
         let newFilters: CaseSearchFilters;
@@ -285,7 +341,10 @@ export const useCaseFilterQueryStore = () => {
         setCaseManagementFilters(newFilters);
     };
 
-    return [caseManagementFilters, setFilters] as [typeof caseManagementFilters, typeof setFilters];
+    return [caseManagementFilters, setFilters] as [
+        typeof caseManagementFilters,
+        typeof setFilters
+    ];
 };
 
 export default useCaseFilterQueryStore;

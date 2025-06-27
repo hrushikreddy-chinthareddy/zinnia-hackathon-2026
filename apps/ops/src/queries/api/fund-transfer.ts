@@ -4,7 +4,7 @@ import { baseAppUrl } from '@deps/queries/api-config';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import {  TransactionResponse } from './bpm';
+import { TransactionResponse } from './bpm';
 import { client } from '../api-utils/client';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
@@ -21,8 +21,16 @@ export interface FundTransferRequest {
         amountType: string;
     };
     funds: {
-        transferFrom: { fundId: string; requestedAmount: string | number; fundSegments: [] }[];
-        transferTo: { fundId: string; requestedAmount: string | number; fundSegments: [] }[];
+        transferFrom: {
+            fundId: string;
+            requestedAmount: string | number;
+            fundSegments: [];
+        }[];
+        transferTo: {
+            fundId: string;
+            requestedAmount: string | number;
+            fundSegments: [];
+        }[];
     };
 }
 
@@ -45,9 +53,12 @@ export const checkEligibilityFundTransfer = async (
         );
         return data;
     } catch (error: any) {
-        browserLogError('checkEligibilityFundTransfer::an error occurred during eligibility check', {
-            ...parseErrorInformation(error),
-        });
+        browserLogError(
+            'checkEligibilityFundTransfer::an error occurred during eligibility check',
+            {
+                ...parseErrorInformation(error),
+            }
+        );
         return error?.data;
     }
 };
@@ -64,9 +75,12 @@ export const validateFundTransfer = async (
         );
         return data;
     } catch (error: any) {
-        browserLogError('validateFundTransfer::an error occurred during validation', {
-            ...parseErrorInformation(error),
-        });
+        browserLogError(
+            'validateFundTransfer::an error occurred during validation',
+            {
+                ...parseErrorInformation(error),
+            }
+        );
         return error?.data as TransactionResponse;
     }
 };
@@ -83,9 +97,12 @@ export const submitFundTransfer = async (
         );
         return { status: response.status, data: response.data };
     } catch (error: any) {
-        browserLogError('submitFundTransfer::an error occurred during submission', {
-            ...parseErrorInformation(error),
-        });
+        browserLogError(
+            'submitFundTransfer::an error occurred during submission',
+            {
+                ...parseErrorInformation(error),
+            }
+        );
 
         return { status: error.response?.status };
     }

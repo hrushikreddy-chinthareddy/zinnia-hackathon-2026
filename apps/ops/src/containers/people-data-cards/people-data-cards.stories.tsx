@@ -14,7 +14,9 @@ export default {
     component: AddressCard,
 } as Meta<typeof AddressCard>;
 
-const partyRoles: PolicyPartyRoles[] = [{ partyId: '789', partyRole: PartyRole.INSURED }];
+const partyRoles: PolicyPartyRoles[] = [
+    { partyId: '789', partyRole: PartyRole.INSURED },
+];
 
 const policyParty = generateParty('789');
 const policyParty2 = generateClassParty('789');
@@ -22,7 +24,10 @@ const policyParty2 = generateClassParty('789');
 export const IdentificationCardContainer = () => {
     return (
         <div className="p-6">
-            <IdentificationCard editable={true} selectedPolicyParty={policyParty2} />
+            <IdentificationCard
+                editable={true}
+                selectedPolicyParty={policyParty2}
+            />
         </div>
     );
 };
@@ -30,7 +35,12 @@ export const IdentificationCardContainer = () => {
 export const AddressCardContainer = () => {
     return (
         <div className="p-6">
-            <AddressCard editable={true} party={policyParty} partyRoles={partyRoles} policyNumber="12345" />
+            <AddressCard
+                editable={true}
+                party={policyParty}
+                partyRoles={partyRoles}
+                policyNumber="12345"
+            />
         </div>
     );
 };
@@ -38,7 +48,12 @@ export const AddressCardContainer = () => {
 export const EmailCardContainer = () => {
     return (
         <div className="p-6">
-            <EmailCard editable={true} party={policyParty} partyRoles={partyRoles} policyNumber="12345" />
+            <EmailCard
+                editable={true}
+                party={policyParty}
+                partyRoles={partyRoles}
+                policyNumber="12345"
+            />
         </div>
     );
 };
@@ -46,7 +61,12 @@ export const EmailCardContainer = () => {
 export const PhoneCardContainer = () => {
     return (
         <div className="p-6">
-            <PhoneCard editable={true} party={policyParty} partyRoles={partyRoles} policyNumber="12345" />
+            <PhoneCard
+                editable={true}
+                party={policyParty}
+                partyRoles={partyRoles}
+                policyNumber="12345"
+            />
         </div>
     );
 };
@@ -54,7 +74,11 @@ export const PhoneCardContainer = () => {
 export const BankCardContainer = () => {
     return (
         <div className="p-6">
-            <BankCard editable={true} party={policyParty} policyNumber="12345" />
+            <BankCard
+                editable={true}
+                party={policyParty}
+                policyNumber="12345"
+            />
         </div>
     );
 };

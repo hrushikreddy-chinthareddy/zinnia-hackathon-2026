@@ -20,7 +20,8 @@ export const useGetPolicyTypeDocs = (
     const getPolicyDocs = useCallback(async () => {
         if (loading) return;
 
-        if (isNullEmptyOrUndefined(id) || isNullEmptyOrUndefined(clientCode)) return;
+        if (isNullEmptyOrUndefined(id) || isNullEmptyOrUndefined(clientCode))
+            return;
 
         try {
             setLoading(true);
@@ -30,25 +31,34 @@ export const useGetPolicyTypeDocs = (
 
             if (items) {
                 const workingDoc = items.find(
-                    item => item.documentNumber === documentNumber && item.documentType.toLowerCase() === docType.toLowerCase()
+                    (item) =>
+                        item.documentNumber === documentNumber &&
+                        item.documentType.toLowerCase() ===
+                            docType.toLowerCase()
                 );
                 const relatedDoc = items.filter(
-                    item => item.documentNumber !== documentNumber
+                    (item) => item.documentNumber !== documentNumber
                 );
-                browserLogInfo('useGetPolicyTypeDocs::Policy documents retrieved', {
-                    id,
-                    clientCode,
-                    docType,
-                    workingDocument: workingDoc ? true : false,
-                    relatedDocument: relatedDoc?.length || 0,
-                    file: 'service-form-review-helper'
-                });
+                browserLogInfo(
+                    'useGetPolicyTypeDocs::Policy documents retrieved',
+                    {
+                        id,
+                        clientCode,
+                        docType,
+                        workingDocument: workingDoc ? true : false,
+                        relatedDocument: relatedDoc?.length || 0,
+                        file: 'service-form-review-helper',
+                    }
+                );
                 setWorkingDocument(workingDoc);
                 setRelatedDocument(relatedDoc);
             }
             setLoading(false);
         } catch (e) {
-            browserLogError('useGetPolicyTypeDocs::error while fetching policy type documents', { id, clientCode, docType, ...parseErrorInformation(e) });
+            browserLogError(
+                'useGetPolicyTypeDocs::error while fetching policy type documents',
+                { id, clientCode, docType, ...parseErrorInformation(e) }
+            );
             setLoading(false);
         }
     }, [loading, id, clientCode, docType, documentNumber]);
@@ -56,7 +66,10 @@ export const useGetPolicyTypeDocs = (
     return [loading, getPolicyDocs, workingDocument, relatedDocument];
 };
 
-export const getWithdrawalFormData = (carrier: string, formSubtype: string | undefined) => {
+export const getWithdrawalFormData = (
+    carrier: string,
+    formSubtype: string | undefined
+) => {
     let formData;
     switch (carrier) {
         case Carrier.SBGC:
@@ -141,7 +154,11 @@ export const getOFTFormData = (carrier: string) => {
     };
 };
 
-export const getFormData = (caseType: CaseType, carrier: string, formSubtype: string | undefined) => {
+export const getFormData = (
+    caseType: CaseType,
+    carrier: string,
+    formSubtype: string | undefined
+) => {
     let data;
     switch (caseType) {
         case CaseType.Withdrawal:

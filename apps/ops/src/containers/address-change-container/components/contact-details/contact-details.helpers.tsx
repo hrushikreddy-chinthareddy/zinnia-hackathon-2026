@@ -7,7 +7,10 @@ import { validateAddress } from '@deps/queries/api/validation';
 
 import { PolicyAddress } from './contact-details.types';
 
-export const useVerifyAddress = (clientCode: string, address: Address): [boolean, () => void, any] => {
+export const useVerifyAddress = (
+    clientCode: string,
+    address: Address
+): [boolean, () => void, any] => {
     const [loading, setLoading] = useState(false);
     const [verifiedAddress, setVerifiedAddress] = useState<null>(null);
     const getVerifiedAddress = useCallback(async () => {
@@ -64,11 +67,18 @@ export const getAddressCardDetails = (address: any, id: number) => {
     return formattedAddress;
 };
 
-export const validateAddressFields = (address: any, t: TFunction, isValidAddress: boolean, selectAddress: any) => {
+export const validateAddressFields = (
+    address: any,
+    t: TFunction,
+    isValidAddress: boolean,
+    selectAddress: any
+) => {
     const errors = {} as FormValidationErrors;
 
     if (!address.AddressLine1 && !address.addressLine1) {
-        errors['addressLine1'] = t('formErrors.formValidation.addressLine1IsRequired');
+        errors['addressLine1'] = t(
+            'formErrors.formValidation.addressLine1IsRequired'
+        );
     }
     if (!address.city && !address.City) {
         errors['city'] = t('formErrors.formValidation.cityIsRequired');
@@ -83,7 +93,9 @@ export const validateAddressFields = (address: any, t: TFunction, isValidAddress
         errors['isValid'] = t('formErrors.formValidation.verifyAddress');
     }
     if (!selectAddress) {
-        errors['noSelection'] = t('formErrors.formValidation.noAddressSelection');
+        errors['noSelection'] = t(
+            'formErrors.formValidation.noAddressSelection'
+        );
     }
     return errors;
 };
@@ -113,7 +125,12 @@ export const validateContractStep = (
     let errors = {} as FormValidationErrors;
 
     if (contactSelection.isAddressChangeRequire) {
-        const addressErrors = validateAddressFields(address, t, isValidAddress, selectAddress);
+        const addressErrors = validateAddressFields(
+            address,
+            t,
+            isValidAddress,
+            selectAddress
+        );
         errors = {
             ...errors,
             ...addressErrors,

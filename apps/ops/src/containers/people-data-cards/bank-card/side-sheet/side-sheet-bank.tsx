@@ -1,11 +1,24 @@
-import { AccountStatus, AccountType, BankAccount, Party, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    AccountStatus,
+    AccountType,
+    BankAccount,
+    Party,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
-import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import CaseDocumentSelect, {
+    CaseDocumentOption,
+    SetStateCaseId,
+} from '@deps/components/case-document-select/case-document-select';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
@@ -45,8 +58,16 @@ export type SideSheetBankProps = {
     setCurrentBankAccounts: Dispatch<SetStateAction<BankAccount[]>>;
 };
 
-const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBankAccounts }: SideSheetBankProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.bank' });
+const SideSheetBank = ({
+    party,
+    planCode,
+    policyNumber,
+    onCancel,
+    setCurrentBankAccounts,
+}: SideSheetBankProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.sideSheet.bank',
+    });
     const { t: defaultT } = useTranslation();
 
     const INITIAL_BANK_ACCOUNT: BankAccount = {
@@ -63,21 +84,31 @@ const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBank
 
     const [bankAccount, setBankAccount] = useState(INITIAL_BANK_ACCOUNT);
     const [body, setBody] = useState(INITIAL_BODY);
-    const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
+    const [caseDocumentOptions, setCaseDocumentOptions] = useState<
+        CaseDocumentOption[]
+    >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
 
-    const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+    const [validationResults, setValidationResults] = useState<
+        ValidationResult[]
+    >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
 
     const { caseId } = body;
     const { partyId } = party ?? {};
 
-    const stopLoading = currentErrors === undefined ? true : !!Object.entries(currentErrors).length;
+    const stopLoading =
+        currentErrors === undefined
+            ? true
+            : !!Object.entries(currentErrors).length;
 
     const accountTypeOptions = getAccountTypeOptions({ t: defaultT });
     const mainCtaText = t('general.add', {
-        type: mapAccountTypeToTranslation(bankAccount.accountType, defaultT).toLowerCase(),
+        type: mapAccountTypeToTranslation(
+            bankAccount.accountType,
+            defaultT
+        ).toLowerCase(),
     });
 
     const handleSubmit = async () => {
@@ -179,8 +210,11 @@ const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBank
                     aria-label={t('labels.accountType') as string}
                     items={accountTypeOptions}
                     label={t('labels.accountType') as string}
-                    onChange={event => {
-                        setBankAccount(prevState => ({ ...prevState, accountType: event.target.value as AccountType }));
+                    onChange={(event) => {
+                        setBankAccount((prevState) => ({
+                            ...prevState,
+                            accountType: event.target.value as AccountType,
+                        }));
                     }}
                     value={bankAccount.accountType}
                 />
@@ -188,48 +222,71 @@ const SideSheetBank = ({ party, planCode, policyNumber, onCancel, setCurrentBank
                     formatOptions={{ format: '#########' }}
                     label={t('labels.routingNumber') as string}
                     message={currentErrors?.routingNumber}
-                    onChange={event => {
-                        setCurrentErrors(prevState => {
-                            const { routingNumber, ...errors } = prevState ?? {};
+                    onChange={(event) => {
+                        setCurrentErrors((prevState) => {
+                            const { routingNumber, ...errors } =
+                                prevState ?? {};
                             return errors;
                         });
-                        setBankAccount(prevState => ({ ...prevState, routingNumber: event.target.value }));
+                        setBankAccount((prevState) => ({
+                            ...prevState,
+                            routingNumber: event.target.value,
+                        }));
                     }}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={bankAccount.routingNumber}
-                    variant={currentErrors?.routingNumber ? FieldVariant.Error : FieldVariant.Default}
+                    variant={
+                        currentErrors?.routingNumber
+                            ? FieldVariant.Error
+                            : FieldVariant.Default
+                    }
                 />
                 <Field
                     label={t('labels.bankName') as string}
                     message={currentErrors?.branchName}
-                    onChange={event => {
-                        setCurrentErrors(prevState => {
+                    onChange={(event) => {
+                        setCurrentErrors((prevState) => {
                             const { branchName, ...errors } = prevState ?? {};
                             return errors;
                         });
-                        setBankAccount(prevState => ({ ...prevState, branchName: event.target.value }));
+                        setBankAccount((prevState) => ({
+                            ...prevState,
+                            branchName: event.target.value,
+                        }));
                     }}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={bankAccount.branchName}
-                    variant={currentErrors?.branchName ? FieldVariant.Error : FieldVariant.Default}
+                    variant={
+                        currentErrors?.branchName
+                            ? FieldVariant.Error
+                            : FieldVariant.Default
+                    }
                 />
                 <Field
                     formatOptions={{ format: '#################' }}
                     label={t('labels.accountNumber') as string}
                     message={currentErrors?.accountNumber}
-                    onChange={event => {
-                        setCurrentErrors(prevState => {
-                            const { accountNumber, ...errors } = prevState ?? {};
+                    onChange={(event) => {
+                        setCurrentErrors((prevState) => {
+                            const { accountNumber, ...errors } =
+                                prevState ?? {};
                             return errors;
                         });
-                        setBankAccount(prevState => ({ ...prevState, accountNumber: event.target.value }));
+                        setBankAccount((prevState) => ({
+                            ...prevState,
+                            accountNumber: event.target.value,
+                        }));
                     }}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={bankAccount.accountNumber}
-                    variant={currentErrors?.accountNumber ? FieldVariant.Error : FieldVariant.Default}
+                    variant={
+                        currentErrors?.accountNumber
+                            ? FieldVariant.Error
+                            : FieldVariant.Default
+                    }
                 />
             </div>
 

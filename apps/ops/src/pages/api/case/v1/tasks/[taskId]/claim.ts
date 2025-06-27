@@ -2,7 +2,12 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -26,14 +31,20 @@ export default withAuthAndLogging(
 
         try {
             const data = await serverApi.patch(baseUrl, config, loggingContext);
-            logTrace('claimNextTask::patch::success::task claimed successful', { ...loggingContext, duration: performance.now() - now });
-            return res.status(200).send(await data.json());
-        } catch (error) {
-            logWarn('claimNextTask::patch::error::something went wrong while claiming task', {
-                ...parseErrorInformation(error),
+            logTrace('claimNextTask::patch::success::task claimed successful', {
                 ...loggingContext,
                 duration: performance.now() - now,
             });
+            return res.status(200).send(await data.json());
+        } catch (error) {
+            logWarn(
+                'claimNextTask::patch::error::something went wrong while claiming task',
+                {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                }
+            );
             res.status(500).json(null);
         }
     },

@@ -1,4 +1,9 @@
-import { Address, AddressType, State, Country } from '@zinnia/api-types/types/sor';
+import {
+    Address,
+    AddressType,
+    State,
+    Country,
+} from '@zinnia/api-types/types/sor';
 
 import { formatAddress, formatCityStateZip } from './address.helpers';
 
@@ -52,7 +57,11 @@ describe('formatFullAddress', () => {
 
         const formattedAddress = formatAddress(address as Address);
 
-        expect(formattedAddress).toEqual(['123 Main Street, Suite 456', 'Cityville, AL 12345-6789', 'US']);
+        expect(formattedAddress).toEqual([
+            '123 Main Street, Suite 456',
+            'Cityville, AL 12345-6789',
+            'US',
+        ]);
     });
 
     it('should handle missing address fields', () => {
@@ -66,7 +75,11 @@ describe('formatFullAddress', () => {
 
         const formattedAddress = formatAddress(address as Address);
 
-        expect(formattedAddress).toEqual(['123 Main Street', 'Cityville, AL 12345', '--']);
+        expect(formattedAddress).toEqual([
+            '123 Main Street',
+            'Cityville, AL 12345',
+            '--',
+        ]);
     });
 
     it('should handle an empty address object', () => {

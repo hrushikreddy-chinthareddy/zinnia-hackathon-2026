@@ -46,9 +46,13 @@ export function formatZipCodeRaw(address: Address): string {
 export const formatAddress = (address: Address): string[] => {
     if (!Object.keys(address).length) return ['', '', ''];
 
-    const addressLines = [address?.addressLine1, address?.addressLine2, address?.addressLine3]
+    const addressLines = [
+        address?.addressLine1,
+        address?.addressLine2,
+        address?.addressLine3,
+    ]
         .filter(Boolean)
-        .map(line => toTitleCase(line))
+        .map((line) => toTitleCase(line))
         .join(', ');
 
     const formatted = [
@@ -66,16 +70,20 @@ export const formatAddress = (address: Address): string[] => {
 export const formatAddressV2 = (address: Address): string[] => {
     if (!Object.keys(address).length) return ['', '', ''];
 
-    const addressLines = [address?.addressLine1, address?.addressLine2, address?.addressLine3]
+    const addressLines = [
+        address?.addressLine1,
+        address?.addressLine2,
+        address?.addressLine3,
+    ]
         .filter(Boolean)
-        .map(line => toTitleCase(line))
+        .map((line) => toTitleCase(line))
         .join(', ');
 
     const formatted = [
         addressLines.toUpperCase(),
-        `${address?.city?.toUpperCase()}, ${address?.state?.toUpperCase()} ${address?.zipCode || ''} ${
-            address?.zipCodeExtension ? `-${address?.zipCodeExtension}` : ''
-        }`,
+        `${address?.city?.toUpperCase()}, ${address?.state?.toUpperCase()} ${
+            address?.zipCode || ''
+        } ${address?.zipCodeExtension ? `-${address?.zipCodeExtension}` : ''}`,
     ];
 
     return formatted;

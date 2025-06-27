@@ -10,7 +10,10 @@ interface BaseDeathBenefitProps {
 }
 
 const BaseDeathBenefit = ({ baseDeathBenefit }: BaseDeathBenefitProps) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
     return (
         <div>
@@ -20,7 +23,10 @@ const BaseDeathBenefit = ({ baseDeathBenefit }: BaseDeathBenefitProps) => {
                 tooltipTitle={t('colDefs:policySummary.baseDeathBenefit')}
                 tooltipBody={t('colDefs:policySummary.baseDeathBenefitTooltip')}
             />
-            <Content details={numberFormatify(baseDeathBenefit)} variant={ContentVariant.BodySm} />
+            <Content
+                details={numberFormatify(baseDeathBenefit)}
+                variant={ContentVariant.BodySm}
+            />
         </div>
     );
 };

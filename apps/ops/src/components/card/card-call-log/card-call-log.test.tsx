@@ -16,16 +16,22 @@ describe('CallLogCard', () => {
     it('renders the CallLogCard with provided props', () => {
         render(<CallLogCard {...testProps} />);
 
-        expect(screen.getByText(`${testProps.callerName},`)).toBeInTheDocument();
+        expect(
+            screen.getByText(`${testProps.callerName},`)
+        ).toBeInTheDocument();
         expect(screen.getByText(testProps.callerRole)).toBeInTheDocument();
-        expect(screen.getByText(toSentenceCase(testProps.tag))).toBeInTheDocument();
+        expect(
+            screen.getByText(toSentenceCase(testProps.tag))
+        ).toBeInTheDocument();
         expect(screen.getByText(testProps.summary)).toBeInTheDocument();
     });
 
     it('renders no summary card when there is no summary provided', () => {
         render(<CallLogCard {...testProps} summary={undefined} />);
 
-        expect(screen.getByText('sideSheet.noCallLogSummary')).toBeInTheDocument();
+        expect(
+            screen.getByText('sideSheet.noCallLogSummary')
+        ).toBeInTheDocument();
     });
 
     it('renders the caller name correctly when missing a caller role', () => {

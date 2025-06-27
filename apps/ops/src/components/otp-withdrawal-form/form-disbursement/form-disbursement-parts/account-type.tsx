@@ -29,7 +29,7 @@ const AccountTypes = ({
     ];
 
     const setDataChange = (val: AccountType) => {
-        onDataChange(ogData => ({
+        onDataChange((ogData) => ({
             ...ogData,
             accountType: val,
         }));
@@ -39,7 +39,12 @@ const AccountTypes = ({
         <SelectSimple
             disabled={isFormStateReadOnly}
             className={classNames}
-            label={fieldLabel || (t('caseWithdrawal.request.distributionMethod.accountType') as string)}
+            label={
+                fieldLabel ||
+                (t(
+                    'caseWithdrawal.request.distributionMethod.accountType'
+                ) as string)
+            }
             options={accountTypeOptions}
             onChange={(val: string) => setDataChange(val as AccountType)}
             size={FieldSize.Small}

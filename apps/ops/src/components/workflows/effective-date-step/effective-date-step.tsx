@@ -1,12 +1,20 @@
-import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useCallback, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -22,7 +30,9 @@ const EffectiveDate = ({
     policy: Policy;
     setEffectiveDate: (value: string) => void;
 }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'cancelFreeLook.date' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'cancelFreeLook.date',
+    });
     const { goToNext } = useWorkflow();
 
     const [formError, setFormError] = useState<null | string>(null);
@@ -55,7 +65,10 @@ const EffectiveDate = ({
                     parentPage={ParentPage.Withdrawals}
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
-                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Date }}
+                    trackEventProps={{
+                        type: TransactionType.FREE_LOOK_CANCELLATION,
+                        step: TransactionStep.Date,
+                    }}
                 />
             }
         >
@@ -71,11 +84,21 @@ const EffectiveDate = ({
                     onChange={handleDateChange}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
-                    variant={isDateValid(effectiveDate) ? FieldVariant.Default : FieldVariant.Error}
-                    message={isDateValid(effectiveDate) ? undefined : invalidDate}
+                    variant={
+                        isDateValid(effectiveDate)
+                            ? FieldVariant.Default
+                            : FieldVariant.Error
+                    }
+                    message={
+                        isDateValid(effectiveDate) ? undefined : invalidDate
+                    }
                 />
                 {!!formError && formError !== invalidDate && (
-                    <AssistiveText className="mt-2" variant={AssistiveTextVariant.Error} text={formError}></AssistiveText>
+                    <AssistiveText
+                        className="mt-2"
+                        variant={AssistiveTextVariant.Error}
+                        text={formError}
+                    ></AssistiveText>
                 )}
             </div>
         </WorkflowCard>

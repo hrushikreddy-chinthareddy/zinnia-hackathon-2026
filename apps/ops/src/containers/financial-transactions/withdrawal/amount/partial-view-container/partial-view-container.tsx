@@ -2,13 +2,17 @@ import { Policy } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, useCallback } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import FieldLabel from '@deps/components/fields/field-label';
 import Radio, { RadioItem, RadioVariant } from '@deps/components/radio/radio';
 import { radioClasses } from '@deps/components/radio/radio.helpers';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -34,7 +38,7 @@ const getRadioItems = (
                     leading="$"
                     type={FieldType.BaseActive}
                     value={customAmount}
-                    onChange={event => onCustomChange(event.target.value)}
+                    onChange={(event) => onCustomChange(event.target.value)}
                     onClick={() => setValue('$0.00')}
                     maxLength={9}
                     formatOptions={{
@@ -43,7 +47,7 @@ const getRadioItems = (
                         decimalPlaces: 2,
                     }}
                     min={1}
-                    onBlur={event => {
+                    onBlur={(event) => {
                         const { target } = event;
                         const value = target?.value;
                         if (!isNullEmptyOrUndefined(value)) {
@@ -63,10 +67,20 @@ const getRadioItems = (
                       <div className="flex flex-col">
                           <FieldLabel
                               label={t('surrenders.partial.maximum') as string}
-                              labelTooltip={t('surrenders.partial.maximum') as string}
-                              labelTooltipBody={t('surrenders.partial.maximumTooltip') as string}
+                              labelTooltip={
+                                  t('surrenders.partial.maximum') as string
+                              }
+                              labelTooltipBody={
+                                  t(
+                                      'surrenders.partial.maximumTooltip'
+                                  ) as string
+                              }
                           />
-                          <Content contentClassName="flex" details={maxAmountToWithdrawal} variant={ContentVariant.BodySm} />
+                          <Content
+                              contentClassName="flex"
+                              details={maxAmountToWithdrawal}
+                              variant={ContentVariant.BodySm}
+                          />
                       </div>
                   ),
                   value: maxAmountToWithdrawal,
@@ -82,8 +96,15 @@ interface PartialViewContainerProps {
     missingAmountError: string;
 }
 
-const PartialViewContainer = ({ policy, formError, exceedMaximumError, missingAmountError }: PartialViewContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'withdrawals.amount' });
+const PartialViewContainer = ({
+    policy,
+    formError,
+    exceedMaximumError,
+    missingAmountError,
+}: PartialViewContainerProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'withdrawals.amount',
+    });
     const { withdrawal, setWithdrawal } = useWithdrawal();
 
     const setAmount = useCallback(
@@ -108,36 +129,77 @@ const PartialViewContainer = ({ policy, formError, exceedMaximumError, missingAm
         setWithdrawal({ ...withdrawal, withdrawalCustomAmount: value });
     };
 
-    const radioItems = getRadioItems(t, policy, withdrawal.withdrawalCustomAmount as string, setAmount, handleChangeCustom);
+    const radioItems = getRadioItems(
+        t,
+        policy,
+        withdrawal.withdrawalCustomAmount as string,
+        setAmount,
+        handleChangeCustom
+    );
 
     return (
         <>
             <div className="my-6 flex flex-col" data-testid="withdrawal-amount">
-                <Typography className="mb-4" variant={TypographyVariant.LabelLg}>
+                <Typography
+                    className="mb-4"
+                    variant={TypographyVariant.LabelLg}
+                >
                     {t('surrenders.partial.title')}
                 </Typography>
-                <Radio items={radioItems} value={withdrawal.withdrawalAmount as string} onChange={onChange} />
-                {(formError === exceedMaximumError || formError === missingAmountError) && (
-                    <AssistiveText className="mt-2" variant={AssistiveTextVariant.Error} text={formError}></AssistiveText>
+                <Radio
+                    items={radioItems}
+                    value={withdrawal.withdrawalAmount as string}
+                    onChange={onChange}
+                />
+                {(formError === exceedMaximumError ||
+                    formError === missingAmountError) && (
+                    <AssistiveText
+                        className="mt-2"
+                        variant={AssistiveTextVariant.Error}
+                        text={formError}
+                    ></AssistiveText>
                 )}
             </div>
             <div className="flex flex-col gap-4">
-                <Typography variant={TypographyVariant.LabelLg}>{t('fundDisbursementTypeLabel')}</Typography>
+                <Typography variant={TypographyVariant.LabelLg}>
+                    {t('fundDisbursementTypeLabel')}
+                </Typography>
                 <FieldLabel
                     label={t('fundDisbursementType') as string}
                     labelTooltip={t('fundDisbursementType') as string}
-                    labelTooltipBody={t('fundDisbursementTypeTooltip') as string}
+                    labelTooltipBody={
+                        t('fundDisbursementTypeTooltip') as string
+                    }
                 />
                 <div className="flex">
                     {/* TODO MG: fix this warning/use bloom component */}
-                    <input checked className={radioClasses(RadioVariant.Default)} tabIndex={-1} type="radio" readOnly />
-                    <Typography className="ml-2" variant={TypographyVariant.Body}>
+                    <input
+                        checked
+                        className={radioClasses(RadioVariant.Default)}
+                        tabIndex={-1}
+                        type="radio"
+                        readOnly
+                    />
+                    <Typography
+                        className="ml-2"
+                        variant={TypographyVariant.Body}
+                    >
                         {t('proRata')}
                     </Typography>
                 </div>
                 <div className="flex">
-                    <input className={`cursor-not-allowed ${radioClasses(RadioVariant.Inactive)}`} tabIndex={-1} type="radio" readOnly />
-                    <Typography className="ml-2 cursor-not-allowed text-gray-300" variant={TypographyVariant.Body}>
+                    <input
+                        className={`cursor-not-allowed ${radioClasses(
+                            RadioVariant.Inactive
+                        )}`}
+                        tabIndex={-1}
+                        type="radio"
+                        readOnly
+                    />
+                    <Typography
+                        className="ml-2 cursor-not-allowed text-gray-300"
+                        variant={TypographyVariant.Body}
+                    >
                         {t('customFunds')}
                     </Typography>
                 </div>

@@ -31,7 +31,9 @@ describe('ProgressBarStepsItem', () => {
     // TODO AD: update to not skip
     it.skip('calls the onClick function when not disabled and clicked', () => {
         render(<ProgressBarStepsItem {...mockProps} />);
-        const clickableItem = screen.getByTestId(ProgressBarStepsTest.ClickWrapper);
+        const clickableItem = screen.getByTestId(
+            ProgressBarStepsTest.ClickWrapper
+        );
         fireEvent.click(clickableItem);
         expect(mockProps.onClick).toHaveBeenCalled();
     });
@@ -40,7 +42,9 @@ describe('ProgressBarStepsItem', () => {
     it.skip('does not call the onClick function when disabled and clicked', () => {
         const disabledProps = { ...mockProps, isDisabled: true };
         render(<ProgressBarStepsItem {...disabledProps} />);
-        const clickableItem = screen.getByTestId(ProgressBarStepsTest.ClickWrapper);
+        const clickableItem = screen.getByTestId(
+            ProgressBarStepsTest.ClickWrapper
+        );
         fireEvent.click(clickableItem);
         expect(mockProps.onClick).not.toHaveBeenCalled();
     });

@@ -34,7 +34,11 @@ const variantMap: Partial<Record<ChipStatusText, BadgeVariant>> = {
     [TransactionStatus.REVERSED]: BadgeVariant.ERROR,
 };
 
-const ChipStatus: FC<ChipStatusProps> = ({ status, statusText, classNames }) => {
+const ChipStatus: FC<ChipStatusProps> = ({
+    status,
+    statusText,
+    classNames,
+}) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'status',
     });
@@ -57,7 +61,14 @@ const ChipStatus: FC<ChipStatusProps> = ({ status, statusText, classNames }) => 
         variant = variantMap[status] || BadgeVariant.DEFAULT;
     }
 
-    return <Badge className={clsx(classNames)} variant={variant} data-testid="chip-status" label={toSentenceCase(dynamicText)} />;
+    return (
+        <Badge
+            className={clsx(classNames)}
+            variant={variant}
+            data-testid="chip-status"
+            label={toSentenceCase(dynamicText)}
+        />
+    );
 };
 
 export default ChipStatus;

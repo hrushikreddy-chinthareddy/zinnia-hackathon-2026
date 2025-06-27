@@ -1,4 +1,9 @@
-import { TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import {
+    TabContent,
+    TabGroup,
+    TabList,
+    TabTrigger,
+} from '@zinnia/bloom/components';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -36,18 +41,32 @@ export default function ActivitySubPage() {
 
     return (
         <div className="flex flex-col rounded bg-white">
-            <PageHeader headerText={t('pageHeader.activity.headerText') || ''} />
-            <TabGroup defaultValue={tabVal} value={tabVal} onValueChange={handleTabChange} className="px-8">
+            <PageHeader
+                headerText={t('pageHeader.activity.headerText') || ''}
+            />
+            <TabGroup
+                defaultValue={tabVal}
+                value={tabVal}
+                onValueChange={handleTabChange}
+                className="px-8"
+            >
                 <TabList>
-                    <TabTrigger value={PolicyActivityTabValues.transactions}>Transactions</TabTrigger>
-                    <TabTrigger value={PolicyActivityTabValues['call-logs']}>Call Logs</TabTrigger>
+                    <TabTrigger value={PolicyActivityTabValues.transactions}>
+                        Transactions
+                    </TabTrigger>
+                    <TabTrigger value={PolicyActivityTabValues['call-logs']}>
+                        Call Logs
+                    </TabTrigger>
                 </TabList>
                 <TabContent value={PolicyActivityTabValues.transactions}>
                     <TransactionsTab />
                 </TabContent>
 
                 <TabContent value={PolicyActivityTabValues['call-logs']}>
-                    <CallLogsTab policyNumber={policy.policyNumber} queryLimit={10} />
+                    <CallLogsTab
+                        policyNumber={policy.policyNumber}
+                        queryLimit={10}
+                    />
                 </TabContent>
             </TabGroup>
         </div>

@@ -28,7 +28,12 @@ const LegendItem: FC<LegendItemProps> = ({ name, count, showPercentage }) => {
     );
 };
 
-export const PieChart: FC<PieChartProps> = ({ colors, series, showPercentage, pieWidth }) => {
+export const PieChart: FC<PieChartProps> = ({
+    colors,
+    series,
+    showPercentage,
+    pieWidth,
+}) => {
     const options = {
         navigation: { buttonOptions: { enabled: false } },
 
@@ -70,7 +75,13 @@ export const PieChart: FC<PieChartProps> = ({ colors, series, showPercentage, pi
             },
             useHTML: true,
             labelFormatter: function (this: Highcharts.Point) {
-                return renderToStaticMarkup(<LegendItem name={this.name} count={this.y || 0} showPercentage={showPercentage} />);
+                return renderToStaticMarkup(
+                    <LegendItem
+                        name={this.name}
+                        count={this.y || 0}
+                        showPercentage={showPercentage}
+                    />
+                );
             },
             symbolRadius: 3,
             symbolHeight: 12,

@@ -5,10 +5,16 @@ import { DisbursementInformation } from '@deps/models/case/withdrawal/disburseme
 
 import AddressEntry from '../../address-entry';
 
-const BankAddress = ({ fieldName, classNames, isFormStateReadOnly, disbursementInformation, onDataChange }: DisbursementInformation) => {
+const BankAddress = ({
+    fieldName,
+    classNames,
+    isFormStateReadOnly,
+    disbursementInformation,
+    onDataChange,
+}: DisbursementInformation) => {
     const address = disbursementInformation?.address;
     const setAddress = (val: Address) => {
-        onDataChange(ogData => ({
+        onDataChange((ogData) => ({
             ...ogData,
             address: val,
         }));

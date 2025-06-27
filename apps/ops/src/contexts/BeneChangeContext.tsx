@@ -6,7 +6,7 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 //TODO: Update all any with the types, we get from api response
 export type BeneChangeFormState = {
-    isPeopleView: boolean,
+    isPeopleView: boolean;
     peopleSelection: PeopleState;
     formData: any;
     signatureData: SignatureState;
@@ -20,8 +20,8 @@ export type BeneChangeFormState = {
     setDeletedBene: React.Dispatch<React.SetStateAction<any>>;
     setSignatureData: React.Dispatch<React.SetStateAction<SignatureState>>;
     setPeopleSelection: React.Dispatch<React.SetStateAction<PeopleState>>;
-    setIsPeopleView: React.Dispatch<React.SetStateAction<boolean>>
-    setOwnerInfo: React.Dispatch<React.SetStateAction<any>>
+    setIsPeopleView: React.Dispatch<React.SetStateAction<boolean>>;
+    setOwnerInfo: React.Dispatch<React.SetStateAction<any>>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -31,7 +31,11 @@ export const beneChangeDefaultValues = {
     formData: {} as any,
     beneData: {} as any,
     deletedBene: {} as any,
-    signatureData: { signatures: [],  isIrrevocableBene: false, isSpousePresent: null },
+    signatureData: {
+        signatures: [],
+        isIrrevocableBene: false,
+        isSpousePresent: null,
+    },
     formErrors: {} as any,
     peopleSelection: {} as any,
     ownerInfo: {} as any,
@@ -42,7 +46,9 @@ export const beneChangeDefaultValues = {
     setFormData: noop,
     setBeneData: noop,
     setDeletedBene: noop,
-    setOwnerInfo: noop
+    setOwnerInfo: noop,
 };
 
-export const BeneChangeContext = createContext<BeneChangeFormState>(beneChangeDefaultValues);
+export const BeneChangeContext = createContext<BeneChangeFormState>(
+    beneChangeDefaultValues
+);

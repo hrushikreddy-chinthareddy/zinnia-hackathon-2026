@@ -59,16 +59,23 @@ describe('OptimizelyService', () => {
     });
 
     it('should throw error if onReady fails', async () => {
-        mockClient.onReady.mockResolvedValueOnce({ success: false, reason: 'some reason' });
+        mockClient.onReady.mockResolvedValueOnce({
+            success: false,
+            reason: 'some reason',
+        });
         const service = new OptimizelyService('sdk_key', mockClient);
-        await expect(service['ensureOnReady']()).rejects.toThrow('optimizely.ts::ensureOnReady:: instance onReady failed:: some reason');
+        await expect(service['ensureOnReady']()).rejects.toThrow(
+            'optimizely.ts::ensureOnReady:: instance onReady failed:: some reason'
+        );
     });
 
     it('should get feature flag decisions', async () => {
         const service = new OptimizelyService('sdk_key', mockClient);
         const userId = 'user123';
         const flags = await service.getFeatureFlagDecisions(userId, logCtx);
-        expect(mockClient.createUserContext).toHaveBeenCalledWith(userId, { userId });
+        expect(mockClient.createUserContext).toHaveBeenCalledWith(userId, {
+            userId,
+        });
         expect(flags).toEqual({
             flag1: true,
             flag2: false,

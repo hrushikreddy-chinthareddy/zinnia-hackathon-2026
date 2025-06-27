@@ -13,17 +13,22 @@ type TaskProviderProps = {
     correlationId: string;
 };
 
-export const TaskProvider = ({ children, initialTask, correlationId }: TaskProviderProps) => {
+export const TaskProvider = ({
+    children,
+    initialTask,
+    correlationId,
+}: TaskProviderProps) => {
     const [task, setTask] = useState<ManagementTask>(initialTask);
-    const [isReadyForDataEntry, setIsReadyForDataEntry] = useState<boolean>(false);
+    const [isReadyForDataEntry, setIsReadyForDataEntry] =
+        useState<boolean>(false);
     const [messages, setMessages] = useState<any>([]);
     const [exceptions, setExceptions] = useState<string[]>([]);
-    const [transactionType, setTransactionType] = useState<CallCenterElement<string, SimpleOption>>(
-        {} as CallCenterElement<string, SimpleOption>
-    );
-    const [transactionSubType, setTransactionSubType] = useState<CallCenterElement<string, SimpleOption>>(
-        {} as CallCenterElement<string, SimpleOption>
-    );
+    const [transactionType, setTransactionType] = useState<
+        CallCenterElement<string, SimpleOption>
+    >({} as CallCenterElement<string, SimpleOption>);
+    const [transactionSubType, setTransactionSubType] = useState<
+        CallCenterElement<string, SimpleOption>
+    >({} as CallCenterElement<string, SimpleOption>);
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [submitFailed, setSubmitFailed] = useState(false);
     // const [metaData, setMetaData] = useState(taskMetadata);

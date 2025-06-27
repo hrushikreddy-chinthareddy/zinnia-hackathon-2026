@@ -1,6 +1,8 @@
 import { SignPresent } from './renewal/signature-validation';
 
-export const convertIsSignedFromValue = (value: boolean | null | undefined): SignPresent => {
+export const convertIsSignedFromValue = (
+    value: boolean | null | undefined
+): SignPresent => {
     if (value === true) {
         return SignPresent.Yes;
     }

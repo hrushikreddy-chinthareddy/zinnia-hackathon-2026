@@ -1,7 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import AmountDetails, { determineProgramType } from '@deps/components/otp-withdrawal-form/amount-details';
+import AmountDetails, {
+    determineProgramType,
+} from '@deps/components/otp-withdrawal-form/amount-details';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
@@ -23,7 +25,9 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 import getSbgcConfig from './sbgc-withdrawal-form.helpers';
 
 export default function SbgcWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         formParty,
         formTpaAuthorization,
@@ -61,47 +65,88 @@ export default function SbgcWithdrawalForm() {
 
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.FLIC}_WD_REDEMPTION_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.FLIC
+            }_WD_REDEMPTION_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.FLIC}_WD_REDEMPTION_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.FLIC
+                }_WD_REDEMPTION_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
         });
     }, []);
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
+    const hasTpaAuthorization =
+        formTpaAuthorization &&
+        !Object.values(formTpaAuthorization).every((val) => val === null);
+    const ownerStateOfResidence =
+        formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <DistributionReason
                 reasonOptions={reasonOptions}
                 hardshipOptions={hardshipOptions}
                 unforeseenOptions={unforeseeableEmergencyOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
-            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} programTypes={programTypes} />
+            <AmountDetails
+                isFormStateReadOnly={isFormStateReadOnly}
+                programTypes={programTypes}
+            />
             <FormDistribution
                 moneyTypeOptions={moneyTypeOptions}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.distributionInstruction') as string}
+                title={
+                    t(
+                        'distributionInstruction.distributionInstruction'
+                    ) as string
+                }
                 isFormStateReadOnly={isFormStateReadOnly}
             />
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions(withdrawalType)} />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions(withdrawalType)}
+            />
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
             <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} />
-            {ownerIsVirginiaResident && <FinancialProfessionalSignature isFormStateReadOnly={isFormStateReadOnly} />}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            {ownerIsVirginiaResident && (
+                <FinancialProfessionalSignature
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

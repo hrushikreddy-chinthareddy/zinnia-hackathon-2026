@@ -8,9 +8,16 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { AdditionalDataInstance } from '@deps/models/case/additional-data-instance';
 import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
-import { AvailableFormsTransaction, SearchTransactionRequestBody } from '@deps/models/case/send-document';
+import {
+    AvailableFormsTransaction,
+    SearchTransactionRequestBody,
+} from '@deps/models/case/send-document';
 import { TransactionDetails } from '@deps/pages/nigo-entry';
-import { getSearchTransactions, getTransactionSubTypes, searchForms } from '@deps/queries/api/c2web';
+import {
+    getSearchTransactions,
+    getTransactionSubTypes,
+    searchForms,
+} from '@deps/queries/api/c2web';
 import { getCases } from '@deps/queries/api/cases';
 import { fetchPolicy } from '@deps/queries/api/policies';
 import { browserLogInfo } from '@deps/utils/browser-logging';
@@ -49,11 +56,20 @@ const NigoEntryContainer = ({
     taskInfoLink,
 }: NigoEntryContainerContainerProps) => {
     const { featureFlags } = useOptimizely();
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry' });
-    const { setTransactionType, setTransactionSubType, setDocument, sectionOption } = useNigoEntry();
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'nigoEntry',
+    });
+    const {
+        setTransactionType,
+        setTransactionSubType,
+        setDocument,
+        sectionOption,
+    } = useNigoEntry();
     const [policy, setPolicy] = useState<Policy>();
-    const [availableFormsTransactions, setAvailableFormsTransactions] = useState<AvailableFormsTransaction[]>([]);
-    const [prevTransactionDetails, setPrevTransactionDetails] = useState<AdditionalDataInstance | null>(null);
+    const [availableFormsTransactions, setAvailableFormsTransactions] =
+        useState<AvailableFormsTransaction[]>([]);
+    const [prevTransactionDetails, setPrevTransactionDetails] =
+        useState<AdditionalDataInstance | null>(null);
 
     const getTransactions = async (policyInfo: Policy) => {
         const transactionRequestBody: SearchTransactionRequestBody = {
@@ -69,7 +85,7 @@ const NigoEntryContainer = ({
     };
 
     const transactionOptions = useMemo(() => {
-        return availableFormsTransactions?.map(transaction => {
+        return availableFormsTransactions?.map((transaction) => {
             return { label: transaction.name, value: transaction.id };
         });
     }, [availableFormsTransactions]);
@@ -119,11 +135,19 @@ const NigoEntryContainer = ({
                 searchCasesResponse = await getCases(filters, featureFlags);
                 if (searchCasesResponse && 'total' in searchCasesResponse) {
                     const latestForm = searchCasesResponse?.data?.find(
-                        item => item?.additionalData?.requestSubType.toUpperCase() === docType.toUpperCase()
+                        (item) =>
+                            item?.additionalData?.requestSubType.toUpperCase() ===
+                            docType.toUpperCase()
                     );
-                    setPrevTransactionDetails(latestForm?.additionalData || null);
+                    setPrevTransactionDetails(
+                        latestForm?.additionalData || null
+                    );
                 } else {
-                    throw new Error(searchCasesResponse?.data?.err ? searchCasesResponse.data.err : 'Error fetching cases');
+                    throw new Error(
+                        searchCasesResponse?.data?.err
+                            ? searchCasesResponse.data.err
+                            : 'Error fetching cases'
+                    );
                 }
             } catch (error) {
                 browserLogInfo('nigo-entry-container::searchCases', {
@@ -142,19 +166,35 @@ const NigoEntryContainer = ({
     useEffect(() => {
         const initialize = async () => {
             if (prevTransactionDetails) {
-                const transType = prevTransactionDetails?.requestSubType.replace(/ /g, '_').toUpperCase();
+                const transType = prevTransactionDetails?.requestSubType
+                    .replace(/ /g, '_')
+                    .toUpperCase();
                 const formName = prevTransactionDetails?.formName;
-                setTransactionType({ selected: transType, list: transactionOptions });
+                setTransactionType({
+                    selected: transType,
+                    list: transactionOptions,
+                });
                 try {
                     const response = await getTransactionSubTypes(transType);
                     const transSubType =
-                        response?.find(transaction => transaction.name === prevTransactionDetails?.transactionSubType || '')?.id || '';
+                        response?.find(
+                            (transaction) =>
+                                transaction.name ===
+                                    prevTransactionDetails?.transactionSubType ||
+                                ''
+                        )?.id || '';
 
                     if (response) {
-                        const options = response.map(transaction => {
-                            return { label: transaction.name, value: transaction.id };
+                        const options = response.map((transaction) => {
+                            return {
+                                label: transaction.name,
+                                value: transaction.id,
+                            };
                         });
-                        setTransactionSubType({ selected: transSubType, list: options });
+                        setTransactionSubType({
+                            selected: transSubType,
+                            list: options,
+                        });
 
                         const formSearchRequestBody = {
                             contractNumber: policy?.policyNumber ?? '',
@@ -165,14 +205,24 @@ const NigoEntryContainer = ({
                             issueState: policy?.issueState ?? '',
                             ctiCallNumber: '',
                         };
-                        const searchResponse = await searchForms(formSearchRequestBody);
-                        const selectedForm = searchResponse?.find(form => form.formShortName === formName);
+                        const searchResponse = await searchForms(
+                            formSearchRequestBody
+                        );
+                        const selectedForm = searchResponse?.find(
+                            (form) => form.formShortName === formName
+                        );
                         if (searchResponse) {
-                            setDocument({ list: searchResponse, selected: selectedForm || null });
+                            setDocument({
+                                list: searchResponse,
+                                selected: selectedForm || null,
+                            });
                         }
                     }
                 } catch (e: any) {
-                    console.error('GetTransactionSubTypes::Error retrieving transaction sub types', e);
+                    console.error(
+                        'GetTransactionSubTypes::Error retrieving transaction sub types',
+                        e
+                    );
                 }
             }
         };
@@ -231,7 +281,12 @@ const NigoEntryContainer = ({
             {
                 ariaLabel: t('tabs.nigoDetails'),
                 isVisible: () => sectionOption === SelOptionType.NIGO_ENTRY,
-                component: <NigoDetailsStep nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />,
+                component: (
+                    <NigoDetailsStep
+                        nigoExceptions={nigoExceptions}
+                        nigoSubExceptions={nigoSubExceptions}
+                    />
+                ),
                 screenReaderLabel: t('tabs.nigoDetails'),
                 index: 1,
                 text: t('tabs.nigoDetails'),
@@ -255,7 +310,12 @@ const NigoEntryContainer = ({
                 ariaLabel: t('tabs.confirm'),
                 isVisible: () => true,
                 component: (
-                    <ConfirmStep documentNumber={documentNumber} docType={docType} clientCode={clientCode} document={documentData} />
+                    <ConfirmStep
+                        documentNumber={documentNumber}
+                        docType={docType}
+                        clientCode={clientCode}
+                        document={documentData}
+                    />
                 ),
                 screenReaderLabel: t('tabs.confirm'),
                 index: 3,
@@ -280,7 +340,10 @@ const NigoEntryContainer = ({
     );
 
     const filteredSteps: Step[] = useMemo(
-        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        () =>
+            steps
+                .filter((item: any) => item.isVisible?.())
+                .map((item: any, index: number) => ({ ...item, index })),
         [steps]
     );
 

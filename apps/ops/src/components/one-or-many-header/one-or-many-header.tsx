@@ -19,7 +19,10 @@ const OneOrManyHeader = ({ entities, className }: OneOrManyHeaderProps) => {
 
     if (entities.length === 0) {
         return (
-            <div data-testid="one-or-many-container" className={defaultClassName}>
+            <div
+                data-testid="one-or-many-container"
+                className={defaultClassName}
+            >
                 {DEFAULT_ERROR_STRING}
             </div>
         );
@@ -27,7 +30,10 @@ const OneOrManyHeader = ({ entities, className }: OneOrManyHeaderProps) => {
 
     if (entities.length === 1) {
         return (
-            <div data-testid="one-or-many-container" className={ownerNameClassName}>
+            <div
+                data-testid="one-or-many-container"
+                className={ownerNameClassName}
+            >
                 <PiiWrapper>{entities[0].name}</PiiWrapper>
             </div>
         );
@@ -36,7 +42,10 @@ const OneOrManyHeader = ({ entities, className }: OneOrManyHeaderProps) => {
     return (
         <div className="flex items-center" data-testid="one-or-many-container">
             <div className={defaultClassName}>{entities[0].name}</div>
-            <PlusOthers entities={entities.slice(1)} tooltipTitle={t('tooltip.jointOwner')} />
+            <PlusOthers
+                entities={entities.slice(1)}
+                tooltipTitle={t('tooltip.jointOwner')}
+            />
         </div>
     );
 };

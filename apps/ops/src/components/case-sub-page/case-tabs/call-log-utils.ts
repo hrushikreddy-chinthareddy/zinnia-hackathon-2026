@@ -1,4 +1,4 @@
-export const PLAY_CALL_LOG_URL = '/api/play-call-log-audio'; 
+export const PLAY_CALL_LOG_URL = '/api/play-call-log-audio';
 export const PLAYER_INITIAL_TIME = '0.00';
 export const AUDIO_DATE_FORMAT = 'M/D/YYYY h:mm a z';
 
@@ -11,7 +11,9 @@ export const FormatTime = (time: number) => {
     const seconds = Math.floor(time % 60);
 
     if (hours > 0) {
-        return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${
+            seconds < 10 ? '0' : ''
+        }${seconds}`;
     } else {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
@@ -32,5 +34,5 @@ export const DateTimeConfig = {
         minute: '2-digit',
         hour12: true,
         timeZoneName: 'short',
-    })
+    }),
 };

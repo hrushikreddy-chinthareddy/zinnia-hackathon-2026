@@ -63,10 +63,7 @@
                     }
                 },
                 "uiSchema": {
-                    "ui:order": [
-                        "sectionHeader",
-                        "details"
-                    ],
+                    "ui:order": ["sectionHeader", "details"],
                     "ui:submitButtonOptions": {
                         "norender": true,
                         "props": {

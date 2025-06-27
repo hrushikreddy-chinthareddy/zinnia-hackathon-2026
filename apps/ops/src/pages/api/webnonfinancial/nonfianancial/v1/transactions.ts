@@ -3,7 +3,12 @@ import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logInfo, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -31,19 +36,28 @@ export default withAuthAndLogging(
         };
 
         try {
-            const { data } = await serverApi.put<any, AxiosResponse>(url, formData, config, loggingContext);
+            const { data } = await serverApi.put<any, AxiosResponse>(
+                url,
+                formData,
+                config,
+                loggingContext
+            );
             logInfo('webnonfinancial::transactions::success', {
                 ...loggingContext,
-                duration: performance.now() - now
+                duration: performance.now() - now,
             });
             return res.json(data);
         } catch (error) {
             logWarn('webnonfinancial::transactions::error', {
                 ...parseErrorInformation(error),
-                ...loggingContext, duration: performance.now() - now
+                ...loggingContext,
+                duration: performance.now() - now,
             });
             res.status(500).json(null);
         }
     },
-    { file: 'webnonfinancial/nonfinancial/v1/transaction', function: 'routeHandler' }
+    {
+        file: 'webnonfinancial/nonfinancial/v1/transaction',
+        function: 'routeHandler',
+    }
 );

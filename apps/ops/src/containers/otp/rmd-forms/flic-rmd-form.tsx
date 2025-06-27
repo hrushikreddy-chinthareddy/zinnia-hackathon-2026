@@ -26,7 +26,9 @@ import DistributionMethodQcd from './qcd/qcd-distribution-method';
 import SelectFormType from './rmd-form-type';
 
 export default function FlicRmdWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -55,7 +57,9 @@ export default function FlicRmdWithdrawalForm() {
         setFormESignatureData,
         formErrors,
     } = useContext(FormDataContext);
-    const [rmdFormType, setRmdFormType] = useState((formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD);
+    const [rmdFormType, setRmdFormType] = useState(
+        (formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD
+    );
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -71,13 +75,19 @@ export default function FlicRmdWithdrawalForm() {
                 formNumber: '',
             },
         });
-        setFormProgram(prev => ({
+        setFormProgram((prev) => ({
             ...prev,
             program: {
-                text: rmdFormType === RmdFormType.QCD ? Processes.QCD : Processes.RequiredMinimumDistribution,
+                text:
+                    rmdFormType === RmdFormType.QCD
+                        ? Processes.QCD
+                        : Processes.RequiredMinimumDistribution,
             },
             programType: {
-                text: rmdFormType === RmdFormType.QCD ? RmdFormType.QCD : RmdFormType.RMD,
+                text:
+                    rmdFormType === RmdFormType.QCD
+                        ? RmdFormType.QCD
+                        : RmdFormType.RMD,
             },
             qcd: prev.qcd ? [...prev.qcd] : [],
         }));
@@ -96,16 +106,33 @@ export default function FlicRmdWithdrawalForm() {
     const renderRmdSections = (
         <>
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            <JointLifeExpectancy
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={jointLifeExpectancyConfigs}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
             {ownerStateOfResidence &&
                 contractIssueState &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
         </>
     );
 
@@ -113,28 +140,53 @@ export default function FlicRmdWithdrawalForm() {
         <>
             <RMDMethod
                 isFormStateReadOnly={isFormStateReadOnly}
-                rmdTypeOptions={[{ label: t('rmdMethod.rmdTypes.calculate'), value: RMDType.CalculateRMD }]}
+                rmdTypeOptions={[
+                    {
+                        label: t('rmdMethod.rmdTypes.calculate'),
+                        value: RMDType.CalculateRMD,
+                    },
+                ]}
                 isQCD={true}
             />
-            <DistributionMethodQcd formProgram={formProgram} setFormProgram={setFormProgram} isFormStateReadOnly={isFormStateReadOnly} />
+            <DistributionMethodQcd
+                formProgram={formProgram}
+                setFormProgram={setFormProgram}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
         </>
     );
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <SelectFormType formType={rmdFormType} onFormTypeChange={setRmdFormType} isFormStateReadOnly={isFormStateReadOnly} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <SelectFormType
+                formType={rmdFormType}
+                onFormTypeChange={setRmdFormType}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <FormDistribution
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                title={
+                    t(
+                        'distributionInstruction.investmentSelectionForDistribution'
+                    ) as string
+                }
                 isFormStateReadOnly={isFormStateReadOnly}
             />
             {isRmdForm ? renderRmdSections : renderQcdSections}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

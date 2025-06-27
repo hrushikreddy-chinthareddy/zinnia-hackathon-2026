@@ -17,7 +17,10 @@ interface ICallAudioPlayer {
     onDurationChange: (duration: string) => void;
 }
 
-const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChange }) => {
+const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({
+    sessionID,
+    onDurationChange,
+}) => {
     const { t } = useTranslation();
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -27,7 +30,9 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
     const [duration, setDuration] = useState(0);
     const [isError, setIsError] = useState(false);
     const [links, setLinks] = useState([]);
-    const [error, setError] = useState(t('sideSheet.audioDetailsContent.error') as string);
+    const [error, setError] = useState(
+        t('sideSheet.audioDetailsContent.error') as string
+    );
 
     const [audio, setAudio] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
@@ -50,7 +55,9 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
                 }
             }
         } catch (error) {
-            browserLogInfo('call-log-audio-player::Error fetching audio URL', { error });
+            browserLogInfo('call-log-audio-player::Error fetching audio URL', {
+                error,
+            });
             setError(t('sideSheet.audioDetailsContent.error') as string);
             setIsError(true);
         } finally {
@@ -58,16 +65,23 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
         }
     };
 
-    const convertToBlob = async (filePath: string): Promise<string | undefined> => {
+    const convertToBlob = async (
+        filePath: string
+    ): Promise<string | undefined> => {
         try {
-            const response = await fetch(`${PLAY_CALL_LOG_URL}?url=${encodeURIComponent(filePath)}`);
+            const response = await fetch(
+                `${PLAY_CALL_LOG_URL}?url=${encodeURIComponent(filePath)}`
+            );
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
             audioRef.current!.src = url;
             return url;
         } catch (error) {
             setIsError(true);
-            browserLogInfo('call-log-audio-player::Error while converting blob audio', { error });
+            browserLogInfo(
+                'call-log-audio-player::Error while converting blob audio',
+                { error }
+            );
             return undefined;
         }
     };
@@ -96,7 +110,9 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
                 setIsPlaying(!isPlaying);
             }
         } catch (error) {
-            browserLogInfo('call-log-audio-player::error while playing audio', { error });
+            browserLogInfo('call-log-audio-player::error while playing audio', {
+                error,
+            });
         }
     };
 
@@ -117,7 +133,8 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
                 setCurrentTime(newTime);
                 setDuration(newDuration);
 
-                const newProgress = newDuration > 0 ? (newTime / newDuration) * 100 : 0;
+                const newProgress =
+                    newDuration > 0 ? (newTime / newDuration) * 100 : 0;
                 setProgress(newProgress);
             }
         };
@@ -129,8 +146,14 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
 
         return () => {
             if (audioRef.current) {
-                audioRef.current.removeEventListener('timeupdate', updateProgress);
-                audioRef.current.removeEventListener('loadedmetadata', updateProgress);
+                audioRef.current.removeEventListener(
+                    'timeupdate',
+                    updateProgress
+                );
+                audioRef.current.removeEventListener(
+                    'loadedmetadata',
+                    updateProgress
+                );
             }
         };
     }, []);
@@ -151,7 +174,10 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
 
         return () => {
             if (audioRef.current) {
-                audioRef.current.removeEventListener('timeupdate', updateProgress);
+                audioRef.current.removeEventListener(
+                    'timeupdate',
+                    updateProgress
+                );
             }
         };
     }, []);
@@ -170,8 +196,6 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
         }
     };
 
-    
-
     useEffect(() => {
         onDurationChange(FormatTime(duration).toString()); // Send to parent
     }, [duration]);
@@ -179,11 +203,22 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
     return (
         <div>
             <div className="w-full max-w-lg h-10 bg-gray-50 text-black md:p-4 gap-4 rounded-xs flex items-center flex-nowrap">
-                <button onClick={togglePlayPause} className="text-white transition">
+                <button
+                    onClick={togglePlayPause}
+                    className="text-white transition"
+                >
                     {isPlaying ? (
-                        <CirclePause width={24} height={24} className="text-gray-800" />
+                        <CirclePause
+                            width={24}
+                            height={24}
+                            className="text-gray-800"
+                        />
                     ) : (
-                        <CirclePlay width={24} height={24} className="text-gray-800" />
+                        <CirclePlay
+                            width={24}
+                            height={24}
+                            className="text-gray-800"
+                        />
                     )}
                 </button>
 
@@ -195,7 +230,9 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
                 <Content
                     className="min-w-max text-gray-900"
                     variant={ContentVariant.BodySm}
-                    details={`${FormatTime(currentTime)} / ${FormatTime(duration)}`}
+                    details={`${FormatTime(currentTime)} / ${FormatTime(
+                        duration
+                    )}`}
                 />
 
                 {/* Custom Progress Bar (Without Round Thumb) */}
@@ -213,18 +250,38 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({ sessionID, onDurationChan
                 </div>
 
                 {/* Mute/Unmute Button */}
-                <button onClick={toggleMute} className="p-3 text-white transition">
+                <button
+                    onClick={toggleMute}
+                    className="p-3 text-white transition"
+                >
                     {isMuted ? (
-                        <VolumeOff width={24} height={24} className="text-gray-800" />
+                        <VolumeOff
+                            width={24}
+                            height={24}
+                            className="text-gray-800"
+                        />
                     ) : (
-                        <VolumeUp width={24} height={24} className="text-gray-800" />
+                        <VolumeUp
+                            width={24}
+                            height={24}
+                            className="text-gray-800"
+                        />
                     )}
                 </button>
             </div>
             {isError && (
                 <div className="flex items-center gap-2">
-                    <ExceptionIcon className="text-semantic-error relative top-[4px]" width={16} height={16} />
-                    <Content className={'text-semantic-error'} contentClassName="mt-2" variant={ContentVariant.BodySm} details={error} />
+                    <ExceptionIcon
+                        className="text-semantic-error relative top-[4px]"
+                        width={16}
+                        height={16}
+                    />
+                    <Content
+                        className={'text-semantic-error'}
+                        contentClassName="mt-2"
+                        variant={ContentVariant.BodySm}
+                        details={error}
+                    />
                 </div>
             )}
         </div>

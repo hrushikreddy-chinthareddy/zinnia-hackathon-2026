@@ -4,7 +4,10 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Button, { ButtonType } from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_LOCALE, setNextLocaleCookie } from '@deps/helpers/routing.helpers';
+import {
+    DEFAULT_LOCALE,
+    setNextLocaleCookie,
+} from '@deps/helpers/routing.helpers';
 import { UserProfile } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { ReactComponent as ZinniaLogo } from '@deps/styles/elements/logos/zinnia-logo.svg';
@@ -15,13 +18,19 @@ import { buildNextPageLoggingContext } from '@deps/utils/server-logging';
 import type { GetServerSideProps } from 'next';
 
 const WelcomePage = () => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { useSuspense: false });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        useSuspense: false,
+    });
 
     return (
         <div className="context-center relative bg-white md:flex md:flex-row">
             <div className="relative hidden h-screen bg-gray-100 mid:block mid:basis-1/3 mid:overflow-hidden">
                 <div className="flex h-full items-center justify-end">
-                    <div className={'absolute h-[830px] w-[592px] mid:bottom-[66px] mid:left-[42px] mid:top-[66px] welcome-xl:left-1/3'}>
+                    <div
+                        className={
+                            'absolute h-[830px] w-[592px] mid:bottom-[66px] mid:left-[42px] mid:top-[66px] welcome-xl:left-1/3'
+                        }
+                    >
                         <ZinniaWelcomeArt />
                     </div>
                 </div>
@@ -35,7 +44,9 @@ const WelcomePage = () => {
                     <div className="my-[41px]">
                         <div>
                             <div className="mb-2 font-primary text-lg font-light">
-                                {t('welcome.header', { policyPortalName: t('site.name') })}
+                                {t('welcome.header', {
+                                    policyPortalName: t('site.name'),
+                                })}
                             </div>
 
                             <div className="border-box context-center mt-11 rounded-lg border-2 border-slate-100 p-8 font-secondary lg:flex">
@@ -46,8 +57,14 @@ const WelcomePage = () => {
                                     </span>
                                 </div>
                                 <div className="mt-5 flex justify-center self-center lg:mt-0 lg:basis-1/2">
-                                    <a href={t('auth.signIn.link') || '/'} className="appearance-none">
-                                        <Button className="!px-6" type={ButtonType.Primary}>
+                                    <a
+                                        href={t('auth.signIn.link') || '/'}
+                                        className="appearance-none"
+                                    >
+                                        <Button
+                                            className="!px-6"
+                                            type={ButtonType.Primary}
+                                        >
                                             {t('welcome.signInBtn')}
                                         </Button>
                                     </a>
@@ -61,19 +78,31 @@ const WelcomePage = () => {
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async context => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const { locale = DEFAULT_LOCALE, req, res, query } = context;
     setNextLocaleCookie(locale, req, res);
-    const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON]);
+    const translations = await serverSideTranslations(locale, [
+        TranslationFiles.COMMON,
+    ]);
 
     const auth = await getSession(req, res);
     const user = auth?.user as UserProfile;
-    const loggingContext = await buildNextPageLoggingContext(context, '/', 'pages/index', 'getServerSideProps');
+    const loggingContext = await buildNextPageLoggingContext(
+        context,
+        '/',
+        'pages/index',
+        'getServerSideProps'
+    );
 
     if (user) {
         let returnTo = locale + '/cases';
 
-        const homePageCheck = await checkTuplePage(context, FgaRelation.UiAccess, FgaUiEntity.ZinniaLiveHomeExerience, loggingContext);
+        const homePageCheck = await checkTuplePage(
+            context,
+            FgaRelation.UiAccess,
+            FgaUiEntity.ZinniaLiveHomeExerience,
+            loggingContext
+        );
 
         if (homePageCheck) {
             returnTo = locale + '/home';
@@ -90,7 +119,9 @@ export const getServerSideProps: GetServerSideProps = async context => {
     if (query?.connection) {
         return {
             redirect: {
-                destination: `/api/auth/login?returnTo=${encodeURIComponent(`/?connection=${query?.connection}`)}`,
+                destination: `/api/auth/login?returnTo=${encodeURIComponent(
+                    `/?connection=${query?.connection}`
+                )}`,
                 permanent: false,
             },
         };

@@ -1,7 +1,11 @@
-import { CaseType, CreateCaseBody, CreateCaseResponse } from "@deps/models/case/case";
-import { createCase } from "@deps/queries/api/cases";
-import { CreateCaseError } from "@deps/types/errors";
-import { Result, failure, success } from "@deps/types/result";
+import {
+    CaseType,
+    CreateCaseBody,
+    CreateCaseResponse,
+} from '@deps/models/case/case';
+import { createCase } from '@deps/queries/api/cases';
+import { CreateCaseError } from '@deps/types/errors';
+import { Result, failure, success } from '@deps/types/result';
 
 const createCaseFromDocumentNumber = async (
     documentNumber: string,
@@ -9,7 +13,7 @@ const createCaseFromDocumentNumber = async (
     contract: string,
     process: CaseType,
     clientId: string
-): Promise<Result<Error, CreateCaseResponse>>  => {
+): Promise<Result<Error, CreateCaseResponse>> => {
     const query: CreateCaseBody = {
         carrier: clientId.toUpperCase(),
         process,

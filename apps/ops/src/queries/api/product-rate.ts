@@ -55,10 +55,16 @@ const buildClientSideProductRatePathUrl = (
 
 // Makes an attempt to retrieve the value from a product-rates response.
 // If there is any ambiguity, returns null
-const extractSimpleRateValue = (response: ProductRateResponse): number | null => {
+const extractSimpleRateValue = (
+    response: ProductRateResponse
+): number | null => {
     const effectiveDates = Object.keys(response.effectiveDate);
     if (!effectiveDates.length) {
-        datadogRum.addError(new Error('product-rate::extractSimpleRateValue::no-effective-dates'));
+        datadogRum.addError(
+            new Error(
+                'product-rate::extractSimpleRateValue::no-effective-dates'
+            )
+        );
         return null;
     }
     let effectiveDate;
@@ -69,19 +75,33 @@ const extractSimpleRateValue = (response: ProductRateResponse): number | null =>
         // grab the first effective date that occurs before today's date.
         effectiveDate = effectiveDates
             .sort((a, b) => {
-                return dayjs(a, ZAHARA_API_DATE_FORMAT).isBefore(dayjs(b, ZAHARA_API_DATE_FORMAT)) ? 1 : -1;
+                return dayjs(a, ZAHARA_API_DATE_FORMAT).isBefore(
+                    dayjs(b, ZAHARA_API_DATE_FORMAT)
+                )
+                    ? 1
+                    : -1;
             })
-            .find(date => !dayjs(date, ZAHARA_API_DATE_FORMAT).isAfter(dayjs()));
+            .find(
+                (date) => !dayjs(date, ZAHARA_API_DATE_FORMAT).isAfter(dayjs())
+            );
     }
 
     if (!effectiveDate) {
-        datadogRum.addError(new Error('product-rate::extractSimpleRateValue::invalid-effective-date'));
+        datadogRum.addError(
+            new Error(
+                'product-rate::extractSimpleRateValue::invalid-effective-date'
+            )
+        );
         return null;
     }
 
     const effectiveDateValues = response.effectiveDate[effectiveDate];
     if (effectiveDateValues?.length !== 1) {
-        datadogRum.addError(new Error('product-rate::extractSimpleRateValue::more-than-one-effectiveDateValue'));
+        datadogRum.addError(
+            new Error(
+                'product-rate::extractSimpleRateValue::more-than-one-effectiveDateValue'
+            )
+        );
         // we can't effectively identify which value is correct.
         return null;
     }
@@ -89,29 +109,41 @@ const extractSimpleRateValue = (response: ProductRateResponse): number | null =>
     const effectiveDateValue = effectiveDateValues[0];
     const ages = Object.keys(effectiveDateValue.ages);
     if (!ages?.length) {
-        datadogRum.addError(new Error('product-rate::extractSimpleRateValue::no-ages'));
+        datadogRum.addError(
+            new Error('product-rate::extractSimpleRateValue::no-ages')
+        );
         return null;
     }
     if (ages.length > 1) {
-        datadogRum.addError(new Error('product-rate::extractSimpleRateValue::more-than-one-age'));
+        datadogRum.addError(
+            new Error('product-rate::extractSimpleRateValue::more-than-one-age')
+        );
         return null;
     }
 
     const ageValues = effectiveDateValue.ages[ages[0]];
 
     if (!ageValues?.length) {
-        datadogRum.addError(new Error('product-rate::extractSimpleRateValue::no-ageValues'));
+        datadogRum.addError(
+            new Error('product-rate::extractSimpleRateValue::no-ageValues')
+        );
         return null;
     }
     if (ageValues.length > 1) {
-        datadogRum.addError(new Error('product-rate::extractSimpleRateValue::more-than-one-value'));
+        datadogRum.addError(
+            new Error(
+                'product-rate::extractSimpleRateValue::more-than-one-value'
+            )
+        );
         return null;
     }
     return ageValues[0];
 };
 
 const getInsuredGenderFromPolicy = (policy: PolicyDetails): string | null => {
-    const insuredPartyGenders = new Set(policy.coveredPeople?.map(({ gender }) => gender));
+    const insuredPartyGenders = new Set(
+        policy.coveredPeople?.map(({ gender }) => gender)
+    );
     if (insuredPartyGenders.size !== 1) {
         return null;
     }
@@ -120,8 +152,14 @@ const getInsuredGenderFromPolicy = (policy: PolicyDetails): string | null => {
 
 const getCoverageValuesFromPolicy = (
     policy: PolicyDetails
-): { coverageAmount: number | null; issueAge: number | null; riskClass: string | null } => {
-    const coverageLayer = policy.coverage.getCoverageLayerByType(RiderType.BASE);
+): {
+    coverageAmount: number | null;
+    issueAge: number | null;
+    riskClass: string | null;
+} => {
+    const coverageLayer = policy.coverage.getCoverageLayerByType(
+        RiderType.BASE
+    );
     const coverageValues = {
         coverageAmount: <number | null>null,
         issueAge: <number | null>null,
@@ -139,52 +177,99 @@ const getCoverageValuesFromPolicy = (
         return coverageValues;
     }
 
-    coverageValues.issueAge = coverageLayer.coverageParticipants[0].issueAge ?? null;
-    coverageValues.riskClass = coverageLayer.coverageParticipants[0].riskClass ?? null;
+    coverageValues.issueAge =
+        coverageLayer.coverageParticipants[0].issueAge ?? null;
+    coverageValues.riskClass =
+        coverageLayer.coverageParticipants[0].riskClass ?? null;
 
     return coverageValues;
 };
 
 // Attempts to retrieve every possible query param to add to the policy-rates requests.  Will only add determinate values
-const getPolicyRatesArguments = (policy: PolicyDetails, effectiveDate: string): string => {
+const getPolicyRatesArguments = (
+    policy: PolicyDetails,
+    effectiveDate: string
+): string => {
     const querySearchParams = new URLSearchParams();
     querySearchParams.append('effectiveDate', effectiveDate);
     const gender = getInsuredGenderFromPolicy(policy);
-    const { coverageAmount, issueAge, riskClass } = getCoverageValuesFromPolicy(policy);
+    const { coverageAmount, issueAge, riskClass } =
+        getCoverageValuesFromPolicy(policy);
     const contractYear = policy.policyYear ?? null;
     gender && querySearchParams.append('gender', gender);
-    coverageAmount && querySearchParams.append('coverageAmount', `${coverageAmount}`);
-    !isNullEmptyOrUndefined(issueAge) && querySearchParams.append('issueAge', `${issueAge}`);
+    coverageAmount &&
+        querySearchParams.append('coverageAmount', `${coverageAmount}`);
+    !isNullEmptyOrUndefined(issueAge) &&
+        querySearchParams.append('issueAge', `${issueAge}`);
     riskClass && querySearchParams.append('riskClass', riskClass);
-    !isNullEmptyOrUndefined(contractYear) && querySearchParams.append('contractYear', `${contractYear}`);
+    !isNullEmptyOrUndefined(contractYear) &&
+        querySearchParams.append('contractYear', `${contractYear}`);
 
     return querySearchParams.toString();
 };
 
 // Match rate is an SBUL-specific value and will not scale to support other products
-export const getSbulMatchRate = async (policy: PolicyDetails, effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)) => {
+export const getSbulMatchRate = async (
+    policy: PolicyDetails,
+    effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)
+) => {
     try {
-        return await getProductRate(policy, ConfiguredSettingId.MatchRate, 'BASE_COVERAGE', effectiveDate);
+        return await getProductRate(
+            policy,
+            ConfiguredSettingId.MatchRate,
+            'BASE_COVERAGE',
+            effectiveDate
+        );
     } catch (e) {
-        console.error('getSbulMatchRate error |', (e as AxiosResponse)?.data ?? (e as Error)?.message);
+        console.error(
+            'getSbulMatchRate error |',
+            (e as AxiosResponse)?.data ?? (e as Error)?.message
+        );
 
         return null;
     }
 };
 
-export const getCurrentInterestRate = async (policy: PolicyDetails, effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)) => {
-    return await getProductRate(policy, ConfiguredSettingId.CurrentInterestRate, 'Base_Coverage', effectiveDate);
+export const getCurrentInterestRate = async (
+    policy: PolicyDetails,
+    effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)
+) => {
+    return await getProductRate(
+        policy,
+        ConfiguredSettingId.CurrentInterestRate,
+        'Base_Coverage',
+        effectiveDate
+    );
 };
 
-export const getLoanInterestRate = async (policy: PolicyDetails, effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)) => {
-    return await getProductRate(policy, ConfiguredSettingId.LoanInterestRate, 'Base_Coverage', effectiveDate);
+export const getLoanInterestRate = async (
+    policy: PolicyDetails,
+    effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)
+) => {
+    return await getProductRate(
+        policy,
+        ConfiguredSettingId.LoanInterestRate,
+        'Base_Coverage',
+        effectiveDate
+    );
 };
 
-export const getBorrowingInterestRate = async (policy: PolicyDetails, effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)) => {
-    return await getProductRate(policy, ConfiguredSettingId.BorrowingInterestRate, 'Base_Coverage', effectiveDate);
+export const getBorrowingInterestRate = async (
+    policy: PolicyDetails,
+    effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)
+) => {
+    return await getProductRate(
+        policy,
+        ConfiguredSettingId.BorrowingInterestRate,
+        'Base_Coverage',
+        effectiveDate
+    );
 };
 
-export const getRiderBenefitData = async (policy: PolicyDetails, rider: Rider): Promise<RiderBenefit | null> => {
+export const getRiderBenefitData = async (
+    policy: PolicyDetails,
+    rider: Rider
+): Promise<RiderBenefit | null> => {
     try {
         const benefitId = CoverageToBenefitId[rider.coverageId as CoverageId];
 
@@ -208,8 +293,13 @@ export const getRiderBenefitData = async (policy: PolicyDetails, rider: Rider): 
         }
 
         const data = await Promise.all(
-            configuredSettings.map(async resourceId => {
-                return await getProductRate(policy, resourceId, benefitId, rider.effectiveDate);
+            configuredSettings.map(async (resourceId) => {
+                return await getProductRate(
+                    policy,
+                    resourceId,
+                    benefitId,
+                    rider.effectiveDate
+                );
             })
         );
 
@@ -250,8 +340,19 @@ export const getProductRate = async (
             planCode = 'SBUL-MATCH';
         }
 
-        const querySearchParams = getPolicyRatesArguments(policy, effectiveDate);
-        const { data } = await client.get(buildClientSideProductRatePathUrl(carrierId, planCode, benefitId, resourceId, querySearchParams));
+        const querySearchParams = getPolicyRatesArguments(
+            policy,
+            effectiveDate
+        );
+        const { data } = await client.get(
+            buildClientSideProductRatePathUrl(
+                carrierId,
+                planCode,
+                benefitId,
+                resourceId,
+                querySearchParams
+            )
+        );
 
         return extractSimpleRateValue(data);
     } catch (e) {

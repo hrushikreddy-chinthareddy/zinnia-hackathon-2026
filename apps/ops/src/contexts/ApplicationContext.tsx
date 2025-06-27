@@ -1,5 +1,11 @@
 import { useRouter } from 'next/router';
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+} from 'react';
 
 import ErrorBoundary from '@deps/components/error-boundary/error-boundary';
 import { LayoutWrapper } from '@deps/containers/layout-wrapper/layout-wrapper';
@@ -27,7 +33,9 @@ interface ApplicationDataProviderProps {
     pageProps: any;
 }
 
-const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderProps, 'pageProps'>) => {
+const ApplicationComponentWrapper = ({
+    children,
+}: Omit<ApplicationDataProviderProps, 'pageProps'>) => {
     const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
 
@@ -38,7 +46,10 @@ const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderP
     const managePathHistory = useCallback((url: string) => {
         let pathHistory = (storage.getItem('pathHistory') as any) || [];
 
-        if (pathHistory.length > 0 && url === pathHistory[pathHistory.length - 1].url) {
+        if (
+            pathHistory.length > 0 &&
+            url === pathHistory[pathHistory.length - 1].url
+        ) {
             // Backward navigation
             pathHistory = pathHistory.slice(0, -1);
         } else {
@@ -63,8 +74,14 @@ const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderP
         if (isMounted) {
             let checkCurrent = (storage.getItem('current') as any) || {};
 
-            if (Object.keys(checkCurrent).length === 0 || checkCurrent.url !== router.asPath) {
-                checkCurrent = { url: router.asPath, h1: document.querySelector('h1')?.textContent };
+            if (
+                Object.keys(checkCurrent).length === 0 ||
+                checkCurrent.url !== router.asPath
+            ) {
+                checkCurrent = {
+                    url: router.asPath,
+                    h1: document.querySelector('h1')?.textContent,
+                };
 
                 setCurrentSessionStorage(checkCurrent.url, checkCurrent.h1);
                 managePathHistory(router.asPath);
@@ -76,7 +93,10 @@ const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderP
                 const checkH1 = setInterval(() => {
                     const header = document.querySelector('h1');
                     if (header?.textContent !== 'loading policy') {
-                        setCurrentSessionStorage(url, header?.textContent || '');
+                        setCurrentSessionStorage(
+                            url,
+                            header?.textContent || ''
+                        );
                         clearInterval(checkH1);
                     }
                 }, 500);
@@ -85,7 +105,10 @@ const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderP
             router.events.on('routeChangeComplete', handleRouteChangeComplete);
 
             return () => {
-                router.events.off('routeChangeComplete', handleRouteChangeComplete);
+                router.events.off(
+                    'routeChangeComplete',
+                    handleRouteChangeComplete
+                );
             };
         }
     }, [isMounted]);
@@ -93,19 +116,21 @@ const ApplicationComponentWrapper = ({ children }: Omit<ApplicationDataProviderP
     return <>{children}</>;
 };
 
-export const ApplicationDataProvider: React.FC<ApplicationDataProviderProps> = ({ children, pageProps }) => {
+export const ApplicationDataProvider: React.FC<
+    ApplicationDataProviderProps
+> = ({ children, pageProps }) => {
     return (
         <ApplicationDataContext.Provider value={{ pageProps }}>
             <OptimizelyProvider>
                 <PermissionsProvider>
                     <ErrorBoundary>
-                            <SideSheetProvider>
-                                <PolicySearchFiltersProvider>
-                                    <ApplicationComponentWrapper>
-                                        <LayoutWrapper>{children}</LayoutWrapper>
-                                    </ApplicationComponentWrapper>
-                                </PolicySearchFiltersProvider>
-                            </SideSheetProvider>
+                        <SideSheetProvider>
+                            <PolicySearchFiltersProvider>
+                                <ApplicationComponentWrapper>
+                                    <LayoutWrapper>{children}</LayoutWrapper>
+                                </ApplicationComponentWrapper>
+                            </PolicySearchFiltersProvider>
+                        </SideSheetProvider>
                     </ErrorBoundary>
                 </PermissionsProvider>
             </OptimizelyProvider>

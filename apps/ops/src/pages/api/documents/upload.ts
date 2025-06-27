@@ -3,7 +3,12 @@ import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logCompliance, logError, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logCompliance,
+    logError,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -18,7 +23,11 @@ export const config = {
 };
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<any | null>, loggingContext) => {
+    async (
+        req: NextApiRequest,
+        res: NextApiResponse<any | null>,
+        loggingContext
+    ) => {
         const accessToken = (await getAccessToken(req, res)).accessToken;
 
         const url = `${baseUrl}/documents`;
@@ -45,7 +54,10 @@ export default withAuthAndLogging(
                 loggingContext
             );
 
-            logCompliance('Document Upload request successful.', loggingContext);
+            logCompliance(
+                'Document Upload request successful.',
+                loggingContext
+            );
             res.json({ ...data });
         } catch (error) {
             logError('documents/upload:: error', {

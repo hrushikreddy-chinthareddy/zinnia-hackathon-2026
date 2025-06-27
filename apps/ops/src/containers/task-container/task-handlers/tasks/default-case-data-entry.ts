@@ -13,18 +13,26 @@ export const processReferenceDataAdapter = async (
     logCtx: LoggingContext
 ): Promise<ProcessReferenceData[] | null> => {
     const PROCESS_KEY = 'PROCESS';
-    const response = await getProcessReferenceDataSSR(PROCESS_KEY, '', accessToken, logCtx);
+    const response = await getProcessReferenceDataSSR(
+        PROCESS_KEY,
+        '',
+        accessToken,
+        logCtx
+    );
 
     if (!response) return null;
 
-    return response?.map(process => ({
+    return response?.map((process) => ({
         type: process.type,
         key: process.key,
         value: process.value,
     }));
 };
 
-const DefaultCaseDataEntryHandler: TaskHandler<Record<string, never>, ProcessReferenceData[]> = {
+const DefaultCaseDataEntryHandler: TaskHandler<
+    Record<string, never>,
+    ProcessReferenceData[]
+> = {
     api: processReferenceDataAdapter,
     getPayload: () => ({}),
     transformResponse: (response, metadata) => {
@@ -34,10 +42,12 @@ const DefaultCaseDataEntryHandler: TaskHandler<Record<string, never>, ProcessRef
         if (!schema?.formSchema?.definitions) return;
 
         schema.formSchema.definitions.caseTypeEnum = {
-            enum: response.map(item => item.key) || [DEFAULT_CASE_TYPE],
+            enum: response.map((item) => item.key) || [DEFAULT_CASE_TYPE],
         };
 
-        schema.uiSchema.caseDetails.caseType['ui:options'] = { enumNames: response.map(item => item.value) };
+        schema.uiSchema.caseDetails.caseType['ui:options'] = {
+            enumNames: response.map((item) => item.value),
+        };
     },
 };
 

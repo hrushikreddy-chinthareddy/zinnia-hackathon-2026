@@ -59,7 +59,13 @@ describe('Checkbox', () => {
     test('disables checkbox when isDisabled prop is set', () => {
         const onChangeMock = jest.fn();
 
-        render(<CheckboxText label="Disabled Checkbox" onChange={onChangeMock} isDisabled={true} />);
+        render(
+            <CheckboxText
+                label="Disabled Checkbox"
+                onChange={onChangeMock}
+                isDisabled={true}
+            />
+        );
 
         const checkboxElement = screen.getByTestId('checkbox');
 

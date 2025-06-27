@@ -48,7 +48,9 @@ export const isMockPolicySearchRequestEnabled = () => {
         return false;
     }
 
-    return getMockParam()?.includes('policySearch') || isMockAllRequestEnabled();
+    return (
+        getMockParam()?.includes('policySearch') || isMockAllRequestEnabled()
+    );
 };
 
 // ..mock..=policyDetails
@@ -67,20 +69,16 @@ export const isMockPolicyDocsRequestEnabled = () => {
         return false;
     }
 
-    return (
-        getMockParam()?.includes('policyDocs') || isMockAllRequestEnabled()
-    )
-}
+    return getMockParam()?.includes('policyDocs') || isMockAllRequestEnabled();
+};
 
 export const isMockCaseDetailsRequestEnabled = () => {
     if (!isMockAllowed()) {
         return false;
     }
 
-    return (
-        getMockParam()?.includes('caseDetails') || isMockAllRequestEnabled()
-    )
-}
+    return getMockParam()?.includes('caseDetails') || isMockAllRequestEnabled();
+};
 
 export const isMockCorrespondanceDocsRequestEnabled = () => {
     if (!isMockAllowed()) {
@@ -88,6 +86,7 @@ export const isMockCorrespondanceDocsRequestEnabled = () => {
     }
 
     return (
-        getMockParam()?.includes('correspondanceDocs') || isMockAllRequestEnabled()
-    )
-}
+        getMockParam()?.includes('correspondanceDocs') ||
+        isMockAllRequestEnabled()
+    );
+};

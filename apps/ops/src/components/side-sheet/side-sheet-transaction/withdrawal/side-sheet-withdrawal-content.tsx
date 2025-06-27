@@ -6,9 +6,14 @@ import { Key } from 'react';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import PayeeSummaryCardRow from '@deps/containers/payee-summary-card/payee-summary-card-row/payee-summary-card-row';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    numberFormatify,
+    percentFormatify,
+} from '@deps/helpers/numbers.helpers';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { withdrawalDetailsTransactions } from '@deps/helpers/transaction-types.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -21,7 +26,10 @@ type SideSheetWithdrawalContentProps = {
     t: TFunction;
 };
 
-const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentProps) => {
+const SideSheetWithdrawalContent = ({
+    values,
+    t,
+}: SideSheetWithdrawalContentProps) => {
     const {
         disbursementType,
         transactionType,
@@ -35,10 +43,16 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
 
     if (transactionType === TransactionType.FULL_SURRENDER) {
         transactionTypeLabel = t('historyEventCard.surrender');
-    } else if (withdrawalDetailsTransactions.includes(transactionType as TransactionType)) {
+    } else if (
+        withdrawalDetailsTransactions.includes(
+            transactionType as TransactionType
+        )
+    ) {
         transactionTypeLabel = t('historyEventCard.withdrawal');
     } else if (transactionType == TransactionType.FREE_LOOK_CANCELLATION) {
-        transactionTypeLabel = t('historyEventCard.transactionTypes.FreeLookCancellation');
+        transactionTypeLabel = t(
+            'historyEventCard.transactionTypes.FreeLookCancellation'
+        );
     }
 
     return (
@@ -47,15 +61,26 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                 {/* TODO: Update each labels used to be headings to meet a11y HTML semantics when wrapped by a parent <section>.
                 Suggest using h2 or h3 depending on the main page content's structure */}
                 <Typography variant={TypographyVariant.H4}>
-                    {t('policy.history.withdrawalSidesheet.detailsTitle', { transactionType: toTitleCase(transactionTypeLabel) })}
+                    {t('policy.history.withdrawalSidesheet.detailsTitle', {
+                        transactionType: toTitleCase(transactionTypeLabel),
+                    })}
                 </Typography>
                 <div className="mt-4 grid w-full grid-cols-2 gap-8">
                     {withdrawalDetails?.map((field: any, index: number) => (
                         <div className="flex flex-col" key={index}>
-                            <FieldData key={index} label={field.label} tooltipTitle={field.tooltipTitle} tooltipBody={field.tooltipBody}>
+                            <FieldData
+                                key={index}
+                                label={field.label}
+                                tooltipTitle={field.tooltipTitle}
+                                tooltipBody={field.tooltipBody}
+                            >
                                 {field.value || DEFAULT_ERROR_STRING}
                             </FieldData>
-                            {field.caption && <Typography variant={TypographyVariant.Caption}>{field.caption}</Typography>}
+                            {field.caption && (
+                                <Typography variant={TypographyVariant.Caption}>
+                                    {field.caption}
+                                </Typography>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -65,20 +90,24 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                 <>
                     <section>
                         <Typography variant={TypographyVariant.H4}>
-                            {t('policy.history.withdrawalSidesheet.taxWithholdingTitle')}
+                            {t(
+                                'policy.history.withdrawalSidesheet.taxWithholdingTitle'
+                            )}
                         </Typography>
                         <div className="mt-4 grid w-full grid-cols-2 gap-8">
-                            {taxWithholdings.map((field: any, index: number) => (
-                                <FieldData
-                                    key={index}
-                                    label={field.label}
-                                    tooltipTitle={field.tooltipTitle}
-                                    tooltipBody={field.tooltipBody}
-                                    sentenceCase={field.sentenceCase}
-                                >
-                                    {field.value || DEFAULT_ERROR_STRING}
-                                </FieldData>
-                            ))}
+                            {taxWithholdings.map(
+                                (field: any, index: number) => (
+                                    <FieldData
+                                        key={index}
+                                        label={field.label}
+                                        tooltipTitle={field.tooltipTitle}
+                                        tooltipBody={field.tooltipBody}
+                                        sentenceCase={field.sentenceCase}
+                                    >
+                                        {field.value || DEFAULT_ERROR_STRING}
+                                    </FieldData>
+                                )
+                            )}
                         </div>
                     </section>
                     <hr className="my-6 h-0.5 bg-gray-200" />
@@ -89,16 +118,25 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                     <section>
                         <div className="mb-4 flex items-center gap-4">
                             <Typography variant={TypographyVariant.H4}>
-                                {t('policy.history.withdrawalSidesheet.paymentDetailsTitle')}
+                                {t(
+                                    'policy.history.withdrawalSidesheet.paymentDetailsTitle'
+                                )}
                             </Typography>
-                            <Tag variant={TagVariant.White} text={toSentenceCase(disbursementType)} />
+                            <Tag
+                                variant={TagVariant.White}
+                                text={toSentenceCase(disbursementType)}
+                            />
                         </div>
                         <div>
                             <PayeeSummaryCardRow
                                 amount={numberFormatify(actualWithdrawalAmount)}
-                                label={t('policy.history.withdrawalSidesheet.actualTransactionAmount', {
-                                    transactionType: transactionTypeLabel?.toLowerCase(),
-                                })}
+                                label={t(
+                                    'policy.history.withdrawalSidesheet.actualTransactionAmount',
+                                    {
+                                        transactionType:
+                                            transactionTypeLabel?.toLowerCase(),
+                                    }
+                                )}
                             />
                             <hr className="my-4 h-0.5 border-none bg-gray-100" />
 
@@ -109,7 +147,9 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                                             key={index}
                                             amount={charge.amount}
                                             label={charge.label}
-                                            isSidesheetSumTotalRow={charge.isSidesheetSumTotalRow}
+                                            isSidesheetSumTotalRow={
+                                                charge.isSidesheetSumTotalRow
+                                            }
                                         />
                                     )
                             )}
@@ -120,14 +160,17 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
             )}
 
             <section>
-                <Typography variant={TypographyVariant.H4}>{t('policy.history.withdrawalSidesheet.payeeDetailsTitle')}</Typography>
+                <Typography variant={TypographyVariant.H4}>
+                    {t('policy.history.withdrawalSidesheet.payeeDetailsTitle')}
+                </Typography>
                 <div className="mt-4">
                     <table role="table" className="w-full rounded-lg">
                         {/* Hardcoded table caption
                         TODO MG: need transalations */}
                         <caption className="hidden">
-                            Payee details table of withdrawal transaction stating whom received the percentage and dollar amount of the
-                            withdrawn amount.
+                            Payee details table of withdrawal transaction
+                            stating whom received the percentage and dollar
+                            amount of the withdrawn amount.
                         </caption>
                         <thead>
                             <tr role="row" className="flex">
@@ -135,21 +178,36 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                                     scope="col"
                                     className="w-[60%] rounded-tl-lg border-b-1 border-l-1 border-t-1 border-gray-200 bg-gray-50 px-3 py-2 text-left"
                                 >
-                                    <Typography variant={TypographyVariant.BodySmBold}>
-                                        {t('policy.history.withdrawalSidesheet.payee')}
+                                    <Typography
+                                        variant={TypographyVariant.BodySmBold}
+                                    >
+                                        {t(
+                                            'policy.history.withdrawalSidesheet.payee'
+                                        )}
                                     </Typography>
                                 </th>
-                                <th scope="col" className="w-[30%] border-b-1 border-t-1 border-gray-200 bg-gray-50 px-3 py-2 text-right">
-                                    <Typography variant={TypographyVariant.BodySmBold}>
-                                        {t('policy.history.withdrawalSidesheet.percentage')}
+                                <th
+                                    scope="col"
+                                    className="w-[30%] border-b-1 border-t-1 border-gray-200 bg-gray-50 px-3 py-2 text-right"
+                                >
+                                    <Typography
+                                        variant={TypographyVariant.BodySmBold}
+                                    >
+                                        {t(
+                                            'policy.history.withdrawalSidesheet.percentage'
+                                        )}
                                     </Typography>
                                 </th>
                                 <th
                                     scope="col"
                                     className="w-[30%] rounded-tr-lg border-b-1 border-r-1 border-t-1 border-gray-200 bg-gray-50 px-3 py-2 text-right"
                                 >
-                                    <Typography variant={TypographyVariant.BodySmBold}>
-                                        {t('policy.history.withdrawalSidesheet.amount')}
+                                    <Typography
+                                        variant={TypographyVariant.BodySmBold}
+                                    >
+                                        {t(
+                                            'policy.history.withdrawalSidesheet.amount'
+                                        )}
                                     </Typography>
                                 </th>
                             </tr>
@@ -161,34 +219,69 @@ const SideSheetWithdrawalContent = ({ values, t }: SideSheetWithdrawalContentPro
                                         role="cell"
                                         className="flex w-[60%] flex-col rounded-bl-lg border-b-1 border-l-1 border-gray-200 px-3 py-2 text-left"
                                     >
-                                        <Typography variant={TypographyVariant.BodySmBold}>
-                                            <PiiWrapper>{payee.bankDetails.nameOnAccount}</PiiWrapper>
-                                        </Typography>
-                                        <Typography variant={TypographyVariant.BodySm}>
-                                            <PiiWrapper>{payee.bankDetails.branchName}</PiiWrapper>
-                                        </Typography>
-                                        <Typography variant={TypographyVariant.BodySm}>
+                                        <Typography
+                                            variant={
+                                                TypographyVariant.BodySmBold
+                                            }
+                                        >
                                             <PiiWrapper>
-                                                {t('policy.history.withdrawalSidesheet.checkingEndingIn', {
-                                                    accountNumber: payee.bankDetails.accountNumber?.substring(
-                                                        payee.bankDetails.accountNumber.length - 4
-                                                    ),
-                                                })}
+                                                {
+                                                    payee.bankDetails
+                                                        .nameOnAccount
+                                                }
+                                            </PiiWrapper>
+                                        </Typography>
+                                        <Typography
+                                            variant={TypographyVariant.BodySm}
+                                        >
+                                            <PiiWrapper>
+                                                {payee.bankDetails.branchName}
+                                            </PiiWrapper>
+                                        </Typography>
+                                        <Typography
+                                            variant={TypographyVariant.BodySm}
+                                        >
+                                            <PiiWrapper>
+                                                {t(
+                                                    'policy.history.withdrawalSidesheet.checkingEndingIn',
+                                                    {
+                                                        accountNumber:
+                                                            payee.bankDetails.accountNumber?.substring(
+                                                                payee
+                                                                    .bankDetails
+                                                                    .accountNumber
+                                                                    .length - 4
+                                                            ),
+                                                    }
+                                                )}
                                             </PiiWrapper>
                                         </Typography>
                                     </td>
-                                    <td role="cell" className="w-[30%] content-center border-b-1 border-gray-200 px-3 py-2 text-right">
-                                        <Typography variant={TypographyVariant.BodySm}>
-                                            {percentFormatify(payee.allocationPercentage, { isInteger: true })}
+                                    <td
+                                        role="cell"
+                                        className="w-[30%] content-center border-b-1 border-gray-200 px-3 py-2 text-right"
+                                    >
+                                        <Typography
+                                            variant={TypographyVariant.BodySm}
+                                        >
+                                            {percentFormatify(
+                                                payee.allocationPercentage,
+                                                { isInteger: true }
+                                            )}
                                         </Typography>
                                     </td>
                                     <td
                                         role="cell"
                                         className="w-[30%] content-center rounded-br-lg border-b-1 border-r-1 border-gray-200 px-3 py-2 text-right"
                                     >
-                                        <Typography variant={TypographyVariant.BodySm}>
+                                        <Typography
+                                            variant={TypographyVariant.BodySm}
+                                        >
                                             {/* Defaulting to DEFAULT_ERROR_STRING for pending sidesheets waiting on Promise to be fulfilled*/}
-                                            {numberFormatify(payee.disbursementAmount || DEFAULT_ERROR_STRING)}
+                                            {numberFormatify(
+                                                payee.disbursementAmount ||
+                                                    DEFAULT_ERROR_STRING
+                                            )}
                                         </Typography>
                                     </td>
                                 </tr>

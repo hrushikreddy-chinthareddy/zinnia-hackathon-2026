@@ -5,7 +5,14 @@ import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
-export const getAgentReviewSteps = ({ taskType, task, taskInfoLink, t, isContinueButtonEnabled, taskMetadata }: GetStepsProps) => {
+export const getAgentReviewSteps = ({
+    taskType,
+    task,
+    taskInfoLink,
+    t,
+    isContinueButtonEnabled,
+    taskMetadata,
+}: GetStepsProps) => {
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
         isVisible: () => true,
@@ -29,7 +36,12 @@ export const getAgentReviewSteps = ({ taskType, task, taskInfoLink, t, isContinu
     const staticSteps: Step[] = [
         {
             isVisible: () => true,
-            component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
+            component: (
+                <ConfirmStep
+                    taskType={taskType}
+                    taskInfoLink={taskInfoLink}
+                ></ConfirmStep>
+            ),
             text: t('confirm'),
             index: dynamicSteps.length,
             screenReaderLabel: t('confirm'),

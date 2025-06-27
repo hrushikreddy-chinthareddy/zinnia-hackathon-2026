@@ -21,32 +21,47 @@ import {
     SSWType,
     AmountType,
 } from '@deps/models/case/withdrawal/case';
-import { DisbursementParts, DEFAULT_DISBURSEMENT_UPDATE, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    DisbursementParts,
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DEFAULT_BANK_DETAILS,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 import useMassSSWConfig from './mass-ssw-form-helpers';
 
-jest.mock('@deps/components/otp-withdrawal-form/form-program/form-program.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-program/form-program.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormProgramValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-program/form-program.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-program/form-program.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormProgramValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
-jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormDisbursementValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormDisbursementValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
 describe('Mass SSW form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
     const {
         result: { current },
     } = renderHook(() => useMassSSWConfig(t));
@@ -147,8 +162,12 @@ describe('Mass SSW form config', () => {
 
         describe('payload generation', () => {
             it('should generate a correct payload for an eft selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
-                expect(eftOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const eftOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+                expect(
+                    eftOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -160,20 +179,26 @@ describe('Mass SSW form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
                             reEnterAccountNumber: '',
                             reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: bankingDetails?.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: bankingDetails?.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        bankingDetails?.doesCheckMeetSecurityRequirements,
                 });
             });
 
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions.find(option => option.value === PaymentMailType.Check);
-                expect(checkOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const checkOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                expect(
+                    checkOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
@@ -187,7 +212,9 @@ describe('Mass SSW form config', () => {
         const isKeogh = true;
         describe('Owner signature', () => {
             const ownerConfig = getSignaturesConfig(isKeogh).find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Owner
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
@@ -197,7 +224,9 @@ describe('Mass SSW form config', () => {
 
         describe('Joint owner signature', () => {
             const jointOwnerConfig = getSignaturesConfig(isKeogh).find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.JointOwner
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.JointOwner
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
@@ -310,8 +339,16 @@ describe('Mass SSW form config', () => {
                     ],
                 };
 
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: jointOwner } as OtpWithdrawalFormState)).toBeTruthy();
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: owner } as OtpWithdrawalFormState)).toBeFalsy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: jointOwner,
+                    } as OtpWithdrawalFormState)
+                ).toBeTruthy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: owner,
+                    } as OtpWithdrawalFormState)
+                ).toBeFalsy();
             });
         });
 
@@ -352,7 +389,9 @@ describe('Mass SSW form config', () => {
             };
 
             const spouseConfig = getSignaturesConfig(isKeogh).find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Spouse
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Spouse
             );
             it('should be in the config', () => {
                 expect(spouseConfig).toBeTruthy();
@@ -360,7 +399,11 @@ describe('Mass SSW form config', () => {
             });
 
             it('should have shouldDisplay logic', () => {
-                expect(spouseConfig?.shouldDisplay?.({ formSignature: signature } as OtpWithdrawalFormState)).toBeTruthy();
+                expect(
+                    spouseConfig?.shouldDisplay?.({
+                        formSignature: signature,
+                    } as OtpWithdrawalFormState)
+                ).toBeTruthy();
             });
         });
     });
@@ -376,8 +419,14 @@ describe('Mass SSW form config', () => {
                 duration: { text: '1' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.FixDollar);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.FixDollar
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.FixDollar },
                 programFrequency: {
@@ -386,7 +435,10 @@ describe('Mass SSW form config', () => {
                     fixedPeriodYear: { text: null },
                     duration: formProgram.duration,
                 },
-                programAmount: { text: formProgram.amount?.text, amountType: AmountType.Dollar },
+                programAmount: {
+                    text: formProgram.amount?.text,
+                    amountType: AmountType.Dollar,
+                },
             });
         });
 
@@ -397,8 +449,14 @@ describe('Mass SSW form config', () => {
                 duration: { text: '12' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.AnnualFree);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.AnnualFree
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.AnnualFree },
                 programFrequency: {
@@ -418,8 +476,14 @@ describe('Mass SSW form config', () => {
                 duration: { text: '1' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.PercentOfAmountValue);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.PercentOfAmountValue
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.PercentOfAmountValue },
                 programFrequency: {
@@ -428,7 +492,10 @@ describe('Mass SSW form config', () => {
                     fixedPeriodYear: { text: null },
                     duration: formProgram.duration,
                 },
-                partialPercent: { text: formProgram.percent?.text, amountType: AmountType.Percent },
+                partialPercent: {
+                    text: formProgram.percent?.text,
+                    amountType: AmountType.Percent,
+                },
             });
         });
     });

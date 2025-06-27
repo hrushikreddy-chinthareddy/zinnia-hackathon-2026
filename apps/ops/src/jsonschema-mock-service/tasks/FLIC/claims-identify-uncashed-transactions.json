@@ -104,22 +104,15 @@
                                             }
                                         }
                                     ],
-                                    "required": [
-                                        "uncashTransactionExists"
-                                    ]
+                                    "required": ["uncashTransactionExists"]
                                 },
-                                "required": [
-                                    "uncashTransaction"
-                                ]
+                                "required": ["uncashTransaction"]
                             }
                         }
                     }
                 },
                 "uiSchema": {
-                    "ui:order": [
-                        "sectionHeader",
-                        "details"
-                    ],
+                    "ui:order": ["sectionHeader", "details"],
                     "ui:submitButtonOptions": {
                         "norender": true,
                         "props": {
@@ -147,10 +140,7 @@
                                 "ui:hideError": true,
                                 "ui:widget": "radio",
                                 "ui:options": {
-                                    "enumNames": [
-                                        "Yes",
-                                        "No"
-                                    ]
+                                    "enumNames": ["Yes", "No"]
                                 }
                             },
                             "transactions": {

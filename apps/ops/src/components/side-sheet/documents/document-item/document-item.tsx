@@ -18,7 +18,11 @@ export interface SideSheetDocumentItemProps {
     activeDocType: DocumentTypeView;
 }
 
-export default function SideSheetDocumentItem({ document, carrier = '', activeDocType }: SideSheetDocumentItemProps) {
+export default function SideSheetDocumentItem({
+    document,
+    carrier = '',
+    activeDocType,
+}: SideSheetDocumentItemProps) {
     const { t } = useTranslation();
     const { displayName, documentDate } = document;
     const timeAgo = dayjs(documentDate).fromNow(); //just as a heads up this cannot be translated bc it is an external library eag
@@ -32,17 +36,29 @@ export default function SideSheetDocumentItem({ document, carrier = '', activeDo
                     activeDocType={activeDocType}
                     carrier={carrier}
                     displayName={document?.displayName || ''}
-                    documentId={document.documentId ?? (document.documentID as string)}
+                    documentId={
+                        document.documentId ?? (document.documentID as string)
+                    }
                 >
                     <>
-                        <DocumentIcon className="shrink-0" role="presentation" width={20} height={20} />
+                        <DocumentIcon
+                            className="shrink-0"
+                            role="presentation"
+                            width={20}
+                            height={20}
+                        />
                         {displayName}
                     </>
                 </DocumentPreviewer>
             ) : (
-                <DocumentDownloader document={{ ...document, documentSource: activeDocType }} carrierCode={carrier} />
+                <DocumentDownloader
+                    document={{ ...document, documentSource: activeDocType }}
+                    carrierCode={carrier}
+                />
             )}
-            <p className="font-primary text-sm font-medium leading-4 text-gray-600">{`${t('sideSheet.posted')} ${timeAgo}`}</p>
+            <p className="font-primary text-sm font-medium leading-4 text-gray-600">{`${t(
+                'sideSheet.posted'
+            )} ${timeAgo}`}</p>
         </div>
     );
 }

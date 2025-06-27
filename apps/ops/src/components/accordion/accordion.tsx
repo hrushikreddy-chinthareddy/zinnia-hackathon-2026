@@ -1,7 +1,9 @@
 import { Disclosure, Transition } from '@headlessui/react';
 import { MouseEventHandler, ReactNode } from 'react';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 interface AccordionProps {
@@ -12,7 +14,13 @@ interface AccordionProps {
     isOpen?: boolean;
 }
 
-const Accordion = ({ title, children, isOpen = false, renderHeaderComponent, onClick }: AccordionProps) => {
+const Accordion = ({
+    title,
+    children,
+    isOpen = false,
+    renderHeaderComponent,
+    onClick,
+}: AccordionProps) => {
     return (
         <div className="shadow-sm">
             <Disclosure defaultOpen={isOpen}>
@@ -24,12 +32,21 @@ const Accordion = ({ title, children, isOpen = false, renderHeaderComponent, onC
                                 open ? '!bg-gray-50' : ''
                             }`}
                         >
-                            {title ? <Typography variant={TypographyVariant.H2}>{title}</Typography> : null}
-                            {renderHeaderComponent ? renderHeaderComponent : null}
+                            {title ? (
+                                <Typography variant={TypographyVariant.H2}>
+                                    {title}
+                                </Typography>
+                            ) : null}
+                            {renderHeaderComponent
+                                ? renderHeaderComponent
+                                : null}
                             <ChevronDown
                                 height={24}
                                 width={24}
-                                className={'simple-transition self-center text-secondary ' + (open ? '' : 'flip180')}
+                                className={
+                                    'simple-transition self-center text-secondary ' +
+                                    (open ? '' : 'flip180')
+                                }
                             />
                         </Disclosure.Button>
                         <Transition
@@ -43,7 +60,9 @@ const Accordion = ({ title, children, isOpen = false, renderHeaderComponent, onC
                             leaveTo="opacity-0 -translate-y-1"
                             show={open}
                         >
-                            <Disclosure.Panel className="bg-white p-8">{children}</Disclosure.Panel>
+                            <Disclosure.Panel className="bg-white p-8">
+                                {children}
+                            </Disclosure.Panel>
                         </Transition>
                     </>
                 )}

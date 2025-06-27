@@ -1,12 +1,20 @@
 import { AxiosResponse } from 'axios';
 import { lookup } from 'mime-types';
 
-import { DocumentDownloadV2, DocumentDownloadV2WithMime } from '@deps/models/case/document';
+import {
+    DocumentDownloadV2,
+    DocumentDownloadV2WithMime,
+} from '@deps/models/case/document';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 import { ServerQueryReq } from '@deps/types/server-query';
-import { logCompliance, logError, LoggingContext, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logCompliance,
+    logError,
+    LoggingContext,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 interface DocumentProps extends ServerQueryReq {
     documentId: string;
@@ -36,7 +44,10 @@ const documentDownloadV2 = async ({
     };
 
     if (!canUnmask) {
-        logCompliance('Document Download request denied due to missing unmask pii permission', logCtx);
+        logCompliance(
+            'Document Download request denied due to missing unmask pii permission',
+            logCtx
+        );
         return { error: 'Forbidden' };
     }
 
@@ -50,7 +61,10 @@ const documentDownloadV2 = async ({
             logCtx
         );
 
-        logCompliance('Document Download request successful.  Sending document to client', logCtx);
+        logCompliance(
+            'Document Download request successful.  Sending document to client',
+            logCtx
+        );
 
         const mimeType = lookup(data.fileExtension) || '';
         return { ...data, mimeType };

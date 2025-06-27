@@ -2,9 +2,16 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 
 interface SuccessStateProps {
     action: NonFinancialTransactionActions;
@@ -16,8 +23,18 @@ interface SuccessStateProps {
     caseId?: string;
 }
 
-const SuccessState = ({ action, isNigo, name, onCancel, transaction, type, caseId }: SuccessStateProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.states.success' });
+const SuccessState = ({
+    action,
+    isNigo,
+    name,
+    onCancel,
+    transaction,
+    type,
+    caseId,
+}: SuccessStateProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.sideSheet.states.success',
+    });
     const { t: defaultT } = useTranslation();
     const router = useRouter();
 
@@ -54,16 +71,23 @@ const SuccessState = ({ action, isNigo, name, onCancel, transaction, type, caseI
             {t('subtitle.default.2')}
             <b>
                 {t('subtitle.default.3', {
-                    transaction: defaultT(`people.sideSheet.transactions.${transaction}`).toLowerCase(),
+                    transaction: defaultT(
+                        `people.sideSheet.transactions.${transaction}`
+                    ).toLowerCase(),
                     type,
-                    action: defaultT(`people.sideSheet.actions.${actionMap[action]}`),
+                    action: defaultT(
+                        `people.sideSheet.actions.${actionMap[action]}`
+                    ),
                 })}
             </b>
             {t('subtitle.default.4')}
         </span>
     );
 
-    const subtitle = transaction === NonFinancialTransactions.BankAccount ? bankingSubtitle : defaultSubtitle;
+    const subtitle =
+        transaction === NonFinancialTransactions.BankAccount
+            ? bankingSubtitle
+            : defaultSubtitle;
 
     return (
         <CardInfo

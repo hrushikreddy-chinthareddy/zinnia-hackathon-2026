@@ -35,12 +35,22 @@ describe('WithdrawalDrawer', () => {
             />
         );
 
-        expect(screen.getByText(transactionDetail.contractId)).toBeInTheDocument();
-        expect(screen.getByText(transactionDetail.documentNumber)).toBeInTheDocument();
+        expect(
+            screen.getByText(transactionDetail.contractId)
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(transactionDetail.documentNumber)
+        ).toBeInTheDocument();
         expect(screen.getByText(transactionDetail.caseId)).toBeInTheDocument();
-        expect(screen.getByText(transactionDetail.qualType)).toBeInTheDocument();
-        expect(screen.getByText(transactionDetail.ownerName)).toBeInTheDocument();
-        expect(screen.getByText(transactionDetail.annuitantName)).toBeInTheDocument();
+        expect(
+            screen.getByText(transactionDetail.qualType)
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(transactionDetail.ownerName)
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(transactionDetail.annuitantName)
+        ).toBeInTheDocument();
         expect(screen.getByTestId('open-status-row')).toBeInTheDocument();
     });
 

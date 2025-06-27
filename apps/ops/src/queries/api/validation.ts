@@ -9,7 +9,10 @@ import { client } from '../api-utils/client';
 
 const baseUrl = baseAppUrl + '/api/validation/v1';
 
-export const validateAddress = async (clientCode: string, address: Address): Promise<any> => {
+export const validateAddress = async (
+    clientCode: string,
+    address: Address
+): Promise<any> => {
     try {
         if (!clientCode) {
             throw new Error('no client provided');

@@ -7,4 +7,6 @@ export interface Pii {
 
 export interface PiiContext extends Pii {}
 
-export interface PiiProps extends PropsWithChildren<HTMLAttributes<HTMLSpanElement>>, Pii {}
+export interface PiiProps
+    extends PropsWithChildren<HTMLAttributes<HTMLSpanElement>>,
+        Pii {}

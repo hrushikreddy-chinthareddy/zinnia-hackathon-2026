@@ -3,7 +3,12 @@ import { useEffect, useState } from 'react';
 import xss from 'xss';
 
 import ButtonGroupItem from '@deps/components/button-group/button-group-item/button-group-item';
-import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldFormat,
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldLabel from '@deps/components/fields/field-label';
 
 import { TaxWithholdingRowProp, getClasses } from './tax-withholding-row';
@@ -18,13 +23,29 @@ const TaxWithholdingSpecified: React.FC<TaxWithholdingRowProp> = ({
     isFormStateReadOnly,
 }) => {
     const { t } = useTranslation();
-    const [dollarAmount, setDollarAmount] = useState<string | null>(withholding?.dollarAmount || null);
-    const [dontWithhold, setDontWithhold] = useState<boolean>(withholding?.dontWithhold || false);
-    const [percentAmount, setPercentAmount] = useState<string | null>(withholding?.percentAmount || null);
-    const [additionalPercentAmount, setAdditionalPercentAmount] = useState<string | null>(withholding?.additionalPercentAmount || null);
-    const [selectMinimum, setSelectMinimum] = useState<boolean>(withholding?.selectMinimum || false);
-    const [specifiedWithholding, setSpecifiedWithholding] = useState<boolean>(withholding?.specified || false);
-    const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: '' };
+    const [dollarAmount, setDollarAmount] = useState<string | null>(
+        withholding?.dollarAmount || null
+    );
+    const [dontWithhold, setDontWithhold] = useState<boolean>(
+        withholding?.dontWithhold || false
+    );
+    const [percentAmount, setPercentAmount] = useState<string | null>(
+        withholding?.percentAmount || null
+    );
+    const [additionalPercentAmount, setAdditionalPercentAmount] = useState<
+        string | null
+    >(withholding?.additionalPercentAmount || null);
+    const [selectMinimum, setSelectMinimum] = useState<boolean>(
+        withholding?.selectMinimum || false
+    );
+    const [specifiedWithholding, setSpecifiedWithholding] = useState<boolean>(
+        withholding?.specified || false
+    );
+    const numberFormat = {
+        type: 'number' as FieldFormat,
+        decimalPlaces: 2,
+        format: '',
+    };
 
     useEffect(() => {
         onDataChange({
@@ -36,7 +57,14 @@ const TaxWithholdingSpecified: React.FC<TaxWithholdingRowProp> = ({
             additionalPercentAmount,
             specified: specifiedWithholding,
         });
-    }, [dollarAmount, dontWithhold, percentAmount, selectMinimum, additionalPercentAmount, specifiedWithholding]);
+    }, [
+        dollarAmount,
+        dontWithhold,
+        percentAmount,
+        selectMinimum,
+        additionalPercentAmount,
+        specifiedWithholding,
+    ]);
 
     return (
         <div className={className} data-testid={`${place}-tax-withholding-row`}>
@@ -46,7 +74,9 @@ const TaxWithholdingSpecified: React.FC<TaxWithholdingRowProp> = ({
                     className={getClasses(dontWithhold)}
                     checked={dontWithhold}
                     dataTestId={`${place}-tax-withholding-do-not-withhold`}
-                    label={t('caseWithdrawal.request.taxWithholdings.dontWithhold')}
+                    label={t(
+                        'caseWithdrawal.request.taxWithholdings.dontWithhold'
+                    )}
                     onClick={() => {
                         setDontWithhold(!dontWithhold);
                     }}
@@ -58,7 +88,9 @@ const TaxWithholdingSpecified: React.FC<TaxWithholdingRowProp> = ({
                     checked={selectMinimum}
                     className={getClasses(selectMinimum)}
                     dataTestId={`${place}-tax-withholding-select-minimum`}
-                    label={t('caseWithdrawal.request.taxWithholdings.selectMin')}
+                    label={t(
+                        'caseWithdrawal.request.taxWithholdings.selectMin'
+                    )}
                     onClick={() => {
                         setSelectMinimum(!selectMinimum);
                     }}
@@ -68,14 +100,18 @@ const TaxWithholdingSpecified: React.FC<TaxWithholdingRowProp> = ({
                 {additionalWithHoldingConfig?.amountType && selectMinimum ? (
                     <Field
                         formatOptions={numberFormat}
-                        onChange={e => {
+                        onChange={(e) => {
                             setAdditionalPercentAmount(xss(e?.target?.value));
                         }}
                         size={FieldSize.Small}
                         trailing={<div>%</div>}
                         type={FieldType.BaseActive}
                         value={additionalPercentAmount || ''}
-                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         disabled={isFormStateReadOnly}
                     />
                 ) : null}
@@ -84,7 +120,9 @@ const TaxWithholdingSpecified: React.FC<TaxWithholdingRowProp> = ({
                     checked={specifiedWithholding}
                     className={getClasses(specifiedWithholding)}
                     dataTestId={`${place}-tax-withholding-select-specified`}
-                    label={t('caseWithdrawal.request.taxWithholdings.specified')}
+                    label={t(
+                        'caseWithdrawal.request.taxWithholdings.specified'
+                    )}
                     onClick={() => {
                         setSpecifiedWithholding(!specifiedWithholding);
                     }}
@@ -97,25 +135,33 @@ const TaxWithholdingSpecified: React.FC<TaxWithholdingRowProp> = ({
                     <Field
                         formatOptions={numberFormat}
                         leading={<div>$</div>}
-                        onChange={e => {
+                        onChange={(e) => {
                             setDollarAmount(xss(e?.target?.value));
                         }}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={dollarAmount || ''}
-                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         disabled={isFormStateReadOnly}
                     />
                     <Field
                         formatOptions={numberFormat}
-                        onChange={e => {
+                        onChange={(e) => {
                             setPercentAmount(xss(e?.target?.value));
                         }}
                         size={FieldSize.Small}
                         trailing={<div>%</div>}
                         type={FieldType.BaseActive}
                         value={percentAmount || ''}
-                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         disabled={isFormStateReadOnly}
                     />
                 </div>

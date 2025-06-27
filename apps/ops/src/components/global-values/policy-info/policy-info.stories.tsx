@@ -2,7 +2,11 @@ import { Meta } from '@storybook/react';
 import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import { t } from 'i18next';
 
-import { BadgeVariant, getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
+import {
+    BadgeVariant,
+    getBadgeStatus,
+    getBadgeStatusVariant,
+} from '@deps/components/badge/badge.helpers';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { formatDate } from '@deps/helpers/string.helpers';
 
@@ -17,7 +21,7 @@ export default {
     title: 'Components/GlobalValues/PolicyInfo',
     component: PolicyInfo,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="bg-white">
                 <Story />
             </div>
@@ -25,7 +29,9 @@ export default {
     ],
 } as Meta<typeof PolicyInfo>;
 
-export const PolicyNumber = () => <PolicyNumberComponent policyNumber="AU22029654" />;
+export const PolicyNumber = () => (
+    <PolicyNumberComponent policyNumber="AU22029654" />
+);
 
 export const PolicyBadgeStatus = () => (
     <PolicyBadgeStatusComponent
@@ -35,9 +41,13 @@ export const PolicyBadgeStatus = () => (
     />
 );
 
-export const PolicyProductType = () => <PolicyProductTypeComponent productType={ProductType.UNIVERSALLIFE} />;
+export const PolicyProductType = () => (
+    <PolicyProductTypeComponent productType={ProductType.UNIVERSALLIFE} />
+);
 
-export const PolicyProductMarketingName = () => <PolicyProductMarketingNameComponent marketingName="Everly Life" />;
+export const PolicyProductMarketingName = () => (
+    <PolicyProductMarketingNameComponent marketingName="Everly Life" />
+);
 
 export const PolicyNotIssuedInformation = () => {
     const policyBadgeStatus = PolicyStatus.NOTISSUED;

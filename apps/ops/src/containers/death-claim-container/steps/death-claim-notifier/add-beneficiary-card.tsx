@@ -6,14 +6,16 @@ import { TranslationFiles } from '@deps/config/translations';
 
 export interface IPartyCardProps {
     onCardClick: (value: boolean) => void;
-    isNewBene: boolean
-};
+    isNewBene: boolean;
+}
 
 export const AddBeneficiaryCard = ({
     onCardClick,
-    isNewBene
+    isNewBene,
 }: IPartyCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.deathClaimNotification' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'deathClaims.deathClaimNotification',
+    });
 
     const handleClick = () => {
         onCardClick(!isNewBene);

@@ -35,7 +35,10 @@ function addNameToDataURL(dataURL: string, name: string) {
     if (dataURL === null) {
         return null;
     }
-    return dataURL.replace(';base64', `;name=${encodeURIComponent(name)};base64`);
+    return dataURL.replace(
+        ';base64',
+        `;name=${encodeURIComponent(name)};base64`
+    );
 }
 
 type FileInfoType = {
@@ -50,7 +53,7 @@ function processFile(file: File): Promise<FileInfoType> {
     return new Promise((resolve, reject) => {
         const reader = new window.FileReader();
         reader.onerror = reject;
-        reader.onload = event => {
+        reader.onload = (event) => {
             if (typeof event.target?.result === 'string') {
                 resolve({
                     dataURL: addNameToDataURL(event.target.result, name),
@@ -82,7 +85,11 @@ function getFileSubtype(blob: Blob) {
     return blob.type || '';
 }
 
-export function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export function FilesInfo<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+>({
     filesInfo,
 }: {
     filesInfo: FileInfoType[];
@@ -100,7 +107,10 @@ export function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
             {filesInfo.map((fileInfo, key) => {
                 const { name } = fileInfo;
                 return (
-                    <li key={key} className="p-2 border-1 border-gray-100 my-4 max-w-sm">
+                    <li
+                        key={key}
+                        className="p-2 border-1 border-gray-100 my-4 max-w-sm"
+                    >
                         <div className="typography-content-body-sm-bold flex gap-2 ">
                             <UploadIcon height={25} width={25} />
                             {name !== undefined ? name : 'No file chosen'}
@@ -135,11 +145,34 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
     }, [] as FileInfoType[]);
 }
 
-function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(widgetProps: WidgetProps<T, S, F>) {
-    const { disabled, readonly, required, multiple, onChange, value, options, name, registry, schema, uiSchema, formContext } = widgetProps;
+function FileWidget<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+>(widgetProps: WidgetProps<T, S, F>) {
+    const {
+        disabled,
+        readonly,
+        required,
+        multiple,
+        onChange,
+        value,
+        options,
+        name,
+        registry,
+        schema,
+        uiSchema,
+        formContext,
+    } = widgetProps;
 
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
-    const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'general',
+    });
+    const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+        'BaseInputTemplate',
+        registry,
+        options
+    );
     const sideSheet = useSideSheetContext();
 
     const { showFiles } = getUiOptions<T, S, F>(uiSchema);
@@ -173,12 +206,17 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                         documentCategory: metaData?.docCategory,
                         documentType: metaData?.documentType,
                         documentExt: metaData?.fileType,
-                        documentName: metaData?.documentTypeDescription || name || '',
+                        documentName:
+                            metaData?.documentTypeDescription || name || '',
                     };
                     attachments.push(attachment);
 
                     const task = formContext?.customData?.task;
-                    return await attachFilesToMappedDocuments(attachment, task, formContext?.correlationId || '');
+                    return await attachFilesToMappedDocuments(
+                        attachment,
+                        task,
+                        formContext?.correlationId || ''
+                    );
                 } else {
                     failedUploads.push(name); // Add the file name to the failed uploads list
                 }
@@ -199,10 +237,16 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
             if (failedUploads.length > 0) {
                 // Notify the user about failed uploads
                 setToastVariant(ToastVariant.Error);
-                setToastMessage(t(`fileUploadToastMessages.fileUploadError`, { failedUploads: failedUploads.join(', ') }));
+                setToastMessage(
+                    t(`fileUploadToastMessages.fileUploadError`, {
+                        failedUploads: failedUploads.join(', '),
+                    })
+                );
             } else {
                 setToastVariant(ToastVariant.Success);
-                setToastMessage(t(`fileUploadToastMessages.fileUploadSuccess`, {}));
+                setToastMessage(
+                    t(`fileUploadToastMessages.fileUploadSuccess`, {})
+                );
             }
 
             sideSheet.onClose();
@@ -217,8 +261,10 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
             // Due to variances in themes, dealing with multiple files for the array case now happens one file at a time.
             // This is because we don't pass `multiple` into the `BaseInputTemplate` anymore. Instead, we deal with the single
             // file in each event and concatenate them together ourselves
-            processFiles(event.target.files).then(filesInfoEvent => {
-                const newValue = filesInfoEvent.map(fileInfo => fileInfo.dataURL);
+            processFiles(event.target.files).then((filesInfoEvent) => {
+                const newValue = filesInfoEvent.map(
+                    (fileInfo) => fileInfo.dataURL
+                );
 
                 let values = '';
                 if (multiple) {
@@ -241,7 +287,9 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
                         <FileAttachmentComponent
                             carrier={formContext?.customData?.carrier || ''}
                             onClose={() => sideSheet.onClose()}
-                            onSubmit={(formData: EDSDocumentRequestBody) => onSubmit(formData, newValue)}
+                            onSubmit={(formData: EDSDocumentRequestBody) =>
+                                onSubmit(formData, newValue)
+                            }
                         />
                     </div>
                 );
@@ -267,7 +315,9 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const rmFile = useCallback(
         (index: number) => {
             if (multiple) {
-                const newValue = value.filter((_: any, i: number) => i !== index);
+                const newValue = value.filter(
+                    (_: any, i: number) => i !== index
+                );
                 onChange(newValue);
             } else {
                 onChange(undefined);
@@ -275,13 +325,19 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         },
         [multiple, value, onChange]
     );
-    const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
+    const filesInfo = useMemo(
+        () => extractFileInfo(Array.isArray(value) ? value : [value]),
+        [value]
+    );
 
     const readonlyClass = readonly ? '!cursor-not-allowed opacity-50' : '';
     return (
         <>
             <div className={`mt-1 ${readonlyClass}`}>
-                <label htmlFor={widgetProps.id} className={`${style.customFileUpload} ${readonlyClass}`}>
+                <label
+                    htmlFor={widgetProps.id}
+                    className={`${style.customFileUpload} ${readonlyClass}`}
+                >
                     {schema?.title ?? t('upload')}
                 </label>
                 <BaseInputTemplate

@@ -3,7 +3,9 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useState } from 'react';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
@@ -21,13 +23,30 @@ type TaskReviewStepProps = {
     clientCode: string;
 };
 
-export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
-    const { isReadyForDataEntry, task, correlationId, setTask, setSubmitFailed } = useContext(TaskDataContext);
+export const TaskReviewStep = ({
+    caseId,
+    clientCode,
+    taskType,
+}: TaskReviewStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: `${convertToCamelCase(taskType)}.taskReview`,
+    });
+    const {
+        isReadyForDataEntry,
+        task,
+        correlationId,
+        setTask,
+        setSubmitFailed,
+    } = useContext(TaskDataContext);
 
-    const [nmDetails, setNmDetails] = useState<{ nmId: string; nmDetails: string } | null>(null);
+    const [nmDetails, setNmDetails] = useState<{
+        nmId: string;
+        nmDetails: string;
+    } | null>(null);
 
-    const [selectedExceptionDetails, setSelectedExceptionDetails] = useState<string[]>([]);
+    const [selectedExceptionDetails, setSelectedExceptionDetails] = useState<
+        string[]
+    >([]);
     const { goToNext } = useWorkflow();
 
     const handleStepContinue = useCallback(async () => {
@@ -36,7 +55,7 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
                 ...task,
                 data: {
                     details: task.data?.details || {},
-                    nigoList: selectedExceptionDetails.map(detail => ({
+                    nigoList: selectedExceptionDetails.map((detail) => ({
                         issue: nmDetails?.nmDetails,
                         applicationValue: detail,
                         nmid: nmDetails?.nmId,
@@ -52,7 +71,15 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
             }
         }
         goToNext();
-    }, [goToNext, isReadyForDataEntry, nmDetails, selectedExceptionDetails, setTask, task, correlationId]);
+    }, [
+        goToNext,
+        isReadyForDataEntry,
+        nmDetails,
+        selectedExceptionDetails,
+        setTask,
+        task,
+        correlationId,
+    ]);
 
     return (
         <WorkflowCard
@@ -78,7 +105,9 @@ export const TaskReviewStep = ({ caseId, clientCode, taskType }: TaskReviewStepP
                         activeDocType={DocumentTypeView.Case}
                         setNmDetails={setNmDetails}
                         selectedExceptionDetails={selectedExceptionDetails}
-                        setSelectedExceptionDetails={setSelectedExceptionDetails}
+                        setSelectedExceptionDetails={
+                            setSelectedExceptionDetails
+                        }
                     />
                 </div>
             </div>

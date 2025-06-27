@@ -9,7 +9,7 @@ export enum PartyRole {
 
 export function getPolicyOwners(parties: PartyInstance[]): PartyInstance[] {
     return parties
-        .filter(party => party?.partyRole?.includes(PartyRole.Owner))
+        .filter((party) => party?.partyRole?.includes(PartyRole.Owner))
         .sort((a, b) => {
             if (a.partyRole?.includes(PartyRole.Primary)) {
                 return -1;
@@ -23,7 +23,10 @@ export function getPolicyOwners(parties: PartyInstance[]): PartyInstance[] {
 
 export function getAgents(parties: PartyInstance[]): PartyInstance[] {
     return parties
-        .filter(party => party?.partyRole?.includes(PartyRole.Agent))
-        .sort(a => (a.partyRole.includes(PartyRole.ServicingAgent) ? -1 : 1))
-        .filter((party, index, self) => index === self.findIndex(t => t.fullName === party.fullName));
+        .filter((party) => party?.partyRole?.includes(PartyRole.Agent))
+        .sort((a) => (a.partyRole.includes(PartyRole.ServicingAgent) ? -1 : 1))
+        .filter(
+            (party, index, self) =>
+                index === self.findIndex((t) => t.fullName === party.fullName)
+        );
 }

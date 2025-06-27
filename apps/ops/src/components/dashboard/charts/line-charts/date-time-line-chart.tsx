@@ -8,7 +8,9 @@ interface DateTimeLineChartProps {
     yAxisTitle?: string;
     xAxisTitle?: string;
     tooltipFormatter?: Highcharts.TooltipFormatterCallbackFunction | undefined;
-    xAxisLabelFormatter?: Highcharts.AxisLabelsFormatterCallbackFunction | undefined;
+    xAxisLabelFormatter?:
+        | Highcharts.AxisLabelsFormatterCallbackFunction
+        | undefined;
     colors?: string[];
 }
 

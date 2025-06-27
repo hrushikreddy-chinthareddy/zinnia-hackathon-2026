@@ -40,12 +40,14 @@ export const useMainNavItems = (): NavGroup[] => {
     const policySearchText = t('site.navLinks.policySearch.text');
     const policySearchHref = t('site.navLinks.policySearch.link') || '';
     const transactionOpsSuiteText = t('site.navLinks.transactionOpsSuite.text');
-    const transactionOpsSuiteHref = t('site.navLinks.transactionOpsSuite.link') || '';
+    const transactionOpsSuiteHref =
+        t('site.navLinks.transactionOpsSuite.link') || '';
     const dashboardText = t('site.navLinks.dashboard.text') || '';
     const dashboardHref = t('site.navLinks.dashboard.link') || '';
     const accessManagement = t('site.navLinks.accessManagement.text');
     const marketingStorefrontText = t('site.navLinks.marketingStorefront.text');
-    const marketingStorefrontHref = t('site.navLinks.marketingStorefront.link') || '';
+    const marketingStorefrontHref =
+        t('site.navLinks.marketingStorefront.link') || '';
 
     const handleAnalytics = (linkText: string) => {
         segmentAnalyticsTrackEvent('navigation_clicked', {
@@ -59,21 +61,39 @@ export const useMainNavItems = (): NavGroup[] => {
         id: homeLinkHref,
         display: homeLinkText,
         icon: IconType.HOUSE,
-        renderComponent: <NavLink type={NavElementType.Link} href={homeLinkHref} onClick={() => handleAnalytics(homeLinkText)} />,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={homeLinkHref}
+                onClick={() => handleAnalytics(homeLinkText)}
+            />
+        ),
     };
 
     const caseLink = {
         id: caseLinkHref,
         display: caseLinkText,
         icon: IconType.BRIEFCASE,
-        renderComponent: <NavLink type={NavElementType.Link} href={caseLinkHref} onClick={() => handleAnalytics(caseLinkText)} />,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={caseLinkHref}
+                onClick={() => handleAnalytics(caseLinkText)}
+            />
+        ),
     };
 
     const policyLink = {
         id: policySearchHref,
         display: policySearchText,
         icon: IconType.SHIELD_CHECKMARK,
-        renderComponent: <NavLink type={NavElementType.Link} href={policySearchHref} onClick={() => handleAnalytics(policySearchText)} />,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={policySearchHref}
+                onClick={() => handleAnalytics(policySearchText)}
+            />
+        ),
     };
 
     const transactionOpsLink = {
@@ -81,7 +101,11 @@ export const useMainNavItems = (): NavGroup[] => {
         display: transactionOpsSuiteText,
         icon: IconType.TICKET,
         renderComponent: (
-            <NavLink type={NavElementType.Link} href={transactionOpsSuiteHref} onClick={() => handleAnalytics(transactionOpsSuiteText)} />
+            <NavLink
+                type={NavElementType.Link}
+                href={transactionOpsSuiteHref}
+                onClick={() => handleAnalytics(transactionOpsSuiteText)}
+            />
         ),
     };
 
@@ -89,7 +113,13 @@ export const useMainNavItems = (): NavGroup[] => {
         id: dashboardHref,
         display: dashboardText,
         icon: IconType.CHART_LINE,
-        renderComponent: <NavLink type={NavElementType.Link} href={dashboardHref} onClick={() => handleAnalytics(dashboardText)} />,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={dashboardHref}
+                onClick={() => handleAnalytics(dashboardText)}
+            />
+        ),
     };
 
     const toppanMerrillLink = {
@@ -131,7 +161,9 @@ export const useMainNavItems = (): NavGroup[] => {
             items: [
                 ...(hasHomeExperience && showHomeNavBtn ? [homeLink] : []),
                 ...(isAllowReadCaseManagement ? [caseLink] : []),
-                ...(isAdvisorsExcel || isAllowReadPolicyAdmin ? [policyLink] : []),
+                ...(isAdvisorsExcel || isAllowReadPolicyAdmin
+                    ? [policyLink]
+                    : []),
             ],
         },
         {
@@ -141,7 +173,11 @@ export const useMainNavItems = (): NavGroup[] => {
             items: [...(hasDashboardPermission ? [dashboardLink] : [])],
         },
         {
-            items: [...(isSuperAdmin ? [accessManagementLink] : []), ...(showToppanMerrill ? [toppanMerrillLink] : []), userContextMenu],
+            items: [
+                ...(isSuperAdmin ? [accessManagementLink] : []),
+                ...(showToppanMerrill ? [toppanMerrillLink] : []),
+                userContextMenu,
+            ],
             alignEnd: true,
         },
     ];

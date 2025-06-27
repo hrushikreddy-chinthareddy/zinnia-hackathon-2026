@@ -27,12 +27,19 @@ type TaxDocumentsTableProps = {
     results: TaxformResponse[];
 };
 
-export default function TaxDocumentsTable({ carrierCode, planCode, policyNumber, results }: TaxDocumentsTableProps) {
+export default function TaxDocumentsTable({
+    carrierCode,
+    planCode,
+    policyNumber,
+    results,
+}: TaxDocumentsTableProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
 
     return (
         <Table className="my-8" stickyColumn={TableStickyColumn.End}>
-            <caption className="hidden">{`${policyNumber} ${t('documents')}`}</caption>
+            <caption className="hidden">{`${policyNumber} ${t(
+                'documents'
+            )}`}</caption>
             <TableHeader className="typography-content-body-sm-bold">
                 <TableRow>
                     <TableHeaderCell>{t('name')}</TableHeaderCell>
@@ -41,25 +48,45 @@ export default function TaxDocumentsTable({ carrierCode, planCode, policyNumber,
                     <TableHeaderCell>
                         <div className="flex flex-row items-center gap-1">
                             {t('actions')}
-                            <Popover body={t('actionsTooltip')} title={t('actions') as string} placement={PopoverPlacement.TopLeft}>
-                                <Icon type={IconType.CIRCLE_INFO} color="var(--color-primary-color-primary)" height={16} width={16} />
+                            <Popover
+                                body={t('actionsTooltip')}
+                                title={t('actions') as string}
+                                placement={PopoverPlacement.TopLeft}
+                            >
+                                <Icon
+                                    type={IconType.CIRCLE_INFO}
+                                    color="var(--color-primary-color-primary)"
+                                    height={16}
+                                    width={16}
+                                />
                             </Popover>
                         </div>
                     </TableHeaderCell>
                 </TableRow>
             </TableHeader>
-            <TableBody className={clsx('typography-content-body-sm', styles.tableBody)}>
-                {results.map(document => {
+            <TableBody
+                className={clsx('typography-content-body-sm', styles.tableBody)}
+            >
+                {results.map((document) => {
                     return (
-                        <TableRow className="disabled-tr" key={`document-${document.taxYear}-${document.formId}`}>
+                        <TableRow
+                            className="disabled-tr"
+                            key={`document-${document.taxYear}-${document.formId}`}
+                        >
                             <TableCell>
-                                <span className="flex flex-col items-start">{document?.name || DEFAULT_ERROR_STRING}</span>
+                                <span className="flex flex-col items-start">
+                                    {document?.name || DEFAULT_ERROR_STRING}
+                                </span>
                             </TableCell>
                             <TableCell>
-                                <span>{document?.taxYear || DEFAULT_ERROR_STRING}</span>
+                                <span>
+                                    {document?.taxYear || DEFAULT_ERROR_STRING}
+                                </span>
                             </TableCell>
                             <TableCell>
-                                <span>{document.formId || DEFAULT_ERROR_STRING}</span>
+                                <span>
+                                    {document.formId || DEFAULT_ERROR_STRING}
+                                </span>
                             </TableCell>
                             <TableCell>
                                 {' '}
@@ -78,7 +105,13 @@ export default function TaxDocumentsTable({ carrierCode, planCode, policyNumber,
                 })}
                 {!results.length && (
                     <TableRow className="disabled-tr w-full">
-                        <TableCell className={clsx('!text-left md:!text-center', styles.noResults)} colSpan={5}>
+                        <TableCell
+                            className={clsx(
+                                '!text-left md:!text-center',
+                                styles.noResults
+                            )}
+                            colSpan={5}
+                        >
                             {t('noResults')}
                         </TableCell>
                     </TableRow>

@@ -11,10 +11,12 @@
         }
 
         &:last-of-type input {
-            border-radius: 0 0 var(--measure-dimension-radius-md) var(--measure-dimension-radius-md);
+            border-radius: 0 0 var(--measure-dimension-radius-md)
+                var(--measure-dimension-radius-md);
 
             @media (min-width: 768px) {
-                border-radius: 0 var(--measure-dimension-radius-md) var(--measure-dimension-radius-md) 0;
+                border-radius: 0 var(--measure-dimension-radius-md)
+                    var(--measure-dimension-radius-md) 0;
             }
         }
     }
@@ -30,12 +32,17 @@
 
 .input {
     --iconSize: 24px;
-    border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-subtle);
+    border: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-subtle);
     border-top-width: 0;
-    border-radius: 0 0 var(--measure-dimension-radius-md) var(--measure-dimension-radius-md);
+    border-radius: 0 0 var(--measure-dimension-radius-md)
+        var(--measure-dimension-radius-md);
     font-family: var(--font-family-secondary);
     padding-block: var(--measure-dimension-padding-lg);
-    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-dimension-padding-2xl));
+    padding-left: calc(
+        var(--iconSize) + var(--measure-dimension-gap-lg) +
+            var(--measure-dimension-padding-2xl)
+    );
     padding-right: calc(var(--iconSize) + var(--measure-dimension-padding-lg));
     width: 100%;
 
@@ -73,7 +80,8 @@
     @media (min-width: 768px) {
         border-left-width: 0;
         border-top-width: var(--measure-dimension-stroke-sm);
-        border-radius: 0 var(--measure-dimension-radius-md) var(--measure-dimension-radius-md) 0;
+        border-radius: 0 var(--measure-dimension-radius-md)
+            var(--measure-dimension-radius-md) 0;
         min-width: 186px;
 
         &.wide {

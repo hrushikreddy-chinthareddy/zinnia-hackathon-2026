@@ -1,11 +1,19 @@
 import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
-import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Loader,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { RadioItem } from '@deps/components/radio/radio';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { getBeneficiariesByRole } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
@@ -15,25 +23,49 @@ import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import NotificationCard from './notification-card';
-import { ClaimCommunicationTypes, NotificationMethod, RoleType } from '../../death-claim.types';
+import {
+    ClaimCommunicationTypes,
+    NotificationMethod,
+    RoleType,
+} from '../../death-claim.types';
 
 type NotificationMethodStepProps = {
     communicationOptions: RadioItem[];
     policy: Policy;
 };
 
-const NotificationMethodStep = ({ policy, communicationOptions }: NotificationMethodStepProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'deathClaims.notificationMethod' });
-    const { beneficiaries, setBeneficiaries, notifiers, owners, setSubmitFailed, setCaseId, formErrors, onbaseCaseId, onbaseDocumentNumber } = useDeathClaim();
+const NotificationMethodStep = ({
+    policy,
+    communicationOptions,
+}: NotificationMethodStepProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'deathClaims.notificationMethod',
+    });
+    const {
+        beneficiaries,
+        setBeneficiaries,
+        notifiers,
+        owners,
+        setSubmitFailed,
+        setCaseId,
+        formErrors,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+    } = useDeathClaim();
     const { goToNext } = useWorkflow();
     const [isLoading, setIsLoading] = useState(false);
 
     const policyBeneficiaries: NotificationMethod[] = useMemo(() => {
         const isPrimaryBeneSelected =
-            notifiers.notifierRole === RoleType.Beneficiary && notifiers.party.partyRole == PartyRole.PRIMARYBENEFICIARY;
-        const beneList = getBeneficiariesByRole(policy, [PartyRole.PRIMARYBENEFICIARY]);
+            notifiers.notifierRole === RoleType.Beneficiary &&
+            notifiers.party.partyRole == PartyRole.PRIMARYBENEFICIARY;
+        const beneList = getBeneficiariesByRole(policy, [
+            PartyRole.PRIMARYBENEFICIARY,
+        ]);
         if (isPrimaryBeneSelected) {
-            return beneList.filter(bene => bene.party.partyId === notifiers.party.partyId);
+            return beneList.filter(
+                (bene) => bene.party.partyId === notifiers.party.partyId
+            );
         } else {
             return beneList;
         }
@@ -47,7 +79,9 @@ const NotificationMethodStep = ({ policy, communicationOptions }: NotificationMe
 
     const handleStepContinue = useCallback(async () => {
         const asArray = Object.entries(formErrors);
-        const filterCb = asArray.filter(([key, value]) => value !== '' || key === 'submit');
+        const filterCb = asArray.filter(
+            ([key, value]) => value !== '' || key === 'submit'
+        );
         const filteredErrors = Object.fromEntries(filterCb);
         if (Object.keys(filteredErrors).length > 0) {
             return;
@@ -58,7 +92,7 @@ const NotificationMethodStep = ({ policy, communicationOptions }: NotificationMe
     }, [formErrors, goToNext]);
 
     const handleNotification = (data: any, index: number) => {
-        setBeneficiaries(prevState => {
+        setBeneficiaries((prevState) => {
             const newState = prevState;
             newState[index] = {
                 ...newState[index],
@@ -70,7 +104,15 @@ const NotificationMethodStep = ({ policy, communicationOptions }: NotificationMe
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries, onbaseCaseId, onbaseDocumentNumber);
+        const payload = buildClaimPaylod(
+            policy,
+            null,
+            notifiers,
+            owners,
+            beneficiaries,
+            onbaseCaseId,
+            onbaseDocumentNumber
+        );
         browserLogInfo('NotificationMethodStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,
@@ -104,7 +146,9 @@ const NotificationMethodStep = ({ policy, communicationOptions }: NotificationMe
         >
             <div className="flex flex-col gap-2">
                 <div className="my-2">
-                    <Typography variant={TypographyVariant.LabelLg}>{t('notificationMethod')}</Typography>
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {t('notificationMethod')}
+                    </Typography>
                 </div>
                 {isLoading && (
                     <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
@@ -121,13 +165,19 @@ const NotificationMethodStep = ({ policy, communicationOptions }: NotificationMe
                                 party={party}
                                 index={index}
                                 handleNotification={handleNotification}
-                                defaultCommunicationType={ClaimCommunicationTypes.Email}
+                                defaultCommunicationType={
+                                    ClaimCommunicationTypes.Email
+                                }
                                 policyBeneficiaries={policyBeneficiaries}
                             />
                         );
                     })}
                 {beneficiaries && beneficiaries.length === 0 && (
-                    <AssistiveText className="my-lg" variant={AssistiveTextVariant.Info} text={t('noBeneficiaries') as string} />
+                    <AssistiveText
+                        className="my-lg"
+                        variant={AssistiveTextVariant.Info}
+                        text={t('noBeneficiaries') as string}
+                    />
                 )}
             </div>
         </WorkflowCard>

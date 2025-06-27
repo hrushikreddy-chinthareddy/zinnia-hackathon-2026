@@ -6,7 +6,12 @@ const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
 export default withAuthAndLogging(
     async (req, res, loggingContext) => {
         const { caseId } = req.query;
-        return await requestHandler<any>(`${ssrCasesUrl}/${caseId}/document`, req, res, loggingContext);
+        return await requestHandler<any>(
+            `${ssrCasesUrl}/${caseId}/document`,
+            req,
+            res,
+            loggingContext
+        );
     },
     { file: 'case/v1/cases/:id/document', function: 'routeHandler' }
 );

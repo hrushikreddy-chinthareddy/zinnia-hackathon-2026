@@ -1,9 +1,12 @@
-import { TFunction , useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
 import * as React from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
 
-import { MaskedAccountNumber, IMaskedAccountNumberProps } from './masked-account-number';
+import {
+    MaskedAccountNumber,
+    IMaskedAccountNumberProps,
+} from './masked-account-number';
 
 export enum BankInfoType {
     Full = 'full',
@@ -34,17 +37,20 @@ const MaskedAccountNumberToggle = ({
     setDisbursementInformation,
     disabled,
 }: IBankInformationContainerProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.distributionMethod' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.distributionMethod',
+    });
     return selectedBankInfoOption ? (
         <>
             <ButtonGrp
                 className="mt-4"
                 activeValue={selectedBankInfoOption}
-                toggle={val => {
-                    setDisbursementInformation(fs => {
+                toggle={(val) => {
+                    setDisbursementInformation((fs) => {
                         return {
                             ...fs,
-                            isDirectDeposit: val === BankInfoType.Full ? true : false,
+                            isDirectDeposit:
+                                val === BankInfoType.Full ? true : false,
                         };
                     });
                 }}

@@ -12,8 +12,11 @@ export default function SignatureComment({
     isFormStateReadOnly = false,
     label = 'signatureComment',
 }: SignaturePartProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.signatureValidation' });
-    const { errors, signatureComment, setSignatureComment, signType } = useContext(SignatureValidationContext);
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.signatureValidation',
+    });
+    const { errors, signatureComment, setSignatureComment, signType } =
+        useContext(SignatureValidationContext);
 
     useEffect(() => {
         if (!shouldDisplay) {
@@ -28,7 +31,7 @@ export default function SignatureComment({
         <Field
             label={t(label) as string}
             message={errors[SignatureFieldNames.SignatureComment]}
-            onChange={e => {
+            onChange={(e) => {
                 setSignatureComment(e.target.value);
             }}
             size={FieldSize.Small}

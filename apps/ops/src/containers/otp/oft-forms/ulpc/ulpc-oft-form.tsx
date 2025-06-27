@@ -12,12 +12,17 @@ import SignatureValidations from '@deps/components/otp-withdrawal-form/signature
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FundWithdrawnMethod,
+} from '@deps/models/case/withdrawal/case';
 
 import getUlpcOftConfig from './ulpc-oft-form.helpers';
 
 export default function UlpcOftWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -53,9 +58,13 @@ export default function UlpcOftWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.ULPC}_OFT_DIGITAL_FORM`,
+            formExtName: `${
+                initialForm?.carrier || Carrier.ULPC
+            }_OFT_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.ULPC}_OFT_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.ULPC
+                }_OFT_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -71,33 +80,52 @@ export default function UlpcOftWithdrawalForm() {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
-                title={t('amountDetails.surrenderingInstructions.title') as string}
+                title={
+                    t('amountDetails.surrenderingInstructions.title') as string
+                }
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                title={
+                    t(
+                        'distributionInstruction.investmentSelectionForDistribution'
+                    ) as string
+                }
                 isDerivedMethodFromFunds={true}
                 defaultMethod={FundWithdrawnMethod.Default}
             />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            <CedingCompanyDistribution qualificationOptions={qualificationOptions} isFormStateReadOnly={isFormStateReadOnly} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            <CedingCompanyDistribution
+                qualificationOptions={qualificationOptions}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                title={t('distributionMethod.cedingCompanyDistribution') as string}
+                title={
+                    t('distributionMethod.cedingCompanyDistribution') as string
+                }
                 defaultValue={defaultValues.disbursementOption}
             />
 
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

@@ -15,8 +15,13 @@ export const DEFAULT_PHONE = {
     },
 };
 
-export function usePhoneFields(phone: Phone, formErrors?: FormValidationErrors) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.personalDetails' });
+export function usePhoneFields(
+    phone: Phone,
+    formErrors?: FormValidationErrors
+) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.personalDetails',
+    });
     const numberFormat = { format: '################' };
     const [phoneNumber, setphoneNumber] = useState(phone?.phoneNumber || '');
     const [currentPhone, setCurrentPhone] = useState(phone || DEFAULT_PHONE);
@@ -28,16 +33,20 @@ export function usePhoneFields(phone: Phone, formErrors?: FormValidationErrors) 
         });
     }, [phoneNumber]);
 
-    const phoneNumberField = ({ label, isFormStateReadOnly}: IFieldConfig) => (
+    const phoneNumberField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             label={label || (t(`daytimePhone`) as string)}
-            onChange={e => setphoneNumber(e.target.value as string)}
+            onChange={(e) => setphoneNumber(e.target.value as string)}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={phoneNumber}
             formatOptions={numberFormat}
             message={formErrors?.phone}
-            variant={selectVarientByConfig({ value: phoneNumber, isFormStateReadOnly, error: formErrors?.phone })}
+            variant={selectVarientByConfig({
+                value: phoneNumber,
+                isFormStateReadOnly,
+                error: formErrors?.phone,
+            })}
         />
     );
 
@@ -61,8 +70,17 @@ export interface PartyPhoneProps {
     onDataChange: (value: Phone) => void;
 }
 
-const PartyPhone = ({ fields, formErrors, phone, onDataChange, isFormStateReadOnly }: PartyPhoneProps) => {
-    const { phoneNumberField, currentPhone } = usePhoneFields(phone, formErrors);
+const PartyPhone = ({
+    fields,
+    formErrors,
+    phone,
+    onDataChange,
+    isFormStateReadOnly,
+}: PartyPhoneProps) => {
+    const { phoneNumberField, currentPhone } = usePhoneFields(
+        phone,
+        formErrors
+    );
 
     useEffect(() => {
         onDataChange(currentPhone);
@@ -73,7 +91,16 @@ const PartyPhone = ({ fields, formErrors, phone, onDataChange, isFormStateReadOn
     return (
         <div className="my-4 grid w-full grid-cols-2  gap-2">
             {fields?.map((field, index) => {
-                if (field.fieldName === PhoneFields.phoneNumber) return <div key={index}> {phoneNumberField({ label: field.fieldLabel, isFormStateReadOnly })} </div>;
+                if (field.fieldName === PhoneFields.phoneNumber)
+                    return (
+                        <div key={index}>
+                            {' '}
+                            {phoneNumberField({
+                                label: field.fieldLabel,
+                                isFormStateReadOnly,
+                            })}{' '}
+                        </div>
+                    );
                 else null;
             })}
         </div>

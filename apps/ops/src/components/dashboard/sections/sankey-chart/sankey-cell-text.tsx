@@ -23,12 +23,26 @@ export const SankeyCellText: FC<SankeyCellTextProps> = ({
     textColor = 'rgb(33, 33, 33)',
 }) => {
     return (
-        <foreignObject transform={transform} x="0" y="0" style={{ fill }} pointerEvents="none" width={width} height={height}>
+        <foreignObject
+            transform={transform}
+            x="0"
+            y="0"
+            style={{ fill }}
+            pointerEvents="none"
+            width={width}
+            height={height}
+        >
             <div className={styles.textContainer}>
-                <span style={{ color: textColor }} className="tracking-normal no-underline font-primary text-xl font-medium">
+                <span
+                    style={{ color: textColor }}
+                    className="tracking-normal no-underline font-primary text-xl font-medium"
+                >
                     {wholeNumberFormatify(count)}
                 </span>
-                <span style={{ color: textColor }} className="font-primary text-sm font-medium leading-4 ml-1">
+                <span
+                    style={{ color: textColor }}
+                    className="font-primary text-sm font-medium leading-4 ml-1"
+                >
                     {title}
                 </span>
             </div>

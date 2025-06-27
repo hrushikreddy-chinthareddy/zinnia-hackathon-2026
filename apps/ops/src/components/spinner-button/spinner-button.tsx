@@ -3,7 +3,11 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
+import Button, {
+    ButtonSize,
+    ButtonType,
+    ButtonVariant,
+} from '@deps/components/button/button';
 
 export interface SpinnerButtonProps {
     size?: ButtonSize;
@@ -12,7 +16,12 @@ export interface SpinnerButtonProps {
     onClick: () => void;
 }
 
-const SpinnerButton = ({ size, stopLoading = false, text, onClick }: SpinnerButtonProps) => {
+const SpinnerButton = ({
+    size,
+    stopLoading = false,
+    text,
+    onClick,
+}: SpinnerButtonProps) => {
     const { t } = useTranslation();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +45,9 @@ const SpinnerButton = ({ size, stopLoading = false, text, onClick }: SpinnerButt
 
     return (
         <Button
-            className={clsx('flex items-center gap-1', { 'cursor-wait': variant === ButtonVariant.Inactive })}
+            className={clsx('flex items-center gap-1', {
+                'cursor-wait': variant === ButtonVariant.Inactive,
+            })}
             data-testid="continue-button"
             onClick={handleClick}
             size={size}

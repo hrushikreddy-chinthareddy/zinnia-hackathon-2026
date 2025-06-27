@@ -70,37 +70,59 @@ const getStandardYesNoOptions = (t: TFunction) => [
 
 export default function useMassWithdrawalConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({
+            formSignature,
+            formDisbursement,
+        }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
-            if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (
+                [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                )
+            ) {
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                    formDisbursement?.bank[0].accountNumber !==
+                        formDisbursement?.bank[0].reEnterAccountNumber
                 ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterAccountNumber] = t(
+                        'formValidation.accountNumberDoesNotMatch'
+                    );
                 }
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                    formDisbursement?.bank[0].routingNumber !==
+                        formDisbursement?.bank[0].reEnterBankRoutingNumber
                 ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                        'formValidation.routingNumberDoesNotMatch'
+                    );
                 }
             }
             const ownerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
             // No choice made for signature
-            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                ownerSignature?.isSigned !== false &&
+                !ownerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+                [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                )
             ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
             }
             return errors;
         },
@@ -108,10 +130,16 @@ export default function useMassWithdrawalConfig(t: TFunction) {
     );
 
     const validateMaritalStatusAllowances = (issueState: USStates) => {
-        return [USStates.GEORGIA, USStates.MINNESOTA, USStates['SOUTH CAROLINA']].includes(issueState);
+        return [
+            USStates.GEORGIA,
+            USStates.MINNESOTA,
+            USStates['SOUTH CAROLINA'],
+        ].includes(issueState);
     };
 
-    const getSignaturesConfig = (isKeogh: boolean): SignatureValidationConfig[] => [
+    const getSignaturesConfig = (
+        isKeogh: boolean
+    ): SignatureValidationConfig[] => [
         {
             key: `sig-val-owner`,
             fields: [
@@ -156,7 +184,9 @@ export default function useMassWithdrawalConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
 
@@ -176,17 +206,24 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ formSignature }: OtpWithdrawalFormState): boolean => {
-                const isMarriedSelected = !!formSignature.signVerificationReason?.some(
-                    reason => reason.text === SignVerificationReason.MarriedWithERISA
-                );
+            shouldDisplay: ({
+                formSignature,
+            }: OtpWithdrawalFormState): boolean => {
+                const isMarriedSelected =
+                    !!formSignature.signVerificationReason?.some(
+                        (reason) =>
+                            reason.text ===
+                            SignVerificationReason.MarriedWithERISA
+                    );
                 return isKeogh && isMarriedSelected;
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
 
         if (programTypeText === ProgramType.TotalFreeAmt) {
@@ -199,14 +236,20 @@ export default function useMassWithdrawalConfig(t: TFunction) {
 
         if (programTypeText === ProgramType.NetWithdrawal) {
             const amount = formProgram?.partialAmount?.text || '';
-            return { selectedOption: ProgramType.NetWithdrawal, amount: amount };
+            return {
+                selectedOption: ProgramType.NetWithdrawal,
+                amount: amount,
+            };
         }
 
         if (programTypeText === ProgramType.WITHDRAWAL) {
             const amount = formProgram?.partialPercent?.text || '';
             return {
                 selectedOption:
-                    formProgram.programSubType.text === ProgramSubType.MaximumAmount ? ProgramType.WITHDRAWAL : ProgramType.PartialPercent,
+                    formProgram.programSubType.text ===
+                    ProgramSubType.MaximumAmount
+                        ? ProgramType.WITHDRAWAL
+                        : ProgramType.PartialPercent,
                 amount,
             };
         }
@@ -215,14 +258,18 @@ export default function useMassWithdrawalConfig(t: TFunction) {
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
         {
-            label: t('amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'),
+            label: t(
+                'amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'
+            ),
             value: ProgramType.TotalFreeAmt,
             generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -236,7 +283,10 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Net },
                     programType: { text: ProgramType.NetWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                    partialNetAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -250,12 +300,17 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.GrossWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
         {
-            label: `${t('amountDetails.partialWithdrawal.percetageOfAccountValue')}`,
+            label: `${t(
+                'amountDetails.partialWithdrawal.percetageOfAccountValue'
+            )}`,
             value: ProgramType.PartialPercent,
             amountFieldType: AmountType.Percent,
             generatePayloadFromSelection: (val = null) => {
@@ -264,7 +319,10 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.WITHDRAWAL },
                     programSubType: { text: ProgramSubType.PercentageofAV },
-                    partialPercent: { text: val, amountType: AmountType.Percent },
+                    partialPercent: {
+                        text: val,
+                        amountType: AmountType.Percent,
+                    },
                 };
             },
         },
@@ -300,7 +358,9 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -326,7 +386,10 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -339,11 +402,16 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -353,18 +421,25 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
                 };
@@ -399,7 +474,8 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -415,7 +491,9 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -439,7 +517,10 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -451,11 +532,16 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -464,18 +550,25 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
                 };
@@ -510,7 +603,8 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -556,8 +650,16 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, upsAccount, emailDeliveryNotification }: FormDisbursement) {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                upsAccount,
+                emailDeliveryNotification,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === PaymentMailType.Check &&
+                    paymentMailType.text === PaymentMailType.ExpressCheck
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         accountNumber: upsAccount?.accountNumber?.text ?? '',
@@ -568,7 +670,12 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ accountNumber, accountName, zip, emailNotification }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                accountNumber,
+                accountName,
+                zip,
+                emailNotification,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
@@ -578,7 +685,9 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                         accountNumber: { text: accountNumber ?? '' },
                         zip: { text: zip ?? '' },
                     },
-                    emailDeliveryNotification: { text: emailNotification || false },
+                    emailDeliveryNotification: {
+                        text: emailNotification || false,
+                    },
                 };
             },
         },
@@ -604,7 +713,9 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                 },
             ],
             getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {
-                if (paymentMethod.text !== PaymentMethod.AlternatePayeeAddress) {
+                if (
+                    paymentMethod.text !== PaymentMethod.AlternatePayeeAddress
+                ) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
 
@@ -615,10 +726,16 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     taxId: payee?.taxId?.text ?? '',
                 };
             },
-            generatePayloadFromSelection: ({ payeeName, address, taxId }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                taxId,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.AlternatePayeeAddress },
+                    paymentMethod: {
+                        text: PaymentMethod.AlternatePayeeAddress,
+                    },
                     payee: {
                         name: {
                             text: payeeName || null,
@@ -685,7 +802,8 @@ export default function useMassWithdrawalConfig(t: TFunction) {
             ],
             agentRecommendation: {
                 label: t('additionalInformation.isAgentOrBrokerRecommended'),
-                shouldDisplay: (formSubtype: FormSubtype) => formSubtype === FormSubtype.FullWithdrawal,
+                shouldDisplay: (formSubtype: FormSubtype) =>
+                    formSubtype === FormSubtype.FullWithdrawal,
             },
         },
         {
@@ -721,13 +839,26 @@ export default function useMassWithdrawalConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Prorata,
+        },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
     const formSubtypeOptions = [
@@ -758,7 +889,9 @@ export default function useMassWithdrawalConfig(t: TFunction) {
             value: SignVerificationReason.Single,
         },
         {
-            label: t('signatureValidation.validationReasons.marriedWithoutERISA'),
+            label: t(
+                'signatureValidation.validationReasons.marriedWithoutERISA'
+            ),
             value: SignVerificationReason.MarriedWithoutERISA,
         },
         {
@@ -768,12 +901,27 @@ export default function useMassWithdrawalConfig(t: TFunction) {
     ];
 
     const distributionReasonOptions = [
-        { label: t('distributionReason.reasonOptions.age595'), value: RestrictionOption.Age595 },
-        { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
-        { label: t('distributionReason.reasonOptions.planTermination'), value: RestrictionOption.PlanTermination },
-        { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
         {
-            label: t('distributionReason.reasonOptions.otherEligibleDistributedPermittedPlan'),
+            label: t('distributionReason.reasonOptions.age595'),
+            value: RestrictionOption.Age595,
+        },
+        {
+            label: t('distributionReason.reasonOptions.severance'),
+            value: RestrictionOption.Severance,
+            subElement: <ReasonDate />,
+        },
+        {
+            label: t('distributionReason.reasonOptions.planTermination'),
+            value: RestrictionOption.PlanTermination,
+        },
+        {
+            label: t('distributionReason.reasonOptions.disabled'),
+            value: RestrictionOption.Disabled,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.otherEligibleDistributedPermittedPlan'
+            ),
             value: RestrictionOption.EligibleDistribution,
         },
         {
@@ -781,17 +929,29 @@ export default function useMassWithdrawalConfig(t: TFunction) {
             value: RestrictionOption.QualifiedReservist,
         },
         {
-            label: t('distributionReason.reasonOptions.qualifiedBirthOrAdoption'),
+            label: t(
+                'distributionReason.reasonOptions.qualifiedBirthOrAdoption'
+            ),
             value: RestrictionOption.AdoptionChildBirth,
         },
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
     const waiverItemsConfig: WaiverItemConfig[] = [
         {
             id: PolicyWaiver.NURSING_HOME_AND_HOSPITAL,
             title: t('additionalWaivers.nursingAndHospitalBenefits'),
-            optionTitle: t('additionalWaivers.isNursingAndHospitalBenefitValid'),
+            optionTitle: t(
+                'additionalWaivers.isNursingAndHospitalBenefitValid'
+            ),
             options: getStandardYesNoOptions(t),
         },
         {

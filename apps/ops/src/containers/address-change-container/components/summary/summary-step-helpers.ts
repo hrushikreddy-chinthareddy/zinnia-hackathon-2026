@@ -12,23 +12,45 @@ export enum TableColumnFields {
     PartyRole = 'partyRole',
 }
 
-export const getColDefinition = (t: TFunction, allowedFields: string[]): TableColumn[] =>
+export const getColDefinition = (
+    t: TFunction,
+    allowedFields: string[]
+): TableColumn[] =>
     [
-        { field: TableColumnFields.PolicyNumber, headerName: t('summary.contractNumber'), type: ColumnType.Text },
-        { field: TableColumnFields.PartyRole, headerName: t('summary.role'), type: ColumnType.Text },
-    ].filter(field => allowedFields.includes(field.field));
+        {
+            field: TableColumnFields.PolicyNumber,
+            headerName: t('summary.contractNumber'),
+            type: ColumnType.Text,
+        },
+        {
+            field: TableColumnFields.PartyRole,
+            headerName: t('summary.role'),
+            type: ColumnType.Text,
+        },
+    ].filter((field) => allowedFields.includes(field.field));
 
-export const getRolesRecordForCurrentContract = (t: TFunction, policy: Policy, applyToRoles: ApplyToRolesState[]) => {
+export const getRolesRecordForCurrentContract = (
+    t: TFunction,
+    policy: Policy,
+    applyToRoles: ApplyToRolesState[]
+) => {
     return applyToRoles
-        .filter(item => item.policyNumber === policy.policyNumber)
-        .map(item => {
+        .filter((item) => item.policyNumber === policy.policyNumber)
+        .map((item) => {
             const partyRole = t(`${getRoleToLabelKeyMap(item.partyRole)}`);
             return { ...item, partyRole: toTitleCase(partyRole) };
         });
 };
 
-export const getRolesRecordForOtherContract = (t: TFunction, policy: Policy, applyToRoles: ApplyToRolesState[]) => {
+export const getRolesRecordForOtherContract = (
+    t: TFunction,
+    policy: Policy,
+    applyToRoles: ApplyToRolesState[]
+) => {
     return applyToRoles
-        .filter(item => item.policyNumber !== policy.policyNumber)
-        .map(item => ({ ...item, partyRole: t(`${getRoleToLabelKeyMap(item.partyRole)}`) }));
+        .filter((item) => item.policyNumber !== policy.policyNumber)
+        .map((item) => ({
+            ...item,
+            partyRole: t(`${getRoleToLabelKeyMap(item.partyRole)}`),
+        }));
 };

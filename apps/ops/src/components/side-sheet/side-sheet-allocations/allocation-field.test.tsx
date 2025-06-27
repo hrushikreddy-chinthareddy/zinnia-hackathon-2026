@@ -48,7 +48,9 @@ describe('allocation-field', () => {
         props.isFirst = true;
         const { queryByText } = renderComponent();
 
-        expect(queryByText('sideSheet.allocation.allocation')).toBeInTheDocument();
+        expect(
+            queryByText('sideSheet.allocation.allocation')
+        ).toBeInTheDocument();
     });
 
     it('handles input field blur', () => {
@@ -72,7 +74,10 @@ describe('allocation-field', () => {
     it('passes partyID to label', () => {
         const { getByText } = renderComponent();
         const labelElement = getByText(firstLastName).parentElement;
-        expect(labelElement).toHaveAttribute('id', `allocationField-${partyId}`);
+        expect(labelElement).toHaveAttribute(
+            'id',
+            `allocationField-${partyId}`
+        );
     });
 
     it('passes value to input field value', () => {

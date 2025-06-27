@@ -4,16 +4,27 @@ import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logCompliance, logError, logTrace, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logCompliance,
+    logError,
+    logTrace,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const baseUrl = `${apiServerBaseUrl}/document/v3`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<TaxformDownloadResponse | null>, loggingContext) => {
+    async (
+        req: NextApiRequest,
+        res: NextApiResponse<TaxformDownloadResponse | null>,
+        loggingContext
+    ) => {
         const now = performance.now();
-        const { formId, clientCode, contractNumber, fChar, taxYear, planCode } = req.query;
+        const { formId, clientCode, contractNumber, fChar, taxYear, planCode } =
+            req.query;
         const accessToken = (await getAccessToken(req, res)).accessToken;
 
         const url = `${baseUrl}/tax-forms/${formId}/download?clientCode=${clientCode}&contractNumber=${contractNumber}&fChar=${fChar}&taxYear=${taxYear}&planCode=${planCode}`;
@@ -22,7 +33,10 @@ export default withAuthAndLogging(
         logCompliance('Tax Form Download Attempt', loggingContext);
 
         try {
-            const { data } = await serverApi.get<TaxformDownloadResponse, AxiosResponse>(
+            const { data } = await serverApi.get<
+                TaxformDownloadResponse,
+                AxiosResponse
+            >(
                 url,
                 {
                     authorization: `Bearer ${accessToken}`,
@@ -33,7 +47,10 @@ export default withAuthAndLogging(
                 },
                 loggingContext
             );
-            logTrace('taxFormDownload::download-complete', { ...loggingContext, duration: performance.now() - now });
+            logTrace('taxFormDownload::download-complete', {
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
 
             res.json(data);
         } catch (error) {

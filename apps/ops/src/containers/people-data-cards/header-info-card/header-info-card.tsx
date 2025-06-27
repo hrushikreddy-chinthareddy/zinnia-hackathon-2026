@@ -1,4 +1,4 @@
-import { Party, Address, Email , Phone } from '@zinnia/api-types/types/sor';
+import { Party, Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 import { FC, useContext, useMemo, useState } from 'react';
 
@@ -6,7 +6,10 @@ import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 
 import SideSheetPeopleHeader from '../side-sheet-people-header/side-sheet-people-header';
 import { SidesheetCommunicationsPreference } from './sidesheet/sidesheet-communications-preference';
@@ -19,10 +22,19 @@ type HeaderInfoCardProps = {
     editable?: boolean;
 };
 
-export const HeaderInfoCard: FC<HeaderInfoCardProps> = ({ children, selectedPolicyParty, t, editable }) => {
+export const HeaderInfoCard: FC<HeaderInfoCardProps> = ({
+    children,
+    selectedPolicyParty,
+    t,
+    editable,
+}) => {
     return (
         <div className="flex items-start align-middle justify-between bg-opacity-50">
-            <CommunicationPreferenceField partyInfo={selectedPolicyParty} t={t} editable={editable} />
+            <CommunicationPreferenceField
+                partyInfo={selectedPolicyParty}
+                t={t}
+                editable={editable}
+            />
             {children}
         </div>
     );
@@ -33,14 +45,22 @@ type CommunicationPreferenceFieldProps = {
     t: TFunction;
     editable?: boolean;
 };
-const CommunicationPreferenceField = ({ partyInfo, t, editable = true }: CommunicationPreferenceFieldProps): JSX.Element | null => {
+const CommunicationPreferenceField = ({
+    partyInfo,
+    t,
+    editable = true,
+}: CommunicationPreferenceFieldProps): JSX.Element | null => {
     const sidesheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
-    const currentParty = policyDetails.parties?.getPartyById(partyInfo?.partyId ?? '');
+    const currentParty = policyDetails.parties?.getPartyById(
+        partyInfo?.partyId ?? ''
+    );
     // We are setting the preferred communication type off of the enterprise api return rather than
     // from preference management services here because the preference management endpoint requires
     // the users auth partyId and we don't have access to that from ops
-    const [contactValue, setContactValue] = useState(currentParty?.preferredCommunication);
+    const [contactValue, setContactValue] = useState(
+        currentParty?.preferredCommunication
+    );
 
     const displayValue = useMemo(() => {
         if (!contactValue) return '';
@@ -84,7 +104,9 @@ const CommunicationPreferenceField = ({ partyInfo, t, editable = true }: Communi
                     className="field-label font-primary font-bold"
                     handleEditClick={handleEditClick}
                     editable={editable}
-                    label={t('people.sideSheet.transactions.communicationpreference')}
+                    label={t(
+                        'people.sideSheet.transactions.communicationpreference'
+                    )}
                 >
                     <PiiWrapper>{displayValue}</PiiWrapper>
                 </FieldData>

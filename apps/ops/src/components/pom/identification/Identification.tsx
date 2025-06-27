@@ -5,7 +5,11 @@ import { ProducerType } from '@deps/components/pom/types';
 
 import { default as styles } from './Identification.module.css';
 
-export const Identification = ({ producerType }: { producerType: ProducerType }) => {
+export const Identification = ({
+    producerType,
+}: {
+    producerType: ProducerType;
+}) => {
     const corporationIdentificationFields = [
         { label: 'Type of corporation', value: 'General agency' },
         { label: 'Tax identification number', value: '771-23-6789' },
@@ -34,12 +38,17 @@ export const Identification = ({ producerType }: { producerType: ProducerType })
 
     return (
         <div className={clsx(styles.cardSubSection)}>
-            <h2 className={clsx(styles.cardSubSectionHeader, styles.h2)}>Identification</h2>
+            <h2 className={clsx(styles.cardSubSectionHeader, styles.h2)}>
+                Identification
+            </h2>
             <div className={clsx(styles.cardSubSectionContent)}>
-                {identificationFields.map(field => (
+                {identificationFields.map((field) => (
                     <div key={field.label}>
                         <Label>{field.label}</Label>
-                        <span className={clsx(styles.span)} aria-label={field.label}>
+                        <span
+                            className={clsx(styles.span)}
+                            aria-label={field.label}
+                        >
                             {field.value}
                         </span>
                     </div>

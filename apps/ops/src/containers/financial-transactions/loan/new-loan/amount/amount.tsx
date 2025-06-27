@@ -1,18 +1,32 @@
-import { DisbursementType, Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    DisbursementType,
+    Policy,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import Content, { ContentVariant } from '@deps/components/content/content';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import FieldLabel from '@deps/components/fields/field-label';
 import Radio, { RadioItem, RadioVariant } from '@deps/components/radio/radio';
 import { radioClasses } from '@deps/components/radio/radio.helpers';
 import SelectSimple from '@deps/components/select/select';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
@@ -55,7 +69,7 @@ const getRadioItems = (
                     leading="$"
                     type={FieldType.BaseActive}
                     value={customAmount}
-                    onChange={event => onCustomChange(event.target.value)}
+                    onChange={(event) => onCustomChange(event.target.value)}
                     onClick={() => setValue('$0.00')}
                     maxLength={9}
                     formatOptions={{
@@ -64,7 +78,7 @@ const getRadioItems = (
                         decimalPlaces: 2,
                     }}
                     min={1}
-                    onBlur={event => {
+                    onBlur={(event) => {
                         const { target } = event;
                         const value = target?.value;
                         if (!isNullEmptyOrUndefined(value)) {
@@ -85,9 +99,15 @@ const getRadioItems = (
                           <FieldLabel
                               label={t('value.maximum') as string}
                               labelTooltip={t('value.maximum') as string}
-                              labelTooltipBody={t('value.maximumTooltip') as string}
+                              labelTooltipBody={
+                                  t('value.maximumTooltip') as string
+                              }
                           />
-                          <Content contentClassName="flex" details={maxLoanAmount} variant={ContentVariant.BodySm} />
+                          <Content
+                              contentClassName="flex"
+                              details={maxLoanAmount}
+                              variant={ContentVariant.BodySm}
+                          />
                       </div>
                   ),
                   value: maxLoanAmount,
@@ -97,7 +117,9 @@ const getRadioItems = (
 };
 
 const Amount = ({ policy }: AmountProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newLoan.amount' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'newLoan.amount',
+    });
     const { goToNext } = useWorkflow();
     const { newLoan, setNewLoan } = useNewLoan();
     const { disbursementType, effectiveDate } = newLoan;
@@ -158,15 +180,24 @@ const Amount = ({ policy }: AmountProps) => {
         }
 
         // Cleaning formatted string dollar to parseable number string
-        const isCustom = Number((newLoan.loanAmount as string).replace(/[^0-9.-]+/g, '')) === 0;
-        const newLoanAmount = isCustom ? newLoan.loanCustomAmount : newLoan.loanAmount;
-        const roundedMaxAmt = Math.round(Number(policy.loanValues?.maximumLoanAmount) * 100) / 100;
+        const isCustom =
+            Number((newLoan.loanAmount as string).replace(/[^0-9.-]+/g, '')) ===
+            0;
+        const newLoanAmount = isCustom
+            ? newLoan.loanCustomAmount
+            : newLoan.loanAmount;
+        const roundedMaxAmt =
+            Math.round(Number(policy.loanValues?.maximumLoanAmount) * 100) /
+            100;
 
         if (!newLoanAmount) {
             return setFormError(missingAmountError);
         }
 
-        if (roundedMaxAmt < parseFloat((newLoanAmount as string).replace(/[^0-9.-]+/g, ''))) {
+        if (
+            roundedMaxAmt <
+            parseFloat((newLoanAmount as string).replace(/[^0-9.-]+/g, ''))
+        ) {
             return setFormError(exceedMaximumError);
         }
 
@@ -191,14 +222,22 @@ const Amount = ({ policy }: AmountProps) => {
         if (!newLoan.loanCustomAmount && !newLoan.loanAmount) {
             return;
         }
-        const isCustom = Number((newLoan.loanAmount as string).replace(/[^0-9.-]+/g, '')) === 0;
+        const isCustom =
+            Number((newLoan.loanAmount as string).replace(/[^0-9.-]+/g, '')) ===
+            0;
         const amount = isCustom ? newLoan.loanCustomAmount : newLoan.loanAmount;
         const amountNum = Number(amount?.replace(/[^0-9.-]+/g, '')) || 0;
 
-        setNewLoan(prevState => ({ ...prevState, amount: amountNum }));
+        setNewLoan((prevState) => ({ ...prevState, amount: amountNum }));
     }, [setNewLoan, newLoan.loanAmount, newLoan.loanCustomAmount]);
 
-    const radioItems = getRadioItems(t, policy, newLoan.loanCustomAmount as string, setAmount, handleChangeCustom);
+    const radioItems = getRadioItems(
+        t,
+        policy,
+        newLoan.loanCustomAmount as string,
+        setAmount,
+        handleChangeCustom
+    );
 
     return (
         <WorkflowCard
@@ -209,7 +248,10 @@ const Amount = ({ policy }: AmountProps) => {
                     parentPage={ParentPage.Loans}
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
-                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Amount }}
+                    trackEventProps={{
+                        type: TransactionType.NEW_LOAN,
+                        step: TransactionStep.Amount,
+                    }}
                 />
             }
         >
@@ -225,17 +267,36 @@ const Amount = ({ policy }: AmountProps) => {
                     onChange={handleDateChange}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
-                    variant={isDateValid(effectiveDate) ? FieldVariant.Default : FieldVariant.Error}
-                    message={isDateValid(effectiveDate) ? undefined : invalidDate}
+                    variant={
+                        isDateValid(effectiveDate)
+                            ? FieldVariant.Default
+                            : FieldVariant.Error
+                    }
+                    message={
+                        isDateValid(effectiveDate) ? undefined : invalidDate
+                    }
                 />
                 <div className="flex flex-col gap-4" data-testid="loan-amount">
-                    <Typography variant={TypographyVariant.LabelLg} data-testid="loan-amount-label">
+                    <Typography
+                        variant={TypographyVariant.LabelLg}
+                        data-testid="loan-amount-label"
+                    >
                         {t('value.title')}
                     </Typography>
-                    <Radio items={radioItems} value={newLoan.loanAmount as string} onChange={onChange} />
+                    <Radio
+                        items={radioItems}
+                        value={newLoan.loanAmount as string}
+                        onChange={onChange}
+                    />
 
-                    {(formError === amountMissingError || formError === exceedMaximumError || formError === missingAmountError) && (
-                        <AssistiveText className="mt-2" variant={AssistiveTextVariant.Error} text={formError}></AssistiveText>
+                    {(formError === amountMissingError ||
+                        formError === exceedMaximumError ||
+                        formError === missingAmountError) && (
+                        <AssistiveText
+                            className="mt-2"
+                            variant={AssistiveTextVariant.Error}
+                            text={formError}
+                        ></AssistiveText>
                     )}
                 </div>
                 <SelectSimple
@@ -246,32 +307,53 @@ const Amount = ({ policy }: AmountProps) => {
                     aria-label={t('disbursementType.label') as string}
                     options={disbursementTypes}
                     value={disbursementType}
-                    onChange={value => {
-                        setNewLoan({ ...newLoan, disbursementType: value as DisbursementType });
+                    onChange={(value) => {
+                        setNewLoan({
+                            ...newLoan,
+                            disbursementType: value as DisbursementType,
+                        });
                     }}
                     size={FieldSize.Small}
                 />
                 <div className="flex flex-col gap-4">
-                    <Typography variant={TypographyVariant.LabelLg}>{t('fundDisbursementType.title')}</Typography>
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {t('fundDisbursementType.title')}
+                    </Typography>
                     <FieldLabel
                         label={t('fundDisbursementType.label') as string}
                         labelTooltip={t('fundDisbursementType.label') as string}
-                        labelTooltipBody={t('fundDisbursementType.tooltip') as string}
+                        labelTooltipBody={
+                            t('fundDisbursementType.tooltip') as string
+                        }
                     />
                     <div className="flex">
-                        <input checked className={radioClasses(RadioVariant.Default)} tabIndex={-1} type="radio" readOnly />
-                        <Typography className="ml-2" variant={TypographyVariant.BodySm}>
+                        <input
+                            checked
+                            className={radioClasses(RadioVariant.Default)}
+                            tabIndex={-1}
+                            type="radio"
+                            readOnly
+                        />
+                        <Typography
+                            className="ml-2"
+                            variant={TypographyVariant.BodySm}
+                        >
                             {t('fundDisbursementType.proRata')}
                         </Typography>
                     </div>
                     <div className="flex">
                         <input
-                            className={`cursor-not-allowed ${radioClasses(RadioVariant.Inactive)}`}
+                            className={`cursor-not-allowed ${radioClasses(
+                                RadioVariant.Inactive
+                            )}`}
                             tabIndex={-1}
                             type="radio"
                             readOnly
                         />
-                        <Typography className="ml-2 cursor-not-allowed text-gray-300" variant={TypographyVariant.BodySm}>
+                        <Typography
+                            className="ml-2 cursor-not-allowed text-gray-300"
+                            variant={TypographyVariant.BodySm}
+                        >
                             {t('fundDisbursementType.customFunds')}
                         </Typography>
                     </div>

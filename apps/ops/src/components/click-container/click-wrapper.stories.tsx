@@ -6,7 +6,7 @@ export default {
     title: 'Components/ClickWrapper',
     component: ClickWrapper,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>

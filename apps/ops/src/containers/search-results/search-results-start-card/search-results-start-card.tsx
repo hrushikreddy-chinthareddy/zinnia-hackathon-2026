@@ -12,7 +12,13 @@ const SearchResultsStartCard = () => {
     return (
         <div className={styles.messageCard}>
             <CardInfo
-                icon={<StarsIcon className="text-primary" height={50} width={50} />}
+                icon={
+                    <StarsIcon
+                        className="text-primary"
+                        height={50}
+                        width={50}
+                    />
+                }
                 title={t('dashboard.search.start.title')}
                 subtitle={t('dashboard.search.start.paragraph')}
             />

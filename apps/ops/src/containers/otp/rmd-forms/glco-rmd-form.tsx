@@ -25,7 +25,9 @@ import DistributionMethodQcd from './qcd/qcd-distribution-method';
 import SelectFormType from './rmd-form-type';
 
 export default function GlcoRmdWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
 
     const {
         signaturesConfig,
@@ -59,7 +61,9 @@ export default function GlcoRmdWithdrawalForm() {
         formErrors,
     } = useContext(FormDataContext);
 
-    const [rmdFormType, setRmdFormType] = useState((formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD);
+    const [rmdFormType, setRmdFormType] = useState(
+        (formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD
+    );
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -68,20 +72,30 @@ export default function GlcoRmdWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.GLCO}_${rmdFormType}_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.GLCO
+            }_${rmdFormType}_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.GLCO}_${rmdFormType}_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.GLCO
+                }_${rmdFormType}_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
         });
-        setFormProgram(prev => ({
+        setFormProgram((prev) => ({
             ...prev,
             program: {
-                text: rmdFormType === RmdFormType.QCD ? Processes.QCD : Processes.RequiredMinimumDistribution,
+                text:
+                    rmdFormType === RmdFormType.QCD
+                        ? Processes.QCD
+                        : Processes.RequiredMinimumDistribution,
             },
             programType: {
-                text: rmdFormType === RmdFormType.QCD ? RmdFormType.QCD : RmdFormType.RMD,
+                text:
+                    rmdFormType === RmdFormType.QCD
+                        ? RmdFormType.QCD
+                        : RmdFormType.RMD,
             },
             qcd: prev.qcd ? [...prev.qcd] : [],
         }));
@@ -107,13 +121,24 @@ export default function GlcoRmdWithdrawalForm() {
                 configs={beneficiaryConfig}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
             {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
         </>
     );
 
@@ -121,24 +146,45 @@ export default function GlcoRmdWithdrawalForm() {
         <>
             <RMDMethod
                 isFormStateReadOnly={isFormStateReadOnly}
-                rmdTypeOptions={[{ label: t('rmdMethod.rmdTypes.calculate'), value: RMDType.CalculateRMD }]}
+                rmdTypeOptions={[
+                    {
+                        label: t('rmdMethod.rmdTypes.calculate'),
+                        value: RMDType.CalculateRMD,
+                    },
+                ]}
                 isQCD={true}
             />
-            <DistributionMethodQcd formProgram={formProgram} setFormProgram={setFormProgram} isFormStateReadOnly={isFormStateReadOnly} />
+            <DistributionMethodQcd
+                formProgram={formProgram}
+                setFormProgram={setFormProgram}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
         </>
     );
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <SelectFormType formType={rmdFormType} onFormTypeChange={setRmdFormType} isFormStateReadOnly={isFormStateReadOnly} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <SelectFormType
+                formType={rmdFormType}
+                onFormTypeChange={setRmdFormType}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             {isRmdForm ? rmdComponents : qcdComponents}
 
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

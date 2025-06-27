@@ -11,8 +11,11 @@ export const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation();
 
     return (
-        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
-            {policy?.product?.productType === ProductType.INDEXEDUNIVERSALLIFE ? (
+        <QuickViewRoot
+            title={t('dashboard.search.results.policySummaryCard.header2')}
+        >
+            {policy?.product?.productType ===
+            ProductType.INDEXEDUNIVERSALLIFE ? (
                 <EverlyIul policy={policy} />
             ) : (
                 <EverlyUl policy={policy} />

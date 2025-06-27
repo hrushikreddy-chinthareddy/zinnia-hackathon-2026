@@ -1,7 +1,14 @@
 import { faker } from '@faker-js/faker';
-import { AccountStatus, AccountType, BankAccount } from '@zinnia/api-types/types/sor';
+import {
+    AccountStatus,
+    AccountType,
+    BankAccount,
+} from '@zinnia/api-types/types/sor';
 
-export const generateBankDetails = (partyId: string, fullName: string): BankAccount => {
+export const generateBankDetails = (
+    partyId: string,
+    fullName: string
+): BankAccount => {
     return {
         accountNumber: faker.finance.accountNumber(16),
 
@@ -11,7 +18,9 @@ export const generateBankDetails = (partyId: string, fullName: string): BankAcco
         branchName: faker.company.name(),
         endDate: '',
         bankId: faker.string.uuid(),
-        internationalBankAccountNumber: faker.datatype.boolean() ? undefined : faker.finance.iban(),
+        internationalBankAccountNumber: faker.datatype.boolean()
+            ? undefined
+            : faker.finance.iban(),
         nameOnAccount: fullName,
         routingNumber: faker.finance.routingNumber(),
         startDate: '2023-11-17',

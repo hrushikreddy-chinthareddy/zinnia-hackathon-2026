@@ -4,7 +4,11 @@ import { useCallback, useState } from 'react';
 
 import AssistiveText from '@deps/components/assistive-text/assistive-text';
 import { ButtonSize } from '@deps/components/button/button';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import SpinnerButton from '@deps/components/spinner-button/spinner-button';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -31,19 +35,33 @@ export interface TransactionCtaProps extends TransactionClickProps {
     stopLoading?: boolean;
 }
 
-const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading, trackEventProps }: TransactionCtaProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.transactionCta' });
+const TransactionCta = ({
+    className,
+    mainCta,
+    secondaryCta,
+    stopLoading,
+    trackEventProps,
+}: TransactionCtaProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'transactions.transactionCta',
+    });
     const { sessionId, partyId } = usePermissionsContext();
 
-    const [assistiveTextMessageIndex, setAssistiveTextMessageIndex] = useState(-1);
+    const [assistiveTextMessageIndex, setAssistiveTextMessageIndex] =
+        useState(-1);
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
 
-    const assistiveTextMessages = [t('checkingRules'), t('creatingSummary'), t('upTo15'), t('stillWorking')];
+    const assistiveTextMessages = [
+        t('checkingRules'),
+        t('creatingSummary'),
+        t('upTo15'),
+        t('stillWorking'),
+    ];
     const hasSecondaryCta = secondaryCta != null;
 
     const startInterval = useCallback(() => {
         const id = setInterval(() => {
-            setAssistiveTextMessageIndex(prevIndex => {
+            setAssistiveTextMessageIndex((prevIndex) => {
                 if (prevIndex === assistiveTextMessages.length - 1) {
                     clearInterval(id);
 
@@ -62,22 +80,28 @@ const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading, trackEv
             return;
         }
 
-        segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(SegmentTrackedEventName.TransactionCancelClicked, {
-            session_id: sessionId,
-            userId: partyId,
-            ...trackEventProps,
-        });
+        segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(
+            SegmentTrackedEventName.TransactionCancelClicked,
+            {
+                session_id: sessionId,
+                userId: partyId,
+                ...trackEventProps,
+            }
+        );
     }, [trackEventProps, sessionId, partyId]);
 
     const onContinueClick = useCallback(() => {
         startInterval();
 
         if (trackEventProps) {
-            segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
-                session_id: sessionId,
-                userId: partyId,
-                ...trackEventProps,
-            });
+            segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
+                SegmentTrackedEventName.TransactionContinueClicked,
+                {
+                    session_id: sessionId,
+                    userId: partyId,
+                    ...trackEventProps,
+                }
+            );
         }
         mainCta.onClick();
     }, [trackEventProps, startInterval, mainCta.onClick]);
@@ -93,7 +117,12 @@ const TransactionCta = ({ className, mainCta, secondaryCta, stopLoading, trackEv
     return (
         <div className={clsx('flex flex-col gap-4', className)}>
             <div className="flex items-center gap-8">
-                <SpinnerButton stopLoading={stopLoading} size={ButtonSize.Small} text={mainCta.text} onClick={onContinueClick} />
+                <SpinnerButton
+                    stopLoading={stopLoading}
+                    size={ButtonSize.Small}
+                    text={mainCta.text}
+                    onClick={onContinueClick}
+                />
                 {hasSecondaryCta &&
                     (secondaryCta?.onClick ? (
                         <NavElement

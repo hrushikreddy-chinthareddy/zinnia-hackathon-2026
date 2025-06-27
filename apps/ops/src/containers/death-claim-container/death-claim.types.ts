@@ -6,7 +6,7 @@ export enum RoleType {
     Owner = 'OWNER',
     Other = 'OTHER',
     Annuitant = 'ANNUITANT',
-};
+}
 
 export enum ClaimActionTypes {
     NONE = 'NONE',

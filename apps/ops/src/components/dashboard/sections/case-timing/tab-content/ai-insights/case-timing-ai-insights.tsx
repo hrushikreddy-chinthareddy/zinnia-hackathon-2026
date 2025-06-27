@@ -10,7 +10,8 @@ import { CaseTimingContext } from '../../context/case-timing-context';
 import { CaseTimingHeader } from '../shared/case-timing-header';
 
 export const CaseTimingAiInsights: FC = () => {
-    const { timerange, caseTimingData, selectedProcess } = useContext(CaseTimingContext);
+    const { timerange, caseTimingData, selectedProcess } =
+        useContext(CaseTimingContext);
 
     const content = JSON.stringify({ timerange });
     const prompt = useMemo(
@@ -19,7 +20,10 @@ export const CaseTimingAiInsights: FC = () => {
                 `You are an expert in all things ${selectedProcess} case data.`,
                 `Your job is to summarize the data for business and executive users.`,
                 `They want simple and insightful information about the data provided to you.`,
-                `The data provided to you here are completed ${dashboardChartTitleFormat(selectedProcess || '', false)} cases.`,
+                `The data provided to you here are completed ${dashboardChartTitleFormat(
+                    selectedProcess || '',
+                    false
+                )} cases.`,
                 `The data is grouped by ${GroupByOptions.ProcessSubType}.`,
                 `The timespan the data comes from is ${timerange.from} to ${timerange.to}.`,
                 `You are to take the median time in seconds and convert it to days, hours, minutes or seconds depending on the timespan.`,
@@ -35,10 +39,17 @@ export const CaseTimingAiInsights: FC = () => {
         [caseTimingData, selectedProcess, timerange]
     );
     return (
-        <CardContainer fullWidth={false} classNames={sharedStyles.aiInsightsTabContainer}>
+        <CardContainer
+            fullWidth={false}
+            classNames={sharedStyles.aiInsightsTabContainer}
+        >
             <CaseTimingHeader />
             <div className={sharedStyles.insightContainer}>
-                <AiInsightSummary className="grow" prompt={prompt} content={content} />
+                <AiInsightSummary
+                    className="grow"
+                    prompt={prompt}
+                    content={content}
+                />
             </div>
         </CardContainer>
     );

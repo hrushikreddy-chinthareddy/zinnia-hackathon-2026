@@ -65,12 +65,18 @@ const carriers = {
     CPAF: 'Farmers Insurance',
 };
 
-export const getCarrierNameByClientId = (clientId: string, showClientCode: boolean = false): string => {
+export const getCarrierNameByClientId = (
+    clientId: string,
+    showClientCode: boolean = false
+): string => {
     if (!clientId) return '';
-    const carrierName = carriers[clientId.toUpperCase() as keyof typeof carriers];
+    const carrierName =
+        carriers[clientId.toUpperCase() as keyof typeof carriers];
 
     if (showClientCode) {
-        return carrierName ? carrierName + ' (' + clientId.toUpperCase() + ')' : '';
+        return carrierName
+            ? carrierName + ' (' + clientId.toUpperCase() + ')'
+            : '';
     } else {
         return carrierName || '';
     }
@@ -80,34 +86,50 @@ const carrierNameClientIdMappings = (activeCarriers: typeof carriers) => {
     return Object.entries(activeCarriers).reduce((prev, curr) => {
         return {
             ...prev,
-            [curr[1]]: prev && prev[curr[1]] ? prev[curr[1]].concat(curr[0]).sort() : [curr[0]],
+            [curr[1]]:
+                prev && prev[curr[1]]
+                    ? prev[curr[1]].concat(curr[0]).sort()
+                    : [curr[0]],
         };
     }, {} as { [key: string]: string[] });
 };
 
-export const getClientIdsByCarrierName = (authorizedCarriers: string[], carrierName: string) => {
+export const getClientIdsByCarrierName = (
+    authorizedCarriers: string[],
+    carrierName: string
+) => {
     const actCarriers = getActiveCarriers(authorizedCarriers);
-    return carrierNameClientIdMappings(actCarriers)[carrierName]?.join(',') || '';
+    return (
+        carrierNameClientIdMappings(actCarriers)[carrierName]?.join(',') || ''
+    );
 };
 
 const getActiveCarriers = (authorizedCarriers: string[]) => {
     const filteredCarriers: { [code: string]: string } = {};
-    authorizedCarriers.forEach(carrier => {
-        filteredCarriers[carrier.toUpperCase()] = carriers[carrier.toUpperCase() as keyof typeof carriers];
+    authorizedCarriers.forEach((carrier) => {
+        filteredCarriers[carrier.toUpperCase()] =
+            carriers[carrier.toUpperCase() as keyof typeof carriers];
     });
     return filteredCarriers as typeof carriers;
 };
 
-export const getCarrierNamesByClientIds = (clientIds: string, authorizedCarriers: string[]) => {
-    const data = Object.entries(carrierNameClientIdMappings(getActiveCarriers(authorizedCarriers))).filter(entry => {
+export const getCarrierNamesByClientIds = (
+    clientIds: string,
+    authorizedCarriers: string[]
+) => {
+    const data = Object.entries(
+        carrierNameClientIdMappings(getActiveCarriers(authorizedCarriers))
+    ).filter((entry) => {
         return (entry[1] as string[]).join(',') === clientIds;
     })[0];
     return data && data.length ? data[0] : '';
 };
 
-export const getSelectedCarriers = (carriers: { [key: string]: string } | undefined): string[] => {
+export const getSelectedCarriers = (
+    carriers: { [key: string]: string } | undefined
+): string[] => {
     return Object.keys(carriers || {})
-        .map(item => item.split(','))
+        .map((item) => item.split(','))
         .flat();
 };
 

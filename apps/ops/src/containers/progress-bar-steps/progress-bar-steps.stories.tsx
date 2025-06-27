@@ -8,7 +8,7 @@ export default {
     title: 'Containers/ProgressBarSteps',
     component: ProgressBarSteps,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="max-w-[1130px]">
                 <Story />
             </div>
@@ -27,9 +27,24 @@ export const ProgressBarStepsDefault = () => {
         currentStepIndex: currentStepIndex,
         onClick: handleClick,
         steps: [
-            { text: 'Step 1', index: 0, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 2', index: 1, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 3', index: 2, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
+            {
+                text: 'Step 1',
+                index: 0,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 2',
+                index: 1,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 3',
+                index: 2,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
         ],
     };
 
@@ -47,14 +62,54 @@ export const ProgressBarStepsFull = () => {
         currentStepIndex: currentStepIndex,
         onClick: handleClick,
         steps: [
-            { text: 'Step 1', index: 0, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 2', index: 1, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 3', index: 2, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 4', index: 3, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 5', index: 4, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 6', index: 5, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 7', index: 6, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
-            { text: 'Step 8', index: 7, ariaLabel: 'ariaLabel', screenReaderLabel: 'screenReaderLabel' },
+            {
+                text: 'Step 1',
+                index: 0,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 2',
+                index: 1,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 3',
+                index: 2,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 4',
+                index: 3,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 5',
+                index: 4,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 6',
+                index: 5,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 7',
+                index: 6,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
+            {
+                text: 'Step 8',
+                index: 7,
+                ariaLabel: 'ariaLabel',
+                screenReaderLabel: 'screenReaderLabel',
+            },
         ],
     };
 

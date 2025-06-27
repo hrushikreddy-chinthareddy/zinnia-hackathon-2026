@@ -1,4 +1,3 @@
-
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { ReactComponent as VerticalDots } from '@deps/styles/elements/icons/icons_outlined/dots-vertical.svg';
 
@@ -21,7 +20,7 @@ export interface ActionCellParams {
     data: TaskTableRow;
     actionParams: ActionCellRendererParams;
 }
-export const  getTaskActions = (params: ActionCellParams) => {
+export const getTaskActions = (params: ActionCellParams) => {
     const { data, actionParams } = params;
     const { status, taskInfoLink } = data || {};
     const actions = [];
@@ -39,7 +38,9 @@ export const  getTaskActions = (params: ActionCellParams) => {
         */
         const readOnlyAction = {
             key: 'read-only',
-            setLink: (link: string) => <a href={link}>{actionLabels?.readOnlyView}</a>,
+            setLink: (link: string) => (
+                <a href={link}>{actionLabels?.readOnlyView}</a>
+            ),
             link: taskInfoLink + '&action=readonly',
         };
         actions.push(readOnlyAction);
@@ -61,12 +62,19 @@ export const  getTaskActions = (params: ActionCellParams) => {
     ));
 };
 
-
 const ActionCellRenderer = (params: ActionCellParams) => {
     return (
-        <Popover title={params?.actionParams?.actionMenu} body={getTaskActions(params)} placement={PopoverPlacement.BottomLeft}>
+        <Popover
+            title={params?.actionParams?.actionMenu}
+            body={getTaskActions(params)}
+            placement={PopoverPlacement.BottomLeft}
+        >
             <span className="block p-[5px]">
-                <VerticalDots height={'25px'} width={'25px'} className="text-primary" />
+                <VerticalDots
+                    height={'25px'}
+                    width={'25px'}
+                    className="text-primary"
+                />
             </span>
         </Popover>
     );

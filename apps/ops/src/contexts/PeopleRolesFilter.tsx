@@ -22,11 +22,12 @@ interface PeopleRolesFilterContextProps {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
-export const PeopleRolesFilterContext = createContext<PeopleRolesFilterContextProps>({
-    peopleRolesFilter: initialFilter,
-    setPeopleRolesFilter: noop,
-    clearPeopleRolesFilter: noop,
-});
+export const PeopleRolesFilterContext =
+    createContext<PeopleRolesFilterContextProps>({
+        peopleRolesFilter: initialFilter,
+        setPeopleRolesFilter: noop,
+        clearPeopleRolesFilter: noop,
+    });
 
 export const PeopleRolesFilterProvider = ({ children }: any) => {
     const [peopleRolesFilter, setPeopleRolesFilter] = useState(initialFilter);
@@ -37,7 +38,9 @@ export const PeopleRolesFilterProvider = ({ children }: any) => {
     };
 
     useEffect(() => {
-        const filtersFromStorage = storage.getItem('PEOPLE_ROLES_FILTER') as PeopleRolesFilter;
+        const filtersFromStorage = storage.getItem(
+            'PEOPLE_ROLES_FILTER'
+        ) as PeopleRolesFilter;
 
         if (filtersFromStorage) {
             setPeopleRolesFilter(filtersFromStorage);
@@ -54,7 +57,11 @@ export const PeopleRolesFilterProvider = ({ children }: any) => {
     }, [peopleRolesFilter]);
 
     const memoizedValues = useMemo(
-        () => ({ peopleRolesFilter, setPeopleRolesFilter, clearPeopleRolesFilter: clearFilters }),
+        () => ({
+            peopleRolesFilter,
+            setPeopleRolesFilter,
+            clearPeopleRolesFilter: clearFilters,
+        }),
         [peopleRolesFilter]
     );
 
@@ -62,5 +69,9 @@ export const PeopleRolesFilterProvider = ({ children }: any) => {
         return <PageLoader />;
     }
 
-    return <PeopleRolesFilterContext.Provider value={memoizedValues}>{children}</PeopleRolesFilterContext.Provider>;
+    return (
+        <PeopleRolesFilterContext.Provider value={memoizedValues}>
+            {children}
+        </PeopleRolesFilterContext.Provider>
+    );
 };

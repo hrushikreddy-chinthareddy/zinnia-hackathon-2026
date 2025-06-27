@@ -1,6 +1,17 @@
-import { DisbursementType, FilingStatus, TaxWithholdingType } from '@zinnia/api-types/types/bpm';
+import {
+    DisbursementType,
+    FilingStatus,
+    TaxWithholdingType,
+} from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
+import {
+    Dispatch,
+    PropsWithChildren,
+    SetStateAction,
+    createContext,
+    useContext,
+    useState,
+} from 'react';
 
 import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
 import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
@@ -14,7 +25,11 @@ export enum WithdrawalType {
     Default = '',
 }
 
-export interface Withdrawal extends AmountType, TaxesType, PayeesType, PaymentMethodType {
+export interface Withdrawal
+    extends AmountType,
+        TaxesType,
+        PayeesType,
+        PaymentMethodType {
     caseId?: string;
 }
 
@@ -59,7 +74,9 @@ const defaultValue = {
 const WithdrawalContext = createContext<WithdrawalContextType>(defaultValue);
 
 export const WithdrawalProvider = ({ children }: PropsWithChildren) => {
-    const [withdrawal, setWithdrawal] = useState<Withdrawal>(defaultValue.withdrawal);
+    const [withdrawal, setWithdrawal] = useState<Withdrawal>(
+        defaultValue.withdrawal
+    );
 
     return (
         <WithdrawalContext.Provider
@@ -77,7 +94,9 @@ export const useWithdrawal = () => {
     const context = useContext(WithdrawalContext);
 
     if (!context) {
-        throw new Error('useWithdrawal must be used within a WithdrawalContext');
+        throw new Error(
+            'useWithdrawal must be used within a WithdrawalContext'
+        );
     }
     return context;
 };

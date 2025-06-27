@@ -1,11 +1,20 @@
-import { ArrayFieldTemplateItemType, FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import {
+    ArrayFieldTemplateItemType,
+    FormContextType,
+    getUiOptions,
+    RJSFSchema,
+    StrictRJSFSchema,
+} from '@rjsf/utils';
 import clsx from 'clsx';
 import { CSSProperties } from 'react';
 
-export const containerClasses = 'flex rounded border-2 border-dashed border-gray-100 bg-gray-50 mb-2 pt-2 px-3';
-export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    props: ArrayFieldTemplateItemType<T, S, F>
-) {
+export const containerClasses =
+    'flex rounded border-2 border-dashed border-gray-100 bg-gray-50 mb-2 pt-2 px-3';
+export default function ArrayFieldItemTemplate<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+>(props: ArrayFieldTemplateItemType<T, S, F>) {
     const {
         children,
         disabled,
@@ -22,7 +31,8 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
         registry,
         uiSchema,
     } = props;
-    const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+    const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } =
+        registry.templates.ButtonTemplates;
     const uiOptions = getUiOptions(uiSchema);
     const btnStyle: CSSProperties = {
         flex: 1,
@@ -32,7 +42,8 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
     };
 
     const nobackground = uiSchema?.['ui:options']?.nobackground ?? false;
-    const centralizedToolbar = uiSchema?.['ui:options']?.centralizedToolbar ?? false;
+    const centralizedToolbar =
+        uiSchema?.['ui:options']?.centralizedToolbar ?? false;
 
     return (
         <>
@@ -41,11 +52,14 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
             ) : (
                 <div className={nobackground ? 'flex' : containerClasses}>
                     <div className="flex w-full">
-                        <div className="w-full">
-                            {children}
-                        </div>
+                        <div className="w-full">{children}</div>
                     </div>
-                    <div className={clsx('ml-auto my-3', centralizedToolbar && 'flex flex-col justify-center')}>
+                    <div
+                        className={clsx(
+                            'ml-auto my-3',
+                            centralizedToolbar && 'flex flex-col justify-center'
+                        )}
+                    >
                         {hasToolbar && (
                             <div className="d-flex flex-row items-center">
                                 {(hasMoveUp || hasMoveDown) && (
@@ -53,8 +67,15 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                         <MoveUpButton
                                             className="array-item-move-up"
                                             style={btnStyle}
-                                            disabled={disabled || readonly || !hasMoveUp}
-                                            onClick={onReorderClick(index, index - 1)}
+                                            disabled={
+                                                disabled ||
+                                                readonly ||
+                                                !hasMoveUp
+                                            }
+                                            onClick={onReorderClick(
+                                                index,
+                                                index - 1
+                                            )}
                                             uiSchema={uiSchema}
                                             registry={registry}
                                         />
@@ -64,8 +85,15 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                     <div className="m-0 p-0">
                                         <MoveDownButton
                                             style={btnStyle}
-                                            disabled={disabled || readonly || !hasMoveDown}
-                                            onClick={onReorderClick(index, index + 1)}
+                                            disabled={
+                                                disabled ||
+                                                readonly ||
+                                                !hasMoveDown
+                                            }
+                                            onClick={onReorderClick(
+                                                index,
+                                                index + 1
+                                            )}
                                             uiSchema={uiSchema}
                                             registry={registry}
                                         />
@@ -82,17 +110,23 @@ export default function ArrayFieldItemTemplate<T = any, S extends StrictRJSFSche
                                         />
                                     </div>
                                 )}
-                                {hasRemove && !readonly && props.totalItems > (props.uiSchema?.['ui:options']?.minItems as number) && (
-                                    <div className="px-4">
-                                        <RemoveButton
-                                            style={btnStyle}
-                                            disabled={disabled || readonly}
-                                            onClick={onDropIndexClick(index)}
-                                            uiSchema={uiSchema}
-                                            registry={registry}
-                                        />
-                                    </div>
-                                )}
+                                {hasRemove &&
+                                    !readonly &&
+                                    props.totalItems >
+                                        (props.uiSchema?.['ui:options']
+                                            ?.minItems as number) && (
+                                        <div className="px-4">
+                                            <RemoveButton
+                                                style={btnStyle}
+                                                disabled={disabled || readonly}
+                                                onClick={onDropIndexClick(
+                                                    index
+                                                )}
+                                                uiSchema={uiSchema}
+                                                registry={registry}
+                                            />
+                                        </div>
+                                    )}
                             </div>
                         )}
                     </div>

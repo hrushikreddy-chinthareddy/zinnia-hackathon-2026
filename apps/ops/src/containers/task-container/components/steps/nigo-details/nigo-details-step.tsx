@@ -2,14 +2,19 @@ import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext } from 'react';
 
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useTask } from '@deps/containers/task-container/task-provider';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
-import { FormValidationErrors, NigoMessages } from '@deps/models/case/withdrawal/case';
+import {
+    FormValidationErrors,
+    NigoMessages,
+} from '@deps/models/case/withdrawal/case';
 
 import { NigoDetails } from './nigo-details';
 
@@ -18,8 +23,13 @@ interface NigoDetailsStepProps {
     nigoSubExceptions: any;
 }
 
-export const NigoDetailsStep = ({ nigoExceptions, nigoSubExceptions }: NigoDetailsStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.nigoDetails' });
+export const NigoDetailsStep = ({
+    nigoExceptions,
+    nigoSubExceptions,
+}: NigoDetailsStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'nigoEntry.nigoDetails',
+    });
     const { goToNext } = useWorkflow();
     const { exceptions, messages, formErrors, setFormErrors } = useTask();
     const { setFormNigos } = useContext(FormDataContext);
@@ -27,14 +37,21 @@ export const NigoDetailsStep = ({ nigoExceptions, nigoSubExceptions }: NigoDetai
     const handleStepContinue = useCallback(() => {
         const errors = {} as FormValidationErrors;
         if (exceptions.length === 0) {
-            errors['noCategorySelected'] = t('formErrors.formValidation.noCategorySelected');
+            errors['noCategorySelected'] = t(
+                'formErrors.formValidation.noCategorySelected'
+            );
             setFormErrors(errors);
         }
 
         if (exceptions.length > 0) {
             exceptions.forEach((exception: string) => {
-                if (messages[exception] === undefined || isEmptyObject(messages[exception])) {
-                    errors['noCategoryDetailsSelected'] = t('formErrors.formValidation.noCategoryDetailsSelected');
+                if (
+                    messages[exception] === undefined ||
+                    isEmptyObject(messages[exception])
+                ) {
+                    errors['noCategoryDetailsSelected'] = t(
+                        'formErrors.formValidation.noCategoryDetailsSelected'
+                    );
                 }
             });
             setFormErrors(errors);
@@ -42,7 +59,7 @@ export const NigoDetailsStep = ({ nigoExceptions, nigoSubExceptions }: NigoDetai
 
         if (Object.keys(errors).length === 0) {
             const nigos: NigoMessages[] = [];
-            exceptions.forEach(exception => {
+            exceptions.forEach((exception) => {
                 const obj = {
                     exceptionId: exception,
                     messages: Object.keys(messages[exception]),
@@ -67,12 +84,23 @@ export const NigoDetailsStep = ({ nigoExceptions, nigoSubExceptions }: NigoDetai
             }
         >
             <div className="flex flex-col gap-5">
-                <NigoDetails nigoExceptions={nigoExceptions} nigoSubExceptions={nigoSubExceptions} />
+                <NigoDetails
+                    nigoExceptions={nigoExceptions}
+                    nigoSubExceptions={nigoSubExceptions}
+                />
                 {formErrors?.noCategorySelected && (
-                    <AssistiveText text={formErrors?.noCategorySelected} variant={AssistiveTextVariant.Error} className="mt-2" />
+                    <AssistiveText
+                        text={formErrors?.noCategorySelected}
+                        variant={AssistiveTextVariant.Error}
+                        className="mt-2"
+                    />
                 )}
                 {formErrors?.noCategoryDetailsSelected && (
-                    <AssistiveText text={formErrors?.noCategoryDetailsSelected} variant={AssistiveTextVariant.Error} className="mt-2" />
+                    <AssistiveText
+                        text={formErrors?.noCategoryDetailsSelected}
+                        variant={AssistiveTextVariant.Error}
+                        className="mt-2"
+                    />
                 )}
             </div>
         </WorkflowCard>

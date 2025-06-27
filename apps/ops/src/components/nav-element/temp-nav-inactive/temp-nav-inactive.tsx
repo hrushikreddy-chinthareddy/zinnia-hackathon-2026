@@ -1,7 +1,10 @@
 import clsx from 'clsx';
 import { PropsWithChildren, ReactNode } from 'react';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 
@@ -13,17 +16,30 @@ type TempNavInactiveProps = {
 } & PropsWithChildren;
 
 export const isStillInactive = {
-    peoplePageHeader: 'Refer to guidelines for instructions to add a new person.',
-    beneficiaryCardContainer: 'Refer to guidelines for instructions to edit allocations.',
-    interiorPeoplePageHeader: 'Refer to guidelines for instructions to add or remove roles.',
-    interiorPeoplePageDOB: 'Refer to guidelines for instructions to edit date of birth.',
-    withdrawalPageexchange1035: 'Refer to guidelines for instructions to process 1035 exchange.',
-    withdrawalSetupAutopay: 'Refer to guidelines for instructions to setup autopay.',
-    withdrawalManageAutopay: 'Refer to guidelines for instructions to manage autopay.',
+    peoplePageHeader:
+        'Refer to guidelines for instructions to add a new person.',
+    beneficiaryCardContainer:
+        'Refer to guidelines for instructions to edit allocations.',
+    interiorPeoplePageHeader:
+        'Refer to guidelines for instructions to add or remove roles.',
+    interiorPeoplePageDOB:
+        'Refer to guidelines for instructions to edit date of birth.',
+    withdrawalPageexchange1035:
+        'Refer to guidelines for instructions to process 1035 exchange.',
+    withdrawalSetupAutopay:
+        'Refer to guidelines for instructions to setup autopay.',
+    withdrawalManageAutopay:
+        'Refer to guidelines for instructions to manage autopay.',
 };
 
 // https://zinnia.atlassian.net/browse/DEPU-1936
-const TempNavInactive = ({ children, tooltipBody, triggerClassName, navElementClassName, hideIcon }: TempNavInactiveProps) => {
+const TempNavInactive = ({
+    children,
+    tooltipBody,
+    triggerClassName,
+    navElementClassName,
+    hideIcon,
+}: TempNavInactiveProps) => {
     return (
         <Tooltip
             isTabbable={false}
@@ -38,7 +54,8 @@ const TempNavInactive = ({ children, tooltipBody, triggerClassName, navElementCl
                 type={NavElementType.Link}
                 tabIndex={0}
                 style={{
-                    backgroundColor: 'var(--color-base-surface-surface-tertiary)',
+                    backgroundColor:
+                        'var(--color-base-surface-surface-tertiary)',
                     color: 'var(--color-base-text-text-secondary)',
                 }}
                 className={clsx(

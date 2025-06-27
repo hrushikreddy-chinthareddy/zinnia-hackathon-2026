@@ -11,7 +11,10 @@ const ProcessTypeChip = ({
 }: {
     process: string;
     processTypes: Set<string>;
-    handleRemoveFilter: (arg: { processTypes: Set<string>; requestSubType: object }) => void;
+    handleRemoveFilter: (arg: {
+        processTypes: Set<string>;
+        requestSubType: object;
+    }) => void;
     t: TFunction;
 }) => {
     const newProcessFilters = new Set(processTypes);
@@ -19,9 +22,16 @@ const ProcessTypeChip = ({
 
     return (
         <ChipX
-            ariaLabel={t('ariaLabel.clearFilter', { filter: process }) as string}
+            ariaLabel={
+                t('ariaLabel.clearFilter', { filter: process }) as string
+            }
             label={process}
-            onDelete={() => handleRemoveFilter({ processTypes: newProcessFilters, requestSubType: new Set() })}
+            onDelete={() =>
+                handleRemoveFilter({
+                    processTypes: newProcessFilters,
+                    requestSubType: new Set(),
+                })
+            }
         />
     );
 };

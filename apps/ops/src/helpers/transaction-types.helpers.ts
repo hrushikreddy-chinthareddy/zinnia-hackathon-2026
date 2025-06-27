@@ -1,6 +1,11 @@
 import { TransactionType } from '@zinnia/api-types/types/sor';
 
-import { EventFilterKeys, PeopleFilters, PolicyFilters, TransactionFilters } from '@deps/contexts/HistoryFiltersContext';
+import {
+    EventFilterKeys,
+    PeopleFilters,
+    PolicyFilters,
+    TransactionFilters,
+} from '@deps/contexts/HistoryFiltersContext';
 
 enum MissingTransactionTypes {
     CalendarProcessing = 'CalendarProcessing',
@@ -22,23 +27,36 @@ export const TransactionTypesNotInTheSpecYet = [
     MissingTransactionTypes.FundTransfer as unknown as TransactionType,
 ];
 
-export const allTransactionTypes = [...Object.values(TransactionType), ...TransactionTypesNotInTheSpecYet];
+export const allTransactionTypes = [
+    ...Object.values(TransactionType),
+    ...TransactionTypesNotInTheSpecYet,
+];
 
-const addressTransactions = [TransactionType.ADDRESS_CHANGE, TransactionType.PREFERRED_MAILING_ADDRESS_CHANGE];
+const addressTransactions = [
+    TransactionType.ADDRESS_CHANGE,
+    TransactionType.PREFERRED_MAILING_ADDRESS_CHANGE,
+];
 const bankAccountTransactions = [TransactionType.BANK_ACCOUNT_CHANGE];
 const beneficiaryTransactions = [TransactionType.BENEFICIARY_CHANGE];
-const communicationPreferenceTransactions = [TransactionType.COMMUNICATION_PREFERENCE_CHANGE];
+const communicationPreferenceTransactions = [
+    TransactionType.COMMUNICATION_PREFERENCE_CHANGE,
+];
 const emailTransactions = [TransactionType.EMAIL_CHANGE];
 const nameTransactions = [TransactionType.EXISTING_PARTY_NAME_CHANGE];
 const phoneNumberTransactions = [TransactionType.PHONE_NUMBER_CHANGE];
-const roleTransactions = [TransactionType.OWNER_CHANGE, TransactionType.PAYEE_CHANGE, TransactionType.PAYOR_CHANGE];
+const roleTransactions = [
+    TransactionType.OWNER_CHANGE,
+    TransactionType.PAYEE_CHANGE,
+    TransactionType.PAYOR_CHANGE,
+];
 const tpdTransactions = [TransactionType.TPDCHANGE];
 
 export const peopleTransactions = {
     [PeopleFilters.Address]: addressTransactions,
     [PeopleFilters.BankAccount]: bankAccountTransactions,
     [PeopleFilters.Beneficiary]: beneficiaryTransactions,
-    [PeopleFilters.CommunicationPreference]: communicationPreferenceTransactions,
+    [PeopleFilters.CommunicationPreference]:
+        communicationPreferenceTransactions,
     [PeopleFilters.Email]: emailTransactions,
     [PeopleFilters.Name]: nameTransactions,
     [PeopleFilters.Phone]: phoneNumberTransactions,
@@ -57,8 +75,15 @@ export const peopleTransactions = {
     ],
 };
 
-const anniversaryTransactions = [TransactionType.ANNIVERSARY, TransactionType.LAPSE_ASSESSMENT, TransactionType.MATCH_BONUS_VESTING];
-const coverageTransactions = [TransactionType.CANCEL_NO_PREMIUM, TransactionType.DEATH_CLAIM];
+const anniversaryTransactions = [
+    TransactionType.ANNIVERSARY,
+    TransactionType.LAPSE_ASSESSMENT,
+    TransactionType.MATCH_BONUS_VESTING,
+];
+const coverageTransactions = [
+    TransactionType.CANCEL_NO_PREMIUM,
+    TransactionType.DEATH_CLAIM,
+];
 const feesTransactions = [
     TransactionType.COST_OF_INSURANCE,
     TransactionType.EXPENSE_CHARGE,
@@ -90,7 +115,12 @@ export const policyTransactions = {
     [PolicyFilters.Coverage]: coverageTransactions,
     [PolicyFilters.Fees]: feesTransactions,
     [PolicyFilters.KeyDates]: keyDateTransaction,
-    all: [...anniversaryTransactions, ...coverageTransactions, ...feesTransactions, ...keyDateTransaction],
+    all: [
+        ...anniversaryTransactions,
+        ...coverageTransactions,
+        ...feesTransactions,
+        ...keyDateTransaction,
+    ],
 };
 
 export const withdrawalDetailsTransactions = [
@@ -151,12 +181,21 @@ export const financialTransactions = {
     [TransactionFilters.Premiums]: premiumTransactions,
     [TransactionFilters.SystematicPrograms]: systematicProgramTransactions,
     [TransactionFilters.Withdrawals]: withdrawalTransactions,
-    all: [...loanTransactions, ...premiumTransactions, ...systematicProgramTransactions, ...withdrawalTransactions],
+    all: [
+        ...loanTransactions,
+        ...premiumTransactions,
+        ...systematicProgramTransactions,
+        ...withdrawalTransactions,
+    ],
 };
 
 export const allTransactions = {
     [EventFilterKeys.Transactions]: financialTransactions,
     [EventFilterKeys.Policy]: policyTransactions,
     [EventFilterKeys.People]: peopleTransactions,
-    all: [...financialTransactions.all, ...policyTransactions.all, ...peopleTransactions.all],
+    all: [
+        ...financialTransactions.all,
+        ...policyTransactions.all,
+        ...peopleTransactions.all,
+    ],
 };

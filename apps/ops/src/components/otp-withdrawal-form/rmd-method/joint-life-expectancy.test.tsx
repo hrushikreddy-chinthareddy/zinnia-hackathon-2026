@@ -3,7 +3,10 @@ import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 
 import getFlicRmdConfig from '@deps/containers/otp/rmd-forms/flic-rmd-form.helpers';
 import getMassMutualRmdConfig from '@deps/containers/otp/rmd-forms/mm-rmd-form.helpers';
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
@@ -33,7 +36,9 @@ describe('JointLifeExpectancy component', () => {
                 </FormDataContext.Provider>
             );
 
-            const checkboxElement = screen.getByTestId('is-joint-life-expectancy-test-id');
+            const checkboxElement = screen.getByTestId(
+                'is-joint-life-expectancy-test-id'
+            );
             expect(checkboxElement).toBeInTheDocument();
             expect(checkboxElement).not.toBeChecked();
         });
@@ -42,12 +47,19 @@ describe('JointLifeExpectancy component', () => {
             const { jointLifeExpectancyConfigs } = getFlicRmdConfig(t);
 
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending }}>
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                    }}
+                >
                     <JointLifeExpectancy configs={jointLifeExpectancyConfigs} />
                 </FormDataContext.Provider>
             );
 
-            const checkboxElement = screen.getByTestId('is-joint-life-expectancy-test-id');
+            const checkboxElement = screen.getByTestId(
+                'is-joint-life-expectancy-test-id'
+            );
             expect(checkboxElement).toBeInTheDocument();
 
             fireEvent.click(checkboxElement);
@@ -72,11 +84,15 @@ describe('JointLifeExpectancy component', () => {
 
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                    <JointLifeExpectancy configs={current.jointLifeExpectancyConfigs} />
+                    <JointLifeExpectancy
+                        configs={current.jointLifeExpectancyConfigs}
+                    />
                 </FormDataContext.Provider>
             );
 
-            const checkboxElement = screen.getByTestId('is-joint-life-expectancy-test-id');
+            const checkboxElement = screen.getByTestId(
+                'is-joint-life-expectancy-test-id'
+            );
             expect(checkboxElement).toBeInTheDocument();
 
             expect(checkboxElement).not.toBeChecked();
@@ -87,12 +103,21 @@ describe('JointLifeExpectancy component', () => {
                 result: { current },
             } = renderHook(() => getMassMutualRmdConfig(t));
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending }}>
-                    <JointLifeExpectancy configs={current.jointLifeExpectancyConfigs} />
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                    }}
+                >
+                    <JointLifeExpectancy
+                        configs={current.jointLifeExpectancyConfigs}
+                    />
                 </FormDataContext.Provider>
             );
 
-            const checkboxElement = screen.getByTestId('is-joint-life-expectancy-test-id');
+            const checkboxElement = screen.getByTestId(
+                'is-joint-life-expectancy-test-id'
+            );
             expect(checkboxElement).toBeInTheDocument();
 
             fireEvent.click(checkboxElement);

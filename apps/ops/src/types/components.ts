@@ -12,7 +12,14 @@ export type PolicyKeyPlaceholderValues = {
 };
 
 export type Size = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type Variant = 'primary' | 'secondary' | 'contrast' | 'error' | 'info' | 'success' | 'text';
+export type Variant =
+    | 'primary'
+    | 'secondary'
+    | 'contrast'
+    | 'error'
+    | 'info'
+    | 'success'
+    | 'text';
 
 export interface TagKey {
     text?: string;

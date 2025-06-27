@@ -1,6 +1,10 @@
 import router from 'next/router';
 
-import NavElement, { NavElementType, NavElementSize, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+    NavElementSize,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { getSlug } from '@deps/helpers/string.helpers';
 
 import NoTasksFound from './no-tasks-found';
@@ -20,11 +24,24 @@ export default function TasksListing({
     isHeaderHidden = true,
 }: TasksListingProps) {
     const taskTableRows: TaskTableRow[] =
-        (tasks && tasks?.map(task => toFormattedTask(t, task, caseId, caseType, documentNumber, clientId))) || [];
+        (tasks &&
+            tasks?.map((task) =>
+                toFormattedTask(
+                    t,
+                    task,
+                    caseId,
+                    caseType,
+                    documentNumber,
+                    clientId
+                )
+            )) ||
+        [];
     const route = getSlug(caseType) + '/' + caseId;
 
     const handleCreateNewTask = () => {
-        router.push(`/create-case/${route}?doc=${documentNumber}&clientId=${clientId}&action=new`);
+        router.push(
+            `/create-case/${route}?doc=${documentNumber}&clientId=${clientId}&action=new`
+        );
     };
 
     return (
@@ -32,7 +49,9 @@ export default function TasksListing({
             <div className="mb-4 grid grid-cols-2">
                 <div className="col-span-1">
                     <p className="leading-7.5 font-primary text-xl font-medium text-gray-900">
-                        {isHeaderHidden ? '' : `${config.searchResults} ${caseId}`}
+                        {isHeaderHidden
+                            ? ''
+                            : `${config.searchResults} ${caseId}`}
                     </p>
                 </div>
                 <div className="col-span-1">
@@ -44,7 +63,9 @@ export default function TasksListing({
                             variant={NavElementVariant.Default}
                             href={`/create-case/${route}?doc=${documentNumber}&clientId=${clientId}&action=new`}
                         >
-                            <span data-testid="create-task-link">+ {config.createNewTask}</span>
+                            <span data-testid="create-task-link">
+                                + {config.createNewTask}
+                            </span>
                         </NavElement>
                     ) : null}
                 </div>
@@ -52,7 +73,12 @@ export default function TasksListing({
             {tasks && tasks?.length > 0 ? (
                 <TasksTable tasks={taskTableRows} t={t} config={config} />
             ) : (
-                tasks && <NoTasksFound labels={config.noTaskFound} handleCreateNewTask={handleCreateNewTask} />
+                tasks && (
+                    <NoTasksFound
+                        labels={config.noTaskFound}
+                        handleCreateNewTask={handleCreateNewTask}
+                    />
+                )
             )}
         </div>
     );

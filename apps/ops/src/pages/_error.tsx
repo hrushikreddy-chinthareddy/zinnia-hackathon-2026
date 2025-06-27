@@ -7,7 +7,11 @@ interface ErrorProps {
 
 const Page = ({ statusCode }: ErrorProps) => {
     return (
-        <Error statusCode={statusCode}>{statusCode ? `An error ${statusCode} occurred on server` : 'An error occurred on client'}</Error>
+        <Error statusCode={statusCode}>
+            {statusCode
+                ? `An error ${statusCode} occurred on server`
+                : 'An error occurred on client'}
+        </Error>
     );
 };
 

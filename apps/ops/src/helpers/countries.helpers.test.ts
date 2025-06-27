@@ -1,6 +1,11 @@
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-import { getCountryByCode, getCountryCodes, getCountryName, getCountryNames } from './countries.helpers';
+import {
+    getCountryByCode,
+    getCountryCodes,
+    getCountryName,
+    getCountryNames,
+} from './countries.helpers';
 
 describe('Countries', () => {
     it('should return an array of country names', () => {

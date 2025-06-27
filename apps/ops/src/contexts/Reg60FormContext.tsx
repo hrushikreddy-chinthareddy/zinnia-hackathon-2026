@@ -3,7 +3,10 @@ import { createContext } from 'react';
 import { Disclosure } from '@deps/containers/otp/reg60-forms/components/create-disclosure/create-disclosure.types';
 import { DisclosureAuthorizationInformation } from '@deps/containers/otp/reg60-forms/components/disclosure-authorization/disclosure-authorization.types';
 import { UserInfo } from '@deps/containers/otp/reg60-forms/components/user-information/user-information.type';
-import { ActiveReg60Case, CurrentPage } from '@deps/containers/otp/reg60-forms/reg60.types';
+import {
+    ActiveReg60Case,
+    CurrentPage,
+} from '@deps/containers/otp/reg60-forms/reg60.types';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 export interface OtpReg60FormState {
@@ -22,7 +25,9 @@ export interface OtpReg60FormState {
     setOwnerInformation: React.Dispatch<React.SetStateAction<UserInfo>>;
     setAgentInformation: React.Dispatch<React.SetStateAction<UserInfo>>;
     setCurrentPage: React.Dispatch<React.SetStateAction<CurrentPage>>;
-    setDisclosureAuthorization: React.Dispatch<React.SetStateAction<DisclosureAuthorizationInformation>>;
+    setDisclosureAuthorization: React.Dispatch<
+        React.SetStateAction<DisclosureAuthorizationInformation>
+    >;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
 }
 
@@ -44,4 +49,6 @@ export const defaultFormDataContext = {
     setDisclosureAuthorization: noop,
 };
 
-export const Reg60FormContext = createContext<OtpReg60FormState>(defaultFormDataContext as OtpReg60FormState);
+export const Reg60FormContext = createContext<OtpReg60FormState>(
+    defaultFormDataContext as OtpReg60FormState
+);

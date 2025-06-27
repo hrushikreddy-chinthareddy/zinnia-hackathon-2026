@@ -10,7 +10,16 @@
     "schemaContent": {
         "definitions": {
             "contactRoleTypeEnum": {
-                "enum": ["Beneficiary", "Agent", "Advisor", "Employer", "Family Member", "Funeral Home", "Trustee", "Other"]
+                "enum": [
+                    "Beneficiary",
+                    "Agent",
+                    "Advisor",
+                    "Employer",
+                    "Family Member",
+                    "Funeral Home",
+                    "Trustee",
+                    "Other"
+                ]
             }
         },
         "tabSchemas": [
@@ -64,7 +73,12 @@
                                                             "phoneType": {
                                                                 "type": "string",
                                                                 "title": "Type",
-                                                                "enum": ["Home", "Work", "Mobile", "Other"]
+                                                                "enum": [
+                                                                    "Home",
+                                                                    "Work",
+                                                                    "Mobile",
+                                                                    "Other"
+                                                                ]
                                                             },
                                                             "countryCode": {
                                                                 "type": "string",
@@ -82,7 +96,12 @@
                                                             "bestTime": {
                                                                 "type": "string",
                                                                 "title": "Best time to call",
-                                                                "enum": ["Morning", "Afternoon", "Evening", "Anytime"]
+                                                                "enum": [
+                                                                    "Morning",
+                                                                    "Afternoon",
+                                                                    "Evening",
+                                                                    "Anytime"
+                                                                ]
                                                             }
                                                         }
                                                     },
@@ -93,7 +112,12 @@
                                                             "phoneType": {
                                                                 "type": "string",
                                                                 "title": "Type",
-                                                                "enum": ["Home", "Work", "Mobile", "Other"]
+                                                                "enum": [
+                                                                    "Home",
+                                                                    "Work",
+                                                                    "Mobile",
+                                                                    "Other"
+                                                                ]
                                                             },
                                                             "countryCode": {
                                                                 "type": "string",
@@ -140,7 +164,14 @@
                         "beneCall": {
                             "callLogs": {
                                 "items": {
-                                    "ui:order": ["contactRole", "fullName", "customName", "relationToDeceased", "phone", "customPhone"],
+                                    "ui:order": [
+                                        "contactRole",
+                                        "fullName",
+                                        "customName",
+                                        "relationToDeceased",
+                                        "phone",
+                                        "customPhone"
+                                    ],
                                     "contactRole": {
                                         "ui:widget": "select",
                                         "ui:options": {

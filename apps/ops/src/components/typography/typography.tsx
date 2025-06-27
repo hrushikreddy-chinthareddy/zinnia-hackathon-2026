@@ -136,10 +136,19 @@ const typographyMapping: Record<TypographyVariant, TypographyData> = {
     },
 };
 
-export default function Typography({ variant, children, asTag, ...rest }: TypographyProps) {
+export default function Typography({
+    variant,
+    children,
+    asTag,
+    ...rest
+}: TypographyProps) {
     const { className, ...newRest } = rest;
 
-    const classes = clsx('tracking-normal no-underline', typographyMapping[variant].styles, className);
+    const classes = clsx(
+        'tracking-normal no-underline',
+        typographyMapping[variant].styles,
+        className
+    );
 
     const Tag = asTag ?? typographyMapping[variant].tag;
 

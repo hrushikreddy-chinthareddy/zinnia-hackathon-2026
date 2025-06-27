@@ -13,7 +13,12 @@ export interface CarrierListItem {
 export const ClosedTransactions = () => {
     return (
         <div className={styles.container}>
-            <div className={clsx(sharedStyles.dashboardCard, sharedStyles.dashboardCardFirst)}>
+            <div
+                className={clsx(
+                    sharedStyles.dashboardCard,
+                    sharedStyles.dashboardCardFirst
+                )}
+            >
                 <CaseTiming />
             </div>
 

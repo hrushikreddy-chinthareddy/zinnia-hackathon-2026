@@ -16,16 +16,27 @@ export interface SelectOneOption {
     subElement?: JSX.Element;
 }
 
-export default function FormProgramProcessDate({ options, isFormStateReadOnly }: FormProgramProcessDateProps) {
+export default function FormProgramProcessDate({
+    options,
+    isFormStateReadOnly,
+}: FormProgramProcessDateProps) {
     const { formProgram, setFormProgram } = useContext(FormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.amountDetails.processTimeframe' });
-    const [selected, setSelected] = useState<ProcessRequestType | ''>(formProgram?.processRequestType?.[0]?.text || '');
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.amountDetails.processTimeframe',
+    });
+    const [selected, setSelected] = useState<ProcessRequestType | ''>(
+        formProgram?.processRequestType?.[0]?.text || ''
+    );
 
     useEffect(() => {
-        const { asOfDate: intentionallyRemovingThisValue, ...rest } = formProgram;
+        const { asOfDate: intentionallyRemovingThisValue, ...rest } =
+            formProgram;
 
         const formProcessRequestType = selected ? [{ text: selected }] : null;
-        const selectedAsOfDate = selected === ProcessRequestType.AsOfDate ? intentionallyRemovingThisValue?.text ?? null : null;
+        const selectedAsOfDate =
+            selected === ProcessRequestType.AsOfDate
+                ? intentionallyRemovingThisValue?.text ?? null
+                : null;
         setFormProgram({
             ...rest,
             asOfDate: { text: selectedAsOfDate }, // setting null for default, value will update from as-of-date component
@@ -38,9 +49,15 @@ export default function FormProgramProcessDate({ options, isFormStateReadOnly }:
             <Radio
                 items={options}
                 label={t('selectOne') as string}
-                onChange={event => setSelected(event.target.value as ProcessRequestType)}
+                onChange={(event) =>
+                    setSelected(event.target.value as ProcessRequestType)
+                }
                 value={selected}
-                variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+                variant={
+                    isFormStateReadOnly
+                        ? RadioVariant.Inactive
+                        : RadioVariant.Default
+                }
             />
         </div>
     );

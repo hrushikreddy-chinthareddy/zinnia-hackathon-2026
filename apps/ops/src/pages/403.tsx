@@ -9,7 +9,11 @@ import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
-import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 const Custom403Page = () => {
@@ -18,7 +22,13 @@ const Custom403Page = () => {
     return (
         <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-semantic-warning bg-white shadow-sm">
             <CardInfo
-                icon={<ErrorIcon className="text-semantic-warning" height={50} width={50} />}
+                icon={
+                    <ErrorIcon
+                        className="text-semantic-warning"
+                        height={50}
+                        width={50}
+                    />
+                }
                 title={t('site.accessDenied.title')}
                 subtitle={t('site.accessDenied.message')}
             />
@@ -46,16 +56,18 @@ export const getServerSideProps = withPageAuthAndLogging(
             };
 
             // We can use the enum to access the permissions object.
-            permissions[UserPermission.AllowReadCaseManagement] = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadCaseManagement,
-                loggingContext
-            );
-            permissions[UserPermission.AllowReadPolicyAdmin] = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadPolicyAdmin,
-                loggingContext
-            );
+            permissions[UserPermission.AllowReadCaseManagement] =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadCaseManagement,
+                    loggingContext
+                );
+            permissions[UserPermission.AllowReadPolicyAdmin] =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadPolicyAdmin,
+                    loggingContext
+                );
 
             const translations = await serverSideTranslations(
                 locale,

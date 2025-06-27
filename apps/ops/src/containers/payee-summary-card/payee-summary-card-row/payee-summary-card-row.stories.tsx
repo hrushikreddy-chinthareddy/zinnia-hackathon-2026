@@ -1,16 +1,22 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import PayeeSummaryCardRow, { PayeeSummaryCardRowProps } from './payee-summary-card-row';
+import PayeeSummaryCardRow, {
+    PayeeSummaryCardRowProps,
+} from './payee-summary-card-row';
 
 export default {
     title: 'Containers/PayeeSummaryCard/Row',
     component: PayeeSummaryCardRow,
     decorators: [
-        Story => (
-            <div className="container" style={{
-                backgroundColor: 'var(--color-base-surface-surface-primary)',
-                padding: 'var(--measure-dimension-padding-xl)'
-            }}>
+        (Story) => (
+            <div
+                className="container"
+                style={{
+                    backgroundColor:
+                        'var(--color-base-surface-surface-primary)',
+                    padding: 'var(--measure-dimension-padding-xl)',
+                }}
+            >
                 <Story />
             </div>
         ),
@@ -23,6 +29,6 @@ export const Default: StoryObj<PayeeSummaryCardRowProps> = {
         percentage: '(15%)',
         label: 'label',
         popoverTitle: 'Withdrawal Charge',
-        popoverBody: 'Withdrawal Body'
-    }
-}
+        popoverBody: 'Withdrawal Body',
+    },
+};

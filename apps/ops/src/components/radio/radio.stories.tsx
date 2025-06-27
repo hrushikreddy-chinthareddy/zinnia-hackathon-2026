@@ -11,7 +11,7 @@ export default {
     title: 'Components/Radio',
     component: Radio,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -31,8 +31,20 @@ export const RadioComponent = () => {
 
     return (
         <div className="flex flex-col gap-5">
-            <Radio label="Group 1" items={items} required={true} value={value} onChange={handleChange} />
-            <Radio label="Group 2" items={items} variant={RadioVariant.Inactive} value={value} onChange={handleChange} />
+            <Radio
+                label="Group 1"
+                items={items}
+                required={true}
+                value={value}
+                onChange={handleChange}
+            />
+            <Radio
+                label="Group 2"
+                items={items}
+                variant={RadioVariant.Inactive}
+                value={value}
+                onChange={handleChange}
+            />
         </div>
     );
 };
@@ -46,7 +58,8 @@ export const RadioFieldComponent = () => {
         }
         setValue(event.target.value);
     };
-    const handleChangeCustom = (event: any) => setCustomAmount(event.target.value);
+    const handleChangeCustom = (event: any) =>
+        setCustomAmount(event.target.value);
 
     const items: RadioItem[] = [
         {
@@ -77,8 +90,15 @@ export const RadioFieldComponent = () => {
             value: '$9,000.00',
             subElement: (
                 <div className="flex flex-col">
-                    <FieldLabel label={'Cost basis'} labelTooltip="Cost basis yes" />
-                    <Content details="$9,000.00" variant={ContentVariant.BodySm} contentClassName="flex" />
+                    <FieldLabel
+                        label={'Cost basis'}
+                        labelTooltip="Cost basis yes"
+                    />
+                    <Content
+                        details="$9,000.00"
+                        variant={ContentVariant.BodySm}
+                        contentClassName="flex"
+                    />
                 </div>
             ),
         },
@@ -87,8 +107,15 @@ export const RadioFieldComponent = () => {
             value: '$25,000.00',
             subElement: (
                 <div className="flex flex-col">
-                    <FieldLabel label={'Coverage preservation limit'} labelTooltip="Coverage preservation limit yes" />
-                    <Content details="$25,000.00" variant={ContentVariant.BodySm} contentClassName="flex" />
+                    <FieldLabel
+                        label={'Coverage preservation limit'}
+                        labelTooltip="Coverage preservation limit yes"
+                    />
+                    <Content
+                        details="$25,000.00"
+                        variant={ContentVariant.BodySm}
+                        contentClassName="flex"
+                    />
                 </div>
             ),
         },
@@ -97,8 +124,15 @@ export const RadioFieldComponent = () => {
             value: '$50,000.00',
             subElement: (
                 <div className="flex flex-col">
-                    <FieldLabel label={'Maximum amount'} labelTooltip="Maximum amount yes" />
-                    <Content details="$50,000.00" variant={ContentVariant.BodySm} contentClassName="flex" />
+                    <FieldLabel
+                        label={'Maximum amount'}
+                        labelTooltip="Maximum amount yes"
+                    />
+                    <Content
+                        details="$50,000.00"
+                        variant={ContentVariant.BodySm}
+                        contentClassName="flex"
+                    />
                 </div>
             ),
         },
@@ -106,7 +140,13 @@ export const RadioFieldComponent = () => {
 
     return (
         <div className="flex flex-col gap-5">
-            <Radio label="Money Money Money" items={items} required={true} value={value} onChange={handleChange} />
+            <Radio
+                label="Money Money Money"
+                items={items}
+                required={true}
+                value={value}
+                onChange={handleChange}
+            />
         </div>
     );
 };

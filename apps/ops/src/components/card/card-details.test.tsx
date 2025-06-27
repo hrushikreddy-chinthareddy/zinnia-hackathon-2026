@@ -22,30 +22,54 @@ afterEach(cleanup);
 
 describe('Card Details Component', () => {
     it('should render an MUI card component', () => {
-        render(<DetailsCard items={cardDetailsItems} titles={cardDetailsTitles} />);
+        render(
+            <DetailsCard items={cardDetailsItems} titles={cardDetailsTitles} />
+        );
         expect(screen.getByTestId(CardDetailsTest.CARD)).toBeInTheDocument();
     });
 
     it('should render each of the items from props', () => {
-        render(<DetailsCard items={cardDetailsItems} titles={cardDetailsTitles} />);
-        expect(screen.getByTestId(`${CardDetailsTest.ITEMS}-1`)).toBeInTheDocument();
-        expect(screen.getByTestId(`${CardDetailsTest.ITEMS}-2`)).toBeInTheDocument();
+        render(
+            <DetailsCard items={cardDetailsItems} titles={cardDetailsTitles} />
+        );
+        expect(
+            screen.getByTestId(`${CardDetailsTest.ITEMS}-1`)
+        ).toBeInTheDocument();
+        expect(
+            screen.getByTestId(`${CardDetailsTest.ITEMS}-2`)
+        ).toBeInTheDocument();
     });
 
     it('should correctly display the titles from props', () => {
-        render(<DetailsCard items={cardDetailsItems} titles={cardDetailsTitles} />);
+        render(
+            <DetailsCard items={cardDetailsItems} titles={cardDetailsTitles} />
+        );
         expect(screen.getByTestId(CardDetailsTest.CONTENT)).toBeInTheDocument();
         expect(screen.getByText(cardDetailsTitles[0])).toBeInTheDocument();
         expect(screen.getByText(cardDetailsTitles[1])).toBeInTheDocument();
     });
 
     it('should not render the card header if the header prop is undefined', () => {
-        render(<DetailsCard items={cardDetailsItems} titles={cardDetailsTitles} header={undefined} />);
-        expect(screen.queryByTestId(CardDetailsTest.HEADER)).not.toBeInTheDocument();
+        render(
+            <DetailsCard
+                items={cardDetailsItems}
+                titles={cardDetailsTitles}
+                header={undefined}
+            />
+        );
+        expect(
+            screen.queryByTestId(CardDetailsTest.HEADER)
+        ).not.toBeInTheDocument();
     });
 
     it('should render the card header if the header prop is defined', () => {
-        render(<DetailsCard items={cardDetailsItems} titles={cardDetailsTitles} header={cardDetailsHeader} />);
+        render(
+            <DetailsCard
+                items={cardDetailsItems}
+                titles={cardDetailsTitles}
+                header={cardDetailsHeader}
+            />
+        );
         expect(screen.getByTestId(CardDetailsTest.HEADER)).toBeInTheDocument();
     });
 });

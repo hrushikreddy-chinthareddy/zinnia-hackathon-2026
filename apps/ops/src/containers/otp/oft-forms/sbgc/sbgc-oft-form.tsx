@@ -25,8 +25,12 @@ type SbgcOftWithdrawalFormProps = {
     planCode: string | '';
 };
 
-export default function SbgcOftWithdrawalForm({ planCode }: SbgcOftWithdrawalFormProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+export default function SbgcOftWithdrawalForm({
+    planCode,
+}: SbgcOftWithdrawalFormProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -60,11 +64,15 @@ export default function SbgcOftWithdrawalForm({ planCode }: SbgcOftWithdrawalFor
     }, []);
 
     useEffect(() => {
-        setFormData(fs => ({
+        setFormData((fs) => ({
             ...fs,
-            formExtName: `${initialForm?.carrier || Carrier.SBGC}_${ProcessType.OFT}_DIGITAL_FORM`,
+            formExtName: `${initialForm?.carrier || Carrier.SBGC}_${
+                ProcessType.OFT
+            }_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.SBGC}_${ProcessType.OFT}_DIGITAL_FORM`,
+                formType: `${initialForm?.carrier || Carrier.SBGC}_${
+                    ProcessType.OFT
+                }_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -78,44 +86,75 @@ export default function SbgcOftWithdrawalForm({ planCode }: SbgcOftWithdrawalFor
         }
     }, [formParty, ownerStateOfResidence]);
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
+    const hasTpaAuthorization =
+        formTpaAuthorization &&
+        !Object.values(formTpaAuthorization).every((val) => val === null);
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
     const isNEAPlanCode = NEA_PLAN_CODES.includes(planCode);
-    const isInvalidContractReplacementState = [USStates['NORTH DAKOTA'], USStates.MICHIGAN, USStates['DISTRICT OF COLUMBIA']].includes(
-        ownerStateOfResidence as USStates
-    );
+    const isInvalidContractReplacementState = [
+        USStates['NORTH DAKOTA'],
+        USStates.MICHIGAN,
+        USStates['DISTRICT OF COLUMBIA'],
+    ].includes(ownerStateOfResidence as USStates);
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             {isNEAPlanCode && <NeaBenefits />}
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
-                title={t('amountDetails.surrenderingInstructions.title') as string}
+                title={
+                    t('amountDetails.surrenderingInstructions.title') as string
+                }
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
-                showContractReplacement={showContractReplacement && !isInvalidContractReplacementState}
+                showContractReplacement={
+                    showContractReplacement &&
+                    !isInvalidContractReplacementState
+                }
             />
-            {ownerIsVirginiaResident && isNEAPlanCode && <FinancialProfessionalSignature isFormStateReadOnly={isFormStateReadOnly} />}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            {ownerIsVirginiaResident && isNEAPlanCode && (
+                <FinancialProfessionalSignature
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
             <CedingCompanyDistribution
                 qualificationOptions={qualTypeOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
                 renderLoaDate={true}
-                authorizedSignatureLabel={t('oftProcess.cedingCompanySignature.isSignatureAuthorized') as string}
+                authorizedSignatureLabel={
+                    t(
+                        'oftProcess.cedingCompanySignature.isSignatureAuthorized'
+                    ) as string
+                }
             />
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                title={t('distributionMethod.cedingCompanyDistribution') as string}
+                title={
+                    t('distributionMethod.cedingCompanyDistribution') as string
+                }
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

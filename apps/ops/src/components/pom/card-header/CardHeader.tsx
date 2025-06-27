@@ -5,7 +5,11 @@ import { ProducerType } from '@deps/components/pom/types';
 
 import { default as styles } from './CardHeader.module.css';
 
-export const CardHeader = ({ producerType }: { producerType: ProducerType }) => {
+export const CardHeader = ({
+    producerType,
+}: {
+    producerType: ProducerType;
+}) => {
     // @TODO: this will change once we integrate with the api
     const { iconType, title, subtext } =
         producerType === ProducerType.CORPORATION

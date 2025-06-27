@@ -1,26 +1,55 @@
 import { Skeleton } from '@radix-ui/themes';
-import { PartyStatus, PolicyFeature, FeatureType, Rider } from '@zinnia/api-types/types/sor';
+import {
+    PartyStatus,
+    PolicyFeature,
+    FeatureType,
+    Rider,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 import React, { ReactElement } from 'react';
 
-import BadgeWithTooltip, { BadgeWithTooltipProps } from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
+import BadgeWithTooltip, {
+    BadgeWithTooltipProps,
+} from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyExtrasCardProps } from '@deps/components/policy-extras-card/policy-extras-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { convertKebabedDateString, isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
-import { FeaturesCardsTest, RidersCardsTest } from '@deps/jest/constants/test-id-constants';
-import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    convertKebabedDateString,
+    isNullEmptyOrUndefined,
+    toSentenceCase,
+} from '@deps/helpers/string.helpers';
+import {
+    FeaturesCardsTest,
+    RidersCardsTest,
+} from '@deps/jest/constants/test-id-constants';
+import {
+    DEFAULT_DATE_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
+    DEFAULT_ERROR_STRING,
+} from '@deps/types/constants';
 import { ConfiguredSettingId } from '@deps/types/product-config-settings';
-import { BenefitId, CoverageId, CoverageToBenefitId, RiderBenefit } from '@deps/types/product-rate';
+import {
+    BenefitId,
+    CoverageId,
+    CoverageToBenefitId,
+    RiderBenefit,
+} from '@deps/types/product-rate';
 
 import { ExtrasCardType } from './policy-extras-cards';
-import { ExtraFilters, filterValidFeature } from '../riders-and-features-sub-page/riders-and-features-sub-page.helpers';
+import {
+    ExtraFilters,
+    filterValidFeature,
+} from '../riders-and-features-sub-page/riders-and-features-sub-page.helpers';
 
 export const RIDER_NOT_ELECTED = 'NOT ELECTED';
 
@@ -37,7 +66,10 @@ export const riderCriticalIllnessSettings = [
     ConfiguredSettingId.MaxBenefitPercentageT2,
 ];
 
-export const riderTerminalIllnessSettings = [ConfiguredSettingId.MaxAmount, ConfiguredSettingId.MaxBenefitPercentage];
+export const riderTerminalIllnessSettings = [
+    ConfiguredSettingId.MaxAmount,
+    ConfiguredSettingId.MaxBenefitPercentage,
+];
 
 // Overloan protection riders do not require any data from the API to show for now
 export const riderOverloanProtectionSettings = [];
@@ -57,7 +89,10 @@ interface CardFields {
     customContent?: React.ReactNode;
 }
 
-const getBadgeFromFeature = (feature: PolicyFeature, t: TFunction): { badge: ReactElement<BadgeWithTooltipProps>; status: string } => {
+const getBadgeFromFeature = (
+    feature: PolicyFeature,
+    t: TFunction
+): { badge: ReactElement<BadgeWithTooltipProps>; status: string } => {
     if (dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())) {
         return {
             badge: (
@@ -98,7 +133,8 @@ const getBadgeFromFeature = (feature: PolicyFeature, t: TFunction): { badge: Rea
 };
 
 const getRiderStatus = (rider: Rider): string => {
-    if (rider.riderElected === RIDER_NOT_ELECTED) return ExtraFilters.NotElected;
+    if (rider.riderElected === RIDER_NOT_ELECTED)
+        return ExtraFilters.NotElected;
 
     switch (rider.status?.toLowerCase()) {
         case ExtraFilters.Active:
@@ -108,12 +144,18 @@ const getRiderStatus = (rider: Rider): string => {
         case ExtraFilters.Terminated:
             return ExtraFilters.Terminated;
         default:
-            console.error('getRiderStatus::Invalid or unsupported rider type', rider.status);
+            console.error(
+                'getRiderStatus::Invalid or unsupported rider type',
+                rider.status
+            );
             return rider.status ?? '';
     }
 };
 
-const getBadgeFromRider = (rider: Rider, t: TFunction): ReactElement<BadgeWithTooltipProps> => {
+const getBadgeFromRider = (
+    rider: Rider,
+    t: TFunction
+): ReactElement<BadgeWithTooltipProps> => {
     if (rider.riderElected === RIDER_NOT_ELECTED) {
         return (
             <BadgeWithTooltip
@@ -154,16 +196,29 @@ const getBadgeFromRider = (rider: Rider, t: TFunction): ReactElement<BadgeWithTo
                 />
             );
         default:
-            console.error('getBadgeFromRider::Invalid or unsupported rider type', rider.status);
+            console.error(
+                'getBadgeFromRider::Invalid or unsupported rider type',
+                rider.status
+            );
             return null as unknown as ReactElement<BadgeWithTooltipProps>;
     }
 };
 
-const getRiderInsuredContent = (policyDetails: PolicyDetails, { riderName, riderParticipant }: Rider): React.ReactNode => {
-    const insuredIds = riderParticipant?.map(participants => participants.insuredId);
+const getRiderInsuredContent = (
+    policyDetails: PolicyDetails,
+    { riderName, riderParticipant }: Rider
+): React.ReactNode => {
+    const insuredIds = riderParticipant?.map(
+        (participants) => participants.insuredId
+    );
 
     if (!insuredIds?.length) {
-        return <Content details={DEFAULT_ERROR_STRING} variant={ContentVariant.Body} />;
+        return (
+            <Content
+                details={DEFAULT_ERROR_STRING}
+                variant={ContentVariant.Body}
+            />
+        );
     }
 
     const insuredElements = insuredIds.map((insuredId, index) => {
@@ -176,7 +231,12 @@ const getRiderInsuredContent = (policyDetails: PolicyDetails, { riderName, rider
 
         if (!policyDetails.coveredPeople.length || !insuredParty?.partyId) {
             return (
-                <Content details={insuredParty?.fullName} key={`insured-${insuredId}-${index}`} variant={ContentVariant.Body} pii={true} />
+                <Content
+                    details={insuredParty?.fullName}
+                    key={`insured-${insuredId}-${index}`}
+                    variant={ContentVariant.Body}
+                    pii={true}
+                />
             );
         }
 
@@ -193,14 +253,25 @@ const getRiderInsuredContent = (policyDetails: PolicyDetails, { riderName, rider
     });
 
     return (
-        <div className="flex flex-col" data-testid={`${RidersCardsTest.Insured}-${riderName}-values`}>
+        <div
+            className="flex flex-col"
+            data-testid={`${RidersCardsTest.Insured}-${riderName}-values`}
+        >
             {insuredElements}
         </div>
     );
 };
 
-const getRiderSubheader = (rider: Rider, riderBenefitData: RiderBenefit, t: TFunction, currency: string): (string | null)[] => {
-    const currencyFormat: Intl.NumberFormatOptions = { style: 'currency', currency };
+const getRiderSubheader = (
+    rider: Rider,
+    riderBenefitData: RiderBenefit,
+    t: TFunction,
+    currency: string
+): (string | null)[] => {
+    const currencyFormat: Intl.NumberFormatOptions = {
+        style: 'currency',
+        currency,
+    };
     const integerFormat = { maximumFractionDigits: 0 };
 
     switch (riderBenefitData?.benefitId) {
@@ -209,8 +280,18 @@ const getRiderSubheader = (rider: Rider, riderBenefitData: RiderBenefit, t: TFun
                 riderBenefitData
                     ? toSentenceCase(
                           t('riders.chronicIllnessBenefit', {
-                              percent: numberFormatify(riderBenefitData[ConfiguredSettingId.MaxBenefitPercentage], integerFormat),
-                              period: numberFormatify(riderBenefitData[ConfiguredSettingId.MaxNumberOfYearsToPay], integerFormat),
+                              percent: numberFormatify(
+                                  riderBenefitData[
+                                      ConfiguredSettingId.MaxBenefitPercentage
+                                  ],
+                                  integerFormat
+                              ),
+                              period: numberFormatify(
+                                  riderBenefitData[
+                                      ConfiguredSettingId.MaxNumberOfYearsToPay
+                                  ],
+                                  integerFormat
+                              ),
                           }) as string
                       )
                     : null,
@@ -220,14 +301,30 @@ const getRiderSubheader = (rider: Rider, riderBenefitData: RiderBenefit, t: TFun
             return [
                 riderBenefitData
                     ? (t('riders.criticalIllnessBenefit1', {
-                          t1Percent: numberFormatify(riderBenefitData[ConfiguredSettingId.MaxBenefitPercentage], integerFormat),
-                          t1Amount: numberFormatify(riderBenefitData[ConfiguredSettingId.MaxAmount], currencyFormat),
+                          t1Percent: numberFormatify(
+                              riderBenefitData[
+                                  ConfiguredSettingId.MaxBenefitPercentage
+                              ],
+                              integerFormat
+                          ),
+                          t1Amount: numberFormatify(
+                              riderBenefitData[ConfiguredSettingId.MaxAmount],
+                              currencyFormat
+                          ),
                       }) as string)
                     : null,
                 riderBenefitData
                     ? (t('riders.criticalIllnessBenefit2', {
-                          t2Percent: numberFormatify(riderBenefitData[ConfiguredSettingId.MaxBenefitPercentageT2], integerFormat),
-                          t2Amount: numberFormatify(riderBenefitData[ConfiguredSettingId.MaxAmountT2], currencyFormat),
+                          t2Percent: numberFormatify(
+                              riderBenefitData[
+                                  ConfiguredSettingId.MaxBenefitPercentageT2
+                              ],
+                              integerFormat
+                          ),
+                          t2Amount: numberFormatify(
+                              riderBenefitData[ConfiguredSettingId.MaxAmountT2],
+                              currencyFormat
+                          ),
                       }) as string)
                     : null,
             ];
@@ -237,8 +334,18 @@ const getRiderSubheader = (rider: Rider, riderBenefitData: RiderBenefit, t: TFun
                 riderBenefitData
                     ? toSentenceCase(
                           t('riders.terminalIllnessBenefit', {
-                              percent: numberFormatify(riderBenefitData[ConfiguredSettingId.MaxBenefitPercentage], integerFormat),
-                              amount: numberFormatify(riderBenefitData[ConfiguredSettingId.MaxAmount], currencyFormat),
+                              percent: numberFormatify(
+                                  riderBenefitData[
+                                      ConfiguredSettingId.MaxBenefitPercentage
+                                  ],
+                                  integerFormat
+                              ),
+                              amount: numberFormatify(
+                                  riderBenefitData[
+                                      ConfiguredSettingId.MaxAmount
+                                  ],
+                                  currencyFormat
+                              ),
                           }) as string
                       )
                     : null,
@@ -258,14 +365,22 @@ const getFeatureHeader = (feature: PolicyFeature, t: TFunction): string => {
     }
 };
 
-const getFeatureSubheader = (feature: PolicyFeature, t: TFunction): (string | null)[] => {
+const getFeatureSubheader = (
+    feature: PolicyFeature,
+    t: TFunction
+): (string | null)[] => {
     switch (feature.featureType) {
         case FeatureType.LAPSEPROTECTION:
             return [
                 toSentenceCase(
-                    t(feature.period === 1 ? 'features.oneYearProtectionGuarantee' : 'features.nYearsProtectionGuarantee', {
-                        n: feature.period,
-                    }) as string
+                    t(
+                        feature.period === 1
+                            ? 'features.oneYearProtectionGuarantee'
+                            : 'features.nYearsProtectionGuarantee',
+                        {
+                            n: feature.period,
+                        }
+                    ) as string
                 ),
             ];
         default:
@@ -273,23 +388,42 @@ const getFeatureSubheader = (feature: PolicyFeature, t: TFunction): (string | nu
     }
 };
 
-const createFieldKvp = ({ key, testId, label, details, customContent }: CardFields) => {
+const createFieldKvp = ({
+    key,
+    testId,
+    label,
+    details,
+    customContent,
+}: CardFields) => {
     return (
         <span data-testid={testId} key={key}>
             <Label variant={LabelVariant.FieldLabel} label={label} />
             <Skeleton
-                loading={isNullEmptyOrUndefined(details) && isNullEmptyOrUndefined(customContent)}
+                loading={
+                    isNullEmptyOrUndefined(details) &&
+                    isNullEmptyOrUndefined(customContent)
+                }
                 minWidth="60px"
                 maxWidth="100px"
                 height="20px"
             >
-                {customContent || <Content details={details} variant={ContentVariant.BodySm} />}
+                {customContent || (
+                    <Content
+                        details={details}
+                        variant={ContentVariant.BodySm}
+                    />
+                )}
             </Skeleton>
         </span>
     );
 };
 
-const mapFeatureFields = (feature: PolicyFeature, t: TFunction, currency: string, isAnnuity = false): ReactElement[] => {
+const mapFeatureFields = (
+    feature: PolicyFeature,
+    t: TFunction,
+    currency: string,
+    isAnnuity = false
+): ReactElement[] => {
     const formatPolicyFeatureDate = (date: string | Date | undefined) => {
         if (date === '2999-12-31') return t('features.lifetime');
         return dayjs(date, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT);
@@ -311,13 +445,19 @@ const mapFeatureFields = (feature: PolicyFeature, t: TFunction, currency: string
                   key: `feature-extras-card-${feature.timestamp}-field-cost`,
                   testId: `${FeaturesCardsTest.Cost}-${feature.timestamp}`,
                   label: t('features.cost'),
-                  details: numberFormatify(feature.paymentAmount as number, { style: 'currency', currency }),
+                  details: numberFormatify(feature.paymentAmount as number, {
+                      style: 'currency',
+                      currency,
+                  }),
               },
               {
                   key: `feature-extras-card-${feature.timestamp}-field-pmt`,
                   testId: `${FeaturesCardsTest.CumulativePayment}-${feature.timestamp}`,
                   label: t('features.cumulativePayment'),
-                  details: numberFormatify(feature.totalPaymentAmount as number, { style: 'currency', currency }),
+                  details: numberFormatify(
+                      feature.totalPaymentAmount as number,
+                      { style: 'currency', currency }
+                  ),
               },
           ];
     return [
@@ -392,7 +532,10 @@ const mapRiderFields = (
 
     if (!isNullEmptyOrUndefined(rider.terminalRiderPaymentAmount)) {
         fields.push({
-            details: numberFormatify(rider.terminalRiderPaymentAmount as number, { style: 'currency', currency }),
+            details: numberFormatify(
+                rider.terminalRiderPaymentAmount as number,
+                { style: 'currency', currency }
+            ),
             key: `rider-extras-card-${rider.riderName}-field-claimProcessed`,
             label: t('riders.claimProcessed'),
             testId: `${RidersCardsTest.ClaimProcessed}-${rider.riderName}`,
@@ -406,9 +549,16 @@ const mapRiderFields = (
         'Rider_SBLOPR' for overloan protection, but an Everly IUL policy will have a coverage id of 'Rider_OPR'
         for the same thing.
     */
-    if (benefitId !== BenefitId.OverloanProtection && benefitId !== BenefitId.Child) {
+    if (
+        benefitId !== BenefitId.OverloanProtection &&
+        benefitId !== BenefitId.Child
+    ) {
         fields.push({
-            details: riderBenefit ? riderBenefit[ConfiguredSettingId.MaxNumberOfClaims]?.toString() : undefined,
+            details: riderBenefit
+                ? riderBenefit[
+                      ConfiguredSettingId.MaxNumberOfClaims
+                  ]?.toString()
+                : undefined,
             key: `rider-extras-card-${rider.riderName}-field-maxClaims`,
             label: t('riders.maxClaims'),
             testId: `${RidersCardsTest.MaxClaims}-${rider.riderName}`,
@@ -417,7 +567,10 @@ const mapRiderFields = (
 
     if (!isNullEmptyOrUndefined(rider.amount)) {
         fields.push({
-            details: numberFormatify(rider.amount as number, { style: 'currency', currency }),
+            details: numberFormatify(rider.amount as number, {
+                style: 'currency',
+                currency,
+            }),
             key: `rider-extras-card-${rider.riderName}-field-claimProcessed`,
             label: t('riders.coverageAmount'),
             testId: `${RidersCardsTest.Amount}-${rider.riderName}`,
@@ -433,7 +586,7 @@ export const mapPolicyFeaturesToExtrasCards = (
     currency = 'USD',
     isAnnuity = false
 ): PolicyExtrasCards[] | undefined => {
-    return features?.filter(filterValidFeature).map(feature => {
+    return features?.filter(filterValidFeature).map((feature) => {
         const { badge, status } = getBadgeFromFeature(feature, t);
 
         return {
@@ -458,9 +611,11 @@ export const mapPolicyRidersToExtrasCards = (
 ): PolicyExtrasCards[] => {
     if (!policyDetails?.riders) return [];
 
-    return policyDetails.riders.map(rider => {
+    return policyDetails.riders.map((rider) => {
         const riderBenefit = riderBenefitData?.find(
-            (benefit: RiderBenefit) => benefit?.benefitId === CoverageToBenefitId[rider.coverageId as CoverageId]
+            (benefit: RiderBenefit) =>
+                benefit?.benefitId ===
+                CoverageToBenefitId[rider.coverageId as CoverageId]
         ) as RiderBenefit;
         const insuredContent = getRiderInsuredContent(policyDetails, rider);
         const currency = policyDetails.currency || 'USD';
@@ -470,7 +625,13 @@ export const mapPolicyRidersToExtrasCards = (
             cardKey: `rider-extras-card-${rider.riderName}`,
             cardProps: {
                 badge: getBadgeFromRider(rider, t),
-                children: mapRiderFields(rider, riderBenefit, t, currency, insuredContent),
+                children: mapRiderFields(
+                    rider,
+                    riderBenefit,
+                    t,
+                    currency,
+                    insuredContent
+                ),
                 headerText: toSentenceCase(rider.riderName as string),
                 labelText: toSentenceCase(rider.type as string),
                 subheader,

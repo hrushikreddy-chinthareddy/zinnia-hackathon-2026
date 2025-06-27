@@ -13,12 +13,20 @@ export default withAuthAndLogging(
         const proxyUrl = req.url?.replace(re, apiServerBaseUrl as string);
 
         // Do not allow users who can't see PII to see documents.
-        const canUnmask = await canUnmaskPii(session?.accessToken, session?.user?.partyId);
+        const canUnmask = await canUnmaskPii(
+            session?.accessToken,
+            session?.user?.partyId
+        );
         if (!canUnmask) {
             return res.status(403).json({ error: 'Forbidden' });
         }
 
-        return await requestHandler<any>(proxyUrl as string, req, res, loggingContext);
+        return await requestHandler<any>(
+            proxyUrl as string,
+            req,
+            res,
+            loggingContext
+        );
     },
     { file: 'document/v2/documents', function: 'routeHandler' }
 );

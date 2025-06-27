@@ -1,5 +1,11 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { ArrangementType, FeatureType, ProductType, Reason, Status } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    FeatureType,
+    ProductType,
+    Reason,
+    Status,
+} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
@@ -7,13 +13,19 @@ import { FooterContent } from '@deps/components/card/card-section/card-section';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helpers';
 import SideSheetCancelAutopay from '@deps/components/side-sheet/side-sheet-transaction/cancel-autopay/side-sheet-cancel-autopay';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
-import { getBankDetails, getFlatExtra, getParty } from '@deps/helpers/payments.helpers';
+import {
+    getBankDetails,
+    getFlatExtra,
+    getParty,
+} from '@deps/helpers/payments.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkOneTimePremiumEligibilityQuery,
@@ -27,10 +39,13 @@ import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
 export const PremiumsSubPage = () => {
     const { policy, policyDetails } = useContext(PolicyData);
     const { t: tRoot } = useTranslation(TranslationFiles.COMMON);
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'premium.upcoming' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'premium.upcoming',
+    });
     const sideSheet = useSideSheetContext();
     const { featureFlags } = useOptimizely();
-    const premiumSetOrCancelAutopayEnabled = featureFlags[FEATURE_FLAGS.PREMIUM_SET_OR_CANCEL_AUTOPAY];
+    const premiumSetOrCancelAutopayEnabled =
+        featureFlags[FEATURE_FLAGS.PREMIUM_SET_OR_CANCEL_AUTOPAY];
 
     const {
         accountValues,
@@ -47,9 +62,15 @@ export const PremiumsSubPage = () => {
     const { planCode } = product ?? {};
 
     const { isAnnuity } = policyDetails;
-    const pendingLapse = policyFeatures?.find(pf => pf.featureType === FeatureType.LAPSEASSESSMENT);
+    const pendingLapse = policyFeatures?.find(
+        (pf) => pf.featureType === FeatureType.LAPSEASSESSMENT
+    );
     const upcomingPayment = useMemo(
-        () => systematicPrograms?.find(sp => sp.reason === Reason.PREMIUM && sp.status === Status.ACTIVE),
+        () =>
+            systematicPrograms?.find(
+                (sp) =>
+                    sp.reason === Reason.PREMIUM && sp.status === Status.ACTIVE
+            ),
         [systematicPrograms]
     );
 
@@ -63,18 +84,28 @@ export const PremiumsSubPage = () => {
 
     const { data: oneTimePremiumEligibility } = useQuery({
         queryKey: ['checkOneTimePremiumEligibility', planCode, policyNumber],
-        queryFn: () => checkOneTimePremiumEligibilityQuery(planCode as string, policyNumber as string),
-        placeholderData: previousData => previousData,
-        select: data => {
+        queryFn: () =>
+            checkOneTimePremiumEligibilityQuery(
+                planCode as string,
+                policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
             return {
                 ...data,
-                isEligibleOneTimePremium: data?.status === TransactionResponseStatus.Success,
+                isEligibleOneTimePremium:
+                    data?.status === TransactionResponseStatus.Success,
             };
         },
     });
 
     const { data: systematicProgramsEligibility } = useQuery({
-        queryKey: ['checkSystematicProgramsEligibility', planCode, policyNumber, upcomingPayment?.arrangementId],
+        queryKey: [
+            'checkSystematicProgramsEligibility',
+            planCode,
+            policyNumber,
+            upcomingPayment?.arrangementId,
+        ],
         queryFn: upcomingPayment?.arrangementId
             ? () =>
                   checkSystematicProgramsEligibilityQuery(
@@ -83,18 +114,21 @@ export const PremiumsSubPage = () => {
                       upcomingPayment?.arrangementId as string
                   )
             : skipToken,
-        placeholderData: previousData => previousData,
-        select: data => {
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
             return {
                 ...data,
-                isEligibleManageAutopay: data?.status === TransactionResponseStatus.Success,
+                isEligibleManageAutopay:
+                    data?.status === TransactionResponseStatus.Success,
             };
         },
     });
 
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
-            <Typography variant={TypographyVariant.H2}>{t('cancelPremiumAutopayTitle')}</Typography>,
+            <Typography variant={TypographyVariant.H2}>
+                {t('cancelPremiumAutopayTitle')}
+            </Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.PAYMENT}
                 onCancel={() => sideSheet.handleOpen(false)}
@@ -109,13 +143,19 @@ export const PremiumsSubPage = () => {
         {
             text: t('startAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/add-premium-autopay`,
-            isDisabled: !premiumSetOrCancelAutopayEnabled || upcomingPayment?.nextProgramDate,
+            isDisabled:
+                !premiumSetOrCancelAutopayEnabled ||
+                upcomingPayment?.nextProgramDate,
         },
         {
             text: t('manageAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay`,
-            isDisabled: !systematicProgramsEligibility?.isEligibleManageAutopay || !upcomingPayment?.nextProgramDate,
-            tooltip: formatValidationResult(systematicProgramsEligibility?.validationResult),
+            isDisabled:
+                !systematicProgramsEligibility?.isEligibleManageAutopay ||
+                !upcomingPayment?.nextProgramDate,
+            tooltip: formatValidationResult(
+                systematicProgramsEligibility?.validationResult
+            ),
         },
         {
             // TODO: avoid using # here
@@ -131,7 +171,9 @@ export const PremiumsSubPage = () => {
             text: t('oneTimePaymentText'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium`,
             isDisabled: !oneTimePremiumEligibility?.isEligibleOneTimePremium,
-            tooltip: formatValidationResult(oneTimePremiumEligibility?.validationResult),
+            tooltip: formatValidationResult(
+                oneTimePremiumEligibility?.validationResult
+            ),
         },
     ];
 
@@ -152,14 +194,23 @@ export const PremiumsSubPage = () => {
                 footerLinks={footerContent as FooterContent[]}
                 autopayAmount={upcomingPayment?.amount}
                 paymentDate={upcomingPayment?.nextProgramDate}
-                paymentDateText={(!!upcomingPayment?.nextProgramDate && t('paymentDateText')) || undefined}
+                paymentDateText={
+                    (!!upcomingPayment?.nextProgramDate &&
+                        t('paymentDateText')) ||
+                    undefined
+                }
                 paymentFrequencyText={
                     t('paymentFrequencyText', {
-                        paymentMode: tRoot(`systematicProgram.frequency.${upcomingPayment?.frequency?.toLowerCase()}`),
+                        paymentMode: tRoot(
+                            `systematicProgram.frequency.${upcomingPayment?.frequency?.toLowerCase()}`
+                        ),
                         paymentType: t('paymentType.premium'),
                     }) || undefined
                 }
-                requestSubTypes={['Systematic Program Setup', 'Systematic Program Update']}
+                requestSubTypes={[
+                    'Systematic Program Setup',
+                    'Systematic Program Update',
+                ]}
             />
 
             {!isTerm && !isAnnuity && (

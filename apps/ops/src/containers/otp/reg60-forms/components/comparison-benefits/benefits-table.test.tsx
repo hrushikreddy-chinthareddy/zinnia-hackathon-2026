@@ -23,9 +23,24 @@ const rowData = [
 ];
 
 const cols = [
-    { headerName: 'Years', field: 'period', editable: false, cellClass: ['w-100', 'text-sm'] },
-    { headerName: 'Guaranteed rate', field: 'returnGuarRate', editable: true, cellClass: ['w-100', 'text-sm'] },
-    { headerName: 'Current rate', field: 'returnCurrRate', editable: true, cellClass: ['w-100', 'text-sm'] },
+    {
+        headerName: 'Years',
+        field: 'period',
+        editable: false,
+        cellClass: ['w-100', 'text-sm'],
+    },
+    {
+        headerName: 'Guaranteed rate',
+        field: 'returnGuarRate',
+        editable: true,
+        cellClass: ['w-100', 'text-sm'],
+    },
+    {
+        headerName: 'Current rate',
+        field: 'returnCurrRate',
+        editable: true,
+        cellClass: ['w-100', 'text-sm'],
+    },
 ];
 
 afterEach(cleanup);
@@ -55,24 +70,30 @@ describe('Table Component', () => {
     it('should render table rows with initial data', () => {
         const initialData = [
             {
-                period: "5 years",
+                period: '5 years',
                 returnGuarRate: 88,
                 returnCurrRate: 72,
                 return0Prct: 11,
                 return6Prct: 32,
-                return12Prct: 45
+                return12Prct: 45,
             },
             {
-                period: "10 years",
+                period: '10 years',
                 returnGuarRate: 12,
                 returnCurrRate: 33,
                 return0Prct: 99,
                 return6Prct: '28',
-                return12Prct: 12
-            }
+                return12Prct: 12,
+            },
         ];
 
-        render(<BenefitsTable rowConfig={rowData} initialData={initialData} colConfig={cols} />);
+        render(
+            <BenefitsTable
+                rowConfig={rowData}
+                initialData={initialData}
+                colConfig={cols}
+            />
+        );
 
         for (const _ of rowData) {
             expect(screen.getByText('Guaranteed rate')).toBeInTheDocument();

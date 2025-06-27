@@ -2,7 +2,11 @@ import { ReactComponent as FinanceIcon } from '@deps/styles/elements/icons/icons
 import { ReactComponent as NewspaperIcon } from '@deps/styles/elements/icons/icons_outlined/newspaper.svg';
 import { DataDefinition } from '@deps/types/data';
 
-import { filterOnSearchHandler, groupValues, mapGroupToIcon } from './search.helpers';
+import {
+    filterOnSearchHandler,
+    groupValues,
+    mapGroupToIcon,
+} from './search.helpers';
 
 const array: DataDefinition<any>[] = [
     {
@@ -48,10 +52,27 @@ describe('Search Helper', () => {
             const groupedData = groupValues(array, groupKey);
 
             const expectedGroup = {
-                creepy: [{ group: 'creepy', key: 'spider', label: 'Spider', value: 'Arachnid' }],
+                creepy: [
+                    {
+                        group: 'creepy',
+                        key: 'spider',
+                        label: 'Spider',
+                        value: 'Arachnid',
+                    },
+                ],
                 hoofed: [
-                    { value: 'Zebra', key: 'mammal', label: 'Hoofed Animal', group: 'hoofed' },
-                    { value: 'Buffalo', key: 'mammal', label: 'Hoofed Animal', group: 'hoofed' },
+                    {
+                        value: 'Zebra',
+                        key: 'mammal',
+                        label: 'Hoofed Animal',
+                        group: 'hoofed',
+                    },
+                    {
+                        value: 'Buffalo',
+                        key: 'mammal',
+                        label: 'Hoofed Animal',
+                        group: 'hoofed',
+                    },
                 ],
             };
 

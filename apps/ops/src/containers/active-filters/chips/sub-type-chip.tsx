@@ -19,9 +19,13 @@ const SubTypeChip = ({
 
     return (
         <ChipX
-            ariaLabel={t('ariaLabel.clearFilter', { filter: subTypeCode }) as string}
+            ariaLabel={
+                t('ariaLabel.clearFilter', { filter: subTypeCode }) as string
+            }
             label={toTitleCase(subTypeCode)}
-            onDelete={() => handleRemoveFilter({ requestSubType: newRequestSubTypes })}
+            onDelete={() =>
+                handleRemoveFilter({ requestSubType: newRequestSubTypes })
+            }
         />
     );
 };

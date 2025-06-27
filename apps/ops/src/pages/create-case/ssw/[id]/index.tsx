@@ -7,9 +7,15 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useEffect, useState, useMemo } from 'react';
 
 import OtpLayout from '@deps/components/otp-layout';
-import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import WithdrawalDrawer, {
+    SidebarContent,
+} from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
@@ -19,7 +25,10 @@ import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { determineFormToRender } from '@deps/helpers/form-selector.helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
@@ -28,16 +37,32 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
-import { ActiveWithdrawalCase, Carrier, QualTypes, Transaction } from '@deps/models/case/withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    Carrier,
+    QualTypes,
+    Transaction,
+} from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
-import { getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
+import {
+    getPolicyPartiesSSR,
+    searchPolicySSR,
+} from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { logError, logInfo, logWarn, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logError,
+    logInfo,
+    logWarn,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { MassMutualSSWForm } from '@deps/containers/otp/ssw-forms/mass/mass-ssw-form';
@@ -49,7 +74,10 @@ import { GdmnSSWForm } from '@deps/containers/otp/ssw-forms/gdmn/gdmn-ssw-form';
 import { UsaaSSWForm } from '@deps/containers/otp/ssw-forms/usaa/usaa-ssw-form';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 
 import { ERROR_CODES } from '../../error';
 import { RslnSSWForm } from '@deps/containers/otp/ssw-forms/rsln/rsln-ssw-form';
@@ -76,7 +104,10 @@ const DefaultSidebarContent = {
     transactions: [],
 };
 
-const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Record<string, React.ReactNode> => ({
+const getFormComponentMap = (
+    qualType: QualTypes | '',
+    planCode?: string
+): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcSSWForm />,
     [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
@@ -90,14 +121,26 @@ const getFormComponentMap = (qualType: QualTypes | '', planCode?: string): Recor
     [Carrier.DLIC]: <DlicSSWForm planCode={planCode} />,
 });
 
-export default function SSWCase({ document, form, parties, transactionsHistory, featureFlagDecisions, user, planCode }: SSWCaseProps) {
+export default function SSWCase({
+    document,
+    form,
+    parties,
+    transactionsHistory,
+    featureFlagDecisions,
+    user,
+    planCode,
+}: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
     // TODO: Need to map this from common portion whenever we will restructure i18 files
-    const { t: withdrawalTx } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t: withdrawalTx } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const router = useRouter();
 
     const { clientId, clientIdOverride } = router.query;
-    const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
+    const clientForFormDetermination = isNonProductionEnvironment()
+        ? clientIdOverride || clientId
+        : clientId;
 
     useSegmentPageTracker(user, SegmentPageName.SswCase, {
         documentNumber: document.documentNumber,
@@ -107,13 +150,21 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     });
 
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
-    const { issueState, qualType, issueDate } = useAccountInfo(document.contract, clientId as string);
-    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(DefaultSidebarContent);
+    const { issueState, qualType, issueDate } = useAccountInfo(
+        document.contract,
+        clientId as string
+    );
+    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
+        DefaultSidebarContent
+    );
     const [isOpenOverride, setIsOpenOverride] = useState<null | boolean>(null);
     const [taskApiError, setTaskApiError] = useState('');
     const [loading, setLoading] = useState(false);
     const initialForm = form;
-    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(qualType, planCode));
+    const formParts = determineFormToRender(
+        clientForFormDetermination as string,
+        getFormComponentMap(qualType, planCode)
+    );
 
     if (!formParts) {
         console.error('SSWCase::No form parts', {
@@ -121,7 +172,9 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
             clientId,
             contract: document?.contract,
         });
-        router.push(`/create-case/error?errorCode=${ERROR_CODES.SSW_FORM_CREATION}`);
+        router.push(
+            `/create-case/error?errorCode=${ERROR_CODES.SSW_FORM_CREATION}`
+        );
     }
     useEffect(() => {
         setTransactionDetail({
@@ -166,13 +219,18 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
     const carrier = (clientForFormDetermination as string).toUpperCase();
     const carrierMappedText = CarrierToCarrierTitleMap[carrier];
     const carrierTitle = carrierMappedText ? carrierMappedText : carrier;
-    const formTitle = carrierTitle ? t('formTitles.standard', { carrier: carrierTitle }) : t(`formTitles.defaultTitle`);
+    const formTitle = carrierTitle
+        ? t('formTitles.standard', { carrier: carrierTitle })
+        : t(`formTitles.defaultTitle`);
 
     return (
         <>
             <PageHead titleKey="createCaseSsw" />
             <DiaryNotesProvider caseDetails={caseDetailsData}>
-                <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
+                <OtpLayout
+                    contractNumber={document.contract}
+                    clientId={clientId as string}
+                >
                     <div className={classes}>
                         <WithdrawalDrawer
                             content={transactionDetail}
@@ -182,11 +240,15 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
                         />
                         <div>
                             <header className="px-5 pt-2">
-                                <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
+                                <Typography variant={TypographyVariant.H1}>
+                                    {formTitle}
+                                </Typography>
                             </header>
                             {loading && (
                                 <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                                    <PageLoader variant={PageLoaderVariant.Center} />
+                                    <PageLoader
+                                        variant={PageLoaderVariant.Center}
+                                    />
                                 </div>
                             )}
                             <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0">
@@ -196,19 +258,26 @@ export default function SSWCase({ document, form, parties, transactionsHistory, 
                                         initialForm={initialForm}
                                         issueState={issueState}
                                         parties={parties}
-                                        featureFlagDecisions={featureFlagDecisions}
+                                        featureFlagDecisions={
+                                            featureFlagDecisions
+                                        }
                                     >
                                         {
                                             <>
                                                 {formParts}
                                                 <NoteSection />
-                                                <FormErrors t={withdrawalTx} taskApiError={taskApiError}></FormErrors>
+                                                <FormErrors
+                                                    t={withdrawalTx}
+                                                    taskApiError={taskApiError}
+                                                ></FormErrors>
                                                 <FormControls
                                                     document={document}
                                                     t={withdrawalTx}
                                                     isLoading={loading}
                                                     setIsLoading={setLoading}
-                                                    setTaskApiError={setTaskApiError}
+                                                    setTaskApiError={
+                                                        setTaskApiError
+                                                    }
                                                 ></FormControls>
                                             </>
                                         }
@@ -227,21 +296,35 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const {
+                locale = DEFAULT_LOCALE,
+                params,
+                query,
+                res,
+                req,
+            } = context;
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
-                logWarn('Access token expired', { error: e, ...loggingContext });
+                logWarn('Access token expired', {
+                    error: e,
+                    ...loggingContext,
+                });
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -259,8 +342,17 @@ export const getServerSideProps = withPageAuthAndLogging(
             const getLastSaved = (query?.getLastSaved as string) || '';
 
             // If feature flag is not enabled, redirect to error page
-            if (!isFormFeatureEnabled(ProcessType.SSW, clientId, featureFlagDecisions)) {
-                logWarn('create-case/ssw/:id::feature flag not enabled', loggingContext);
+            if (
+                !isFormFeatureEnabled(
+                    ProcessType.SSW,
+                    clientId,
+                    featureFlagDecisions
+                )
+            ) {
+                logWarn(
+                    'create-case/ssw/:id::feature flag not enabled',
+                    loggingContext
+                );
                 return {
                     redirect: {
                         destination: '/403',
@@ -271,10 +363,19 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const [translations, document] = await Promise.all([
                 serverSideTranslations(locale, [TranslationFiles.COMMON]),
-                getDocumentV2SSR(documentNumber, DocumentType.SSW, clientId.toUpperCase(), accessToken, loggingContext),
+                getDocumentV2SSR(
+                    documentNumber,
+                    DocumentType.SSW,
+                    clientId.toUpperCase(),
+                    accessToken,
+                    loggingContext
+                ),
             ]);
             if (!document?.contract) {
-                logError('create-case/ssw/:id::Error getting document', loggingContext);
+                logError(
+                    'create-case/ssw/:id::Error getting document',
+                    loggingContext
+                );
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
@@ -283,11 +384,19 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-            const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
+            const shouldShowNewExperience =
+                featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            const isUsedLastSaved =
+                shouldShowNewExperience &&
+                deStringifyTrueFalseNull(getLastSaved.toLowerCase());
             if (shouldShowNewExperience && action !== 'readonly') {
                 logInfo('create-case/ssw/:id:Checking NIGO', loggingContext);
-                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
+                const isNigoCase = await checkNigoExistsSSR(
+                    clientId.toUpperCase(),
+                    document.caseId,
+                    accessToken,
+                    loggingContext
+                );
                 if (isNigoCase && !isUsedLastSaved) {
                     logInfo('create-case/ssw/:id::Nigo exists for case', {
                         ...loggingContext,
@@ -302,14 +411,27 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
             } else {
-                logInfo('create-case/ssw/:id:Skipping NIGO check', loggingContext);
+                logInfo(
+                    'create-case/ssw/:id:Skipping NIGO check',
+                    loggingContext
+                );
             }
 
             const policyNumber = document?.contract ?? '';
-            const response = await searchPolicySSR(policyNumber, [clientId.toUpperCase() as Carrier], accessToken, 1, 0, loggingContext);
+            const response = await searchPolicySSR(
+                policyNumber,
+                [clientId.toUpperCase() as Carrier],
+                accessToken,
+                1,
+                0,
+                loggingContext
+            );
             const planCode = response ? response[0]?.planCode : null;
             if (!planCode) {
-                logInfo('create-case/ssw/:id::Plan code not found', loggingContext);
+                logInfo(
+                    'create-case/ssw/:id::Plan code not found',
+                    loggingContext
+                );
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
@@ -334,10 +456,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext,
             });
             if (!form) {
-                logError('create-case/ssw/:id::Error initializing task ssw form', {
-                    ...loggingContext,
-                    contract: document?.contract,
-                });
+                logError(
+                    'create-case/ssw/:id::Error initializing task ssw form',
+                    {
+                        ...loggingContext,
+                        contract: document?.contract,
+                    }
+                );
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.SSW_TASK_INITIALIZATION}`,
@@ -347,7 +472,12 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             const parties = document?.contract
-                ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                ? await getPolicyPartiesSSR(
+                      document?.contract,
+                      clientId,
+                      accessToken as string,
+                      loggingContext
+                  )
                 : [];
 
             return {
@@ -365,5 +495,9 @@ export const getServerSideProps = withPageAuthAndLogging(
             };
         },
     },
-    { file: 'create-case/ssw/:id', function: 'getServerSideProps', page: 'create-case/ssw/:id' }
+    {
+        file: 'create-case/ssw/:id',
+        function: 'getServerSideProps',
+        page: 'create-case/ssw/:id',
+    }
 );

@@ -1,4 +1,8 @@
-import { ExceptionCountGroupByEnum, ExceptionCountOutput, ExceptionCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
+import {
+    ExceptionCountGroupByEnum,
+    ExceptionCountOutput,
+    ExceptionCountOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
@@ -10,9 +14,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import PageLoader from '@deps/components/page-loader/page-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { DASHBOARD_DEFAULT_LABEL, DASHBOARD_REPLACE_LABELS } from '@deps/helpers/dashboard/dashboard-helpers';
+import {
+    DASHBOARD_DEFAULT_LABEL,
+    DASHBOARD_REPLACE_LABELS,
+} from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
@@ -31,18 +40,26 @@ if (typeof Highcharts === 'object') {
 export type TreeMapInsightsProps = {
     dashboardStatsData?: ExceptionCountOutput;
     heading: string;
-    carrierOrBrokerDealer?: ExceptionCountGroupByEnum.CARRIER | ExceptionCountGroupByEnum.BROKER_DEALER_NAME;
+    carrierOrBrokerDealer?:
+        | ExceptionCountGroupByEnum.CARRIER
+        | ExceptionCountGroupByEnum.BROKER_DEALER_NAME;
     FilterComponents: React.ReactNode;
 };
 
-export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents }: TreeMapInsightsProps) => {
+export const TreeMapInsights = ({
+    dashboardStatsData,
+    heading,
+    FilterComponents,
+}: TreeMapInsightsProps) => {
     const chartCompomentRef = useRef<HighchartsReact.RefObject>(null);
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const shouldShowCaseInsights = useCaseInsightsPermission();
     const [loading, setLoading] = useState(false);
 
     // TODO: add context for secondary and tertiary groupings if applicable
-    const getOpenAiSummary = async (caseStats: ExceptionCountOutputLevel1[]) => {
+    const getOpenAiSummary = async (
+        caseStats: ExceptionCountOutputLevel1[]
+    ) => {
         try {
             setLoading(true);
             const summary = await getCaseInsights({
@@ -58,15 +75,21 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
 
     const seriesData = dashboardStatsData?.data; // this will change once filters are added
 
-    const noData = !seriesData || seriesData?.length === 0 || dashboardStatsData?.totalElements === 0;
+    const noData =
+        !seriesData ||
+        seriesData?.length === 0 ||
+        dashboardStatsData?.totalElements === 0;
 
     // this is the same code that is found in exception-insights.tsx
     const chartOptions: Highcharts.Options = useMemo(() => {
-        const chartData: Highcharts.SeriesTreemapOptions['data'] = seriesData?.map(item => ({
-            name: DASHBOARD_REPLACE_LABELS.includes(item.name) ? DASHBOARD_DEFAULT_LABEL : item.name,
-            value: item.count,
-            colorValue: item.count,
-        }));
+        const chartData: Highcharts.SeriesTreemapOptions['data'] =
+            seriesData?.map((item) => ({
+                name: DASHBOARD_REPLACE_LABELS.includes(item.name)
+                    ? DASHBOARD_DEFAULT_LABEL
+                    : item.name,
+                value: item.count,
+                colorValue: item.count,
+            }));
 
         return {
             accessibility: {
@@ -107,37 +130,55 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
                         useHTML: true,
                         formatter: function () {
                             const name = this.point.name;
-                            // @ts-expect-error: this actually exists
-                            const value = this.point.value;
-                            // @ts-expect-error: this actually exists
-                            const dataLabel = this.point.dataLabel;
+                            const value = (this.point as any).value;
+                            const dataLabel = (this.point as any).dataLabel;
                             const shape = this.point.shapeArgs;
-                            // @ts-expect-error: this actually exists
-                            const seriesValues: Array<number> = this.series.valueData;
-                            const total = seriesValues.reduce((sum, val) => sum + val, 0);
+                            const seriesValues: Array<number> = (
+                                this.series as any
+                            ).valueData;
+                            const total = seriesValues.reduce(
+                                (sum, val) => sum + val,
+                                0
+                            );
                             const len = (Number(value) / total) * 100;
                             const wrapper = document.createElement('div');
-                            wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
-                            wrapper.classList.add('rounded', 'typography-content-body');
-                            wrapper.style.color = 'var(--color-base-text-text-primary)';
-                            wrapper.style.margin = 'var(--measure-dimension-margin-sm)';
-                            wrapper.style.fontFamily = 'var(--font-family-secondary)';
+                            wrapper.style.backgroundColor =
+                                'var(--color-base-surface-surface-primary)';
+                            wrapper.classList.add(
+                                'rounded',
+                                'typography-content-body'
+                            );
+                            wrapper.style.color =
+                                'var(--color-base-text-text-primary)';
+                            wrapper.style.margin =
+                                'var(--measure-dimension-margin-sm)';
+                            wrapper.style.fontFamily =
+                                'var(--font-family-secondary)';
                             wrapper.style.fontSize = '11px';
                             wrapper.style.overflow = 'hidden';
                             wrapper.style.textOverflow = 'ellipsis';
 
-                            wrapper.style.margin = 'var(--measure-dimension-padding-xs)';
-                            wrapper.style.padding = 'var(--measure-dimension-padding-xs)';
+                            wrapper.style.margin =
+                                'var(--measure-dimension-padding-xs)';
+                            wrapper.style.padding =
+                                'var(--measure-dimension-padding-xs)';
                             wrapper.style.alignItems = 'center';
                             const nameSpan = document.createElement('span');
                             // const valueSpan = document.createElement('span');
                             nameSpan.innerText = name;
 
                             //TODO: For some reason, dataLabel can be undefined sometimes and cause issues
-                            if (dataLabel?.width + dataLabel?.padding >= shape?.width) {
+                            if (
+                                dataLabel?.width + dataLabel?.padding >=
+                                shape?.width
+                            ) {
                                 wrapper.style.whiteSpace = 'break-spaces';
                             }
-                            if (len < 1 || dataLabel?.height + dataLabel?.padding >= shape?.height) {
+                            if (
+                                len < 1 ||
+                                dataLabel?.height + dataLabel?.padding >=
+                                    shape?.height
+                            ) {
                                 wrapper.style.visibility = 'hidden';
                             }
                             wrapper.appendChild(nameSpan);
@@ -155,10 +196,12 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
                 formatter: function () {
                     const wrapper = document.createElement('div');
                     wrapper.classList.add(styles.tooltip);
-                    wrapper.style.backgroundColor = 'var(--color-base-surface-surface-primary)';
+                    wrapper.style.backgroundColor =
+                        'var(--color-base-surface-surface-primary)';
                     wrapper.classList.add('rounded', 'typography-content-body');
                     wrapper.style.color = 'var(--color-base-text-text-primary)';
-                    wrapper.style.padding = 'var(--measure-dimension-padding-lg)';
+                    wrapper.style.padding =
+                        'var(--measure-dimension-padding-lg)';
                     wrapper.style.display = 'flex';
                     wrapper.style.flexDirection = 'column';
                     wrapper.style.justifyContent = 'start';
@@ -170,7 +213,10 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
                     const value = this.point.value;
                     // @ts-expect-error: this actually exists
                     const seriesValues: Array<number> = this.series.valueData;
-                    const total = seriesValues.reduce((sum, val) => sum + val, 0);
+                    const total = seriesValues.reduce(
+                        (sum, val) => sum + val,
+                        0
+                    );
                     const ratio = `${value} / ${total}`;
 
                     nameSpan.innerText = this.point.name;
@@ -189,7 +235,7 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
             return;
         }
         if (seriesData?.length) {
-            getOpenAiSummary(seriesData).then(summary => {
+            getOpenAiSummary(seriesData).then((summary) => {
                 if (summary) {
                     setAiSummary(summary);
                 }
@@ -201,7 +247,12 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
 
     return (
         <div className={clsx('bg-white')}>
-            <ChartHeader title={heading} subtitle={`There are ${wholeNumberFormatify(dashboardStatsData?.totalElements)} NIGOs`} />
+            <ChartHeader
+                title={heading}
+                subtitle={`There are ${wholeNumberFormatify(
+                    dashboardStatsData?.totalElements
+                )} NIGOs`}
+            />
 
             <div className="flex flex-col lg:flex-row gap-4 mt-6">
                 <div className="w-1/4 flex flex-col gap-4 items-start">
@@ -214,30 +265,55 @@ export const TreeMapInsights = ({ dashboardStatsData, heading, FilterComponents 
                             {!!aiSummary?.length && (
                                 <>
                                     <div className="flex flow-col items-center align-middle gap-2">
-                                        <LightBulbIcon height={'24px'} width={'24px'} />
-                                        <Typography variant={TypographyVariant.LabelLg}>Insight</Typography>
+                                        <LightBulbIcon
+                                            height={'24px'}
+                                            width={'24px'}
+                                        />
+                                        <Typography
+                                            variant={TypographyVariant.LabelLg}
+                                        >
+                                            Insight
+                                        </Typography>
                                     </div>
-                                    <Typography variant={TypographyVariant.BodySm}>{aiSummary}</Typography>
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                    >
+                                        {aiSummary}
+                                    </Typography>
                                 </>
                             )}
                         </>
                     )}
                 </div>
-                <div className={clsx('w-3/4 flex-col', sharedStyles.chartContainer)}>
+                <div
+                    className={clsx(
+                        'w-3/4 flex-col',
+                        sharedStyles.chartContainer
+                    )}
+                >
                     <div>{FilterComponents}</div>
                     <div
                         className={clsx(
                             `w-full h-[${CHART_HEIGHT}px]`,
-                            noData && 'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]'
+                            noData &&
+                                'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]'
                         )}
                     >
                         {noData ? (
                             <div className="flex flex-col gap-2 items-center">
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
-                                <Typography variant={TypographyVariant.BodyBold}>There are no NIGOs</Typography>
+                                <Typography
+                                    variant={TypographyVariant.BodyBold}
+                                >
+                                    There are no NIGOs
+                                </Typography>
                             </div>
                         ) : (
-                            <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chartCompomentRef} />
+                            <HighchartsReact
+                                highcharts={Highcharts}
+                                options={chartOptions}
+                                ref={chartCompomentRef}
+                            />
                         )}
                     </div>
                 </div>

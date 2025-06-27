@@ -19,6 +19,6 @@ const IssueDate = ({ issueDate }: IssueDateProps) => {
             <Content details={issueDate} variant={ContentVariant.BodySm} />
         </div>
     );
-}
+};
 
 export default IssueDate;

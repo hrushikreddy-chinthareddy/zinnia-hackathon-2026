@@ -1,7 +1,9 @@
 import { isHttpsEnvironment } from '@deps/utils/environment.helpers';
 
 // The __Host- prepend requires an https environmenet
-export const PERMISSIONS_COOKIE_NAME = `${isHttpsEnvironment() ? '__Host-' : ''}fga-permissions`;
+export const PERMISSIONS_COOKIE_NAME = `${
+    isHttpsEnvironment() ? '__Host-' : ''
+}fga-permissions`;
 
 export const DEFAULT_PERMISSIONS_COOKIE = '{"tuples":{},"carriers":{}}';
 
@@ -19,5 +21,9 @@ export interface PermissionsCookie {
 }
 
 // determines if a user has a specific permission.  Will also check if permisisonsObject has the relation at the carrier level via a previous list carriers call
-export type HasPermission = (relation: Relation, object: TupleObject, carrierCode?: string) => Promise<boolean>;
+export type HasPermission = (
+    relation: Relation,
+    object: TupleObject,
+    carrierCode?: string
+) => Promise<boolean>;
 export type ListCarriers = (relation: Relation) => Promise<string[]>;

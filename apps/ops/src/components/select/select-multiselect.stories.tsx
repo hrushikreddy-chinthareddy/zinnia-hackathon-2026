@@ -13,7 +13,7 @@ export default {
     title: 'Components/Select/Multiselect',
     component: Select,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="ml-32 mt-16 w-96">
                 <div
                     style={{
@@ -40,7 +40,11 @@ const sortValues: MultiselectOption[] = [
     },
 ];
 
-export const Default = (args: { disabled: boolean; options: MultiselectOption[]; size: FieldSize }) => {
+export const Default = (args: {
+    disabled: boolean;
+    options: MultiselectOption[];
+    size: FieldSize;
+}) => {
     const [selections, setSelections] = useState<{ [key: string]: string }>({});
 
     const updateSelection = (value: string, displayText: string) => {
@@ -53,7 +57,14 @@ export const Default = (args: { disabled: boolean; options: MultiselectOption[];
         setSelections(newSelections);
     };
 
-    return <Select {...args} value={selections} onChange={updateSelection} isMultiselect />;
+    return (
+        <Select
+            {...args}
+            value={selections}
+            onChange={updateSelection}
+            isMultiselect
+        />
+    );
 };
 
 Default.args = {
@@ -111,7 +122,11 @@ const lotsOfOptions: MultiselectOption[] = [
     },
 ];
 
-export const LotsOfOptions = (args: { disabled: boolean; options: MultiselectOption[]; size: FieldSize }) => {
+export const LotsOfOptions = (args: {
+    disabled: boolean;
+    options: MultiselectOption[];
+    size: FieldSize;
+}) => {
     const [selections, setSelections] = useState<{ [key: string]: string }>({});
 
     const updateSelection = (value: string, displayText: string) => {
@@ -124,7 +139,14 @@ export const LotsOfOptions = (args: { disabled: boolean; options: MultiselectOpt
         setSelections(newSelections);
     };
 
-    return <Select {...args} value={selections} onChange={updateSelection} isMultiselect />;
+    return (
+        <Select
+            {...args}
+            value={selections}
+            onChange={updateSelection}
+            isMultiselect
+        />
+    );
 };
 
 LotsOfOptions.args = {
@@ -161,7 +183,11 @@ const carrierSamples: MultiselectOption[] = [
     },
 ];
 
-export const CarrierExample = (args: { disabled: boolean; options: MultiselectOption[]; size: FieldSize }) => {
+export const CarrierExample = (args: {
+    disabled: boolean;
+    options: MultiselectOption[];
+    size: FieldSize;
+}) => {
     const [selections, setSelections] = useState<{ [key: string]: string }>({});
 
     const updateSelection = (value: string, displayText: string) => {
@@ -174,7 +200,14 @@ export const CarrierExample = (args: { disabled: boolean; options: MultiselectOp
         setSelections(newSelections);
     };
 
-    return <Select {...args} value={selections} onChange={updateSelection} isMultiselect />;
+    return (
+        <Select
+            {...args}
+            value={selections}
+            onChange={updateSelection}
+            isMultiselect
+        />
+    );
 };
 
 CarrierExample.args = {

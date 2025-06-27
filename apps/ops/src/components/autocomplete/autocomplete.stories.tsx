@@ -10,7 +10,7 @@ export default {
     title: 'Components/Autocomplete',
     component: Autocomplete,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="ml-32 w-64 p-10">
                 <div
                     style={{
@@ -73,4 +73,3 @@ Default.args = {
     // eslint-disable-next-line
     onChange: () => {},
 };
-

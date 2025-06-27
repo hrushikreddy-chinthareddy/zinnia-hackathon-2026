@@ -2,13 +2,18 @@ import { Party } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 
-import NavElement, { NavElementSize, NavElementType } from '../nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '../nav-element/nav-element';
 import { PiiWrapper } from '../pii/PiiWrapper';
 
 export interface PageHeaderProps {
@@ -26,16 +31,28 @@ export interface PageHeaderProps {
     headerRowFlexClassNames?: string;
 }
 
-export const Breadcrumb = ({ breadcrumbUrl, breadcrumbText, onClick }: PageHeaderProps) => {
+export const Breadcrumb = ({
+    breadcrumbUrl,
+    breadcrumbText,
+    onClick,
+}: PageHeaderProps) => {
     const { t } = useTranslation();
 
     const { policy } = useContext(PolicyData);
 
-    const checkBreadcrumbForPartyPii = (breadcrumbText?: string, PolicyPartyRoles?: Party[]) => {
+    const checkBreadcrumbForPartyPii = (
+        breadcrumbText?: string,
+        PolicyPartyRoles?: Party[]
+    ) => {
         const partyNames = PolicyPartyRoles?.map(
-            party => `${toSentenceCase(party.firstName)} ${toSentenceCase(party.middleName)} ${toSentenceCase(party.lastName)}`
+            (party) =>
+                `${toSentenceCase(party.firstName)} ${toSentenceCase(
+                    party.middleName
+                )} ${toSentenceCase(party.lastName)}`
         );
-        const matchedName = partyNames?.find(name => breadcrumbText?.includes(name));
+        const matchedName = partyNames?.find((name) =>
+            breadcrumbText?.includes(name)
+        );
 
         if (matchedName) {
             return (
@@ -48,7 +65,10 @@ export const Breadcrumb = ({ breadcrumbUrl, breadcrumbText, onClick }: PageHeade
         }
     };
 
-    const piiBreadcrumb = checkBreadcrumbForPartyPii(breadcrumbText, policy.parties);
+    const piiBreadcrumb = checkBreadcrumbForPartyPii(
+        breadcrumbText,
+        policy.parties
+    );
 
     return (
         <>
@@ -71,7 +91,11 @@ export const Breadcrumb = ({ breadcrumbUrl, breadcrumbText, onClick }: PageHeade
 
 const HeaderText = ({ headerText }: Pick<PageHeaderProps, 'headerText'>) => {
     return (
-        <Typography className="flex items-center" variant={TypographyVariant.H1} data-testid="header-text">
+        <Typography
+            className="flex items-center"
+            variant={TypographyVariant.H1}
+            data-testid="header-text"
+        >
             {headerText}
         </Typography>
     );
@@ -81,7 +105,10 @@ const Icon = ({ icon }: Pick<PageHeaderProps, 'icon'>) => {
     return (
         <>
             {icon && (
-                <div data-testid="icon" className={`mr-2 flex text-gray-900 xs:hidden lg:flex`}>
+                <div
+                    data-testid="icon"
+                    className={`mr-2 flex text-gray-900 xs:hidden lg:flex`}
+                >
                     {icon}
                 </div>
             )}
@@ -106,24 +133,39 @@ export const PageHeader = ({
     const headerRowClassNames = `flex justify-between ${headerRowFlexClassNames}`;
 
     return (
-        <CardContainer data-testid="page-header" containerClassNames="rounded-t" classNames="flex w-full flex-col justify-center">
+        <CardContainer
+            data-testid="page-header"
+            containerClassNames="rounded-t"
+            classNames="flex w-full flex-col justify-center"
+        >
             {/* breadcrumb and breadcrumb siblings -- elements above header text row */}
             {(breadcrumbText || breadcrumbSiblings) && (
                 <div className="mb-4 flex justify-between">
-                    <Breadcrumb breadcrumbText={breadcrumbText} breadcrumbUrl={breadcrumbUrl} onClick={onClick} />
+                    <Breadcrumb
+                        breadcrumbText={breadcrumbText}
+                        breadcrumbUrl={breadcrumbUrl}
+                        onClick={onClick}
+                    />
                     {breadcrumbSiblings && breadcrumbSiblings}
                 </div>
             )}
             {/* header text row */}
             <div className={headerRowClassNames}>
                 {/* header text and header text siblings - group one -- elements justified on left side within the header text row */}
-                <div data-testid="group-one-siblings" className={groupOneFlexClassNames}>
+                <div
+                    data-testid="group-one-siblings"
+                    className={groupOneFlexClassNames}
+                >
                     <div className={`flex flex-col`}>
                         <div className="flex">
                             <Icon icon={icon} />
                             <HeaderText headerText={headerText} />
                         </div>
-                        {subHeaderTextChildren && <div data-testid="children-below">{subHeaderTextChildren}</div>}
+                        {subHeaderTextChildren && (
+                            <div data-testid="children-below">
+                                {subHeaderTextChildren}
+                            </div>
+                        )}
                     </div>
                     {headerTextSiblingsGroupOne && headerTextSiblingsGroupOne}
                 </div>
@@ -136,7 +178,11 @@ export const PageHeader = ({
                 )}
             </div>
             {/* below header text children - elements below header text row */}
-            {belowHeaderTextChildren && <div data-testid="children-below">{belowHeaderTextChildren}</div>}
+            {belowHeaderTextChildren && (
+                <div data-testid="children-below">
+                    {belowHeaderTextChildren}
+                </div>
+            )}
         </CardContainer>
     );
 };

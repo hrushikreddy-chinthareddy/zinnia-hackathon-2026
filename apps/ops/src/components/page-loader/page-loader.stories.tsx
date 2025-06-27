@@ -6,7 +6,7 @@ export default {
     title: 'Components/PageLoader',
     component: PageLoader,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>

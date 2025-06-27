@@ -1,13 +1,21 @@
 import { Loader } from '@zinnia/bloom/components';
 
-import FieldData, { FieldDataProps } from '@deps/components/fields/field-data/field-data';
+import FieldData, {
+    FieldDataProps,
+} from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
 import { SideSheetReversedTransactionModel } from './types';
 
-const SideSheetReversedTransactionContent = ({ t, loading, values }: SideSheetReversedTransactionModel) => {
+const SideSheetReversedTransactionContent = ({
+    t,
+    loading,
+    values,
+}: SideSheetReversedTransactionModel) => {
     const transactionFields: Record<string, FieldDataProps> = {
         transactionType: {
             label: t('policy.history.sidesheet.transactionType'),
@@ -40,7 +48,9 @@ const SideSheetReversedTransactionContent = ({ t, loading, values }: SideSheetRe
     const originalTransactionFields: Record<string, FieldDataProps> = {
         submittedAmount: {
             label: t('policy.history.sidesheet.submittedAmount'),
-            tooltipBody: t('policy.history.sidesheet.reverseRecreateSubmittedAmountTooltip'),
+            tooltipBody: t(
+                'policy.history.sidesheet.reverseRecreateSubmittedAmountTooltip'
+            ),
             tooltipTitle: t('policy.history.sidesheet.submittedAmount'),
             children: numberFormatify(`${values?.submittedAmount}`),
         },
@@ -73,18 +83,22 @@ const SideSheetReversedTransactionContent = ({ t, loading, values }: SideSheetRe
                 {t('policy.history.sidesheet.originalTransactionDetails')}
             </Typography>
             <div className="grid grid-cols-2 gap-8">
-                {Object.entries(originalTransactionFields).map(([key, value]) => (
-                    <FieldData key={key} {...value} />
-                ))}
+                {Object.entries(originalTransactionFields).map(
+                    ([key, value]) => (
+                        <FieldData key={key} {...value} />
+                    )
+                )}
             </div>
         </>
     );
 
-    return [transactionContent, originalTransactionContent].map((content, index) => (
-        <div key={index} className="mt-8 border-t-2 border-gray-200 pt-8">
-            {content}
-        </div>
-    ));
+    return [transactionContent, originalTransactionContent].map(
+        (content, index) => (
+            <div key={index} className="mt-8 border-t-2 border-gray-200 pt-8">
+                {content}
+            </div>
+        )
+    );
 };
 
 export default SideSheetReversedTransactionContent;

@@ -1,4 +1,9 @@
-import { Policy, Reason, Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    Reason,
+    Transaction,
+    TransactionStatus,
+} from '@zinnia/api-types/types/sor';
 
 export const basePolicy = {
     parties: [
@@ -53,13 +58,15 @@ export const basePolicy = {
                 {
                     amount: 80,
                     effectiveDate: '2022-07-11',
-                    systematicPaymentId: 'AU35046202-InitialPremium-2022-07-11-2',
+                    systematicPaymentId:
+                        'AU35046202-InitialPremium-2022-07-11-2',
                     systematicPaymentType: 'INITIAL',
                 },
                 {
                     amount: 80,
                     effectiveDate: '2022-08-11',
-                    systematicPaymentId: 'AU35046202-SubsequentPremium-2022-08-11-2',
+                    systematicPaymentId:
+                        'AU35046202-SubsequentPremium-2022-08-11-2',
                     systematicPaymentType: 'SUBSEQUENT',
                 },
             ],

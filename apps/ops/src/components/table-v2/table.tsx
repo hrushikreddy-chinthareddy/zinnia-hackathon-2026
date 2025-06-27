@@ -17,15 +17,28 @@ export type TableProps<T> = {
     onAllRowsSelected?: (allRowsSelected: boolean) => void;
 };
 
-const Table = <T,>({ data, columns, onAllRowsSelected, disablePagination = true, bodyCellClass, onCellChange }: TableProps<T>) => {
+const Table = <T,>({
+    data,
+    columns,
+    onAllRowsSelected,
+    disablePagination = true,
+    bodyCellClass,
+    onCellChange,
+}: TableProps<T>) => {
     const [localData, setLocalData] = useState<TypedRow<T>[]>(data);
-    const [allRowsSelected, setAllRowsSelected] = useState(data.every(obj => obj.check === true));
-    const [sortOrderColumn, setSortOrderColumn] = useState<SortOrderColumn>({ column: 'id', order: 'asc' });
+    const [allRowsSelected, setAllRowsSelected] = useState(
+        data.every((obj) => obj.check === true)
+    );
+    const [sortOrderColumn, setSortOrderColumn] = useState<SortOrderColumn>({
+        column: 'id',
+        order: 'asc',
+    });
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = disablePagination ? data.length : PAGE_SIZE;
 
     const handleSort = (column: string) => {
-        if (sortOrderColumn.order === 'asc') setSortOrderColumn({ column, order: 'desc' });
+        if (sortOrderColumn.order === 'asc')
+            setSortOrderColumn({ column, order: 'desc' });
         else setSortOrderColumn({ column, order: 'asc' });
     };
 
@@ -40,41 +53,63 @@ const Table = <T,>({ data, columns, onAllRowsSelected, disablePagination = true,
         if (onCellChange) {
             onCellChange(updatedRow);
         }
-        setLocalData(prevData => prevData.map(item => (item.id === row.id ? updatedRow : item)));
+        setLocalData((prevData) =>
+            prevData.map((item) => (item.id === row.id ? updatedRow : item))
+        );
     };
 
     const handleAllRowsSelected = (allRowsSelected: boolean) => {
         setAllRowsSelected(allRowsSelected);
-        if(onAllRowsSelected) {
+        if (onAllRowsSelected) {
             onAllRowsSelected(allRowsSelected);
         }
-        setLocalData(prevData => prevData.map(item => ({ ...item, check: allRowsSelected })));
+        setLocalData((prevData) =>
+            prevData.map((item) => ({ ...item, check: allRowsSelected }))
+        );
     };
 
     useEffect(() => {
-        const sortData = (data: TypedRow<T>[], column: string, order: 'asc' | 'desc') => {
+        const sortData = (
+            data: TypedRow<T>[],
+            column: string,
+            order: 'asc' | 'desc'
+        ) => {
             return data.slice().sort((a, b) => {
                 if (typeof a[column] === 'string') {
-                    return order === 'asc' ? a[column].localeCompare(b[column]) : b[column].localeCompare(a[column]);
+                    return order === 'asc'
+                        ? a[column].localeCompare(b[column])
+                        : b[column].localeCompare(a[column]);
                 } else if (typeof a[column] === 'number') {
-                    return order === 'asc' ? a[column] - b[column] : b[column] - a[column];
+                    return order === 'asc'
+                        ? a[column] - b[column]
+                        : b[column] - a[column];
                 }
                 return 0;
             });
         };
-        const sortedData = sortData(data, sortOrderColumn.column, sortOrderColumn.order);
-        setLocalData(prevState => (prevState === sortedData ? prevState : sortedData));
+        const sortedData = sortData(
+            data,
+            sortOrderColumn.column,
+            sortOrderColumn.order
+        );
+        setLocalData((prevState) =>
+            prevState === sortedData ? prevState : sortedData
+        );
     }, [sortOrderColumn, data]);
 
     useEffect(() => {
-        const isAllRowSelected = localData.every(obj => obj.check === true);
+        const isAllRowSelected = localData.every((obj) => obj.check === true);
         setAllRowsSelected(isAllRowSelected);
     }, [localData]);
 
     const paginatedData = getPagedData() || [];
 
     return (
-        <div className={clsx(`w-auto overflow-x-auto rounded-lg border border-gray-200 shadow-sm`)}>
+        <div
+            className={clsx(
+                `w-auto overflow-x-auto rounded-lg border border-gray-200 shadow-sm`
+            )}
+        >
             <table className="body-sm w-full table-fixed text-left">
                 <TableHeader
                     allRowsSelected={allRowsSelected}
@@ -83,10 +118,20 @@ const Table = <T,>({ data, columns, onAllRowsSelected, disablePagination = true,
                     handleSort={handleSort}
                     sortOrderColumn={sortOrderColumn}
                 />
-                <TableBody bodyCellClass={bodyCellClass} data={paginatedData} columns={columns} handleCellChange={handleCellChange} />
+                <TableBody
+                    bodyCellClass={bodyCellClass}
+                    data={paginatedData}
+                    columns={columns}
+                    handleCellChange={handleCellChange}
+                />
             </table>
             {!disablePagination && (
-                <TablePagination total={data.length} currentPage={currentPage} setCurrentPage={setCurrentPage} pageSize={pageSize} />
+                <TablePagination
+                    total={data.length}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    pageSize={pageSize}
+                />
             )}
         </div>
     );

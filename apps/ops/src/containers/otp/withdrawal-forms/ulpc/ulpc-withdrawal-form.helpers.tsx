@@ -77,21 +77,40 @@ export const spousalSignatureStateCodes = [
 export default function getUlpcConfig(t: TFunction, isLC: boolean) {
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
-    ): { selectedOption: string | null; amount: string | null; maturityGuaranteePeriod?: string | null } => {
+    ): {
+        selectedOption: string | null;
+        amount: string | null;
+        maturityGuaranteePeriod?: string | null;
+    } => {
         const program = formProgram?.program?.text;
         const withdrawType = formProgram?.withdrawType?.text;
         const programTypeText = formProgram?.programType?.text || '';
         const programSubType = formProgram?.programSubType?.text || '';
 
-        if (withdrawType == WithdrawalType.Net && program == ProgramType.Withdrawal) {
-            return { selectedOption: ProgramType.NetWithdrawal, amount: formProgram?.partialNetAmount?.text || '' };
+        if (
+            withdrawType == WithdrawalType.Net &&
+            program == ProgramType.Withdrawal
+        ) {
+            return {
+                selectedOption: ProgramType.NetWithdrawal,
+                amount: formProgram?.partialNetAmount?.text || '',
+            };
         }
 
-        if (withdrawType == WithdrawalType.Gross && programTypeText === ProgramType.GrossWithdrawal) {
-            return { selectedOption: ProgramType.GrossWithdrawal, amount: formProgram?.partialGrossAmount?.text || '' };
+        if (
+            withdrawType == WithdrawalType.Gross &&
+            programTypeText === ProgramType.GrossWithdrawal
+        ) {
+            return {
+                selectedOption: ProgramType.GrossWithdrawal,
+                amount: formProgram?.partialGrossAmount?.text || '',
+            };
         }
 
-        if (withdrawType == WithdrawalType.Gross && programSubType === ProgramSubType.TotalFreeWithdrawal) {
+        if (
+            withdrawType == WithdrawalType.Gross &&
+            programSubType === ProgramSubType.TotalFreeWithdrawal
+        ) {
             return { selectedOption: ProgramType.TotalFreeAmt, amount: '' };
         }
         return { selectedOption: null, amount: '' };
@@ -108,7 +127,10 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     withdrawType: { text: WithdrawalType.Net },
                     programType: { text: ProgramType.NetWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                    partialNetAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -122,7 +144,10 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.GrossWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -134,7 +159,9 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -152,8 +179,14 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Default,
+        },
+        {
+            label: t('distributionInstruction.specifyFunds'),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [
@@ -219,7 +252,9 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -242,7 +277,8 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
             /*shouldDisplay: ({ parties, partyRoles }: OtpWithdrawalFormState): boolean => {
                 return isLC
                 ? isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[])
@@ -266,8 +302,15 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
+                return (
+                    !!ownerStateOfResidence &&
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
+                );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
@@ -379,7 +422,9 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -405,7 +450,10 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -418,11 +466,16 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -432,21 +485,30 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     isBankingField: true,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -483,7 +545,8 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -498,7 +561,9 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -522,7 +587,10 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -534,11 +602,16 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -547,21 +620,30 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -598,7 +680,8 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -632,8 +715,15 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, upsAccount }: FormDisbursement) {
-                if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                upsAccount,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === FormDisbursementSelections.Check &&
+                    paymentMailType.text === PaymentMailType.ExpressCheck
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         accountNumber: upsAccount?.accountNumber?.text ?? '',
@@ -642,7 +732,13 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, contractNumber, address, accountName, accountNumber }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                contractNumber,
+                address,
+                accountName,
+                accountNumber,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
@@ -663,21 +759,34 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
         {
-            label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t(
+                'amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+            ),
             value: ProcessRequestType.NoLongerSubject,
         },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
     const fullWithdrawalOptions = [
         {
-            label: t('amountDetails.fullWithdrawal.withdrawTheEntireContractValue'),
+            label: t(
+                'amountDetails.fullWithdrawal.withdrawTheEntireContractValue'
+            ),
             value: AccountCloseReason.Surrender,
         },
         {
-            label: t('amountDetails.fullWithdrawal.contractHasBeenLostOrDestroyed'),
+            label: t(
+                'amountDetails.fullWithdrawal.contractHasBeenLostOrDestroyed'
+            ),
             value: AccountCloseReason.ContractLost,
         },
     ];
@@ -685,9 +794,18 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
     const maritalStatusAllowanceConfig = {
         label: 'maritalStatusAllowancesMN',
         maritalStatusAllowancesOptions: [
-            { label: 'maritalStatusAllowanceItems.single', value: MaritalStatusAllowances.Single },
-            { label: 'maritalStatusAllowanceItems.married', value: MaritalStatusAllowances.Married },
-            { label: 'maritalStatusAllowanceItems.headOfHousehold', value: MaritalStatusAllowances.HeadOfHousehold },
+            {
+                label: 'maritalStatusAllowanceItems.single',
+                value: MaritalStatusAllowances.Single,
+            },
+            {
+                label: 'maritalStatusAllowanceItems.married',
+                value: MaritalStatusAllowances.Married,
+            },
+            {
+                label: 'maritalStatusAllowanceItems.headOfHousehold',
+                value: MaritalStatusAllowances.HeadOfHousehold,
+            },
         ],
     };
 
@@ -718,8 +836,16 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
     };
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
 
     return {
@@ -727,7 +853,8 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,
-        formValidation: (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values),
+        formValidation: (values: Partial<FormParts> = {}) =>
+            commonOftFormValidation(t, values),
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         irsSignatureConfig,

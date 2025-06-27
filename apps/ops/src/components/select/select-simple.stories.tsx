@@ -10,7 +10,7 @@ export default {
     title: 'Components/Select/Simple',
     component: Select,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="ml-32 w-64 p-10">
                 <div
                     style={{

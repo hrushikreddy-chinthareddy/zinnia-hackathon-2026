@@ -6,7 +6,8 @@ const usePomExperience = (): boolean => {
     // @TODO: SWZ-559 https://zinnia.atlassian.net/browse/SWZ-559
     // add Set up FGA permissions for POM experience
     // const permissions = usePermissionsContext();
-    const shouldShowPomExperience = featureFlags?.[FEATURE_FLAGS.POM_EXPERIENCE];
+    const shouldShowPomExperience =
+        featureFlags?.[FEATURE_FLAGS.POM_EXPERIENCE];
 
     return shouldShowPomExperience;
 };

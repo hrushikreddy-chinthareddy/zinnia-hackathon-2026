@@ -7,7 +7,13 @@ import { BadgeVariant } from '../badge.helpers';
 
 export const BadgeWithTooltipComponent = (args: BadgeWithTooltipProps) => {
     return args.icon ? (
-        <BadgeWithTooltip icon={infoSvg} label={args.label} rounded={args.rounded} tooltip={args.tooltip} variant={args.variant} />
+        <BadgeWithTooltip
+            icon={infoSvg}
+            label={args.label}
+            rounded={args.rounded}
+            tooltip={args.tooltip}
+            variant={args.variant}
+        />
     ) : (
         <BadgeWithTooltip {...args}>{args.label}</BadgeWithTooltip>
     );
@@ -47,7 +53,14 @@ const meta: Meta<typeof BadgeWithTooltip> = {
 export default meta;
 
 const infoSvg = (
-    <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+        width="100%"
+        height="100%"
+        preserveAspectRatio="none"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
         <path
             fillRule="evenodd"
             clipRule="evenodd"

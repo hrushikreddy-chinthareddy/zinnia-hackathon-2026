@@ -75,7 +75,9 @@ describe('AddressDetails', () => {
         // Assert
         expect(screen.getByLabelText('City')).toBeInTheDocument();
         expect(screen.getByLabelText('Street address 2')).toBeInTheDocument();
-        expect(screen.getByLabelText('Agent/Broker street address')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Agent/Broker street address')
+        ).toBeInTheDocument();
         expect(screen.getByLabelText('Street address 3')).toBeInTheDocument();
         expect(screen.getByLabelText('Zip')).toBeInTheDocument();
     });
@@ -96,7 +98,13 @@ describe('AddressDetails', () => {
         );
         const inputNode = screen.getByTestId('addressLine1');
         fireEvent.change(inputNode, { target: { value: 'new Address' } });
-        handleChange({ ...addressInfo, addressDetails: { ...addressInfo.addressDetails, addressLine1: 'new Address' } });
+        handleChange({
+            ...addressInfo,
+            addressDetails: {
+                ...addressInfo.addressDetails,
+                addressLine1: 'new Address',
+            },
+        });
         expect(addressInfo.addressDetails.addressLine1).toBe('new Address');
     });
 
@@ -116,7 +124,13 @@ describe('AddressDetails', () => {
         );
         const inputNode = screen.getByTestId('addressLine2');
         fireEvent.change(inputNode, { target: { value: 'new Address 2' } });
-        handleChange({ ...addressInfo, addressDetails: { ...addressInfo.addressDetails, addressLine2: 'new Address 2' } });
+        handleChange({
+            ...addressInfo,
+            addressDetails: {
+                ...addressInfo.addressDetails,
+                addressLine2: 'new Address 2',
+            },
+        });
         expect(addressInfo.addressDetails.addressLine2).toBe('new Address 2');
     });
 
@@ -136,7 +150,13 @@ describe('AddressDetails', () => {
         );
         const inputNode = screen.getByTestId('addressLine3');
         fireEvent.change(inputNode, { target: { value: 'new Address 3' } });
-        handleChange({ ...addressInfo, addressDetails: { ...addressInfo.addressDetails, addressLine3: 'new Address 3' } });
+        handleChange({
+            ...addressInfo,
+            addressDetails: {
+                ...addressInfo.addressDetails,
+                addressLine3: 'new Address 3',
+            },
+        });
         expect(addressInfo.addressDetails.addressLine3).toBe('new Address 3');
     });
 
@@ -156,7 +176,10 @@ describe('AddressDetails', () => {
         );
         const inputNode = screen.getByTestId('city');
         fireEvent.change(inputNode, { target: { value: 'new city' } });
-        handleChange({ ...addressInfo, addressDetails: { ...addressInfo.addressDetails, city: 'new city' } });
+        handleChange({
+            ...addressInfo,
+            addressDetails: { ...addressInfo.addressDetails, city: 'new city' },
+        });
         expect(addressInfo.addressDetails.city).toBe('new city');
     });
 
@@ -176,7 +199,10 @@ describe('AddressDetails', () => {
         );
         const inputNode = screen.getByTestId('zipCode');
         fireEvent.change(inputNode, { target: { value: '09876' } });
-        handleChange({ ...addressInfo, addressDetails: { ...addressInfo.addressDetails, zipCode: '09876' } });
+        handleChange({
+            ...addressInfo,
+            addressDetails: { ...addressInfo.addressDetails, zipCode: '09876' },
+        });
         expect(addressInfo.addressDetails.zipCode).toBe('09876');
     });
 });

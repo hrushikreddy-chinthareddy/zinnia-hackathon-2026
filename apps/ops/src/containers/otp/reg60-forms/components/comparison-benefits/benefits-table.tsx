@@ -1,10 +1,17 @@
-import { GridReadyEvent, CellValueChangedEvent, ColumnApi } from 'ag-grid-community';
+import {
+    GridReadyEvent,
+    CellValueChangedEvent,
+    ColumnApi,
+} from 'ag-grid-community';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
 import DepTable from '@deps/components/table/table';
 
-import { ComparisonBenefitsTableProps, RowConfig } from './benefits-table.types';
+import {
+    ComparisonBenefitsTableProps,
+    RowConfig,
+} from './benefits-table.types';
 
 const BenefitsTable = ({
     rowConfig,
@@ -14,7 +21,9 @@ const BenefitsTable = ({
     tableWrapperClassName,
 }: ComparisonBenefitsTableProps) => {
     const [, setGridColumnApi] = useState<ColumnApi | null>(null);
-    const [rowData, setRowData] = useState<RowConfig[] | any>(initialData || rowConfig);
+    const [rowData, setRowData] = useState<RowConfig[] | any>(
+        initialData || rowConfig
+    );
 
     const hanldeGridReady = (params: GridReadyEvent) => {
         setGridColumnApi(params?.columnApi);

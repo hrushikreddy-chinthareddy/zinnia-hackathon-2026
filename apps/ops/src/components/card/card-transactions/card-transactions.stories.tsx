@@ -1,7 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react';
 
 import { generateAdditionalCharges } from '@deps/utils/mock/mockPolicyValues';
-import { numberOfFieldsArgTypes, storybookContainerDecorator } from '@deps/utils/storybook';
+import {
+    numberOfFieldsArgTypes,
+    storybookContainerDecorator,
+} from '@deps/utils/storybook';
 
 import CardTransactions, { CardTransactionsProps } from './card-transactions';
 
@@ -25,7 +28,10 @@ const meta: Meta<StoryProps> = {
         ...numberOfFieldsArgTypes,
     },
     render: ({ numberOfFields, ...props }: StoryProps) => (
-        <CardTransactions {...props} additionalCharges={generateAdditionalCharges(numberOfFields)} />
+        <CardTransactions
+            {...props}
+            additionalCharges={generateAdditionalCharges(numberOfFields)}
+        />
     ),
 };
 

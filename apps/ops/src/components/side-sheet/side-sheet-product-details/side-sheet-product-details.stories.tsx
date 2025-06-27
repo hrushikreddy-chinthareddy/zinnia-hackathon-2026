@@ -2,12 +2,18 @@ import '@deps/styles/styles.css';
 import { Meta } from '@storybook/react';
 import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
+import {
+    getBadgeStatus,
+    getBadgeStatusVariant,
+} from '@deps/components/badge/badge.helpers';
 import Button from '@deps/components/button/button';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
-import { SideSheetProvider, useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import {
+    SideSheetProvider,
+    useSideSheetContext,
+} from '@deps/contexts/SideSheetContext';
 
 import SideSheetProductDetails from './side-sheet-product-details';
 
@@ -35,7 +41,7 @@ export default {
         },
     },
     decorators: [
-        Story => (
+        (Story) => (
             <div className="bg-background p-10">
                 <SideSheetProvider>
                     <Story />

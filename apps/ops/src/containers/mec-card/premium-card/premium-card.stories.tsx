@@ -30,7 +30,7 @@ export default {
         },
     },
     decorators: [
-        Story => (
+        (Story) => (
             <div className="p-10">
                 <Story />
             </div>

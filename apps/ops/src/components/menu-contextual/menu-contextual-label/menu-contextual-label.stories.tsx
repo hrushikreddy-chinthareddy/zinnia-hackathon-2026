@@ -14,7 +14,7 @@ export default {
         layout: 'centered',
     },
     decorators: [
-        Story => (
+        (Story) => (
             <div className="w-fit rounded-sm bg-gray-900">
                 <Story />
             </div>
@@ -25,7 +25,9 @@ export default {
     },
 } as Meta<typeof MenuContextualLabel>;
 
-export const MenuContextualLabelStory = ({ label }: MenuContextualLabelProps) => {
+export const MenuContextualLabelStory = ({
+    label,
+}: MenuContextualLabelProps) => {
     const props = {
         label,
         // intentionally omitting children for storybook

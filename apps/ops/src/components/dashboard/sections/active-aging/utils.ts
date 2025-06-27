@@ -20,7 +20,10 @@ export interface TimeOrganizedData {
     total: number;
 }
 
-export type TimeRangeData = Record<ActiveAgingTimeRange, { data: TimeOrganizedData[]; total: number }>;
+export type TimeRangeData = Record<
+    ActiveAgingTimeRange,
+    { data: TimeOrganizedData[]; total: number }
+>;
 
 const LAST_COLUMN_INDEX = 54;
 const TWENTY_EIGHT_PLUS_GROUP_BY = 9;
@@ -28,16 +31,35 @@ const FOURTEEN_TO_TWENTYSEVEN_GROUP_BY = 2;
 
 dayjs.extend(isBetween);
 
-export const isBetweenTimeRange = (endDate: dayjs.Dayjs, createdDate: string, timeRange: ActiveAgingTimeRange) => {
+export const isBetweenTimeRange = (
+    endDate: dayjs.Dayjs,
+    createdDate: string,
+    timeRange: ActiveAgingTimeRange
+) => {
     const created = dayjs(createdDate);
 
     switch (timeRange) {
         case ActiveAgingTimeRange.ZERO_TO_SIX:
-            return created.isBetween(endDate, endDate.subtract(6, 'day'), 'day', '[]');
+            return created.isBetween(
+                endDate,
+                endDate.subtract(6, 'day'),
+                'day',
+                '[]'
+            );
         case ActiveAgingTimeRange.SEVEN_TO_THIRTEEN:
-            return created.isBetween(endDate.subtract(7, 'day'), endDate.subtract(13, 'day'), 'day', '[]');
+            return created.isBetween(
+                endDate.subtract(7, 'day'),
+                endDate.subtract(13, 'day'),
+                'day',
+                '[]'
+            );
         case ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN:
-            return created.isBetween(endDate.subtract(14, 'day'), endDate.subtract(27, 'day'), 'day', '[]');
+            return created.isBetween(
+                endDate.subtract(14, 'day'),
+                endDate.subtract(27, 'day'),
+                'day',
+                '[]'
+            );
         case ActiveAgingTimeRange.TWENTY_EIGHT_PLUS:
             return created.isBefore(endDate.subtract(28, 'day'));
 
@@ -92,25 +114,54 @@ export const isBetweenTimeRange = (endDate: dayjs.Dayjs, createdDate: string, ti
  * @param data
  * @returns
  */
-export const organizeAndMergeDataByTimeRange = (data: CaseCountOutputLevel1[]): TimeRangeData => {
+export const organizeAndMergeDataByTimeRange = (
+    data: CaseCountOutputLevel1[]
+): TimeRangeData => {
     const today = dayjs(); // Get the current date
 
     // Initialize the result object with empty arrays for each time range
-    const result: Record<ActiveAgingTimeRange, { data: TimeOrganizedData[]; total: number; countByDay: { [key: string]: number } }> = {
-        [ActiveAgingTimeRange.ZERO_TO_SIX]: { data: [], total: 0, countByDay: {} },
-        [ActiveAgingTimeRange.SEVEN_TO_THIRTEEN]: { data: [], total: 0, countByDay: {} },
-        [ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN]: { data: [], total: 0, countByDay: {} },
-        [ActiveAgingTimeRange.TWENTY_EIGHT_PLUS]: { data: [], total: 0, countByDay: {} },
+    const result: Record<
+        ActiveAgingTimeRange,
+        {
+            data: TimeOrganizedData[];
+            total: number;
+            countByDay: { [key: string]: number };
+        }
+    > = {
+        [ActiveAgingTimeRange.ZERO_TO_SIX]: {
+            data: [],
+            total: 0,
+            countByDay: {},
+        },
+        [ActiveAgingTimeRange.SEVEN_TO_THIRTEEN]: {
+            data: [],
+            total: 0,
+            countByDay: {},
+        },
+        [ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN]: {
+            data: [],
+            total: 0,
+            countByDay: {},
+        },
+        [ActiveAgingTimeRange.TWENTY_EIGHT_PLUS]: {
+            data: [],
+            total: 0,
+            countByDay: {},
+        },
     };
     // Iterate over each item in the data array
-    data.forEach(item => {
+    data.forEach((item) => {
         // Inside each item, iterate over its values array
-        item.values?.forEach(value => {
+        item.values?.forEach((value) => {
             // Determine the appropriate time range for the current value's date
-            const range = Object.values(ActiveAgingTimeRange).find(range => isBetweenTimeRange(today, value.name, range));
+            const range = Object.values(ActiveAgingTimeRange).find((range) =>
+                isBetweenTimeRange(today, value.name, range)
+            );
             if (range) {
                 // Check if an item with the same name already exists in the appropriate time range
-                const existingItem = result[range].data.find(resultItem => resultItem.name === item.name);
+                const existingItem = result[range].data.find(
+                    (resultItem) => resultItem.name === item.name
+                );
 
                 if (existingItem) {
                     // If an item with the same name exists, append the count to its count array and update the total
@@ -137,16 +188,50 @@ export const organizeAndMergeDataByTimeRange = (data: CaseCountOutputLevel1[]): 
     return result;
 };
 
-export const generateActiveAgingCategories = (timeRange: ActiveAgingTimeRange) => {
+export const generateActiveAgingCategories = (
+    timeRange: ActiveAgingTimeRange
+) => {
     switch (timeRange) {
         case ActiveAgingTimeRange.ZERO_TO_SIX:
-            return ['Today', '1 Day', '2 Days', '3 Days', '4 Days', '5 Days', '6 Days'];
+            return [
+                'Today',
+                '1 Day',
+                '2 Days',
+                '3 Days',
+                '4 Days',
+                '5 Days',
+                '6 Days',
+            ];
         case ActiveAgingTimeRange.SEVEN_TO_THIRTEEN:
-            return ['7 Days', '8 Days', '9 Days', '10 Days', '11 Days', '12 Days', '13 Days'];
+            return [
+                '7 Days',
+                '8 Days',
+                '9 Days',
+                '10 Days',
+                '11 Days',
+                '12 Days',
+                '13 Days',
+            ];
         case ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN:
-            return ['14-15 Days', '16-17 Days', '18-19 Days', '20-21 Days', '22-23 Days', '24-25 days', '26-27 days'];
+            return [
+                '14-15 Days',
+                '16-17 Days',
+                '18-19 Days',
+                '20-21 Days',
+                '22-23 Days',
+                '24-25 days',
+                '26-27 days',
+            ];
         case ActiveAgingTimeRange.TWENTY_EIGHT_PLUS:
-            return ['28-37 Days', '38-47 Days', '48-57 Days', '58-67 Days', '68-77 Days', '78-87 Days', '88+ Days'];
+            return [
+                '28-37 Days',
+                '38-47 Days',
+                '48-57 Days',
+                '58-67 Days',
+                '68-77 Days',
+                '78-87 Days',
+                '88+ Days',
+            ];
     }
 };
 
@@ -187,14 +272,17 @@ export const generateActiveAgingCategories = (timeRange: ActiveAgingTimeRange) =
     }
         ```
  */
-export const generateActiveAgingSeries = (timeRange: ActiveAgingTimeRange, timeOrganizedData?: TimeRangeData) => {
+export const generateActiveAgingSeries = (
+    timeRange: ActiveAgingTimeRange,
+    timeOrganizedData?: TimeRangeData
+) => {
     // If no time-organized data is provided, return an empty array.
     if (!timeOrganizedData) {
         return [];
     }
 
     // Map over each item in the time-organized data.
-    return timeOrganizedData[timeRange].data.map(item => {
+    return timeOrganizedData[timeRange].data.map((item) => {
         let data: number[];
 
         // Determine the grouping logic based on the time range.
@@ -225,7 +313,9 @@ export const generateActiveAgingSeries = (timeRange: ActiveAgingTimeRange, timeO
                         acc[acc.length - 1] += value;
                     } else {
                         // Otherwise, group by 9.
-                        const groupIndex = Math.floor(index / TWENTY_EIGHT_PLUS_GROUP_BY);
+                        const groupIndex = Math.floor(
+                            index / TWENTY_EIGHT_PLUS_GROUP_BY
+                        );
                         if (!acc[groupIndex]) {
                             acc[groupIndex] = 0;
                         }
@@ -252,7 +342,9 @@ export const generateActiveAgingSeries = (timeRange: ActiveAgingTimeRange, timeO
     });
 };
 
-export const generateActiveAgingPieChartSeries = (timeRangeData: Record<ActiveAgingTimeRange, TimeOrganizedData[]>) => {
+export const generateActiveAgingPieChartSeries = (
+    timeRangeData: Record<ActiveAgingTimeRange, TimeOrganizedData[]>
+) => {
     const result: Record<ActiveAgingTimeRange, number> = {
         [ActiveAgingTimeRange.TWENTY_EIGHT_PLUS]: 0,
         [ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN]: 0,
@@ -271,10 +363,18 @@ export const generateActiveAgingPieChartSeries = (timeRangeData: Record<ActiveAg
 
 // Define the start dates for each time range
 export const startDates: Record<ActiveAgingTimeRange, string> = {
-    [ActiveAgingTimeRange.ZERO_TO_SIX]: dayjs().subtract(6, 'day').format(friendlyDateFormat),
-    [ActiveAgingTimeRange.SEVEN_TO_THIRTEEN]: dayjs().subtract(13, 'day').format(friendlyDateFormat),
-    [ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN]: dayjs().subtract(27, 'day').format(friendlyDateFormat),
-    [ActiveAgingTimeRange.TWENTY_EIGHT_PLUS]: dayjs().subtract(1, 'year').format(friendlyDateFormat),
+    [ActiveAgingTimeRange.ZERO_TO_SIX]: dayjs()
+        .subtract(6, 'day')
+        .format(friendlyDateFormat),
+    [ActiveAgingTimeRange.SEVEN_TO_THIRTEEN]: dayjs()
+        .subtract(13, 'day')
+        .format(friendlyDateFormat),
+    [ActiveAgingTimeRange.FOURTEEN_TO_TWENTYSEVEN]: dayjs()
+        .subtract(27, 'day')
+        .format(friendlyDateFormat),
+    [ActiveAgingTimeRange.TWENTY_EIGHT_PLUS]: dayjs()
+        .subtract(1, 'year')
+        .format(friendlyDateFormat),
 };
 
 // Calculate the end date based on the active aging time range
@@ -296,7 +396,9 @@ export const calculateEndDate = (timeRange: ActiveAgingTimeRange): string => {
 };
 
 // Formats the time ranges in the objet
-export const getFormattedDateRange = (timeRange: ActiveAgingTimeRange): { from: string; to: string } => {
+export const getFormattedDateRange = (
+    timeRange: ActiveAgingTimeRange
+): { from: string; to: string } => {
     const startDate = dayjs(startDates[timeRange]).format(friendlyDateFormat);
     const endDate = calculateEndDate(timeRange);
 

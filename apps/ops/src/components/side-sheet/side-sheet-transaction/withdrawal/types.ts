@@ -36,7 +36,8 @@ export type WithdrawalDetails = {
     value?: string;
 };
 
-export interface WithdrawalSideSheetValues extends BaseTransactionSideSheetValues {
+export interface WithdrawalSideSheetValues
+    extends BaseTransactionSideSheetValues {
     actualWithdrawalAmount?: number;
     disbursementType?: string;
     withdrawalDetails?: WithdrawalDetails[];
@@ -57,7 +58,9 @@ export type WithdrawalChargesValues = {
     totalPayment?: number;
 };
 
-export type WithdrawalQuoteResponse = FullSurrenderQuoteResponse | PartialWithdrawalOneTimeQuoteResponse;
+export type WithdrawalQuoteResponse =
+    | FullSurrenderQuoteResponse
+    | PartialWithdrawalOneTimeQuoteResponse;
 
 export type WithdrawalDetailsValues = {
     // ---------------------

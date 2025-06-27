@@ -2,7 +2,11 @@ import { Meta } from '@storybook/react';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import '@deps/styles/styles.css';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 
 import { SideSheetProvider, useSideSheetContext } from './SideSheetContext';
 
@@ -10,7 +14,7 @@ export default {
     title: 'Context/SideSheet',
     component: SideSheetProvider,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -58,7 +62,10 @@ const SideSheetContent2: React.FC = () => {
     const sideSheet = useSideSheetContext();
 
     const swapClick = () => {
-        sideSheet.changeSideSheetContent(<>Component #1 with a different header</>, <SideSheetContent1 />);
+        sideSheet.changeSideSheetContent(
+            <>Component #1 with a different header</>,
+            <SideSheetContent1 />
+        );
     };
 
     const cancelClick = () => {
@@ -71,7 +78,11 @@ const SideSheetContent2: React.FC = () => {
             <div className="mt-2">
                 <div className="flex flex-row justify-start gap-6">
                     <div className="flex flex-col">
-                        <Button type={ButtonType.Primary} size={ButtonSize.Small} onClick={() => swapClick()}>
+                        <Button
+                            type={ButtonType.Primary}
+                            size={ButtonSize.Small}
+                            onClick={() => swapClick()}
+                        >
                             Swap to component #1
                         </Button>
                     </div>

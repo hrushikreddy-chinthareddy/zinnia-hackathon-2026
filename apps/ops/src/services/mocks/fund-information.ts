@@ -1,7 +1,13 @@
 import { FundAccountType } from '@zinnia/api-types/types/sor';
 
-import { DisbursementMethodEnum, FundLevelDisbursementMethodEnum } from '@deps/models/funds/fund-information';
-import { FundInformationByFundId, FundInformationByPlanCode } from '@deps/types/fund-information';
+import {
+    DisbursementMethodEnum,
+    FundLevelDisbursementMethodEnum,
+} from '@deps/models/funds/fund-information';
+import {
+    FundInformationByFundId,
+    FundInformationByPlanCode,
+} from '@deps/types/fund-information';
 
 export const mockFundInformationByFundId: FundInformationByFundId = {
     fixedFund: {
@@ -36,15 +42,18 @@ export const mockFundInformationByPlanCode: FundInformationByPlanCode = {
     },
     disbursementPriority: {
         ELI001: {
-            fundLevelDisbursementMethod: FundLevelDisbursementMethodEnum.PRO_RATA,
+            fundLevelDisbursementMethod:
+                FundLevelDisbursementMethodEnum.PRO_RATA,
             priority: 1,
         },
         ELI002: {
-            fundLevelDisbursementMethod: FundLevelDisbursementMethodEnum.PRO_RATA,
+            fundLevelDisbursementMethod:
+                FundLevelDisbursementMethodEnum.PRO_RATA,
             priority: 2,
         },
         ELF001: {
-            fundLevelDisbursementMethod: FundLevelDisbursementMethodEnum.PRO_RATA,
+            fundLevelDisbursementMethod:
+                FundLevelDisbursementMethodEnum.PRO_RATA,
             priority: 3,
         },
     },

@@ -16,7 +16,10 @@ export const getDocumentPreviewV3 = async (
 ): Promise<DocumentDownloadV3WithMime | null> => {
     try {
         const url = `${baseAppUrl}/api/document/v3/documents/${documentId}/preview?parentCarrierCode=${parentCarrierCode.toUpperCase()}&documentClassification=${documentClassification}`;
-        const { data } = await client.get<DocumentDownloadV3WithMime, AxiosResponse>(url);
+        const { data } = await client.get<
+            DocumentDownloadV3WithMime,
+            AxiosResponse
+        >(url);
 
         return data;
     } catch (error: any) {

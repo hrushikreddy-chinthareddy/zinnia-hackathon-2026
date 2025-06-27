@@ -8,14 +8,21 @@ export type InputCheckboxProps = {
     required?: boolean;
 };
 
-const InputCheckBox = ({ checked, className, isDisabled, onChange, required }: InputCheckboxProps) => {
+const InputCheckBox = ({
+    checked,
+    className,
+    isDisabled,
+    onChange,
+    required,
+}: InputCheckboxProps) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!isDisabled) {
             onChange(event.target.checked);
         }
     };
 
-    const focusCheckboxClasses = 'focus:ring-2 focus:ring-offset-2 focus:ring-semantic-focus';
+    const focusCheckboxClasses =
+        'focus:ring-2 focus:ring-offset-2 focus:ring-semantic-focus';
 
     const checkboxClasses = clsx(
         'h-6 w-6 rounded border-2 text-white',

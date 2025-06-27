@@ -37,7 +37,11 @@
                                 "state": "AA",
                                 "zip": "12342",
                                 "country": "USA",
-                                "addressLines": ["2417 Spinka Dale", "string", "string"]
+                                "addressLines": [
+                                    "2417 Spinka Dale",
+                                    "string",
+                                    "string"
+                                ]
                             },
                             "type": -101,
                             "amountRequested": 15000.0,

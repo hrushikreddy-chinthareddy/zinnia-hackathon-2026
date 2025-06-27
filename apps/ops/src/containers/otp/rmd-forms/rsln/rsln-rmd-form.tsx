@@ -15,13 +15,18 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FundWithdrawnMethod,
+} from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getRslnRmdConfig from './rsln-rmd-form.helpers';
 
 export default function RslnRmdWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         formValidation,
         formPartyConfigs,
@@ -54,40 +59,76 @@ export default function RslnRmdWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.RSLN}_RMD_DIGITAL_FORM`,
+            formExtName: `${
+                initialForm?.carrier || Carrier.RSLN
+            }_RMD_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.RSLN}_RMD_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.RSLN
+                }_RMD_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
         });
     }, [initialForm]);
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
+    const hasTpaAuthorization =
+        formTpaAuthorization &&
+        !Object.values(formTpaAuthorization).every((val) => val === null);
     const shouldStateW4pRender = isAllowedState(contractIssueState);
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <JointLifeExpectancy
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={jointLifeExpectancyConfigs}
+            />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.distributionInstruction') as string}
+                title={
+                    t(
+                        'distributionInstruction.distributionInstruction'
+                    ) as string
+                }
                 isDerivedMethodFromFunds={true}
                 defaultMethod={FundWithdrawnMethod.Prorata}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

@@ -11,18 +11,24 @@ interface CaseCallLogsQuery {
     offset?: number;
 }
 
-export const getCaseCallLogs = async (query: CaseCallLogsQuery): Promise<{ data: CallLogResponse | null; status: number }> => {
+export const getCaseCallLogs = async (
+    query: CaseCallLogsQuery
+): Promise<{ data: CallLogResponse | null; status: number }> => {
     const { contract, limit, offset } = query;
     const queryParams = `?contract=${contract}&limit=${limit}&offset=${offset}`;
 
     try {
-        const { data, status } = await client.get<CallLogResponse, AxiosResponse>(
-            `${baseAppUrl}/api/callcenter/v1/CallEntry${queryParams}`
-        );
+        const { data, status } = await client.get<
+            CallLogResponse,
+            AxiosResponse
+        >(`${baseAppUrl}/api/callcenter/v1/CallEntry${queryParams}`);
 
         return { data, status };
     } catch (error: any) {
-        console.error('getCaseCallLogs::An error occurred while getting case call log results results', error);
+        console.error(
+            'getCaseCallLogs::An error occurred while getting case call log results results',
+            error
+        );
 
         return { data: null, status: (error as AxiosResponse)?.status || 500 };
     }

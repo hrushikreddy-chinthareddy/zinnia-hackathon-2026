@@ -10,21 +10,42 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { DocumentDownloadV2WithMime, supportedTiffExtensions } from '@deps/models/case/document';
+import {
+    DocumentDownloadV2WithMime,
+    supportedTiffExtensions,
+} from '@deps/models/case/document';
 import documentDownloadV2 from '@deps/queries/server/documents/v2/download';
 import documentDownload from '@deps/queries/server/documents/v3/download';
 import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { b64ToBlob } from '@deps/utils/blob';
 import { TiffConversion } from '@deps/utils/fileviewer/tiffConversion';
-import { isFeatureFlagVariableActive, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import {
+    isFeatureFlagVariableActive,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
-import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-const DocumentViewerPage = ({ doc, user }: SegmentTrackedPageProps & { doc: DocumentDownloadV2WithMime | DocumentDownloadV3WithMime }) => {
+const DocumentViewerPage = ({
+    doc,
+    user,
+}: SegmentTrackedPageProps & {
+    doc: DocumentDownloadV2WithMime | DocumentDownloadV3WithMime;
+}) => {
     useSegmentPageTracker(user, SegmentPageName.DocumentViewer);
-    const blob = b64ToBlob(doc.binaryData || '', doc.mimeType || 'application/pdf');
+    const blob = b64ToBlob(
+        doc.binaryData || '',
+        doc.mimeType || 'application/pdf'
+    );
 
     const url = blob ? URL.createObjectURL(blob) : '';
     return (
@@ -41,7 +62,13 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const { params, res, req, query, locale = DEFAULT_LOCALE } = context;
+            const {
+                params,
+                res,
+                req,
+                query,
+                locale = DEFAULT_LOCALE,
+            } = context;
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
@@ -75,7 +102,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             }
-            const featureFlagVariables = await optimizelyService.getAllFeatureFlagVariables(user.sub, loggingContext);
+            const featureFlagVariables =
+                await optimizelyService.getAllFeatureFlagVariables(
+                    user.sub,
+                    loggingContext
+                );
 
             const useV3 = isFeatureFlagVariableActive(
                 featureFlagVariables,
@@ -89,7 +120,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                 let docClass;
                 switch (documentType) {
                     case DocumentTypeView.Correspondence:
-                        docClass = SearchRequest.documentClassification.OUTBOUND;
+                        docClass =
+                            SearchRequest.documentClassification.OUTBOUND;
                         break;
                     case DocumentTypeView.Policy:
                     default:
@@ -132,10 +164,20 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             }
-            const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON], nextI18nextConfig, ALL_LOCALES);
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
 
-            if (docDownload?.mimeType === 'image/tiff' || supportedTiffExtensions.includes(docDownload?.fileExtension)) {
-                const { tiffBuffer, success } = await TiffConversion({ binaryData: docDownload.binaryData });
+            if (
+                docDownload?.mimeType === 'image/tiff' ||
+                supportedTiffExtensions.includes(docDownload?.fileExtension)
+            ) {
+                const { tiffBuffer, success } = await TiffConversion({
+                    binaryData: docDownload.binaryData,
+                });
 
                 if (success) {
                     docDownload.mimeType = 'image/png';
@@ -149,7 +191,11 @@ export const getServerSideProps = withPageAuthAndLogging(
             };
         },
     },
-    { file: 'documents/[id]/index', function: 'getServerSideProps', page: 'documents/:id' }
+    {
+        file: 'documents/[id]/index',
+        function: 'getServerSideProps',
+        page: 'documents/:id',
+    }
 );
 
 export default DocumentViewerPage;

@@ -1,12 +1,21 @@
 import { PartyRole, PhoneType, Policy } from '@zinnia/api-types/types/sor';
-import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Loader,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { buildClaimPaylod, validateOtherNotifier } from '@deps/containers/death-claim-container/death-claim.helpers';
+import {
+    buildClaimPaylod,
+    validateOtherNotifier,
+} from '@deps/containers/death-claim-container/death-claim.helpers';
 import { getPolicyOwnersByRole } from '@deps/containers/death-claim-container/steps/death-claim-notifier/death-claim-notifier.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -18,7 +27,11 @@ import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import { DeathClaim } from './death-claim';
 import { DeceasedDetails } from './deceased-details';
-import { DeceasedParty, NotifierParty, RoleType } from '../../death-claim.types';
+import {
+    DeceasedParty,
+    NotifierParty,
+    RoleType,
+} from '../../death-claim.types';
 
 interface DeathClaimNotificationStepProps {
     policy: Policy;
@@ -26,8 +39,13 @@ interface DeathClaimNotificationStepProps {
 }
 
 export const checkNewPhone = (notifierPhone: any, party: any) => {
-    const homePhone = party?.phones?.filter((phone: { phoneType: string }) => phone.phoneType === PhoneType.HOME)?.[0] || {};
-    const existingPhone = [homePhone.extension, homePhone.dialNumber].filter(Boolean).join('');
+    const homePhone =
+        party?.phones?.filter(
+            (phone: { phoneType: string }) => phone.phoneType === PhoneType.HOME
+        )?.[0] || {};
+    const existingPhone = [homePhone.extension, homePhone.dialNumber]
+        .filter(Boolean)
+        .join('');
 
     return {
         isNewPhone: notifierPhone !== existingPhone,
@@ -35,24 +53,44 @@ export const checkNewPhone = (notifierPhone: any, party: any) => {
     };
 };
 
-export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathClaimNotificationStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.deathClaimNotification' });
+export const DeathClaimNotificationStep = ({
+    policy,
+    showNotification,
+}: DeathClaimNotificationStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'deathClaims.deathClaimNotification',
+    });
     const { goToNext } = useWorkflow();
-    const { formErrors, setNotifiers, owners, setOwners, notifiers, beneficiaries, setFormErrors, setSubmitFailed, setCaseId, onbaseCaseId, onbaseDocumentNumber } =
-        useDeathClaim();
+    const {
+        formErrors,
+        setNotifiers,
+        owners,
+        setOwners,
+        notifiers,
+        beneficiaries,
+        setFormErrors,
+        setSubmitFailed,
+        setCaseId,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+    } = useDeathClaim();
     const [isNewBene, setIsNewBene] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const policyOwners = useMemo(() => {
-        return getPolicyOwnersByRole(policy, [PartyRole.OWNER, PartyRole.JOINTOWNER]);
+        return getPolicyOwnersByRole(policy, [
+            PartyRole.OWNER,
+            PartyRole.JOINTOWNER,
+        ]);
     }, [policy]);
 
     const policyAnnuitants = useMemo(() => {
-        return getPolicyOwnersByRole(policy,[ PartyRole.ANNUITANT ]);
+        return getPolicyOwnersByRole(policy, [PartyRole.ANNUITANT]);
     }, [policy]);
 
     const ownerPartyType = useMemo(() => {
-        return  getPolicyOwnersByRole(policy,[PartyRole.OWNER])?.[0]?.party.partyType;
+        return getPolicyOwnersByRole(policy, [PartyRole.OWNER])?.[0]?.party
+            .partyType;
     }, [policy]);
 
     const isIndividual = ownerPartyType === PartyType.INDIVIDUAL;
@@ -60,20 +98,30 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
 
     useEffect(() => {
         if (isIndividual && policyOwners && policyOwners?.length > 0) {
-            browserLogInfo('DeathClaimNotifierStep::Setting owner under deceased list', {
-                isIndividual: isIndividual,
-                policyOwners: policyOwners
-            });
+            browserLogInfo(
+                'DeathClaimNotifierStep::Setting owner under deceased list',
+                {
+                    isIndividual: isIndividual,
+                    policyOwners: policyOwners,
+                }
+            );
             setOwners(policyOwners);
         }
     }, [policyOwners, setOwners, isIndividual]);
 
     useEffect(() => {
-        if (isNonIndividual && policyAnnuitants && policyAnnuitants?.length > 0) {
-            browserLogInfo('DeathClaimNotifierStep::setting annuitants under deceased list', {
-                isNonIndividual: isNonIndividual,
-                policyAnnuitants: policyAnnuitants
-            });
+        if (
+            isNonIndividual &&
+            policyAnnuitants &&
+            policyAnnuitants?.length > 0
+        ) {
+            browserLogInfo(
+                'DeathClaimNotifierStep::setting annuitants under deceased list',
+                {
+                    isNonIndividual: isNonIndividual,
+                    policyAnnuitants: policyAnnuitants,
+                }
+            );
             setOwners(policyAnnuitants);
         }
     }, [policyAnnuitants, setOwners, isNonIndividual]);
@@ -85,7 +133,11 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
         let errors: FormValidationErrors = {};
 
         if (notifiers?.notifierRole === RoleType.Beneficiary && isNewBene) {
-            errors = validateOtherNotifier(notifiers?.party, RoleType.Beneficiary, t);
+            errors = validateOtherNotifier(
+                notifiers?.party,
+                RoleType.Beneficiary,
+                t
+            );
         } else if (notifiers?.notifierRole === RoleType.Other) {
             errors = validateOtherNotifier(notifiers?.party, RoleType.Other, t);
         } else {
@@ -94,7 +146,7 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
             errors['relationship'] = '';
         }
 
-        setFormErrors(prevState => ({
+        setFormErrors((prevState) => ({
             ...prevState,
             ...errors,
         }));
@@ -102,7 +154,15 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries, onbaseCaseId, onbaseDocumentNumber);
+        const payload = buildClaimPaylod(
+            policy,
+            null,
+            notifiers,
+            owners,
+            beneficiaries,
+            onbaseCaseId,
+            onbaseDocumentNumber
+        );
         browserLogInfo('DeathClaimNotifierStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,
@@ -127,18 +187,26 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
         const errors: FormValidationErrors = {};
         if (!isNullEmptyOrUndefined(notifiers?.notifierRole)) {
             //} && notifiers?.notifierRole as RoleType !== RoleType.Other) {
-            if (isNullEmptyOrUndefined(notifiers?.party?.partyId) && !isNewBene && notifiers?.notifierRole !== RoleType.Other) {
-                errors['beneficiary'] = t('formErrors.formValidation.notifierIsRequired');
+            if (
+                isNullEmptyOrUndefined(notifiers?.party?.partyId) &&
+                !isNewBene &&
+                notifiers?.notifierRole !== RoleType.Other
+            ) {
+                errors['beneficiary'] = t(
+                    'formErrors.formValidation.notifierIsRequired'
+                );
             } else {
                 errors['beneficiary'] = '';
             }
         }
 
-        const isDeceasedArr = owners?.filter(owner => owner.isDeceased) || [];
+        const isDeceasedArr = owners?.filter((owner) => owner.isDeceased) || [];
         if (isDeceasedArr.length > 0) {
             errors['deceased'] = '';
         } else {
-            errors['deceased'] = t('formErrors.formValidation.deceasedSelectionIsRequired');
+            errors['deceased'] = t(
+                'formErrors.formValidation.deceasedSelectionIsRequired'
+            );
         }
 
         if (formErrors['submit']) {
@@ -146,7 +214,9 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
         }
 
         const asArray = Object.entries({ ...formErrors, ...errors });
-        const filterCb = asArray.filter(([key, value]) => value !== '' || key === 'submit');
+        const filterCb = asArray.filter(
+            ([key, value]) => value !== '' || key === 'submit'
+        );
         const filteredErrors = Object.fromEntries(filterCb);
 
         setFormErrors(filteredErrors);
@@ -187,17 +257,17 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
             errors = {
                 role: t('formErrors.formValidation.roleIsRequired'),
             };
-            setFormErrors(prevState => ({
+            setFormErrors((prevState) => ({
                 ...prevState,
                 ...errors,
             }));
         } else {
-            setFormErrors(prevState => {
+            setFormErrors((prevState) => {
                 delete prevState?.role;
                 return prevState;
             });
         }
-        setNotifiers(prevState => ({
+        setNotifiers((prevState) => ({
             ...prevState,
             ...notifier,
         }));
@@ -246,7 +316,11 @@ export const DeathClaimNotificationStep = ({ policy, showNotification }: DeathCl
                     />
                 )}
                 {formErrors['deceased'] && (
-                    <AssistiveText className="my-lg" variant={AssistiveTextVariant.Error} text={formErrors['deceased']} />
+                    <AssistiveText
+                        className="my-lg"
+                        variant={AssistiveTextVariant.Error}
+                        text={formErrors['deceased']}
+                    />
                 )}
             </div>
         </WorkflowCard>

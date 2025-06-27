@@ -1,16 +1,36 @@
 'use client';
 
 import * as ReactPopover from '@radix-ui/react-popover';
-import { Label, AssistiveText, AssistiveTextVariant, DatePicker, Icon, IconType } from '@zinnia/bloom/components';
+import {
+    Label,
+    AssistiveText,
+    AssistiveTextVariant,
+    DatePicker,
+    Icon,
+    IconType,
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { ChangeEvent, cloneElement, forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import {
+    ChangeEvent,
+    cloneElement,
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { zIndexOrder } from '@deps/utils/zIndexOrder';
 
 import { handleKeyPressDateCharactersOnly } from './utils';
 import fieldStyles from '../Field.module.css';
-import { DateInterval, FieldDataActiveTestIds, FieldDateProps, FieldStatus } from '../types';
+import {
+    DateInterval,
+    FieldDataActiveTestIds,
+    FieldDateProps,
+    FieldStatus,
+} from '../types';
 
 export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
     (
@@ -27,12 +47,18 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
         },
         ref
     ) => {
-        if (!!label && (label?.type as React.JSXElementConstructor<any>)?.name !== Label.name) {
+        if (
+            !!label &&
+            (label?.type as React.JSXElementConstructor<any>)?.name !==
+                Label.name
+        ) {
             throw new Error('Required field: label is not of type Label');
         }
         const [calendarOpen, setCalendarOpen] = useState(false);
         const [inputWidth, setInputWidth] = useState(0);
-        const [selectedDate, setSelectedDate] = useState<Date | undefined>(defaultDate ? new Date(defaultDate) : undefined);
+        const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+            defaultDate ? new Date(defaultDate) : undefined
+        );
         const [inputVal, setInputVal] = useState(defaultDate);
 
         const inputContainer = useRef<HTMLInputElement>(null);
@@ -48,9 +74,15 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
 
         useEffect(() => {
             const inputRefCurrent = innerInputRef?.current;
-            inputRefCurrent?.addEventListener('keypress', handleKeyPressDateCharactersOnly);
+            inputRefCurrent?.addEventListener(
+                'keypress',
+                handleKeyPressDateCharactersOnly
+            );
             return () => {
-                inputRefCurrent?.removeEventListener('keypress', handleKeyPressDateCharactersOnly);
+                inputRefCurrent?.removeEventListener(
+                    'keypress',
+                    handleKeyPressDateCharactersOnly
+                );
             };
         }, []);
 
@@ -91,11 +123,22 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
 
         return (
             <div ref={inputContainer}>
-                <div data-testid={FieldDataActiveTestIds.LABEL}>{clonedLabel}</div>
+                <div data-testid={FieldDataActiveTestIds.LABEL}>
+                    {clonedLabel}
+                </div>
 
-                <ReactPopover.Root open={calendarOpen} onOpenChange={setCalendarOpen}>
+                <ReactPopover.Root
+                    open={calendarOpen}
+                    onOpenChange={setCalendarOpen}
+                >
                     <ReactPopover.Trigger style={{ width: '100%' }}>
-                        <div className={clsx(fieldStyles.inputContainer, fieldStyles[status], 'typography-content-body-sm')}>
+                        <div
+                            className={clsx(
+                                fieldStyles.inputContainer,
+                                fieldStyles[status],
+                                'typography-content-body-sm'
+                            )}
+                        >
                             <input
                                 autoComplete="off"
                                 id={inputId}
@@ -118,11 +161,22 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
                         </div>
                     </ReactPopover.Trigger>
                     <ReactPopover.Portal>
-                        <ReactPopover.Content align="end" side="bottom" style={{ zIndex: zIndexOrder.DatePickerDialog }}>
-                            <div className={fieldStyles.datePickerContainer} style={{ width: inputWidth }}>
+                        <ReactPopover.Content
+                            align="end"
+                            side="bottom"
+                            style={{ zIndex: zIndexOrder.DatePickerDialog }}
+                        >
+                            <div
+                                className={fieldStyles.datePickerContainer}
+                                style={{ width: inputWidth }}
+                            >
                                 <DatePicker
                                     mode="single"
-                                    selected={selectedDate ? new Date(selectedDate) : undefined}
+                                    selected={
+                                        selectedDate
+                                            ? new Date(selectedDate)
+                                            : undefined
+                                    }
                                     onSelect={handleDateSelect}
                                     defaultMonth={new Date()}
                                     disabled={
@@ -141,7 +195,11 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
                 </ReactPopover.Root>
                 {fieldStatus === FieldStatus.ERROR && errorMessage && (
                     <div data-testid={FieldDataActiveTestIds.ERROR_MESSAGE}>
-                        <AssistiveText className={fieldStyles.assistiveMessage} text={errorMessage} variant={AssistiveTextVariant.Error} />
+                        <AssistiveText
+                            className={fieldStyles.assistiveMessage}
+                            text={errorMessage}
+                            variant={AssistiveTextVariant.Error}
+                        />
                     </div>
                 )}
             </div>

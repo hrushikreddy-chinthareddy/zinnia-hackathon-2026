@@ -1,7 +1,11 @@
 import '@deps/styles/styles.css';
 import { Meta, StoryObj } from '@storybook/react';
 
-import NavElement, { NavElementSize, NavElementVariant, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementVariant,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 
 const meta: Meta<typeof NavElement> = {
     title: 'Components/NavElement',
@@ -11,7 +15,11 @@ const meta: Meta<typeof NavElement> = {
     },
     argTypes: {
         variant: {
-            options: [NavElementVariant.Default, NavElementVariant.Primary, NavElementVariant.Text],
+            options: [
+                NavElementVariant.Default,
+                NavElementVariant.Primary,
+                NavElementVariant.Text,
+            ],
             control: 'select',
         },
         size: {
@@ -37,7 +45,14 @@ export const NavElementComponent: StoryObj<typeof meta> = {
         const handleClick = () => {
             console.log(`Nav${type}clicked`);
         };
-        return <NavElement type={type} className={className} {...restArgs} onClick={handleClick} />;
+        return (
+            <NavElement
+                type={type}
+                className={className}
+                {...restArgs}
+                onClick={handleClick}
+            />
+        );
     },
 };
 

@@ -39,7 +39,10 @@ describe('Utils Functions', () => {
                         type: 'line',
                         name: 'Test Carrier',
                         color: colors[0],
-                        data: groupedData?.map(item => [dayjs(item.name).unix() * 1000, item.count]),
+                        data: groupedData?.map((item) => [
+                            dayjs(item.name).unix() * 1000,
+                            item.count,
+                        ]),
                     },
                 ]);
             });

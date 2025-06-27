@@ -2,20 +2,35 @@ import { Address } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import NavElement, { NavElementType, NavElementVariant, NavElementSize } from '@deps/components/nav-element/nav-element';
-import Toggle, { ToggleSize, ToggleVariant } from '@deps/components/toggle/toggle';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import NavElement, {
+    NavElementType,
+    NavElementVariant,
+    NavElementSize,
+} from '@deps/components/nav-element/nav-element';
+import Toggle, {
+    ToggleSize,
+    ToggleVariant,
+} from '@deps/components/toggle/toggle';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import SideSheetAddress from '@deps/containers/people-data-cards/address-card//side-sheet/side-sheet-address';
-import { Addresses, sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
+import {
+    Addresses,
+    sortAddressesByType,
+} from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 import { PersonCardProps } from '@deps/containers/people-data-cards/people-data-card-props';
 import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
 interface OpenSideSheet {
@@ -23,23 +38,42 @@ interface OpenSideSheet {
     header: SideSheetPeopleHeaderProps;
 }
 
-const AddressCard = ({ editable = false, infoOnly, party, planCode, policyNumber }: PersonCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.card.address' });
+const AddressCard = ({
+    editable = false,
+    infoOnly,
+    party,
+    planCode,
+    policyNumber,
+}: PersonCardProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.card.address',
+    });
 
     const sideSheet = useSideSheetContext();
 
     const [showAdditional, setShowAdditional] = useState(false);
 
     const { addresses, preferredAddressIndicator } = party ?? {};
-    const [currentAddresses, setCurrentAddresses] = useState<Address[]>(sortAddressesByType({ addresses, preferredAddressIndicator }));
+    const [currentAddresses, setCurrentAddresses] = useState<Address[]>(
+        sortAddressesByType({ addresses, preferredAddressIndicator })
+    );
 
     const showToggle = currentAddresses.length > 4;
 
-    const openSideSheet = ({ address, header: { action, transaction, typeTranslation } }: OpenSideSheet) => {
+    const openSideSheet = ({
+        address,
+        header: { action, transaction, typeTranslation },
+    }: OpenSideSheet) => {
         sideSheet.changeSideSheetContent(
-            <SideSheetPeopleHeader action={action} transaction={transaction} typeTranslation={typeTranslation} />,
+            <SideSheetPeopleHeader
+                action={action}
+                transaction={transaction}
+                typeTranslation={typeTranslation}
+            />,
             <SideSheetAddress
-                isCurrentMailingAddress={party?.preferredAddressIndicator === address?.addressId}
+                isCurrentMailingAddress={
+                    party?.preferredAddressIndicator === address?.addressId
+                }
                 isOnlyAddress={currentAddresses?.length === 1}
                 onCancel={() => sideSheet.handleOpen(false)}
                 party={party}
@@ -81,8 +115,11 @@ const AddressCard = ({ editable = false, infoOnly, party, planCode, policyNumber
                                 openSideSheet({
                                     header: {
                                         action: NonFinancialTransactionActions.Add,
-                                        transaction: NonFinancialTransactions.Address,
-                                        typeTranslation: t('general.new') as string,
+                                        transaction:
+                                            NonFinancialTransactions.Address,
+                                        typeTranslation: t(
+                                            'general.new'
+                                        ) as string,
                                     },
                                 })
                             }
@@ -110,7 +147,11 @@ const AddressCard = ({ editable = false, infoOnly, party, planCode, policyNumber
                 )}
             </div>
 
-            {currentAddresses.length ? AddressesBody : <EmptyCard text={t('general.empty') as string} />}
+            {currentAddresses.length ? (
+                AddressesBody
+            ) : (
+                <EmptyCard text={t('general.empty') as string} />
+            )}
         </CardContainer>
     );
 };

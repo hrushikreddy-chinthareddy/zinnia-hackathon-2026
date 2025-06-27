@@ -11,7 +11,10 @@ import { getNigoExceptions } from '@deps/containers/nigo-entry-container/compone
 import RenewalFormProvider from '@deps/containers/otp/renewal-forms/components/renewal-form-provider';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
@@ -22,16 +25,38 @@ import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { UserPermission } from '@deps/models/user-profile';
-import { mapTaskToActiveRenewalCaseTask, mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
+import {
+    mapTaskToActiveRenewalCaseTask,
+    mapTaskToActiveWithdrawalCaseTask,
+} from '@deps/operations/tasks/v2/helpers';
 import { searchCasesSSR } from '@deps/queries/api/cases';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
-import { getPolicyDetailsSsr, getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
+import {
+    getPolicyDetailsSsr,
+    getPolicyPartiesSSR,
+    searchPolicySSR,
+} from '@deps/queries/api/policies';
 import { getCaseTaskByIdSSR } from '@deps/queries/api/v2/task';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { FEATURE_FLAGS, FeatureKeyIdentifier } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
+import {
+    FEATURE_FLAGS,
+    FeatureKeyIdentifier,
+} from '@deps/utils/optimizely/flags';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logWarn,
+    logError,
+    parseErrorInformation,
+    logInfo,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
@@ -62,10 +87,18 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     partyRoles?: PolicyPartyRoles[];
 }
 
-const isNigoEntryEnabled = (clientId: string, process: string, featureFlagMap: FeatureFlags) => {
-    const identifier = `NIGO_ENTRY_${clientId?.toUpperCase()}_${process?.toUpperCase().replaceAll(' ', '_')}` as FeatureKeyIdentifier;
+const isNigoEntryEnabled = (
+    clientId: string,
+    process: string,
+    featureFlagMap: FeatureFlags
+) => {
+    const identifier = `NIGO_ENTRY_${clientId?.toUpperCase()}_${process
+        ?.toUpperCase()
+        .replaceAll(' ', '_')}` as FeatureKeyIdentifier;
     const featureKey = FEATURE_FLAGS[identifier];
-    return featureKey && featureFlagMap[featureKey] ? featureFlagMap[featureKey] : false;
+    return featureKey && featureFlagMap[featureKey]
+        ? featureFlagMap[featureKey]
+        : false;
 };
 
 const NigoEntry = ({
@@ -99,7 +132,10 @@ const NigoEntry = ({
 
     const isLC = !isFastFeatureEnabled(form.taskType, featureFlagDecisions);
     const accountInfo = useAccountInfo(document.contract, clientCode as string);
-    const contractAccountInfo = useContractAccountInfo(document.contract, planCode as string);
+    const contractAccountInfo = useContractAccountInfo(
+        document.contract,
+        planCode as string
+    );
     const { issueState } = isLC ? accountInfo : contractAccountInfo;
 
     return (
@@ -107,7 +143,11 @@ const NigoEntry = ({
             {caseType === CaseType.Renewal ? (
                 <RenewalFormProvider
                     initialForm={form}
-                    parties={Array.isArray(parties) ? (parties as LifeCadParty[]) : ([] as LifeCadParty[])}
+                    parties={
+                        Array.isArray(parties)
+                            ? (parties as LifeCadParty[])
+                            : ([] as LifeCadParty[])
+                    }
                     form={form}
                     userId={''}
                     document={document}
@@ -167,23 +207,31 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
             const taskId = (query.taskId as string) || '';
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
-                logWarn('getServerSidePropsNigoEntryPage::Access token expired', {
-                    ...parseErrorInformation(e),
-                    ...loggingContext,
-                });
+                logWarn(
+                    'getServerSidePropsNigoEntryPage::Access token expired',
+                    {
+                        ...parseErrorInformation(e),
+                        ...loggingContext,
+                    }
+                );
                 return serverSidePropsLogout();
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
 
             if (!doesUserHasPagePermissions) {
                 return {
@@ -202,11 +250,18 @@ export const getServerSideProps = withPageAuthAndLogging(
                         nextI18nextConfig,
                         ALL_LOCALES
                     ),
-                    await getCaseTaskByIdSSR(taskId, accessToken, loggingContext),
+                    await getCaseTaskByIdSSR(
+                        taskId,
+                        accessToken,
+                        loggingContext
+                    ),
                 ]);
 
                 if (!activeForm) {
-                    logError('nigo-entry::Error getting task by id', loggingContext);
+                    logError(
+                        'nigo-entry::Error getting task by id',
+                        loggingContext
+                    );
                     return {
                         redirect: {
                             destination: `/create-case/error?errorCode=${ERROR_CODES.TASK_INITIALIZATION}`,
@@ -215,16 +270,27 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const { documentNumber, contractNum, clientCode, lob } = activeForm?.data || {};
-                logInfo('nigo-entry::getCaseTaskByIdSSR task active form found', loggingContext);
+                const { documentNumber, contractNum, clientCode, lob } =
+                    activeForm?.data || {};
+                logInfo(
+                    'nigo-entry::getCaseTaskByIdSSR task active form found',
+                    loggingContext
+                );
 
-                const caseType = ProcessesToCaseTypeMap[activeForm.process as Processes];
+                const caseType =
+                    ProcessesToCaseTypeMap[activeForm.process as Processes];
                 const docType = caseType ? docTypes[caseType] : null;
 
                 const form =
                     caseType === CaseType.Renewal
-                        ? mapTaskToActiveRenewalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name })
-                        : mapTaskToActiveWithdrawalCaseTask(activeForm, { ...activeForm?.data, userId: user?.name });
+                        ? mapTaskToActiveRenewalCaseTask(activeForm, {
+                              ...activeForm?.data,
+                              userId: user?.name,
+                          })
+                        : mapTaskToActiveWithdrawalCaseTask(activeForm, {
+                              ...activeForm?.data,
+                              userId: user?.name,
+                          });
 
                 if (!caseType) {
                     logWarn('nigo-entry::Error getting case type', {
@@ -278,7 +344,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 }
 
                 const shouldShowNigoEntry =
-                    caseType !== CaseType.Renewal ? isNigoEntryEnabled(clientCode, caseType, featureFlagDecisions) : true;
+                    caseType !== CaseType.Renewal
+                        ? isNigoEntryEnabled(
+                              clientCode,
+                              caseType,
+                              featureFlagDecisions
+                          )
+                        : true;
                 // If feature flag is not enabled, redirect to error page
                 if (!shouldShowNigoEntry) {
                     logWarn('nigo_entry::feature flag not enabled', {
@@ -297,7 +369,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const taskInfoLink = buildTaskLink(taskId, form?.caseId ?? '', caseType, documentNumber, clientCode);
+                const taskInfoLink = buildTaskLink(
+                    taskId,
+                    form?.caseId ?? '',
+                    caseType,
+                    documentNumber,
+                    clientCode
+                );
                 const filters = {
                     policyNumber: contractNum,
                     limit: 25,
@@ -309,12 +387,23 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
 
                 const nigoFilters = {
-                    categoryIds: ['Form', 'Signature', 'Account Information', 'Data Entry'],
+                    categoryIds: [
+                        'Form',
+                        'Signature',
+                        'Account Information',
+                        'Data Entry',
+                    ],
                     carrier: clientCode?.toUpperCase(),
                     process: activeForm?.process,
                 };
 
-                const document = await getDocumentV2SSR(documentNumber, docType, clientCode?.toUpperCase(), accessToken, loggingContext);
+                const document = await getDocumentV2SSR(
+                    documentNumber,
+                    docType,
+                    clientCode?.toUpperCase(),
+                    accessToken,
+                    loggingContext
+                );
                 if (!document) {
                     logWarn('nigoEntry::Error getting document', {
                         taskId,
@@ -343,36 +432,82 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ...loggingContext,
                 });
 
-                const [parties, searchCasesResponse, policies, nigoExceptionResponse] = await Promise.all([
-                    await getPolicyPartiesSSR(contractNum ?? docContract, clientCode, accessToken as string, loggingContext),
-                    await searchCasesSSR(filters, accessToken, loggingContext, featureFlagDecisions),
-                    await searchPolicySSR(contractNum ?? docContract, [clientCode?.toUpperCase()], accessToken, 1, 0, loggingContext),
-                    await getNigoExceptions(nigoFilters, accessToken, loggingContext),
+                const [
+                    parties,
+                    searchCasesResponse,
+                    policies,
+                    nigoExceptionResponse,
+                ] = await Promise.all([
+                    await getPolicyPartiesSSR(
+                        contractNum ?? docContract,
+                        clientCode,
+                        accessToken as string,
+                        loggingContext
+                    ),
+                    await searchCasesSSR(
+                        filters,
+                        accessToken,
+                        loggingContext,
+                        featureFlagDecisions
+                    ),
+                    await searchPolicySSR(
+                        contractNum ?? docContract,
+                        [clientCode?.toUpperCase()],
+                        accessToken,
+                        1,
+                        0,
+                        loggingContext
+                    ),
+                    await getNigoExceptions(
+                        nigoFilters,
+                        accessToken,
+                        loggingContext
+                    ),
                 ]);
 
                 const planCode = policies?.[0]?.planCode || null;
-                const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
-                logInfo('nigo-entry::Retrieved parties, document, planCode, nigoExceptions and correspondence case search result', {
-                    taskId,
-                    documentNumber,
-                    documentType: docType,
-                    clientCode,
-                    contractNum: contractNum ?? docContract,
-                    planCode,
-                    ...loggingContext,
-                });
+                const { nigoExceptions, nigoSubExceptions } =
+                    nigoExceptionResponse;
+                logInfo(
+                    'nigo-entry::Retrieved parties, document, planCode, nigoExceptions and correspondence case search result',
+                    {
+                        taskId,
+                        documentNumber,
+                        documentType: docType,
+                        clientCode,
+                        contractNum: contractNum ?? docContract,
+                        planCode,
+                        ...loggingContext,
+                    }
+                );
 
                 const latestForm =
                     !isNullEmptyOrUndefined(docType) &&
-                    searchCasesResponse?.data?.find(item => item?.additionalData?.requestSubType?.toUpperCase() === docType.toUpperCase());
+                    searchCasesResponse?.data?.find(
+                        (item) =>
+                            item?.additionalData?.requestSubType?.toUpperCase() ===
+                            docType.toUpperCase()
+                    );
 
-                const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
+                const isLC = !isFastFeatureEnabled(
+                    form?.taskType,
+                    featureFlagDecisions
+                );
 
                 if (!isLC) {
                     // should get parties from policy api
-                    const policy = await getPolicyDetailsSsr(document?.contract, planCode, accessToken, loggingContext, true);
+                    const policy = await getPolicyDetailsSsr(
+                        document?.contract,
+                        planCode,
+                        accessToken,
+                        loggingContext,
+                        true
+                    );
                     if (!policy) {
-                        logInfo('create-case/withdrawal/:id::Policy not found', loggingContext);
+                        logInfo(
+                            'create-case/withdrawal/:id::Policy not found',
+                            loggingContext
+                        );
                         return {
                             redirect: {
                                 destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
@@ -380,7 +515,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                             },
                         };
                     }
-                    logInfo('create-case/withdrawal/:id::Policy details found', loggingContext);
+                    logInfo(
+                        'create-case/withdrawal/:id::Policy details found',
+                        loggingContext
+                    );
 
                     const { parties, partyRoles = [] } = policy ?? {};
 
@@ -402,7 +540,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                             featureFlagDecisions,
                             document,
                             taskInfoLink: taskInfoLink ?? '', // to check this
-                            prevTransactionDetails: latestForm ? latestForm?.additionalData || null : null,
+                            prevTransactionDetails: latestForm
+                                ? latestForm?.additionalData || null
+                                : null,
                             isNigoCase: false,
                         },
                     };
@@ -425,20 +565,29 @@ export const getServerSideProps = withPageAuthAndLogging(
                             featureFlagDecisions,
                             document,
                             taskInfoLink: taskInfoLink ?? '', // to check this
-                            prevTransactionDetails: latestForm ? latestForm?.additionalData || null : null,
+                            prevTransactionDetails: latestForm
+                                ? latestForm?.additionalData || null
+                                : null,
                             isNigoCase: false,
                         },
                     };
                 }
             } catch (error) {
-                logError('nigoEnty::Error', { ...parseErrorInformation(error), ...loggingContext });
+                logError('nigoEnty::Error', {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                });
                 return {
                     props: {},
                 };
             }
         },
     },
-    { file: 'nigo-entry/index', function: 'getServerSideProps', page: 'nigo-entry' }
+    {
+        file: 'nigo-entry/index',
+        function: 'getServerSideProps',
+        page: 'nigo-entry',
+    }
 );
 
 export default NigoEntry;

@@ -1,7 +1,11 @@
 import { FGA_Tuple, BulkCheckTuple } from '@zinnia/utils';
 
 import { UserPermission } from '@deps/models/user-profile';
-import { bulkCheckResponseClient, checkTuple, getCarrierList } from '@deps/queries/api/fga';
+import {
+    bulkCheckResponseClient,
+    checkTuple,
+    getCarrierList,
+} from '@deps/queries/api/fga';
 import {
     checkPermissionsCookieForTuple,
     doesPermissionsHaveCarrierRelation,
@@ -15,15 +19,30 @@ import {
  * @returns {Promise<BulkCheckTuple[]>} A promise that resolves to an array of tuples with permission results.
  * @throws {Error} If an error occurs while checking permission or if no tuples are found.
  */
-export const bulkCheckPermissionsQuery = async ({ tuples }: { tuples: FGA_Tuple[] }): Promise<BulkCheckTuple[]> => {
-    const checkedTuples = tuples.map(tuple => {
-        return { ...tuple, allowed: checkPermissionsCookieForTuple(tuple.relation, tuple.object) };
+export const bulkCheckPermissionsQuery = async ({
+    tuples,
+}: {
+    tuples: FGA_Tuple[];
+}): Promise<BulkCheckTuple[]> => {
+    const checkedTuples = tuples.map((tuple) => {
+        return {
+            ...tuple,
+            allowed: checkPermissionsCookieForTuple(
+                tuple.relation,
+                tuple.object
+            ),
+        };
     });
-    const neededTuples = checkedTuples.filter(tuple => tuple.allowed === undefined);
+    const neededTuples = checkedTuples.filter(
+        (tuple) => tuple.allowed === undefined
+    );
     if (neededTuples.length) {
         const result = await bulkCheckResponseClient({ tuples: neededTuples });
-        result?.data?.tuples?.forEach(tuple => {
-            const index = checkedTuples.findIndex(t => t.relation === tuple.relation && t.object === tuple.object);
+        result?.data?.tuples?.forEach((tuple) => {
+            const index = checkedTuples.findIndex(
+                (t) =>
+                    t.relation === tuple.relation && t.object === tuple.object
+            );
             if (index !== -1) {
                 checkedTuples[index].allowed = tuple.allowed;
             }
@@ -35,7 +54,10 @@ export const bulkCheckPermissionsQuery = async ({ tuples }: { tuples: FGA_Tuple[
         throw 'No tuples found';
     }
 
-    return checkedTuples.map(tuple => ({ ...tuple, allowed: !!tuple.allowed }));
+    return checkedTuples.map((tuple) => ({
+        ...tuple,
+        allowed: !!tuple.allowed,
+    }));
 };
 
 /**
@@ -48,7 +70,12 @@ export const bulkCheckPermissionsQuery = async ({ tuples }: { tuples: FGA_Tuple[
  * @returns {Promise<boolean>} A promise that resolves to a boolean indicating whether the user has permission to access the resource.
  * @throws {Error} If an error occurs while checking permission.
  */
-export const hasPermissionQuery = async (relation: string, tupleObject: string, partyId: string, carrier?: string): Promise<boolean> => {
+export const hasPermissionQuery = async (
+    relation: string,
+    tupleObject: string,
+    partyId: string,
+    carrier?: string
+): Promise<boolean> => {
     // check if the user has the relation at the carrier level
     // if it doesn't exist OR is false at the carrier level, we need to do a tuple check before returning false
     if (!partyId || !relation) return false;
@@ -81,7 +108,10 @@ export const hasPermissionQuery = async (relation: string, tupleObject: string, 
  * @returns {Promise<string[]>} A promise that resolves to an array of carrier IDs.
  * @throws {Error} If an error occurs while retrieving the carrier list.
  */
-export const getCarriersListQuery = async (relation: string, partyId: string): Promise<string[]> => {
+export const getCarriersListQuery = async (
+    relation: string,
+    partyId: string
+): Promise<string[]> => {
     const cookieCarrierList = checkPermissionsCookieForCarrierList(relation);
     if (!partyId || !relation) return [];
     if (cookieCarrierList !== undefined) {
@@ -102,7 +132,10 @@ export const getCarriersListQuery = async (relation: string, partyId: string): P
  * @param {string} partyId The party ID to use for checking the permission.
  * @returns {Promise<boolean>} A promise that resolves to a boolean indicating whether the user has permission to access the page.
  */
-export const doesUserHavePagePermissionQuery = async (permission: UserPermission, partyId: string): Promise<boolean> => {
+export const doesUserHavePagePermissionQuery = async (
+    permission: UserPermission,
+    partyId: string
+): Promise<boolean> => {
     if (!partyId || !permission) return false;
 
     const carriers = await getCarriersListQuery(permission, partyId);

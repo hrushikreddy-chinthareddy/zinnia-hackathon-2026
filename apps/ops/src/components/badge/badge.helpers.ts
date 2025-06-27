@@ -53,7 +53,9 @@ export const getBadgeStatus = (status: PolicyStatus | undefined) => {
     }
 };
 
-export const getBadgeStatusVariant = (status: PolicyStatus | undefined): BadgeVariant => {
+export const getBadgeStatusVariant = (
+    status: PolicyStatus | undefined
+): BadgeVariant => {
     if (status == null) return BadgeVariant.Neutral;
 
     switch (status) {

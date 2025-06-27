@@ -1,5 +1,6 @@
 .additionalInfo {
-    padding: var(--measure-dimension-padding-lg) var(--measure-dimension-padding-2xl);
+    padding: var(--measure-dimension-padding-lg)
+        var(--measure-dimension-padding-2xl);
     vertical-align: middle;
     font-size: small;
     gap: 1;

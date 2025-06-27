@@ -1,7 +1,14 @@
 import xss from 'xss';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import { DisbursementInformation, SupportedValidationOperation } from '@deps/models/case/withdrawal/disbursement-types';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import {
+    DisbursementInformation,
+    SupportedValidationOperation,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 const BankTextField = ({
     fieldLabel,
@@ -18,12 +25,21 @@ const BankTextField = ({
     disableCopyPaste,
 }: DisbursementInformation) => {
     const value = disbursementInformation[fieldName] as string;
-    const realTimeValidationError = validator?.(SupportedValidationOperation.Equal, value, disbursementInformation) || error;
+    const realTimeValidationError =
+        validator?.(
+            SupportedValidationOperation.Equal,
+            value,
+            disbursementInformation
+        ) || error;
 
     const setDataChange = (val: string) => {
-        onDataChange(ogData => ({
+        onDataChange((ogData) => ({
             ...ogData,
-            [fieldName]: ['fboDetails', 'contractNumber', 'payeeName'].includes(fieldName) ? val?.toUpperCase() : val,
+            [fieldName]: ['fboDetails', 'contractNumber', 'payeeName'].includes(
+                fieldName
+            )
+                ? val?.toUpperCase()
+                : val,
         }));
     };
 
@@ -31,7 +47,7 @@ const BankTextField = ({
         <div className={classNames}>
             <Field
                 label={fieldLabel}
-                onChange={e => {
+                onChange={(e) => {
                     setDataChange(xss(e?.target?.value));
                 }}
                 value={value as string}
@@ -44,7 +60,13 @@ const BankTextField = ({
                 maxLength={maxLength}
                 maskOnBlur={maskOnBlur}
                 message={realTimeValidationError}
-                variant={realTimeValidationError ? FieldVariant.Error : isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={
+                    realTimeValidationError
+                        ? FieldVariant.Error
+                        : isFormStateReadOnly
+                        ? FieldVariant.Inactive
+                        : FieldVariant.Default
+                }
                 disableCopyPaste={disableCopyPaste}
             />
         </div>

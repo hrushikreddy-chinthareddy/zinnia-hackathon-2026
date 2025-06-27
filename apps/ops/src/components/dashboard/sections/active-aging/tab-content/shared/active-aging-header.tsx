@@ -5,14 +5,19 @@ import { ChartHeader } from '@deps/components/dashboard/header-components/chart-
 import { ActiveAgingContext } from '../../context/active-aging-context';
 
 export const ActiveAgingHeader = () => {
-    const { activeAgingDataFetching, totalCaseCount } = useContext(ActiveAgingContext);
+    const { activeAgingDataFetching, totalCaseCount } =
+        useContext(ActiveAgingContext);
 
     const totalCases = activeAgingDataFetching ? (
         <div className="blur">
-            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+            <p className={'typography-titles-subtitle'}>
+                {totalCaseCount?.toLocaleString() || '0'} total cases
+            </p>
         </div>
     ) : (
-        <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+        <p className={'typography-titles-subtitle'}>
+            {totalCaseCount?.toLocaleString() || '0'} total cases
+        </p>
     );
 
     return (

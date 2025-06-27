@@ -2,16 +2,27 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect, ChangeEvent } from 'react';
 
-import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldFormat,
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import SelectSimple from '@deps/components/select/select';
 import { SimpleOption } from '@deps/components/select/select.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    NUMERIC_DATE_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 
-import { cdscPeriodOptions, productOptions } from './disclosure-authorization.helpers';
+import {
+    cdscPeriodOptions,
+    productOptions,
+} from './disclosure-authorization.helpers';
 import {
     DisclosureAuthorizationFields,
     DisclosureAuthorizationFieldConfig,
@@ -27,25 +38,47 @@ export function useDisclosureAuthorizationFields(
     formErrors?: FormValidationErrors,
     isFormStateReadOnly?: boolean
 ) {
-    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request.disclosureAuthorization' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, {
+        keyPrefix: 'caseReg60.request.disclosureAuthorization',
+    });
 
-    const [signatureDate, setSignatureDate] = useState(disclosureAuthorization?.signatureDate || '');
-    const [expectedAcctValue, setExpectedAcctValue] = useState(disclosureAuthorization?.expectedAcctValue || '');
-    const [product, setProduct] = useState(disclosureAuthorization?.product || '');
-    const [cdscPeriod, setCdscPeriod] = useState(disclosureAuthorization?.cdscPeriod || '');
-    const [isCdscPeriodDisabled, setIsCdscPeriodDisabled] = useState(disclosureAuthorization?.cdscPeriod === CDSCPeriods.NA ? true : false);
-    const [currentDisclosureAuthorization, setCurrentDisclosureAuthorization] = useState(disclosureAuthorization);
+    const [signatureDate, setSignatureDate] = useState(
+        disclosureAuthorization?.signatureDate || ''
+    );
+    const [expectedAcctValue, setExpectedAcctValue] = useState(
+        disclosureAuthorization?.expectedAcctValue || ''
+    );
+    const [product, setProduct] = useState(
+        disclosureAuthorization?.product || ''
+    );
+    const [cdscPeriod, setCdscPeriod] = useState(
+        disclosureAuthorization?.cdscPeriod || ''
+    );
+    const [isCdscPeriodDisabled, setIsCdscPeriodDisabled] = useState(
+        disclosureAuthorization?.cdscPeriod === CDSCPeriods.NA ? true : false
+    );
+    const [currentDisclosureAuthorization, setCurrentDisclosureAuthorization] =
+        useState(disclosureAuthorization);
 
-    const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: '' };
+    const numberFormat = {
+        type: 'number' as FieldFormat,
+        decimalPlaces: 2,
+        format: '',
+    };
 
     const handleSetSignatureDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const formattedDate = dayjs(e.target.value, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
+        const formattedDate = dayjs(e.target.value, NUMERIC_DATE_FORMAT).format(
+            ZAHARA_API_DATE_FORMAT
+        );
         if (dayjs(formattedDate).isValid()) {
             setSignatureDate(formattedDate);
         }
     };
     useEffect(() => {
-        if (product === Products.retireEase || product === Products.retireEaseChoice) {
+        if (
+            product === Products.retireEase ||
+            product === Products.retireEaseChoice
+        ) {
             setCdscPeriod('');
             setIsCdscPeriodDisabled(true);
         } else {
@@ -58,7 +91,13 @@ export function useDisclosureAuthorizationFields(
             product,
             cdscPeriod,
         });
-    }, [signatureDate, expectedAcctValue, product, cdscPeriod, disclosureAuthorization]);
+    }, [
+        signatureDate,
+        expectedAcctValue,
+        product,
+        cdscPeriod,
+        disclosureAuthorization,
+    ]);
 
     const cdscPeriodField = (label?: string) => (
         <SelectSimple
@@ -69,7 +108,11 @@ export function useDisclosureAuthorizationFields(
             type={FieldType.BaseActive}
             value={cdscPeriod}
             message={formErrors?.cdscPeriod}
-            variant={formErrors?.cdscPeriod ? FieldVariant.Error : FieldVariant.Default}
+            variant={
+                formErrors?.cdscPeriod
+                    ? FieldVariant.Error
+                    : FieldVariant.Default
+            }
             data-testid="cdsc-period-test-id"
             disabled={isCdscPeriodDisabled || isFormStateReadOnly}
             required
@@ -80,7 +123,7 @@ export function useDisclosureAuthorizationFields(
         <Field
             formatOptions={numberFormat}
             leading={<div>$</div>}
-            onChange={e => setExpectedAcctValue(Number(e.target.value))}
+            onChange={(e) => setExpectedAcctValue(Number(e.target.value))}
             label={label || (t(`expectedAcctValue`) as string)}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
@@ -106,7 +149,9 @@ export function useDisclosureAuthorizationFields(
             type={FieldType.BaseActive}
             value={product}
             message={formErrors?.product}
-            variant={formErrors?.product ? FieldVariant.Error : FieldVariant.Default}
+            variant={
+                formErrors?.product ? FieldVariant.Error : FieldVariant.Default
+            }
             data-testid="product-test-id"
             required
             disabled={isFormStateReadOnly}
@@ -115,12 +160,21 @@ export function useDisclosureAuthorizationFields(
 
     const signatureDateField = (label?: string) => (
         <FieldDateSelect
-            className={formErrors?.signatureDate && 'border-2 border-solid border-semantic-error'}
+            className={
+                formErrors?.signatureDate &&
+                'border-2 border-solid border-semantic-error'
+            }
             label={label || (t(`signatureDate`) as string)}
             onChange={handleSetSignatureDateChange}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
-            value={signatureDate ? dayjs(signatureDate, 'YYYY-MM-DD').format(NUMERIC_DATE_FORMAT) : ''}
+            value={
+                signatureDate
+                    ? dayjs(signatureDate, 'YYYY-MM-DD').format(
+                          NUMERIC_DATE_FORMAT
+                      )
+                    : ''
+            }
             message={formErrors?.signatureDate}
             variant={selectVarientByConfig({
                 value: signatureDate || '',
@@ -133,7 +187,9 @@ export function useDisclosureAuthorizationFields(
         />
     );
 
-    const renderField = (field: DisclosureAuthorizationFieldConfig): JSX.Element | null => {
+    const renderField = (
+        field: DisclosureAuthorizationFieldConfig
+    ): JSX.Element | null => {
         switch (field.fieldName) {
             case DisclosureAuthorizationFields.CdscPeriod:
                 return (
@@ -142,7 +198,11 @@ export function useDisclosureAuthorizationFields(
                     </div>
                 );
             case DisclosureAuthorizationFields.ExpectedAcctValue:
-                return <div key={field.fieldName}>{expectedAcctValueField(field.fieldLabel)}</div>;
+                return (
+                    <div key={field.fieldName}>
+                        {expectedAcctValueField(field.fieldLabel)}
+                    </div>
+                );
             case DisclosureAuthorizationFields.Product:
                 return (
                     <div className="col-span-2" key={field.fieldName}>
@@ -150,7 +210,11 @@ export function useDisclosureAuthorizationFields(
                     </div>
                 );
             case DisclosureAuthorizationFields.SignatureDate:
-                return <div key={field.fieldName}>{signatureDateField(field.fieldLabel)}</div>;
+                return (
+                    <div key={field.fieldName}>
+                        {signatureDateField(field.fieldLabel)}
+                    </div>
+                );
 
             default:
                 return null;
@@ -171,16 +235,21 @@ export function DisclosureAuthorization({
     isFormStateReadOnly,
     planCode,
 }: DisclosureAuthorizationProps) {
-    const { renderField, currentDisclosureAuthorization } = useDisclosureAuthorizationFields(
-        disclosureAuthorizationInfo,
-        planCode,
-        formErrors,
-        isFormStateReadOnly
-    );
+    const { renderField, currentDisclosureAuthorization } =
+        useDisclosureAuthorizationFields(
+            disclosureAuthorizationInfo,
+            planCode,
+            formErrors,
+            isFormStateReadOnly
+        );
 
     useEffect(() => {
         onDataChange(currentDisclosureAuthorization);
     }, [currentDisclosureAuthorization]);
 
-    return <div className="my-4 grid w-full grid-cols-3 gap-4">{fields?.map(renderField)}</div>;
+    return (
+        <div className="my-4 grid w-full grid-cols-3 gap-4">
+            {fields?.map(renderField)}
+        </div>
+    );
 }

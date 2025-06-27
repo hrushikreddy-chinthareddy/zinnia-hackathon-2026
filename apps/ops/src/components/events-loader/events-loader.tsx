@@ -1,5 +1,9 @@
-import PageLoader, { PageLoaderVariant } from "@deps/components/page-loader/page-loader";
-import Typography, { TypographyVariant } from "@deps/components/typography/typography";
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 
 export default function EventsLoader({ message }: { message: string }) {
     return (

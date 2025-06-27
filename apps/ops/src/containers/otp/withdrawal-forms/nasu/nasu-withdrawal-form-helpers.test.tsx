@@ -2,33 +2,53 @@ import { renderHook } from '@testing-library/react';
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
-import { AccountType, BankDetails, PaymentMailType, PaymentMethod } from '@deps/models/case/withdrawal/case';
-import { DisbursementParts, DEFAULT_DISBURSEMENT_UPDATE, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    AccountType,
+    BankDetails,
+    PaymentMailType,
+    PaymentMethod,
+} from '@deps/models/case/withdrawal/case';
+import {
+    DisbursementParts,
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DEFAULT_BANK_DETAILS,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 import useNasuConfig from './nasu-withdrawal-form-helpers';
 
-jest.mock('@deps/components/otp-withdrawal-form/form-program/form-program.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-program/form-program.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormProgramValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-program/form-program.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-program/form-program.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormProgramValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
-jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormDisbursementValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormDisbursementValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
 describe('Nasu withdrawal form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
 
     const {
         result: { current },
@@ -84,9 +104,20 @@ describe('Nasu withdrawal form config', () => {
 
         describe('payload generation', () => {
             it('should generate a correct payload for an eft bank type full selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
-                const eftFull: BankDetails = { ...bank, maskedAccountNumber: '1234', isDirectDeposit: { text: true } };
-                expect(eftOption?.generatePayloadFromSelection({ ...bankingDetails, bank: eftFull })).toEqual({
+                const eftOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+                const eftFull: BankDetails = {
+                    ...bank,
+                    maskedAccountNumber: '1234',
+                    isDirectDeposit: { text: true },
+                };
+                expect(
+                    eftOption?.generatePayloadFromSelection({
+                        ...bankingDetails,
+                        bank: eftFull,
+                    })
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -98,10 +129,13 @@ describe('Nasu withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                         },
                     ],
                     disbursmentConsent: {
@@ -125,9 +159,20 @@ describe('Nasu withdrawal form config', () => {
             });
 
             it('should generate a correct payload for an eft bank type masked selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
-                const eftMasked: BankDetails = { ...DEFAULT_BANK_DETAILS, maskedAccountNumber: '1234', isDirectDeposit: { text: false } };
-                expect(eftOption?.generatePayloadFromSelection({ ...bankingDetails, bank: eftMasked })).toEqual({
+                const eftOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+                const eftMasked: BankDetails = {
+                    ...DEFAULT_BANK_DETAILS,
+                    maskedAccountNumber: '1234',
+                    isDirectDeposit: { text: false },
+                };
+                expect(
+                    eftOption?.generatePayloadFromSelection({
+                        ...bankingDetails,
+                        bank: eftMasked,
+                    })
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -139,10 +184,13 @@ describe('Nasu withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                         },
                     ],
                     disbursmentConsent: {
@@ -166,13 +214,20 @@ describe('Nasu withdrawal form config', () => {
             });
 
             it('should generate a correct payload for a wire selection', () => {
-                const wireOption = disbursementOptions.find(option => option.value === PaymentMethod.Wire);
+                const wireOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.Wire
+                );
                 const wireBankDetails: BankDetails = {
                     ...DEFAULT_BANK_DETAILS,
                     maskedAccountNumber: null,
                     isDirectDeposit: { text: true },
                 };
-                expect(wireOption?.generatePayloadFromSelection({ ...bankingDetails, bank: wireBankDetails })).toEqual({
+                expect(
+                    wireOption?.generatePayloadFromSelection({
+                        ...bankingDetails,
+                        bank: wireBankDetails,
+                    })
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Wire },
                     paymentMailType: { text: null },
@@ -184,10 +239,13 @@ describe('Nasu withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                         },
                     ],
                     disbursmentConsent: {
@@ -211,8 +269,12 @@ describe('Nasu withdrawal form config', () => {
             });
 
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions.find(option => option.value === PaymentMailType.Check);
-                expect(checkOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const checkOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                expect(
+                    checkOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },

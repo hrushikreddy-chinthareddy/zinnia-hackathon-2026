@@ -23,11 +23,18 @@ describe('CreateDisclosure', () => {
             contractComparison: [],
         };
         const setContractComparisons = jest.fn();
-        const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+        const t: TFunction = (key: string | string[]) =>
+            key as unknown as TFunctionDetailedResult<string>;
 
         const { disclosureConfig } = getMassMutualReg60Config(t);
 
-        render(<CreateDisclosure disclosure={discloureData} onDisclosureChange={setContractComparisons} formConfig={disclosureConfig} />);
+        render(
+            <CreateDisclosure
+                disclosure={discloureData}
+                onDisclosureChange={setContractComparisons}
+                formConfig={disclosureConfig}
+            />
+        );
         expect(screen.queryByTestId('disclosure-title')).toBeInTheDocument();
     });
 
@@ -44,12 +51,21 @@ describe('CreateDisclosure', () => {
             contractComparison: [],
         };
         const setContractComparisons = jest.fn();
-        const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+        const t: TFunction = (key: string | string[]) =>
+            key as unknown as TFunctionDetailedResult<string>;
 
         const { disclosureConfig } = getMassMutualReg60Config(t);
-        render(<CreateDisclosure disclosure={discloureData} onDisclosureChange={setContractComparisons} formConfig={disclosureConfig} />);
+        render(
+            <CreateDisclosure
+                disclosure={discloureData}
+                onDisclosureChange={setContractComparisons}
+                formConfig={disclosureConfig}
+            />
+        );
 
-        expect(screen.queryByTestId('comparison-contract')).not.toBeInTheDocument();
+        expect(
+            screen.queryByTestId('comparison-contract')
+        ).not.toBeInTheDocument();
     });
 
     it('should show list of contract comparisons', () => {
@@ -131,10 +147,17 @@ describe('CreateDisclosure', () => {
             ],
         };
         const setContractComparisons = jest.fn();
-        const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+        const t: TFunction = (key: string | string[]) =>
+            key as unknown as TFunctionDetailedResult<string>;
 
         const { disclosureConfig } = getMassMutualReg60Config(t);
-        render(<CreateDisclosure disclosure={discloureData} onDisclosureChange={setContractComparisons} formConfig={disclosureConfig} />);
+        render(
+            <CreateDisclosure
+                disclosure={discloureData}
+                onDisclosureChange={setContractComparisons}
+                formConfig={disclosureConfig}
+            />
+        );
 
         expect(screen.queryByTestId('comparison-contract')).toBeInTheDocument();
     });
@@ -218,14 +241,23 @@ describe('CreateDisclosure', () => {
             ],
         };
         const setContractComparisons = jest.fn();
-        const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+        const t: TFunction = (key: string | string[]) =>
+            key as unknown as TFunctionDetailedResult<string>;
 
         const { disclosureConfig } = getMassMutualReg60Config(t);
 
-        render(<CreateDisclosure disclosure={discloureData} onDisclosureChange={setContractComparisons} formConfig={disclosureConfig} />);
+        render(
+            <CreateDisclosure
+                disclosure={discloureData}
+                onDisclosureChange={setContractComparisons}
+                formConfig={disclosureConfig}
+            />
+        );
 
         fireEvent.click(screen.getByText('addNewComparison'));
-        expect(screen.getAllByTestId('comparison-contract')[0]).toBeInTheDocument();
+        expect(
+            screen.getAllByTestId('comparison-contract')[0]
+        ).toBeInTheDocument();
         fireEvent.click(screen.getByText('addNewComparison'));
     });
 
@@ -374,15 +406,26 @@ describe('CreateDisclosure', () => {
             ],
         };
         const setContractComparisons = jest.fn();
-        const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+        const t: TFunction = (key: string | string[]) =>
+            key as unknown as TFunctionDetailedResult<string>;
 
         const { disclosureConfig } = getMassMutualReg60Config(t);
 
-        render(<CreateDisclosure disclosure={discloureData} onDisclosureChange={setContractComparisons} formConfig={disclosureConfig} />);
+        render(
+            <CreateDisclosure
+                disclosure={discloureData}
+                onDisclosureChange={setContractComparisons}
+                formConfig={disclosureConfig}
+            />
+        );
 
         fireEvent.click(screen.getByTestId('remove-contract'));
 
-        expect(screen.getAllByTestId('comparison-contract')[0]).toBeInTheDocument();
-        expect(screen.getAllByTestId('comparison-contract')[1]).toBeInTheDocument();
+        expect(
+            screen.getAllByTestId('comparison-contract')[0]
+        ).toBeInTheDocument();
+        expect(
+            screen.getAllByTestId('comparison-contract')[1]
+        ).toBeInTheDocument();
     });
 });

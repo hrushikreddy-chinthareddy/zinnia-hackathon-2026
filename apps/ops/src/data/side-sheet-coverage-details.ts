@@ -20,14 +20,18 @@ export interface SideSheetCoverageColDto {
     eligibleForIncreaseUntil: string;
 }
 
-export const toSideSheetCoverageDto = (policy: Policy): SideSheetCoverageColDto => {
+export const toSideSheetCoverageDto = (
+    policy: Policy
+): SideSheetCoverageColDto => {
     if (!policy) return policy;
 
     const { coverage, policyYear } = policy;
 
     const baseDeathBenefit = coverage?.coverageLayers?.[0]?.currentAmount ?? 0;
 
-    const changesAllowedInPolicyYear = String(coverage?.maximumAnnualCoverageChangeAllowedPerPolicy);
+    const changesAllowedInPolicyYear = String(
+        coverage?.maximumAnnualCoverageChangeAllowedPerPolicy
+    );
 
     const coverageChangeUnit = coverage?.minimumCoverageDecreaseAmount;
 
@@ -39,13 +43,21 @@ export const toSideSheetCoverageDto = (policy: Policy): SideSheetCoverageColDto 
 
     const availableIncrease = coverage?.maximumCoverageIncreaseAmount ?? 0;
 
-    const policyAge = policyYear ?? 0 < 1 ? '1 year' : policyYear === 1 ? '1 year' : `${policyYear} years`;
+    const policyAge =
+        policyYear ?? 0 < 1
+            ? '1 year'
+            : policyYear === 1
+            ? '1 year'
+            : `${policyYear} years`;
 
     const issueDate = policy.policyDates?.issueDate;
 
     const eligibleForIncreaseUntil =
-        String(coverage?.maximumAgeNumberCoverageAmountIncrease === 0 ? 'N/A' : coverage?.maximumAgeNumberCoverageAmountIncrease) ??
-        DEFAULT_ERROR_STRING;
+        String(
+            coverage?.maximumAgeNumberCoverageAmountIncrease === 0
+                ? 'N/A'
+                : coverage?.maximumAgeNumberCoverageAmountIncrease
+        ) ?? DEFAULT_ERROR_STRING;
 
     return {
         baseDeathBenefit,
@@ -61,7 +73,9 @@ export const toSideSheetCoverageDto = (policy: Policy): SideSheetCoverageColDto 
     };
 };
 
-export const getSideSheetCoverageColDefs = (t: TFunction): DataDefinition<SideSheetCoverageColDto>[] => [
+export const getSideSheetCoverageColDefs = (
+    t: TFunction
+): DataDefinition<SideSheetCoverageColDto>[] => [
     {
         key: 'baseDeathBenefit',
         label: t('baseDeathBenefit'),

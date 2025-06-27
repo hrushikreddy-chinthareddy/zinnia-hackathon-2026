@@ -9,7 +9,9 @@ describe('DotContainer Component', () => {
     };
 
     it('renders dot container with left and right sides', () => {
-        const { getByText, container } = render(<DotContainer {...defaultProps} />);
+        const { getByText, container } = render(
+            <DotContainer {...defaultProps} />
+        );
         const leftSideElement = getByText('Left Side');
         const rightSideElement = getByText('Right Side');
         const dotElement = container.querySelector('hr'); // The dot character, which is the content of the dot element
@@ -24,10 +26,18 @@ describe('DotContainer Component', () => {
             dotLeftSideClassName: 'custom-left-side',
             dotRightSideClassName: 'custom-right-side',
         };
-        const { container } = render(<DotContainer {...defaultProps} {...customClassNames} />);
-        const dotContainerElement = container.querySelector('.dot-container.custom-container');
-        const leftSideElement = container.querySelector('.dot-left-side.custom-left-side');
-        const rightSideElement = container.querySelector('.dot-right-side.custom-right-side');
+        const { container } = render(
+            <DotContainer {...defaultProps} {...customClassNames} />
+        );
+        const dotContainerElement = container.querySelector(
+            '.dot-container.custom-container'
+        );
+        const leftSideElement = container.querySelector(
+            '.dot-left-side.custom-left-side'
+        );
+        const rightSideElement = container.querySelector(
+            '.dot-right-side.custom-right-side'
+        );
         expect(dotContainerElement).toBeInTheDocument();
         expect(leftSideElement).toBeInTheDocument();
         expect(rightSideElement).toBeInTheDocument();
@@ -35,7 +45,9 @@ describe('DotContainer Component', () => {
 
     it('applies custom class name to dot element', () => {
         const customDotClassName = 'custom-dot';
-        const { container } = render(<DotContainer {...defaultProps} dotClassName={customDotClassName} />);
+        const { container } = render(
+            <DotContainer {...defaultProps} dotClassName={customDotClassName} />
+        );
         const dotElement = container.querySelector('.dot.custom-dot');
         expect(dotElement).toBeInTheDocument();
     });
@@ -51,7 +63,12 @@ describe('DotContainer Component', () => {
     });
 
     it('renders any valid ReactNode for the left and right sides', () => {
-        const { getByText } = render(<DotContainer dotLeftSide={<div>Left Side Div</div>} dotRightSide={<span>Right Side Span</span>} />);
+        const { getByText } = render(
+            <DotContainer
+                dotLeftSide={<div>Left Side Div</div>}
+                dotRightSide={<span>Right Side Span</span>}
+            />
+        );
         const leftSideElement = getByText('Left Side Div');
         const rightSideElement = getByText('Right Side Span');
         expect(leftSideElement).toBeInTheDocument();

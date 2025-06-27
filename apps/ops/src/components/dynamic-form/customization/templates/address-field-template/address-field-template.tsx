@@ -1,6 +1,9 @@
 import { ObjectFieldTemplateProps } from '@rjsf/utils';
 
-export default function AddressFieldTemplate({ properties, uiSchema = {} }: ObjectFieldTemplateProps): JSX.Element {
+export default function AddressFieldTemplate({
+    properties,
+    uiSchema = {},
+}: ObjectFieldTemplateProps): JSX.Element {
     return (
         <div className="w-full max-w-lg bg-gray-100 p-6 rounded-md">
             <div className="flex flex-wrap gap-4">
@@ -22,7 +25,10 @@ export default function AddressFieldTemplate({ properties, uiSchema = {} }: Obje
                             : 'w-1/5';
 
                     return (
-                        <div key={name} className={`${widthClass} flex flex-col`}>
+                        <div
+                            key={name}
+                            className={`${widthClass} flex flex-col`}
+                        >
                             {content}
                         </div>
                     );

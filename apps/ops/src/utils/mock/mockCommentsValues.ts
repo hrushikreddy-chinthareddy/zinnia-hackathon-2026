@@ -4,7 +4,7 @@ export type Comment = {
     userName: string;
     comment: string;
     submissionDate: string;
-}
+};
 
 export const generateComments = (x: number) =>
     Array(x)

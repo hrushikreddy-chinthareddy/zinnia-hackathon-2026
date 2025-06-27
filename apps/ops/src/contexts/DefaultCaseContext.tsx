@@ -1,4 +1,7 @@
-import { IdentificationType, Policy } from '@xd/api-types/dist/generated-types/sor';
+import {
+    IdentificationType,
+    Policy,
+} from '@xd/api-types/dist/generated-types/sor';
 import { policyOwner } from '@xd/utils/dist';
 import { createContext, useContext, useState } from 'react';
 
@@ -23,17 +26,26 @@ type DefaultCaseContextProps = {
     user: UserProfile;
     submitFailed: boolean;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
-    setDefaultCaseData: React.Dispatch<React.SetStateAction<DefaultDataEntryTask>>;
+    setDefaultCaseData: React.Dispatch<
+        React.SetStateAction<DefaultDataEntryTask>
+    >;
     correlationId: string;
 };
 
-export const DefaultCaseContext = createContext<DefaultCaseContextProps | undefined>(defaultCorrespondenceState);
+export const DefaultCaseContext = createContext<
+    DefaultCaseContextProps | undefined
+>(defaultCorrespondenceState);
 
-const getCaseDetails = (policy: Policy, user: UserProfile): DefaultDataEntryTask => {
+const getCaseDetails = (
+    policy: Policy,
+    user: UserProfile
+): DefaultDataEntryTask => {
     const owner = policyOwner(policy);
     const ssn =
-        owner?.identifications?.find(identification => identification.identificationType === IdentificationType.SSN)?.identificationValue ||
-        undefined;
+        owner?.identifications?.find(
+            (identification) =>
+                identification.identificationType === IdentificationType.SSN
+        )?.identificationValue || undefined;
     return {
         caseDetails: {
             caseType: '',
@@ -62,12 +74,26 @@ type DefaultCaseProviderProps = {
     user: UserProfile;
     correlationId: string;
 };
-export const DefaultCaseProvider = ({ children, policy, user, correlationId }: DefaultCaseProviderProps) => {
-    const [defaultCaseData, setDefaultCaseData] = useState<DefaultDataEntryTask>(getCaseDetails(policy, user));
+export const DefaultCaseProvider = ({
+    children,
+    policy,
+    user,
+    correlationId,
+}: DefaultCaseProviderProps) => {
+    const [defaultCaseData, setDefaultCaseData] =
+        useState<DefaultDataEntryTask>(getCaseDetails(policy, user));
     const [submitFailed, setSubmitFailed] = useState(false);
     return (
         <DefaultCaseContext.Provider
-            value={{ defaultCaseData, setDefaultCaseData, policy, user, submitFailed, setSubmitFailed, correlationId }}
+            value={{
+                defaultCaseData,
+                setDefaultCaseData,
+                policy,
+                user,
+                submitFailed,
+                setSubmitFailed,
+                correlationId,
+            }}
         >
             {children}
         </DefaultCaseContext.Provider>
@@ -78,7 +104,9 @@ export const useDefaultCase = () => {
     const context = useContext(DefaultCaseContext);
 
     if (!context) {
-        throw new Error('useDefaultCase must be used within a DefaultCaseProvider');
+        throw new Error(
+            'useDefaultCase must be used within a DefaultCaseProvider'
+        );
     }
     return context;
 };

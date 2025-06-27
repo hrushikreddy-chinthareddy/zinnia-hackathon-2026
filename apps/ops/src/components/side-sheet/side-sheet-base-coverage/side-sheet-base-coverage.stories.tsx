@@ -1,7 +1,10 @@
 import { Meta } from '@storybook/react';
 
 import Button from '@deps/components/button/button';
-import { SideSheetProvider, useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import {
+    SideSheetProvider,
+    useSideSheetContext,
+} from '@deps/contexts/SideSheetContext';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
 import SideSheetCoverage from './side-sheet-base-coverage';
@@ -12,7 +15,7 @@ export default {
     title: 'Components/SideSheet',
     component: SideSheetCoverage,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <SideSheetProvider>
                     <Story />
@@ -25,7 +28,10 @@ export default {
 export const BaseCoverage = () => {
     const sideSheet = useSideSheetContext();
     const openSideSheet = () => {
-        sideSheet.changeSideSheetContent('Related Policies', <SideSheetCoverage policy={mockPolicy} />);
+        sideSheet.changeSideSheetContent(
+            'Related Policies',
+            <SideSheetCoverage policy={mockPolicy} />
+        );
         sideSheet.handleOpen(true);
     };
 

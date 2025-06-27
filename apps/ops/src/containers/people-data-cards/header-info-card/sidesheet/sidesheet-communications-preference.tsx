@@ -1,12 +1,22 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { CommunicationPreferenceChange, CommunicationPreferenceChangeRequest } from '@zinnia/api-types/types/bpm';
-import { PreferredCommunicationType, Email, Address, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    CommunicationPreferenceChange,
+    CommunicationPreferenceChangeRequest,
+} from '@zinnia/api-types/types/bpm';
+import {
+    PreferredCommunicationType,
+    Email,
+    Address,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import CaseDocumentSelect, {
     CaseDocumentOption,
     PROCESS_WITHOUT_CASE_DOCUMENT,
@@ -56,20 +66,29 @@ export const SidesheetCommunicationsPreference = ({
     emails,
     addresses,
 }: SideSheetCommnunicationPreferenceProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.communicationpreference' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.sideSheet.communicationpreference',
+    });
     const { t: defaultT } = useTranslation();
 
     const INITIAL_BODY: CommunicationPreferenceChangeRequest = {
         correlationId: uuidV4(),
     };
 
-    const [body, setBody] = useState<CommunicationPreferenceChangeRequest>(INITIAL_BODY);
+    const [body, setBody] =
+        useState<CommunicationPreferenceChangeRequest>(INITIAL_BODY);
     const [newCaseId, setNewCaseId] = useState<string | undefined>(undefined);
-    const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
+    const [caseDocumentOptions, setCaseDocumentOptions] = useState<
+        CaseDocumentOption[]
+    >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
-    const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+    const [validationResults, setValidationResults] = useState<
+        ValidationResult[]
+    >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
-    const [selectedOption, setSelectedOption] = useState<CommunicationPreferenceOption | undefined>({
+    const [selectedOption, setSelectedOption] = useState<
+        CommunicationPreferenceOption | undefined
+    >({
         contactType: party?.preferredCommunicationType,
         contactInfo: party?.preferredCommunication,
     });
@@ -78,7 +97,10 @@ export const SidesheetCommunicationsPreference = ({
 
     const partyFullName = party?.fullName ?? '';
 
-    const stopLoading = currentErrors === undefined ? true : !!Object.entries(currentErrors).length;
+    const stopLoading =
+        currentErrors === undefined
+            ? true
+            : !!Object.entries(currentErrors).length;
 
     const mainCtaText = t('mainCta.update');
 
@@ -97,7 +119,9 @@ export const SidesheetCommunicationsPreference = ({
     const handleChange = (value: string) => {
         if (value.includes('addressId')) {
             const addressId = value.split('-')[1];
-            const address = addresses.find(address => address.addressId === addressId);
+            const address = addresses.find(
+                (address) => address.addressId === addressId
+            );
             const newOption = {
                 contactType: PreferredCommunicationType.REGULARMAIL,
                 contactInfo: address,
@@ -107,7 +131,7 @@ export const SidesheetCommunicationsPreference = ({
         }
         if (value.includes('emailId')) {
             const emailId = value.split('-')[1];
-            const email = emails.find(email => email.emailId === emailId);
+            const email = emails.find((email) => email.emailId === emailId);
             const newOption = {
                 contactType: PreferredCommunicationType.EMAIL,
                 contactInfo: email,
@@ -118,7 +142,7 @@ export const SidesheetCommunicationsPreference = ({
 
     const handleSubmit = async () => {
         if (!caseId && caseId !== PROCESS_WITHOUT_CASE_DOCUMENT) {
-            setBody(prevBody => ({
+            setBody((prevBody) => ({
                 ...INITIAL_BODY,
                 ...prevBody,
                 caseId: PROCESS_WITHOUT_CASE_DOCUMENT,
@@ -126,7 +150,12 @@ export const SidesheetCommunicationsPreference = ({
             return;
         }
 
-        const errors = getFormErrors({ preferredCommunication: selectedContactInfo, caseId: caseId ?? '', isDelete: false, t: defaultT });
+        const errors = getFormErrors({
+            preferredCommunication: selectedContactInfo,
+            caseId: caseId ?? '',
+            isDelete: false,
+            t: defaultT,
+        });
         if (Object.keys(errors).length > 0) {
             setCurrentErrors(errors);
             return;
@@ -135,14 +164,17 @@ export const SidesheetCommunicationsPreference = ({
         if (!selectedContactInfo) {
             setCurrentErrors({
                 ...currentErrors,
-                communicationPreference: 'selected contact info is missing' + JSON.stringify(selectedContactInfo),
+                communicationPreference:
+                    'selected contact info is missing' +
+                    JSON.stringify(selectedContactInfo),
             });
         }
 
         if (!planCode) {
             setCurrentErrors({
                 ...currentErrors,
-                communicationPreference: 'plan code is missing' + JSON.stringify(planCode),
+                communicationPreference:
+                    'plan code is missing' + JSON.stringify(planCode),
             });
             return;
         }
@@ -150,7 +182,8 @@ export const SidesheetCommunicationsPreference = ({
         if (!partyId) {
             setCurrentErrors({
                 ...currentErrors,
-                communicationPreference: 'party id is missing' + JSON.stringify(partyId),
+                communicationPreference:
+                    'party id is missing' + JSON.stringify(partyId),
             });
             return;
         }
@@ -158,7 +191,8 @@ export const SidesheetCommunicationsPreference = ({
         if (!policyNumber) {
             setCurrentErrors({
                 ...currentErrors,
-                communicationPreference: 'policy number is missing' + JSON.stringify(policyNumber),
+                communicationPreference:
+                    'policy number is missing' + JSON.stringify(policyNumber),
             });
             return;
         }
@@ -167,15 +201,24 @@ export const SidesheetCommunicationsPreference = ({
             preferredCommunicationType: CommunicationPreferenceChange.preferredCommunicationType;
             email?: string;
         } = {
-            preferredCommunicationType: CommunicationPreferenceChange.preferredCommunicationType.NOPREFERENCE,
+            preferredCommunicationType:
+                CommunicationPreferenceChange.preferredCommunicationType
+                    .NOPREFERENCE,
         };
 
-        if (selectedOption?.contactType === PreferredCommunicationType.REGULARMAIL) {
-            preferredCommunication.preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL;
+        if (
+            selectedOption?.contactType ===
+            PreferredCommunicationType.REGULARMAIL
+        ) {
+            preferredCommunication.preferredCommunicationType =
+                CommunicationPreferenceChange.preferredCommunicationType.REGULARMAIL;
         }
         if (selectedOption?.contactType === PreferredCommunicationType.EMAIL) {
-            preferredCommunication.preferredCommunicationType = CommunicationPreferenceChange.preferredCommunicationType.EMAIL;
-            preferredCommunication.email = (selectedOption.contactInfo as Email)?.emailAddress;
+            preferredCommunication.preferredCommunicationType =
+                CommunicationPreferenceChange.preferredCommunicationType.EMAIL;
+            preferredCommunication.email = (
+                selectedOption.contactInfo as Email
+            )?.emailAddress;
         }
 
         const response = await updateEDeliveryPreferenceByPlanCode({
@@ -206,7 +249,7 @@ export const SidesheetCommunicationsPreference = ({
 
     const sortedEmails = sortEmailsByType({ emails: emails });
 
-    const emailRadioOptions = sortedEmails.map(role => ({
+    const emailRadioOptions = sortedEmails.map((role) => ({
         label: role.emailAddress,
         value: role.emailId,
         type: NonFinancialTransactionIdKeys.Email,
@@ -219,7 +262,9 @@ export const SidesheetCommunicationsPreference = ({
               label: preferredAddress.addressType,
               value: preferredAddress.addressId,
               type: NonFinancialTransactionIdKeys.Address,
-              children: <AddressDetails condensed={true} address={preferredAddress} />,
+              children: (
+                  <AddressDetails condensed={true} address={preferredAddress} />
+              ),
           }
         : null;
 
@@ -227,23 +272,37 @@ export const SidesheetCommunicationsPreference = ({
         case ViewState.Loading:
             return <LoadingState />;
         case ViewState.Alert:
-            return <AlertState ctaAction={() => setViewState(ViewState.Default)} />;
+            return (
+                <AlertState ctaAction={() => setViewState(ViewState.Default)} />
+            );
         case ViewState.BpmError:
             return (
                 <BpmErrorState
                     onCancel={onCancel}
                     onContinue={handleSubmit}
                     setViewState={setViewState}
-                    transaction={NonFinancialTransactions.CommunicationPreference}
+                    transaction={
+                        NonFinancialTransactions.CommunicationPreference
+                    }
                     validationResults={validationResults}
                 >
                     {selectedContactInfo && (
                         <>
-                            {selectedOption?.contactType === PreferredCommunicationType.EMAIL && (
-                                <EmailDetails condensed={true} email={selectedOption.contactInfo as Email} />
+                            {selectedOption?.contactType ===
+                                PreferredCommunicationType.EMAIL && (
+                                <EmailDetails
+                                    condensed={true}
+                                    email={selectedOption.contactInfo as Email}
+                                />
                             )}
-                            {selectedOption?.contactType === PreferredCommunicationType.REGULARMAIL && (
-                                <AddressDetails condensed={true} address={selectedOption.contactInfo as Address} />
+                            {selectedOption?.contactType ===
+                                PreferredCommunicationType.REGULARMAIL && (
+                                <AddressDetails
+                                    condensed={true}
+                                    address={
+                                        selectedOption.contactInfo as Address
+                                    }
+                                />
                             )}
                         </>
                     )}
@@ -256,7 +315,9 @@ export const SidesheetCommunicationsPreference = ({
                     name={partyFullName}
                     onCancel={onCancel}
                     onContinue={handleSubmit}
-                    transaction={NonFinancialTransactions.CommunicationPreference}
+                    transaction={
+                        NonFinancialTransactions.CommunicationPreference
+                    }
                 />
             );
         case ViewState.Warn:
@@ -268,7 +329,9 @@ export const SidesheetCommunicationsPreference = ({
                         setViewState(ViewState.Loading);
                         handleSubmit();
                     }}
-                    transaction={NonFinancialTransactions.CommunicationPreference}
+                    transaction={
+                        NonFinancialTransactions.CommunicationPreference
+                    }
                 />
             );
         case ViewState.Success:
@@ -278,14 +341,20 @@ export const SidesheetCommunicationsPreference = ({
                     isNigo={!!validationResults?.length}
                     name={partyFullName}
                     onCancel={onCancel}
-                    transaction={NonFinancialTransactions.CommunicationPreference}
+                    transaction={
+                        NonFinancialTransactions.CommunicationPreference
+                    }
                     caseId={newCaseId}
                 />
             );
         case ViewState.Default:
         default:
             return (
-                <div role="group" id="comm-pref-form" className="flex flex-col gap-8 p-8">
+                <div
+                    role="group"
+                    id="comm-pref-form"
+                    className="flex flex-col gap-8 p-8"
+                >
                     <CaseDocumentSelect
                         caseDocumentOptions={caseDocumentOptions}
                         caseId={caseId}
@@ -297,9 +366,15 @@ export const SidesheetCommunicationsPreference = ({
                         setCurrentErrors={setCurrentErrors}
                         setViewState={setViewState}
                     />
-                    <div role="group" className="flex flex-col gap-4" id="comm-pref-radios">
+                    <div
+                        role="group"
+                        className="flex flex-col gap-4"
+                        id="comm-pref-radios"
+                    >
                         <Label size="lg" labelFor="comm-pref-radios">
-                            <span className="typography-labels-label-lg">{t('labels.form')}</span>
+                            <span className="typography-labels-label-lg">
+                                {t('labels.form')}
+                            </span>
                         </Label>
                         <RadioGroup.Root
                             id="comm-pref-radio-group"
@@ -307,11 +382,17 @@ export const SidesheetCommunicationsPreference = ({
                             value={selectedRadioOption}
                             onValueChange={handleChange}
                         >
-                            <div className="flex flex-col gap-md " role="group" id="comm-pref-email">
+                            <div
+                                className="flex flex-col gap-md "
+                                role="group"
+                                id="comm-pref-email"
+                            >
                                 <Label size="lg" labelFor="comm-pref-email">
-                                    <span className="typography-desktop-headline-4-d">{t('labels.email')}</span>
+                                    <span className="typography-desktop-headline-4-d">
+                                        {t('labels.email')}
+                                    </span>
                                 </Label>
-                                {emailRadioOptions.map(role => (
+                                {emailRadioOptions.map((role) => (
                                     <RadioGroup.Item
                                         className="hover:gray-300 border-2 text-start rounded p-4 border-border-light hover:border-border-hover data-[state=checked]:border-border-selected overflow-auto"
                                         key={`people-chip-${role.label}`}
@@ -322,9 +403,18 @@ export const SidesheetCommunicationsPreference = ({
                                 ))}
                             </div>
                             {addressRadioOptions && (
-                                <div className="flex flex-col gap-md" role="group" id="comm-pref-address">
-                                    <Label size="lg" labelFor="comm-pref-address">
-                                        <span className="typography-desktop-headline-4-d">{t('labels.address')}</span>
+                                <div
+                                    className="flex flex-col gap-md"
+                                    role="group"
+                                    id="comm-pref-address"
+                                >
+                                    <Label
+                                        size="lg"
+                                        labelFor="comm-pref-address"
+                                    >
+                                        <span className="typography-desktop-headline-4-d">
+                                            {t('labels.address')}
+                                        </span>
                                     </Label>
                                     <RadioGroup.Item
                                         className="hover:gray-300 border-2 text-start rounded p-4 border-border-light hover:border-border-hover data-[state=checked]:border-border-selected overflow-auto"
@@ -335,14 +425,23 @@ export const SidesheetCommunicationsPreference = ({
                                 </div>
                             )}
                             {!!currentErrors?.address && (
-                                <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.address} />
+                                <AssistiveText
+                                    variant={AssistiveTextVariant.Error}
+                                    text={currentErrors.address}
+                                />
                             )}
                             {!!currentErrors?.emailAddress && (
-                                <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.emailAddress} />
+                                <AssistiveText
+                                    variant={AssistiveTextVariant.Error}
+                                    text={currentErrors.emailAddress}
+                                />
                             )}
                         </RadioGroup.Root>
                         {!!currentErrors?.communicationPreference && (
-                            <AssistiveText variant={AssistiveTextVariant.Error} text={currentErrors.communicationPreference} />
+                            <AssistiveText
+                                variant={AssistiveTextVariant.Error}
+                                text={currentErrors.communicationPreference}
+                            />
                         )}
                     </div>
                     <TransactionCta

@@ -2,10 +2,21 @@ import { AxiosResponse } from 'axios';
 
 import { Nigo, OnbaseCase } from '@deps/models/case/case';
 import { DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
-import { CalculateRmdBody, CalculateRmdResponse } from '@deps/models/case/withdrawal/rmd';
-import { ProductFund, ProductFundsRequestBody } from '@deps/models/integration/product-funds';
+import {
+    CalculateRmdBody,
+    CalculateRmdResponse,
+} from '@deps/models/case/withdrawal/rmd';
+import {
+    ProductFund,
+    ProductFundsRequestBody,
+} from '@deps/models/integration/product-funds';
 import { browserLogInfo } from '@deps/utils/browser-logging';
-import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    logInfo,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -16,13 +27,26 @@ const ssrBaseUrl = `${apiServerBaseUrl}/integration/v1`;
 
 export const getDigitalFormSSR = async (
     accessToken: string,
-    queryParams: { contractNumber: string; clientCode: string; source: string; taskType?: string },
+    queryParams: {
+        contractNumber: string;
+        clientCode: string;
+        source: string;
+        taskType?: string;
+    },
     logCtx: LoggingContext
 ): Promise<DigitalFormWithdrawal | null> => {
-    const loggingContext = { ...logCtx, inputs: { queryParams }, file: 'queries/api/integration', function: 'getDigitalFormSSR' };
+    const loggingContext = {
+        ...logCtx,
+        inputs: { queryParams },
+        file: 'queries/api/integration',
+        function: 'getDigitalFormSSR',
+    };
     try {
         const url = new URL(`${ssrBaseUrl}/digital/form`);
-        logInfo('getDigitalFormSSR', { ...loggingContext, url: url.toString() });
+        logInfo('getDigitalFormSSR', {
+            ...loggingContext,
+            url: url.toString(),
+        });
         url.search = new URLSearchParams(queryParams).toString();
 
         const { data } = await serverHttpClient.get<DigitalFormWithdrawal>(
@@ -64,14 +88,17 @@ export const getProductFunds = async ({
     }
 
     try {
-        const { data } = await client.post<ProductFundsRequestBody, AxiosResponse<ProductFund[]>>(`${baseUrl}/lifecad/getEligibleFunds`, {
+        const { data } = await client.post<
+            ProductFundsRequestBody,
+            AxiosResponse<ProductFund[]>
+        >(`${baseUrl}/lifecad/getEligibleFunds`, {
             contractNumber,
             clientCode,
             expiryDate,
             planCode,
             sourceSystem,
         });
-        console.log("Retrieved prouct funds", data)
+        console.log('Retrieved prouct funds', data);
         return data;
     } catch (e) {
         console.error('Error fetching product funds', e);
@@ -79,7 +106,11 @@ export const getProductFunds = async ({
     }
 };
 
-export const calculateRmd = async (query: CalculateRmdBody, policyNumber: string, clientCode: string): Promise<CalculateRmdResponse> => {
+export const calculateRmd = async (
+    query: CalculateRmdBody,
+    policyNumber: string,
+    clientCode: string
+): Promise<CalculateRmdResponse> => {
     try {
         const response = await client.post<CalculateRmdBody, AxiosResponse>(
             `${baseUrl}/${clientCode}/rmd/${policyNumber}/calculate`,
@@ -87,8 +118,14 @@ export const calculateRmd = async (query: CalculateRmdBody, policyNumber: string
         );
         return response.data;
     } catch (error: any) {
-        console.error('calculate RMD::An error occurred retrieving calculate RMD response', error);
-        throw new Error(error?.data?.status?.statusMessage || 'An error occurred retrieving calculate RMD response');
+        console.error(
+            'calculate RMD::An error occurred retrieving calculate RMD response',
+            error
+        );
+        throw new Error(
+            error?.data?.status?.statusMessage ||
+                'An error occurred retrieving calculate RMD response'
+        );
     }
 };
 
@@ -98,7 +135,12 @@ export const getOnbaseCaseDetailsSSR = async (
     accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<Promise<OnbaseCase | null>> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/integration', function: 'getOnbaseCaseDetailsSSR', inputs: { lob, caseId } };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/integration',
+        function: 'getOnbaseCaseDetailsSSR',
+        inputs: { lob, caseId },
+    };
     try {
         const url = `${ssrBaseUrl}/onbase/getCaseDetails`;
         const formData = {
@@ -116,7 +158,12 @@ export const getOnbaseCaseDetailsSSR = async (
         };
 
         logInfo('getOnbaseCaseDetailsSSR', loggingContext);
-        const { data } = await serverHttpClient.post<any, AxiosResponse>(url, formData, config, loggingContext);
+        const { data } = await serverHttpClient.post<any, AxiosResponse>(
+            url,
+            formData,
+            config,
+            loggingContext
+        );
         return data;
     } catch (error: any) {
         logError('getOnbaseCaseDetailsSSR', {
@@ -133,10 +180,23 @@ export const checkNigoExistsSSR = async (
     accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<boolean> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/integration', function: 'checkNigoExistsSSR', inputs: { lob, caseId } };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/integration',
+        function: 'checkNigoExistsSSR',
+        inputs: { lob, caseId },
+    };
     try {
-        const caseDetails = await getOnbaseCaseDetailsSSR(lob, caseId, accessToken as string, loggingContext);
-        const nigoExists = caseDetails?.nigos?.some((nigo: Nigo) => nigo?.status.toUpperCase() === 'NEW') || false;
+        const caseDetails = await getOnbaseCaseDetailsSSR(
+            lob,
+            caseId,
+            accessToken as string,
+            loggingContext
+        );
+        const nigoExists =
+            caseDetails?.nigos?.some(
+                (nigo: Nigo) => nigo?.status.toUpperCase() === 'NEW'
+            ) || false;
         logInfo('checkNigoExistsSSR', { ...loggingContext, nigoExists });
         return nigoExists;
     } catch (error: any) {
@@ -165,14 +225,14 @@ export const getDocuments = async (
     const body = {
         lob,
         docType,
-        contractNumber
+        contractNumber,
     };
 
     try {
-        const {data} = await client.post<any, AxiosResponse>(
-                `${baseUrl}/onbase/getdocuments`,
-                body
-            );
+        const { data } = await client.post<any, AxiosResponse>(
+            `${baseUrl}/onbase/getdocuments`,
+            body
+        );
 
         browserLogInfo('getDocuments::success', {
             payload: body,
@@ -180,7 +240,7 @@ export const getDocuments = async (
         });
         return data.data || [];
     } catch (error) {
-         browserLogInfo('getDocuments::error', {
+        browserLogInfo('getDocuments::error', {
             ...parseErrorInformation(error),
             payload: body,
             function: 'integration.getDocuments',

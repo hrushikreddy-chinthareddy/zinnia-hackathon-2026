@@ -2,7 +2,12 @@ import { useCallback, useState } from 'react';
 
 import { TaskDocument, DocumentSource } from '@deps/models/case/task-instance';
 
-export const useGetCaseDocs = (): [boolean, any, TaskDocument[] | undefined, TaskDocument[] | undefined] => {
+export const useGetCaseDocs = (): [
+    boolean,
+    any,
+    TaskDocument[] | undefined,
+    TaskDocument[] | undefined
+] => {
     const [loading, setLoading] = useState(false);
     const [workingDocument, setWorkingDocument] = useState<TaskDocument[]>();
     const [relatedDocument, setRelatedDocument] = useState<TaskDocument[]>();
@@ -13,7 +18,9 @@ export const useGetCaseDocs = (): [boolean, any, TaskDocument[] | undefined, Tas
             try {
                 setLoading(true);
                 if (documents) {
-                    const workingDoc = documents.filter(item => item.documentSource === DocumentSource.Working);
+                    const workingDoc = documents.filter(
+                        (item) => item.documentSource === DocumentSource.Working
+                    );
                     const relatedDoc = [] as TaskDocument[];
                     setWorkingDocument(workingDoc);
                     setRelatedDocument(relatedDoc);

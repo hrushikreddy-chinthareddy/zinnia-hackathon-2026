@@ -7,10 +7,16 @@ import React, { useEffect, useState, useMemo } from 'react';
 
 import OtpLayout from '@deps/components/otp-layout';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
-import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import WithdrawalDrawer, {
+    SidebarContent,
+} from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import OftDlicForm from '@deps/containers/otp/oft-forms/dlic/dlic-oft-form';
 import FlicOftWithdrawalForm from '@deps/containers/otp/oft-forms/flic/flic-oft-form';
@@ -30,9 +36,15 @@ import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { determineFormToRender } from '@deps/helpers/form-selector.helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { deStringifyTrueFalseNull, toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    deStringifyTrueFalseNull,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -40,20 +52,37 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
-import { ActiveWithdrawalCase, Carrier, PartyRoles, QualTypes } from '@deps/models/case/withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    Carrier,
+    PartyRoles,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logError,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
 
@@ -75,7 +104,10 @@ const DefaultSidebarContent = {
     annuitantName: '',
 };
 
-const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): Record<string, React.ReactNode> => ({
+const getFormComponentMap = (
+    planCode: string | '',
+    qualType: QualTypes | ''
+): Record<string, React.ReactNode> => ({
     [Carrier.FLIC]: <FlicOftWithdrawalForm qualType={qualType} />,
     [Carrier.GLCO]: <GlcoOftWithdrawalForm />,
     [Carrier.MASS]: <MassOftWithdrawalForm />,
@@ -89,13 +121,26 @@ const getFormComponentMap = (planCode: string | '', qualType: QualTypes | ''): R
     [Carrier.PRDN]: <PrdnOftWithdrawalForm />,
 });
 
-export default function OftCase({ document, form, featureFlagDecisions, user, parties }: OftCaseProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+export default function OftCase({
+    document,
+    form,
+    featureFlagDecisions,
+    user,
+    parties,
+}: OftCaseProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const router = useRouter();
 
     const { clientId, clientIdOverride } = router.query;
-    const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
-    const { qualType, issueState, planCode } = useAccountInfo(document.contract, clientId as string);
+    const clientForFormDetermination = isNonProductionEnvironment()
+        ? clientIdOverride || clientId
+        : clientId;
+    const { qualType, issueState, planCode } = useAccountInfo(
+        document.contract,
+        clientId as string
+    );
 
     useSegmentPageTracker(user, SegmentPageName.OftCase, {
         clientId,
@@ -108,7 +153,10 @@ export default function OftCase({ document, form, featureFlagDecisions, user, pa
         planCode,
     });
 
-    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap(planCode, qualType));
+    const formParts = determineFormToRender(
+        clientForFormDetermination as string,
+        getFormComponentMap(planCode, qualType)
+    );
 
     if (!formParts) {
         console.error('OFTCase::No form parts', {
@@ -116,22 +164,30 @@ export default function OftCase({ document, form, featureFlagDecisions, user, pa
             clientId,
             contract: document?.contract,
         });
-        router.push(`/create-case/error?errorCode=${ERROR_CODES.OFT_FORM_CREATION}`);
+        router.push(
+            `/create-case/error?errorCode=${ERROR_CODES.OFT_FORM_CREATION}`
+        );
     }
 
     const [taskApiError, setTaskApiError] = useState('');
 
     // Transaction Details
-    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(DefaultSidebarContent);
+    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
+        DefaultSidebarContent
+    );
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
     const [isOpenOverride, setIsOpenOverride] = useState<null | boolean>(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const initialForm = form;
     const ownerName =
-        initialForm?.data?.formRequest?.formParty?.parties?.find(party => party.partyRoleType === PartyRoles.OWNER)?.fullName || '';
+        initialForm?.data?.formRequest?.formParty?.parties?.find(
+            (party) => party.partyRoleType === PartyRoles.OWNER
+        )?.fullName || '';
     const annuitantName =
-        initialForm?.data?.formRequest?.formParty?.parties?.find(party => party.partyRoleType === PartyRoles.ANNUITANT)?.fullName || '';
+        initialForm?.data?.formRequest?.formParty?.parties?.find(
+            (party) => party.partyRoleType === PartyRoles.ANNUITANT
+        )?.fullName || '';
 
     useEffect(() => {
         setTransactionDetail({
@@ -168,7 +224,9 @@ export default function OftCase({ document, form, featureFlagDecisions, user, pa
         'grid-cols-[350px,auto]': !shouldOverlay,
     });
 
-    const formTitle = t(`formTitles.oft`, { carrier: getCarrierNameByClientId(clientForFormDetermination as string) });
+    const formTitle = t(`formTitles.oft`, {
+        carrier: getCarrierNameByClientId(clientForFormDetermination as string),
+    });
     const caseDetailsData = {
         clientId: clientId as string,
         policyNum: document.contract || '',
@@ -178,7 +236,10 @@ export default function OftCase({ document, form, featureFlagDecisions, user, pa
         <>
             <PageHead titleKey="createCaseOft" />
             <DiaryNotesProvider caseDetails={caseDetailsData}>
-                <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
+                <OtpLayout
+                    contractNumber={document.contract}
+                    clientId={clientId as string}
+                >
                     <div className={classes}>
                         <WithdrawalDrawer
                             content={transactionDetail}
@@ -188,11 +249,15 @@ export default function OftCase({ document, form, featureFlagDecisions, user, pa
                         />
                         <div>
                             <header className="px-5 pt-2">
-                                <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
+                                <Typography variant={TypographyVariant.H1}>
+                                    {formTitle}
+                                </Typography>
                             </header>
                             {isLoading && (
                                 <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                                    <PageLoader variant={PageLoaderVariant.Center} />
+                                    <PageLoader
+                                        variant={PageLoaderVariant.Center}
+                                    />
                                 </div>
                             )}
                             <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0">
@@ -201,19 +266,26 @@ export default function OftCase({ document, form, featureFlagDecisions, user, pa
                                         form={form}
                                         issueState={issueState}
                                         initialForm={initialForm}
-                                        featureFlagDecisions={featureFlagDecisions}
+                                        featureFlagDecisions={
+                                            featureFlagDecisions
+                                        }
                                         parties={parties}
                                     >
                                         {
                                             <>
                                                 {formParts}
                                                 <NoteSection />
-                                                <FormErrors t={t} taskApiError={taskApiError}></FormErrors>
+                                                <FormErrors
+                                                    t={t}
+                                                    taskApiError={taskApiError}
+                                                ></FormErrors>
                                                 <FormControls
                                                     document={document}
                                                     t={t}
                                                     setIsLoading={setIsLoading}
-                                                    setTaskApiError={setTaskApiError}
+                                                    setTaskApiError={
+                                                        setTaskApiError
+                                                    }
                                                 ></FormControls>
                                             </>
                                         }
@@ -232,8 +304,18 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const {
+                locale = DEFAULT_LOCALE,
+                params,
+                query,
+                res,
+                req,
+            } = context;
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
@@ -245,11 +327,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -269,8 +352,17 @@ export const getServerSideProps = withPageAuthAndLogging(
             /*
             If feature flag is not enabled, redirect to error page
         */
-            if (!isFormFeatureEnabled(ProcessType.OFT, clientId, featureFlagDecisions)) {
-                logWarn('create-case/oft/:id::feature flag not enabled', loggingContext);
+            if (
+                !isFormFeatureEnabled(
+                    ProcessType.OFT,
+                    clientId,
+                    featureFlagDecisions
+                )
+            ) {
+                logWarn(
+                    'create-case/oft/:id::feature flag not enabled',
+                    loggingContext
+                );
                 return {
                     redirect: {
                         destination: '/403',
@@ -281,11 +373,20 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const [translations, document] = await Promise.all([
                 serverSideTranslations(locale, [TranslationFiles.COMMON]),
-                getDocumentV2SSR(documentNumber, DocumentType.Oft, clientId.toUpperCase(), accessToken, loggingContext),
+                getDocumentV2SSR(
+                    documentNumber,
+                    DocumentType.Oft,
+                    clientId.toUpperCase(),
+                    accessToken,
+                    loggingContext
+                ),
             ]);
 
             if (!document?.contract) {
-                logError('create-case/oft/:id::Error getting document', loggingContext);
+                logError(
+                    'create-case/oft/:id::Error getting document',
+                    loggingContext
+                );
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
@@ -294,11 +395,19 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-            const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
+            const shouldShowNewExperience =
+                featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            const isUsedLastSaved =
+                shouldShowNewExperience &&
+                deStringifyTrueFalseNull(getLastSaved.toLowerCase());
             if (shouldShowNewExperience && action !== 'readonly') {
                 logInfo('create-case/oft/:id:Checking NIGO', loggingContext);
-                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
+                const isNigoCase = await checkNigoExistsSSR(
+                    clientId.toUpperCase(),
+                    document.caseId,
+                    accessToken,
+                    loggingContext
+                );
                 if (isNigoCase && !isUsedLastSaved) {
                     logInfo('create-case/oft/:id::Nigo exists for case', {
                         ...loggingContext,
@@ -313,7 +422,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
             } else {
-                logInfo('create-case/oft/:id:Skipping NIGO check', loggingContext);
+                logInfo(
+                    'create-case/oft/:id:Skipping NIGO check',
+                    loggingContext
+                );
             }
 
             const form = await initializeOTPTaskSSR({
@@ -331,14 +443,22 @@ export const getServerSideProps = withPageAuthAndLogging(
             });
 
             const parties = document?.contract
-                ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                ? await getPolicyPartiesSSR(
+                      document?.contract,
+                      clientId,
+                      accessToken as string,
+                      loggingContext
+                  )
                 : [];
 
             if (!form) {
-                logWarn('create-case/oft/id::Error initializing task oft form', {
-                    ...loggingContext,
-                    contract: document?.contract,
-                });
+                logWarn(
+                    'create-case/oft/id::Error initializing task oft form',
+                    {
+                        ...loggingContext,
+                        contract: document?.contract,
+                    }
+                );
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.OFT_TASK_INITIALIZATION}`,
@@ -360,5 +480,9 @@ export const getServerSideProps = withPageAuthAndLogging(
             };
         },
     },
-    { file: 'create-case/oft/[id]/index', function: 'getServerSideProps', page: 'create-case/oft/:id' }
+    {
+        file: 'create-case/oft/[id]/index',
+        function: 'getServerSideProps',
+        page: 'create-case/oft/:id',
+    }
 );

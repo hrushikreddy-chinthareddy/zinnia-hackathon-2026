@@ -1,5 +1,8 @@
 // Converts the Base 64 encoded binaryData string into a blob on the client to allow for downloading.
-export const b64ToBlob = (b64data: string, contentType = 'application/octet-stream'): Blob | null => {
+export const b64ToBlob = (
+    b64data: string,
+    contentType = 'application/octet-stream'
+): Blob | null => {
     try {
         const chunkSize = 1024;
         const byteChars = atob(b64data);
@@ -20,7 +23,10 @@ export const b64ToBlob = (b64data: string, contentType = 'application/octet-stre
         const blob = new Blob(chunks, { type: contentType });
         return blob;
     } catch (error) {
-        console.error('document-downloader::b64ToBlob::Error converting document response to Blob', error);
+        console.error(
+            'document-downloader::b64ToBlob::Error converting document response to Blob',
+            error
+        );
         return null;
     }
 };

@@ -70,5 +70,7 @@ export enum TransactionTypes {
 }
 
 export const getTrasanctionsByIds = (ids: string[]): TransactionOption[] => {
-    return transactionOptions.filter(transaction => ids.includes(transaction.value));
+    return transactionOptions.filter((transaction) =>
+        ids.includes(transaction.value)
+    );
 };

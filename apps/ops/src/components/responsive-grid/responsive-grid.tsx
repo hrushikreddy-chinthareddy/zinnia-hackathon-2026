@@ -29,7 +29,15 @@ export type ResponsiveGridProps = {
  * @param {ResponsiveGridProps} props - The props for the component.
  * @returns {JSX.Element} The rendered component.
  */
-const ResponsiveGrid = ({ maxColumns = 4, columnGap, rowGap, minItemWidth, children, className = '', Tag = 'ul' }: ResponsiveGridProps) => (
+const ResponsiveGrid = ({
+    maxColumns = 4,
+    columnGap,
+    rowGap,
+    minItemWidth,
+    children,
+    className = '',
+    Tag = 'ul',
+}: ResponsiveGridProps) => (
     <Tag
         data-testid={ResponsiveGridTest.CONTAINER}
         className={`responsive-grid w-full ${className}`}

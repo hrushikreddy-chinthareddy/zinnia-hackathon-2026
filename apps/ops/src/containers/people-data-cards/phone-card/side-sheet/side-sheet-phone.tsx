@@ -1,14 +1,26 @@
 import { Transition } from '@headlessui/react';
-import { Phone, PhoneType, Party, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    Phone,
+    PhoneType,
+    Party,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
-import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
+import CaseDocumentSelect, {
+    CaseDocumentOption,
+    SetStateCaseId,
+} from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
 import Radio, { RadioOrientation } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
@@ -24,7 +36,9 @@ import SuccessState from '@deps/components/side-sheet/side-sheet-transaction/non
 import WarnState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/warn-state';
 import { NonFinancialTransactionIdKeys } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import {
     Errors,
@@ -59,8 +73,17 @@ type SideSheetPhoneProps = {
     updatePhone?: Phone;
 };
 
-export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCurrentPhones, updatePhone }: SideSheetPhoneProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.phone' });
+export const SideSheetPhone = ({
+    onCancel,
+    party,
+    planCode,
+    policyNumber,
+    setCurrentPhones,
+    updatePhone,
+}: SideSheetPhoneProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.sideSheet.phone',
+    });
     const { t: defaultT } = useTranslation();
 
     const INITIAL_PHONE: Phone = {
@@ -77,13 +100,21 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
         reverseInitiator: false,
     };
 
-    const [action, setAction] = useState(updatePhone ? NonFinancialTransactionActions.Edit : NonFinancialTransactionActions.Add);
+    const [action, setAction] = useState(
+        updatePhone
+            ? NonFinancialTransactionActions.Edit
+            : NonFinancialTransactionActions.Add
+    );
     const [body, setBody] = useState(INITIAL_BODY);
-    const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
+    const [caseDocumentOptions, setCaseDocumentOptions] = useState<
+        CaseDocumentOption[]
+    >([]);
     const [country, setCountry] = useState('US' as keyof typeof countries);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
     const [phone, setPhone] = useState<Phone>(updatePhone ?? INITIAL_PHONE);
-    const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+    const [validationResults, setValidationResults] = useState<
+        ValidationResult[]
+    >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
 
@@ -93,14 +124,18 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
 
     const isAdd = action === NonFinancialTransactionActions.Add;
     const isDelete = action === NonFinancialTransactionActions.Delete;
-    const stopLoading = currentErrors === undefined ? true : !!Object.entries(currentErrors).length;
+    const stopLoading =
+        currentErrors === undefined
+            ? true
+            : !!Object.entries(currentErrors).length;
 
     const bestTimeOptions = getBestTimeOptions({ t: defaultT });
     const phoneTypeOptions = getPhoneTypeOptions({ t: defaultT });
     const timeZoneOptions = getTimeZoneOptions({ t: defaultT });
 
     const phoneTypeTranslation = mapPhoneTypeToTranslation(phoneType, defaultT);
-    const phoneTypeTranslationLowercase = phoneTypeTranslation.toLocaleLowerCase();
+    const phoneTypeTranslationLowercase =
+        phoneTypeTranslation.toLocaleLowerCase();
     const mainCtaText = isAdd
         ? t('mainCta.add', { type: phoneTypeTranslationLowercase })
         : t('mainCta.update', { type: phoneTypeTranslationLowercase });
@@ -159,7 +194,12 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
             });
         }
 
-        handleResponse({ response, setViewState, setValidationResults, setNewCaseId });
+        handleResponse({
+            response,
+            setViewState,
+            setValidationResults,
+            setNewCaseId,
+        });
     };
 
     switch (viewState) {
@@ -199,7 +239,12 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                 />
             );
         case ViewState.Success:
-            updateOptimistically({ action, idKey: NonFinancialTransactionIdKeys.Phone, newItem: phone, setState: setCurrentPhones });
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Phone,
+                newItem: phone,
+                setState: setCurrentPhones,
+            });
 
             return (
                 <SuccessState
@@ -238,7 +283,12 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                             aria-label={t('fieldLabels.type') as string}
                             items={phoneTypeOptions}
                             label={t('fieldLabels.type') as string}
-                            onChange={event => setPhone({ ...phone, phoneType: event.target.value as PhoneType })}
+                            onChange={(event) =>
+                                setPhone({
+                                    ...phone,
+                                    phoneType: event.target.value as PhoneType,
+                                })
+                            }
                             orientation={RadioOrientation.Vertical}
                             value={phone.phoneType}
                         />
@@ -254,20 +304,33 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                             label={t('fieldLabels.number') as string}
                             leading={countries[country].emoji}
                             message={currentErrors?.phoneNumber}
-                            onChange={event => {
-                                setCurrentErrors(prevState => {
-                                    const { phoneNumber, ...errors } = prevState ?? {};
+                            onChange={(event) => {
+                                setCurrentErrors((prevState) => {
+                                    const { phoneNumber, ...errors } =
+                                        prevState ?? {};
                                     return errors;
                                 });
-                                setPhone(prevState => ({
+                                setPhone((prevState) => ({
                                     ...prevState,
-                                    areaCode: event.target.value.substring(0, 3),
-                                    dialNumber: event.target.value.substring(3, 10),
+                                    areaCode: event.target.value.substring(
+                                        0,
+                                        3
+                                    ),
+                                    dialNumber: event.target.value.substring(
+                                        3,
+                                        10
+                                    ),
                                 }));
                             }}
-                            onDropdownChange={value => {
+                            onDropdownChange={(value) => {
                                 setCountry(value as keyof typeof countries);
-                                setPhone(prevState => ({ ...prevState, countryCode: countries[value as keyof typeof countries].phone }));
+                                setPhone((prevState) => ({
+                                    ...prevState,
+                                    countryCode:
+                                        countries[
+                                            value as keyof typeof countries
+                                        ].phone,
+                                }));
                             }}
                             options={countryOptions}
                             prefix={`+${countries[country].phone}`}
@@ -275,7 +338,11 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                             type={FieldType.BaseActive}
                             value={formatPhoneNumberRaw(phone)}
                             variant={
-                                isDelete ? FieldVariant.Inactive : currentErrors?.phoneNumber ? FieldVariant.Error : FieldVariant.Default
+                                isDelete
+                                    ? FieldVariant.Inactive
+                                    : currentErrors?.phoneNumber
+                                    ? FieldVariant.Error
+                                    : FieldVariant.Default
                             }
                         />
                         <Transition
@@ -290,29 +357,47 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                             show={phone.phoneType === PhoneType.BUSINESS}
                         >
                             <Field
-                                aria-label={t('fieldLabels.extension') as string}
+                                aria-label={
+                                    t('fieldLabels.extension') as string
+                                }
                                 className="w-[120px]"
                                 formatOptions={{ format: '####' }}
                                 label={t('fieldLabels.extension') as string}
-                                onChange={event => setPhone(prevState => ({ ...prevState, extension: event.target.value }))}
+                                onChange={(event) =>
+                                    setPhone((prevState) => ({
+                                        ...prevState,
+                                        extension: event.target.value,
+                                    }))
+                                }
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={phone.extension}
-                                variant={isDelete ? FieldVariant.Inactive : FieldVariant.Default}
+                                variant={
+                                    isDelete
+                                        ? FieldVariant.Inactive
+                                        : FieldVariant.Default
+                                }
                             />
                         </Transition>
                     </div>
                 </div>
 
                 <div className="flex flex-col gap-4">
-                    <Typography variant={TypographyVariant.LabelLg}>{t('fieldLabels.preferredTime')}</Typography>
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {t('fieldLabels.preferredTime')}
+                    </Typography>
                     <div className="flex flex-col gap-6">
                         <SelectSimple
                             aria-label={t('fieldLabels.bestTime') as string}
                             className="!w-1/2"
                             disabled={isDelete}
                             label={t('fieldLabels.bestTime') as string}
-                            onChange={value => setPhone(prevState => ({ ...prevState, bestTime: value }))}
+                            onChange={(value) =>
+                                setPhone((prevState) => ({
+                                    ...prevState,
+                                    bestTime: value,
+                                }))
+                            }
                             options={bestTimeOptions}
                             size={FieldSize.Small}
                             value={phone.bestTime}
@@ -322,7 +407,12 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                             className="!w-1/2"
                             disabled={isDelete}
                             label={t('fieldLabels.timeZone') as string}
-                            onChange={value => setPhone(prevState => ({ ...prevState, timezone: value }))}
+                            onChange={(value) =>
+                                setPhone((prevState) => ({
+                                    ...prevState,
+                                    timezone: value,
+                                }))
+                            }
                             options={timeZoneOptions}
                             size={FieldSize.Small}
                             value={phone.timezone ?? ''}
@@ -335,8 +425,12 @@ export const SideSheetPhone = ({ onCancel, party, planCode, policyNumber, setCur
                 <CheckboxText
                     checked={isDelete}
                     label={t('fieldLabels.removeNumber')}
-                    onChange={e => {
-                        setAction(e ? NonFinancialTransactionActions.Delete : NonFinancialTransactionActions.Edit);
+                    onChange={(e) => {
+                        setAction(
+                            e
+                                ? NonFinancialTransactionActions.Delete
+                                : NonFinancialTransactionActions.Edit
+                        );
                     }}
                 />
             )}

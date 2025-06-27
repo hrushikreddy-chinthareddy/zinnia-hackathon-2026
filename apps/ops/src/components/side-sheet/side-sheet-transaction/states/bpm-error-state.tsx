@@ -2,10 +2,16 @@ import { useTranslation } from 'next-i18next';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
 import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import BannerAlert, { BannerVariant } from '@deps/components/banner-alert/banner-alert';
+import BannerAlert, {
+    BannerVariant,
+} from '@deps/components/banner-alert/banner-alert';
 import CardInfo from '@deps/components/card/card-info/card-info';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import { ValidationResult } from '@deps/queries/api/bpm';
@@ -25,12 +31,27 @@ interface BpmErrorStateProps {
     label?: string;
 }
 
-const BpmErrorState = ({ children, onCancel, onContinue, setViewState, validationResults, showEdit = true, date = '', label }: BpmErrorStateProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.states.bpmError' });
-    const newChildren = React.cloneElement(children!, { effectiveDate: date, label });
+const BpmErrorState = ({
+    children,
+    onCancel,
+    onContinue,
+    setViewState,
+    validationResults,
+    showEdit = true,
+    date = '',
+    label,
+}: BpmErrorStateProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'transactions.states.bpmError',
+    });
+    const newChildren = React.cloneElement(children!, {
+        effectiveDate: date,
+        label,
+    });
 
     const [isNigoSelected, setIsNigoSelected] = useState(false);
-    const [showAcknowledgeNigoError, setShowAcknowledgeNigoError] = useState(false);
+    const [showAcknowledgeNigoError, setShowAcknowledgeNigoError] =
+        useState(false);
     const [stopLoading, setStopLoading] = useState(true);
 
     const clickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -44,12 +65,21 @@ const BpmErrorState = ({ children, onCancel, onContinue, setViewState, validatio
         <div className="flex flex-col">
             <CardInfo
                 className="my-8"
-                icon={<HexExclamationIcon className="text-semantic-error" height={50} width={50} />}
+                icon={
+                    <HexExclamationIcon
+                        className="text-semantic-error"
+                        height={50}
+                        width={50}
+                    />
+                }
                 subtitle={t('subtitle')}
                 title={t('title')}
             />
             <div className="flex flex-col gap-6 px-8">
-                <div className="flex gap-6 rounded border-2 border-gray-200 p-6" onClick={clickHandler}>
+                <div
+                    className="flex gap-6 rounded border-2 border-gray-200 p-6"
+                    onClick={clickHandler}
+                >
                     {showEdit ? children : newChildren}
                     {showEdit && (
                         <NavElement
@@ -66,21 +96,33 @@ const BpmErrorState = ({ children, onCancel, onContinue, setViewState, validatio
                 </div>
 
                 {!!validationResults?.length &&
-                    validationResults.map(validationResult => {
-                        const { error, errorCode, resolution } = validationResult;
+                    validationResults.map((validationResult) => {
+                        const { error, errorCode, resolution } =
+                            validationResult;
                         return (
-                            <BannerAlert canDismiss={false} key={`bpm-validation-banner-${errorCode}`} variant={BannerVariant.Error}>
+                            <BannerAlert
+                                canDismiss={false}
+                                key={`bpm-validation-banner-${errorCode}`}
+                                variant={BannerVariant.Error}
+                            >
                                 <b>{error}</b> {resolution}
                             </BannerAlert>
                         );
                     })}
 
                 <CheckboxText
-                    assistiveText={showAcknowledgeNigoError ? { text: t('nigoAssistive'), variant: AssistiveTextVariant.Error } : undefined}
+                    assistiveText={
+                        showAcknowledgeNigoError
+                            ? {
+                                  text: t('nigoAssistive'),
+                                  variant: AssistiveTextVariant.Error,
+                              }
+                            : undefined
+                    }
                     checked={isNigoSelected}
                     label={t('nigo')}
                     onChange={() => {
-                        setIsNigoSelected(prevState => {
+                        setIsNigoSelected((prevState) => {
                             if (!prevState) setShowAcknowledgeNigoError(false);
                             return !prevState;
                         });

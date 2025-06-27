@@ -2,13 +2,22 @@ import { useQuery } from '@tanstack/react-query';
 import { Transaction } from '@zinnia/api-types/types/sor';
 import { Pagination } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { Fragment, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+    Fragment,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import HistoryEventCard from '@deps/components/history-event-card/history-event-card';
 import { LabelVariant, labelMapping } from '@deps/components/label/label';
 import DividerLabel from '@deps/components/tailwind-components/divider-label';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { getTransactionsQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
@@ -31,8 +40,18 @@ export default function EventFeed({ isSideSheetOpen }: EventFeedProps) {
         isLoading,
         refetch,
     } = useQuery({
-        queryKey: ['getTransactions', historyFilters, policy.policyNumber, policy.product?.planCode],
-        queryFn: () => getTransactionsQuery({ historyFilters, policyNumber: policy.policyNumber, planCode: policy.product?.planCode }),
+        queryKey: [
+            'getTransactions',
+            historyFilters,
+            policy.policyNumber,
+            policy.product?.planCode,
+        ],
+        queryFn: () =>
+            getTransactionsQuery({
+                historyFilters,
+                policyNumber: policy.policyNumber,
+                planCode: policy.product?.planCode,
+            }),
         enabled: !!policy.policyNumber && !!policy.product?.planCode,
     });
 
@@ -70,43 +89,70 @@ export default function EventFeed({ isSideSheetOpen }: EventFeedProps) {
         <div className="flex h-full flex-1 flex-col gap-4 self-stretch pl-2 pr-4 md:pr-6 lg:pr-8">
             <div className="flex flex-col items-start gap-2 self-stretch">
                 <h2 className={labelMapping[LabelVariant.FieldLabel].styles}>
-                    {t(`policy.history.${(historyFilters.statusFilter ?? 'all').replace(' ', '').toLowerCase()}Events`)}
+                    {t(
+                        `policy.history.${(historyFilters.statusFilter ?? 'all')
+                            .replace(' ', '')
+                            .toLowerCase()}Events`
+                    )}
                 </h2>
                 {transactions?.length ? (
                     <>
                         <ol className="flex flex-col gap-2 self-stretch">
-                            {paginatedData.map((transaction: Transaction, index: number) => {
-                                const currentYear = transaction.effectiveDate?.slice(0, 4);
-                                const lastItemYear = index ? transactions[index - 1].effectiveDate?.slice(0, 4) : currentYear;
-                                const cardItem = (
-                                    <HistoryEventCard
-                                        key={`transaction-upcoming-${transaction.correlationId}`}
-                                        refreshTransactions={refetch}
-                                        policy={policy}
-                                        transaction={transaction}
-                                    />
-                                );
+                            {paginatedData.map(
+                                (transaction: Transaction, index: number) => {
+                                    const currentYear =
+                                        transaction.effectiveDate?.slice(0, 4);
+                                    const lastItemYear = index
+                                        ? transactions[
+                                              index - 1
+                                          ].effectiveDate?.slice(0, 4)
+                                        : currentYear;
+                                    const cardItem = (
+                                        <HistoryEventCard
+                                            key={`transaction-upcoming-${transaction.correlationId}`}
+                                            refreshTransactions={refetch}
+                                            policy={policy}
+                                            transaction={transaction}
+                                        />
+                                    );
 
-                                return (
-                                    <Fragment key={`transaction-${transaction.correlationId}-${index}`}>
-                                        {currentYear !== lastItemYear && (
-                                            <li>
-                                                <DividerLabel>
-                                                    <Typography variant={TypographyVariant.H3}>{currentYear}</Typography>
-                                                </DividerLabel>
-                                            </li>
-                                        )}
-                                        {cardItem}
-                                    </Fragment>
-                                );
-                            })}
+                                    return (
+                                        <Fragment
+                                            key={`transaction-${transaction.correlationId}-${index}`}
+                                        >
+                                            {currentYear !== lastItemYear && (
+                                                <li>
+                                                    <DividerLabel>
+                                                        <Typography
+                                                            variant={
+                                                                TypographyVariant.H3
+                                                            }
+                                                        >
+                                                            {currentYear}
+                                                        </Typography>
+                                                    </DividerLabel>
+                                                </li>
+                                            )}
+                                            {cardItem}
+                                        </Fragment>
+                                    );
+                                }
+                            )}
                         </ol>
                         <div className="flex self-center my-4">
-                            <Pagination limit={limit} offset={offset} total={transactions?.length || 0} goToPage={goToPage} />
+                            <Pagination
+                                limit={limit}
+                                offset={offset}
+                                total={transactions?.length || 0}
+                                goToPage={goToPage}
+                            />
                         </div>
                     </>
                 ) : (
-                    <EmptyState title={t('policy.history.noEventsTitle')} subtitle={t('policy.history.noEventsSubtitle')} />
+                    <EmptyState
+                        title={t('policy.history.noEventsTitle')}
+                        subtitle={t('policy.history.noEventsSubtitle')}
+                    />
                 )}
             </div>
         </div>

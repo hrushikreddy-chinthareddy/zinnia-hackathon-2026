@@ -15,22 +15,32 @@ import {
     PhoneTypes,
     SignatureWithdrawal,
 } from '@deps/models/case/withdrawal/case';
-import { DisbursementParts, DEFAULT_DISBURSEMENT_UPDATE, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    DisbursementParts,
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DEFAULT_BANK_DETAILS,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 import getRslnConfig from './rsln-withdrawal-form.helpers';
 
-jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormDisbursementValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormDisbursementValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
 describe('RSLN withdrawal form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
     const rslnConfig = getRslnConfig(t);
     describe('Config existence', () => {
         it('should return an object with the correct configuration options', () => {
@@ -78,8 +88,14 @@ describe('RSLN withdrawal form config', () => {
         };
         describe('payload generation', () => {
             it('should generate a correct payload for an eft selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
-                expect(eftOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
+                const eftOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+                expect(
+                    eftOption?.generatePayloadFromSelection(
+                        disbursementMockData
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -91,19 +107,28 @@ describe('RSLN withdrawal form config', () => {
                                 text: disbursementMockData.accountType,
                             },
                             bankName: disbursementMockData.bankName,
-                            nameOnBankAccount: disbursementMockData.accountHolder ?? '',
-                            routingNumber: disbursementMockData.bankRoutingNumber,
+                            nameOnBankAccount:
+                                disbursementMockData.accountHolder ?? '',
+                            routingNumber:
+                                disbursementMockData.bankRoutingNumber,
                             reEnterAccountNumber: '',
                             reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: disbursementMockData.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: disbursementMockData.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        disbursementMockData.doesCheckMeetSecurityRequirements,
                 });
             });
             it('should generate a correct payload for a wire selection', () => {
-                const wireOption = disbursementOptions.find(option => option.value === PaymentMethod.Wire);
-                expect(wireOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
+                const wireOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.Wire
+                );
+                expect(
+                    wireOption?.generatePayloadFromSelection(
+                        disbursementMockData
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Wire },
                     paymentMailType: { text: null },
@@ -115,20 +140,31 @@ describe('RSLN withdrawal form config', () => {
                                 text: disbursementMockData.accountType,
                             },
                             bankName: disbursementMockData.bankName,
-                            nameOnBankAccount: disbursementMockData.accountHolder ?? '',
-                            routingNumber: disbursementMockData.bankRoutingNumber,
+                            nameOnBankAccount:
+                                disbursementMockData.accountHolder ?? '',
+                            routingNumber:
+                                disbursementMockData.bankRoutingNumber,
                             reEnterAccountNumber: '',
                             reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: disbursementMockData.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: disbursementMockData.doesCheckMeetSecurityRequirements,
-                    isWireApprovalPresent: { text: disbursementMockData.isWireApprovalPresent },
+                    doesCheckMeetSecRequiremnt:
+                        disbursementMockData.doesCheckMeetSecurityRequirements,
+                    isWireApprovalPresent: {
+                        text: disbursementMockData.isWireApprovalPresent,
+                    },
                 });
             });
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions.find(option => option.value === PaymentMailType.Check);
-                expect(checkOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
+                const checkOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                expect(
+                    checkOption?.generatePayloadFromSelection(
+                        disbursementMockData
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
@@ -186,7 +222,11 @@ describe('RSLN withdrawal form config', () => {
     describe('signaturesConfig', () => {
         const { signaturesConfig } = rslnConfig;
         describe('Owner signature', () => {
-            const ownerConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Owner);
+            const ownerConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
                 expect(ownerConfig?.fields).toHaveLength(7);
@@ -195,7 +235,9 @@ describe('RSLN withdrawal form config', () => {
 
         describe('Joint owner signature', () => {
             const jointOwnerConfig = signaturesConfig.find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.JointOwner
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.JointOwner
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
@@ -308,8 +350,16 @@ describe('RSLN withdrawal form config', () => {
                     ],
                 };
 
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: jointOwner } as OtpWithdrawalFormState)).toBeTruthy();
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: owner } as OtpWithdrawalFormState)).toBeFalsy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: jointOwner,
+                    } as OtpWithdrawalFormState)
+                ).toBeTruthy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: owner,
+                    } as OtpWithdrawalFormState)
+                ).toBeFalsy();
             });
         });
     });

@@ -8,17 +8,41 @@ import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import Highlighter from '@deps/components/highlighter/highlighter';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
+import {
+    getCarrierLogoByClientId,
+    getCarrierNameByClientId,
+} from '@deps/utils/carriers';
 
-export const PolicyNumber = ({ policyNumber, highlight }: Partial<GlobalValues>) => {
-    const value = highlight ? <Highlighter text={policyNumber?.toString() || ''} highlights={[highlight]} /> : policyNumber;
+export const PolicyNumber = ({
+    policyNumber,
+    highlight,
+}: Partial<GlobalValues>) => {
+    const value = highlight ? (
+        <Highlighter
+            text={policyNumber?.toString() || ''}
+            highlights={[highlight]}
+        />
+    ) : (
+        policyNumber
+    );
 
-    return value && <PiiWrapper className="mr-4 mt-[-1px] font-primary text-[22px] leading-6 text-gray-900">{value}</PiiWrapper>;
+    return (
+        value && (
+            <PiiWrapper className="mr-4 mt-[-1px] font-primary text-[22px] leading-6 text-gray-900">
+                {value}
+            </PiiWrapper>
+        )
+    );
 };
 
 export const PolicyBadgeStatus = ({
@@ -31,7 +55,12 @@ export const PolicyBadgeStatus = ({
         <div className="mt-[-3px]">
             {!!status && !!tooltip && (
                 <Tooltip placement={tooltipPlacements} body={tooltip}>
-                    <Badge rounded={true} label={status} variant={variant as BadgeVariant} className="w-max" />
+                    <Badge
+                        rounded={true}
+                        label={status}
+                        variant={variant as BadgeVariant}
+                        className="w-max"
+                    />
                 </Tooltip>
             )}
         </div>
@@ -50,17 +79,29 @@ export const getCarrierLogoSrc = (marketingName: string): string => {
     return `${baseUrl}/carrier-logos/${kebobMarketingName}.svg`;
 };
 
-export const PolicyCarrierLogo = ({ carrierId, tooltipPlacements = PopoverPlacement.TopRight }: Partial<GlobalValues>) => {
+export const PolicyCarrierLogo = ({
+    carrierId,
+    tooltipPlacements = PopoverPlacement.TopRight,
+}: Partial<GlobalValues>) => {
     const carrierName = getCarrierNameByClientId(carrierId as string);
 
     return (
         <div className="mr-2">
             {carrierId &&
                 (carrierName ? (
-                    <Tooltip placement={tooltipPlacements} body={carrierName} triggerClassName="!rounded cursor-default">
+                    <Tooltip
+                        placement={tooltipPlacements}
+                        body={carrierName}
+                        triggerClassName="!rounded cursor-default"
+                    >
                         <div className="self-center pb-[1.5px] pt-[1.5px]">
                             <div className="default-focus flex h-12 w-12 items-center justify-center rounded border-2 border-gray-100 bg-white">
-                                <Image alt={carrierName} width={48} height={48} src={getCarrierLogoByClientId(carrierId)} />
+                                <Image
+                                    alt={carrierName}
+                                    width={48}
+                                    height={48}
+                                    src={getCarrierLogoByClientId(carrierId)}
+                                />
                             </div>
                         </div>
                     </Tooltip>
@@ -68,7 +109,10 @@ export const PolicyCarrierLogo = ({ carrierId, tooltipPlacements = PopoverPlacem
                     <div className="self-center pb-[1.5px] pt-[1.5px]">
                         <div className="default-focus flex h-12 w-12 items-center justify-center rounded border-2 border-gray-100 bg-white">
                             <Image
-                                alt={getCarrierNameByClientId(carrierId) || carrierId}
+                                alt={
+                                    getCarrierNameByClientId(carrierId) ||
+                                    carrierId
+                                }
                                 width={48}
                                 height={48}
                                 src={getCarrierLogoByClientId(carrierId)}
@@ -80,17 +124,35 @@ export const PolicyCarrierLogo = ({ carrierId, tooltipPlacements = PopoverPlacem
     );
 };
 
-export const PolicyProductType = ({ productType, tooltipPlacements = PopoverPlacement.TopRight, openSideSheet }: Partial<GlobalValues>) => {
+export const PolicyProductType = ({
+    productType,
+    tooltipPlacements = PopoverPlacement.TopRight,
+    openSideSheet,
+}: Partial<GlobalValues>) => {
     const { t } = useTranslation();
     const isClickable = !!openSideSheet;
-    const { acronym, label } = mapProductTypeToTranslation(productType as ProductType, t);
+    const { acronym, label } = mapProductTypeToTranslation(
+        productType as ProductType,
+        t
+    );
 
     return (
         <div className="mb-[4.5px] mr-2 mt-[1.5px] flex self-center">
             {acronym && (
-                <Tooltip placement={tooltipPlacements} body={label} triggerClassName="!rounded">
+                <Tooltip
+                    placement={tooltipPlacements}
+                    body={label}
+                    triggerClassName="!rounded"
+                >
                     <div>
-                        <Badge variant={isClickable ? BadgeVariant.Brand : BadgeVariant.Neutral} label={acronym} />
+                        <Badge
+                            variant={
+                                isClickable
+                                    ? BadgeVariant.Brand
+                                    : BadgeVariant.Neutral
+                            }
+                            label={acronym}
+                        />
                     </div>
                 </Tooltip>
             )}
@@ -98,13 +160,24 @@ export const PolicyProductType = ({ productType, tooltipPlacements = PopoverPlac
     );
 };
 
-export const PolicyProductMarketingName = ({ marketingName, openSideSheet }: Partial<GlobalValues>) => {
+export const PolicyProductMarketingName = ({
+    marketingName,
+    openSideSheet,
+}: Partial<GlobalValues>) => {
     const isClickable = !!openSideSheet;
 
-    const classes = clsx('z-0', { 'mb-[3px] cursor-pointer': isClickable, 'mt-[1px]': !isClickable });
+    const classes = clsx('z-0', {
+        'mb-[3px] cursor-pointer': isClickable,
+        'mt-[1px]': !isClickable,
+    });
 
     return isClickable ? (
-        <NavElement size={NavElementSize.Small} type={NavElementType.Button} className={classes} onClick={openSideSheet}>
+        <NavElement
+            size={NavElementSize.Small}
+            type={NavElementType.Button}
+            className={classes}
+            onClick={openSideSheet}
+        >
             {marketingName}
         </NavElement>
     ) : (
@@ -148,19 +221,56 @@ const PolicyInfo = ({
 }: PolicyInfoProps) => {
     return (
         <div className="flex items-center">
-            <Skeleton loading={loadingPolicyDetails && !carrierId} width="48px" height="48px" className="mr-1" />
-            <PolicyCarrierLogo carrierId={carrierId} tooltipPlacements={tooltipPlacements} />
+            <Skeleton
+                loading={loadingPolicyDetails && !carrierId}
+                width="48px"
+                height="48px"
+                className="mr-1"
+            />
+            <PolicyCarrierLogo
+                carrierId={carrierId}
+                tooltipPlacements={tooltipPlacements}
+            />
             <div className="flex w-max flex-col">
                 <div className="flex flex-row">
-                    <Skeleton loading={loadingPolicyDetails && !productType} width="36px" height="28px" />
-                    <PolicyProductType productType={productType} tooltipPlacements={tooltipPlacements} openSideSheet={openSideSheet} />
-                    <Skeleton loading={loadingPolicyDetails && !marketingName && !planName} width="80px" height="28px" />
-                    <PolicyProductMarketingName marketingName={marketingName || planName} openSideSheet={openSideSheet} />
+                    <Skeleton
+                        loading={loadingPolicyDetails && !productType}
+                        width="36px"
+                        height="28px"
+                    />
+                    <PolicyProductType
+                        productType={productType}
+                        tooltipPlacements={tooltipPlacements}
+                        openSideSheet={openSideSheet}
+                    />
+                    <Skeleton
+                        loading={
+                            loadingPolicyDetails && !marketingName && !planName
+                        }
+                        width="80px"
+                        height="28px"
+                    />
+                    <PolicyProductMarketingName
+                        marketingName={marketingName || planName}
+                        openSideSheet={openSideSheet}
+                    />
                 </div>
                 <div className="flex items-center">
-                    <Skeleton loading={loadingPolicyDetails && !policyNumber} width="128px" height="24px" />
-                    <PolicyNumber policyNumber={policyNumber} highlight={highlight} />
-                    <Skeleton loading={loadingPolicyDetails && !status} width="60px" height="34px" className="ml-2" />
+                    <Skeleton
+                        loading={loadingPolicyDetails && !policyNumber}
+                        width="128px"
+                        height="24px"
+                    />
+                    <PolicyNumber
+                        policyNumber={policyNumber}
+                        highlight={highlight}
+                    />
+                    <Skeleton
+                        loading={loadingPolicyDetails && !status}
+                        width="60px"
+                        height="34px"
+                        className="ml-2"
+                    />
                     <PolicyBadgeStatus
                         status={status}
                         tooltip={tooltip}

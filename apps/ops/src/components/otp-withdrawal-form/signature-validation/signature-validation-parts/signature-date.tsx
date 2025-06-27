@@ -10,12 +10,22 @@ import { SignatureDateProps, SignatureFieldNames } from './signature-parts';
 import { selectVarientByConfig } from '../../form-party/form-party';
 import { SignatureValidationContext } from '../signature-validation-context';
 
-export default function SignatureDate({ isFormStateReadOnly = false }: SignatureDateProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.signatureValidation' });
-    const { errors, signDate, setSignDate, signType } = useContext(SignatureValidationContext);
+export default function SignatureDate({
+    isFormStateReadOnly = false,
+}: SignatureDateProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.signatureValidation',
+    });
+    const { errors, signDate, setSignDate, signType } = useContext(
+        SignatureValidationContext
+    );
 
     const setSignDateHandler = (date: string | null) => {
-        setSignDate({ text: dayjs(date, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) });
+        setSignDate({
+            text: dayjs(date, DATE_PICKER_FORMAT).format(
+                ZAHARA_API_DATE_FORMAT
+            ),
+        });
     };
 
     return (

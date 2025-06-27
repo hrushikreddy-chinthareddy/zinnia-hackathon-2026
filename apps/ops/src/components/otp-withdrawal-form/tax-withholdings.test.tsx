@@ -1,8 +1,16 @@
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { FormDataContext, OtpWithdrawalFormState, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { AmountType, TaxWithholdingPlace, CaseStatus } from '@deps/models/case/withdrawal/case';
+import {
+    FormDataContext,
+    OtpWithdrawalFormState,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    AmountType,
+    TaxWithholdingPlace,
+    CaseStatus,
+} from '@deps/models/case/withdrawal/case';
 
 import { MaritalStatusAllowances } from './maritial-status-allowance-withholdings';
 import TaxWithholdings from './tax-withholdings';
@@ -30,14 +38,25 @@ describe('TaxWithholdings', () => {
     });
 
     it('handles dollar amount changes in federal withholding', () => {
-        const onDataChange = jest.fn() as React.Dispatch<React.SetStateAction<any>>;
+        const onDataChange = jest.fn() as React.Dispatch<
+            React.SetStateAction<any>
+        >;
 
         render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, setFormTaxWithholding: onDataChange } as OtpWithdrawalFormState}>
+            <FormDataContext.Provider
+                value={
+                    {
+                        ...defaultFormDataContext,
+                        setFormTaxWithholding: onDataChange,
+                    } as OtpWithdrawalFormState
+                }
+            >
                 <TaxWithholdings ownerStateOfResidence="NA" />
             </FormDataContext.Provider>
         );
-        const federalInputs = screen.getByTestId('Federal-tax-withholding-row').getElementsByTagName('input');
+        const federalInputs = screen
+            .getByTestId('Federal-tax-withholding-row')
+            .getElementsByTagName('input');
 
         fireEvent.change(federalInputs[0], { target: { value: '10' } });
         expect(onDataChange).toHaveBeenCalledWith({
@@ -55,14 +74,25 @@ describe('TaxWithholdings', () => {
     });
 
     it('handles percent changes in federal withholding', () => {
-        const onDataChange = jest.fn() as React.Dispatch<React.SetStateAction<any>>;
+        const onDataChange = jest.fn() as React.Dispatch<
+            React.SetStateAction<any>
+        >;
 
         render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, setFormTaxWithholding: onDataChange } as OtpWithdrawalFormState}>
+            <FormDataContext.Provider
+                value={
+                    {
+                        ...defaultFormDataContext,
+                        setFormTaxWithholding: onDataChange,
+                    } as OtpWithdrawalFormState
+                }
+            >
                 <TaxWithholdings ownerStateOfResidence="NA" />
             </FormDataContext.Provider>
         );
-        const federalInputs = screen.getByTestId('Federal-tax-withholding-row').getElementsByTagName('input');
+        const federalInputs = screen
+            .getByTestId('Federal-tax-withholding-row')
+            .getElementsByTagName('input');
 
         fireEvent.change(federalInputs[1], { target: { value: '20' } });
         expect(onDataChange).toHaveBeenCalledWith({
@@ -80,15 +110,26 @@ describe('TaxWithholdings', () => {
     });
 
     it('handles dollar amount in state withholding with owner state set', () => {
-        const onDataChange = jest.fn() as React.Dispatch<React.SetStateAction<any>>;
+        const onDataChange = jest.fn() as React.Dispatch<
+            React.SetStateAction<any>
+        >;
 
         render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, setFormTaxWithholding: onDataChange } as OtpWithdrawalFormState}>
+            <FormDataContext.Provider
+                value={
+                    {
+                        ...defaultFormDataContext,
+                        setFormTaxWithholding: onDataChange,
+                    } as OtpWithdrawalFormState
+                }
+            >
                 <TaxWithholdings ownerStateOfResidence="Iowa" />
             </FormDataContext.Provider>
         );
 
-        const stateInputs = screen.getByTestId('State-tax-withholding-row').getElementsByTagName('input');
+        const stateInputs = screen
+            .getByTestId('State-tax-withholding-row')
+            .getElementsByTagName('input');
 
         fireEvent.change(stateInputs[0], { target: { value: '10' } });
         expect(onDataChange).toHaveBeenCalledWith({
@@ -180,7 +221,9 @@ describe('TaxWithholdings', () => {
                 },
             ],
         };
-        const mockSetFormTaxWithholding = jest.fn() as React.Dispatch<React.SetStateAction<any>>;
+        const mockSetFormTaxWithholding = jest.fn() as React.Dispatch<
+            React.SetStateAction<any>
+        >;
         render(
             <FormDataContext.Provider
                 value={
@@ -195,12 +238,24 @@ describe('TaxWithholdings', () => {
             </FormDataContext.Provider>
         );
 
-        const federalInputs = screen.getByTestId('Federal-tax-withholding-row').getElementsByTagName('input');
-        const federalDontWithhold = screen.getByTestId('Federal-tax-withholding-do-not-withhold');
-        const federalSelectMinimum = screen.getByTestId('Federal-tax-withholding-select-minimum');
-        const stateSelectMinimum = screen.getByTestId('State-tax-withholding-select-minimum');
-        const stateInputs = screen.getByTestId('State-tax-withholding-row').getElementsByTagName('input');
-        const stateDontWithhold = screen.getByTestId('State-tax-withholding-do-not-withhold');
+        const federalInputs = screen
+            .getByTestId('Federal-tax-withholding-row')
+            .getElementsByTagName('input');
+        const federalDontWithhold = screen.getByTestId(
+            'Federal-tax-withholding-do-not-withhold'
+        );
+        const federalSelectMinimum = screen.getByTestId(
+            'Federal-tax-withholding-select-minimum'
+        );
+        const stateSelectMinimum = screen.getByTestId(
+            'State-tax-withholding-select-minimum'
+        );
+        const stateInputs = screen
+            .getByTestId('State-tax-withholding-row')
+            .getElementsByTagName('input');
+        const stateDontWithhold = screen.getByTestId(
+            'State-tax-withholding-do-not-withhold'
+        );
 
         const selectedClass = '!bg-primary-lighter';
 
@@ -239,11 +294,16 @@ describe('TaxWithholdings', () => {
                     amount: { text: null, amountType: null },
                     exemption: { text: null },
                     filingStatus: { text: null },
-                    additionalAmount: { text: '40', amountType: AmountType.Percent },
+                    additionalAmount: {
+                        text: '40',
+                        amountType: AmountType.Percent,
+                    },
                 },
             ],
         };
-        const mockSetFormTaxWithholding = jest.fn() as React.Dispatch<React.SetStateAction<any>>;
+        const mockSetFormTaxWithholding = jest.fn() as React.Dispatch<
+            React.SetStateAction<any>
+        >;
         render(
             <FormDataContext.Provider
                 value={
@@ -254,7 +314,13 @@ describe('TaxWithholdings', () => {
                     } as OtpWithdrawalFormState
                 }
             >
-                <TaxWithholdings additionalWithHoldingConfig={{ [TaxWithholdingPlace.Federal]: { amountType: AmountType.Percent } }} />
+                <TaxWithholdings
+                    additionalWithHoldingConfig={{
+                        [TaxWithholdingPlace.Federal]: {
+                            amountType: AmountType.Percent,
+                        },
+                    }}
+                />
             </FormDataContext.Provider>
         );
 
@@ -282,14 +348,19 @@ describe('TaxWithholdings', () => {
                     amount: { text: null, amountType: null },
                     exemption: { text: null },
                     filingStatus: { text: null },
-                    additionalAmount: { text: '40', amountType: AmountType.Percent },
+                    additionalAmount: {
+                        text: '40',
+                        amountType: AmountType.Percent,
+                    },
                 },
             ],
         });
     });
 
     it('correctly maps a change in value to formTaxWithholding', () => {
-        const mockSetFormTaxWithholding = jest.fn() as React.Dispatch<React.SetStateAction<any>>;
+        const mockSetFormTaxWithholding = jest.fn() as React.Dispatch<
+            React.SetStateAction<any>
+        >;
         const mockFormTaxWithholding = {
             taxWithholding: [
                 {
@@ -349,7 +420,9 @@ describe('TaxWithholdings', () => {
             </FormDataContext.Provider>
         );
 
-        const stateDontWithhold = screen.getByTestId('State-tax-withholding-do-not-withhold');
+        const stateDontWithhold = screen.getByTestId(
+            'State-tax-withholding-do-not-withhold'
+        );
         fireEvent.click(stateDontWithhold);
 
         expect(mockSetFormTaxWithholding).toHaveBeenCalledWith({
@@ -392,14 +465,19 @@ describe('TaxWithholdings', () => {
                     amount: { text: null, amountType: null },
                     exemption: { text: null },
                     filingStatus: { text: null },
-                    additionalAmount: { text: null, amountType: AmountType.Percent },
+                    additionalAmount: {
+                        text: null,
+                        amountType: AmountType.Percent,
+                    },
                 },
             ],
         });
     });
 
     it('correctly maps a change in value to formTaxWithholding', () => {
-        const mockSetFormTaxWithholding = jest.fn() as React.Dispatch<React.SetStateAction<any>>;
+        const mockSetFormTaxWithholding = jest.fn() as React.Dispatch<
+            React.SetStateAction<any>
+        >;
         const mockFormTaxWithholding = {
             taxWithholding: [
                 {
@@ -459,7 +537,9 @@ describe('TaxWithholdings', () => {
             </FormDataContext.Provider>
         );
 
-        const stateDontWithhold = screen.getByTestId('State-tax-withholding-do-not-withhold');
+        const stateDontWithhold = screen.getByTestId(
+            'State-tax-withholding-do-not-withhold'
+        );
         fireEvent.click(stateDontWithhold);
 
         expect(mockSetFormTaxWithholding).toHaveBeenCalledWith({
@@ -502,7 +582,10 @@ describe('TaxWithholdings', () => {
                     amount: { text: null, amountType: null },
                     exemption: { text: null },
                     filingStatus: { text: null },
-                    additionalAmount: { text: null, amountType: AmountType.Percent },
+                    additionalAmount: {
+                        text: null,
+                        amountType: AmountType.Percent,
+                    },
                 },
             ],
         });
@@ -529,14 +612,28 @@ describe('TaxWithholdings', () => {
         expect(screen.getByText('federal')).toBeInTheDocument();
         expect(screen.getByText('state')).toBeInTheDocument();
 
-        const maritalStatusAllowancesCheckbox = screen.getByTestId('marital-status-allowances-test-id');
+        const maritalStatusAllowancesCheckbox = screen.getByTestId(
+            'marital-status-allowances-test-id'
+        );
         expect(maritalStatusAllowancesCheckbox).toBeInTheDocument();
 
         fireEvent.click(maritalStatusAllowancesCheckbox);
 
-        expect(screen.getByTestId(`marital-status-test-id-${MaritalStatusAllowances.Single}`)).toBeInTheDocument();
-        expect(screen.getByTestId(`marital-status-test-id-${MaritalStatusAllowances.Married}`)).toBeInTheDocument();
-        expect(screen.getByTestId(`marital-status-test-id-${MaritalStatusAllowances.HeadOfHousehold}`)).toBeInTheDocument();
+        expect(
+            screen.getByTestId(
+                `marital-status-test-id-${MaritalStatusAllowances.Single}`
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByTestId(
+                `marital-status-test-id-${MaritalStatusAllowances.Married}`
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByTestId(
+                `marital-status-test-id-${MaritalStatusAllowances.HeadOfHousehold}`
+            )
+        ).toBeInTheDocument();
     });
 
     it('should not render marital status allowances component when isMaritalStatusAllowances is false', () => {
@@ -549,10 +646,19 @@ describe('TaxWithholdings', () => {
     });
 
     it('should render specified tax view component when specifiedView is true', () => {
-        const onDataChange = jest.fn() as React.Dispatch<React.SetStateAction<any>>;
+        const onDataChange = jest.fn() as React.Dispatch<
+            React.SetStateAction<any>
+        >;
 
         render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, setFormTaxWithholding: onDataChange } as OtpWithdrawalFormState}>
+            <FormDataContext.Provider
+                value={
+                    {
+                        ...defaultFormDataContext,
+                        setFormTaxWithholding: onDataChange,
+                    } as OtpWithdrawalFormState
+                }
+            >
                 <TaxWithholdings specifiedView={true} />
             </FormDataContext.Provider>
         );
@@ -560,10 +666,14 @@ describe('TaxWithholdings', () => {
         expect(screen.getByText('title')).toBeInTheDocument();
         expect(screen.getByText('state')).toBeInTheDocument();
 
-        const stateDontWithhold = screen.getByTestId('State-tax-withholding-select-specified');
+        const stateDontWithhold = screen.getByTestId(
+            'State-tax-withholding-select-specified'
+        );
         fireEvent.click(stateDontWithhold);
 
-        const federalInputs = screen.getByTestId('State-tax-withholding-row').getElementsByTagName('input');
+        const federalInputs = screen
+            .getByTestId('State-tax-withholding-row')
+            .getElementsByTagName('input');
         expect(federalInputs[0]).toBeInTheDocument(); //dollar field
         expect(federalInputs[1]).toBeInTheDocument(); //percentage field
         expect(onDataChange).toHaveBeenCalledWith({

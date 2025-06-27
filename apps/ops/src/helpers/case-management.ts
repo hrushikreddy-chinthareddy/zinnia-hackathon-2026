@@ -7,7 +7,9 @@ import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
-export const isSearchValueObjectEmpty = (searchValueObject: Partial<Record<PolicySearchKeys, string>> = {}): boolean => {
+export const isSearchValueObjectEmpty = (
+    searchValueObject: Partial<Record<PolicySearchKeys, string>> = {}
+): boolean => {
     return Object.keys(searchValueObject).length === 0;
 };
 
@@ -42,13 +44,13 @@ export const getSearchValueObject = (
         case 'documentNumber':
             return documentNumber
                 ? {
-                    identifiers: [
-                        {
-                            identifier: 'documentNumber',
-                            value: documentNumber,
-                        },
-                    ],
-                }
+                      identifiers: [
+                          {
+                              identifier: 'documentNumber',
+                              value: documentNumber,
+                          },
+                      ],
+                  }
                 : {};
         case 'agentName':
             return {
@@ -59,7 +61,6 @@ export const getSearchValueObject = (
             return firmName.trim() ? { brokerDealerName: firmName.trim() } : {};
         default:
             return {};
-
     }
 };
 
@@ -78,7 +79,9 @@ type AdditionalFiltersResult = {
 };
 
 // Get additional filters based on the filters selected
-export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilters): AdditionalFiltersResult => {
+export const getAdditionalFilters = (
+    additionalFilters: CaseSearchAdditionalFilters
+): AdditionalFiltersResult => {
     const result: AdditionalFiltersResult = {};
 
     // The API expects the date format to be "2004-08-06T14:15:25.083Z" format.
@@ -87,16 +90,28 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
     // the day of the current timezone for the user.
 
     function formatDateFromDatePicker(date: string, isStartDate: boolean) {
-        const dateParts = [date.slice(0, 2), date.slice(2, 4), date.slice(4, 8)];
-        const dateInLocalTimezone = dayjs(`${dateParts[2]}-${dateParts[0]}-${dateParts[1]}`);
-        return isStartDate ? dateInLocalTimezone.startOf('day').format() : dateInLocalTimezone.endOf('day').format();
+        const dateParts = [
+            date.slice(0, 2),
+            date.slice(2, 4),
+            date.slice(4, 8),
+        ];
+        const dateInLocalTimezone = dayjs(
+            `${dateParts[2]}-${dateParts[0]}-${dateParts[1]}`
+        );
+        return isStartDate
+            ? dateInLocalTimezone.startOf('day').format()
+            : dateInLocalTimezone.endOf('day').format();
     }
 
     function dateToString(dateObject: Date) {
         const date = dateObject.getDate();
         const month = dateObject.getMonth() + 1;
         const year = dateObject.getFullYear();
-        const dateParts = [month.toString().padStart(2, '0'), date.toString().padStart(2, '0'), year.toString()];
+        const dateParts = [
+            month.toString().padStart(2, '0'),
+            date.toString().padStart(2, '0'),
+            year.toString(),
+        ];
         return dateParts.join('');
     }
 
@@ -107,38 +122,74 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
     }
 
     if (additionalFilters.createdDateStart) {
-        result['createdDateStart'] = formatDateFromDatePicker(additionalFilters.createdDateStart, true);
+        result['createdDateStart'] = formatDateFromDatePicker(
+            additionalFilters.createdDateStart,
+            true
+        );
     }
 
     if (additionalFilters.createdDateEnd) {
-        result['createdDateEnd'] = formatDateFromDatePicker(additionalFilters.createdDateEnd, false);
+        result['createdDateEnd'] = formatDateFromDatePicker(
+            additionalFilters.createdDateEnd,
+            false
+        );
     }
 
     if (additionalFilters.updatedDateStart) {
-        result['updatedDateStart'] = formatDateFromDatePicker(additionalFilters.updatedDateStart, true);
+        result['updatedDateStart'] = formatDateFromDatePicker(
+            additionalFilters.updatedDateStart,
+            true
+        );
     }
 
     if (additionalFilters.updatedDateEnd) {
-        result['updatedDateEnd'] = formatDateFromDatePicker(additionalFilters.updatedDateEnd, false);
+        result['updatedDateEnd'] = formatDateFromDatePicker(
+            additionalFilters.updatedDateEnd,
+            false
+        );
     }
 
     if (additionalFilters.age) {
         switch (additionalFilters.age) {
             case '7':
-                result['createdDateStart'] = formatDateFromDatePicker(dateToString(getDateWithDaysOffset(7)), true);
-                result['createdDateEnd'] = formatDateFromDatePicker(dateToString(new Date()), false);
+                result['createdDateStart'] = formatDateFromDatePicker(
+                    dateToString(getDateWithDaysOffset(7)),
+                    true
+                );
+                result['createdDateEnd'] = formatDateFromDatePicker(
+                    dateToString(new Date()),
+                    false
+                );
                 break;
             case '14':
-                result['createdDateStart'] = formatDateFromDatePicker(dateToString(getDateWithDaysOffset(14)), true);
-                result['createdDateEnd'] = formatDateFromDatePicker(dateToString(getDateWithDaysOffset(7)), false);
+                result['createdDateStart'] = formatDateFromDatePicker(
+                    dateToString(getDateWithDaysOffset(14)),
+                    true
+                );
+                result['createdDateEnd'] = formatDateFromDatePicker(
+                    dateToString(getDateWithDaysOffset(7)),
+                    false
+                );
                 break;
             case '30':
-                result['createdDateStart'] = formatDateFromDatePicker(dateToString(getDateWithDaysOffset(30)), true);
-                result['createdDateEnd'] = formatDateFromDatePicker(dateToString(getDateWithDaysOffset(15)), false);
+                result['createdDateStart'] = formatDateFromDatePicker(
+                    dateToString(getDateWithDaysOffset(30)),
+                    true
+                );
+                result['createdDateEnd'] = formatDateFromDatePicker(
+                    dateToString(getDateWithDaysOffset(15)),
+                    false
+                );
                 break;
             case '31':
-                result['createdDateStart'] = formatDateFromDatePicker(dateToString(new Date('01/01/1970')), true);
-                result['createdDateEnd'] = formatDateFromDatePicker(dateToString(getDateWithDaysOffset(31)), false);
+                result['createdDateStart'] = formatDateFromDatePicker(
+                    dateToString(new Date('01/01/1970')),
+                    true
+                );
+                result['createdDateEnd'] = formatDateFromDatePicker(
+                    dateToString(getDateWithDaysOffset(31)),
+                    false
+                );
                 break;
         }
     }
@@ -147,12 +198,15 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
         result['process'] = Array.from(additionalFilters.processTypes);
     }
 
-    if (additionalFilters.carriers && Object.keys(additionalFilters.carriers).length) {
+    if (
+        additionalFilters.carriers &&
+        Object.keys(additionalFilters.carriers).length
+    ) {
         result['carrier'] = Object.keys(additionalFilters.carriers)
-            .map(code => code.split(','))
+            .map((code) => code.split(','))
             .concat()
             .flat()
-            .map(code => code.toUpperCase());
+            .map((code) => code.toUpperCase());
     }
 
     if (additionalFilters.products.size) {
@@ -172,7 +226,9 @@ export const getAdditionalFilters = (additionalFilters: CaseSearchAdditionalFilt
     }
 
     if (additionalFilters.notInCaseStatus) {
-        result['notInCaseStatus'] = Array.from(additionalFilters.notInCaseStatus);
+        result['notInCaseStatus'] = Array.from(
+            additionalFilters.notInCaseStatus
+        );
     }
 
     return result;
@@ -239,8 +295,7 @@ export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => {
             label: t('caseManagementDashboard.case.documentNumber'),
             value: 'documentNumber',
             placeholder: t('dashboard.search.buttons.documentNumber') ?? '',
-
-        }
+        },
     ];
     return labels;
 };
@@ -260,14 +315,14 @@ export const calculateDaysAgo = (date: Date): number => {
 };
 
 export const insertStepDetails = (caseDetails: Case, metadata: Metadata) => {
-    const newStages = caseDetails.stages.map(stage => {
+    const newStages = caseDetails.stages.map((stage) => {
         const stageMetadata = metadata.stages[stage.id];
 
         if (!stageMetadata) return stage;
 
         return {
             ...stage,
-            steps: stage.steps?.map(step => {
+            steps: stage.steps?.map((step) => {
                 const stepMetadata = stageMetadata.steps[step.id];
 
                 if (!stepMetadata) return step;
@@ -303,6 +358,13 @@ export const formatCaseTotals = (count: number, stats: StatCount) => {
     };
 };
 
-export const getCaseIdentifierValue = (identifiers: IdentifierInstance[], identifierToSearch: string) => {
-    return identifiers?.find(identifier => identifier.identifier === identifierToSearch)?.value || '';
+export const getCaseIdentifierValue = (
+    identifiers: IdentifierInstance[],
+    identifierToSearch: string
+) => {
+    return (
+        identifiers?.find(
+            (identifier) => identifier.identifier === identifierToSearch
+        )?.value || ''
+    );
 };

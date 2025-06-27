@@ -2,8 +2,14 @@ import { Party } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { BankAccounts } from '@deps/containers/people-data-cards/bank-card/bank-card.helpers';
@@ -12,7 +18,10 @@ import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card'
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
 export interface BankCardProps {
@@ -22,12 +31,21 @@ export interface BankCardProps {
     policyNumber?: string;
 }
 
-export const BankCard = ({ editable = false, party, planCode, policyNumber }: BankCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.card.bank' });
+export const BankCard = ({
+    editable = false,
+    party,
+    planCode,
+    policyNumber,
+}: BankCardProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.card.bank',
+    });
 
     const sideSheet = useSideSheetContext();
 
-    const [currentBankAccounts, setCurrentBankAccounts] = useState(party?.bankDetails?.filter(bank => !isEndDated(bank.endDate)) ?? []);
+    const [currentBankAccounts, setCurrentBankAccounts] = useState(
+        party?.bankDetails?.filter((bank) => !isEndDated(bank.endDate)) ?? []
+    );
 
     const openSidesheet = () => {
         sideSheet.changeSideSheetContent(

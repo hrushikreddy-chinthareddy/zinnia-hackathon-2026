@@ -4,16 +4,26 @@ import { AxiosResponse } from 'axios';
 import { DocumentDownloadV2 } from '@deps/models/case/document';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logError, logTrace, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logError,
+    logTrace,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const baseUrl = `${apiServerBaseUrl}/document/v2`;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<DocumentDownloadV2 | null>, loggingContext) => {
+    async (
+        req: NextApiRequest,
+        res: NextApiResponse<DocumentDownloadV2 | null>,
+        loggingContext
+    ) => {
         const now = performance.now();
-        const { documentNumber, clientCode, contractNumber, fChar, taxYear } = req.query;
+        const { documentNumber, clientCode, contractNumber, fChar, taxYear } =
+            req.query;
         const accessToken = (await getAccessToken(req, res)).accessToken;
 
         const url = `${baseUrl}/taxForms/${documentNumber}?clientCode=${clientCode}&contractNumber=${contractNumber}&fChar=${fChar}&taxYear=${taxYear}`;
@@ -21,7 +31,10 @@ export default withAuthAndLogging(
         logTrace('documentPreview::start', loggingContext);
 
         try {
-            const { data } = await serverApi.get<DocumentDownloadV2, AxiosResponse>(
+            const { data } = await serverApi.get<
+                DocumentDownloadV2,
+                AxiosResponse
+            >(
                 url,
                 {
                     authorization: `Bearer ${accessToken}`,
@@ -32,7 +45,10 @@ export default withAuthAndLogging(
                 },
                 loggingContext
             );
-            logTrace('documentPreview::download-complete', { ...loggingContext, duration: performance.now() - now });
+            logTrace('documentPreview::download-complete', {
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
 
             res.json(data);
         } catch (error) {
@@ -45,7 +61,10 @@ export default withAuthAndLogging(
             res.status((error as Response)?.status ?? 500).json(null);
         }
     },
-    { file: 'documents/tax-form/:documentNumber/preview', function: 'routeHandler' }
+    {
+        file: 'documents/tax-form/:documentNumber/preview',
+        function: 'routeHandler',
+    }
 );
 
 // Addresses NextJS error: API response for this route exceeds 4MB. API Routes are meant to respond quickly.

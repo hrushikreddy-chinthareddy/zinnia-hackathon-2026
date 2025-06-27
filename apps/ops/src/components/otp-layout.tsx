@@ -1,8 +1,14 @@
 import { useTranslation } from 'next-i18next';
 import React, { PropsWithChildren } from 'react';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useDiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -18,7 +24,10 @@ interface OTPLayoutProps extends PropsWithChildren {
     contractNumber?: string;
 }
 
-export default function OtpLayout({ childContainerClasses = '', children }: OTPLayoutProps) {
+export default function OtpLayout({
+    childContainerClasses = '',
+    children,
+}: OTPLayoutProps) {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const sideSheet = useSideSheetContext();
     const diaryNotesData = useDiaryNotesContext();
@@ -26,7 +35,10 @@ export default function OtpLayout({ childContainerClasses = '', children }: OTPL
     // TODO: create store and use diary notes data from store. Passing context data in props is not correct.
     const openSideSheet = () => {
         const content = <DiaryNotesContent notesData={diaryNotesData} />;
-        sideSheet.changeSideSheetContent(t('site.navLinks.diaryNotes.text'), content);
+        sideSheet.changeSideSheetContent(
+            t('site.navLinks.diaryNotes.text'),
+            content
+        );
         sideSheet.handleOpen(true);
         if (diaryNotesData && diaryNotesData.areDiaryNotesViewed) {
             diaryNotesData.setAreDiaryNotesViewed(true);
@@ -44,11 +56,18 @@ export default function OtpLayout({ childContainerClasses = '', children }: OTPL
                     href={'/create-case'}
                     startIcon={<ChevronLeftIcon width={16} height={16} />}
                 >
-                    <span className="hidden md:inline">{t('site.navLinks.backToCreateCase.textLargeScreen')}</span>
-                    <span className="md:hidden">{t('site.navLinks.backToCreateCase.textSmallScreen')}</span>
+                    <span className="hidden md:inline">
+                        {t('site.navLinks.backToCreateCase.textLargeScreen')}
+                    </span>
+                    <span className="md:hidden">
+                        {t('site.navLinks.backToCreateCase.textSmallScreen')}
+                    </span>
                 </NavElement>
                 <div className="flex flex-row items-center justify-end space-x-8">
-                    <Typography variant={TypographyVariant.FieldLabel} className="hidden md:block">
+                    <Typography
+                        variant={TypographyVariant.FieldLabel}
+                        className="hidden md:block"
+                    >
                         {t('site.navLinks.relatedActivity.text')}
                     </Typography>
                     <NavElement
@@ -57,7 +76,10 @@ export default function OtpLayout({ childContainerClasses = '', children }: OTPL
                         className="flex items-center"
                         startIcon={<AnnotationIcon width={16} height={16} />}
                         onClick={() => openSideSheet()}
-                        onKeyDown={(e: { key: string; preventDefault: () => void }) => {
+                        onKeyDown={(e: {
+                            key: string;
+                            preventDefault: () => void;
+                        }) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault();
                                 openSideSheet();
@@ -68,7 +90,9 @@ export default function OtpLayout({ childContainerClasses = '', children }: OTPL
                     </NavElement>
                 </div>
             </div>
-            <div className={`mr-4 md:mr-6 lg:mr-8 ${childContainerClasses}`}>{children}</div>
+            <div className={`mr-4 md:mr-6 lg:mr-8 ${childContainerClasses}`}>
+                {children}
+            </div>
         </div>
     );
 }

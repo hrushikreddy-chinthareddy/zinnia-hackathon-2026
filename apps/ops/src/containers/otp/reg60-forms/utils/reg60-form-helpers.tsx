@@ -12,7 +12,7 @@ import { Reg60FormData } from '../reg60.types';
 
 const getUpdateDisclosure = (disclosureData: Disclosure) => {
     const contractComparisonsCl = disclosureData.contractComparison;
-    contractComparisonsCl?.map(item => {
+    contractComparisonsCl?.map((item) => {
         if (!item.annuitizationValueReceived) {
             item.annuitizationQuote = null;
         }
@@ -44,7 +44,10 @@ export const buildForm = (
             taskType: 'NBReg60Comparision',
             clientCode: initialForm.data.clientCode,
             lob: document?.lob,
-            documentReceivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
+            documentReceivedDate: dayjs(
+                document.dateReceived,
+                'M/D/YYYY hh:mm:ss A'
+            ).format('YYYY-MM-DDTHH:mm:ss:Z'),
             requestedDate: dayjs().format('YYYY-MM-DDTHH:mm:ss:Z'),
             ownerInformation: formState.ownerInformation,
             agentInformation: formState.agentInformation,
@@ -209,10 +212,22 @@ export enum AnnuityPaymentType {
 }
 
 export const getPaymentFrequencyOptions = (t: TFunction) => [
-    { label: t('proposedAnnuityQuote.paymentFrequency.monthly'), value: AnnuityPaymentType.MONTHLY },
-    { label: t('proposedAnnuityQuote.paymentFrequency.quarterly'), value: AnnuityPaymentType.QUARTERLY },
-    { label: t('proposedAnnuityQuote.paymentFrequency.semiAnnually'), value: AnnuityPaymentType.SEMI_ANNUALLY },
-    { label: t('proposedAnnuityQuote.paymentFrequency.annually'), value: AnnuityPaymentType.ANNUALLY },
+    {
+        label: t('proposedAnnuityQuote.paymentFrequency.monthly'),
+        value: AnnuityPaymentType.MONTHLY,
+    },
+    {
+        label: t('proposedAnnuityQuote.paymentFrequency.quarterly'),
+        value: AnnuityPaymentType.QUARTERLY,
+    },
+    {
+        label: t('proposedAnnuityQuote.paymentFrequency.semiAnnually'),
+        value: AnnuityPaymentType.SEMI_ANNUALLY,
+    },
+    {
+        label: t('proposedAnnuityQuote.paymentFrequency.annually'),
+        value: AnnuityPaymentType.ANNUALLY,
+    },
 ];
 
 export enum RetireEaseOptions {
@@ -251,38 +266,127 @@ export enum RetireEaseChoiceOptions {
 }
 
 export const getRetireEaseOptions = (t: TFunction) => [
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifeCashRefund'), value: RetireEaseOptions.SINGLE_LIFE_CASH_REFUND },
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifeInstallRef'), value: RetireEaseOptions.SINGLE_LIFE_INSTALL_REF },
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifePC'), value: RetireEaseOptions.SINGLE_LIFE_PC },
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifeNoRefund'), value: RetireEaseOptions.SINGLE_LIFE_NO_REFUND },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeCashRef'), value: RetireEaseOptions.JT_SURV_LIFE_CASH_REF },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvInstallRef'), value: RetireEaseChoiceOptions.JT_SURV_INSTALL_REF },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifePC'), value: RetireEaseOptions.JT_SURV_LIFE_PC },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeHalfReduct'), value: RetireEaseOptions.JT_SURV_LIFE_1_2_REDUCT },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeTwoThirdsReduct'), value: RetireEaseOptions.JT_SURV_LIFE_2_3_REDUCT },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeThreeFourthsReduct'), value: RetireEaseOptions.JT_SURV_LIFE_3_4_REDUCT },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeNoRefund'), value: RetireEaseOptions.JT_SURV_LIFE_NO_REFUND },
-    { label: t('proposedAnnuityQuote.incomeOption.periodCertain'), value: RetireEaseOptions.PERIOD_CERTAIN },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.singleLifeCashRefund'),
+        value: RetireEaseOptions.SINGLE_LIFE_CASH_REFUND,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.singleLifeInstallRef'),
+        value: RetireEaseOptions.SINGLE_LIFE_INSTALL_REF,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.singleLifePC'),
+        value: RetireEaseOptions.SINGLE_LIFE_PC,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.singleLifeNoRefund'),
+        value: RetireEaseOptions.SINGLE_LIFE_NO_REFUND,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeCashRef'),
+        value: RetireEaseOptions.JT_SURV_LIFE_CASH_REF,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvInstallRef'),
+        value: RetireEaseChoiceOptions.JT_SURV_INSTALL_REF,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifePC'),
+        value: RetireEaseOptions.JT_SURV_LIFE_PC,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeHalfReduct'),
+        value: RetireEaseOptions.JT_SURV_LIFE_1_2_REDUCT,
+    },
+    {
+        label: t(
+            'proposedAnnuityQuote.incomeOption.jtAndSurvLifeTwoThirdsReduct'
+        ),
+        value: RetireEaseOptions.JT_SURV_LIFE_2_3_REDUCT,
+    },
+    {
+        label: t(
+            'proposedAnnuityQuote.incomeOption.jtAndSurvLifeThreeFourthsReduct'
+        ),
+        value: RetireEaseOptions.JT_SURV_LIFE_3_4_REDUCT,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeNoRefund'),
+        value: RetireEaseOptions.JT_SURV_LIFE_NO_REFUND,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.periodCertain'),
+        value: RetireEaseOptions.PERIOD_CERTAIN,
+    },
 ];
 
 export const getRetireEaseChoiceOptions = (t: TFunction) => [
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifeNoDeathBft'), value: RetireEaseChoiceOptions.SINGLE_LIFE_NO_DEATH_BFT },
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifeCashRefund'), value: RetireEaseChoiceOptions.SINGLE_LIFE_CASH_REFUND },
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifeInstallRef'), value: RetireEaseChoiceOptions.SINGLE_LIFE_INSTALL_REF },
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifeNoRefund'), value: RetireEaseChoiceOptions.SINGLE_LIFE_NO_REFUND },
-    { label: t('proposedAnnuityQuote.incomeOption.singleLifePC'), value: RetireEaseChoiceOptions.SINGLE_LIFE_PC },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeNoRefund'), value: RetireEaseChoiceOptions.JT_SURV_LIFE_NO_REFUND },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifePC'), value: RetireEaseChoiceOptions.JT_SURV_LIFE_PC },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeCashRef'), value: RetireEaseChoiceOptions.JT_SURV_LIFE_CASH_REF },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvInstallRef'), value: RetireEaseChoiceOptions.JT_SURV_INSTALL_REF },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeHalfReduct'), value: RetireEaseChoiceOptions.JT_SURV_LIFE_1_2_REDUCT },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeTwoThirdsReduct'), value: RetireEaseChoiceOptions.JT_SURV_LIFE_2_3_REDUCT },
     {
-        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeThreeFourthsReduct'),
+        label: t('proposedAnnuityQuote.incomeOption.singleLifeNoDeathBft'),
+        value: RetireEaseChoiceOptions.SINGLE_LIFE_NO_DEATH_BFT,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.singleLifeCashRefund'),
+        value: RetireEaseChoiceOptions.SINGLE_LIFE_CASH_REFUND,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.singleLifeInstallRef'),
+        value: RetireEaseChoiceOptions.SINGLE_LIFE_INSTALL_REF,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.singleLifeNoRefund'),
+        value: RetireEaseChoiceOptions.SINGLE_LIFE_NO_REFUND,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.singleLifePC'),
+        value: RetireEaseChoiceOptions.SINGLE_LIFE_PC,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeNoRefund'),
+        value: RetireEaseChoiceOptions.JT_SURV_LIFE_NO_REFUND,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifePC'),
+        value: RetireEaseChoiceOptions.JT_SURV_LIFE_PC,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeCashRef'),
+        value: RetireEaseChoiceOptions.JT_SURV_LIFE_CASH_REF,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvInstallRef'),
+        value: RetireEaseChoiceOptions.JT_SURV_INSTALL_REF,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvLifeHalfReduct'),
+        value: RetireEaseChoiceOptions.JT_SURV_LIFE_1_2_REDUCT,
+    },
+    {
+        label: t(
+            'proposedAnnuityQuote.incomeOption.jtAndSurvLifeTwoThirdsReduct'
+        ),
+        value: RetireEaseChoiceOptions.JT_SURV_LIFE_2_3_REDUCT,
+    },
+    {
+        label: t(
+            'proposedAnnuityQuote.incomeOption.jtAndSurvLifeThreeFourthsReduct'
+        ),
         value: RetireEaseChoiceOptions.JT_SURV_LIFE_3_4_REDUCT,
     },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvConvNoRef'), value: RetireEaseChoiceOptions.JT_SURV_CONV_NO_REF },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvConvPC'), value: RetireEaseChoiceOptions.JT_SURV_CONV_PC },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvConvCashRef'), value: RetireEaseChoiceOptions.JT_SURV_CONV_CASH_REF },
-    { label: t('proposedAnnuityQuote.incomeOption.jtAndSurvConvInstallRef'), value: RetireEaseChoiceOptions.JT_SURV_CONV_INSTALL_REF },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvConvNoRef'),
+        value: RetireEaseChoiceOptions.JT_SURV_CONV_NO_REF,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvConvPC'),
+        value: RetireEaseChoiceOptions.JT_SURV_CONV_PC,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvConvCashRef'),
+        value: RetireEaseChoiceOptions.JT_SURV_CONV_CASH_REF,
+    },
+    {
+        label: t('proposedAnnuityQuote.incomeOption.jtAndSurvConvInstallRef'),
+        value: RetireEaseChoiceOptions.JT_SURV_CONV_INSTALL_REF,
+    },
 ];

@@ -5,7 +5,9 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Footnote from '@deps/components/footnote/footnote';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { Loader } from '@deps/components/page-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { percentFormatify } from '@deps/helpers/numbers.helpers';
@@ -36,7 +38,10 @@ const MatchCard = ({ policy }: MatchCardProps) => {
         };
 
         const getViewModel = async () => {
-            const matchViewModel = getMatchViewModel(policy?.policy?.allocation?.matchSegment, policy?.product);
+            const matchViewModel = getMatchViewModel(
+                policy?.policy?.allocation?.matchSegment,
+                policy?.product
+            );
 
             setViewModel(matchViewModel);
             setLoading(false);
@@ -54,8 +59,15 @@ const MatchCard = ({ policy }: MatchCardProps) => {
             {!loading && (
                 <>
                     <div className="flex gap-2">
-                        <CurrencyDollarsIcon className="mt-1 text-primary" role="presentation" width={24} height={24} />
-                        <Typography variant={TypographyVariant.H2}>{t('label')}</Typography>
+                        <CurrencyDollarsIcon
+                            className="mt-1 text-primary"
+                            role="presentation"
+                            width={24}
+                            height={24}
+                        />
+                        <Typography variant={TypographyVariant.H2}>
+                            {t('label')}
+                        </Typography>
                     </div>
                     <div className="mt-4 grid grid-cols-[repeat(2,minmax(min-content,max-content))] gap-x-8 gap-y-4 md:flex md:flex-wrap lg:ml-8">
                         <div>
@@ -65,10 +77,17 @@ const MatchCard = ({ policy }: MatchCardProps) => {
                                 tooltipTitle={t('currentValue')}
                                 variant={LabelVariant.FieldLabel}
                             />
-                            <Content details={viewModel?.matchAccountValue} variant={ContentVariant.BodySm} />
+                            <Content
+                                details={viewModel?.matchAccountValue}
+                                variant={ContentVariant.BodySm}
+                            />
                             <Content
                                 className="text-gray-600"
-                                details={t('ytdValue', { value: viewModel?.yearToDateMatchValue }) as string}
+                                details={
+                                    t('ytdValue', {
+                                        value: viewModel?.yearToDateMatchValue,
+                                    }) as string
+                                }
                                 variant={ContentVariant.Caption}
                             />
                         </div>
@@ -79,7 +98,10 @@ const MatchCard = ({ policy }: MatchCardProps) => {
                                 tooltipTitle={t('matchRate')}
                                 variant={LabelVariant.FieldLabel}
                             />
-                            <Content details={matchRate} variant={ContentVariant.BodySm} />
+                            <Content
+                                details={matchRate}
+                                variant={ContentVariant.BodySm}
+                            />
                         </div>
                         <div>
                             <Label
@@ -88,10 +110,21 @@ const MatchCard = ({ policy }: MatchCardProps) => {
                                 tooltipTitle={t('vestingPeriod')}
                                 variant={LabelVariant.FieldLabel}
                             />
-                            <Content details={t('years', { count: viewModel?.vestingPeriod }) as string} variant={ContentVariant.BodySm} />
+                            <Content
+                                details={
+                                    t('years', {
+                                        count: viewModel?.vestingPeriod,
+                                    }) as string
+                                }
+                                variant={ContentVariant.BodySm}
+                            />
                             <Content
                                 className="text-gray-600"
-                                details={t('matchVestingDate', { date: viewModel?.matchVestingDate }) as string}
+                                details={
+                                    t('matchVestingDate', {
+                                        date: viewModel?.matchVestingDate,
+                                    }) as string
+                                }
                                 variant={ContentVariant.Caption}
                             />
                         </div>
@@ -102,10 +135,18 @@ const MatchCard = ({ policy }: MatchCardProps) => {
                                 tooltipTitle={t('maxLifetimeMatch')}
                                 variant={LabelVariant.FieldLabel}
                             />
-                            <Content details={viewModel?.maximumLifeTimeVestingAmount} variant={ContentVariant.BodySm} />
+                            <Content
+                                details={
+                                    viewModel?.maximumLifeTimeVestingAmount
+                                }
+                                variant={ContentVariant.BodySm}
+                            />
                         </div>
                     </div>
-                    <Footnote productMarketingName={viewModel?.marketingName} productType={viewModel?.product?.productType} />
+                    <Footnote
+                        productMarketingName={viewModel?.marketingName}
+                        productType={viewModel?.product?.productType}
+                    />
                 </>
             )}
         </CardContainer>

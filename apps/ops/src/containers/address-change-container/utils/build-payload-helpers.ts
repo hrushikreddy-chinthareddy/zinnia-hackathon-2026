@@ -8,9 +8,14 @@ import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { getChannel } from './address-change-helpers';
-import { AddressChangePayload, SignatureState } from '../types/address-change-types';
+import {
+    AddressChangePayload,
+    SignatureState,
+} from '../types/address-change-types';
 
-export const transformSignatureStateToPayload = (data: SignatureState | null) => {
+export const transformSignatureStateToPayload = (
+    data: SignatureState | null
+) => {
     if (!data) return {};
 
     const signature = data.signatures.map((item: SignatureWithdrawal) => ({
@@ -18,7 +23,10 @@ export const transformSignatureStateToPayload = (data: SignatureState | null) =>
         isSignedPresent: item.isSigned || null,
         signDate: item.signDate.text || null,
         signPrintName: item.signName || null,
-        signDesignation: item.signTitle.text == SignValidated.Unselected ? null : item.signTitle.text || null,
+        signDesignation:
+            item.signTitle.text == SignValidated.Unselected
+                ? null
+                : item.signTitle.text || null,
     }));
 
     return {
@@ -70,9 +78,17 @@ const DEFAULT_PARTY: any = {
 };
 
 const transformPartyToPayload = (params: any) => {
-    const { isPhoneChangeRequire, isAddressChangeRequire, phone, address, partyDetails } = params;
+    const {
+        isPhoneChangeRequire,
+        isAddressChangeRequire,
+        phone,
+        address,
+        partyDetails,
+    } = params;
 
-    const formattedPartyDetails = partyDetails ? toPartyPayload(partyDetails) : DEFAULT_PARTY;
+    const formattedPartyDetails = partyDetails
+        ? toPartyPayload(partyDetails)
+        : DEFAULT_PARTY;
     const party = formattedPartyDetails;
 
     if (isPhoneChangeRequire && phone) {
@@ -85,7 +101,15 @@ const transformPartyToPayload = (params: any) => {
     return party;
 };
 
-const toPartyPayload = ({ firstName, middleName, lastName, suffix, prefix, identifications, partyId }: Party) => ({
+const toPartyPayload = ({
+    firstName,
+    middleName,
+    lastName,
+    suffix,
+    prefix,
+    identifications,
+    partyId,
+}: Party) => ({
     partyId: partyId,
     firstName: firstName,
     middleName: middleName,
@@ -127,10 +151,17 @@ export const buildAddressChangeRequestBody = ({
 }: AddressChangePayload) => {
     const { policyNumber, policyStatus, product, carrierId, parties } = policy;
 
-    const addresses = [{ ...formData.addresses['entered'] }, { ...formData.addresses['validated'] }];
-    const newAddress = addresses.find(a => a.addressId === formData.selectedId);
+    const addresses = [
+        { ...formData.addresses['entered'] },
+        { ...formData.addresses['validated'] },
+    ];
+    const newAddress = addresses.find(
+        (a) => a.addressId === formData.selectedId
+    );
 
-    const partyDetails = parties?.find(party => party.partyId === roleIdentifier.partyId);
+    const partyDetails = parties?.find(
+        (party) => party.partyId === roleIdentifier.partyId
+    );
     const party = transformPartyToPayload({
         partyId: partyDetails?.partyId,
         isPhoneChangeRequire: formData.isPhoneChangeRequire,
@@ -148,7 +179,11 @@ export const buildAddressChangeRequestBody = ({
             correlationid: uuid4(),
             onbaseCaseId: selectedDocument?.caseId,
             caseId: formData.caseId,
-            documentDate: selectedDocument ? dayjs(selectedDocument?.documentDate).format(ZAHARA_API_DATE_FORMAT) : null,
+            documentDate: selectedDocument
+                ? dayjs(selectedDocument?.documentDate).format(
+                      ZAHARA_API_DATE_FORMAT
+                  )
+                : null,
             carrierId: carrierId,
             planCode: product?.planCode,
             policyNumber: policyNumber,
@@ -173,7 +208,9 @@ export const buildAddressChangeRequestBody = ({
             correlationid: uuid4(),
             onbaseCaseId: document?.caseId,
             caseId: null,
-            documentDate: document ? dayjs(document?.documentDate).format(ZAHARA_API_DATE_FORMAT) : null,
+            documentDate: document
+                ? dayjs(document?.documentDate).format(ZAHARA_API_DATE_FORMAT)
+                : null,
             carrierId: carrierId,
             planCode: product?.planCode,
             policyNumber: policyNumber,

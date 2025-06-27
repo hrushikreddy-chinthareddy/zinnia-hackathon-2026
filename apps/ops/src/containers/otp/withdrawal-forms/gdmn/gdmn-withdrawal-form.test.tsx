@@ -1,10 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { TaskType } from '@deps/models/case/task';
-import { AccountCloseReason, CaseStatus } from '@deps/models/case/withdrawal/case';
+import {
+    AccountCloseReason,
+    CaseStatus,
+} from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import GdmnWithdrawalForm from './gdmn-withdrawal-form';
@@ -212,7 +218,10 @@ describe('GDMN Form Specific component', () => {
         await waitFor(() => {
             userEvent.click(formSelect);
 
-            const formTypeElement = screen.getByText('formSubtype.partialWithdrawal', { ignore: 'option' });
+            const formTypeElement = screen.getByText(
+                'formSubtype.partialWithdrawal',
+                { ignore: 'option' }
+            );
             userEvent.click(formTypeElement);
         });
 
@@ -273,7 +282,9 @@ describe('GDMN Form Specific component', () => {
 
         await userEvent.click(formSelect);
 
-        const partilWithdrawalContainer = screen.queryByTestId('partial-withdrawal-program');
+        const partilWithdrawalContainer = screen.queryByTestId(
+            'partial-withdrawal-program'
+        );
         expect(partilWithdrawalContainer).toBeInTheDocument();
     });
 
@@ -321,13 +332,21 @@ describe('GDMN Form Specific component', () => {
 
         const formSelect = screen.getByTestId('form-type');
         expect(formSelect).toBeInTheDocument();
-        const fullWithdrawalContainer = screen.queryByTestId('full-withdrawal-program');
+        const fullWithdrawalContainer = screen.queryByTestId(
+            'full-withdrawal-program'
+        );
         expect(fullWithdrawalContainer).toBeInTheDocument();
-        const surrenderOption = screen.queryByTestId(AccountCloseReason.Surrender);
+        const surrenderOption = screen.queryByTestId(
+            AccountCloseReason.Surrender
+        );
         expect(surrenderOption).toBeInTheDocument();
-        const ContractAttached = screen.queryByText(AccountCloseReason.ContractAttached);
+        const ContractAttached = screen.queryByText(
+            AccountCloseReason.ContractAttached
+        );
         expect(ContractAttached).not.toBeInTheDocument();
-        const ContractLost = screen.queryByText(AccountCloseReason.ContractLost);
+        const ContractLost = screen.queryByText(
+            AccountCloseReason.ContractLost
+        );
         expect(ContractLost).not.toBeInTheDocument();
     });
 });

@@ -14,72 +14,93 @@ type DefaultCaseFormProps = {
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
 };
-export const DefaultCaseForm = React.forwardRef(function DefaultCaseFormComponent(
-    { readonly, onSubmit, isSubmit, taskMetadata }: DefaultCaseFormProps,
-    forwardedRef: ForwardedRef<Form>
-) {
-    const { defaultCaseData, setDefaultCaseData, policy, setSubmitFailed, correlationId } = useDefaultCase();
-    const [formSchema, setFormSchema] = useState(taskMetadata);
+export const DefaultCaseForm = React.forwardRef(
+    function DefaultCaseFormComponent(
+        { readonly, onSubmit, isSubmit, taskMetadata }: DefaultCaseFormProps,
+        forwardedRef: ForwardedRef<Form>
+    ) {
+        const {
+            defaultCaseData,
+            setDefaultCaseData,
+            policy,
+            setSubmitFailed,
+            correlationId,
+        } = useDefaultCase();
+        const [formSchema, setFormSchema] = useState(taskMetadata);
 
-    const handleSubmit = useCallback(async () => {
-        if (!isSubmit) {
+        const handleSubmit = useCallback(async () => {
+            if (!isSubmit) {
+                onSubmit('');
+                return;
+            }
+            const defaultCasePayload = cleanForm(defaultCaseData, taskMetadata);
+            const success = await submitServiceRequestForm(defaultCasePayload);
+            setSubmitFailed(!success);
             onSubmit('');
-            return;
-        }
-        const defaultCasePayload = cleanForm(defaultCaseData, taskMetadata);
-        const success = await submitServiceRequestForm(defaultCasePayload);
-        setSubmitFailed(!success);
-        onSubmit('');
-    }, [isSubmit, onSubmit, defaultCaseData, taskMetadata, setSubmitFailed]);
+        }, [
+            isSubmit,
+            onSubmit,
+            defaultCaseData,
+            taskMetadata,
+            setSubmitFailed,
+        ]);
 
-    const handleChange = useCallback(
-        (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+        const handleChange = useCallback(
+            (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+                setDefaultCaseData((ogDefaultCaseData: any) => ({
+                    ...ogDefaultCaseData,
+                    ...event.formData,
+                }));
+            },
+            [setDefaultCaseData]
+        );
+
+        const setFormContext = (dynamicData: any) => {
             setDefaultCaseData((ogDefaultCaseData: any) => ({
                 ...ogDefaultCaseData,
-                ...event.formData,
+                ...dynamicData,
             }));
-        },
-        [setDefaultCaseData]
-    );
+        };
 
-    const setFormContext = (dynamicData: any) => {
-        setDefaultCaseData((ogDefaultCaseData: any) => ({
-            ...ogDefaultCaseData,
-            ...dynamicData,
-        }));
-    };
-
-    const updateSchemaHandler = (dynamicData: any) => {
-        Object.keys(dynamicData).forEach(key => {
-            const currentSchema1 = {
-                ...formSchema,
-                formSchema: {
-                    ...formSchema.formSchema,
-                    definitions: {
-                        ...formSchema.formSchema.definitions,
-                        [key]: { ...dynamicData[key] },
+        const updateSchemaHandler = (dynamicData: any) => {
+            Object.keys(dynamicData).forEach((key) => {
+                const currentSchema1 = {
+                    ...formSchema,
+                    formSchema: {
+                        ...formSchema.formSchema,
+                        definitions: {
+                            ...formSchema.formSchema.definitions,
+                            [key]: { ...dynamicData[key] },
+                        },
                     },
-                },
-            };
-            setFormSchema(oldSchema => ({ ...oldSchema, ...currentSchema1 }));
-        });
-    };
+                };
+                setFormSchema((oldSchema) => ({
+                    ...oldSchema,
+                    ...currentSchema1,
+                }));
+            });
+        };
 
-    const memoizedSchema = useMemo(() => formSchema, [formSchema]);
+        const memoizedSchema = useMemo(() => formSchema, [formSchema]);
 
-    return (
-        <DynamicForm
-            ref={forwardedRef}
-            formData={defaultCaseData}
-            taskMetadata={memoizedSchema}
-            onChange={handleChange}
-            onSubmit={handleSubmit}
-            formContext={{
-                customData: { ...defaultCaseData, carrier: policy.carrierId, correlationId },
-                setCustomData: setFormContext,
-                updateSchema: updateSchemaHandler,
-            }}
-            readonly={readonly}
-        ></DynamicForm>
-    );
-});
+        return (
+            <DynamicForm
+                ref={forwardedRef}
+                formData={defaultCaseData}
+                taskMetadata={memoizedSchema}
+                onChange={handleChange}
+                onSubmit={handleSubmit}
+                formContext={{
+                    customData: {
+                        ...defaultCaseData,
+                        carrier: policy.carrierId,
+                        correlationId,
+                    },
+                    setCustomData: setFormContext,
+                    updateSchema: updateSchemaHandler,
+                }}
+                readonly={readonly}
+            ></DynamicForm>
+        );
+    }
+);

@@ -26,7 +26,9 @@ import useNasuConfig from './nasu-withdrawal-form-helpers';
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
 
 export default function NasuWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
 
     const {
         formValidation,
@@ -62,11 +64,15 @@ export default function NasuWithdrawalForm() {
     } = useContext(FormDataContext);
 
     useEffect(() => {
-        setFormData(fs => ({
+        setFormData((fs) => ({
             ...fs,
-            formExtName: `${initialForm?.carrier || Carrier.NASU}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.NASU
+            }_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.NASU}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.NASU
+                }_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -77,19 +83,37 @@ export default function NasuWithdrawalForm() {
         setFormValidator(() => formValidation);
     }, [setFormValidator]);
 
-    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
+    const ownerStateOfResidence =
+        formParty?.parties?.[0]?.addresses?.[0]?.state;
+    const hasTpaAuthorization =
+        formTpaAuthorization &&
+        !Object.values(formTpaAuthorization).every((val) => val === null);
+    const isLC = !isFastFeatureEnabled(
+        initialForm?.taskType,
+        featureFlagDecisions
+    );
     const shouldShowDOBInOl4573 = isLC
         ? handleShouldShowDOBInOl4573LC(parties as LifeCadParty[])
-        : handleShouldShowDOBInOl4573(parties as any[], partyRoles as PolicyPartyRoles[]);
+        : handleShouldShowDOBInOl4573(
+              parties as any[],
+              partyRoles as PolicyPartyRoles[]
+          );
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormType isFormStateReadOnly={isFormStateReadOnly} formSubtypeOptions={formSubtypeOptions} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />
+            <FormType
+                isFormStateReadOnly={isFormStateReadOnly}
+                formSubtypeOptions={formSubtypeOptions}
+            />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <DistributionReason
+                reasonOptions={reasonOptions}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             {formSubtype === FormSubtype.FullWithdrawal ? (
                 <FormProgramFullWithdrawal
                     selectOneOptions={selectOneOptions}
@@ -107,7 +131,11 @@ export default function NasuWithdrawalForm() {
                     <FormDistribution
                         isFormStateReadOnly={isFormStateReadOnly}
                         fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                        title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                        title={
+                            t(
+                                'distributionInstruction.investmentSelectionForDistribution'
+                            ) as string
+                        }
                     />
                 </>
             )}
@@ -116,20 +144,38 @@ export default function NasuWithdrawalForm() {
                 options={disbursementOptions}
                 defaultValue={defaultValues.disbursementOption}
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <TaxOL4753Attachment isFormStateReadOnly={isFormStateReadOnly} shouldShowDOBInOl4573={shouldShowDOBInOl4573} />
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <TaxOL4753Attachment
+                isFormStateReadOnly={isFormStateReadOnly}
+                shouldShowDOBInOl4573={shouldShowDOBInOl4573}
+            />
             {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
                 config={signaturesNotaryConfig}
             />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

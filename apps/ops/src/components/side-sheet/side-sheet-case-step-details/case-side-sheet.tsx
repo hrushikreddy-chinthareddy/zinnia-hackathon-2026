@@ -1,4 +1,9 @@
-import { TabGroup, TabList, TabTrigger, TabContent } from '@zinnia/bloom/components';
+import {
+    TabGroup,
+    TabList,
+    TabTrigger,
+    TabContent,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -47,28 +52,50 @@ export const doesStepHaveSidesheet = (step: TransformedStep): boolean => {
     return getStepSidesheetViews(step).length > 0;
 };
 
-export default function StepSideSheetContent({ step }: { step: TransformedStep }) {
+export default function StepSideSheetContent({
+    step,
+}: {
+    step: TransformedStep;
+}) {
     const { t } = useTranslation();
     const sideSheetViews = getStepSidesheetViews(step);
     const [tab, setTab] = useState(sideSheetViews[0]);
 
     return (
         <div>
-            <TabGroup defaultValue={tab} value={tab} activationMode="manual" onValueChange={setTab}>
-                <TabList className={`!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8 ${sideSheetViews.length <= 1 ? '!hidden' : ''}`}>
-                    {sideSheetViews.map(view => (
+            <TabGroup
+                defaultValue={tab}
+                value={tab}
+                activationMode="manual"
+                onValueChange={setTab}
+            >
+                <TabList
+                    className={`!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8 ${
+                        sideSheetViews.length <= 1 ? '!hidden' : ''
+                    }`}
+                >
+                    {sideSheetViews.map((view) => (
                         <TabTrigger key={view} value={view}>
                             {t(`caseOverview.sidesheet.${view}`)}
                         </TabTrigger>
                     ))}
                 </TabList>
-                <TabContent className="w-full p-8" value={StepSideSheetViews.MultiInstance}>
+                <TabContent
+                    className="w-full p-8"
+                    value={StepSideSheetViews.MultiInstance}
+                >
                     <MultiInstanceTab step={step} />
                 </TabContent>
-                <TabContent className="w-full p-8" value={StepSideSheetViews.Documents}>
+                <TabContent
+                    className="w-full p-8"
+                    value={StepSideSheetViews.Documents}
+                >
                     <DocumentsTab step={step} />
                 </TabContent>
-                <TabContent className="w-full p-8" value={StepSideSheetViews.AdditionalData}>
+                <TabContent
+                    className="w-full p-8"
+                    value={StepSideSheetViews.AdditionalData}
+                >
                     <StepAdditionalData
                         additionalData={step.additionalData}
                         stepKey={step.id as AdditionalDataStepIds}
@@ -76,7 +103,10 @@ export default function StepSideSheetContent({ step }: { step: TransformedStep }
                         date={step.updatedAt}
                     />
                 </TabContent>
-                <TabContent className="w-full p-8" value={StepSideSheetViews.StepAdditionalData}>
+                <TabContent
+                    className="w-full p-8"
+                    value={StepSideSheetViews.StepAdditionalData}
+                >
                     <TransactionsStepAdditionalData
                         stepAdditionalData={step.stepAdditionalData?.[0]}
                         stepKey={step.id as TransactionsAdditionalDataStepIds}

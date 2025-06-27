@@ -8,11 +8,14 @@ import CallLogCard, { CallLogCardProps } from './card-call-log';
 const meta: Meta<typeof CallLogCard> = {
     title: 'Components/Cards/CallLogCard',
     component: CallLogCard,
-    decorators: [storybookContainerDecorator, Story => (
-        <div className="w-[500px]">
-            <Story />
-        </div>
-    )],
+    decorators: [
+        storybookContainerDecorator,
+        (Story) => (
+            <div className="w-[500px]">
+                <Story />
+            </div>
+        ),
+    ],
     args: {
         callerName: 'John Smith',
         callerRole: 'Representative',
@@ -42,6 +45,6 @@ const meta: Meta<typeof CallLogCard> = {
 
 export default meta;
 
-type StoryType = StoryObj<CallLogCardProps>
+type StoryType = StoryObj<CallLogCardProps>;
 
 export const Default: StoryType = {};

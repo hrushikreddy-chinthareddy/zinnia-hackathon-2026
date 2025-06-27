@@ -2,7 +2,11 @@ import { render } from '@testing-library/react';
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
-import { FormDataContext, OtpWithdrawalFormState, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    OtpWithdrawalFormState,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { TaskType } from '@deps/models/case/task';
@@ -60,7 +64,8 @@ describe('RSLN OFT Form Specific component', () => {
     const formTaxWithholding = data.formTaxWithholding;
     const formTpaAuthorization = data.formTpaAuthorization;
 
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
     const rslnConfig = getRSLNOftConfig(t);
 
     describe('Config existence', () => {
@@ -223,7 +228,11 @@ describe('RSLN OFT Form Specific component', () => {
     describe('signaturesConfig', () => {
         const { signaturesConfig } = rslnConfig;
         describe('Owner signature', () => {
-            const ownerConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Owner);
+            const ownerConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
                 expect(ownerConfig?.fields).toHaveLength(6);
@@ -232,7 +241,9 @@ describe('RSLN OFT Form Specific component', () => {
 
         describe('Joint Owner signature', () => {
             const jointOwnerConfig = signaturesConfig.find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.JointOwner
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.JointOwner
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
@@ -345,15 +356,25 @@ describe('RSLN OFT Form Specific component', () => {
                     ],
                 };
 
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: jointOwner } as OtpWithdrawalFormState)).toBeTruthy();
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: owner } as OtpWithdrawalFormState)).toBeFalsy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: jointOwner,
+                    } as OtpWithdrawalFormState)
+                ).toBeTruthy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: owner,
+                    } as OtpWithdrawalFormState)
+                ).toBeFalsy();
             });
         });
 
         describe('Beneficiary signature', () => {
             it('should be in the config', () => {
                 const beneficiaryConfig = signaturesConfig.find(
-                    sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+                    (sigConfig) =>
+                        sigConfig.signatureType ===
+                        SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
                 expect(beneficiaryConfig).toBeTruthy();
                 expect(beneficiaryConfig?.fields).toHaveLength(6);

@@ -41,18 +41,42 @@ export const calculaterFilterProps = ({
     const features = originalFeatures?.filter(filterValidFeature) ?? [];
 
     const numActive =
-        (riders?.filter(rider => rider.status?.toLowerCase() === ExtraFilters.Pending).length ?? 0) +
-        features.filter(feature => feature.approvalDate && !dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())).length;
+        (riders?.filter(
+            (rider) => rider.status?.toLowerCase() === ExtraFilters.Pending
+        ).length ?? 0) +
+        features.filter(
+            (feature) =>
+                feature.approvalDate &&
+                !dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(
+                    dayjs()
+                )
+        ).length;
     const numAvailable =
-        (riders?.filter(rider => rider.status?.toLowerCase() === ExtraFilters.Active).length ?? 0) +
-        features.filter(feature => !feature.approvalDate && !dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())).length;
+        (riders?.filter(
+            (rider) => rider.status?.toLowerCase() === ExtraFilters.Active
+        ).length ?? 0) +
+        features.filter(
+            (feature) =>
+                !feature.approvalDate &&
+                !dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(
+                    dayjs()
+                )
+        ).length;
     const numTerminated =
-        (riders?.filter(rider => rider.status?.toLowerCase() === ExtraFilters.Terminated).length ?? 0) +
-        features.filter(feature => dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())).length;
-    const numNotElected = riders?.filter(rider => rider.riderElected === RIDER_NOT_ELECTED).length ?? 0;
+        (riders?.filter(
+            (rider) => rider.status?.toLowerCase() === ExtraFilters.Terminated
+        ).length ?? 0) +
+        features.filter((feature) =>
+            dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())
+        ).length;
+    const numNotElected =
+        riders?.filter((rider) => rider.riderElected === RIDER_NOT_ELECTED)
+            .length ?? 0;
 
-    const quantitySort = (a: { quantity: number | undefined }, b: { quantity: number | undefined }) =>
-        a.quantity === 0 ? 1 : b.quantity === 0 ? -1 : 1;
+    const quantitySort = (
+        a: { quantity: number | undefined },
+        b: { quantity: number | undefined }
+    ) => (a.quantity === 0 ? 1 : b.quantity === 0 ? -1 : 1);
 
     return [
         {

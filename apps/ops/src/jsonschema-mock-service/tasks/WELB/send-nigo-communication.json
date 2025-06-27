@@ -110,7 +110,14 @@
                     "required": ["issueResolved"]
                 },
                 "uiSchema": {
-                    "ui:order": ["rules", "issueResolved", "declineReason", "issueReason", "uploadDocuments", "attachments"],
+                    "ui:order": [
+                        "rules",
+                        "issueResolved",
+                        "declineReason",
+                        "issueReason",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,

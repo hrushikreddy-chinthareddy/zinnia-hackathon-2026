@@ -1,17 +1,29 @@
 import { AmountType } from '@zinnia/api-types/types/bpm';
-import { Reason, Status, SystematicProgram as SystematicPrograms, PaymentForm , SystematicProgram } from '@zinnia/api-types/types/sor';
+import {
+    Reason,
+    Status,
+    SystematicProgram as SystematicPrograms,
+    PaymentForm,
+    SystematicProgram,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ACH, Autopay } from '@deps/contexts/transactions/AutopayContext';
 import { SystematicProgramUpdateRequestQuery } from '@deps/queries/api/bpm';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    NUMERIC_DATE_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 
 export const buildSystematicProgramUpdateRequestBody = (
     autopay: Autopay,
     systematicProgram: SystematicProgram
 ): SystematicProgramUpdateRequestQuery => {
-    const effectiveDateFormatted = dayjs(autopay.effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
+    const effectiveDateFormatted = dayjs(
+        autopay.effectiveDate,
+        NUMERIC_DATE_FORMAT
+    ).format(ZAHARA_API_DATE_FORMAT);
 
     return {
         caseId: autopay.caseId || '',
@@ -24,7 +36,9 @@ export const buildSystematicProgramUpdateRequestBody = (
             paymentForm: ACH,
             amountType: AmountType.AMOUNT,
             frequency: autopay.frequency,
-            startDate: autopay.isSetUp ? effectiveDateFormatted : systematicProgram?.startDate,
+            startDate: autopay.isSetUp
+                ? effectiveDateFormatted
+                : systematicProgram?.startDate,
             endDate: systematicProgram?.endDate,
             previousProgramDate: systematicProgram?.previousProgramDate,
             nextProgramDate: effectiveDateFormatted,
@@ -44,8 +58,15 @@ export const buildSystematicProgramUpdateRequestBody = (
     };
 };
 
-export const getSystematicInfo = (systematicPrograms?: SystematicPrograms[], systematicProgramReason?: Reason, isSetUp?: boolean) => {
-    const systematicProgram = systematicPrograms?.find(sp => sp.reason === systematicProgramReason && sp.status === Status.ACTIVE);
+export const getSystematicInfo = (
+    systematicPrograms?: SystematicPrograms[],
+    systematicProgramReason?: Reason,
+    isSetUp?: boolean
+) => {
+    const systematicProgram = systematicPrograms?.find(
+        (sp) =>
+            sp.reason === systematicProgramReason && sp.status === Status.ACTIVE
+    );
     const arrangementId = isSetUp ? '' : systematicProgram?.arrangementId || '';
 
     return { systematicProgram, arrangementId };
@@ -54,7 +75,10 @@ export const buildSystematicWithdrawalProgramUpdateRequestBody = (
     autopay: Autopay,
     systematicProgram: SystematicProgram
 ): SystematicProgramUpdateRequestQuery => {
-    const effectiveDateFormatted = dayjs(autopay.effectiveDate, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT);
+    const effectiveDateFormatted = dayjs(
+        autopay.effectiveDate,
+        NUMERIC_DATE_FORMAT
+    ).format(ZAHARA_API_DATE_FORMAT);
 
     return {
         caseId: autopay.caseId || '',
@@ -67,7 +91,9 @@ export const buildSystematicWithdrawalProgramUpdateRequestBody = (
             paymentForm: (autopay.paymentForm || ACH) as PaymentForm,
             amountType: AmountType.AMOUNT,
             frequency: autopay.frequency,
-            startDate: autopay.isSetUp ? effectiveDateFormatted : systematicProgram?.startDate,
+            startDate: autopay.isSetUp
+                ? effectiveDateFormatted
+                : systematicProgram?.startDate,
             endDate: systematicProgram?.endDate,
             previousProgramDate: systematicProgram?.previousProgramDate,
             nextProgramDate: effectiveDateFormatted,

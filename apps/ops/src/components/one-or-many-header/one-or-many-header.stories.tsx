@@ -7,7 +7,7 @@ export default {
     title: 'Components/OneOrManyHeader',
     component: OneOrManyHeader,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="mt-16 h-screen w-screen p-10">
                 <div
                     style={{
@@ -27,19 +27,25 @@ export default {
     },
 } as Meta<typeof OneOrManyHeader>;
 
-export const ZeroOwners = (args: OneOrManyHeaderProps) => <OneOrManyHeader {...args} />;
+export const ZeroOwners = (args: OneOrManyHeaderProps) => (
+    <OneOrManyHeader {...args} />
+);
 ZeroOwners.args = {
     entities: [[]],
     labels: ['Joint Owner', 'SSN'],
 };
 
-export const OneOwner = (args: OneOrManyHeaderProps) => <OneOrManyHeader {...args} />;
+export const OneOwner = (args: OneOrManyHeaderProps) => (
+    <OneOrManyHeader {...args} />
+);
 OneOwner.args = {
     entities: [['Chakarabarti Padmanbhman'], ['***-**-6789']],
     labels: ['Joint Owner', 'SSN'],
 };
 
-export const TwoOwners = (args: OneOrManyHeaderProps) => <OneOrManyHeader {...args} />;
+export const TwoOwners = (args: OneOrManyHeaderProps) => (
+    <OneOrManyHeader {...args} />
+);
 TwoOwners.args = {
     entities: [
         ['Chakarabarti Padmanbhman', 'Roger Aikmann'],
@@ -48,7 +54,9 @@ TwoOwners.args = {
     labels: ['Joint Owner', 'SSN'],
 };
 
-export const ThreeOwners = (args: OneOrManyHeaderProps) => <OneOrManyHeader {...args} />;
+export const ThreeOwners = (args: OneOrManyHeaderProps) => (
+    <OneOrManyHeader {...args} />
+);
 ThreeOwners.args = {
     entities: [
         ['Chakarabarti Padmanbhman', 'Roger Aikmann', 'Carrie Donald'],
@@ -57,7 +65,9 @@ ThreeOwners.args = {
     labels: ['Joint Owner', 'SSN'],
 };
 
-export const ThreeAgents = (args: OneOrManyHeaderProps) => <OneOrManyHeader {...args} />;
+export const ThreeAgents = (args: OneOrManyHeaderProps) => (
+    <OneOrManyHeader {...args} />
+);
 ThreeAgents.args = {
     entities: [['Agent 1', 'Agent 2', 'Agent 3']],
     labels: [],

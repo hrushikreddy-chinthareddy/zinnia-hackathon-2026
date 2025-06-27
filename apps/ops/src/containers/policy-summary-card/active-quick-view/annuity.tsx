@@ -20,14 +20,19 @@ type AnnuityQuickViewFieldProps = {
 type AnnuityQuickViewFields = Record<string, AnnuityQuickViewFieldProps>;
 
 export default function AnnuityQuickView({ policy }: BasePolicyComponentArgs) {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
     const Fields: AnnuityQuickViewFields = {
         AccountValue: {
             label: t('colDefs:policySummary.accountValue'),
             details: numberFormatify(policy.accountValue),
             tooltipTitle: t('colDefs:policySummary.accountValue') as string,
-            tooltipBody: t('colDefs:policySummary.accountValueTooltip') as string,
+            tooltipBody: t(
+                'colDefs:policySummary.accountValueTooltip'
+            ) as string,
         },
         IssueDate: {
             label: t('colDefs:policySummary.issueDate'),
@@ -47,18 +52,36 @@ export default function AnnuityQuickView({ policy }: BasePolicyComponentArgs) {
         },
         qualificationType: {
             label: t('colDefs:policySummary.qualificationType'),
-            details: t(`dashboard.search.results.policySummaryCard.${policy?.qualificationType?.toLowerCase()}`) ?? '',
+            details:
+                t(
+                    `dashboard.search.results.policySummaryCard.${policy?.qualificationType?.toLowerCase()}`
+                ) ?? '',
         },
     };
 
     return (
-        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2Annuity')}>
-            {Object.entries(Fields).map(([key, { label, details, ...tooltipProps }]) => (
-                <div key={key}>
-                    <Label variant={LabelVariant.FieldLabel} label={label} {...(HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 ? {} : tooltipProps)} />
-                    <Content details={details} variant={ContentVariant.BodySm} />
-                </div>
-            ))}
+        <QuickViewRoot
+            title={t(
+                'dashboard.search.results.policySummaryCard.header2Annuity'
+            )}
+        >
+            {Object.entries(Fields).map(
+                ([key, { label, details, ...tooltipProps }]) => (
+                    <div key={key}>
+                        <Label
+                            variant={LabelVariant.FieldLabel}
+                            label={label}
+                            {...(HIDE_ANNUITIES_TOOLTIPS_DEPU_2749
+                                ? {}
+                                : tooltipProps)}
+                        />
+                        <Content
+                            details={details}
+                            variant={ContentVariant.BodySm}
+                        />
+                    </div>
+                )
+            )}
         </QuickViewRoot>
     );
 }

@@ -1,6 +1,9 @@
 import { DataDefinition } from '@deps/types/data';
 
-export const sort = <T extends object>(a: DataDefinition<T>, b: DataDefinition<T>) => {
+export const sort = <T extends object>(
+    a: DataDefinition<T>,
+    b: DataDefinition<T>
+) => {
     if (!b || b?.value === undefined || b?.value === null) return -1;
     if (!a || a?.value === undefined || a?.value === null) return 1;
 
@@ -13,7 +16,11 @@ export const sort = <T extends object>(a: DataDefinition<T>, b: DataDefinition<T
     return 0;
 };
 
-export const orderObjectsByString = (objects: any[], orderedSet: string[] = [], key = ''): any[] => {
+export const orderObjectsByString = (
+    objects: any[],
+    orderedSet: string[] = [],
+    key = ''
+): any[] => {
     const indexMap = new Map<any, number>();
 
     if (!orderedSet.length || !objects.length) return [];
@@ -44,7 +51,11 @@ export const orderObjectsByString = (objects: any[], orderedSet: string[] = [], 
     return objects;
 };
 
-export const orderObjectsByFirstString = (objects: any[], orderedSet: string[], key = ''): any[] => {
+export const orderObjectsByFirstString = (
+    objects: any[],
+    orderedSet: string[],
+    key = ''
+): any[] => {
     const sortedObjects = [...objects];
 
     sortedObjects.sort((a, b) => {
@@ -79,7 +90,10 @@ export const sortByAndThenBy = <T>(objects: T[], ...keys: (keyof T)[]): T[] =>
 
             if (typeof aValue === 'string' && typeof bValue === 'string') {
                 return aValue.localeCompare(bValue);
-            } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+            } else if (
+                typeof aValue === 'number' &&
+                typeof bValue === 'number'
+            ) {
                 return aValue - bValue;
             }
         }

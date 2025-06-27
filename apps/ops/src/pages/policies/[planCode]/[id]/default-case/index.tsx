@@ -17,10 +17,22 @@ import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { UserProfile } from '@deps/models/user-profile';
 import { getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    logError,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface DefaultCaseProps extends SegmentTrackedPageProps {
@@ -30,14 +42,28 @@ interface DefaultCaseProps extends SegmentTrackedPageProps {
     correlationId: string;
 }
 
-const DefaultCase = ({ policy, user, taskMetadata, correlationId }: DefaultCaseProps) => {
-    useSegmentPageTracker(user, SegmentPageName.DefaultCaseDataEntry, { correlationId, policyNumber: policy.policyNumber });
+const DefaultCase = ({
+    policy,
+    user,
+    taskMetadata,
+    correlationId,
+}: DefaultCaseProps) => {
+    useSegmentPageTracker(user, SegmentPageName.DefaultCaseDataEntry, {
+        correlationId,
+        policyNumber: policy.policyNumber,
+    });
 
     return (
         <>
             <PageHead titleKey="defaultCase" />
-            <DefaultCaseProvider policy={policy} user={user} correlationId={correlationId}>
-                <DefaultCaseContainer taskMetadata={taskMetadata}></DefaultCaseContainer>
+            <DefaultCaseProvider
+                policy={policy}
+                user={user}
+                correlationId={correlationId}
+            >
+                <DefaultCaseContainer
+                    taskMetadata={taskMetadata}
+                ></DefaultCaseContainer>
             </DefaultCaseProvider>
         </>
     );
@@ -56,15 +82,25 @@ export const getServerSideProps = withPageAuthAndLogging(
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
-                logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
-                    ...parseErrorInformation(e),
-                    ...loggingContext,
-                });
+                logWarn(
+                    'getServerSidePropsPolicyDetailsPage::Access token expired',
+                    {
+                        ...parseErrorInformation(e),
+                        ...loggingContext,
+                    }
+                );
                 return serverSidePropsLogout();
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const shouldShowDefaultCase = featureFlagDecisions?.[FEATURE_FLAGS.SERVICE_REQUEST_FORM_ENABLED];
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const shouldShowDefaultCase =
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.SERVICE_REQUEST_FORM_ENABLED
+                ];
 
             if (!shouldShowDefaultCase) {
                 return {
@@ -82,7 +118,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
             try {
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
+                const policy = await getPolicyDetailsSsr(
+                    policyNumber,
+                    planCode,
+                    accessToken,
+                    loggingContext,
+                    true
+                );
 
                 const taskMetadata = await getTaskFormMetadata(
                     policy?.carrierId || '',
@@ -93,7 +135,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                     false
                 );
 
-                const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
+                const currentTaskMetadata =
+                    taskMetadata?.schemaContent?.tabSchemas ||
+                    ([] as FormMetadata[]);
 
                 if (!currentTaskMetadata.length) {
                     const fallbackMetadata: FormMetadata = {
@@ -116,7 +160,11 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 //transform schema options with api
                 await applyDynamicOptions(
-                    { ...policy, taskType: TaskType.Default_Case_DataEntry, carrier: policy.carrierId },
+                    {
+                        ...policy,
+                        taskType: TaskType.Default_Case_DataEntry,
+                        carrier: policy.carrierId,
+                    },
                     accessToken,
                     currentTaskMetadata
                 );
@@ -130,14 +178,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             } catch (error) {
-                logError('getServerSidePropsPolicyDetailsPage', { ...parseErrorInformation(error), ...loggingContext });
+                logError('getServerSidePropsPolicyDetailsPage', {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                });
                 return {
                     props: {},
                 };
             }
         },
     },
-    { file: 'policies/[planCode]/[id]/default-case', function: 'getServerSideProps', page: 'policies/:planCode/:id/default-case' }
+    {
+        file: 'policies/[planCode]/[id]/default-case',
+        function: 'getServerSideProps',
+        page: 'policies/:planCode/:id/default-case',
+    }
 );
 
 export default DefaultCase;

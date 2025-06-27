@@ -49,11 +49,15 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
-import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helpers';
+import {
+    commonOftFormValidation,
+    getQualTypeOptions,
+} from '../oft-form-helpers';
 
 export default function getUsaaOftConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.
-    const formValidation = (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values);
+    const formValidation = (values: Partial<FormParts> = {}) =>
+        commonOftFormValidation(t, values);
 
     const signaturesConfig: SignatureValidationConfig[] = [
         {
@@ -100,7 +104,9 @@ export default function getUsaaOftConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
 
@@ -124,7 +130,8 @@ export default function getUsaaOftConfig(t: TFunction) {
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         },
         {
             key: `sig-val-spouse`,
@@ -143,19 +150,36 @@ export default function getUsaaOftConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
+                return (
+                    !!ownerStateOfResidence &&
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
+                );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
-    const oftFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
+    const oftFormValidation = ({
+        formParty,
+        formSignature,
+        formDisbursement,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = formValidation({
+            formParty,
+            formSignature,
+            formDisbursement,
+        });
 
         // fbo details required
         if (
-            ![PaymentMethod.DTCC].includes(formDisbursement?.paymentMethod.text as PaymentMethod) &&
+            ![PaymentMethod.DTCC].includes(
+                formDisbursement?.paymentMethod.text as PaymentMethod
+            ) &&
             formDisbursement?.paymentMethod.text &&
             !formDisbursement?.payee?.fboDetails?.text
         ) {
@@ -292,7 +316,10 @@ export default function getUsaaOftConfig(t: TFunction) {
                     programType: { text: ProgramType.WITHDRAWAL },
                     programSubType: { text: ProgramSubType.Dollar },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -309,7 +336,10 @@ export default function getUsaaOftConfig(t: TFunction) {
                     },
                     programType: { text: ProgramType.WITHDRAWAL },
                     programSubType: { text: ProgramSubType.PercentageofAV },
-                    partialPercent: { text: val, amountType: AmountType.Percent },
+                    partialPercent: {
+                        text: val,
+                        amountType: AmountType.Percent,
+                    },
                 };
             },
         },
@@ -324,26 +354,39 @@ export default function getUsaaOftConfig(t: TFunction) {
                         text: Program.OFT,
                     },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
     ];
 
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null } => {
         const programSubType = formProgram?.programSubType?.text || '';
         if (programSubType === ProgramSubType.FullSurrender) {
             return { selectedOption: ProgramType.FullSurrender, amount: '' };
         }
         if (programSubType === ProgramSubType.TotalFreeWithdrawal) {
-            return { selectedOption: ProgramType.PenaltyFreeAmount, amount: '' };
+            return {
+                selectedOption: ProgramType.PenaltyFreeAmount,
+                amount: '',
+            };
         }
         if (programSubType === ProgramSubType.PercentageofAV) {
-            return { selectedOption: ProgramType.PartialPercent, amount: formProgram?.partialPercent?.text || '' };
+            return {
+                selectedOption: ProgramType.PartialPercent,
+                amount: formProgram?.partialPercent?.text || '',
+            };
         }
 
         if (programSubType === ProgramSubType.Dollar) {
-            return { selectedOption: ProgramType.PartialDollar, amount: formProgram?.partialAmount?.text || '' };
+            return {
+                selectedOption: ProgramType.PartialDollar,
+                amount: formProgram?.partialAmount?.text || '',
+            };
         }
         return { selectedOption: null, amount: '' };
     };
@@ -385,7 +428,10 @@ export default function getUsaaOftConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -398,11 +444,16 @@ export default function getUsaaOftConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -423,8 +474,12 @@ export default function getUsaaOftConfig(t: TFunction) {
                     maxLength: 35,
                     tooltip: {
                         shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                        title: t(
+                            'distributionMethod.contractLabelPopoverTitle'
+                        ) as string,
+                        body: t(
+                            'distributionMethod.contractLabelPopoverMessage'
+                        ) as string,
                     },
                 },
                 {
@@ -434,7 +489,11 @@ export default function getUsaaOftConfig(t: TFunction) {
                     classNames: 'col-span-3',
                 },
             ],
-            getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                bank,
+                payee,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
@@ -442,7 +501,8 @@ export default function getUsaaOftConfig(t: TFunction) {
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
                     payeeName: payee?.name?.text ?? '',
@@ -523,7 +583,10 @@ export default function getUsaaOftConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -535,11 +598,16 @@ export default function getUsaaOftConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -554,7 +622,9 @@ export default function getUsaaOftConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
                 {
@@ -570,8 +640,12 @@ export default function getUsaaOftConfig(t: TFunction) {
                     maxLength: 35,
                     tooltip: {
                         shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                        title: t(
+                            'distributionMethod.contractLabelPopoverTitle'
+                        ) as string,
+                        body: t(
+                            'distributionMethod.contractLabelPopoverMessage'
+                        ) as string,
                     },
                 },
                 {
@@ -581,7 +655,11 @@ export default function getUsaaOftConfig(t: TFunction) {
                     classNames: 'col-span-3',
                 },
             ],
-            getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                bank,
+                payee,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
@@ -590,11 +668,14 @@ export default function getUsaaOftConfig(t: TFunction) {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                     payeeName: payee?.name?.text ?? '',
                     fboDetails: payee?.fboDetails?.text || '',
                     contractNumber: payee?.contractNumber.text ?? '',
@@ -669,8 +750,12 @@ export default function getUsaaOftConfig(t: TFunction) {
                     maxLength: 35,
                     tooltip: {
                         shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                        title: t(
+                            'distributionMethod.contractLabelPopoverTitle'
+                        ) as string,
+                        body: t(
+                            'distributionMethod.contractLabelPopoverMessage'
+                        ) as string,
                     },
                 },
                 {
@@ -679,8 +764,15 @@ export default function getUsaaOftConfig(t: TFunction) {
                     component: DisbursementFields.BankAddress,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, payee }: FormDisbursement) {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                payee,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === PaymentMailType.Check &&
+                    paymentMailType.text === null
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         payeeName: payee?.name.text ?? '',
@@ -691,7 +783,12 @@ export default function getUsaaOftConfig(t: TFunction) {
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, contractNumber, fboDetails }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                contractNumber,
+                fboDetails,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
@@ -729,8 +826,12 @@ export default function getUsaaOftConfig(t: TFunction) {
                     maxLength: 35,
                     tooltip: {
                         shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                        title: t(
+                            'distributionMethod.contractLabelPopoverTitle'
+                        ) as string,
+                        body: t(
+                            'distributionMethod.contractLabelPopoverMessage'
+                        ) as string,
                     },
                 },
                 {
@@ -750,8 +851,16 @@ export default function getUsaaOftConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, payee, upsAccount }: FormDisbursement) {
-                if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                payee,
+                upsAccount,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === FormDisbursementSelections.Check &&
+                    paymentMailType.text === PaymentMailType.ExpressCheck
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         payeeName: payee?.name.text ?? '',
@@ -798,7 +907,9 @@ export default function getUsaaOftConfig(t: TFunction) {
             value: ProcessRequestType.Immediately,
         },
         {
-            label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
+            label: t(
+                'amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+            ),
             value: ProcessRequestType.NoLongerSubject,
         },
         {

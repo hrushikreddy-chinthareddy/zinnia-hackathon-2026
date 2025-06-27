@@ -4,10 +4,13 @@ import { BaseTransactionSideSheetValues, PayeePaymentDetails } from '../types';
 //     interestRate?: number;
 // };
 
-export interface NewLoanTransactionSideSheetValues extends BaseTransactionSideSheetValues {
+export interface NewLoanTransactionSideSheetValues
+    extends BaseTransactionSideSheetValues {
     effectiveDate: string;
     fundDisbursementType?: string;
-    getAsyncSideSheetValues?: () => Promise<Partial<NewLoanTransactionSideSheetValues>>;
+    getAsyncSideSheetValues?: () => Promise<
+        Partial<NewLoanTransactionSideSheetValues>
+    >;
     interestRate?: number;
     loanAmount?: number;
     loanInterestType?: string;

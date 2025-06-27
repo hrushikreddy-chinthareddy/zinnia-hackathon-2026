@@ -41,9 +41,18 @@ export type AvailableFormsTransaction = {
 };
 
 export type SendDocumentActions =
-    | { type: SendDocumentAction.TransactionType; payload: CallCenterElement<string, SimpleOption> }
-    | { type: SendDocumentAction.TransactionSubType; payload: CallCenterElement<string, SimpleOption> }
-    | { type: SendDocumentAction.Documents; payload: CallCenterElement<FormDetails, FormDetails> }
+    | {
+          type: SendDocumentAction.TransactionType;
+          payload: CallCenterElement<string, SimpleOption>;
+      }
+    | {
+          type: SendDocumentAction.TransactionSubType;
+          payload: CallCenterElement<string, SimpleOption>;
+      }
+    | {
+          type: SendDocumentAction.Documents;
+          payload: CallCenterElement<FormDetails, FormDetails>;
+      }
     | { type: SendDocumentAction.Correspondence; payload: Correspondence }
     | { type: SendDocumentAction.Confirm; payload: Confirm }
     | { type: SendDocumentAction.Reset };
@@ -76,7 +85,10 @@ export enum SendDocumentFormType {
     ServiceRequestForm = 'Service Request Form',
 }
 
-export const AllowedRoleTypes: string[] = [PartyRole.JOINTOWNER, PartyRole.OWNER];
+export const AllowedRoleTypes: string[] = [
+    PartyRole.JOINTOWNER,
+    PartyRole.OWNER,
+];
 
 export const AllowedRoleTypesEmail: string[] = Object.values(PartyRole);
 

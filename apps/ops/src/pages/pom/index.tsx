@@ -24,7 +24,7 @@ export default POM;
 
 export const getServerSideProps = withPageAuthAndLogging(
     {
-        getServerSideProps: async context => {
+        getServerSideProps: async (context) => {
             const { locale = DEFAULT_LOCALE } = context;
 
             const translations = await serverSideTranslations(

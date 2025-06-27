@@ -1,14 +1,22 @@
-import { AccountType, AddressType, EmailType, PhoneType, ProductType } from '@zinnia/api-types/types/sor';
+import {
+    AccountType,
+    AddressType,
+    EmailType,
+    PhoneType,
+    ProductType,
+} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 // ToDo - BPB: Once the SOR ProductTypes spec has been updated to include the below types, we can remove anticipatedProductTypes logic.
-export type AnticipatedProductTypesType = (typeof AnticipatedProductTypes)[keyof typeof AnticipatedProductTypes];
+export type AnticipatedProductTypesType =
+    (typeof AnticipatedProductTypes)[keyof typeof AnticipatedProductTypes];
 
 const AnticipatedProductTypes = {
     TERMLIFE: 'TERMLIFE',
-    DELAYEDIMMEDIATEFIXEDANDVARIABLEANNUITY: 'Delayed Immediate Fixed and Variable Annuity',
+    DELAYEDIMMEDIATEFIXEDANDVARIABLEANNUITY:
+        'Delayed Immediate Fixed and Variable Annuity',
     DELAYEDIMMEDIATEFIXEDANNUITY: 'Delayed Immediate Fixed Annuity',
     DELAYEDIMMEDIATEVARIABLEANNUITY: 'Delayed Immediate Variable Annuity',
     EQUITYINDEXANNUITY: 'Equity Index Annuity',
@@ -28,23 +36,36 @@ const AnticipatedProductTypes = {
     ...ProductType,
 };
 
-export function mapProductTypeToTranslation(productType: ProductType | AnticipatedProductTypesType | undefined, t: TFunction) {
+export function mapProductTypeToTranslation(
+    productType: ProductType | AnticipatedProductTypesType | undefined,
+    t: TFunction
+) {
     const translationString = 'policy.productType.';
     switch (productType) {
         case AnticipatedProductTypes.DELAYEDIMMEDIATEFIXEDANDVARIABLEANNUITY:
             return {
-                label: t(translationString + 'delayedImmediateFixedAndVariableAnnuity'),
-                acronym: t(translationString + 'delayedImmediateFixedAndVariableAnnuityAcronym'),
+                label: t(
+                    translationString +
+                        'delayedImmediateFixedAndVariableAnnuity'
+                ),
+                acronym: t(
+                    translationString +
+                        'delayedImmediateFixedAndVariableAnnuityAcronym'
+                ),
             };
         case AnticipatedProductTypes.DELAYEDIMMEDIATEFIXEDANNUITY:
             return {
                 label: t(translationString + 'delayedImmediateFixedAnnuity'),
-                acronym: t(translationString + 'delayedImmediateFixedAnnuityAcronym'),
+                acronym: t(
+                    translationString + 'delayedImmediateFixedAnnuityAcronym'
+                ),
             };
         case AnticipatedProductTypes.DELAYEDIMMEDIATEVARIABLEANNUITY:
             return {
                 label: t(translationString + 'delayedImmediateVariableAnnuity'),
-                acronym: t(translationString + 'delayedImmediateVariableAnnuityAcronym'),
+                acronym: t(
+                    translationString + 'delayedImmediateVariableAnnuityAcronym'
+                ),
             };
         case AnticipatedProductTypes.EQUITYINDEXANNUITY:
             return {
@@ -73,8 +94,13 @@ export function mapProductTypeToTranslation(productType: ProductType | Anticipat
             };
         case AnticipatedProductTypes.IMMEDIATEFIXEDANDVARIABLEANNUITY:
             return {
-                label: t(translationString + 'immediateFixedAndVariableAnnuity'),
-                acronym: t(translationString + 'immediateFixedAndVariableAnnuityAcronym'),
+                label: t(
+                    translationString + 'immediateFixedAndVariableAnnuity'
+                ),
+                acronym: t(
+                    translationString +
+                        'immediateFixedAndVariableAnnuityAcronym'
+                ),
             };
         case AnticipatedProductTypes.IMMEDIATEFIXEDANNUITY:
             return {
@@ -84,7 +110,9 @@ export function mapProductTypeToTranslation(productType: ProductType | Anticipat
         case AnticipatedProductTypes.IMMEDIATEVARIABLEANNUITY:
             return {
                 label: t(translationString + 'immediateVariableAnnuity'),
-                acronym: t(translationString + 'immediateVariableAnnuityAcronym'),
+                acronym: t(
+                    translationString + 'immediateVariableAnnuityAcronym'
+                ),
             };
         case AnticipatedProductTypes.MUTUALFUND:
             return {
@@ -94,7 +122,9 @@ export function mapProductTypeToTranslation(productType: ProductType | Anticipat
         case AnticipatedProductTypes.MYGA:
             return {
                 label: t(translationString + 'multiYearGuaranteeAnnuity'),
-                acronym: t(translationString + 'multiYearGuaranteeAnnuityAcronym'),
+                acronym: t(
+                    translationString + 'multiYearGuaranteeAnnuityAcronym'
+                ),
             };
         case AnticipatedProductTypes.REGINDEXLINKEDANNUITY:
             return {
@@ -109,12 +139,16 @@ export function mapProductTypeToTranslation(productType: ProductType | Anticipat
         case AnticipatedProductTypes.VARIABLEDEFERREDANNUITY:
             return {
                 label: t(translationString + 'variableDeferredAnnuity'),
-                acronym: t(translationString + 'variableDeferredAnnuityAcronym'),
+                acronym: t(
+                    translationString + 'variableDeferredAnnuityAcronym'
+                ),
             };
         case AnticipatedProductTypes.VARIABLEUNIVERSALLIFEANNUITY:
             return {
                 label: t(translationString + 'variableUniversalLifeAnnuity'),
-                acronym: t(translationString + 'variableUniversalLifeAnnuityAcronym'),
+                acronym: t(
+                    translationString + 'variableUniversalLifeAnnuityAcronym'
+                ),
             };
         case ProductType.INDEXEDUNIVERSALLIFE:
             return {
@@ -150,7 +184,10 @@ export function mapProductTypeToTranslation(productType: ProductType | Anticipat
     }
 }
 
-export function mapAccountTypeToTranslation(accountType: AccountType | undefined, t: TFunction) {
+export function mapAccountTypeToTranslation(
+    accountType: AccountType | undefined,
+    t: TFunction
+) {
     const translationString = 'people.card.bank.accountOptions.';
 
     switch (accountType) {
@@ -170,7 +207,10 @@ export function mapAccountTypeToTranslation(accountType: AccountType | undefined
     }
 }
 
-export function mapEmailTypeToTranslation(emailType: EmailType | undefined, t: TFunction) {
+export function mapEmailTypeToTranslation(
+    emailType: EmailType | undefined,
+    t: TFunction
+) {
     const translationString = 'people.card.email.emailOptions.';
 
     switch (emailType) {
@@ -190,7 +230,11 @@ interface MapAddressTypeToTranslation {
     t: TFunction;
 }
 
-export function mapAddressTypeToTranslation({ addressType, lowercase, t }: MapAddressTypeToTranslation) {
+export function mapAddressTypeToTranslation({
+    addressType,
+    lowercase,
+    t,
+}: MapAddressTypeToTranslation) {
     if (!addressType) {
         return DEFAULT_ERROR_STRING;
     }
@@ -200,15 +244,24 @@ export function mapAddressTypeToTranslation({ addressType, lowercase, t }: MapAd
     switch (addressType?.toUpperCase()) {
         default:
         case AddressType.RESIDENCE:
-            return lowercase ? t(translationString + 'residence').toLocaleLowerCase() : t(translationString + 'residence');
+            return lowercase
+                ? t(translationString + 'residence').toLocaleLowerCase()
+                : t(translationString + 'residence');
         case AddressType.BUSINESS:
-            return lowercase ? t(translationString + 'business').toLocaleLowerCase() : t(translationString + 'business');
+            return lowercase
+                ? t(translationString + 'business').toLocaleLowerCase()
+                : t(translationString + 'business');
         case AddressType.POBOX:
-            return lowercase ? t(translationString + 'poBoxLower') : t(translationString + 'poBox');
+            return lowercase
+                ? t(translationString + 'poBoxLower')
+                : t(translationString + 'poBox');
     }
 }
 
-export function mapAddressTypeToPreferredTranslation(addressType: AddressType, t: TFunction) {
+export function mapAddressTypeToPreferredTranslation(
+    addressType: AddressType,
+    t: TFunction
+) {
     const translationString = 'people.card.addressOptions.';
 
     switch (addressType) {
@@ -222,7 +275,10 @@ export function mapAddressTypeToPreferredTranslation(addressType: AddressType, t
     }
 }
 
-export function mapPhoneTypeToTranslation(phoneType: PhoneType | undefined, t: TFunction) {
+export function mapPhoneTypeToTranslation(
+    phoneType: PhoneType | undefined,
+    t: TFunction
+) {
     const translationString = 'people.card.phone.phoneOptions.';
 
     switch (phoneType) {

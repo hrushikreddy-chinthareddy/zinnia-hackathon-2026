@@ -1,6 +1,16 @@
-import { ChangeEvent, InputHTMLAttributes, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
+import {
+    ChangeEvent,
+    InputHTMLAttributes,
+    ReactNode,
+    RefObject,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import { FieldTest } from '@deps/jest/constants/test-id-constants';
 
 import FieldClear from './field-clear/field-clear';
@@ -110,7 +120,9 @@ export default function Field({
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Tab') {
                 setTimeout(() => {
-                    const isDescendantOfContainer = containerRef.current && containerRef.current.contains(document.activeElement);
+                    const isDescendantOfContainer =
+                        containerRef.current &&
+                        containerRef.current.contains(document.activeElement);
                     setFocus(!!isDescendantOfContainer);
                 }, 0);
             }
@@ -128,41 +140,66 @@ export default function Field({
     const activeClass = 'active:border-primary';
     const selectedClass = `${selected ? 'border-primary' : ''}`;
 
-    const stateClass = type === FieldType.Base ? `${focusClass}` : `${hoverClass} ${focusClass} ${activeClass} ${selectedClass}`;
+    const stateClass =
+        type === FieldType.Base
+            ? `${focusClass}`
+            : `${hoverClass} ${focusClass} ${activeClass} ${selectedClass}`;
 
     const baseDefaultVariantClass = 'text-gray-900 ';
-    const baseInactiveVariantClass = 'text-gray-300 border-0 pointer-events-none';
+    const baseInactiveVariantClass =
+        'text-gray-300 border-0 pointer-events-none';
     const baseSuccessVariantClass =
         'text-gray-900 border-0 relative after:absolute after:content-[" "] after:h-[2px] after:w-full after:-bottom-[2px] after:bg-semantic-success !ring-0';
     const baseErrorVariantClass =
         'text-semantic-error border-0 relative after:absolute after:content-[" "] after:h-[2px] after:w-full after:-bottom-[2px] after:bg-semantic-error !ring-0';
-    const defaultVariantClasses = 'bg-white border-2 border-gray-200 text-gray-900';
-    const inactiveVariantClasses = 'bg-gray-100 border-2 border-gray-300 pointer-events-none text-gray-600';
+    const defaultVariantClasses =
+        'bg-white border-2 border-gray-200 text-gray-900';
+    const inactiveVariantClasses =
+        'bg-gray-100 border-2 border-gray-300 pointer-events-none text-gray-600';
 
-    const successVariantClasses = 'bg-white border-2 border-semantic-success text-gray-900';
-    const errorVariantClasses = 'bg-white border-2 border-semantic-error text-semantic-error';
+    const successVariantClasses =
+        'bg-white border-2 border-semantic-success text-gray-900';
+    const errorVariantClasses =
+        'bg-white border-2 border-semantic-error text-semantic-error';
 
     let variantClass;
     switch (variant) {
         case FieldVariant.Inactive:
-            variantClass = type === FieldType.Base ? baseInactiveVariantClass : inactiveVariantClasses;
+            variantClass =
+                type === FieldType.Base
+                    ? baseInactiveVariantClass
+                    : inactiveVariantClasses;
             break;
         case FieldVariant.Success:
-            variantClass = type === FieldType.Base ? baseSuccessVariantClass : successVariantClasses;
+            variantClass =
+                type === FieldType.Base
+                    ? baseSuccessVariantClass
+                    : successVariantClasses;
             break;
         case FieldVariant.Error:
-            variantClass = type === FieldType.Base ? baseErrorVariantClass : errorVariantClasses;
+            variantClass =
+                type === FieldType.Base
+                    ? baseErrorVariantClass
+                    : errorVariantClasses;
             break;
         case FieldVariant.Default:
         default:
-            variantClass = type === FieldType.Base ? baseDefaultVariantClass : defaultVariantClasses;
+            variantClass =
+                type === FieldType.Base
+                    ? baseDefaultVariantClass
+                    : defaultVariantClasses;
             break;
     }
 
     const classes = `${stateClass} ${variantClass} flex flex-row justify-between rounded-lg ${className}`;
 
     return (
-        <div data-testid={FieldTest.Container} className={'flex flex-col'} onClick={onClick} ref={containerRef}>
+        <div
+            data-testid={FieldTest.Container}
+            className={'flex flex-col'}
+            onClick={onClick}
+            ref={containerRef}
+        >
             <FieldLabel
                 classNames={labelClassNames}
                 label={label}
@@ -173,7 +210,10 @@ export default function Field({
                 required={required}
             />
             <div data-testid={FieldTest.Input} className={classes}>
-                <FieldUnits variant={variant} location={FieldUnitsLocation.Start}>
+                <FieldUnits
+                    variant={variant}
+                    location={FieldUnitsLocation.Start}
+                >
                     {leading}
                 </FieldUnits>
                 <FieldInterior
@@ -190,9 +230,22 @@ export default function Field({
                 <FieldUnits variant={variant} location={FieldUnitsLocation.End}>
                     {trailing}
                 </FieldUnits>
-                {isClearable && <FieldClear label={label} {...rest} inputRef={inputRef} onClear={onClear} />}
+                {isClearable && (
+                    <FieldClear
+                        label={label}
+                        {...rest}
+                        inputRef={inputRef}
+                        onClear={onClear}
+                    />
+                )}
             </div>
-            {message && <AssistiveText text={message} variant={AssistiveTextVariant.Error} className="mt-2" />}
+            {message && (
+                <AssistiveText
+                    text={message}
+                    variant={AssistiveTextVariant.Error}
+                    className="mt-2"
+                />
+            )}
         </div>
     );
 }

@@ -3,7 +3,11 @@ import { ApiVersion, ProcessType } from '@deps/models/case/enums';
 import { CaseApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
-import { getCaseTaskInstances, getCaseTasks, getTaskFormMetadataSSR } from '@deps/queries/api/v1/task';
+import {
+    getCaseTaskInstances,
+    getCaseTasks,
+    getTaskFormMetadataSSR,
+} from '@deps/queries/api/v1/task';
 import { getCaseTaskByIdSSR, updateTask } from '@deps/queries/api/v2/task';
 import { isProd } from '@deps/utils/environment.helpers';
 import { LoggingContext } from '@deps/utils/server-logging';
@@ -21,7 +25,9 @@ interface TaskItem {
 const loadMockService = async () => {
     if (!isProd()) {
         try {
-            const { mockService } = require('@deps/jsonschema-mock-service/mock-service');
+            const {
+                mockService,
+            } = require('@deps/jsonschema-mock-service/mock-service');
             return mockService;
         } catch (error) {
             console.error('Error loading mockService:', error);
@@ -44,7 +50,11 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
         });
 
         const filteredTasks = tasks?.filter((task: any) => {
-            return task.status === TaskStatus.New || task.status === TaskStatus.Completed || task.status === TaskStatus.InProgress;
+            return (
+                task.status === TaskStatus.New ||
+                task.status === TaskStatus.Completed ||
+                task.status === TaskStatus.InProgress
+            );
         });
 
         formattedList = filteredTasks?.map((task: any) => {
@@ -73,7 +83,9 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
                 updatedDate: task.updatedDate,
             };
         });
-        formattedList.sort((a: TaskItem, b: TaskItem) => b.updatedDate.localeCompare(a.updatedDate));
+        formattedList.sort((a: TaskItem, b: TaskItem) =>
+            b.updatedDate.localeCompare(a.updatedDate)
+        );
     }
 
     return formattedList;
@@ -93,7 +105,13 @@ export const getTaskFormMetadata = async (
             return mockService.getTaskFormMetadataSSRMock(clientId, taskType);
         }
     }
-    return getTaskFormMetadataSSR(clientId, taskType, processType, accessToken, logCtx);
+    return getTaskFormMetadataSSR(
+        clientId,
+        taskType,
+        processType,
+        accessToken,
+        logCtx
+    );
 };
 export const getCaseTaskById = async (
     taskId: string,
@@ -111,7 +129,10 @@ export const getCaseTaskById = async (
     return getCaseTaskByIdSSR(taskId, accessToken, logCtx);
 };
 
-export const updateCaseTask = async (task: ManagementTask, taskStatus?: TaskStatus): Promise<ManagementTask<TaskStatus> | null> => {
+export const updateCaseTask = async (
+    task: ManagementTask,
+    taskStatus?: TaskStatus
+): Promise<ManagementTask<TaskStatus> | null> => {
     const body = { ...task, status: taskStatus || TaskStatus.Completed };
     return await updateTask(task.caseId, task.id, body);
 };

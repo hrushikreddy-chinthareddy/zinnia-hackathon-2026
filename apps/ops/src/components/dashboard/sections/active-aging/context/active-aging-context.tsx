@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { CaseCountGroupByEnum, CaseCountInputFilter, CaseCountOutput } from '@zinnia/api-types/types/analytics';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutput,
+} from '@zinnia/api-types/types/analytics';
 import { createContext, FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
@@ -9,7 +13,12 @@ import {
     organizeAndMergeDataByTimeRange,
     TimeRangeData,
 } from '@deps/components/dashboard/sections/active-aging/utils';
-import { formatProcessFilter, createBaseQuery, startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+import {
+    formatProcessFilter,
+    createBaseQuery,
+    startDates,
+    TimeframeFilterOptions,
+} from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
 
@@ -73,21 +82,34 @@ const defaultState = {
 
 const filterNullData = (response: CaseCountOutput) => {
     if (response?.data?.length) {
-        response.data = response?.data?.filter(item => item.name !== null && item.name !== 'null' && item.name !== '');
+        response.data = response?.data?.filter(
+            (item) =>
+                item.name !== null && item.name !== 'null' && item.name !== ''
+        );
     }
     return response;
 };
 
-export const ActiveAgingContext = createContext<ActiveAgingContextTypes>(defaultState);
+export const ActiveAgingContext =
+    createContext<ActiveAgingContextTypes>(defaultState);
 
 export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [timeframe, setTimeframe] = useState<ActiveAgingTimeRange>(ActiveAgingTimeRange.ZERO_TO_SIX);
-    const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(CaseCountGroupByEnum.PROCESS_SUB_TYPE);
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
+    const [timeframe, setTimeframe] = useState<ActiveAgingTimeRange>(
+        ActiveAgingTimeRange.ZERO_TO_SIX
+    );
+    const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(
+        CaseCountGroupByEnum.PROCESS_SUB_TYPE
+    );
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
+    const [selectedProcess, setSelectedProcess] = useState<
+        Processes | ExtendedProcesses
+    >(Processes.NewBusiness);
     const [caseStatus, setCaseStatus] = useState(defaultCaseStatus);
 
-    const createdDateStart = startDates[TimeframeFilterOptions.Trailing12Months];
+    const createdDateStart =
+        startDates[TimeframeFilterOptions.Trailing12Months];
 
     const filter = {
         caseStatus: Object.keys(caseStatus) as Statuses[],
@@ -104,21 +126,37 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
         isError: activeAgingDataError,
     } = useQuery({
         queryKey: ['activeAgingData', filter, groupBy, timeframe],
-        placeholderData: previousData => previousData,
-        queryFn: () => createBaseQuery(filter, [groupBy, CaseCountGroupByEnum.CREATED_DAY]),
+        placeholderData: (previousData) => previousData,
+        queryFn: () =>
+            createBaseQuery(filter, [
+                groupBy,
+                CaseCountGroupByEnum.CREATED_DAY,
+            ]),
         enabled: Object.keys(filter).length > 0,
         select: filterNullData,
     });
 
-    const timeRangeData = useMemo(() => organizeAndMergeDataByTimeRange(activeAgingData?.data || []), [activeAgingData]);
+    const timeRangeData = useMemo(
+        () => organizeAndMergeDataByTimeRange(activeAgingData?.data || []),
+        [activeAgingData]
+    );
 
-    const chartSeries = useMemo(() => generateActiveAgingSeries(timeframe, timeRangeData), [timeframe, timeRangeData]);
-    const totalCaseCount = useMemo(() => timeRangeData[timeframe]?.total || 0, [timeframe, timeRangeData]);
+    const chartSeries = useMemo(
+        () => generateActiveAgingSeries(timeframe, timeRangeData),
+        [timeframe, timeRangeData]
+    );
+    const totalCaseCount = useMemo(
+        () => timeRangeData[timeframe]?.total || 0,
+        [timeframe, timeRangeData]
+    );
     const pieSeries = useMemo(
         () => [
             {
                 name: 'Active aging',
-                data: Object.entries(timeRangeData).map(([key, value]) => ({ name: key.replace('D', ' Days'), y: value.total })),
+                data: Object.entries(timeRangeData).map(([key, value]) => ({
+                    name: key.replace('D', ' Days'),
+                    y: value.total,
+                })),
             },
         ],
         [timeRangeData]

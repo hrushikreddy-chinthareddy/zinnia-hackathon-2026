@@ -1,5 +1,10 @@
 import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
-import { TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import {
+    TabContent,
+    TabGroup,
+    TabList,
+    TabTrigger,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -52,16 +57,26 @@ function CaseDetailsContent({
     policyNumber,
     clientCode,
 }: CaseDetailsProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'sideSheet.caseDetailsContent',
+    });
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
-    const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
+    const handleTabChange = (value: string) =>
+        setActiveTab(value as TabOptions);
     const carrierName = getCarrierNameByClientId(clientCode as string);
-    const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
-    const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
+    const policyOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.OWNER
+    )?.partyId;
+    const policyOwner = policy?.parties?.find(
+        (party) => party.partyId === policyOwnerId
+    );
 
     const renderTabContent = (
         <>
-            <TabContent value={TabOptions.Details} className="flex flex-col px-6 pt-6 md:px-8 lg:px-10 gap-5">
+            <TabContent
+                value={TabOptions.Details}
+                className="flex flex-col px-6 pt-6 md:px-8 lg:px-10 gap-5"
+            >
                 <DetailsTab
                     carrierName={carrierName}
                     documentData={documentData}
@@ -70,10 +85,22 @@ function CaseDetailsContent({
                     clientCode={clientCode}
                 />
             </TabContent>
-            <TabContent className="flex w-full flex-col items-center" value={TabOptions.Related}>
-                <RelatedTab offset={offset} limit={limit} setOffset={setOffset} caseTableData={caseTableData} setError={setError} />
+            <TabContent
+                className="flex w-full flex-col items-center"
+                value={TabOptions.Related}
+            >
+                <RelatedTab
+                    offset={offset}
+                    limit={limit}
+                    setOffset={setOffset}
+                    caseTableData={caseTableData}
+                    setError={setError}
+                />
             </TabContent>
-            <TabContent className="flex w-full flex-col items-center" value={TabOptions.Address}>
+            <TabContent
+                className="flex w-full flex-col items-center"
+                value={TabOptions.Address}
+            >
                 <AddressTab
                     addresses={policyOwner?.addresses as addressType[]}
                     planCode={policy?.product?.planCode}
@@ -84,14 +111,22 @@ function CaseDetailsContent({
     );
     return (
         <div>
-            <TabGroup defaultValue={activeTab} value={activeTab} activationMode="manual" onValueChange={handleTabChange}>
+            <TabGroup
+                defaultValue={activeTab}
+                value={activeTab}
+                activationMode="manual"
+                onValueChange={handleTabChange}
+            >
                 <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
-                    <TabTrigger value={TabOptions.Details}>{t('tabs.details') ?? ''}</TabTrigger>
+                    <TabTrigger value={TabOptions.Details}>
+                        {t('tabs.details') ?? ''}
+                    </TabTrigger>
                     <TabTrigger value={TabOptions.Related}>
                         {t('tabs.related') ?? ''} ({caseTableData?.total || 0})
                     </TabTrigger>
                     <TabTrigger value={TabOptions.Address}>
-                        {t('tabs.addressHistory') ?? ''} ({policyOwner?.addresses?.length || 0})
+                        {t('tabs.addressHistory') ?? ''} (
+                        {policyOwner?.addresses?.length || 0})
                     </TabTrigger>
                 </TabList>
                 {renderTabContent}

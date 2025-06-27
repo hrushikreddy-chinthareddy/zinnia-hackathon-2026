@@ -20,10 +20,17 @@ import { TransactionTrendsContext } from '@deps/components/dashboard/sections/tr
 import { TransactionTrendsFilters } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-filters';
 import { TransactionTrendsHeader } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-header';
 import { calculateAverage } from '@deps/components/dashboard/sections/transaction-trends/utils';
-import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import {
+    friendlyGroupByName,
+    generateCaseLink,
+} from '@deps/components/dashboard/utils';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { Statuses } from '@deps/models/case/case';
@@ -56,7 +63,7 @@ export const TransactionTrendsTable = () => {
     } = useContext(TransactionTrendsContext);
 
     const dataWithMonthlyAverage = useMemo(() => {
-        return transactionTrendsData?.data?.map(item => ({
+        return transactionTrendsData?.data?.map((item) => ({
             ...item,
             average: calculateAverage(item.count, timerange),
         }));
@@ -64,7 +71,11 @@ export const TransactionTrendsTable = () => {
 
     // Filter by search
     const searchedData = useMemo(() => {
-        return dataWithMonthlyAverage?.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase())) || [];
+        return (
+            dataWithMonthlyAverage?.filter((item) =>
+                item.name.toLowerCase().includes(searchText.toLowerCase())
+            ) || []
+        );
     }, [dataWithMonthlyAverage, searchText]);
 
     const { handleSort, sortedData } = useTableOptions({
@@ -109,8 +120,10 @@ export const TransactionTrendsTable = () => {
             <div className={sharedStyles.searchContainer}>
                 <FieldData
                     fieldSize={FieldSize.Small}
-                    placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()}`}
-                    onChange={e => setSearchText(e.target.value)}
+                    placeholder={`Search by ${friendlyGroupByName[
+                        groupBy
+                    ]?.toLocaleLowerCase()}`}
+                    onChange={(e) => setSearchText(e.target.value)}
                 />
             </div>
             <TransactionTrendsFilters />
@@ -118,14 +131,22 @@ export const TransactionTrendsTable = () => {
                 <BlurOverlayLoader loading={transactionTrendsDataFetching}>
                     {transactionTrendsDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'Something went wrong fetching the application types, please try again by refreshing the page'}
+                                {
+                                    'Something went wrong fetching the application types, please try again by refreshing the page'
+                                }
                             </Typography>
                         </div>
                     ) : searchedData?.length === 0 ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
                                 {'There is no data for this selection'}
                             </Typography>
@@ -134,8 +155,15 @@ export const TransactionTrendsTable = () => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {toSentenceCase(friendlyGroupByName[groupBy])}
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.NAME)
+                                        }
+                                        sortable
+                                    >
+                                        {toSentenceCase(
+                                            friendlyGroupByName[groupBy]
+                                        )}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -144,7 +172,12 @@ export const TransactionTrendsTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.COUNT)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.COUNT)
+                                        }
+                                        sortable
+                                    >
                                         Total cases
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -154,7 +187,12 @@ export const TransactionTrendsTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.AVERAGE)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.AVERAGE)
+                                        }
+                                        sortable
+                                    >
                                         {dailyOrMonthly} average
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -182,8 +220,12 @@ export const TransactionTrendsTable = () => {
                                     return (
                                         <TableRow key={`${item.name}-${index}`}>
                                             <TableCell>{item.name}</TableCell>
-                                            <TableCell>{item.count.toLocaleString()}</TableCell>
-                                            <TableCell>{item.average.toLocaleString()}</TableCell>
+                                            <TableCell>
+                                                {item.count.toLocaleString()}
+                                            </TableCell>
+                                            <TableCell>
+                                                {item.average.toLocaleString()}
+                                            </TableCell>
                                             <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
@@ -201,11 +243,18 @@ export const TransactionTrendsTable = () => {
                             </TableBody>
                         </Table>
                     )}
-                    {!transactionTrendsDataFetching && searchedData?.length > 0 && searchedData.length > limit && (
-                        <div className={sharedStyles.paginationContainer}>
-                            <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
-                        </div>
-                    )}
+                    {!transactionTrendsDataFetching &&
+                        searchedData?.length > 0 &&
+                        searchedData.length > limit && (
+                            <div className={sharedStyles.paginationContainer}>
+                                <Pagination
+                                    limit={limit}
+                                    offset={offset}
+                                    total={searchedData?.length || 0}
+                                    goToPage={goToPage}
+                                />
+                            </div>
+                        )}
                 </BlurOverlayLoader>
             </div>
         </CardContainer>

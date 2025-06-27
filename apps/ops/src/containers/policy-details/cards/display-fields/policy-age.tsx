@@ -19,6 +19,6 @@ const PolicyAge = ({ policyAge }: PolicyAgeProps) => {
             <Content details={policyAge} variant={ContentVariant.BodySm} />
         </div>
     );
-}
+};
 
 export default PolicyAge;

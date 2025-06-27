@@ -1,10 +1,19 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { TaskType } from '@deps/models/case/task';
-import { AddressTypes, CaseStatus, maritalStatusType, PartyRoles, PhoneTypes } from '@deps/models/case/withdrawal/case';
+import {
+    AddressTypes,
+    CaseStatus,
+    maritalStatusType,
+    PartyRoles,
+    PhoneTypes,
+} from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import DlicWithdrawalForm from './dlic-withdrawal-form';

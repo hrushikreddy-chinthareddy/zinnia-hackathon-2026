@@ -1,7 +1,11 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { setCookie } from 'cookies-next';
 import { IncomingMessage, ServerResponse } from 'http';
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
+import {
+    GetServerSidePropsContext,
+    NextApiRequest,
+    NextApiResponse,
+} from 'next';
 // TODO: Look into this rule and why it exists https://nextjs.org/docs/messages/no-document-import-in-page
 // eslint-disable-next-line @next/next/no-document-import-in-page
 import { DocumentContext } from 'next/document';
@@ -21,7 +25,10 @@ export const getInitialData = async (ctx: DocumentContext) => {
     const isProd = ctx.req?.headers.host === PRODUCTION_HOST_NAME;
 
     if (!isProd && ctx.query.demouser) {
-        setCookie('demouser', ctx.query.demouser, { res: ctx.res, req: ctx.req });
+        setCookie('demouser', ctx.query.demouser, {
+            res: ctx.res,
+            req: ctx.req,
+        });
     }
     return { company };
 };
@@ -47,7 +54,11 @@ export const doesUserHavePagePermissions = async (
     loggingContext: LoggingContext,
     carrier: string | null = null
 ): Promise<boolean> => {
-    const carriers = await listCarriersPage(context, permission, loggingContext);
+    const carriers = await listCarriersPage(
+        context,
+        permission,
+        loggingContext
+    );
 
     if (carriers.length > 0 && carrier === null) {
         return true;

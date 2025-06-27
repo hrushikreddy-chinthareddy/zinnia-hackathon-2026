@@ -6,22 +6,48 @@ import {
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { FormValidationErrors, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
+import {
+    FormValidationErrors,
+    SignatureWithdrawal,
+} from '@deps/models/case/withdrawal/case';
 
-const spousalSignatureStateCodes: string[] = ['CA', 'ID', 'LA', 'NM', 'NV', 'TX', 'WI'];
+const spousalSignatureStateCodes: string[] = [
+    'CA',
+    'ID',
+    'LA',
+    'NM',
+    'NV',
+    'TX',
+    'WI',
+];
 
-export const useReRegSignatureStepConfig = (t: TFunction, isJointOwnerExist: boolean, ownerState: string, carrierId: string) => {
+export const useReRegSignatureStepConfig = (
+    t: TFunction,
+    isJointOwnerExist: boolean,
+    ownerState: string,
+    carrierId: string
+) => {
     const [isIrrevocableBene, setIssirrovocableBene] = useState(false);
-    const [isOwnerSignGuaranteeStamp, setIsOwnerSignGuaranteeStamp] = useState(false);
+    const [isOwnerSignGuaranteeStamp, setIsOwnerSignGuaranteeStamp] =
+        useState(false);
 
     const formValidation = useCallback(
         (signatures: SignatureWithdrawal[]): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
-            const ownerSignature = signatures?.find(sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner);
+            const ownerSignature = signatures?.find(
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
 
             // No choice made for signature
-            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t('signatureShouldBePresent');
+            if (
+                ownerSignature?.isSigned !== false &&
+                !ownerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('signatureShouldBePresent');
             }
 
             return errors;
@@ -83,7 +109,8 @@ export const useReRegSignatureStepConfig = (t: TFunction, isJointOwnerExist: boo
                                   key: 'joint-date',
                               },
                           ],
-                          signatureType: SignatureValidationTypeWithdrawal.JointOwner,
+                          signatureType:
+                              SignatureValidationTypeWithdrawal.JointOwner,
                           shouldDisplay: (): boolean => {
                               return true;
                           },
@@ -108,7 +135,8 @@ export const useReRegSignatureStepConfig = (t: TFunction, isJointOwnerExist: boo
                                   key: 'irrevocable-beneficiary-date',
                               },
                           ],
-                          signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+                          signatureType:
+                              SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
                       },
                   ]
                 : []),
@@ -130,11 +158,14 @@ export const useReRegSignatureStepConfig = (t: TFunction, isJointOwnerExist: boo
                                   key: 'witness-date',
                               },
                           ],
-                          signatureType: SignatureValidationTypeWithdrawal.Witness,
+                          signatureType:
+                              SignatureValidationTypeWithdrawal.Witness,
                       },
                   ]
                 : []),
-            ...(!!ownerState && spousalSignatureStateCodes.includes(ownerState?.toUpperCase()) && carrierId === 'FLIC'
+            ...(!!ownerState &&
+            spousalSignatureStateCodes.includes(ownerState?.toUpperCase()) &&
+            carrierId === 'FLIC'
                 ? [
                       {
                           key: `sig-val-spouse`,
@@ -152,12 +183,18 @@ export const useReRegSignatureStepConfig = (t: TFunction, isJointOwnerExist: boo
                                   key: 'spouse-date',
                               },
                           ],
-                          signatureType: SignatureValidationTypeWithdrawal.Spouse,
+                          signatureType:
+                              SignatureValidationTypeWithdrawal.Spouse,
                       },
                   ]
                 : []),
         ],
-        [isIrrevocableBene, isOwnerSignGuaranteeStamp, isJointOwnerExist, ownerState]
+        [
+            isIrrevocableBene,
+            isOwnerSignGuaranteeStamp,
+            isJointOwnerExist,
+            ownerState,
+        ]
     );
 
     return {

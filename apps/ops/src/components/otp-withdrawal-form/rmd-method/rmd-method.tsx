@@ -2,14 +2,29 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState, FormEvent, useEffect } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import Button, {
+    ButtonSize,
+    ButtonType,
+    ButtonVariant,
+} from '@deps/components/button/button';
 import ButtonGrp from '@deps/components/button-group/button-group';
 import IconButton from '@deps/components/icon-button/icon-button';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { AmountType, Frequency, RMDProgram, Terminateprogram, WithdrawalType, RMDType } from '@deps/models/case/withdrawal/case';
+import {
+    AmountType,
+    Frequency,
+    RMDProgram,
+    Terminateprogram,
+    WithdrawalType,
+    RMDType,
+} from '@deps/models/case/withdrawal/case';
 import { ReactComponent as RemoveIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
@@ -45,7 +60,7 @@ export interface RMDMethodId extends RMDProgram {
 }
 
 const getrmdRows = (rmds: RMDProgram[]): RMDMethodId[] => {
-    return rmds.map(method => {
+    return rmds.map((method) => {
         const id = Math.random().toString();
         return { ...method, id: id };
     });
@@ -68,11 +83,20 @@ interface RMDMethodProps {
     isQCD?: boolean;
 }
 
-export default function RMDMethod({ isFormStateReadOnly, rmdTypeOptions, isQCD = false }: RMDMethodProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.rmdMethod' });
-    const { formProgram, setFormProgram, formErrors } = useContext(FormDataContext);
+export default function RMDMethod({
+    isFormStateReadOnly,
+    rmdTypeOptions,
+    isQCD = false,
+}: RMDMethodProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.rmdMethod',
+    });
+    const { formProgram, setFormProgram, formErrors } =
+        useContext(FormDataContext);
 
-    const [rmdRows, setrmdRows] = useState<RMDMethodId[]>(getrmdRows(formProgram?.rmd?.rmdPrograms || [DEFAULT_RMD_PROGRAM]));
+    const [rmdRows, setrmdRows] = useState<RMDMethodId[]>(
+        getrmdRows(formProgram?.rmd?.rmdPrograms || [DEFAULT_RMD_PROGRAM])
+    );
     const [terminated, setTerminated] = useState<Terminateprogram[]>([]);
     const [rmdType, setRmdType] = useState(RMDType.AutoRMD);
     const [overlappingRmds, setOverlappingRmds] = useState<string[]>([]);
@@ -83,24 +107,38 @@ export default function RMDMethod({ isFormStateReadOnly, rmdTypeOptions, isQCD =
 
         // get last rmd method data
         const previousItem = rmdRows[rmdRows.length - 1];
-        const frequency = (previousItem?.frequency?.text && frequencyToValue[previousItem?.frequency?.text]) || frequencyToValue.Annually;
+        const frequency =
+            (previousItem?.frequency?.text &&
+                frequencyToValue[previousItem?.frequency?.text]) ||
+            frequencyToValue.Annually;
 
         const nextStartDate =
             (previousItem?.startDate?.text &&
                 dayjs(previousItem?.startDate?.text, ZAHARA_API_DATE_FORMAT)
-                    .add((Number(previousItem?.duration?.text) - 1) * frequency || 0, 'month')
+                    .add(
+                        (Number(previousItem?.duration?.text) - 1) *
+                            frequency || 0,
+                        'month'
+                    )
                     .add(1, 'day')
                     .format(ZAHARA_API_DATE_FORMAT)
                     .toString()) ||
             '';
 
-        setrmdRows(val => {
-            return [...val, { ...DEFAULT_RMD_PROGRAM, id, startDate: { text: nextStartDate } }];
+        setrmdRows((val) => {
+            return [
+                ...val,
+                {
+                    ...DEFAULT_RMD_PROGRAM,
+                    id,
+                    startDate: { text: nextStartDate },
+                },
+            ];
         });
     };
 
     const setRMDData = (val: RMDMethodId, i: number) => {
-        setrmdRows(data => {
+        setrmdRows((data) => {
             return data.map((rmd, j) => {
                 if (i !== j) {
                     return rmd;
@@ -121,19 +159,22 @@ export default function RMDMethod({ isFormStateReadOnly, rmdTypeOptions, isQCD =
     };
 
     const removeRmdRow = (i: number) => {
-        setrmdRows(val => val.filter((x, index) => i !== index));
+        setrmdRows((val) => val.filter((x, index) => i !== index));
     };
 
     useEffect(() => {
-        const programs = rmdRows.map(method => {
+        const programs = rmdRows.map((method) => {
             const mappedparty = { ...method };
             (mappedparty.frequency = {
-                text: mappedparty.frequency.text === Frequency.None ? ('' as Frequency) : mappedparty.frequency.text,
+                text:
+                    mappedparty.frequency.text === Frequency.None
+                        ? ('' as Frequency)
+                        : mappedparty.frequency.text,
             }),
                 delete mappedparty.id;
             return mappedparty;
         });
-        const overlappingIds = findOverlaps(rmdRows).map(val => val.id ?? '');
+        const overlappingIds = findOverlaps(rmdRows).map((val) => val.id ?? '');
         setOverlappingRmds(overlappingIds);
 
         const rmd = {
@@ -157,7 +198,7 @@ export default function RMDMethod({ isFormStateReadOnly, rmdTypeOptions, isQCD =
     }, [rmdRows, terminated]);
 
     const validateDuration = (programs: RMDProgram[]) => {
-        return programs.some(program => program?.duration?.text === '0');
+        return programs.some((program) => program?.duration?.text === '0');
     };
 
     const RmdMultipleTypeOptions = [
@@ -175,37 +216,55 @@ export default function RMDMethod({ isFormStateReadOnly, rmdTypeOptions, isQCD =
                 <ButtonGrp
                     activeValue={rmdType || ''}
                     groupLabel=""
-                    toggle={val => {
+                    toggle={(val) => {
                         setRmdType(val as RMDType);
                     }}
                     labels={rmdTypeOptions ?? RmdMultipleTypeOptions}
                     disabled={isFormStateReadOnly}
                 />
             </div>
-            <ExistingPrograms terminated={terminated} onDataChange={setTerminated} disableAllPrograms={true} />
+            <ExistingPrograms
+                terminated={terminated}
+                onDataChange={setTerminated}
+                disableAllPrograms={true}
+            />
             {rmdType === RMDType.CalculateRMD && <RMDCalculator />}
             {!isQCD && (
                 <div className="p-2">
-                    <Typography variant={TypographyVariant.BodyBold} className="my-2">
+                    <Typography
+                        variant={TypographyVariant.BodyBold}
+                        className="my-2"
+                    >
                         {t(`newRmdProgram`)}
                     </Typography>
                     {rmdRows.map((rmdMethod, index) => (
                         <div
                             key={rmdMethod.id}
                             className={`grid grid-cols-auto-2 p-2 ${
-                                overlappingRmds.includes(rmdMethod.id as string) ? 'my-4 rounded border-2 border-semantic-error' : ''
+                                overlappingRmds.includes(rmdMethod.id as string)
+                                    ? 'my-4 rounded border-2 border-semantic-error'
+                                    : ''
                             }`}
                         >
                             <div className="grid grid-cols-auto-2">
                                 <RMDOptions
-                                    onDataChange={val => setRMDData({ ...val, id: rmdMethod.id }, index)}
+                                    onDataChange={(val) =>
+                                        setRMDData(
+                                            { ...val, id: rmdMethod.id },
+                                            index
+                                        )
+                                    }
                                     rmdData={rmdMethod}
                                     isFormStateReadOnly={isFormStateReadOnly}
                                 />
                                 <IconButton
                                     className="ml-5 mt-6"
-                                    onClick={event => handleRMDOptionDelete(event, index)}
-                                    aria-label={t('removeThisRmdProgram') as string}
+                                    onClick={(event) =>
+                                        handleRMDOptionDelete(event, index)
+                                    }
+                                    aria-label={
+                                        t('removeThisRmdProgram') as string
+                                    }
                                     disabled={isFormStateReadOnly}
                                 >
                                     <RemoveIcon height={25} width={25} />
@@ -220,7 +279,11 @@ export default function RMDMethod({ isFormStateReadOnly, rmdTypeOptions, isQCD =
                         type={ButtonType.Primary}
                         className="my-4"
                         disabled={validateDuration(rmdRows) ? true : false}
-                        variant={validateDuration(rmdRows) || isFormStateReadOnly ? ButtonVariant.Inactive : ButtonVariant.Default}
+                        variant={
+                            validateDuration(rmdRows) || isFormStateReadOnly
+                                ? ButtonVariant.Inactive
+                                : ButtonVariant.Default
+                        }
                     >
                         {t('add')}
                     </Button>
@@ -237,13 +300,25 @@ export default function RMDMethod({ isFormStateReadOnly, rmdTypeOptions, isQCD =
                         />
                     )}
                     {formErrors?.rmdDateOverlap && (
-                        <AssistiveText text={formErrors?.rmdDateOverlap} variant={AssistiveTextVariant.Error} className="mt-2" />
+                        <AssistiveText
+                            text={formErrors?.rmdDateOverlap}
+                            variant={AssistiveTextVariant.Error}
+                            className="mt-2"
+                        />
                     )}
                     {formErrors?.rmdDetectedDurationZero && (
-                        <AssistiveText text={formErrors?.rmdDetectedDurationZero} variant={AssistiveTextVariant.Error} className="mt-2" />
+                        <AssistiveText
+                            text={formErrors?.rmdDetectedDurationZero}
+                            variant={AssistiveTextVariant.Error}
+                            className="mt-2"
+                        />
                     )}
                     {formErrors?.rmdSystematicStartDate && (
-                        <AssistiveText text={formErrors?.rmdSystematicStartDate} variant={AssistiveTextVariant.Error} className="mt-2" />
+                        <AssistiveText
+                            text={formErrors?.rmdSystematicStartDate}
+                            variant={AssistiveTextVariant.Error}
+                            className="mt-2"
+                        />
                     )}
                 </div>
             )}

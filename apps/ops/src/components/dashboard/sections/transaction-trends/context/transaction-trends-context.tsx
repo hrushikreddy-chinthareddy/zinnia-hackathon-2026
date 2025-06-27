@@ -1,7 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { CaseCountGroupByEnum, CaseCountInputFilter, CaseCountOutput } from '@zinnia/api-types/types/analytics';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutput,
+} from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
-import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
+import {
+    createContext,
+    FC,
+    PropsWithChildren,
+    useEffect,
+    useState,
+} from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import {
@@ -53,17 +63,28 @@ const defaultState = {
     handleRangeChange: () => {},
 };
 
-export const TransactionTrendsContext = createContext<TransactionTrendsContextTypes>(defaultState);
+export const TransactionTrendsContext =
+    createContext<TransactionTrendsContextTypes>(defaultState);
 
-export const TransactionTrendsProvider: FC<PropsWithChildren> = ({ children }) => {
-    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(state => state);
-
-    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
-    const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(
-        Object.keys(selectedCarriers).length ? CaseCountGroupByEnum.PROCESS_SUB_TYPE : CaseCountGroupByEnum.CARRIER
+export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
+    children,
+}) => {
+    const { selectedBrokerDealers, selectedCarriers } = useDashboardStore(
+        (state) => state
     );
 
-    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+    const [selectedProcess, setSelectedProcess] = useState<
+        Processes | ExtendedProcesses
+    >(Processes.NewBusiness);
+    const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(
+        Object.keys(selectedCarriers).length
+            ? CaseCountGroupByEnum.PROCESS_SUB_TYPE
+            : CaseCountGroupByEnum.CARRIER
+    );
+
+    const [timeframeRadio, setTimeframeRadio] = useState<
+        TimeframeFilterOptions | undefined
+    >(TimeframeFilterOptions.Trailing12Months);
 
     const [timerange, setTimerange] = useState({
         from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
@@ -97,8 +118,12 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({ children }) =
         error: transactionTrendsDataError,
     } = useQuery({
         queryKey: ['transactionTrends', filter, groupBy],
-        placeholderData: previousData => previousData,
-        queryFn: () => createBaseQuery(filter, [groupBy, CaseCountGroupByEnum.UPDATED_DAY]),
+        placeholderData: (previousData) => previousData,
+        queryFn: () =>
+            createBaseQuery(filter, [
+                groupBy,
+                CaseCountGroupByEnum.UPDATED_DAY,
+            ]),
         enabled: Object.keys(filter).length > 0,
     });
 

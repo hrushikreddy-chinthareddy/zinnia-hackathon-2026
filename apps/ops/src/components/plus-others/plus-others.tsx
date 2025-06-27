@@ -13,21 +13,32 @@ export interface PlusOthersProps {
     tooltipTitle: string;
 }
 
-const PlusOthers = ({ className = '', entities, tooltipTitle }: PlusOthersProps) => {
+const PlusOthers = ({
+    className = '',
+    entities,
+    tooltipTitle,
+}: PlusOthersProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
     const body = (
         <div className="plus-others-container">
-            {entities.map(entity => (
-                <div key={`other-${entity.name}`} className="nowrap flex flex-row gap-4">
+            {entities.map((entity) => (
+                <div
+                    key={`other-${entity.name}`}
+                    className="nowrap flex flex-row gap-4"
+                >
                     <div className="flex flex-col">
-                        <Typography variant={TypographyVariant.FieldLabel}>{tooltipTitle}</Typography>
+                        <Typography variant={TypographyVariant.FieldLabel}>
+                            {tooltipTitle}
+                        </Typography>
                         <Typography variant={TypographyVariant.BodySm}>
                             <PiiWrapper>{entity.name}</PiiWrapper>
                         </Typography>
                     </div>
                     <div className="flex flex-col">
-                        <Typography variant={TypographyVariant.FieldLabel}>{t('tooltip.ssn')}</Typography>
+                        <Typography variant={TypographyVariant.FieldLabel}>
+                            {t('tooltip.ssn')}
+                        </Typography>
                         <Typography variant={TypographyVariant.BodySm}>
                             <PiiWrapper>{entity.ssn}</PiiWrapper>
                         </Typography>
@@ -42,7 +53,12 @@ const PlusOthers = ({ className = '', entities, tooltipTitle }: PlusOthersProps)
             placement={TooltipPlacement.BottomRight}
             tooltipClassName="px-4 py-4 !w-auto"
             trigger={
-                <div className={clsx(`ml-2 whitespace-nowrap font-primary text-md font-semibold text-secondary`, className)}>
+                <div
+                    className={clsx(
+                        `ml-2 whitespace-nowrap font-primary text-md font-semibold text-secondary`,
+                        className
+                    )}
+                >
                     <span data-testid="plus-number">+{entities.length}</span>
                     {` ${t('tooltip.other')}`}
                 </div>

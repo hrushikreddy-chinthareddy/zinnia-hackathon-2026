@@ -22,8 +22,14 @@ interface SelectFormTypeProps {
     onFormTypeChange: Dispatch<SetStateAction<RmdFormType>>;
 }
 
-const SelectFormType: React.FC<SelectFormTypeProps> = ({ formType, isFormStateReadOnly, onFormTypeChange }) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+const SelectFormType: React.FC<SelectFormTypeProps> = ({
+    formType,
+    isFormStateReadOnly,
+    onFormTypeChange,
+}) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
 
     const handleChange = (val: string) => {
         onFormTypeChange(val as RmdFormType);
@@ -34,7 +40,7 @@ const SelectFormType: React.FC<SelectFormTypeProps> = ({ formType, isFormStateRe
                 className="max-w-lg my-3"
                 label={t('formType') as string}
                 options={rmdFormTypeOptions()}
-                onChange={value => handleChange(value)}
+                onChange={(value) => handleChange(value)}
                 size={FieldSize.Small}
                 value={formType}
                 name="sswRequest"

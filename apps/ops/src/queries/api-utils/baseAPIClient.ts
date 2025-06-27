@@ -31,7 +31,9 @@ export abstract class Http {
         this.instance = this.initHttp();
     }
 
-    private async addToken(axiosConfig?: AxiosAuthRequestConfig): Promise<AxiosRequestConfig> {
+    private async addToken(
+        axiosConfig?: AxiosAuthRequestConfig
+    ): Promise<AxiosRequestConfig> {
         const agent = new https.Agent({
             rejectUnauthorized: false,
         });
@@ -49,33 +51,52 @@ export abstract class Http {
         };
     }
 
-    async request<T = any, R = AxiosResponse<T>>(config: AxiosAuthRequestConfig): Promise<R> {
+    async request<T = any, R = AxiosResponse<T>>(
+        config: AxiosAuthRequestConfig
+    ): Promise<R> {
         const configWithToken = await this.addToken(config);
         return this.instance.request<T, R>(configWithToken);
     }
 
-    async get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosAuthRequestConfig): Promise<R> {
+    async get<T = any, R = AxiosResponse<T>>(
+        url: string,
+        config?: AxiosAuthRequestConfig
+    ): Promise<R> {
         const configWithToken = await this.addToken(config);
         return await this.instance.get<T, R>(url, configWithToken);
     }
 
-    async post<T = any, R = AxiosResponse<T>>(url: string, data?: T, config?: AxiosAuthRequestConfig): Promise<R> {
+    async post<T = any, R = AxiosResponse<T>>(
+        url: string,
+        data?: T,
+        config?: AxiosAuthRequestConfig
+    ): Promise<R> {
         const configWithToken = await this.addToken(config);
 
         return await this.instance.post<T, R>(url, data, configWithToken);
     }
 
-    async put<T = any, R = AxiosResponse<T>>(url: string, data?: T, config?: AxiosAuthRequestConfig): Promise<R> {
+    async put<T = any, R = AxiosResponse<T>>(
+        url: string,
+        data?: T,
+        config?: AxiosAuthRequestConfig
+    ): Promise<R> {
         const configWithToken = await this.addToken(config);
         return await this.instance.put<T, R>(url, data, configWithToken);
     }
 
-    async patch<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosAuthRequestConfig): Promise<R> {
+    async patch<T = any, R = AxiosResponse<T>>(
+        url: string,
+        config?: AxiosAuthRequestConfig
+    ): Promise<R> {
         const configWithToken = await this.addToken(config);
         return await this.instance.patch<T, R>(url, configWithToken);
     }
 
-    async delete<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosAuthRequestConfig): Promise<R> {
+    async delete<T = any, R = AxiosResponse<T>>(
+        url: string,
+        config?: AxiosAuthRequestConfig
+    ): Promise<R> {
         const configWithToken = await this.addToken(config);
         return this.instance.delete<T, R>(url, configWithToken);
     }
@@ -84,8 +105,8 @@ export abstract class Http {
         const http = axios.create({});
 
         http.interceptors.response.use(
-            response => response,
-            error => {
+            (response) => response,
+            (error) => {
                 const { response } = error;
                 return this.handleError(response);
             }
@@ -108,7 +129,10 @@ export abstract class Http {
             }
             case StatusCode.Unauthorized: {
                 console.log('UNAUTHORIZED', error);
-                setCookie('zlSessionTimeout', true, { maxAge: 60 * 60 * 24, path: '/' });
+                setCookie('zlSessionTimeout', true, {
+                    maxAge: 60 * 60 * 24,
+                    path: '/',
+                });
                 if (window) {
                     window.location.href = '/api/auth/logout';
                 }

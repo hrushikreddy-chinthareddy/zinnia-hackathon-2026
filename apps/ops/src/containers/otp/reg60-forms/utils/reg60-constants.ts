@@ -8,7 +8,11 @@ export const DefaultSidebarContent = {
 };
 
 export const numberFormat = { format: '################' };
-export const amountFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: '' };
+export const amountFormat = {
+    type: 'number' as FieldFormat,
+    decimalPlaces: 2,
+    format: '',
+};
 export const FIVE_YEAR = '5YEAR';
 export const TEN_YEAR = '10YEAR';
 export const MAX_COMPARISON = 3;

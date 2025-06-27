@@ -19,10 +19,17 @@ import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
 import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
-import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import {
+    friendlyGroupByName,
+    generateCaseLink,
+} from '@deps/components/dashboard/utils';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { Statuses } from '@deps/models/case/case';
@@ -41,8 +48,11 @@ interface FlattenedDashboardStatsElement {
 // Since we're returning arrays of carriers with nested data for the submission method,
 // we need to flatten the list of submission methods out and associate them with the carrier
 // Carrier | Method | Count
-const flattenDashboardStats = (data: CaseCountOutputLevel1[], parentName: string): FlattenedDashboardStatsElement[] => {
-    return data.flatMap(item => {
+const flattenDashboardStats = (
+    data: CaseCountOutputLevel1[],
+    parentName: string
+): FlattenedDashboardStatsElement[] => {
+    return data.flatMap((item) => {
         if (item.values && item.values.length > 0) {
             return flattenDashboardStats(item.values, item.name);
         } else {
@@ -68,8 +78,16 @@ export const SubmissionTypeTable = () => {
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const { graphStats, timerange, submissionVs, selectedProcess, graphStatsLoading, graphStatsFetching, graphStatsError, filter } =
-        useContext(SubmissionTypeContext);
+    const {
+        graphStats,
+        timerange,
+        submissionVs,
+        selectedProcess,
+        graphStatsLoading,
+        graphStatsFetching,
+        graphStatsError,
+        filter,
+    } = useContext(SubmissionTypeContext);
 
     // Transform the data by flattening it
     const flattenedData = useMemo(() => {
@@ -79,7 +97,9 @@ export const SubmissionTypeTable = () => {
 
     // Filter by search
     const searchedData = useMemo(() => {
-        return flattenedData.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        return flattenedData.filter((item) =>
+            item.name.toLowerCase().includes(searchText.toLowerCase())
+        );
     }, [flattenedData, searchText]);
 
     const { handleSort, sortedData } = useTableOptions({
@@ -105,14 +125,20 @@ export const SubmissionTypeTable = () => {
         goToPage(1);
     }, [goToPage, sortedData]);
 
-    const totalCaseCount = graphStats?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
+    const totalCaseCount = graphStats?.data
+        ?.map((stat) => stat.count)
+        .reduce((a, b) => a + b, 0);
 
     const totalCases = graphStatsFetching ? (
         <div className="blur">
-            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+            <p className={'typography-titles-subtitle'}>
+                {totalCaseCount?.toLocaleString() || '0'} total cases
+            </p>
         </div>
     ) : (
-        <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+        <p className={'typography-titles-subtitle'}>
+            {totalCaseCount?.toLocaleString() || '0'} total cases
+        </p>
     );
 
     return (
@@ -126,23 +152,35 @@ export const SubmissionTypeTable = () => {
             <div className={sharedStyles.searchContainer}>
                 <FieldData
                     fieldSize={FieldSize.Small}
-                    placeholder={`Search by ${friendlyGroupByName[submissionVs]?.toLocaleLowerCase()}`}
-                    onChange={e => setSearchText(e.target.value)}
+                    placeholder={`Search by ${friendlyGroupByName[
+                        submissionVs
+                    ]?.toLocaleLowerCase()}`}
+                    onChange={(e) => setSearchText(e.target.value)}
                 />
             </div>
             <SubmissionTypeFilters />
             <div className={sharedStyles.tableContainer}>
-                <BlurOverlayLoader loading={graphStatsFetching || graphStatsLoading}>
+                <BlurOverlayLoader
+                    loading={graphStatsFetching || graphStatsLoading}
+                >
                     {graphStatsError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'Something went wrong fetching the application types, please try again by refreshing the page'}
+                                {
+                                    'Something went wrong fetching the application types, please try again by refreshing the page'
+                                }
                             </Typography>
                         </div>
                     ) : searchedData?.length === 0 ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
                                 {'There is no data for this selection'}
                             </Typography>
@@ -151,8 +189,15 @@ export const SubmissionTypeTable = () => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {toSentenceCase(friendlyGroupByName[submissionVs])}
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.NAME)
+                                        }
+                                        sortable
+                                    >
+                                        {toSentenceCase(
+                                            friendlyGroupByName[submissionVs]
+                                        )}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -161,7 +206,14 @@ export const SubmissionTypeTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.SUBMISSION_METHOD)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(
+                                                SortByOptions.SUBMISSION_METHOD
+                                            )
+                                        }
+                                        sortable
+                                    >
                                         Submission method
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -171,7 +223,12 @@ export const SubmissionTypeTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.COUNT)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.COUNT)
+                                        }
+                                        sortable
+                                    >
                                         Total submissions
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -185,22 +242,30 @@ export const SubmissionTypeTable = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {paginatedData.map(item => {
+                                {paginatedData.map((item) => {
                                     const link = generateCaseLink({
                                         process: selectedProcess,
                                         carrierOrProductName: item.name,
                                         submissionMethod: item.submissionMethod,
                                         startDate: timerange.from,
                                         endDate: timerange.to,
-                                        status: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+                                        status: [
+                                            Statuses.InProgress,
+                                            Statuses.Exception,
+                                            Statuses.NotStarted,
+                                        ],
                                         groupBy: submissionVs,
                                         carrier: filter.carrier,
                                         brokerDealer: filter.brokerDealerName,
                                     });
                                     return (
-                                        <TableRow key={`${item.name}-${item.submissionMethod}`}>
+                                        <TableRow
+                                            key={`${item.name}-${item.submissionMethod}`}
+                                        >
                                             <TableCell>{item.name}</TableCell>
-                                            <TableCell>{item.submissionMethod}</TableCell>
+                                            <TableCell>
+                                                {item.submissionMethod}
+                                            </TableCell>
                                             <TableCell>{item.count}</TableCell>
                                             <TableCell>
                                                 <NavElement
@@ -219,11 +284,18 @@ export const SubmissionTypeTable = () => {
                             </TableBody>
                         </Table>
                     )}
-                    {!graphStatsError && searchedData?.length > 0 && searchedData.length > limit && (
-                        <div className={sharedStyles.paginationContainer}>
-                            <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
-                        </div>
-                    )}
+                    {!graphStatsError &&
+                        searchedData?.length > 0 &&
+                        searchedData.length > limit && (
+                            <div className={sharedStyles.paginationContainer}>
+                                <Pagination
+                                    limit={limit}
+                                    offset={offset}
+                                    total={searchedData?.length || 0}
+                                    goToPage={goToPage}
+                                />
+                            </div>
+                        )}
                 </BlurOverlayLoader>
             </div>
         </CardContainer>

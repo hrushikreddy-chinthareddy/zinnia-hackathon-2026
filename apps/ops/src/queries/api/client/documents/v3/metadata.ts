@@ -1,12 +1,15 @@
 import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '@deps/queries/api-config';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
-import { DocumentMetadata, DocumentMetaDataRequest } from '@deps/types/documents-v3';
+import { ApiResponse } from '@deps/types/api-response';
+import {
+    DocumentMetadata,
+    DocumentMetaDataRequest,
+} from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { ApiResponse } from '@deps/types/api-response';
 
 export const getDocumentMetadataV3 = async (
     requestBody: DocumentMetaDataRequest,
@@ -21,20 +24,31 @@ export const getDocumentMetadataV3 = async (
         });
 
         const url = `${baseAppUrl}/api/document/v3/documentType/search?limit=${limit}&offset=${offset}`;
-        const response = await client.post<DocumentMetaDataRequest, AxiosResponse>(url, requestBody);
+        const response = await client.post<
+            DocumentMetaDataRequest,
+            AxiosResponse
+        >(url, requestBody);
 
         if (response.status === StatusCode.Okay) {
             return { data: response.data?.documentTypeList || [], error: null };
         } else {
-            const error = new Error(response?.data?.message || response?.statusText);
-            return { data: null, error: { ...error, status: response?.status || 500 } };
+            const error = new Error(
+                response?.data?.message || response?.statusText
+            );
+            return {
+                data: null,
+                error: { ...error, status: response?.status || 500 },
+            };
         }
     } catch (error: any) {
-        browserLogError('An error occurred while getting document v3 metadata', {
-            ...parseErrorInformation(error),
-            file: 'queries/api/documents/v3/metadata',
-            function: 'getDocumentMetadataV3',
-        });
+        browserLogError(
+            'An error occurred while getting document v3 metadata',
+            {
+                ...parseErrorInformation(error),
+                file: 'queries/api/documents/v3/metadata',
+                function: 'getDocumentMetadataV3',
+            }
+        );
 
         return error.response;
     }

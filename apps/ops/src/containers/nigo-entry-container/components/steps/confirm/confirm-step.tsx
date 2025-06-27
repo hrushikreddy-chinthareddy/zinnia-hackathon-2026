@@ -3,8 +3,14 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helpers';
@@ -27,7 +33,9 @@ interface ConfirmStepProps {
 }
 
 const ConfirmStep = ({ document }: ConfirmStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.confirmStep' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'nigoEntry.confirmStep',
+    });
     const router = useRouter();
     const { submitFailed, setSubmitFailed, sectionOption } = useNigoEntry();
     const formState = useContext(FormDataContext);
@@ -50,7 +58,8 @@ const ConfirmStep = ({ document }: ConfirmStepProps) => {
     const submit = useCallback(async () => {
         setIsLoading(true);
         if (
-            TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 &&
+            TaskApiVersionMapper[formState.initialForm.taskType] ===
+                ApiVersion.v2 &&
             formState.initialForm.status !== TaskStatus.Completed
         ) {
             const successfulCaseUpdate = await updateTask(
@@ -95,8 +104,18 @@ const ConfirmStep = ({ document }: ConfirmStepProps) => {
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <CardInfo
-                icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
-                subtitle={sectionOption === SelOptionType.DOC_INDEXING ? t('subTitleReindexing') : t('subTitle')}
+                icon={
+                    <CircleCheckIcon
+                        className="text-semantic-success"
+                        height={50}
+                        width={50}
+                    />
+                }
+                subtitle={
+                    sectionOption === SelOptionType.DOC_INDEXING
+                        ? t('subTitleReindexing')
+                        : t('subTitle')
+                }
                 title={t('title')}
                 cta={{
                     action: () => {

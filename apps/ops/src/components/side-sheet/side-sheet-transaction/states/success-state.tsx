@@ -2,7 +2,11 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 
 interface SuccessStateProps {
@@ -12,8 +16,15 @@ interface SuccessStateProps {
     transactionType: string;
 }
 
-const SuccessState = ({ caseId, transactionType, isNigo, onCancel }: SuccessStateProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.states.success' });
+const SuccessState = ({
+    caseId,
+    transactionType,
+    isNigo,
+    onCancel,
+}: SuccessStateProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'transactions.states.success',
+    });
     const { t: defaultT } = useTranslation();
     const router = useRouter();
 
@@ -42,7 +53,12 @@ const SuccessState = ({ caseId, transactionType, isNigo, onCancel }: SuccessStat
                     : undefined
             }
             secondaryCta={
-                <NavElement onClick={onCancel} size={NavElementSize.Small} type={NavElementType.Button} variant={NavElementVariant.Default}>
+                <NavElement
+                    onClick={onCancel}
+                    size={NavElementSize.Small}
+                    type={NavElementType.Button}
+                    variant={NavElementVariant.Default}
+                >
                     {defaultT('general.close')}
                 </NavElement>
             }

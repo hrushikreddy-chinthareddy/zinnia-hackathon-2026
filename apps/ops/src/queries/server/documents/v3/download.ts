@@ -6,7 +6,12 @@ import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import canUnmaskPii from '@deps/queries/server/fga/can-unmask';
 import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
 import { ServerQueryReq } from '@deps/types/server-query';
-import { logCompliance, logError, LoggingContext, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logCompliance,
+    logError,
+    LoggingContext,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 interface DocumentProps extends ServerQueryReq {
     documentId: string;
@@ -36,13 +41,19 @@ const documentDownload = async ({
     };
 
     if (!canUnmask) {
-        logCompliance('Document Download request denied due to missing unmask pii permission', logCtx);
+        logCompliance(
+            'Document Download request denied due to missing unmask pii permission',
+            logCtx
+        );
         return { error: 'Forbidden' };
     }
 
     logCompliance('Document Download Attempt', logCtx);
     try {
-        const { data } = await serverApi.get<DocumentDownloadV3WithMime, AxiosResponse>(
+        const { data } = await serverApi.get<
+            DocumentDownloadV3WithMime,
+            AxiosResponse
+        >(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -50,7 +61,10 @@ const documentDownload = async ({
             logCtx
         );
 
-        logCompliance('Document Download request successful.  Sending document to client', logCtx);
+        logCompliance(
+            'Document Download request successful.  Sending document to client',
+            logCtx
+        );
 
         const mimeType = lookup(data.fileExtension) || '';
         return { ...data, mimeType };

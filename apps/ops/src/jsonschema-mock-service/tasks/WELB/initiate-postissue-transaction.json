@@ -48,7 +48,10 @@
                                 "if": {
                                     "properties": {
                                         "process": {
-                                            "enum": ["Withdrawal", "Full Surrender"]
+                                            "enum": [
+                                                "Withdrawal",
+                                                "Full Surrender"
+                                            ]
                                         }
                                     }
                                 },
@@ -65,7 +68,9 @@
                                     "if": {
                                         "properties": {
                                             "process": {
-                                                "enum": ["Systematic Program Update"]
+                                                "enum": [
+                                                    "Systematic Program Update"
+                                                ]
                                             }
                                         }
                                     },

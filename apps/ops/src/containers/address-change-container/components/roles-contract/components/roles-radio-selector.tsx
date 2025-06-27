@@ -3,7 +3,9 @@ import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useAddressChange } from '@deps/containers/address-change-container/address-change-provider';
 
@@ -13,21 +15,28 @@ interface RolesRadioSelectorsProps {
     extractedPartyRoles: PolicyPartyRoles[];
 }
 
-export const RolesRadioSelectors = ({ extractedPartyRoles }: RolesRadioSelectorsProps) => {
+export const RolesRadioSelectors = ({
+    extractedPartyRoles,
+}: RolesRadioSelectorsProps) => {
     const { roleIdentifier, setRoleIdentifier } = useAddressChange();
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'addressChange',
+    });
 
     const onChangeHandler = React.useCallback(
-        (extractedPartyRoles: PolicyPartyRoles[]) => (e: React.ChangeEvent<HTMLInputElement>) => {
-            const selectedOption = extractedPartyRoles?.find(item => item?.partyRoleId?.toString() === e.target.value);
-            if (selectedOption) {
-                setRoleIdentifier({
-                    partyRoleId: selectedOption?.partyRoleId,
-                    partyRole: selectedOption?.partyRole,
-                    partyId: selectedOption?.partyId,
-                });
-            }
-        },
+        (extractedPartyRoles: PolicyPartyRoles[]) =>
+            (e: React.ChangeEvent<HTMLInputElement>) => {
+                const selectedOption = extractedPartyRoles?.find(
+                    (item) => item?.partyRoleId?.toString() === e.target.value
+                );
+                if (selectedOption) {
+                    setRoleIdentifier({
+                        partyRoleId: selectedOption?.partyRoleId,
+                        partyRole: selectedOption?.partyRole,
+                        partyId: selectedOption?.partyId,
+                    });
+                }
+            },
         [setRoleIdentifier]
     );
 
@@ -47,7 +56,9 @@ export const RolesRadioSelectors = ({ extractedPartyRoles }: RolesRadioSelectors
 
     return (
         <>
-            <Typography variant={TypographyVariant.LabelLg}>{t('rolesAndContracts.roleSelectTitle')}</Typography>
+            <Typography variant={TypographyVariant.LabelLg}>
+                {t('rolesAndContracts.roleSelectTitle')}
+            </Typography>
             <Radio
                 items={radioOptions}
                 onChange={onChangeHandler(extractedPartyRoles)}

@@ -5,7 +5,9 @@ import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_PAGE_TITLE } from '@deps/constants/page-title';
 
 export const PageHead = ({ titleKey }: { titleKey: string }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'site.pageTitles' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'site.pageTitles',
+    });
 
     return (
         <Head>

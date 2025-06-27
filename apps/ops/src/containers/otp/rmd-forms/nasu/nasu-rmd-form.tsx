@@ -26,7 +26,9 @@ import DistributionMethodQcd from '../qcd/qcd-distribution-method';
 import SelectFormType from '../rmd-form-type';
 
 export default function NasuRmdWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         formPartyConfigs,
         cslnCheckStates,
@@ -60,7 +62,9 @@ export default function NasuRmdWithdrawalForm() {
         setFormESignatureData,
         formErrors,
     } = useContext(FormDataContext);
-    const [rmdFormType, setRmdFormType] = useState((formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD);
+    const [rmdFormType, setRmdFormType] = useState(
+        (formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD
+    );
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -76,13 +80,19 @@ export default function NasuRmdWithdrawalForm() {
                 formNumber: '',
             },
         });
-        setFormProgram(prev => ({
+        setFormProgram((prev) => ({
             ...prev,
             program: {
-                text: rmdFormType === RmdFormType.QCD ? Processes.QCD : Processes.RequiredMinimumDistribution,
+                text:
+                    rmdFormType === RmdFormType.QCD
+                        ? Processes.QCD
+                        : Processes.RequiredMinimumDistribution,
             },
             programType: {
-                text: rmdFormType === RmdFormType.QCD ? RmdFormType.QCD : RmdFormType.RMD,
+                text:
+                    rmdFormType === RmdFormType.QCD
+                        ? RmdFormType.QCD
+                        : RmdFormType.RMD,
             },
             qcd: prev.qcd ? [...prev.qcd] : [],
         }));
@@ -95,7 +105,9 @@ export default function NasuRmdWithdrawalForm() {
         }
     }, [formParty]);
 
-    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties as LifeCadParty[]);
+    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(
+        parties as LifeCadParty[]
+    );
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 
@@ -109,23 +121,49 @@ export default function NasuRmdWithdrawalForm() {
                 isBeneSpouseOption={isBeneSpouseOption}
                 configs={beneficiaryConfig}
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <TaxOL4753Attachment isFormStateReadOnly={isFormStateReadOnly} shouldShowDOBInOl4573={shouldShowDOBInOl4573} />
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <TaxOL4753Attachment
+                isFormStateReadOnly={isFormStateReadOnly}
+                shouldShowDOBInOl4573={shouldShowDOBInOl4573}
+            />
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
             {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
         </>
     );
     const qcdComponents = !isRmdForm && (
         <>
-            <DistributionMethodQcd formProgram={formProgram} setFormProgram={setFormProgram} isFormStateReadOnly={isFormStateReadOnly} />
+            <DistributionMethodQcd
+                formProgram={formProgram}
+                setFormProgram={setFormProgram}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             <RMDMethod
                 isFormStateReadOnly={isFormStateReadOnly}
-                rmdTypeOptions={[{ label: t('rmdMethod.rmdTypes.calculate'), value: RMDType.CalculateRMD }]}
+                rmdTypeOptions={[
+                    {
+                        label: t('rmdMethod.rmdTypes.calculate'),
+                        value: RMDType.CalculateRMD,
+                    },
+                ]}
                 isQCD={true}
             />
         </>
@@ -133,10 +171,20 @@ export default function NasuRmdWithdrawalForm() {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <SelectFormType formType={rmdFormType} onFormTypeChange={setRmdFormType} isFormStateReadOnly={isFormStateReadOnly} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <SelectFormType
+                formType={rmdFormType}
+                onFormTypeChange={setRmdFormType}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             {isRmdForm ? rmdComponents : qcdComponents}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
@@ -144,7 +192,9 @@ export default function NasuRmdWithdrawalForm() {
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

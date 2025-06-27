@@ -10,7 +10,14 @@ interface SelectSimpleItemProps {
     onClick?: () => void;
 }
 
-export default function FieldSelectItem({ label, labelElement, className, disabled, selected, onClick }: SelectSimpleItemProps) {
+export default function FieldSelectItem({
+    label,
+    labelElement,
+    className,
+    disabled,
+    selected,
+    onClick,
+}: SelectSimpleItemProps) {
     const classes = clsx(
         'default-hover relative flex w-full flex-row items-center justify-start border-1 border-transparent px-4 py-2 focus:border-semantic-focus focus:outline-none',
         {
@@ -36,7 +43,7 @@ export default function FieldSelectItem({ label, labelElement, className, disabl
                     onClick();
                 }
             }}
-            onKeyDown={event => {
+            onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault(); // to prevent the default action of the key press
 

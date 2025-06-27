@@ -18,7 +18,10 @@ export const searchDocumentsV3 = async ({
     searchBody: SearchRequest;
 }): Promise<ApiResponse<SearchDocumentResponse>> => {
     try {
-        const request = client.post<SearchRequest, AxiosResponse<SearchDocumentResponse>>(
+        const request = client.post<
+            SearchRequest,
+            AxiosResponse<SearchDocumentResponse>
+        >(
             `${baseAppUrl}/api/document/v3/documents/search?limit=${limit}&offset=${offset}`,
             searchBody
         );
@@ -27,14 +30,24 @@ export const searchDocumentsV3 = async ({
         if (response.status === StatusCode.Okay) {
             return { data: response.data, error: null };
         } else {
-            const error = new Error(response?.data?.message || response?.statusText);
-            return { data: null, error: { ...error, status: response?.status || 500 } };
+            const error = new Error(
+                response?.data?.message || response?.statusText
+            );
+            return {
+                data: null,
+                error: { ...error, status: response?.status || 500 },
+            };
         }
     } catch (e) {
         return {
             data: null,
             error: {
-                ...(e instanceof Error ? e : new Error((e as Error)?.message || 'an error occurred while searching for documents')),
+                ...(e instanceof Error
+                    ? e
+                    : new Error(
+                          (e as Error)?.message ||
+                              'an error occurred while searching for documents'
+                      )),
                 status: 500,
             },
         };

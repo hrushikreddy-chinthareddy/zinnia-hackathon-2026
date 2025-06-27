@@ -1,4 +1,11 @@
-import { createContext, Dispatch, PropsWithChildren, useContext, useMemo, useReducer } from 'react';
+import {
+    createContext,
+    Dispatch,
+    PropsWithChildren,
+    useContext,
+    useMemo,
+    useReducer,
+} from 'react';
 
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { Correspondence } from '@deps/models/case/correspondence';
@@ -29,7 +36,9 @@ type SendDocumentContextProps = {
     state: SendDocumentFormParts;
     dispatch: Dispatch<SendDocumentActions>;
 };
-export const SendDocumentContext = createContext<SendDocumentContextProps | undefined>(defaultSendDocumentState);
+export const SendDocumentContext = createContext<
+    SendDocumentContextProps | undefined
+>(defaultSendDocumentState);
 
 function reducer(state: SendDocumentFormParts, action: SendDocumentActions) {
     switch (action.type) {
@@ -64,14 +73,20 @@ export const SendDocumentProvider = ({ children }: PropsWithChildren) => {
         return { state, dispatch };
     }, [state, dispatch]);
 
-    return <SendDocumentContext.Provider value={contextValue}>{children}</SendDocumentContext.Provider>;
+    return (
+        <SendDocumentContext.Provider value={contextValue}>
+            {children}
+        </SendDocumentContext.Provider>
+    );
 };
 
 export const useSendDocument = () => {
     const context = useContext(SendDocumentContext);
 
     if (!context) {
-        throw new Error('useSendDocument must be used within a SendDocumentProvider');
+        throw new Error(
+            'useSendDocument must be used within a SendDocumentProvider'
+        );
     }
     return context;
 };

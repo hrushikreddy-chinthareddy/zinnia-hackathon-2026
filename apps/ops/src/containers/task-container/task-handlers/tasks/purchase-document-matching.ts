@@ -6,7 +6,10 @@ interface PurchaseDocumentMatchingPayload {
     keys: ('processList' | 'requestSubType' | 'productName')[];
 }
 
-const DocumentMatchingHandler: TaskHandler<PurchaseDocumentMatchingPayload, any> = {
+const DocumentMatchingHandler: TaskHandler<
+    PurchaseDocumentMatchingPayload,
+    any
+> = {
     api: getReferenceDataSSR,
     getPayload: (task: any) => ({
         carrier: [task?.carrier],
@@ -20,7 +23,9 @@ const DocumentMatchingHandler: TaskHandler<PurchaseDocumentMatchingPayload, any>
 
         if (metadata[0]?.formSchema?.definitions) {
             metadata[0].formSchema.definitions.caseTypeEnum = {
-                enum: caseTypeOptions?.referenceData.processList || ['Case Type Not Found'],
+                enum: caseTypeOptions?.referenceData.processList || [
+                    'Case Type Not Found',
+                ],
             };
         }
     },

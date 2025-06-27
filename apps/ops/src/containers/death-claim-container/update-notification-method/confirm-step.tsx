@@ -1,11 +1,17 @@
-import { Policy } from "@zinnia/api-types/types/sor";
+import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
@@ -16,32 +22,59 @@ import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/c
 import { buildUpdateNotificationMethodPayload } from './update-notification-method-helper';
 
 interface ConfirmStepProps {
-  policy: Policy,
-  transactionData: NotificationsTransactionData
-};
+    policy: Policy;
+    transactionData: NotificationsTransactionData;
+}
 
 const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'updateNotificationMethodForBeneficiary.confirmStep' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'updateNotificationMethodForBeneficiary.confirmStep',
+    });
     const router = useRouter();
-    const { submitFailed, setSubmitFailed, setCaseId, caseId, emailData, faxData, addressData, notificationMethodSelected } = useUpdateNotificationMethod();
+    const {
+        submitFailed,
+        setSubmitFailed,
+        setCaseId,
+        caseId,
+        emailData,
+        faxData,
+        addressData,
+        notificationMethodSelected,
+    } = useUpdateNotificationMethod();
     const [isLoading, setIsLoading] = useState(false);
 
     const submit = useCallback(async () => {
-      setIsLoading(true);
-      const payload = buildUpdateNotificationMethodPayload(policy, transactionData, emailData, faxData, addressData, notificationMethodSelected);
-      console.log(payload);
+        setIsLoading(true);
+        const payload = buildUpdateNotificationMethodPayload(
+            policy,
+            transactionData,
+            emailData,
+            faxData,
+            addressData,
+            notificationMethodSelected
+        );
+        console.log(payload);
 
-      const successfulSubmit = await updateNotificationMethod(payload);
+        const successfulSubmit = await updateNotificationMethod(payload);
 
-      if (successfulSubmit && successfulSubmit?.zlCaseId) {
-        setCaseId(successfulSubmit?.zlCaseId);
-        setSubmitFailed(false);
-      } else {
-        setCaseId('')
-        setSubmitFailed(true);
-      }
-      setIsLoading(false);
-    }, [policy, transactionData, emailData, faxData, addressData, notificationMethodSelected, setCaseId, setSubmitFailed]);
+        if (successfulSubmit && successfulSubmit?.zlCaseId) {
+            setCaseId(successfulSubmit?.zlCaseId);
+            setSubmitFailed(false);
+        } else {
+            setCaseId('');
+            setSubmitFailed(true);
+        }
+        setIsLoading(false);
+    }, [
+        policy,
+        transactionData,
+        emailData,
+        faxData,
+        addressData,
+        notificationMethodSelected,
+        setCaseId,
+        setSubmitFailed,
+    ]);
 
     if (isLoading) {
         return (
@@ -66,8 +99,14 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <CardInfo
-                icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
-                subtitle={t('subTitle', { caseId: caseId})}
+                icon={
+                    <CircleCheckIcon
+                        className="text-semantic-success"
+                        height={50}
+                        width={50}
+                    />
+                }
+                subtitle={t('subTitle', { caseId: caseId })}
                 title={t('title')}
                 cta={{
                     action: () => {
@@ -79,7 +118,9 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
                     <NavElement
                         aria-label={t('secondaryCta') as string}
                         onClick={() =>
-                            router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}`)
+                            router.push(
+                                `/policies/${policy.product?.planCode}/${policy.policyNumber}`
+                            )
                         }
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
@@ -94,4 +135,3 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
 };
 
 export default ConfirmStep;
-

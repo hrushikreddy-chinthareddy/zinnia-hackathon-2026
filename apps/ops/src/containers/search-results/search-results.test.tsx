@@ -44,9 +44,15 @@ describe('SearchResults', () => {
         );
 
         expect(screen.getByText('dashboard.h2')).toBeInTheDocument();
-        expect(screen.getByText('dashboard.search.empty.title')).toBeInTheDocument();
-        expect(screen.getByText('dashboard.search.empty.paragraph')).toBeInTheDocument();
-        expect(screen.queryByText('Search Results Content')).not.toBeInTheDocument();
+        expect(
+            screen.getByText('dashboard.search.empty.title')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('dashboard.search.empty.paragraph')
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByText('Search Results Content')
+        ).not.toBeInTheDocument();
     });
 
     // Renders start card when query is idle
@@ -67,9 +73,15 @@ describe('SearchResults', () => {
         );
 
         expect(screen.getByText('dashboard.h2')).toBeInTheDocument();
-        expect(screen.getByText('dashboard.search.start.title')).toBeInTheDocument();
-        expect(screen.getByText('dashboard.search.start.paragraph')).toBeInTheDocument();
-        expect(screen.queryByText('Search Results Content')).not.toBeInTheDocument();
+        expect(
+            screen.getByText('dashboard.search.start.title')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('dashboard.search.start.paragraph')
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByText('Search Results Content')
+        ).not.toBeInTheDocument();
     });
 
     // Renders error card when query is in error state and error response status is not 404
@@ -90,9 +102,15 @@ describe('SearchResults', () => {
         );
 
         expect(screen.getByText('dashboard.h2')).toBeInTheDocument();
-        expect(screen.getByText('dashboard.search.error.title')).toBeInTheDocument();
-        expect(screen.getByText('dashboard.search.error.paragraph')).toBeInTheDocument();
-        expect(screen.queryByText('Search Results Content')).not.toBeInTheDocument();
+        expect(
+            screen.getByText('dashboard.search.error.title')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('dashboard.search.error.paragraph')
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByText('Search Results Content')
+        ).not.toBeInTheDocument();
     });
 
     // Renders empty card when query is in error state and error response status is 404
@@ -113,9 +131,15 @@ describe('SearchResults', () => {
         );
 
         expect(screen.getByText('dashboard.h2')).toBeInTheDocument();
-        expect(screen.getByText('dashboard.search.empty.title')).toBeInTheDocument();
-        expect(screen.getByText('dashboard.search.empty.paragraph')).toBeInTheDocument();
-        expect(screen.queryByText('Search Results Content')).not.toBeInTheDocument();
+        expect(
+            screen.getByText('dashboard.search.empty.title')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('dashboard.search.empty.paragraph')
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByText('Search Results Content')
+        ).not.toBeInTheDocument();
     });
 
     // Renders loader when query is loading
@@ -137,6 +161,8 @@ describe('SearchResults', () => {
 
         expect(screen.getByText('dashboard.h2')).toBeInTheDocument();
         expect(screen.getByTestId('test-loader')).toBeInTheDocument();
-        expect(screen.queryByText('Search Results Content')).not.toBeInTheDocument();
+        expect(
+            screen.queryByText('Search Results Content')
+        ).not.toBeInTheDocument();
     });
 });

@@ -4,7 +4,10 @@ import { SignaturesConfig } from '@deps/components/otp-renewal-form/signature-va
 import { SignatureFields } from '@deps/components/otp-renewal-form/signature-validation/single-signature';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import { RadioItem } from '@deps/components/radio/radio';
-import { getTrasanctionsByIds, TransactionTypes } from '@deps/helpers/transaction-options.helpers';
+import {
+    getTrasanctionsByIds,
+    TransactionTypes,
+} from '@deps/helpers/transaction-options.helpers';
 import { Channel, RenewalPeriod } from '@deps/models/case/renewal/case-renewal';
 import { renewalsFormParts } from '@deps/models/case/task';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
@@ -130,9 +133,15 @@ export default function getDlicConfig(t: TFunction) {
     ];
 
     const periodRadioItems: RadioItem[] = [
-        { label: t('periodLabel', { year: 3 }), value: RenewalPeriod.ThreeYear },
+        {
+            label: t('periodLabel', { year: 3 }),
+            value: RenewalPeriod.ThreeYear,
+        },
         { label: t('periodLabel', { year: 5 }), value: RenewalPeriod.FiveYear },
-        { label: t('periodLabel', { year: 7 }), value: RenewalPeriod.SevenYear },
+        {
+            label: t('periodLabel', { year: 7 }),
+            value: RenewalPeriod.SevenYear,
+        },
     ];
 
     // CMW-19673 for delaware renewal we need only percentage option as per paper form

@@ -1,5 +1,10 @@
 import * as ReactPopover from '@radix-ui/react-popover';
-import { DatePicker, DatePickerTypes, Icon, IconType } from '@zinnia/bloom/components';
+import {
+    DatePicker,
+    DatePickerTypes,
+    Icon,
+    IconType,
+} from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 
@@ -13,7 +18,10 @@ interface CustomDateRangeProps {
     handleTimerangeChange?: (value: { from: string; to: string }) => void;
 }
 
-export const CustomDateRange: FC<CustomDateRangeProps> = ({ timerange, handleTimerangeChange }) => {
+export const CustomDateRange: FC<CustomDateRangeProps> = ({
+    timerange,
+    handleTimerangeChange,
+}) => {
     const [open, setOpen] = useState(false);
 
     if (!timerange) {
@@ -21,8 +29,16 @@ export const CustomDateRange: FC<CustomDateRangeProps> = ({ timerange, handleTim
     }
 
     const handleSelect = (dateRange: DatePickerTypes.DateRange | undefined) => {
-        if (dateRange && dateRange.from && dateRange.to && handleTimerangeChange) {
-            handleTimerangeChange({ from: dateRange.from.toISOString(), to: dateRange.to.toISOString() });
+        if (
+            dateRange &&
+            dateRange.from &&
+            dateRange.to &&
+            handleTimerangeChange
+        ) {
+            handleTimerangeChange({
+                from: dateRange.from.toISOString(),
+                to: dateRange.to.toISOString(),
+            });
         }
     };
 
@@ -35,20 +51,38 @@ export const CustomDateRange: FC<CustomDateRangeProps> = ({ timerange, handleTim
 
     return (
         <ReactPopover.Root open={open} onOpenChange={setOpen}>
-            <ReactPopover.Trigger disabled={!handleTimerangeChange} className={styles.trigger}>
-                {handleTimerangeChange && <Icon className={styles.calendarIcon} width={16} height={16} type={IconType.CALENDAR} />}
+            <ReactPopover.Trigger
+                disabled={!handleTimerangeChange}
+                className={styles.trigger}
+            >
+                {handleTimerangeChange && (
+                    <Icon
+                        className={styles.calendarIcon}
+                        width={16}
+                        height={16}
+                        type={IconType.CALENDAR}
+                    />
+                )}
 
-                <p className="typography-labels-field-label mb-1">{rangeText}</p>
+                <p className="typography-labels-field-label mb-1">
+                    {rangeText}
+                </p>
             </ReactPopover.Trigger>
             <ReactPopover.Portal>
-                <ReactPopover.Content align="end" side="bottom" style={{ zIndex: zIndexOrder.DatePickerDialog }}>
+                <ReactPopover.Content
+                    align="end"
+                    side="bottom"
+                    style={{ zIndex: zIndexOrder.DatePickerDialog }}
+                >
                     <div className={fieldStyles.datePickerContainer}>
                         <DatePicker
                             mode="range"
                             timeZone="UTC"
                             selected={selected}
                             onSelect={handleSelect}
-                            defaultMonth={dayjs(timerange?.from || dayjs()).toDate()}
+                            defaultMonth={dayjs(
+                                timerange?.from || dayjs()
+                            ).toDate()}
                         />
                     </div>
                 </ReactPopover.Content>

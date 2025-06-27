@@ -12,7 +12,10 @@ interface ButtonGroupItemProps {
     dataTestId?: string;
 }
 
-const getButtonGroupItemClasses = (position: ButtonGroupItemPosition, classNames: string) => {
+const getButtonGroupItemClasses = (
+    position: ButtonGroupItemPosition,
+    classNames: string
+) => {
     const positionClasses = {
         first: 'rounded-l-md rounded-r-none border-t-2 border-b-2 border-l-2 border-r-1',
         middle: 'rounded-none border-t-2 border-b-2 border-l-1 border-r-1',
@@ -37,12 +40,21 @@ export const ButtonGroupItem: React.FC<ButtonGroupItemProps> = ({
     );
 
     const checkedClasses = clsx({
-        'z-19 border-primary !bg-primary-lighter font-bold hover:!bg-primary-lighter': checked,
+        'z-19 border-primary !bg-primary-lighter font-bold hover:!bg-primary-lighter':
+            checked,
         'border-2 bg-white font-normal': !checked,
     });
     const positionClasses = getButtonGroupItemClasses(position, className);
-    const disabledClasses = clsx({ 'cursor-not-allowed !bg-gray-100 text-gray-900': disabled, 'cursor-pointer': !disabled });
-    const btnGroupItemClasses = clsx(baseClasses, positionClasses, checkedClasses, disabledClasses);
+    const disabledClasses = clsx({
+        'cursor-not-allowed !bg-gray-100 text-gray-900': disabled,
+        'cursor-pointer': !disabled,
+    });
+    const btnGroupItemClasses = clsx(
+        baseClasses,
+        positionClasses,
+        checkedClasses,
+        disabledClasses
+    );
 
     const handleClick = () => {
         if (!disabled) {
@@ -59,7 +71,7 @@ export const ButtonGroupItem: React.FC<ButtonGroupItemProps> = ({
             data-testid={dataTestId}
             data-label={label}
             onClick={handleClick}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     handleClick();

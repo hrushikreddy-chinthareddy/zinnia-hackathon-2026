@@ -2,8 +2,16 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { FormEvent, useContext, useState } from 'react';
 
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import Button, {
+    ButtonSize,
+    ButtonType,
+    ButtonVariant,
+} from '@deps/components/button/button';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
@@ -39,12 +47,20 @@ export function allValuesEmptyObjects(obj: any) {
     return true; // All values are empty objects
 }
 
-export function FormControls({ isLoading, setIsLoading, setTaskApiError, document }: FormControlsProps) {
+export function FormControls({
+    isLoading,
+    setIsLoading,
+    setTaskApiError,
+    document,
+}: FormControlsProps) {
     const router = useRouter();
     const [timer] = useState(performance.now());
-    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, {
+        keyPrefix: 'caseReg60.request',
+    });
     const formState = useContext(Reg60FormContext);
-    const formStatusCompleted = formState?.initialForm?.status === TaskStatus.Completed;
+    const formStatusCompleted =
+        formState?.initialForm?.status === TaskStatus.Completed;
     const caseId = router?.query?.id || '';
 
     const {
@@ -92,7 +108,10 @@ export function FormControls({ isLoading, setIsLoading, setTaskApiError, documen
                 buildForm(TaskStatus.New, document, formState)
             );
         } else {
-            successfulTaskUpdate = await createTask(caseId as string, buildForm(TaskStatus.New, document, formState));
+            successfulTaskUpdate = await createTask(
+                caseId as string,
+                buildForm(TaskStatus.New, document, formState)
+            );
         }
 
         if (successfulTaskUpdate) {
@@ -136,19 +155,33 @@ export function FormControls({ isLoading, setIsLoading, setTaskApiError, documen
                     timer
                 );
             } else {
-                successfulTaskUpsert = await createTask(caseId as string, buildForm(TaskStatus.Completed, document, formState));
+                successfulTaskUpsert = await createTask(
+                    caseId as string,
+                    buildForm(TaskStatus.Completed, document, formState)
+                );
             }
 
             if (successfulTaskUpsert) {
                 if (isLocalStorageEnabled()) {
-                    const successMessageStart = t('formControls.createTaskSuccessStart', {
-                        documentNumber: document?.documentNumber,
-                    });
-                    const successMessageEnd = t('formControls.createTaskSuccessEnd', {
-                        contractNumber: document?.contract,
-                    });
-                    const finalCreateSuccessMessage = `${successMessageStart} ${document.contract ? successMessageEnd : ''}`;
-                    localStorage.setItem(FormSuccessMessageKey.Reg60MassMutualSuccess, finalCreateSuccessMessage);
+                    const successMessageStart = t(
+                        'formControls.createTaskSuccessStart',
+                        {
+                            documentNumber: document?.documentNumber,
+                        }
+                    );
+                    const successMessageEnd = t(
+                        'formControls.createTaskSuccessEnd',
+                        {
+                            contractNumber: document?.contract,
+                        }
+                    );
+                    const finalCreateSuccessMessage = `${successMessageStart} ${
+                        document.contract ? successMessageEnd : ''
+                    }`;
+                    localStorage.setItem(
+                        FormSuccessMessageKey.Reg60MassMutualSuccess,
+                        finalCreateSuccessMessage
+                    );
                 }
 
                 router.push(`/create-case`);
@@ -163,7 +196,9 @@ export function FormControls({ isLoading, setIsLoading, setTaskApiError, documen
 
     const handleCancelAction = async (event: FormEvent) => {
         event.preventDefault();
-        const confirmCancel = window.confirm(t('formControls.cancelConfirm') as string);
+        const confirmCancel = window.confirm(
+            t('formControls.cancelConfirm') as string
+        );
         if (confirmCancel) {
             setIsLoading(false);
             setTaskApiError('');
@@ -174,7 +209,13 @@ export function FormControls({ isLoading, setIsLoading, setTaskApiError, documen
     return (
         <div className="flex flex-row self-center p-4">
             {userOnInfoPage ? (
-                <Button className="mr-4" onClick={handleContinue} disabled={isLoading} size={ButtonSize.Small} type={ButtonType.Primary}>
+                <Button
+                    className="mr-4"
+                    onClick={handleContinue}
+                    disabled={isLoading}
+                    size={ButtonSize.Small}
+                    type={ButtonType.Primary}
+                >
                     {t('formControls.continue')}
                 </Button>
             ) : (
@@ -184,7 +225,11 @@ export function FormControls({ isLoading, setIsLoading, setTaskApiError, documen
                     disabled={isFormStateReadOnly || isLoading}
                     size={ButtonSize.Small}
                     type={ButtonType.Primary}
-                    variant={isFormStateReadOnly ? ButtonVariant.Inactive : ButtonVariant.Default}
+                    variant={
+                        isFormStateReadOnly
+                            ? ButtonVariant.Inactive
+                            : ButtonVariant.Default
+                    }
                 >
                     {t('formControls.calculateComparison')}
                 </Button>
@@ -194,7 +239,11 @@ export function FormControls({ isLoading, setIsLoading, setTaskApiError, documen
                 onClick={handleSaveAsDraft}
                 size={ButtonSize.Small}
                 type={ButtonType.Primary}
-                variant={formStatusCompleted ? ButtonVariant.Inactive : ButtonVariant.Default}
+                variant={
+                    formStatusCompleted
+                        ? ButtonVariant.Inactive
+                        : ButtonVariant.Default
+                }
                 disabled={formStatusCompleted}
             >
                 {t('formControls.saveAsDraft')}

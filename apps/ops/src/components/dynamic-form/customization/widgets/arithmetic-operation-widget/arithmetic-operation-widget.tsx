@@ -2,99 +2,126 @@ import { getUiOptions, WidgetProps } from '@rjsf/utils';
 import { Label } from '@zinnia/bloom/components';
 import { useEffect } from 'react';
 
-import Field, { FieldFormat, FieldSize, FieldType } from '@deps/components/fields/field';
-
-
+import Field, {
+    FieldFormat,
+    FieldSize,
+    FieldType,
+} from '@deps/components/fields/field';
 
 const enum ArithmeticOperation {
-  Addition = 'addition',
-  Subtraction='subtraction',
-  Multiplication = 'multiplication'
-};
+    Addition = 'addition',
+    Subtraction = 'subtraction',
+    Multiplication = 'multiplication',
+}
 type FormContextOptions = {
-  keyName: string;
-  details: string;
-  mainObject: string;
-  field1: string;
-  field2: string;
-  operation: ArithmeticOperation;
+    keyName: string;
+    details: string;
+    mainObject: string;
+    field1: string;
+    field2: string;
+    operation: ArithmeticOperation;
 };
 
 const ArithmeticOperationWidget = function (props: WidgetProps) {
-  const { id, required, disabled, rawErrors, description, errors, readonly, uiSchema, hideError = false, onChange, title, formContext, name, placeholder } = props;
+    const {
+        id,
+        required,
+        disabled,
+        rawErrors,
+        description,
+        errors,
+        readonly,
+        uiSchema,
+        hideError = false,
+        onChange,
+        title,
+        formContext,
+        name,
+        placeholder,
+    } = props;
 
-  const formContextOptions: FormContextOptions = getUiOptions(uiSchema)?.formContext as FormContextOptions;
+    const formContextOptions: FormContextOptions = getUiOptions(uiSchema)
+        ?.formContext as FormContextOptions;
 
-  const applyArithmeticOperations = (formContextOptions: FormContextOptions) => {
-    const data = formContext?.[formContextOptions.keyName]?.[formContextOptions.details]?.[formContextOptions.mainObject];
+    const applyArithmeticOperations = (
+        formContextOptions: FormContextOptions
+    ) => {
+        const data =
+            formContext?.[formContextOptions.keyName]?.[
+                formContextOptions.details
+            ]?.[formContextOptions.mainObject];
 
-    if (data) {
-      const field1 = data[formContextOptions.field1];
-      const field2 = data[formContextOptions.field2];
+        if (data) {
+            const field1 = data[formContextOptions.field1];
+            const field2 = data[formContextOptions.field2];
 
-      switch (formContextOptions.operation) {
-        case ArithmeticOperation.Addition:
-          return Number(field1) + Number(field2);
+            switch (formContextOptions.operation) {
+                case ArithmeticOperation.Addition:
+                    return Number(field1) + Number(field2);
 
-        case ArithmeticOperation.Subtraction:
-          return Number(field1) - Number(field2);
+                case ArithmeticOperation.Subtraction:
+                    return Number(field1) - Number(field2);
 
-        case ArithmeticOperation.Multiplication:
-          return Number(field1) * Number(field2);
-      }
-    }
-    else
-      return null
-  };
+                case ArithmeticOperation.Multiplication:
+                    return Number(field1) * Number(field2);
+            }
+        } else return null;
+    };
 
-  const value = applyArithmeticOperations(formContextOptions);
-  const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 2, format: 'en-US' };
-  const formatNumber = (num: any) => {
-    return parseFloat(num).toLocaleString('en-US', {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2
-    })
-  };
+    const value = applyArithmeticOperations(formContextOptions);
+    const numberFormat = {
+        type: 'number' as FieldFormat,
+        decimalPlaces: 2,
+        format: 'en-US',
+    };
+    const formatNumber = (num: any) => {
+        return parseFloat(num).toLocaleString('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+        });
+    };
 
-  useEffect(() => {
-    if (value !== null || value !== undefined) {
-      onChange(value?.toFixed(2));
-    }
-  }, [value]);
+    useEffect(() => {
+        if (value !== null || value !== undefined) {
+            onChange(value?.toFixed(2));
+        }
+    }, [value]);
 
-
-  if (typeof value === 'number') {
-    return (disabled as boolean) ? (
-      <div>{value}</div>
-    ) : (
-      readonly ? <>{formatNumber(value)}</> :
-        <div className="">
-          {title && (
-            <div className="mb-2">
-              <Label labelFor={props.id}>
-                <span className="">{title}</span>
-              </Label>
+    if (typeof value === 'number') {
+        return (disabled as boolean) ? (
+            <div>{value}</div>
+        ) : readonly ? (
+            <>{formatNumber(value)}</>
+        ) : (
+            <div className="">
+                {title && (
+                    <div className="mb-2">
+                        <Label labelFor={props.id}>
+                            <span className="">{title}</span>
+                        </Label>
+                    </div>
+                )}
+                {description}
+                <div className="max-w-sm flex w-full flex-col">
+                    <Field
+                        name={id}
+                        value={value.toString()}
+                        formatOptions={numberFormat}
+                        id={id}
+                        disabled={disabled}
+                        required={required}
+                        readOnly={readonly}
+                        placeholder={placeholder}
+                        onChange={(e) => onChange(e.target.value)}
+                        size={FieldSize.Small}
+                        type={FieldType.BaseActive}
+                    />
+                </div>
+                {!hideError && errors}
             </div>
-          )}
-          {description}
-          <div className="max-w-sm flex w-full flex-col">
-            <Field name={id}
-              value={value.toString()}
-              formatOptions={numberFormat}
-              id={id}
-              disabled={disabled}
-              required={required}
-              readOnly={readonly}
-              placeholder={placeholder}
-              onChange={e => onChange(e.target.value)}
-              size={FieldSize.Small}
-              type={FieldType.BaseActive} />
-          </div>
-          {!hideError && errors}
-        </div>
-    );
-  } else {
-    return <></>;
-  }
+        );
+    } else {
+        return <></>;
+    }
 };
-export default ArithmeticOperationWidget
+export default ArithmeticOperationWidget;

@@ -7,7 +7,7 @@ export default {
     title: 'Components/Accordion',
     component: Accordion,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>
@@ -22,7 +22,11 @@ export const AccordionCard = () => (
 );
 
 export const AccordionCardWithHeader = () => (
-    <Accordion isOpen={false} title={'Create Case'} renderHeaderComponent={<div></div>}>
+    <Accordion
+        isOpen={false}
+        title={'Create Case'}
+        renderHeaderComponent={<div></div>}
+    >
         <div>Accordion with Header element and Children</div>
     </Accordion>
 );

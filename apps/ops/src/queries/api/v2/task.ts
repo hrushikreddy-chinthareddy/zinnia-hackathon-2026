@@ -2,15 +2,31 @@ import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { Reg60FormData } from '@deps/containers/otp/reg60-forms/reg60.types';
-import { CreateTaskBody, RenewalsFormData, TaskV2Payload } from '@deps/models/case/task';
+import {
+    CreateTaskBody,
+    RenewalsFormData,
+    TaskV2Payload,
+} from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCaseData } from '@deps/models/case/withdrawal/case';
-import { baseAppUrl, se2ApiServerUrl, se2ApiServerUrlV2 } from '@deps/queries/api-config';
+import {
+    baseAppUrl,
+    se2ApiServerUrl,
+    se2ApiServerUrlV2,
+} from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { CaseSearchErrorResponse, CaseTaskSearchResponse } from '@deps/types/search';
+import {
+    CaseSearchErrorResponse,
+    CaseTaskSearchResponse,
+} from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    logInfo,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 const baseCasesV2Url = `${baseAppUrl}/api/case/v2/cases`;
 const tasksV2Url = `${baseAppUrl}/api/case/v2/tasks`;
@@ -22,7 +38,13 @@ export const getCaseTaskByIdSSR = async (
     loggingContext: LoggingContext
 ): Promise<ManagementTask<TaskStatus> | null> => {
     const url = `${ssrCasesUrlV2}/tasks/${taskId}`;
-    const logCtx = { ...loggingContext, file: 'queries/api/v2/task', function: 'getCaseTaskByIdSSR', inputs: { taskId }, url };
+    const logCtx = {
+        ...loggingContext,
+        file: 'queries/api/v2/task',
+        function: 'getCaseTaskByIdSSR',
+        inputs: { taskId },
+        url,
+    };
     try {
         logInfo('getCaseTaskByIdSSR::Fetching task by id', logCtx);
         const { data } = await serverApi.get<any>(
@@ -41,24 +63,35 @@ export const getCaseTaskByIdSSR = async (
         logInfo('getCaseTaskByIdSSR::Successfully retrived task by id', logCtx);
         return data;
     } catch (error: any) {
-        logError('getCaseTaskByIdSSR::Failed to retrieve task by id', { ...parseErrorInformation(error), ...logCtx });
+        logError('getCaseTaskByIdSSR::Failed to retrieve task by id', {
+            ...parseErrorInformation(error),
+            ...logCtx,
+        });
         return null;
     }
 };
 
-export const getTaskInstance = async (query: any): Promise<ManagementTask | null> => {
+export const getTaskInstance = async (
+    query: any
+): Promise<ManagementTask | null> => {
     try {
         // removing the cache logic for fetching task instance as we try to upload a new document to the task and then open the task sidesheet, we want the newly uploaded document to be shown in the task sidesheet without refreshing the page
-        const { data } = await client.get<any, AxiosResponse>(`${tasksV2Url}/${query.taskId}`, query);
+        const { data } = await client.get<any, AxiosResponse>(
+            `${tasksV2Url}/${query.taskId}`,
+            query
+        );
 
         return data;
     } catch (error: any) {
-        browserLogError('getTaskInstance::An error occurred while getting Task Instance', {
-            ...parseErrorInformation(error),
-            query,
-            file: 'queries/api/v2/task',
-            function: 'getTaskInstance',
-        });
+        browserLogError(
+            'getTaskInstance::An error occurred while getting Task Instance',
+            {
+                ...parseErrorInformation(error),
+                query,
+                file: 'queries/api/v2/task',
+                function: 'getTaskInstance',
+            }
+        );
         return null;
     }
 };
@@ -69,9 +102,17 @@ export const createTaskSSR = async <T>(
     payload: CreateTaskBody<TaskStatus, T>,
     logCtx: LoggingContext
 ): Promise<ManagementTask<TaskStatus>> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/v2/task', function: 'createTaskSSR', inputs: { caseId, payload } };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/v2/task',
+        function: 'createTaskSSR',
+        inputs: { caseId, payload },
+    };
     try {
-        const { data } = await serverApi.post<CreateTaskBody<TaskStatus, T>, AxiosResponse>(
+        const { data } = await serverApi.post<
+            CreateTaskBody<TaskStatus, T>,
+            AxiosResponse
+        >(
             `${se2ApiServerUrlV2}/cases/${caseId}/tasks`,
             payload,
             {
@@ -87,7 +128,10 @@ export const createTaskSSR = async <T>(
         );
         return data;
     } catch (error: any) {
-        logError('createTaskSSR', { ...parseErrorInformation(error), ...loggingContext });
+        logError('createTaskSSR', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+        });
         return error.response;
     }
 };
@@ -97,11 +141,22 @@ export const searchTaskSSR = async (
     accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<CaseTaskSearchResponse | CaseSearchErrorResponse> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/v2/task', function: 'searchTaskSSR', inputs: { caseId } };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/v2/task',
+        function: 'searchTaskSSR',
+        inputs: { caseId },
+    };
     try {
         const url = `${se2ApiServerUrl}/tasks/search`;
-        logInfo('searchTaskSSR::Fetching case tasks', { ...loggingContext, url });
-        const { data } = await serverApi.post<{ caseId: string }, AxiosResponse>(
+        logInfo('searchTaskSSR::Fetching case tasks', {
+            ...loggingContext,
+            url,
+        });
+        const { data } = await serverApi.post<
+            { caseId: string },
+            AxiosResponse
+        >(
             url,
             { caseId },
             {
@@ -115,7 +170,10 @@ export const searchTaskSSR = async (
             },
             loggingContext
         );
-        logInfo('searchTaskSSR::Performed case tasks search', { ...loggingContext, url });
+        logInfo('searchTaskSSR::Performed case tasks search', {
+            ...loggingContext,
+            url,
+        });
         return data;
     } catch (error: any) {
         logError('searchTaskSSR::Failed to perform case tasks search', {
@@ -128,7 +186,10 @@ export const searchTaskSSR = async (
 
 export const createTask = async (
     caseId: string,
-    payload: CreateTaskBody<TaskStatus, Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData>,
+    payload: CreateTaskBody<
+        TaskStatus,
+        Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData
+    >,
     entryDuration?: number
 ): Promise<any> => {
     try {
@@ -136,10 +197,17 @@ export const createTask = async (
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseCasesV2Url}/${caseId}/tasks`;
         const { data } = await client.post<
-            CreateTaskBody<TaskStatus, Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData>,
+            CreateTaskBody<
+                TaskStatus,
+                Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData
+            >,
             AxiosResponse
         >(url, payload);
-        browserLogInfo('Successfully created task using v2', { caseId, url, function: 'tasks.createTask' });
+        browserLogInfo('Successfully created task using v2', {
+            caseId,
+            url,
+            function: 'tasks.createTask',
+        });
 
         datadogLogs.logger.info('CreateTask::Form Entry time', {
             timeElapsedSinceLoad: timeInSeconds,
@@ -155,7 +223,11 @@ export const createTask = async (
 
         return data;
     } catch (error: any) {
-        browserLogError('An error occurred during create task using v2', { error, caseId, function: 'tasks.createTask' });
+        browserLogError('An error occurred during create task using v2', {
+            error,
+            caseId,
+            function: 'tasks.createTask',
+        });
         return null;
     }
 };
@@ -170,8 +242,16 @@ export const updateTask = async (
         const logTime = entryDuration ? performance.now() - entryDuration : 0;
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseCasesV2Url}/${caseId}/tasks/${taskId}`;
-        const { data } = await client.put<CreateTaskBody<TaskStatus, TaskV2Payload>, AxiosResponse>(url, payload);
-        browserLogInfo('Successfully updated task using v2', { caseId, taskId, url, function: 'tasks.updateTask' });
+        const { data } = await client.put<
+            CreateTaskBody<TaskStatus, TaskV2Payload>,
+            AxiosResponse
+        >(url, payload);
+        browserLogInfo('Successfully updated task using v2', {
+            caseId,
+            taskId,
+            url,
+            function: 'tasks.updateTask',
+        });
 
         datadogLogs.logger.info('updateTask::Successfully updated a task', {
             timeElapsedSinceLoad: timeInSeconds,
@@ -187,7 +267,12 @@ export const updateTask = async (
 
         return data;
     } catch (error: any) {
-        browserLogError('An error occurred during update task using v2', { error, caseId, taskId, function: 'tasks.updateTask' });
+        browserLogError('An error occurred during update task using v2', {
+            error,
+            caseId,
+            taskId,
+            function: 'tasks.updateTask',
+        });
         return null;
     }
 };

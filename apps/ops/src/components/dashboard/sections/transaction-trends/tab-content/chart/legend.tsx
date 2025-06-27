@@ -15,8 +15,13 @@ export const Legend: FC<LegendProps> = ({ title, colors, labels }) => {
             <div className={styles.itemsContainer}>
                 {labels.map((label, index) => (
                     <div key={index} className={styles.item}>
-                        <div className={styles.color} style={{ backgroundColor: colors[index] }}></div>
-                        <div className="typography-content-body-sm">{label}</div>
+                        <div
+                            className={styles.color}
+                            style={{ backgroundColor: colors[index] }}
+                        ></div>
+                        <div className="typography-content-body-sm">
+                            {label}
+                        </div>
                     </div>
                 ))}
             </div>

@@ -7,7 +7,8 @@ import { Option } from './autocomplete.types';
 export const getTriggerClasses = (isOpen: boolean) => {
     const hoverFocusClass = 'default-hover default-focus';
     const activeClass = 'active:border-primary';
-    const defaultVariantClasses = 'bg-white border-2 border-gray-200 text-gray-900';
+    const defaultVariantClasses =
+        'bg-white border-2 border-gray-200 text-gray-900';
     const triggerClasses = clsx(
         'flex w-full flex-row items-center justify-between rounded-lg disabled:border-gray-300 disabled:bg-gray-100',
         hoverFocusClass,
@@ -31,7 +32,12 @@ export const getSelectedValueClasses = (disabled: boolean, size: FieldSize) =>
         }
     );
 
-export const getItemClasses = (option: Option, index: number, numOptions: number, selected: boolean) =>
+export const getItemClasses = (
+    option: Option,
+    index: number,
+    numOptions: number,
+    selected: boolean
+) =>
     clsx(
         'default-hover relative flex w-full flex-row items-center justify-start border-1 border-transparent px-4 py-2 font-secondary text-md leading-5.5 outline-none focus-visible:border-accent1',
         {

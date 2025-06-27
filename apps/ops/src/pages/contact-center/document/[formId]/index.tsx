@@ -10,8 +10,15 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { downloadFormById } from '@deps/queries/api/c2web';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
+import {
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 interface FormViewerProps extends SegmentTrackedPageProps {
     formId: number;
@@ -113,7 +120,11 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
         },
     },
-    { file: 'contact-center/document/[formId]/index', function: 'getServerSideProps', page: 'contact-center/document/:formId' }
+    {
+        file: 'contact-center/document/[formId]/index',
+        function: 'getServerSideProps',
+        page: 'contact-center/document/:formId',
+    }
 );
 
 export default FormViewerPage;

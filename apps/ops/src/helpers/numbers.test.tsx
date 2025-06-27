@@ -38,7 +38,9 @@ describe('Numbers Helper', () => {
     describe('> numberFormatify', () => {
         it('should format as a defaut error string if no value, null, undefined', () => {
             const valueEmpty = '';
-            const formatEmpty = numberFormatify(valueEmpty, { style: undefined });
+            const formatEmpty = numberFormatify(valueEmpty, {
+                style: undefined,
+            });
             expect(formatEmpty).toBe(DEFAULT_ERROR_STRING);
 
             const valueNull = null;
@@ -46,7 +48,9 @@ describe('Numbers Helper', () => {
             expect(formatNull).toBe(DEFAULT_ERROR_STRING);
 
             const valueUndefined = undefined;
-            const formatUndefined = numberFormatify(valueUndefined, { style: undefined });
+            const formatUndefined = numberFormatify(valueUndefined, {
+                style: undefined,
+            });
             expect(formatUndefined).toBe(DEFAULT_ERROR_STRING);
         });
 
@@ -66,14 +70,22 @@ describe('Numbers Helper', () => {
 
         it('should return rounded numbers in the millions range with an M next to them when specified in the parameters', () => {
             const value = '1000000';
-            const format = numberFormatify(value, { style: 'currency', currency: 'USD' }, true);
+            const format = numberFormatify(
+                value,
+                { style: 'currency', currency: 'USD' },
+                true
+            );
 
             expect(format).toBe('$1M');
         });
 
         it('should return rounded numbers up to 1 decimal point in the millions range with an M next to them when specified in the parameters', () => {
             const value = '1200000';
-            const format = numberFormatify(value, { style: 'currency', currency: 'USD' }, true);
+            const format = numberFormatify(
+                value,
+                { style: 'currency', currency: 'USD' },
+                true
+            );
 
             expect(format).toBe('$1.2M');
         });

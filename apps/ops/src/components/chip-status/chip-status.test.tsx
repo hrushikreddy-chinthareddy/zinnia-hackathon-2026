@@ -16,21 +16,27 @@ describe('ChipStatus Component', () => {
     it('should render In Progress chip with correct colors', () => {
         const chip = renderChipStatus(Statuses.InProgress);
         expect(chip).toHaveStyle('color: var(--color-semantic-information)');
-        expect(chip).toHaveStyle('background-color: var(--color-semantic-information-light)');
+        expect(chip).toHaveStyle(
+            'background-color: var(--color-semantic-information-light)'
+        );
         expect(chip).toHaveTextContent('Inprogress');
     });
 
     it('should render Exception chip with correct colors', () => {
         const chip = renderChipStatus(Statuses.Exception);
         expect(chip).toHaveStyle('color: var(--color-semantic-error)');
-        expect(chip).toHaveStyle('background-color: var(--color-semantic-error-light)');
+        expect(chip).toHaveStyle(
+            'background-color: var(--color-semantic-error-light)'
+        );
         expect(chip).toHaveTextContent('Exception');
     });
 
     it('should render Completed chip with correct colors', () => {
         const chip = renderChipStatus(Statuses.Completed);
         expect(chip).toHaveStyle('color: var(--color-semantic-success)');
-        expect(chip).toHaveStyle('background-color: var(--color-semantic-success-light)');
+        expect(chip).toHaveStyle(
+            'background-color: var(--color-semantic-success-light)'
+        );
         expect(chip).toHaveTextContent('Completed');
     });
 

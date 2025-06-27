@@ -12,7 +12,7 @@ export default {
     title: 'Containers/MEC/PolicyTestCard',
     component: PolicyTestCard,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="p-10">
                 <Story />
             </div>
@@ -89,13 +89,15 @@ export const SevenPayPolicyTestCardTest: StoryType = {
                 value: 'Feb 2, 2020 - Feb 1, 2026',
                 caption: 'in year 2 of 7',
                 tooltipTitle: '7-pay premium test period',
-                tooltipBody: '7-pay premium test period 7-pay premium test period',
+                tooltipBody:
+                    '7-pay premium test period 7-pay premium test period',
             },
             {
                 label: 'Annual 7-Pay premium',
                 value: numberFormatify(12345 / 100),
                 tooltipTitle: 'Annual 7-Pay premium',
-                tooltipBody: ' Annual 7-Pay premium Annual 7-Pay premium Annual 7-Pay premium',
+                tooltipBody:
+                    ' Annual 7-Pay premium Annual 7-Pay premium Annual 7-Pay premium',
             },
         ],
     },

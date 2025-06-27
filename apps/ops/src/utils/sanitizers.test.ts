@@ -3,7 +3,13 @@ import { Party, Policy } from '@zinnia/api-types/types/sor';
 import { Case } from '@deps/models/case/case';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 
-import { caseSanitizer, caseSearchSanitizer, lcPartyResponseSanitizer, policyResponseSanitizer, policySanitizer } from './sanitizers';
+import {
+    caseSanitizer,
+    caseSearchSanitizer,
+    lcPartyResponseSanitizer,
+    policyResponseSanitizer,
+    policySanitizer,
+} from './sanitizers';
 
 jest.mock('@deps/utils/server-logging');
 
@@ -30,12 +36,23 @@ const mockPolicyParties = [
     {
         fullName: 'John Smith',
         bankDetails: [
-            { internationalBankAccountNumber: '987654321', accountNumber: '0123456789', routingNumber: 'do not modify' },
-            { internationalBankAccountNumber: null, accountNumber: '2468101214', otherValue: 'do not touch this' },
+            {
+                internationalBankAccountNumber: '987654321',
+                accountNumber: '0123456789',
+                routingNumber: 'do not modify',
+            },
+            {
+                internationalBankAccountNumber: null,
+                accountNumber: '2468101214',
+                otherValue: 'do not touch this',
+            },
         ],
         identifications: [
             { identificationType: 'SSN', identificationValue: '123-45-6789' },
-            { identificationType: 'DriverLicense', identificationValue: '867-5309' },
+            {
+                identificationType: 'DriverLicense',
+                identificationValue: '867-5309',
+            },
         ],
         otherStuff: ['there', 'is', 'stuff', 'in', 'here'],
     },
@@ -57,12 +74,26 @@ const expectedPolicyOutput = {
         {
             fullName: 'John Smith',
             bankDetails: [
-                { internationalBankAccountNumber: '*****4321', accountNumber: '******6789', routingNumber: 'do not modify' },
-                { internationalBankAccountNumber: null, accountNumber: '******1214', otherValue: 'do not touch this' },
+                {
+                    internationalBankAccountNumber: '*****4321',
+                    accountNumber: '******6789',
+                    routingNumber: 'do not modify',
+                },
+                {
+                    internationalBankAccountNumber: null,
+                    accountNumber: '******1214',
+                    otherValue: 'do not touch this',
+                },
             ],
             identifications: [
-                { identificationType: 'SSN', identificationValue: '***-**-6789' },
-                { identificationType: 'DriverLicense', identificationValue: '867-5309' },
+                {
+                    identificationType: 'SSN',
+                    identificationValue: '***-**-6789',
+                },
+                {
+                    identificationType: 'DriverLicense',
+                    identificationValue: '867-5309',
+                },
             ],
             otherStuff: ['there', 'is', 'stuff', 'in', 'here'],
         },
@@ -111,8 +142,17 @@ describe('sanitizers', () => {
 
     describe('caseSearchSanitizer', () => {
         it('should mask SSNs for cases in the data array', () => {
-            const otherStuff = { limit: 10, count: 10, offset: 0, status: 200, message: 'OK', total: 1 };
-            expect(caseSearchSanitizer({ data: [mockCaseInput], ...otherStuff })).toEqual({ data: [expectedCaseOutput], ...otherStuff });
+            const otherStuff = {
+                limit: 10,
+                count: 10,
+                offset: 0,
+                status: 200,
+                message: 'OK',
+                total: 1,
+            };
+            expect(
+                caseSearchSanitizer({ data: [mockCaseInput], ...otherStuff })
+            ).toEqual({ data: [expectedCaseOutput], ...otherStuff });
         });
     });
 
@@ -124,13 +164,17 @@ describe('sanitizers', () => {
     describe('policyResponseSanitizer', () => {
         it('should call policySanitizer on the `data` property of a policy response', () => {
             const otherStuff = { message: 'This is the message', status: 200 };
-            expect(policyResponseSanitizer({ data: mockPolicy, ...otherStuff })).toEqual({ ...otherStuff, data: expectedPolicyOutput });
+            expect(
+                policyResponseSanitizer({ data: mockPolicy, ...otherStuff })
+            ).toEqual({ ...otherStuff, data: expectedPolicyOutput });
         });
     });
 
     describe('lcPartyResponseSanitizer', () => {
         it('should sanitize the TaxIDs in the LC Party response', () => {
-            expect(lcPartyResponseSanitizer(mockLcParty)).toEqual(expectedLcOutput);
+            expect(lcPartyResponseSanitizer(mockLcParty)).toEqual(
+                expectedLcOutput
+            );
         });
     });
 });

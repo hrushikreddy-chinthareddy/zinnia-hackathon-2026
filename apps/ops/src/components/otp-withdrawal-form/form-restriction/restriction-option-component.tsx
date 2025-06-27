@@ -1,7 +1,9 @@
 import { SetStateAction } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { Restriction } from '@deps/models/case/withdrawal/case';
 
 import { Option } from './distribution-reason';
@@ -15,15 +17,22 @@ export type OptionComponentProps<T> = {
 };
 
 function isChecked<T>(val: T, restrictions: Restriction<T>[]): boolean {
-    return !!restrictions.find(restriction => restriction.text === val);
+    return !!restrictions.find((restriction) => restriction.text === val);
 }
 
-function toggleRestriction<T>(val: T, setRestrictions: React.Dispatch<React.SetStateAction<Restriction<T>[]>>) {
+function toggleRestriction<T>(
+    val: T,
+    setRestrictions: React.Dispatch<React.SetStateAction<Restriction<T>[]>>
+) {
     return (shouldHaveRestriction: boolean) => {
-        setRestrictions(restrictions => {
-            const hasRestriction = restrictions.find(checkedRestriction => checkedRestriction.text === val);
+        setRestrictions((restrictions) => {
+            const hasRestriction = restrictions.find(
+                (checkedRestriction) => checkedRestriction.text === val
+            );
             if (hasRestriction && !shouldHaveRestriction) {
-                return restrictions.filter(checkedRestriction => checkedRestriction.text !== val);
+                return restrictions.filter(
+                    (checkedRestriction) => checkedRestriction.text !== val
+                );
             }
 
             if (!hasRestriction && shouldHaveRestriction) {
@@ -39,21 +48,37 @@ function toggleRestriction<T>(val: T, setRestrictions: React.Dispatch<React.SetS
     };
 }
 
-export default function RestrictionOptionComponent<T>({ options, restriction, setRestriction, legend, classes, isFormStateReadOnly }: OptionComponentProps<T>) {
+export default function RestrictionOptionComponent<T>({
+    options,
+    restriction,
+    setRestriction,
+    legend,
+    classes,
+    isFormStateReadOnly,
+}: OptionComponentProps<T>) {
     return (
         <fieldset>
             <legend className="mb-2">
-                <Typography variant={TypographyVariant.Label}>{legend}</Typography>
+                <Typography variant={TypographyVariant.Label}>
+                    {legend}
+                </Typography>
             </legend>
             <div className="flex flex-col gap-4">
                 {options.map(({ label, value, subElement }) => {
-                    const containerClasses = subElement && classes ? classes(subElement) : '';
+                    const containerClasses =
+                        subElement && classes ? classes(subElement) : '';
                     return (
-                        <div key={`${legend}Select-${value}`} className={containerClasses}>
+                        <div
+                            key={`${legend}Select-${value}`}
+                            className={containerClasses}
+                        >
                             <CheckboxText
                                 checked={isChecked(value, restriction)}
                                 label={label}
-                                onChange={toggleRestriction(value, setRestriction)}
+                                onChange={toggleRestriction(
+                                    value,
+                                    setRestriction
+                                )}
                                 isDisabled={isFormStateReadOnly}
                             />
                             {subElement}

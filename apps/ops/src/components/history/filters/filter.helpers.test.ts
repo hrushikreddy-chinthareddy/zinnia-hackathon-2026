@@ -1,4 +1,9 @@
-import { EventFilterKeys, initialFilter, PolicyFilters, TransactionFilters } from '@deps/contexts/HistoryFiltersContext';
+import {
+    EventFilterKeys,
+    initialFilter,
+    PolicyFilters,
+    TransactionFilters,
+} from '@deps/contexts/HistoryFiltersContext';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import {
@@ -52,26 +57,40 @@ describe('HistoryFilters helpers', () => {
 
         describe('getFilter', () => {
             it('returns the filter and subfilter names if a filter is present', () => {
-                const eventFilter = { [EventFilterKeys.Policy]: PolicyFilters.Anniversary };
+                const eventFilter = {
+                    [EventFilterKeys.Policy]: PolicyFilters.Anniversary,
+                };
 
-                expect(getFilter(eventFilter)).toEqual({ filterName: 'policy', subfilterName: 'anniversary' });
+                expect(getFilter(eventFilter)).toEqual({
+                    filterName: 'policy',
+                    subfilterName: 'anniversary',
+                });
             });
 
             it('returns undefined for filter and subfilter names if no filter is present', () => {
                 const eventFilter = undefined;
 
-                expect(getFilter(eventFilter)).toEqual({ filterName: undefined, subfilterName: undefined });
+                expect(getFilter(eventFilter)).toEqual({
+                    filterName: undefined,
+                    subfilterName: undefined,
+                });
             });
         });
 
         describe('setFilter', () => {
             it('sets the filter and subfilter in history filters', () => {
                 let historyFilters = {};
-                const setHistoryFilters = jest.fn().mockImplementation(callback => {
-                    historyFilters = callback(historyFilters);
-                });
+                const setHistoryFilters = jest
+                    .fn()
+                    .mockImplementation((callback) => {
+                        historyFilters = callback(historyFilters);
+                    });
 
-                setFilter(setHistoryFilters, EventFilterKeys.Transactions, TransactionFilters.Premiums);
+                setFilter(
+                    setHistoryFilters,
+                    EventFilterKeys.Transactions,
+                    TransactionFilters.Premiums
+                );
 
                 expect(historyFilters).toEqual({
                     eventFilter: { transactions: 'premiums' },
@@ -82,9 +101,11 @@ describe('HistoryFilters helpers', () => {
         describe('setYearFilter', () => {
             it('sets the year filter in history filters', () => {
                 let historyFilters = {};
-                const setHistoryFilters = jest.fn().mockImplementation(callback => {
-                    historyFilters = callback(historyFilters);
-                });
+                const setHistoryFilters = jest
+                    .fn()
+                    .mockImplementation((callback) => {
+                        historyFilters = callback(historyFilters);
+                    });
 
                 setYearFilter(setHistoryFilters, '2022');
 
@@ -106,10 +127,17 @@ describe('HistoryFilters helpers', () => {
 
         describe('removeEventFilter', () => {
             it('removes all subfilters from history filters', () => {
-                let historyFilters = { eventFilter: { [EventFilterKeys.Policy]: PolicyFilters.Anniversary }, yearFilter: '2022' };
-                const setHistoryFilters = jest.fn().mockImplementation(callback => {
-                    historyFilters = callback(historyFilters);
-                });
+                let historyFilters = {
+                    eventFilter: {
+                        [EventFilterKeys.Policy]: PolicyFilters.Anniversary,
+                    },
+                    yearFilter: '2022',
+                };
+                const setHistoryFilters = jest
+                    .fn()
+                    .mockImplementation((callback) => {
+                        historyFilters = callback(historyFilters);
+                    });
 
                 removeEventFilter(setHistoryFilters);
 
@@ -121,10 +149,17 @@ describe('HistoryFilters helpers', () => {
 
         describe('removeYearFilter', () => {
             it('removes the year filter from history filters', () => {
-                let historyFilters = { eventFilter: { [EventFilterKeys.Policy]: PolicyFilters.Anniversary }, yearFilter: '2022' };
-                const setHistoryFilters = jest.fn().mockImplementation(callback => {
-                    historyFilters = callback(historyFilters);
-                });
+                let historyFilters = {
+                    eventFilter: {
+                        [EventFilterKeys.Policy]: PolicyFilters.Anniversary,
+                    },
+                    yearFilter: '2022',
+                };
+                const setHistoryFilters = jest
+                    .fn()
+                    .mockImplementation((callback) => {
+                        historyFilters = callback(historyFilters);
+                    });
 
                 removeYearFilter(setHistoryFilters);
 

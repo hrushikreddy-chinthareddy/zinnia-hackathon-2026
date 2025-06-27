@@ -10,12 +10,23 @@ import {
 } from '@deps/queries/api/bpm';
 import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
 
-export const checkOneTimePremiumEligibilityQuery = async (planCode: string, policyNumber: string) => {
+export const checkOneTimePremiumEligibilityQuery = async (
+    planCode: string,
+    policyNumber: string
+) => {
     return await checkEligibilityOneTimePremium(planCode, policyNumber);
 };
 
-export const checkSystematicProgramsEligibilityQuery = async (planCode: string, policyNumber: string, arrangementId: string) => {
-    return await checkEligibilitySystematicPrograms(planCode, policyNumber, arrangementId);
+export const checkSystematicProgramsEligibilityQuery = async (
+    planCode: string,
+    policyNumber: string,
+    arrangementId: string
+) => {
+    return await checkEligibilitySystematicPrograms(
+        planCode,
+        policyNumber,
+        arrangementId
+    );
 };
 
 export const checkLoanRepaymentOneTimeEligibilityQuery = async (
@@ -23,22 +34,42 @@ export const checkLoanRepaymentOneTimeEligibilityQuery = async (
     policyNumber: string,
     totalLoanBalance: number | undefined
 ) => {
-    return await checkEligibilityLoanRepaymentOneTime(planCode, policyNumber, totalLoanBalance);
+    return await checkEligibilityLoanRepaymentOneTime(
+        planCode,
+        policyNumber,
+        totalLoanBalance
+    );
 };
 
-export const checkNewLoanEligibilityQuery = async (planCode: string, policyNumber: string, maxLoanValue: number | undefined) => {
+export const checkNewLoanEligibilityQuery = async (
+    planCode: string,
+    policyNumber: string,
+    maxLoanValue: number | undefined
+) => {
     return await checkEligibilityNewLoan(planCode, policyNumber, maxLoanValue);
 };
 
-export const checkPartialWithdrawalOneTimeEligibilityQuery = async (planCode: string, policyNumber: string) => {
-    return await checkEligibilityPartialWithdrawalOneTime(planCode, policyNumber);
+export const checkPartialWithdrawalOneTimeEligibilityQuery = async (
+    planCode: string,
+    policyNumber: string
+) => {
+    return await checkEligibilityPartialWithdrawalOneTime(
+        planCode,
+        policyNumber
+    );
 };
 
-export const checkFullSurrenderWithdrawal = async (planCode: string, policyNumber: string) => {
+export const checkFullSurrenderWithdrawal = async (
+    planCode: string,
+    policyNumber: string
+) => {
     return await checkEligibilityFullSurrender(planCode, policyNumber);
 };
 
-export const checkInitialDeathClaimExistsQuery = async (policyNumber: string, clientId: string) => {
+export const checkInitialDeathClaimExistsQuery = async (
+    policyNumber: string,
+    clientId: string
+) => {
     return await initialDeathClaimExists(policyNumber, clientId);
 };
 
@@ -48,5 +79,10 @@ export const checkSystematicProgramEligibilityQuery = async (
     arrangementId: string,
     query: SystematicProgramRequestQuery
 ) => {
-    return await checkEligibilitySystematicProgram(planCode, policyNumber, arrangementId, query);
+    return await checkEligibilitySystematicProgram(
+        planCode,
+        policyNumber,
+        arrangementId,
+        query
+    );
 };

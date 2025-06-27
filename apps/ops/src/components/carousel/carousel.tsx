@@ -72,12 +72,20 @@ export const Carousel: FC<CarouselProps> = ({
             <div className={styles.embla}>
                 <div className={styles.emblaViewport} ref={emblaRef}>
                     <div
-                        className={clsx(styles.emblaContainer, { [styles.vertical]: emblaOptions?.axis === 'y' })}
+                        className={clsx(styles.emblaContainer, {
+                            [styles.vertical]: emblaOptions?.axis === 'y',
+                        })}
                         style={{ height: containerHeight }}
                     >
                         {slides.map((slide, index) => {
                             return (
-                                <div key={index} className={clsx([styles.emblaSlide, slideStyle])}>
+                                <div
+                                    key={index}
+                                    className={clsx([
+                                        styles.emblaSlide,
+                                        slideStyle,
+                                    ])}
+                                >
                                     {slide}
                                 </div>
                             );
@@ -93,7 +101,9 @@ export const Carousel: FC<CarouselProps> = ({
                         disabled={prevBtnDisabled}
                         mode="link"
                         size="small"
-                        className={clsx(styles.first, [controls?.controlClasses?.prevClasses])}
+                        className={clsx(styles.first, [
+                            controls?.controlClasses?.prevClasses,
+                        ])}
                         onClick={() => emblaApi?.scrollTo(0)}
                     >
                         {controls?.firstLabel}
@@ -104,7 +114,9 @@ export const Carousel: FC<CarouselProps> = ({
                     mode="link"
                     disabled={prevBtnDisabled}
                     size="small"
-                    className={clsx(styles.prev, [controls?.controlClasses?.prevClasses])}
+                    className={clsx(styles.prev, [
+                        controls?.controlClasses?.prevClasses,
+                    ])}
                     onClick={() => emblaApi?.scrollPrev()}
                 >
                     {controls?.prevLabel}
@@ -113,7 +125,9 @@ export const Carousel: FC<CarouselProps> = ({
                     disabled={nextBtnDisabled}
                     mode="link"
                     size="small"
-                    className={clsx(styles.next, [controls?.controlClasses?.nextClasses])}
+                    className={clsx(styles.next, [
+                        controls?.controlClasses?.nextClasses,
+                    ])}
                     onClick={() => emblaApi?.scrollNext()}
                 >
                     {controls?.nextLabel}
@@ -123,7 +137,9 @@ export const Carousel: FC<CarouselProps> = ({
                         disabled={nextBtnDisabled}
                         mode="link"
                         size="small"
-                        className={clsx(styles.last, [controls?.controlClasses?.nextClasses])}
+                        className={clsx(styles.last, [
+                            controls?.controlClasses?.nextClasses,
+                        ])}
                         onClick={() => emblaApi?.scrollTo(slides.length - 1)}
                     >
                         {controls?.lastLabel}
@@ -131,8 +147,14 @@ export const Carousel: FC<CarouselProps> = ({
                 )}
 
                 {slideItemsCount.length > 0 && (
-                    <span className={clsx('typography-labels-label-md', styles.pageNumber)}>
-                        {slideItemsCount?.[selectedSlide]?.start}-{slideItemsCount?.[selectedSlide]?.end} of{' '}
+                    <span
+                        className={clsx(
+                            'typography-labels-label-md',
+                            styles.pageNumber
+                        )}
+                    >
+                        {slideItemsCount?.[selectedSlide]?.start}-
+                        {slideItemsCount?.[selectedSlide]?.end} of{' '}
                         {slideItemsCount?.[selectedSlide]?.total}
                     </span>
                 )}

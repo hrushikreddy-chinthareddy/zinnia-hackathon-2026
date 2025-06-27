@@ -1,5 +1,10 @@
 import { faker } from '@faker-js/faker';
-import { Address, AddressType, State, Country } from '@zinnia/api-types/types/sor';
+import {
+    Address,
+    AddressType,
+    State,
+    Country,
+} from '@zinnia/api-types/types/sor';
 
 export const generateAddress = (): Address => {
     const addressType = faker.helpers.arrayElement(Object.values(AddressType));
@@ -8,7 +13,9 @@ export const generateAddress = (): Address => {
         endDate: faker.date.future().toISOString().split('T')[0],
         addressType: addressType,
         addressLine1: faker.location.streetAddress(),
-        addressLine2: faker.datatype.boolean() ? faker.location.secondaryAddress() : '',
+        addressLine2: faker.datatype.boolean()
+            ? faker.location.secondaryAddress()
+            : '',
         addressLine3: '',
         city: faker.location.city(),
         state: faker.location.state({ abbreviated: true }) as State,

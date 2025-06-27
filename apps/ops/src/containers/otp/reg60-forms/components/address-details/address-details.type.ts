@@ -1,4 +1,7 @@
-import { AddressTypes, FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import {
+    AddressTypes,
+    FormValidationErrors,
+} from '@deps/models/case/withdrawal/case';
 
 import { UserInfo } from '../user-information/user-information.type';
 

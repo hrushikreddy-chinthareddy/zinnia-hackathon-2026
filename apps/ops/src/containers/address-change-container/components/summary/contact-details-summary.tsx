@@ -1,11 +1,18 @@
 import { Address as PolicyAddress, Policy } from '@zinnia/api-types/types/sor';
-import { Address, AddressProps, Tag, TagVariant } from '@zinnia/bloom/components';
+import {
+    Address,
+    AddressProps,
+    Tag,
+    TagVariant,
+} from '@zinnia/bloom/components';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 import { ReactNode } from 'react';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { formatPhone } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -19,19 +26,30 @@ type ContactDetailsSummaryProps = {
     policy: Policy;
 };
 
-const changeTable = (values: { updated: ReactNode; original: ReactNode; label: string }[], t: TFunction) => {
+const changeTable = (
+    values: { updated: ReactNode; original: ReactNode; label: string }[],
+    t: TFunction
+) => {
     return (
         <div className="mb-10 flex flex-col gap-4">
-            <Typography variant={TypographyVariant.H2}>{t('contactTable.contactDetails')}</Typography>
+            <Typography variant={TypographyVariant.H2}>
+                {t('contactTable.contactDetails')}
+            </Typography>
             <table className="w-full table-fixed border-separate border-spacing-0 rounded-lg border border-gray-200">
                 <thead>
                     <tr>
-                        <th className="w-1/6 rounded-tl-lg border-b border-gray-200 px-4 py-2.5 text-left">{}</th>
+                        <th className="w-1/6 rounded-tl-lg border-b border-gray-200 px-4 py-2.5 text-left">
+                            {}
+                        </th>
                         <th className="w-1/2 border-b border-gray-200 px-4 py-2.5 text-left">
-                            <Typography variant={TypographyVariant.Label}>{t('contactTable.existing')}</Typography>
+                            <Typography variant={TypographyVariant.Label}>
+                                {t('contactTable.existing')}
+                            </Typography>
                         </th>
                         <th className="w-1/2 rounded-tl-lg border-b border-gray-200 bg-gray-50 px-4 py-2.5 text-left">
-                            <Typography variant={TypographyVariant.Label}>{t('contactTable.new')}</Typography>
+                            <Typography variant={TypographyVariant.Label}>
+                                {t('contactTable.new')}
+                            </Typography>
                         </th>
                     </tr>
                 </thead>
@@ -39,22 +57,36 @@ const changeTable = (values: { updated: ReactNode; original: ReactNode; label: s
                     {values.map(({ updated, original, label }, index) => (
                         <tr key={label}>
                             <td className="w-1/2 border-b border-gray-200 px-4 py-2 align-middle">
-                                <Typography variant={TypographyVariant.Label}>{label}</Typography>
+                                <Typography variant={TypographyVariant.Label}>
+                                    {label}
+                                </Typography>
                             </td>
                             <td className="w-1/2 border-b border-gray-200 px-4 py-2 align-middle">
-                                <Typography className="text-wrap !block w-full break-words" variant={TypographyVariant.BodySm}>
+                                <Typography
+                                    className="text-wrap !block w-full break-words"
+                                    variant={TypographyVariant.BodySm}
+                                >
                                     {original}
                                 </Typography>
                             </td>
                             <td
                                 className={`w-1/2 border-b border-gray-200 px-4 py-2 align-middle ${
-                                    index + 1 === values.length ? 'rounded-bl-lg' : ''
+                                    index + 1 === values.length
+                                        ? 'rounded-bl-lg'
+                                        : ''
                                 } bg-gray-50`}
                             >
-                                <Typography className="text-wrap flex break-words" variant={TypographyVariant.BodySm}>
+                                <Typography
+                                    className="text-wrap flex break-words"
+                                    variant={TypographyVariant.BodySm}
+                                >
                                     <span>{updated}</span>
                                     <span className="flex flex-col justify-center align-middle">
-                                        <Tag text="New" className="mx-2 h-6" variant={TagVariant.Information} />
+                                        <Tag
+                                            text="New"
+                                            className="mx-2 h-6"
+                                            variant={TagVariant.Information}
+                                        />
                                     </span>
                                 </Typography>
                             </td>
@@ -66,25 +98,49 @@ const changeTable = (values: { updated: ReactNode; original: ReactNode; label: s
     );
 };
 
-export const ContactDetailsSummary = ({ policy }: ContactDetailsSummaryProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange.summary' });
+export const ContactDetailsSummary = ({
+    policy,
+}: ContactDetailsSummaryProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'addressChange.summary',
+    });
     const { formData, phone, roleIdentifier } = useAddressChange();
-    const addresses = [{ ...formData.addresses['entered'] }, { ...formData.addresses['validated'] }];
-    const newAddress = addresses.find(a => a.addressId === formData.selectedId);
+    const addresses = [
+        { ...formData.addresses['entered'] },
+        { ...formData.addresses['validated'] },
+    ];
+    const newAddress = addresses.find(
+        (a) => a.addressId === formData.selectedId
+    );
 
-    const extractedParties = React.useMemo(() => policy?.parties || [], [policy]);
-    const extractedPartyRoles = React.useMemo(
-        () => policy?.partyRoles?.filter(role => AllowedRoleTypes.includes(role?.partyRole ?? '')) || [],
+    const extractedParties = React.useMemo(
+        () => policy?.parties || [],
         [policy]
     );
-    const qualificationType = React.useMemo(() => policy?.qualificationType ?? '', [policy]);
+    const extractedPartyRoles = React.useMemo(
+        () =>
+            policy?.partyRoles?.filter((role) =>
+                AllowedRoleTypes.includes(role?.partyRole ?? '')
+            ) || [],
+        [policy]
+    );
+    const qualificationType = React.useMemo(
+        () => policy?.qualificationType ?? '',
+        [policy]
+    );
 
     const partyCardsData: PartyAddressCard[] = React.useMemo(
-        () => groupPartiesByAddress(extractedPartyRoles, extractedParties, qualificationType, t),
+        () =>
+            groupPartiesByAddress(
+                extractedPartyRoles,
+                extractedParties,
+                qualificationType,
+                t
+            ),
         [extractedPartyRoles, extractedParties, qualificationType, t]
     );
 
-    const oldContactDetails = partyCardsData.filter(p => {
+    const oldContactDetails = partyCardsData.filter((p) => {
         return p.partyRoles.includes(roleIdentifier.partyRole as string);
     });
 
@@ -111,7 +167,9 @@ export const ContactDetailsSummary = ({ policy }: ContactDetailsSummaryProps) =>
     if (formData.isPhoneChangeRequire && phone) {
         tableArgs.push({
             updated: phone ? formatPhone(phone) : '',
-            original: oldContactDetails[0].homePhone ? formatPhone(oldContactDetails[0].homePhone) : '',
+            original: oldContactDetails[0].homePhone
+                ? formatPhone(oldContactDetails[0].homePhone)
+                : '',
             label: t('contactTable.phone'),
         });
     }

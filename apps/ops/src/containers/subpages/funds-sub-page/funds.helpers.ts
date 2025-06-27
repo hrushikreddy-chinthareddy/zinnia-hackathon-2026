@@ -1,23 +1,49 @@
-import { Fund, FundAccountType, FundAllocation, FundSegment, MatchSegment, Product } from '@zinnia/api-types/types/sor';
+import {
+    Fund,
+    FundAccountType,
+    FundAllocation,
+    FundSegment,
+    MatchSegment,
+    Product,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    numberFormatify,
+    percentFormatify,
+} from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { FundAccountTypeEnum, FundUsageInfo } from '@deps/models/funds/fund-information';
-import { getFundInformationByFundId, getFundInformationByPlanCode } from '@deps/queries/api/fund-information';
+import {
+    FundAccountTypeEnum,
+    FundUsageInfo,
+} from '@deps/models/funds/fund-information';
+import {
+    getFundInformationByFundId,
+    getFundInformationByPlanCode,
+} from '@deps/queries/api/fund-information';
 import { getCurrentInterestRate } from '@deps/queries/api/product-rate';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { FundInformationByFundId, FundInformationByFundIdResponse, FundInformationByPlanCode, Funds } from '@deps/types/fund-information';
+import {
+    FundInformationByFundId,
+    FundInformationByFundIdResponse,
+    FundInformationByPlanCode,
+    Funds,
+} from '@deps/types/fund-information';
 
-import { FundDetailsViewModel, FundViewModel, MatchViewModel, SegmentViewModel } from './types';
+import {
+    FundDetailsViewModel,
+    FundViewModel,
+    MatchViewModel,
+    SegmentViewModel,
+} from './types';
 
-const FundAccountTypesForPolicyDetailsData: (FundAccountType | FundAccountTypeEnum)[] = [
-    FundAccountType.FIXED,
-    FundAccountTypeEnum.HOLDING,
-];
+const FundAccountTypesForPolicyDetailsData: (
+    | FundAccountType
+    | FundAccountTypeEnum
+)[] = [FundAccountType.FIXED, FundAccountTypeEnum.HOLDING];
 
 // #region First Glance
 
@@ -56,13 +82,20 @@ const getElectedFundsViewModel = async ({
 }: ElectedFundsViewModelProps): Promise<FundViewModel[]> => {
     const electedFunds: FundViewModel[] = [];
 
-    Object.keys(fundAllocationsInvestmentsMap || {}).filter(async fundId => {
+    Object.keys(fundAllocationsInvestmentsMap || {}).filter(async (fundId) => {
         const allocationFund = allocationFundsMap?.[fundId as string];
         const fundInfo = fundsInfoMap?.[fundId as string];
         const productFund = productFunds?.[fundId as string];
-        const fundAllocationInvestment = fundAllocationsInvestmentsMap?.[fundId as string];
+        const fundAllocationInvestment =
+            fundAllocationsInvestmentsMap?.[fundId as string];
 
-        const electedFund = await getFundViewModel(allocationFund, fundInfo, productFund, fundAllocationInvestment, policy);
+        const electedFund = await getFundViewModel(
+            allocationFund,
+            fundInfo,
+            productFund,
+            fundAllocationInvestment,
+            policy
+        );
 
         electedFunds.push(electedFund);
     });
@@ -89,7 +122,13 @@ const getNotElectedFund = async (
     const allocationFund = allocationFundsMap?.[fundId as string];
     const productFund = productFunds?.[fundId as string];
 
-    return await getFundViewModel(allocationFund, fundInfo, productFund, undefined, policy);
+    return await getFundViewModel(
+        allocationFund,
+        fundInfo,
+        productFund,
+        undefined,
+        policy
+    );
 };
 
 interface NotElectedFundsViewModelProps {
@@ -104,11 +143,17 @@ const getNotElectedFundsViewModel = async ({
     fundsInfoMap,
     productFunds,
 }: NotElectedFundsViewModelProps): Promise<FundViewModel[]> => {
-    const notElectedFundIds = Object.keys(productFunds || {}).filter(fundId => !fundAllocationsInvestmentsMap?.[fundId]);
+    const notElectedFundIds = Object.keys(productFunds || {}).filter(
+        (fundId) => !fundAllocationsInvestmentsMap?.[fundId]
+    );
     const notElectedFunds: FundViewModel[] = [];
 
-    notElectedFundIds?.forEach(async notElectedFundId => {
-        const notElectedFund = await getNotElectedFund(notElectedFundId as string, allocationFundsMap, fundsInfoMap);
+    notElectedFundIds?.forEach(async (notElectedFundId) => {
+        const notElectedFund = await getNotElectedFund(
+            notElectedFundId as string,
+            allocationFundsMap,
+            fundsInfoMap
+        );
 
         if (!notElectedFund) {
             return;
@@ -129,18 +174,22 @@ export const getSegmentsViewModel = async (
 ): Promise<SegmentViewModel[]> => {
     const viewModel: SegmentViewModel[] = [];
 
-    segments?.forEach(async segment => {
+    segments?.forEach(async (segment) => {
         const fundInfo = fundsInfoMap?.[segment?.fundId as string];
 
         viewModel.push({
             capRate: fundInfo?.indexedFund?.capRate
-                ? percentFormatify(fundInfo?.indexedFund?.capRate, { isInteger: true })
+                ? percentFormatify(fundInfo?.indexedFund?.capRate, {
+                      isInteger: true,
+                  })
                 : DEFAULT_ERROR_STRING,
             depositAmount: numberFormatify(segment.depositAmount),
             endDate: segment.endDate,
             id: segment.segmentId,
             participationRate: fundInfo?.indexedFund?.participationRate
-                ? percentFormatify(fundInfo?.indexedFund?.participationRate, { isInteger: true })
+                ? percentFormatify(fundInfo?.indexedFund?.participationRate, {
+                      isInteger: true,
+                  })
                 : DEFAULT_ERROR_STRING,
             startDate: segment.startDate,
         });
@@ -158,10 +207,16 @@ const getRate = async (policy?: PolicyDetails) => {
         return DEFAULT_ERROR_STRING;
     }
 
-    return await getCurrentInterestRate(policy, policy.policy.policyDates.issueDate);
+    return await getCurrentInterestRate(
+        policy,
+        policy.policy.policyDates.issueDate
+    );
 };
 
-const getFundInterestRate = async (fundInfo?: FundInformationByFundId, policy?: PolicyDetails): Promise<string> => {
+const getFundInterestRate = async (
+    fundInfo?: FundInformationByFundId,
+    policy?: PolicyDetails
+): Promise<string> => {
     if (fundInfo?.fundAccountType === FundAccountType.INDEXED) {
         return DEFAULT_ERROR_STRING;
     }
@@ -170,10 +225,16 @@ const getFundInterestRate = async (fundInfo?: FundInformationByFundId, policy?: 
       BPB - policy details only includes rates for elected/allocated fixed funds.
       Unallocated funds will not show a rate on the funds page.
     */
-    if (FundAccountTypesForPolicyDetailsData.includes(fundInfo?.fundAccountType as FundAccountType)) {
+    if (
+        FundAccountTypesForPolicyDetailsData.includes(
+            fundInfo?.fundAccountType as FundAccountType
+        )
+    ) {
         const rate = policy?.policy?.allocation?.funds
-            ?.find(fund => fund.fundId === fundInfo?.fundId)
-            ?.fundSegments?.find(segment => segment.segmentId === '1')?.startingPrice;
+            ?.find((fund) => fund.fundId === fundInfo?.fundId)
+            ?.fundSegments?.find(
+                (segment) => segment.segmentId === '1'
+            )?.startingPrice;
         return percentFormatify(rate, { isInteger: true });
     }
 
@@ -188,7 +249,9 @@ const getFundInterestRate = async (fundInfo?: FundInformationByFundId, policy?: 
     return percentFormatify(fund.interestRate, { isInteger: true });
 };
 
-const getFundType = (fundType?: FundAccountType | FundAccountTypeEnum): string => {
+const getFundType = (
+    fundType?: FundAccountType | FundAccountTypeEnum
+): string => {
     if (!fundType) {
         return DEFAULT_ERROR_STRING;
     }
@@ -204,7 +267,10 @@ const getSweepDate = (sweepDay?: number | null): string => {
     }
 
     const today = dayjs();
-    const sweepDate = today.date() >= sweepDay ? today.add(1, 'month').date(sweepDay) : today.date(sweepDay);
+    const sweepDate =
+        today.date() >= sweepDay
+            ? today.add(1, 'month').date(sweepDay)
+            : today.date(sweepDay);
 
     return sweepDate.format('MM/DD/YYYY');
 };
@@ -237,23 +303,35 @@ const getHoldingFundsViewModel = async ({
     let lastFundId = '';
 
     try {
-        fundIds.forEach(async fundId => {
+        fundIds.forEach(async (fundId) => {
             lastFundId = fundId;
 
             const fundInfo = fundsInfoMap?.[fundId as string];
 
-            if (fundInfo?.fundAccountType !== (FundAccountTypeEnum.HOLDING as string)) {
+            if (
+                fundInfo?.fundAccountType !==
+                (FundAccountTypeEnum.HOLDING as string)
+            ) {
                 return;
             }
 
             const productFund = productFunds?.[fundId as string];
             const allocationFund = allocationFundsMap?.[fundId as string];
-            const holdingFund = await getFundViewModel(allocationFund, fundInfo, productFund, undefined, policy);
+            const holdingFund = await getFundViewModel(
+                allocationFund,
+                fundInfo,
+                productFund,
+                undefined,
+                policy
+            );
 
             holdingFunds.push(holdingFund);
         });
     } catch (error) {
-        console.error('buildHoldingFunds::missing carrierId or fundId', { error, fundId: lastFundId });
+        console.error('buildHoldingFunds::missing carrierId or fundId', {
+            error,
+            fundId: lastFundId,
+        });
 
         return holdingFunds;
     }
@@ -265,15 +343,24 @@ const getHoldingFundsViewModel = async ({
 
 // #region Match
 
-export const getMatchViewModel = (matchSegment?: MatchSegment, product?: Product): MatchViewModel => {
+export const getMatchViewModel = (
+    matchSegment?: MatchSegment,
+    product?: Product
+): MatchViewModel => {
     return {
         marketingName: product?.marketingName,
         matchAccountValue: numberFormatify(matchSegment?.matchAccountValue),
-        matchVestingDate: convertKebabedDateString(matchSegment?.matchVestingDate),
-        maximumLifeTimeVestingAmount: numberFormatify(matchSegment?.maximumAnnualVestingAmount),
+        matchVestingDate: convertKebabedDateString(
+            matchSegment?.matchVestingDate
+        ),
+        maximumLifeTimeVestingAmount: numberFormatify(
+            matchSegment?.maximumAnnualVestingAmount
+        ),
         product,
         vestingPeriod: matchSegment?.vestingPeriod,
-        yearToDateMatchValue: numberFormatify(matchSegment?.yearToDateMatchValue),
+        yearToDateMatchValue: numberFormatify(
+            matchSegment?.yearToDateMatchValue
+        ),
     };
 };
 
@@ -281,7 +368,10 @@ export const getMatchViewModel = (matchSegment?: MatchSegment, product?: Product
 
 // #region Funds Info
 
-const getProductFundsInfo = async (carrierId?: string, productFunds?: FundInformationByPlanCode): Promise<FundInformationByFundId[]> => {
+const getProductFundsInfo = async (
+    carrierId?: string,
+    productFunds?: FundInformationByPlanCode
+): Promise<FundInformationByFundId[]> => {
     const fundIds = Object.keys(productFunds || {});
 
     if (!carrierId || !fundIds.length) {
@@ -291,29 +381,47 @@ const getProductFundsInfo = async (carrierId?: string, productFunds?: FundInform
     try {
         const fundsInfoResponses = await getFundsInfo(carrierId, fundIds);
 
-        return fundsInfoResponses.map(response => response?.data);
+        return fundsInfoResponses.map((response) => response?.data);
     } catch (error) {
-        console.error('getProductFundsInfo::error getting fund info', { carrierId, error, fundIds });
+        console.error('getProductFundsInfo::error getting fund info', {
+            carrierId,
+            error,
+            fundIds,
+        });
 
         return [];
     }
 };
 
-const getFundsInfo = async (carrierId?: string, fundIds?: string[]): Promise<FundInformationByFundIdResponse[]> => {
+const getFundsInfo = async (
+    carrierId?: string,
+    fundIds?: string[]
+): Promise<FundInformationByFundIdResponse[]> => {
     if (!fundIds?.length) {
         return [];
     }
 
     try {
         return await Promise.all(
-            fundIds.map(async fundId => {
-                const response = await getFundInformationByFundId(carrierId, fundId);
+            fundIds.map(async (fundId) => {
+                const response = await getFundInformationByFundId(
+                    carrierId,
+                    fundId
+                );
 
-                return { data: { ...response?.data, fundId }, message: response?.message, status: response?.status };
+                return {
+                    data: { ...response?.data, fundId },
+                    message: response?.message,
+                    status: response?.status,
+                };
             })
         );
     } catch (error) {
-        console.error('getFundsInfo::error getting fund info', { carrierId, error, fundIds });
+        console.error('getFundsInfo::error getting fund info', {
+            carrierId,
+            error,
+            fundIds,
+        });
 
         return [
             {
@@ -335,19 +443,35 @@ const getFundViewModel = async (
     policy?: PolicyDetails
 ): Promise<FundViewModel> => {
     return {
-        allocation: percentFormatify(fundAllocationInvestment?.allocationPercentage, { isInteger: true }),
+        allocation: percentFormatify(
+            fundAllocationInvestment?.allocationPercentage,
+            { isInteger: true }
+        ),
         fundId: fundInfo?.fundId || allocationFund?.fundId,
-        fundName: fundInfo?.fundAccountName || allocationFund?.fundName || DEFAULT_ERROR_STRING,
-        fundValue: numberFormatify(allocationFund?.totalFundValue || allocationFund?.totalFundValue),
+        fundName:
+            fundInfo?.fundAccountName ||
+            allocationFund?.fundName ||
+            DEFAULT_ERROR_STRING,
+        fundValue: numberFormatify(
+            allocationFund?.totalFundValue || allocationFund?.totalFundValue
+        ),
         interestGuaranteedPeriod: allocationFund?.interestGuaranteedPeriod,
         interestRate: await getFundInterestRate(fundInfo, policy),
         nextSweepDate: getSweepDate(fundUsageInfo?.sweepDay),
-        type: getFundType(fundInfo?.fundAccountType || allocationFund?.fundAccountType),
+        type: getFundType(
+            fundInfo?.fundAccountType || allocationFund?.fundAccountType
+        ),
     };
 };
 
-const getProductFundsInfoMap = async (policy: PolicyDetails, productFunds?: Funds): Promise<Record<string, FundInformationByFundId>> => {
-    const productFundsInfo = await getProductFundsInfo(policy?.carrierId, productFunds);
+const getProductFundsInfoMap = async (
+    policy: PolicyDetails,
+    productFunds?: Funds
+): Promise<Record<string, FundInformationByFundId>> => {
+    const productFundsInfo = await getProductFundsInfo(
+        policy?.carrierId,
+        productFunds
+    );
 
     return productFundsInfo.reduce((map, item) => {
         map[item.fundId as string] = item;
@@ -356,25 +480,40 @@ const getProductFundsInfoMap = async (policy: PolicyDetails, productFunds?: Fund
     }, {} as Record<string, FundInformationByFundId>);
 };
 
-export const getFundDetailsViewModel = async (policy: PolicyDetails): Promise<FundDetailsViewModel> => {
-    const allocationFundsMap = policy?.policy?.allocation?.funds?.reduce((map, item) => {
-        map[item.fundId as string] = item;
-
-        return map;
-    }, {} as Record<string, Fund>);
-
-    const fundAllocationsInvestmentsMap = policy?.policy?.allocation?.fundAllocationsInvestments?.reduce((map, item) => {
-        if (!isEndDated(item?.endDate)) {
+export const getFundDetailsViewModel = async (
+    policy: PolicyDetails
+): Promise<FundDetailsViewModel> => {
+    const allocationFundsMap = policy?.policy?.allocation?.funds?.reduce(
+        (map, item) => {
             map[item.fundId as string] = item;
-        }
 
-        return map;
-    }, {} as Record<string, FundAllocation>);
+            return map;
+        },
+        {} as Record<string, Fund>
+    );
+
+    const fundAllocationsInvestmentsMap =
+        policy?.policy?.allocation?.fundAllocationsInvestments?.reduce(
+            (map, item) => {
+                if (!isEndDated(item?.endDate)) {
+                    map[item.fundId as string] = item;
+                }
+
+                return map;
+            },
+            {} as Record<string, FundAllocation>
+        );
 
     const planCode = policy?.planCode || policy?.product?.planCode;
 
-    const { data: productFunds } = await getFundInformationByPlanCode(policy?.carrierId, planCode);
-    const productFundsInfoMap = await getProductFundsInfoMap(policy, productFunds?.funds);
+    const { data: productFunds } = await getFundInformationByPlanCode(
+        policy?.carrierId,
+        planCode
+    );
+    const productFundsInfoMap = await getProductFundsInfoMap(
+        policy,
+        productFunds?.funds
+    );
 
     const [electedFunds, holdingFunds, notElectedFunds] = await Promise.all([
         getElectedFundsViewModel({

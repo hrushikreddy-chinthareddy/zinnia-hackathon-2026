@@ -7,7 +7,9 @@ import DocumentPreviewer from '@deps/components/document-viewer/document-preview
 import Radio from '@deps/components/radio/radio';
 import Select from '@deps/components/select/select';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { ExceptionRef } from '@deps/models/case/task';
@@ -36,14 +38,23 @@ export const TaskReview = ({
     selectedExceptionDetails,
     setSelectedExceptionDetails,
 }: TaskReviewProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.taskReview` });
-    const { setIsReadyForDataEntry, isReadyForDataEntry, task } = useContext(TaskDataContext);
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: `${convertToCamelCase(taskType)}.taskReview`,
+    });
+    const { setIsReadyForDataEntry, isReadyForDataEntry, task } =
+        useContext(TaskDataContext);
 
-    const [sectionOption, setSectionOption] = useState(isReadyForDataEntry === true ? 'true' : '');
+    const [sectionOption, setSectionOption] = useState(
+        isReadyForDataEntry === true ? 'true' : ''
+    );
 
     const [loading, getCaseDocs, workingDocument] = useGetCaseDocs();
-    const [selectedOption, setSelectedOption] = useState<{ [key: string]: string }>({});
-    const [exceptionOptions, setExceptionOptions] = useState<ExceptionRef[]>([]);
+    const [selectedOption, setSelectedOption] = useState<{
+        [key: string]: string;
+    }>({});
+    const [exceptionOptions, setExceptionOptions] = useState<ExceptionRef[]>(
+        []
+    );
 
     const sectionOptions = [
         {
@@ -66,15 +77,24 @@ export const TaskReview = ({
             try {
                 const data = await searchNigoExceptionRefs();
 
-                const missingInfoReason = data.find((item: any) => item.nmId === missingDetailsNmId);
+                const missingInfoReason = data.find(
+                    (item: any) => item.nmId === missingDetailsNmId
+                );
                 if (missingInfoReason) {
-                    const uniqueExceptions = missingInfoReason.exceptionSubRefs.reduce((unique: ExceptionRef[], item: ExceptionRef) => {
-                        const exists = unique.some(u => u.subNmIdDetail === item.subNmIdDetail);
-                        if (!exists) {
-                            unique.push(item);
-                        }
-                        return unique;
-                    }, []);
+                    const uniqueExceptions =
+                        missingInfoReason.exceptionSubRefs.reduce(
+                            (unique: ExceptionRef[], item: ExceptionRef) => {
+                                const exists = unique.some(
+                                    (u) =>
+                                        u.subNmIdDetail === item.subNmIdDetail
+                                );
+                                if (!exists) {
+                                    unique.push(item);
+                                }
+                                return unique;
+                            },
+                            []
+                        );
 
                     setExceptionOptions(uniqueExceptions);
                     setNmDetails({
@@ -98,7 +118,7 @@ export const TaskReview = ({
     };
 
     const handleExceptionChange = (subNmIdDetail: string) => {
-        setSelectedOption(prevOptions => {
+        setSelectedOption((prevOptions) => {
             if (prevOptions[subNmIdDetail]) {
                 const { [subNmIdDetail]: removed, ...rest } = prevOptions;
                 return rest;
@@ -109,9 +129,16 @@ export const TaskReview = ({
 
         const exists = selectedExceptionDetails.includes(subNmIdDetail);
         if (exists) {
-            setSelectedExceptionDetails(selectedExceptionDetails.filter(item => item !== subNmIdDetail));
+            setSelectedExceptionDetails(
+                selectedExceptionDetails.filter(
+                    (item) => item !== subNmIdDetail
+                )
+            );
         } else {
-            setSelectedExceptionDetails([...selectedExceptionDetails, subNmIdDetail]);
+            setSelectedExceptionDetails([
+                ...selectedExceptionDetails,
+                subNmIdDetail,
+            ]);
         }
     };
 
@@ -125,8 +152,16 @@ export const TaskReview = ({
             setSectionOption(sectionOption);
 
             if (task.data?.nigoList?.length > 0) {
-                setSelectedOption(task.data.nigoList.map((item: any) => item.applicationValue || ''));
-                setSelectedExceptionDetails(task.data.nigoList.map((item: any) => item?.applicationValue || ''));
+                setSelectedOption(
+                    task.data.nigoList.map(
+                        (item: any) => item.applicationValue || ''
+                    )
+                );
+                setSelectedExceptionDetails(
+                    task.data.nigoList.map(
+                        (item: any) => item?.applicationValue || ''
+                    )
+                );
             }
             if (sectionOption === 'true') {
                 setIsReadyForDataEntry(true);
@@ -140,10 +175,16 @@ export const TaskReview = ({
                 {!loading && workingDocument && (
                     <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
                         <div>
-                            <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
+                            <Icon
+                                width={20}
+                                height={20}
+                                type={IconType.DOCUMENT_TEXT}
+                            />{' '}
                         </div>
                         <div>
-                            <div className="text-sm font-bold">{documentName}</div>
+                            <div className="text-sm font-bold">
+                                {documentName}
+                            </div>
                         </div>
                         <div className="flex items-center">
                             <DocumentPreviewer
@@ -162,7 +203,7 @@ export const TaskReview = ({
                     readonly={readyOnly}
                     items={sectionOptions}
                     label={''}
-                    onChange={event => onOptionSelection(event.target.value)}
+                    onChange={(event) => onOptionSelection(event.target.value)}
                     value={sectionOption}
                 />
                 {sectionOption === 'false' && (
@@ -173,7 +214,10 @@ export const TaskReview = ({
                                 readOnly={readyOnly}
                                 options={exceptionOptions.reduce(
                                     (unique, item, index) => {
-                                        const existingItem = unique.find(u => u.value === item.subNmIdDetail);
+                                        const existingItem = unique.find(
+                                            (u) =>
+                                                u.value === item.subNmIdDetail
+                                        );
                                         if (!existingItem) {
                                             unique.push({
                                                 key: `option-${item.subNmId}-${index}`,
@@ -198,17 +242,27 @@ export const TaskReview = ({
                         </div>
                         {selectedExceptionDetails?.length > 0 && (
                             <div className="bg-[--color-grayscale-color-100-gray] p-5 w-[500px] rounded-md">
-                                <Typography variant={TypographyVariant.LabelAlt} className="mb-2">
+                                <Typography
+                                    variant={TypographyVariant.LabelAlt}
+                                    className="mb-2"
+                                >
                                     These issues will be created for the Case:
                                 </Typography>
                                 <ul className="list-disc pl-5">
-                                    {selectedExceptionDetails.map((detail, index) => (
-                                        <li key={index}>
-                                            <Typography variant={TypographyVariant.BodyParagraph} className="text-gray-700">
-                                                {detail}
-                                            </Typography>
-                                        </li>
-                                    ))}
+                                    {selectedExceptionDetails.map(
+                                        (detail, index) => (
+                                            <li key={index}>
+                                                <Typography
+                                                    variant={
+                                                        TypographyVariant.BodyParagraph
+                                                    }
+                                                    className="text-gray-700"
+                                                >
+                                                    {detail}
+                                                </Typography>
+                                            </li>
+                                        )
+                                    )}
                                 </ul>
                             </div>
                         )}

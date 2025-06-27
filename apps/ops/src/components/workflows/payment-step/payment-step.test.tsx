@@ -38,30 +38,58 @@ let state: PaymentState = {
     paymentAmount: '',
     effectiveDate: '',
 };
-const setState = jest.fn().mockImplementation(callback => {
+const setState = jest.fn().mockImplementation((callback) => {
     state = callback(state);
 });
 
 describe('PaymentStep component', () => {
     it.skip('renders PaymentStep correctly', () => {
-        render(<PaymentStep parentPage={ParentPage.Premiums} policy={mockPolicy} setState={setState} state={state} />);
+        render(
+            <PaymentStep
+                parentPage={ParentPage.Premiums}
+                policy={mockPolicy}
+                setState={setState}
+                state={state}
+            />
+        );
 
-        expect(screen.getByText('workflows.paymentStep.heading')).toBeInTheDocument();
-        expect(screen.getByText('workflows.paymentStep.label')).toBeInTheDocument();
+        expect(
+            screen.getByText('workflows.paymentStep.heading')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('workflows.paymentStep.label')
+        ).toBeInTheDocument();
 
         expect(screen.getByText('BRANCH A')).toBeInTheDocument();
-        expect(screen.getByText('Bankaccounttype.checking account')).toBeInTheDocument();
-        expect(screen.getByText('People.card.bankoptions.accountnumber')).toBeInTheDocument();
-        expect(screen.getByText('people.card.bankOptions.endingIn3456')).toBeInTheDocument();
+        expect(
+            screen.getByText('Bankaccounttype.checking account')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('People.card.bankoptions.accountnumber')
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText('people.card.bankOptions.endingIn3456')
+        ).toBeInTheDocument();
 
-        expect(screen.getByText('workflows.paymentStep.add')).toBeInTheDocument();
+        expect(
+            screen.getByText('workflows.paymentStep.add')
+        ).toBeInTheDocument();
 
         expect(screen.getByText('general.continue')).toBeInTheDocument();
-        expect(screen.getByText('general.leaveTransaction')).toBeInTheDocument();
+        expect(
+            screen.getByText('general.leaveTransaction')
+        ).toBeInTheDocument();
     });
 
     it.skip('updates state when a PaymentStep is loaded', () => {
-        render(<PaymentStep parentPage={ParentPage.Premiums} policy={mockPolicy} setState={setState} state={state} />);
+        render(
+            <PaymentStep
+                parentPage={ParentPage.Premiums}
+                policy={mockPolicy}
+                setState={setState}
+                state={state}
+            />
+        );
 
         expect(state).toEqual({
             currentStepIndex: 2,
@@ -73,29 +101,68 @@ describe('PaymentStep component', () => {
     });
 
     it.skip('does not show form error when continue is clicked after selecting a payment', () => {
-        const { rerender } = render(<PaymentStep parentPage={ParentPage.Premiums} policy={mockPolicy} setState={setState} state={state} />);
+        const { rerender } = render(
+            <PaymentStep
+                parentPage={ParentPage.Premiums}
+                policy={mockPolicy}
+                setState={setState}
+                state={state}
+            />
+        );
 
         // rerender to reflect state updates from useeffect
-        rerender(<PaymentStep parentPage={ParentPage.Premiums} policy={mockPolicy} setState={setState} state={state} />);
+        rerender(
+            <PaymentStep
+                parentPage={ParentPage.Premiums}
+                policy={mockPolicy}
+                setState={setState}
+                state={state}
+            />
+        );
 
         fireEvent.click(screen.getByText('general.continue'));
 
-        expect(screen.queryByText('workflows.paymentStep.error')).not.toBeInTheDocument();
+        expect(
+            screen.queryByText('workflows.paymentStep.error')
+        ).not.toBeInTheDocument();
     });
 
     it.skip('shows form error when continue is clicked without selecting a payment', async () => {
-        const { rerender } = render(<PaymentStep parentPage={ParentPage.Premiums} policy={mockPolicy} setState={setState} state={state} />);
+        const { rerender } = render(
+            <PaymentStep
+                parentPage={ParentPage.Premiums}
+                policy={mockPolicy}
+                setState={setState}
+                state={state}
+            />
+        );
 
         // rerender to reflect state updates from useeffect
-        rerender(<PaymentStep parentPage={ParentPage.Premiums} policy={mockPolicy} setState={setState} state={state} />);
+        rerender(
+            <PaymentStep
+                parentPage={ParentPage.Premiums}
+                policy={mockPolicy}
+                setState={setState}
+                state={state}
+            />
+        );
 
         fireEvent.click(screen.getByText('BRANCH A'));
 
         // rerender to reflect state updates from click
-        rerender(<PaymentStep parentPage={ParentPage.Premiums} policy={mockPolicy} setState={setState} state={state} />);
+        rerender(
+            <PaymentStep
+                parentPage={ParentPage.Premiums}
+                policy={mockPolicy}
+                setState={setState}
+                state={state}
+            />
+        );
 
         fireEvent.click(screen.getByText('general.continue'));
 
-        expect(screen.getByText('workflows.paymentStep.error')).toBeInTheDocument();
+        expect(
+            screen.getByText('workflows.paymentStep.error')
+        ).toBeInTheDocument();
     });
 });

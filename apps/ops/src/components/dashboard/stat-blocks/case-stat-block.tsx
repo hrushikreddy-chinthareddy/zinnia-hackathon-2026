@@ -5,10 +5,18 @@ import { ReactNode, useEffect, useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { formatNumberLabel, wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    formatNumberLabel,
+    wholeNumberFormatify,
+} from '@deps/helpers/numbers.helpers';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { getCaseInsights } from '@deps/queries/api/openai';
@@ -72,27 +80,50 @@ const CaseStatBlock = ({
                 <div className="flex gap-1">
                     <Label label={blockLabel} variant={LabelVariant.LabelMd} />
                     {labelTooltip && (
-                        <Tooltip trigger={<CircleInfoIcon height={'16px'} width={'16px'} className="text-primary" />}>
+                        <Tooltip
+                            trigger={
+                                <CircleInfoIcon
+                                    height={'16px'}
+                                    width={'16px'}
+                                    className="text-primary"
+                                />
+                            }
+                        >
                             {labelTooltip}
                         </Tooltip>
                     )}
                 </div>
 
-                <Label label={timeFrameLabel} variant={LabelVariant.LabelSmAlt} />
+                <Label
+                    label={timeFrameLabel}
+                    variant={LabelVariant.LabelSmAlt}
+                />
             </div>
         );
     };
 
     const getTotalStatValue = () => {
-        const value = dashboardStatsResponse?.data?.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
+        const value = dashboardStatsResponse?.data?.reduce(
+            (prevValue, statElement) => prevValue + statElement.count,
+            0
+        );
         return value;
     };
 
     const renderStatValue = () => {
         return (
             <div className="flex gap-1">
-                <Content details={wholeNumberFormatify(getTotalStatValue() || 0)} variant={ContentVariant.Value} />
-                <Content details={formatNumberLabel(statMeasurementLabel, getTotalStatValue() || 0)} variant={ContentVariant.Value} />
+                <Content
+                    details={wholeNumberFormatify(getTotalStatValue() || 0)}
+                    variant={ContentVariant.Value}
+                />
+                <Content
+                    details={formatNumberLabel(
+                        statMeasurementLabel,
+                        getTotalStatValue() || 0
+                    )}
+                    variant={ContentVariant.Value}
+                />
             </div>
         );
     };
@@ -113,11 +144,16 @@ const CaseStatBlock = ({
         }
         return (
             <>
-                <Typography className="flex gap-2 items-center mb-2" variant={TypographyVariant.BodyBold}>
+                <Typography
+                    className="flex gap-2 items-center mb-2"
+                    variant={TypographyVariant.BodyBold}
+                >
                     <LighBulb height={24} width={24} />
                     <span>Insight</span>
                 </Typography>
-                <Typography variant={TypographyVariant.BodySm}>{aiSummary ?? 'Generating AI Summary...'}</Typography>
+                <Typography variant={TypographyVariant.BodySm}>
+                    {aiSummary ?? 'Generating AI Summary...'}
+                </Typography>
             </>
         );
     };
@@ -187,8 +223,13 @@ const CaseStatBlock = ({
         if (!shouldShowCaseInsights) {
             return;
         }
-        if (!loading && dashboardStatsResponse && dashboardStatsResponse.data && dashboardStatsResponse.data.length > 0) {
-            getOpenAiSummary(dashboardStatsResponse).then(summary => {
+        if (
+            !loading &&
+            dashboardStatsResponse &&
+            dashboardStatsResponse.data &&
+            dashboardStatsResponse.data.length > 0
+        ) {
+            getOpenAiSummary(dashboardStatsResponse).then((summary) => {
                 if (summary) {
                     setAiSummary(summary);
                 }
@@ -197,7 +238,10 @@ const CaseStatBlock = ({
     }, [dashboardStatsResponse, loading, shouldShowCaseInsights]);
 
     return (
-        <CardContainer fullWidth={false} containerClassNames={clsx(classNames, getWidthClassName())}>
+        <CardContainer
+            fullWidth={false}
+            containerClassNames={clsx(classNames, getWidthClassName())}
+        >
             {variant === 'single' && renderSingleStatBlock()}
             {variant === 'double' && renderDoubleStatBlock()}
         </CardContainer>

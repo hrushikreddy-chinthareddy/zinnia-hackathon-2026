@@ -51,7 +51,15 @@ const ResponsiveFlex = ({
     <Tag
         data-testid={dataTestId || ResponsiveFlexTest.Container}
         style={style}
-        className={clsx(verticalResizing, horizontalResizing, itemSpacing, itemPadding, layoutDirection, layoutAlignment, className)}
+        className={clsx(
+            verticalResizing,
+            horizontalResizing,
+            itemSpacing,
+            itemPadding,
+            layoutDirection,
+            layoutAlignment,
+            className
+        )}
     >
         {children}
     </Tag>

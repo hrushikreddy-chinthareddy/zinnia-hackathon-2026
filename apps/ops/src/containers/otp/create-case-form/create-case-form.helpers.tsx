@@ -10,7 +10,11 @@ export default function getCreateCaseConfig(t: TFunction) {
 
     // REG60 is the spacial case which wont be editable yet
     const isEditable = (status: string) => {
-        return (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress);
+        return (
+            status === CaseStatus.Pending ||
+            status === TaskStatus.New ||
+            status === TaskStatus.InProgress
+        );
     };
 
     const taskTableConfig = {
@@ -30,7 +34,7 @@ export default function getCreateCaseConfig(t: TFunction) {
                 duplicateTaskContent: t('tasksListing.actions.edit'),
             },
             actionMenu: t('tasksListing.actionMenu'),
-        }
+        },
     };
 
     return {

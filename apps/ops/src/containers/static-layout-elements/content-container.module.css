@@ -1,12 +1,14 @@
 .contentCard {
     background-color: var(--color-base-surface-surface-primary);
-    border: var(--measure-dimension-stroke-sm) solid var(--color-grayscale-color-200-gray);
+    border: var(--measure-dimension-stroke-sm) solid
+        var(--color-grayscale-color-200-gray);
     border-radius: var(--measure-dimension-radius-md);
     overflow: hidden;
 }
 
 .quickLinks {
-    border-bottom: var(--measure-dimension-stroke-sm) solid var(--color-grayscale-color-200-gray);
+    border-bottom: var(--measure-dimension-stroke-sm) solid
+        var(--color-grayscale-color-200-gray);
     padding: var(--measure-dimension-z-space-4);
     padding-inline-start: var(--measure-dimension-z-space-8);
 }

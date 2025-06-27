@@ -46,7 +46,9 @@
     &.active {
         height: var(--measure-dimension-z-space-1-5);
         &:not(&.disabled) {
-            background-color: var(--color-progress-bar-steps-item-progress-bar-steps-item-active-border);
+            background-color: var(
+                --color-progress-bar-steps-item-progress-bar-steps-item-active-border
+            );
         }
     }
 }

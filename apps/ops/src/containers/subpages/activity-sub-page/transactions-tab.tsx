@@ -2,9 +2,14 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
-import TypeFilters, { DismissableFilters } from '@deps/components/history/filters/type-filters';
+import TypeFilters, {
+    DismissableFilters,
+} from '@deps/components/history/filters/type-filters';
 import YearFilter from '@deps/components/history/filters/year-filter';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 import SideSheetHistory from '@deps/containers/subpages/activity-sub-page/side-sheet-history';
 import { HistoryFiltersProvider } from '@deps/contexts/HistoryFiltersContext';
@@ -13,7 +18,9 @@ import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_
 import HistoryEventFeed from './event-feed/event-feed';
 
 const TransactionsTab = () => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'policy.history.filter',
+    });
     const [isSideSheetOpen, setIsSideSheetOpen] = useState(false);
 
     return (
@@ -23,7 +30,8 @@ const TransactionsTab = () => {
                     className="flex h-6 items-center gap-1 leading-6 lg:hidden"
                     onClick={() => setIsSideSheetOpen(true)}
                     onKeyDown={(e: { key: string }) => {
-                        if (e.key === 'Enter' || e.key === ' ') setIsSideSheetOpen(true);
+                        if (e.key === 'Enter' || e.key === ' ')
+                            setIsSideSheetOpen(true);
                     }}
                     size={NavElementSize.Small}
                     startIcon={<FilterIcon height={16} width={16} />}
@@ -40,7 +48,10 @@ const TransactionsTab = () => {
                 </div>
                 <HistoryEventFeed isSideSheetOpen={isSideSheetOpen} />
             </div>
-            <SideSheetHistory isSideSheetOpen={isSideSheetOpen} setIsSideSheetOpen={setIsSideSheetOpen} />
+            <SideSheetHistory
+                isSideSheetOpen={isSideSheetOpen}
+                setIsSideSheetOpen={setIsSideSheetOpen}
+            />
         </HistoryFiltersProvider>
     );
 };

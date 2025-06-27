@@ -2,7 +2,11 @@ import sharp from 'sharp';
 
 import { logError, parseErrorInformation } from '../server-logging';
 
-export async function TiffConversion({ binaryData }: { binaryData: string }): Promise<{ tiffBuffer: Buffer; success: boolean }> {
+export async function TiffConversion({
+    binaryData,
+}: {
+    binaryData: string;
+}): Promise<{ tiffBuffer: Buffer; success: boolean }> {
     const buffer = Buffer.from(binaryData, 'base64');
 
     let tiffBuffer: Buffer = buffer;
@@ -28,7 +32,9 @@ export async function TiffConversion({ binaryData }: { binaryData: string }): Pr
         }
 
         const width = Math.max(...pageWidths);
-        const totalHeight = pageHeights.reduce((sum, h) => sum + h, 0) + paddingBetweenPages * (pageCount - 1);
+        const totalHeight =
+            pageHeights.reduce((sum, h) => sum + h, 0) +
+            paddingBetweenPages * (pageCount - 1);
 
         const compositeInputs = [];
         let currentTop = 0;

@@ -2,19 +2,34 @@ import { ValueFormatterParams, ValueParserParams } from 'ag-grid-community';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { AddressTypes, FormValidationErrors, PartyRoles } from '@deps/models/case/withdrawal/case';
+import {
+    AddressTypes,
+    FormValidationErrors,
+    PartyRoles,
+} from '@deps/models/case/withdrawal/case';
 
 import { AddressField } from '../components/address-details/address-details.type';
-import { BenefitType, ContractComparisonField } from '../components/create-disclosure/create-disclosure.types';
+import {
+    BenefitType,
+    ContractComparisonField,
+} from '../components/create-disclosure/create-disclosure.types';
 import {
     DisclosureAuthorizationConfig,
     DisclosureAuthorizationFields,
     DisclosureAuthorizationInformation,
     Products,
 } from '../components/disclosure-authorization/disclosure-authorization.types';
-import { AnnuityQuote, ProposedAnnuityFormData } from '../components/proposed-annuity-quote/proposed-annuity-quote.types';
+import {
+    AnnuityQuote,
+    ProposedAnnuityFormData,
+} from '../components/proposed-annuity-quote/proposed-annuity-quote.types';
 import { UserInfo } from '../components/user-information/user-information.type';
-import { CurrentPage, FormParts, TypeOfPaymentOptions, UserFields } from '../reg60.types';
+import {
+    CurrentPage,
+    FormParts,
+    TypeOfPaymentOptions,
+    UserFields,
+} from '../reg60.types';
 
 export function numberParser(params: ValueParserParams) {
     const result = parseFloat(params.newValue).toFixed(2);
@@ -33,13 +48,28 @@ function getValidationErrors(data: any, t: TFunction) {
             if (key !== 'carrierBenefits') {
                 // Exclude carrierBenefits for separate check
                 if (typeof item[key] === 'string' && item[key]?.trim() === '') {
-                    errorItem[key] = `${t(`contractComparison.${key}`)} ${t('contractComparison.isRequired')}`;
-                } else if (['surrenderValue', 'accountValue'].includes(key) && item[key] <= 0) {
-                    errorItem[key] = `${t(`contractComparison.${key}`)} ${t('contractComparison.greaterThanZero')}`;
-                } else if (typeof item[key] === 'object' && item[key]?.applicable && !item[key]?.amount) {
-                    errorItem[key] = `${t(`contractComparison.${key}`)} is required`;
+                    errorItem[key] = `${t(`contractComparison.${key}`)} ${t(
+                        'contractComparison.isRequired'
+                    )}`;
+                } else if (
+                    ['surrenderValue', 'accountValue'].includes(key) &&
+                    item[key] <= 0
+                ) {
+                    errorItem[key] = `${t(`contractComparison.${key}`)} ${t(
+                        'contractComparison.greaterThanZero'
+                    )}`;
+                } else if (
+                    typeof item[key] === 'object' &&
+                    item[key]?.applicable &&
+                    !item[key]?.amount
+                ) {
+                    errorItem[key] = `${t(
+                        `contractComparison.${key}`
+                    )} is required`;
                 } else if (typeof item[key] === 'number' && !item[key]) {
-                    errorItem[key] = `${t(`contractComparison.${key}`)} ${t('contractComparison.isRequired')}`;
+                    errorItem[key] = `${t(`contractComparison.${key}`)} ${t(
+                        'contractComparison.isRequired'
+                    )}`;
                 }
             }
         }
@@ -54,7 +84,9 @@ function getValidationErrors(data: any, t: TFunction) {
 }
 
 export function amountCellFormatter(params: ValueFormatterParams) {
-    return params.value ? '$ ' + parseFloat(params.value).toFixed(2) : params.value;
+    return params.value
+        ? '$ ' + parseFloat(params.value).toFixed(2)
+        : params.value;
 }
 
 export default function getMassMutualReg60Config(t: TFunction) {
@@ -185,7 +217,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
             fields: {
                 streetAddress: {
                     fieldName: AddressField.StreetAddress,
-                    fieldLabel: t('partyDetails.addressDetails.agentStreetAddress'),
+                    fieldLabel: t(
+                        'partyDetails.addressDetails.agentStreetAddress'
+                    ),
                 },
                 streetAddress2: {
                     fieldName: AddressField.StreetAddress2,
@@ -290,7 +324,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
             key: BenefitType.SurrenderBenefit,
             rowConfig: [
                 {
-                    period: t('contractComparison.table.surrenderValueTable.rowPeriods.fiveYears'),
+                    period: t(
+                        'contractComparison.table.surrenderValueTable.rowPeriods.fiveYears'
+                    ),
                     returnGuarRate: '',
                     returnCurrRate: '',
                     return0Prct: '',
@@ -298,7 +334,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
                     return12Prct: '',
                 },
                 {
-                    period: t('contractComparison.table.surrenderValueTable.rowPeriods.tenYears'),
+                    period: t(
+                        'contractComparison.table.surrenderValueTable.rowPeriods.tenYears'
+                    ),
                     returnGuarRate: '',
                     returnCurrRate: '',
                     return0Prct: '',
@@ -308,13 +346,17 @@ export default function getMassMutualReg60Config(t: TFunction) {
             ],
             colConfigFixed: [
                 {
-                    headerName: t('contractComparison.table.surrenderValueTable.fixedCol.years'),
+                    headerName: t(
+                        'contractComparison.table.surrenderValueTable.fixedCol.years'
+                    ),
                     field: 'period',
                     editable: false,
                     cellClass: ['w-100', 'text-sm'],
                 },
                 {
-                    headerName: t('contractComparison.table.surrenderValueTable.fixedCol.guaranteedRate'),
+                    headerName: t(
+                        'contractComparison.table.surrenderValueTable.fixedCol.guaranteedRate'
+                    ),
                     field: 'returnGuarRate',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -322,7 +364,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
                     valueFormatter: amountCellFormatter,
                 },
                 {
-                    headerName: t('contractComparison.table.surrenderValueTable.fixedCol.currentRate'),
+                    headerName: t(
+                        'contractComparison.table.surrenderValueTable.fixedCol.currentRate'
+                    ),
                     field: 'returnCurrRate',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -332,13 +376,17 @@ export default function getMassMutualReg60Config(t: TFunction) {
             ],
             colConfigVariable: [
                 {
-                    headerName: t('contractComparison.table.surrenderValueTable.variableCol.year'),
+                    headerName: t(
+                        'contractComparison.table.surrenderValueTable.variableCol.year'
+                    ),
                     field: 'period',
                     editable: false,
                     cellClass: ['w-100', 'text-sm border-b-xl'],
                 },
                 {
-                    headerName: t('contractComparison.table.surrenderValueTable.variableCol.zeroPercent'),
+                    headerName: t(
+                        'contractComparison.table.surrenderValueTable.variableCol.zeroPercent'
+                    ),
                     field: 'return0Prct',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -346,7 +394,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
                     valueFormatter: amountCellFormatter,
                 },
                 {
-                    headerName: t('contractComparison.table.surrenderValueTable.variableCol.sixPercent'),
+                    headerName: t(
+                        'contractComparison.table.surrenderValueTable.variableCol.sixPercent'
+                    ),
                     field: 'return6Prct',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -354,7 +404,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
                     valueFormatter: amountCellFormatter,
                 },
                 {
-                    headerName: t('contractComparison.table.surrenderValueTable.variableCol.twelvePercent'),
+                    headerName: t(
+                        'contractComparison.table.surrenderValueTable.variableCol.twelvePercent'
+                    ),
                     field: 'return12Prct',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -368,7 +420,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
             key: BenefitType.DeathBenefit,
             rowConfig: [
                 {
-                    period: t('contractComparison.table.deathBenefitsTable.rowPeriods.fiveYears'),
+                    period: t(
+                        'contractComparison.table.deathBenefitsTable.rowPeriods.fiveYears'
+                    ),
                     returnGuarRate: '',
                     returnCurrRate: '',
                     return0Prct: '',
@@ -376,7 +430,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
                     return12Prct: '',
                 },
                 {
-                    period: t('contractComparison.table.deathBenefitsTable.rowPeriods.tenYears'),
+                    period: t(
+                        'contractComparison.table.deathBenefitsTable.rowPeriods.tenYears'
+                    ),
                     returnGuarRate: '',
                     returnCurrRate: '',
                     return0Prct: '',
@@ -386,13 +442,17 @@ export default function getMassMutualReg60Config(t: TFunction) {
             ],
             colConfigFixed: [
                 {
-                    headerName: t('contractComparison.table.deathBenefitsTable.fixedCol.years'),
+                    headerName: t(
+                        'contractComparison.table.deathBenefitsTable.fixedCol.years'
+                    ),
                     field: 'period',
                     editable: false,
                     cellClass: ['w-100', 'text-sm'],
                 },
                 {
-                    headerName: t('contractComparison.table.deathBenefitsTable.fixedCol.guaranteedRate'),
+                    headerName: t(
+                        'contractComparison.table.deathBenefitsTable.fixedCol.guaranteedRate'
+                    ),
                     field: 'returnGuarRate',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -400,7 +460,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
                     valueFormatter: amountCellFormatter,
                 },
                 {
-                    headerName: t('contractComparison.table.deathBenefitsTable.fixedCol.currentRate'),
+                    headerName: t(
+                        'contractComparison.table.deathBenefitsTable.fixedCol.currentRate'
+                    ),
                     field: 'returnCurrRate',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -410,13 +472,17 @@ export default function getMassMutualReg60Config(t: TFunction) {
             ],
             colConfigVariable: [
                 {
-                    headerName: t('contractComparison.table.deathBenefitsTable.variableCol.year'),
+                    headerName: t(
+                        'contractComparison.table.deathBenefitsTable.variableCol.year'
+                    ),
                     field: 'period',
                     editable: false,
                     cellClass: ['w-100', 'text-sm border-b-xl'],
                 },
                 {
-                    headerName: t('contractComparison.table.deathBenefitsTable.variableCol.zeroPercent'),
+                    headerName: t(
+                        'contractComparison.table.deathBenefitsTable.variableCol.zeroPercent'
+                    ),
                     field: 'return0Prct',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -424,7 +490,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
                     valueFormatter: amountCellFormatter,
                 },
                 {
-                    headerName: t('contractComparison.table.deathBenefitsTable.variableCol.sixPercent'),
+                    headerName: t(
+                        'contractComparison.table.deathBenefitsTable.variableCol.sixPercent'
+                    ),
                     field: 'return6Prct',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -432,7 +500,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
                     valueFormatter: amountCellFormatter,
                 },
                 {
-                    headerName: t('contractComparison.table.deathBenefitsTable.variableCol.twelvePercent'),
+                    headerName: t(
+                        'contractComparison.table.deathBenefitsTable.variableCol.twelvePercent'
+                    ),
                     field: 'return12Prct',
                     editable: true,
                     cellClass: ['w-100', 'text-sm'],
@@ -511,52 +581,88 @@ export default function getMassMutualReg60Config(t: TFunction) {
                 fieldLabel: t('proposedAnnuityQuote.typeOfPayment'),
                 isRequired: false,
                 selectOptions: [
-                    { label: t('proposedAnnuityQuote.typeOfPaymentOptions.fixed'), value: TypeOfPaymentOptions.Fixed },
-                    { label: t('proposedAnnuityQuote.typeOfPaymentOptions.variable'), value: TypeOfPaymentOptions.Variable },
+                    {
+                        label: t(
+                            'proposedAnnuityQuote.typeOfPaymentOptions.fixed'
+                        ),
+                        value: TypeOfPaymentOptions.Fixed,
+                    },
+                    {
+                        label: t(
+                            'proposedAnnuityQuote.typeOfPaymentOptions.variable'
+                        ),
+                        value: TypeOfPaymentOptions.Variable,
+                    },
                 ],
             },
         },
     };
 
-    const validateDisclosureAuthorizationForm = (disclosureAuthorization: DisclosureAuthorizationInformation) => {
+    const validateDisclosureAuthorizationForm = (
+        disclosureAuthorization: DisclosureAuthorizationInformation
+    ) => {
         const errors = {} as FormValidationErrors;
         if (!disclosureAuthorization?.signatureDate) {
-            errors[`signatureDate`] = t('formErrors.formValidation.signatureDateIsRequired');
+            errors[`signatureDate`] = t(
+                'formErrors.formValidation.signatureDateIsRequired'
+            );
         }
         if (disclosureAuthorization?.signatureDate) {
             const selectedDate = disclosureAuthorization?.signatureDate || '';
             if (dayjs().diff(selectedDate, 'days') > 120) {
-                errors['signatureDate'] = t('formErrors.formValidation.signatureDateIsInvalid');
+                errors['signatureDate'] = t(
+                    'formErrors.formValidation.signatureDateIsInvalid'
+                );
             }
         }
         if (
             !disclosureAuthorization?.expectedAcctValue ||
-            (disclosureAuthorization?.expectedAcctValue && Number(disclosureAuthorization?.expectedAcctValue) <= 0)
+            (disclosureAuthorization?.expectedAcctValue &&
+                Number(disclosureAuthorization?.expectedAcctValue) <= 0)
         ) {
-            errors[`expectedAcctValue`] = t('formErrors.formValidation.expectedAcctValueIsRequired');
+            errors[`expectedAcctValue`] = t(
+                'formErrors.formValidation.expectedAcctValueIsRequired'
+            );
         }
         if (!disclosureAuthorization?.product) {
-            errors[`product`] = t('formErrors.formValidation.productIsRequired');
+            errors[`product`] = t(
+                'formErrors.formValidation.productIsRequired'
+            );
         }
-        if (disclosureAuthorization?.product === Products.stableVoyage && !disclosureAuthorization?.cdscPeriod) {
-            errors[`cdscPeriod`] = t('formErrors.formValidation.cdscPeriodIsRequired');
+        if (
+            disclosureAuthorization?.product === Products.stableVoyage &&
+            !disclosureAuthorization?.cdscPeriod
+        ) {
+            errors[`cdscPeriod`] = t(
+                'formErrors.formValidation.cdscPeriodIsRequired'
+            );
         }
         return errors;
     };
 
-    const validateProposedAnnuitizationQuote = (proposedAnnuityQuote: AnnuityQuote) => {
+    const validateProposedAnnuitizationQuote = (
+        proposedAnnuityQuote: AnnuityQuote
+    ) => {
         const errors = {} as FormValidationErrors;
         if (!proposedAnnuityQuote.annuityPaymentAmount) {
-            errors['annuityPaymentAmount'] = t('formErrors.formValidation.annuityPaymentAmountIsRequired');
+            errors['annuityPaymentAmount'] = t(
+                'formErrors.formValidation.annuityPaymentAmountIsRequired'
+            );
         }
         if (!proposedAnnuityQuote.firstPaymentDate) {
-            errors['firstPaymentDate'] = t('formErrors.formValidation.firstPaymentDateIsRequired');
+            errors['firstPaymentDate'] = t(
+                'formErrors.formValidation.firstPaymentDateIsRequired'
+            );
         }
         if (!proposedAnnuityQuote.incomeOption) {
-            errors['incomeOption'] = t('formErrors.formValidation.incomeOptionIsRequired');
+            errors['incomeOption'] = t(
+                'formErrors.formValidation.incomeOptionIsRequired'
+            );
         }
         if (!proposedAnnuityQuote.paymentFrequency) {
-            errors['paymentFrequency'] = t('formErrors.formValidation.paymentFrequencyIsRequired');
+            errors['paymentFrequency'] = t(
+                'formErrors.formValidation.paymentFrequencyIsRequired'
+            );
         }
         if (
             proposedAnnuityQuote.incomeOption === 'SINGLE_LIFE_PC' ||
@@ -565,7 +671,9 @@ export default function getMassMutualReg60Config(t: TFunction) {
             proposedAnnuityQuote.incomeOption === 'JT_SURV_CONV_PC'
         ) {
             if (!proposedAnnuityQuote.periodCertainYears) {
-                errors['periodCertainYears'] = t('formErrors.formValidation.periodCertainYearsIsRequired');
+                errors['periodCertainYears'] = t(
+                    'formErrors.formValidation.periodCertainYearsIsRequired'
+                );
             }
         }
 
@@ -586,65 +694,112 @@ export default function getMassMutualReg60Config(t: TFunction) {
             const partyErrors: Partial<FormValidationErrors> = {};
             const address = party.addressDetails || {};
 
-            if (role === PartyRoles.OWNER && !party.personalInformation.firstName && !document?.firstName) {
-                partyErrors[`${role}_firstName`] = t('formErrors.formValidation.firstNameIsRequired') || '';
+            if (
+                role === PartyRoles.OWNER &&
+                !party.personalInformation.firstName &&
+                !document?.firstName
+            ) {
+                partyErrors[`${role}_firstName`] =
+                    t('formErrors.formValidation.firstNameIsRequired') || '';
             }
 
-            if (role === PartyRoles.AGENT && !party.personalInformation.firstName && !document?.agentFirstName) {
-                partyErrors[`${role}_firstName`] = t('formErrors.formValidation.firstNameIsRequired') || '';
+            if (
+                role === PartyRoles.AGENT &&
+                !party.personalInformation.firstName &&
+                !document?.agentFirstName
+            ) {
+                partyErrors[`${role}_firstName`] =
+                    t('formErrors.formValidation.firstNameIsRequired') || '';
             }
 
             // if (!party.personalInformation.middleName) {
             //     partyErrors[`${role}_middleName`] = t('formErrors.formValidation.middleNameIsRequired') || '';
             // }
 
-            if (role === PartyRoles.OWNER && !party.personalInformation.lastName && !document?.lastName) {
-                partyErrors[`${role}_lastName`] = t('formErrors.formValidation.lastNameIsRequired') || '';
+            if (
+                role === PartyRoles.OWNER &&
+                !party.personalInformation.lastName &&
+                !document?.lastName
+            ) {
+                partyErrors[`${role}_lastName`] =
+                    t('formErrors.formValidation.lastNameIsRequired') || '';
             }
 
-            if (role === PartyRoles.AGENT && !party.personalInformation.lastName && !document?.agentLastName) {
-                partyErrors[`${role}_firstName`] = t('formErrors.formValidation.firstNameIsRequired') || '';
+            if (
+                role === PartyRoles.AGENT &&
+                !party.personalInformation.lastName &&
+                !document?.agentLastName
+            ) {
+                partyErrors[`${role}_firstName`] =
+                    t('formErrors.formValidation.firstNameIsRequired') || '';
             }
-            if (!party.companyName && role === PartyRoles.AGENT && !document?.bdName) {
-                partyErrors[`${role}_companyName`] = t('formErrors.formValidation.companyNameIsRequired') || '';
+            if (
+                !party.companyName &&
+                role === PartyRoles.AGENT &&
+                !document?.bdName
+            ) {
+                partyErrors[`${role}_companyName`] =
+                    t('formErrors.formValidation.companyNameIsRequired') || '';
             }
-            if (!party.personalInformation.ssNumber && role === PartyRoles.OWNER && !document?.ssNTaxId) {
-                partyErrors[`${role}_ssNumber`] = t('formErrors.formValidation.ownerSSNisRequired') || '';
+            if (
+                !party.personalInformation.ssNumber &&
+                role === PartyRoles.OWNER &&
+                !document?.ssNTaxId
+            ) {
+                partyErrors[`${role}_ssNumber`] =
+                    t('formErrors.formValidation.ownerSSNisRequired') || '';
             }
 
             if (!address.addressLine1) {
-                partyErrors[`${role}_addressLine1`] = t('formErrors.formValidation.ownerStreetAddressIsRequired') || '';
+                partyErrors[`${role}_addressLine1`] =
+                    t(
+                        'formErrors.formValidation.ownerStreetAddressIsRequired'
+                    ) || '';
             }
 
             if (!address.city) {
-                partyErrors[`${role}_city`] = t('formErrors.formValidation.cityIsRequired') || '';
+                partyErrors[`${role}_city`] =
+                    t('formErrors.formValidation.cityIsRequired') || '';
             }
             if (!address.state) {
-                partyErrors[`${role}_state`] = t('formErrors.formValidation.stateIsRequired') || '';
+                partyErrors[`${role}_state`] =
+                    t('formErrors.formValidation.stateIsRequired') || '';
             }
 
             if (!address.zipCode) {
-                partyErrors[`${role}_zipCode`] = t('formErrors.formValidation.zipIsRequired') || '';
+                partyErrors[`${role}_zipCode`] =
+                    t('formErrors.formValidation.zipIsRequired') || '';
             }
 
             return partyErrors;
         };
 
         if (ownerInformation) {
-            Object.assign(errors, validateParty(ownerInformation, PartyRoles.OWNER));
+            Object.assign(
+                errors,
+                validateParty(ownerInformation, PartyRoles.OWNER)
+            );
         }
 
         if (agentInformation) {
-            Object.assign(errors, validateParty(agentInformation, PartyRoles.AGENT));
+            Object.assign(
+                errors,
+                validateParty(agentInformation, PartyRoles.AGENT)
+            );
 
             if (!agentInformation.channel) {
-                errors[`${PartyRoles.AGENT}_channel`] = t('formErrors.formValidation.channelIsRequired');
+                errors[`${PartyRoles.AGENT}_channel`] = t(
+                    'formErrors.formValidation.channelIsRequired'
+                );
             }
         }
 
         const formDisclosureAuthorization = disclosureAuthorization;
         if (formDisclosureAuthorization) {
-            const disclosureAuthorizationErrors = validateDisclosureAuthorizationForm(formDisclosureAuthorization);
+            const disclosureAuthorizationErrors =
+                validateDisclosureAuthorizationForm(
+                    formDisclosureAuthorization
+                );
             Object.assign(errors, disclosureAuthorizationErrors);
         }
 
@@ -653,7 +808,10 @@ export default function getMassMutualReg60Config(t: TFunction) {
             disclosure?.contractComparison?.length > 0 &&
             currentPage === CurrentPage.COMPARISON
         ) {
-            const contractComparisonsErrors = getValidationErrors(disclosure?.contractComparison, t);
+            const contractComparisonsErrors = getValidationErrors(
+                disclosure?.contractComparison,
+                t
+            );
             Object.assign(errors, contractComparisonsErrors);
         }
         const annuityQuote = disclosure?.proposedAnnuitizationQuote;
@@ -662,7 +820,8 @@ export default function getMassMutualReg60Config(t: TFunction) {
             formDisclosureAuthorization?.product === Products.retireEaseChoice
         ) {
             if (annuityQuote && currentPage === CurrentPage.COMPARISON) {
-                const annuityQuoteErrors = validateProposedAnnuitizationQuote(annuityQuote);
+                const annuityQuoteErrors =
+                    validateProposedAnnuitizationQuote(annuityQuote);
                 Object.assign(errors, annuityQuoteErrors);
             }
         }

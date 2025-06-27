@@ -2,11 +2,17 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 import xss from 'xss';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import SelectSimple from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { Reg60FormContext } from '@deps/contexts/Reg60FormContext';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
@@ -16,8 +22,15 @@ import { SSN_FORMAT } from '../../utils/reg60-constants';
 import AddressDetails from '../address-details/address-details';
 import UserPhoneNumber from '../phone-number/phone-number';
 
-const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: UserInformationProps) => {
-    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request.partyDetails' });
+const UserInformation = ({
+    userInfo,
+    setUserInfo,
+    formErrors,
+    formConfig,
+}: UserInformationProps) => {
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, {
+        keyPrefix: 'caseReg60.request.partyDetails',
+    });
 
     const { isFormStateReadOnly } = useContext(Reg60FormContext);
     return (
@@ -27,9 +40,18 @@ const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: User
                     {formConfig.title || t(`ownerInformation.header`)}
                 </Typography>
                 {formConfig.titleTooltip && (
-                    <Popover triggerClassName="mb-4" title={'Info'} body={formConfig.titleTooltip} placement={PopoverPlacement.BottomRight}>
+                    <Popover
+                        triggerClassName="mb-4"
+                        title={'Info'}
+                        body={formConfig.titleTooltip}
+                        placement={PopoverPlacement.BottomRight}
+                    >
                         <span className="block p-[5px]">
-                            <CircleInfoIcon height={'16px'} width={'16px'} className="text-primary" />
+                            <CircleInfoIcon
+                                height={'16px'}
+                                width={'16px'}
+                                className="text-primary"
+                            />
                         </span>
                     </Popover>
                 )}
@@ -39,10 +61,13 @@ const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: User
                     <Field
                         label={t('firstName') as string}
                         message={formErrors?.firstName}
-                        onChange={e => {
+                        onChange={(e) => {
                             setUserInfo({
                                 ...userInfo,
-                                personalInformation: { ...userInfo?.personalInformation, firstName: xss(e.target.value) },
+                                personalInformation: {
+                                    ...userInfo?.personalInformation,
+                                    firstName: xss(e.target.value),
+                                },
                             });
                         }}
                         size={FieldSize.Small}
@@ -59,12 +84,18 @@ const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: User
                 )}
                 {formConfig.userFields.fields.middleName && (
                     <Field
-                        className={formErrors?.name && 'border-2 border-solid border-semantic-error'}
+                        className={
+                            formErrors?.name &&
+                            'border-2 border-solid border-semantic-error'
+                        }
                         label={t(`middleName`) as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setUserInfo({
                                 ...userInfo,
-                                personalInformation: { ...userInfo?.personalInformation, middleName: xss(e.target.value) },
+                                personalInformation: {
+                                    ...userInfo?.personalInformation,
+                                    middleName: xss(e.target.value),
+                                },
                             });
                         }}
                         size={FieldSize.Small}
@@ -80,12 +111,18 @@ const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: User
                 )}
                 {formConfig.userFields.fields.lastName && (
                     <Field
-                        className={formErrors?.name && 'border-2 border-solid border-semantic-error'}
+                        className={
+                            formErrors?.name &&
+                            'border-2 border-solid border-semantic-error'
+                        }
                         label={t(`lastName`) as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setUserInfo({
                                 ...userInfo,
-                                personalInformation: { ...userInfo?.personalInformation, lastName: xss(e.target.value) },
+                                personalInformation: {
+                                    ...userInfo?.personalInformation,
+                                    lastName: xss(e.target.value),
+                                },
                             });
                         }}
                         size={FieldSize.Small}
@@ -105,22 +142,32 @@ const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: User
                     <SelectSimple
                         disabled={isFormStateReadOnly}
                         label={t(`channel`) as string}
-                        onChange={val => {
+                        onChange={(val) => {
                             setUserInfo({
                                 ...userInfo,
                                 channel: val,
                             });
                         }}
                         options={[
-                            { label: t('channelOption.cas'), value: ChannelType.CAS },
-                            { label: t('channelOption.broker'), value: ChannelType.Broker },
+                            {
+                                label: t('channelOption.cas'),
+                                value: ChannelType.CAS,
+                            },
+                            {
+                                label: t('channelOption.broker'),
+                                value: ChannelType.Broker,
+                            },
                         ]}
                         message={formErrors?.channel}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         data-testid={`channel-${userInfo.channel}`}
                         value={userInfo.channel}
-                        variant={formErrors?.channel ? FieldVariant.Error : FieldVariant.Default}
+                        variant={
+                            formErrors?.channel
+                                ? FieldVariant.Error
+                                : FieldVariant.Default
+                        }
                         required
                     />
                 )}
@@ -129,10 +176,15 @@ const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: User
             {formConfig.userFields?.fields?.userCompany && (
                 <div className="my-4 max-w-lg">
                     <Field
-                        label={formConfig.userFields.fields.userCompany?.fieldLabel}
+                        label={
+                            formConfig.userFields.fields.userCompany?.fieldLabel
+                        }
                         message={formErrors.companyName}
-                        onChange={e => {
-                            setUserInfo({ ...userInfo, companyName: xss(e.target.value) });
+                        onChange={(e) => {
+                            setUserInfo({
+                                ...userInfo,
+                                companyName: xss(e.target.value),
+                            });
                         }}
                         size={FieldSize.Small}
                         data-testid={`companyName-${userInfo?.companyName}`}
@@ -164,10 +216,13 @@ const UserInformation = ({ userInfo, setUserInfo, formErrors, formConfig }: User
                         formatOptions={SSN_FORMAT}
                         label={t(`ownerSSN`) as string}
                         message={formErrors?.ssNumber}
-                        onChange={e => {
+                        onChange={(e) => {
                             setUserInfo({
                                 ...userInfo,
-                                personalInformation: { ...userInfo?.personalInformation, ssNumber: xss(e.target.value) },
+                                personalInformation: {
+                                    ...userInfo?.personalInformation,
+                                    ssNumber: xss(e.target.value),
+                                },
                             });
                         }}
                         size={FieldSize.Small}

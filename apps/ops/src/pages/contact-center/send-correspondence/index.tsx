@@ -20,17 +20,43 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { AttachmentDetails, CorrespondenceFormParts, TransactionTypes } from '@deps/models/case/correspondence';
+import {
+    AttachmentDetails,
+    CorrespondenceFormParts,
+    TransactionTypes,
+} from '@deps/models/case/correspondence';
 import { PolicyDocument } from '@deps/models/case/document';
-import { CommunicationTypes, SendDocumentFormType } from '@deps/models/case/send-document';
+import {
+    CommunicationTypes,
+    SendDocumentFormType,
+} from '@deps/models/case/send-document';
 import { StatementTypes } from '@deps/models/case/send-statement';
-import { getApplicableStatementsSSR, sendCommunication } from '@deps/queries/api/c2web';
+import {
+    getApplicableStatementsSSR,
+    sendCommunication,
+} from '@deps/queries/api/c2web';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, getFeatureFlagByKey, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { FEATURE_FLAG_VARIABLES, FEATURE_VARIABLES_CORRESPONDENCE_KEYS } from '@deps/utils/optimizely/variables';
-import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    getFeatureFlagByKey,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    FEATURE_FLAG_VARIABLES,
+    FEATURE_VARIABLES_CORRESPONDENCE_KEYS,
+} from '@deps/utils/optimizely/variables';
+import {
+    logWarn,
+    logError,
+    parseErrorInformation,
+    logInfo,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendCorrespondenceProps extends SegmentTrackedPageProps {
@@ -54,10 +80,18 @@ const SendCorrespondence = ({
     const [statements, setStatements] = useState<PolicyDocument[]>([]);
     const { ctiCallNumber, correlationId } = router.query;
 
-    useSegmentPageTracker(user, SegmentPageName.SendCorrespondence, { ctiCallNumber, correlationId, policyNumber: policy.policyNumber });
+    useSegmentPageTracker(user, SegmentPageName.SendCorrespondence, {
+        ctiCallNumber,
+        correlationId,
+        policyNumber: policy.policyNumber,
+    });
 
-    const formSelectionLabel = t('contactCenter.sendStatement.tabs.statementSelection');
-    const correspondenceLabel = t('contactCenter.sendStatement.tabs.correspondence');
+    const formSelectionLabel = t(
+        'contactCenter.sendStatement.tabs.statementSelection'
+    );
+    const correspondenceLabel = t(
+        'contactCenter.sendStatement.tabs.correspondence'
+    );
     const confirmLabel = t('contactCenter.sendStatement.tabs.confirm');
 
     const communicationTypes = useMemo(
@@ -82,7 +116,7 @@ const SendCorrespondence = ({
     );
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
     const handleSubmitRequest = async (state: CorrespondenceFormParts) => {
-        const attachments: AttachmentDetails[] = statements.map(statement => {
+        const attachments: AttachmentDetails[] = statements.map((statement) => {
             return {
                 transactionType: TransactionTypes.Statements,
                 transactionSubType: statement.documentType,
@@ -128,7 +162,13 @@ const SendCorrespondence = ({
             text: formSelectionLabel,
         },
         {
-            component: <Correspondence communicationOptions={communicationOptions} policy={policy} submitRequest={handleSubmitRequest} />,
+            component: (
+                <Correspondence
+                    communicationOptions={communicationOptions}
+                    policy={policy}
+                    submitRequest={handleSubmitRequest}
+                />
+            ),
             screenReaderLabel: correspondenceLabel,
             index: 1,
             text: correspondenceLabel,
@@ -145,7 +185,10 @@ const SendCorrespondence = ({
         <>
             <PageHead titleKey="sendStatement" />
             <CorrespondenceProvider>
-                <TabGroupContainer steps={steps} policy={new PolicyDetails(policy)}></TabGroupContainer>
+                <TabGroupContainer
+                    steps={steps}
+                    policy={new PolicyDetails(policy)}
+                ></TabGroupContainer>
             </CorrespondenceProvider>
         </>
     );
@@ -162,16 +205,27 @@ export const getServerSideProps = withPageAuthAndLogging(
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
-                logWarn('getServerSidePropsSendStatementPage::Access token expired', {
-                    ...parseErrorInformation(e),
-                    ...loggingContext,
-                });
+                logWarn(
+                    'getServerSidePropsSendStatementPage::Access token expired',
+                    {
+                        ...parseErrorInformation(e),
+                        ...loggingContext,
+                    }
+                );
                 return serverSidePropsLogout();
             }
 
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const shouldShowSendDocumentPage = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT];
-            const shouldShowCaseButton = featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON];
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const shouldShowSendDocumentPage =
+                featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT];
+            const shouldShowCaseButton =
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON
+                ];
 
             if (!shouldShowSendDocumentPage) {
                 return {
@@ -189,10 +243,19 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
             try {
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
+                const policy = await getPolicyDetailsSsr(
+                    policyNumber,
+                    planCode,
+                    accessToken,
+                    loggingContext,
+                    true
+                );
                 const carrierId = policy?.carrierId || '';
                 if (!policy || !carrierId) {
-                    logInfo('contact-center/send-statement/policy-not-found', loggingContext);
+                    logInfo(
+                        'contact-center/send-statement/policy-not-found',
+                        loggingContext
+                    );
                     return {
                         redirect: {
                             destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
@@ -200,9 +263,18 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-                const applicableStatements = (await getApplicableStatementsSSR(planCode, accessToken, loggingContext)) || [];
+                const applicableStatements =
+                    (await getApplicableStatementsSSR(
+                        planCode,
+                        accessToken,
+                        loggingContext
+                    )) || [];
 
-                const [shouldShowMailOption, shouldShowEmailOption, shouldShowFaxOption] = await Promise.all([
+                const [
+                    shouldShowMailOption,
+                    shouldShowEmailOption,
+                    shouldShowFaxOption,
+                ] = await Promise.all([
                     getFeatureFlagByKey(
                         FEATURE_FLAG_VARIABLES.SEND_STATEMENT,
                         FEATURE_VARIABLES_CORRESPONDENCE_KEYS.Mail,
@@ -239,14 +311,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             } catch (error) {
-                logError('getServerSidePropsPolicyDetailsPage', { ...parseErrorInformation(error), ...loggingContext });
+                logError('getServerSidePropsPolicyDetailsPage', {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                });
                 return {
                     props: {},
                 };
             }
         },
     },
-    { file: 'contact-center/send-correspondence/index', function: 'getServerSideProps', page: 'contact-center/send-correspondence' }
+    {
+        file: 'contact-center/send-correspondence/index',
+        function: 'getServerSideProps',
+        page: 'contact-center/send-correspondence',
+    }
 );
 
 export default SendCorrespondence;

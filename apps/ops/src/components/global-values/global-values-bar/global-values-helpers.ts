@@ -2,7 +2,9 @@ import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-export const getPolicyBadgeStatusTooltip = (status: PolicyStatus | undefined) => {
+export const getPolicyBadgeStatusTooltip = (
+    status: PolicyStatus | undefined
+) => {
     if (status == null) return DEFAULT_ERROR_STRING;
 
     switch (status) {

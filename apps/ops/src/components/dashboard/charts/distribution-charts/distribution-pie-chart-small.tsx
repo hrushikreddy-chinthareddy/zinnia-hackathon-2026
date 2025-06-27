@@ -36,10 +36,14 @@ const DistributionPieChartSmall = ({
     const [chartConfig, setChartConfig] = useState({});
     const getChartData = (statsGrouping?: DashboardStatsElementResponse) => {
         const chartData: { name: string; y: number; totalCount: number }[] = [];
-        if (!statsGrouping || !statsGrouping.values || statsGrouping.values.length === 0) {
+        if (
+            !statsGrouping ||
+            !statsGrouping.values ||
+            statsGrouping.values.length === 0
+        ) {
             return chartData;
         }
-        statsGrouping.values.forEach(statGrouping => {
+        statsGrouping.values.forEach((statGrouping) => {
             chartData.push({
                 name: dashboardChartTitleFormat(statGrouping.name),
                 y: statGrouping.count / statsGrouping.count,
@@ -52,7 +56,8 @@ const DistributionPieChartSmall = ({
 
     const getBaseConfig = useCallback(
         (showInLegend: boolean) => {
-            const config: Highcharts.Options = caseChartHelpers.getBaseSmallPieConfiguration();
+            const config: Highcharts.Options =
+                caseChartHelpers.getBaseSmallPieConfiguration();
 
             if (config.chart && height) {
                 config.chart.height = height;
@@ -73,12 +78,17 @@ const DistributionPieChartSmall = ({
     );
 
     const getChartConfig = useCallback(
-        (chartData: { name: string; y: number }[], baseConfig: Highcharts.Options) => {
+        (
+            chartData: { name: string; y: number }[],
+            baseConfig: Highcharts.Options
+        ) => {
             const config = Highcharts.merge(baseConfig, {
                 series: [
                     {
                         name: seriesLabel,
-                        data: sort ? chartData.sort((a, b) => b.y - a.y) : chartData,
+                        data: sort
+                            ? chartData.sort((a, b) => b.y - a.y)
+                            : chartData,
                     },
                 ],
             });

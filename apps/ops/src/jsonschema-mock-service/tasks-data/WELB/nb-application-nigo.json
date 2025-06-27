@@ -70,9 +70,19 @@
                 "processingResolution": "Review the identified state training issue and confirm if we can resolve it."
             }
         ],
-        "nigos": ["EX000000008148", "EX000000008149", "EX000000008146", "EX000000008147"]
+        "nigos": [
+            "EX000000008148",
+            "EX000000008149",
+            "EX000000008146",
+            "EX000000008147"
+        ]
     },
-    "mappedExceptions": ["EX000000008148", "EX000000008149", "EX000000008146", "EX000000008147"],
+    "mappedExceptions": [
+        "EX000000008148",
+        "EX000000008149",
+        "EX000000008146",
+        "EX000000008147"
+    ],
     "mappedDocuments": [],
     "queue": "new_business",
     "escalated": false,

@@ -104,8 +104,16 @@ export const Label = ({
         <div className={clsx('flex items-center gap-2', className)}>
             {myNode}
             {tooltipTitle && tooltipBody && (
-                <Popover title={tooltipTitle} body={tooltipBody} placement={tooltipPlacement}>
-                    <CircleInfoIcon height={16} width={16} className="text-primary" />
+                <Popover
+                    title={tooltipTitle}
+                    body={tooltipBody}
+                    placement={tooltipPlacement}
+                >
+                    <CircleInfoIcon
+                        height={16}
+                        width={16}
+                        className="text-primary"
+                    />
                 </Popover>
             )}
             {editable && (

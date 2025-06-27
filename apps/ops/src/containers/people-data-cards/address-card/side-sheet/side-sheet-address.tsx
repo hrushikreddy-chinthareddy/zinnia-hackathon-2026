@@ -1,15 +1,32 @@
 import { Transition } from '@headlessui/react';
-import { Address, AddressType, Country, Party, State, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    Address,
+    AddressType,
+    Country,
+    Party,
+    State,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import CaseDocumentSelect, { CaseDocumentOption, SetStateCaseId } from '@deps/components/case-document-select/case-document-select';
+import CaseDocumentSelect, {
+    CaseDocumentOption,
+    SetStateCaseId,
+} from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field, { FieldType, FieldSize, FieldVariant } from '@deps/components/fields/field';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import Field, {
+    FieldType,
+    FieldSize,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import Radio from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
@@ -70,7 +87,9 @@ const SideSheetAddress = ({
     setCurrentAddresses,
     updateAddress,
 }: SideSheetAddressProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.address' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.sideSheet.address',
+    });
     const { t: defaultT } = useTranslation();
 
     const INITIAL_ADDRESS: Address = {
@@ -81,17 +100,29 @@ const SideSheetAddress = ({
     const INITIAL_BODY: NonFinancialTransactionBody = {
         correlationId: uuidV4(),
         effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-        preferredAddressIndicator: isCurrentMailingAddress ? PreferredAddressIndicator.Yes : PreferredAddressIndicator.No,
+        preferredAddressIndicator: isCurrentMailingAddress
+            ? PreferredAddressIndicator.Yes
+            : PreferredAddressIndicator.No,
         reverseInitiator: false,
     };
 
-    const [action, setAction] = useState(updateAddress ? NonFinancialTransactionActions.Edit : NonFinancialTransactionActions.Add);
+    const [action, setAction] = useState(
+        updateAddress
+            ? NonFinancialTransactionActions.Edit
+            : NonFinancialTransactionActions.Add
+    );
     const [address, setAddress] = useState(updateAddress ?? INITIAL_ADDRESS);
-    const [addressLines, setAddressLines] = useState(updateAddress?.addressLine3 ? 3 : updateAddress?.addressLine2 ? 2 : 1);
+    const [addressLines, setAddressLines] = useState(
+        updateAddress?.addressLine3 ? 3 : updateAddress?.addressLine2 ? 2 : 1
+    );
     const [body, setBody] = useState(INITIAL_BODY);
-    const [caseDocumentOptions, setCaseDocumentOptions] = useState<CaseDocumentOption[]>([]);
+    const [caseDocumentOptions, setCaseDocumentOptions] = useState<
+        CaseDocumentOption[]
+    >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
-    const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+    const [validationResults, setValidationResults] = useState<
+        ValidationResult[]
+    >([]);
     const [viewState, setViewState] = useState<ViewState>(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
 
@@ -102,20 +133,33 @@ const SideSheetAddress = ({
     const isAdd = action === NonFinancialTransactionActions.Add;
     const isDelete = action === NonFinancialTransactionActions.Delete;
     const isEdit = action === NonFinancialTransactionActions.Edit;
-    const isSelectedMailingAddress = body.preferredAddressIndicator === PreferredAddressIndicator.Yes;
-    const stopLoading = currentErrors === undefined ? true : !!Object.entries(currentErrors).length;
+    const isSelectedMailingAddress =
+        body.preferredAddressIndicator === PreferredAddressIndicator.Yes;
+    const stopLoading =
+        currentErrors === undefined
+            ? true
+            : !!Object.entries(currentErrors).length;
 
     const addressTypeOptions = getAddressTypeOptions({ t: defaultT });
-    const stateOptions = getStateCodes().map(state => ({ label: state, value: state }));
+    const stateOptions = getStateCodes().map((state) => ({
+        label: state,
+        value: state,
+    }));
 
-    const addressTypeTranslation = mapAddressTypeToTranslation({ addressType, lowercase: true, t: defaultT });
+    const addressTypeTranslation = mapAddressTypeToTranslation({
+        addressType,
+        lowercase: true,
+        t: defaultT,
+    });
     const mailingAddressAssistiveText =
         isCurrentMailingAddress && !isSelectedMailingAddress
             ? t('mailingAddressAssitiveText.remove')
             : !isCurrentMailingAddress && isSelectedMailingAddress
             ? t('mailingAddressAssitiveText.add')
             : '';
-    const mainCtaText = isAdd ? t('mainCta.add', { type: addressTypeTranslation }) : t('mainCta.update', { type: addressTypeTranslation });
+    const mainCtaText = isAdd
+        ? t('mainCta.add', { type: addressTypeTranslation })
+        : t('mainCta.update', { type: addressTypeTranslation });
 
     const handleDelete = async () => {
         const response = await editNonFinancialTransaction({
@@ -171,7 +215,12 @@ const SideSheetAddress = ({
             });
         }
 
-        handleResponse({ response, setViewState, setValidationResults, setNewCaseId });
+        handleResponse({
+            response,
+            setViewState,
+            setValidationResults,
+            setNewCaseId,
+        });
     };
 
     switch (viewState) {
@@ -186,7 +235,10 @@ const SideSheetAddress = ({
                     transaction={NonFinancialTransactions.Address}
                     validationResults={validationResults}
                 >
-                    <AddressDetails address={address} isSelectedMailingAddress={isSelectedMailingAddress} />
+                    <AddressDetails
+                        address={address}
+                        isSelectedMailingAddress={isSelectedMailingAddress}
+                    />
                 </BpmErrorState>
             );
         case ViewState.ApiError:
@@ -212,7 +264,12 @@ const SideSheetAddress = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({ action, idKey: NonFinancialTransactionIdKeys.Address, newItem: address, setState: setCurrentAddresses });
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Address,
+                newItem: address,
+                setState: setCurrentAddresses,
+            });
 
             return (
                 <SuccessState
@@ -247,7 +304,12 @@ const SideSheetAddress = ({
                 <Radio
                     items={addressTypeOptions}
                     label={t('labels.addressType') as string}
-                    onChange={event => setAddress(prevState => ({ ...prevState, addressType: event.target.value as AddressType }))}
+                    onChange={(event) =>
+                        setAddress((prevState) => ({
+                            ...prevState,
+                            addressType: event.target.value as AddressType,
+                        }))
+                    }
                     value={addressType}
                 />
             )}
@@ -259,28 +321,44 @@ const SideSheetAddress = ({
                             aria-label={t('labels.addressLine1') as string}
                             label={t('labels.address') as string}
                             message={currentErrors?.addressLine1}
-                            onChange={event => {
-                                setCurrentErrors(prevState => {
-                                    const { addressLine1, ...errors } = prevState ?? {};
+                            onChange={(event) => {
+                                setCurrentErrors((prevState) => {
+                                    const { addressLine1, ...errors } =
+                                        prevState ?? {};
                                     return errors;
                                 });
-                                setAddress(prevState => ({ ...prevState, addressLine1: event.target.value }));
+                                setAddress((prevState) => ({
+                                    ...prevState,
+                                    addressLine1: event.target.value,
+                                }));
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={address.addressLine1}
                             variant={
-                                currentErrors?.addressLine1 ? FieldVariant.Error : isDelete ? FieldVariant.Inactive : FieldVariant.Default
+                                currentErrors?.addressLine1
+                                    ? FieldVariant.Error
+                                    : isDelete
+                                    ? FieldVariant.Inactive
+                                    : FieldVariant.Default
                             }
                         />
                         <AdditionalAddressLine
                             aria-label={t('labels.addressLine2') as string}
                             disabled={isDelete}
                             label={t('labels.addressLine2') as string}
-                            onChange={event => setAddress(prevState => ({ ...prevState, addressLine2: event.target.value }))}
+                            onChange={(event) =>
+                                setAddress((prevState) => ({
+                                    ...prevState,
+                                    addressLine2: event.target.value,
+                                }))
+                            }
                             removeAddressLine={() => {
-                                setAddress(prevState => ({ ...prevState, addressLine2: '' }));
-                                setAddressLines(prevState => prevState - 1);
+                                setAddress((prevState) => ({
+                                    ...prevState,
+                                    addressLine2: '',
+                                }));
+                                setAddressLines((prevState) => prevState - 1);
                             }}
                             show={addressLines >= 2}
                             value={address.addressLine2}
@@ -289,10 +367,18 @@ const SideSheetAddress = ({
                             aria-label={t('labels.addressLine3') as string}
                             disabled={isDelete}
                             label={t('labels.addressLine3') as string}
-                            onChange={event => setAddress(prevState => ({ ...prevState, addressLine3: event.target.value }))}
+                            onChange={(event) =>
+                                setAddress((prevState) => ({
+                                    ...prevState,
+                                    addressLine3: event.target.value,
+                                }))
+                            }
                             removeAddressLine={() => {
-                                setAddress(prevState => ({ ...prevState, addressLine3: '' }));
-                                setAddressLines(prevState => prevState - 1);
+                                setAddress((prevState) => ({
+                                    ...prevState,
+                                    addressLine3: '',
+                                }));
+                                setAddressLines((prevState) => prevState - 1);
                             }}
                             show={addressLines >= 3}
                             value={address.addressLine3}
@@ -310,7 +396,9 @@ const SideSheetAddress = ({
                     >
                         <NavElement
                             disabled={isDelete}
-                            onClick={() => setAddressLines(prevState => prevState + 1)}
+                            onClick={() =>
+                                setAddressLines((prevState) => prevState + 1)
+                            }
                             size={NavElementSize.Small}
                             startIcon={<AddIcon height={20} width={20} />}
                             type={NavElementType.Button}
@@ -328,21 +416,32 @@ const SideSheetAddress = ({
                             formatOptions={{ format: '#####-####' }}
                             label={t('labels.zip') as string}
                             message={currentErrors?.zipCode}
-                            onChange={event => {
-                                setCurrentErrors(prevState => {
-                                    const { zipCode, ...errors } = prevState ?? {};
+                            onChange={(event) => {
+                                setCurrentErrors((prevState) => {
+                                    const { zipCode, ...errors } =
+                                        prevState ?? {};
                                     return errors;
                                 });
-                                setAddress(prevState => ({
+                                setAddress((prevState) => ({
                                     ...prevState,
                                     zipCode: event.target.value.substring(0, 5),
-                                    zipCodeExtension: event.target.value.substring(5, 9),
+                                    zipCodeExtension:
+                                        event.target.value.substring(5, 9),
                                 }));
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
-                            value={(address.zipCode ?? '') + (address.zipCodeExtension ?? '')}
-                            variant={currentErrors?.zipCode ? FieldVariant.Error : isDelete ? FieldVariant.Inactive : FieldVariant.Default}
+                            value={
+                                (address.zipCode ?? '') +
+                                (address.zipCodeExtension ?? '')
+                            }
+                            variant={
+                                currentErrors?.zipCode
+                                    ? FieldVariant.Error
+                                    : isDelete
+                                    ? FieldVariant.Inactive
+                                    : FieldVariant.Default
+                            }
                         />
                     </div>
                     <div className="flex-grow">
@@ -350,17 +449,26 @@ const SideSheetAddress = ({
                             aria-label={t('labels.city') as string}
                             label={t('labels.city') as string}
                             message={currentErrors?.city}
-                            onChange={event => {
-                                setCurrentErrors(prevState => {
+                            onChange={(event) => {
+                                setCurrentErrors((prevState) => {
                                     const { city, ...errors } = prevState ?? {};
                                     return errors;
                                 });
-                                setAddress(prevState => ({ ...prevState, city: event.target.value }));
+                                setAddress((prevState) => ({
+                                    ...prevState,
+                                    city: event.target.value,
+                                }));
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={toTitleCase(address.city)}
-                            variant={currentErrors?.city ? FieldVariant.Error : isDelete ? FieldVariant.Inactive : FieldVariant.Default}
+                            variant={
+                                currentErrors?.city
+                                    ? FieldVariant.Error
+                                    : isDelete
+                                    ? FieldVariant.Inactive
+                                    : FieldVariant.Default
+                            }
                         />
                     </div>
                     <div className="basis-1/4">
@@ -369,17 +477,25 @@ const SideSheetAddress = ({
                             disabled={isDelete}
                             label={t('labels.state') as string}
                             message={currentErrors?.state}
-                            onChange={value => {
-                                setCurrentErrors(prevState => {
-                                    const { state, ...errors } = prevState ?? {};
+                            onChange={(value) => {
+                                setCurrentErrors((prevState) => {
+                                    const { state, ...errors } =
+                                        prevState ?? {};
                                     return errors;
                                 });
-                                setAddress(prevState => ({ ...prevState, state: value as State }));
+                                setAddress((prevState) => ({
+                                    ...prevState,
+                                    state: value as State,
+                                }));
                             }}
                             options={stateOptions}
                             size={FieldSize.Small}
                             value={address.state}
-                            variant={currentErrors?.state ? FieldVariant.Error : FieldVariant.Default}
+                            variant={
+                                currentErrors?.state
+                                    ? FieldVariant.Error
+                                    : FieldVariant.Default
+                            }
                         />
                     </div>
                 </div>
@@ -392,10 +508,12 @@ const SideSheetAddress = ({
                     checked={isSelectedMailingAddress}
                     isDisabled={(isOnlyAddress && isEdit) || isDelete}
                     label={t('labels.setAsMailingAddress')}
-                    onChange={e =>
-                        setBody(prevState => ({
+                    onChange={(e) =>
+                        setBody((prevState) => ({
                             ...prevState,
-                            preferredAddressIndicator: e ? PreferredAddressIndicator.Yes : PreferredAddressIndicator.No,
+                            preferredAddressIndicator: e
+                                ? PreferredAddressIndicator.Yes
+                                : PreferredAddressIndicator.No,
                         }))
                     }
                 />
@@ -404,8 +522,12 @@ const SideSheetAddress = ({
                     <CheckboxText
                         checked={isDelete}
                         label={t('labels.removeAddress')}
-                        onChange={e => {
-                            setAction(e ? NonFinancialTransactionActions.Delete : NonFinancialTransactionActions.Edit);
+                        onChange={(e) => {
+                            setAction(
+                                e
+                                    ? NonFinancialTransactionActions.Delete
+                                    : NonFinancialTransactionActions.Edit
+                            );
                         }}
                     />
                 )}

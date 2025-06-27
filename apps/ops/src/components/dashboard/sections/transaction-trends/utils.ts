@@ -6,7 +6,10 @@ export enum TransactionTrendsTimeframe {
     LastMonth = '1M',
 }
 
-import { CaseCountOutputLevel1, CaseCountOutputLevel2 } from '@zinnia/api-types/types/analytics';
+import {
+    CaseCountOutputLevel1,
+    CaseCountOutputLevel2,
+} from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 
@@ -21,9 +24,14 @@ dayjs.extend(isoWeek);
  * the data for the series it returns is like [[unixTimestamp, yValue], [unixTimestamp, yValue]] aka: [[x, y], [x, y]]
  *
  */
-export const generateSeries = (transactionTrendsData: CaseCountOutputLevel1[] | undefined, timerange: { from: string; to: string }) => {
+export const generateSeries = (
+    transactionTrendsData: CaseCountOutputLevel1[] | undefined,
+    timerange: { from: string; to: string }
+) => {
     if (!transactionTrendsData || !transactionTrendsData.length) return [];
-    const sortedByCount = transactionTrendsData.sort((a, b) => b.count - a.count);
+    const sortedByCount = transactionTrendsData.sort(
+        (a, b) => b.count - a.count
+    );
     const top5 = sortedByCount.slice(0, 5);
 
     const fromDate = dayjs(timerange.from);
@@ -31,13 +39,18 @@ export const generateSeries = (transactionTrendsData: CaseCountOutputLevel1[] | 
     const olderThanOneWeek = toDate.diff(fromDate, 'week') > 1;
 
     return top5.map((item, index) => {
-        const data = olderThanOneWeek ? groupDataByWeek(item.values!) : item.values;
+        const data = olderThanOneWeek
+            ? groupDataByWeek(item.values!)
+            : item.values;
 
         return {
             type: 'line',
             name: item.name,
             color: colors[index],
-            data: data?.map(item => [dayjs(item.name).unix() * 1000, item.count]),
+            data: data?.map((item) => [
+                dayjs(item.name).unix() * 1000,
+                item.count,
+            ]),
         };
     });
 };
@@ -63,10 +76,12 @@ export const generateSeries = (transactionTrendsData: CaseCountOutputLevel1[] | 
  * //   { key: '3', name: '2023-04-04', count: 15 }
  * // ]
  */
-export const groupDataByWeek = (data: CaseCountOutputLevel1[] | CaseCountOutputLevel2[]): DashboardResponseData[] => {
+export const groupDataByWeek = (
+    data: CaseCountOutputLevel1[] | CaseCountOutputLevel2[]
+): DashboardResponseData[] => {
     const weeklyCounts = new Map<string, { key: string; count: number }>(); // Map to store weekly counts
 
-    data.forEach(item => {
+    data.forEach((item) => {
         const date = dayjs(item.name); // Convert the name ('2023-04-01') to a Day.js object
         const weekStart = date.startOf('isoWeek'); // Get the start of the week for that day
         const weekMiddle = weekStart.add(3, 'day').format('YYYY-MM-DD'); // get the middle of the week for that day
@@ -92,7 +107,10 @@ export const groupDataByWeek = (data: CaseCountOutputLevel1[] | CaseCountOutputL
     return result;
 };
 
-export const calculateTickInterval = (timerange: { from: string; to: string }) => {
+export const calculateTickInterval = (timerange: {
+    from: string;
+    to: string;
+}) => {
     const fromDate = dayjs(timerange.from);
     const toDate = dayjs(timerange.to);
 
@@ -127,10 +145,14 @@ export const calculateTooltipRanges = (
     const startOfWeek = dayjs(tooltipContext.point.category).startOf('week');
     const endOfWeek = dayjs(tooltipContext.point.category).endOf('week');
 
-    return `Week of ${startOfWeek.format('M/D/YYYY')} - ${dayjs(endOfWeek).format('M/D/YYYY')}`;
+    return `Week of ${startOfWeek.format('M/D/YYYY')} - ${dayjs(
+        endOfWeek
+    ).format('M/D/YYYY')}`;
 };
 
-export const getTooltipData = (points: Highcharts.TooltipFormatterContextObject[] | undefined) => {
+export const getTooltipData = (
+    points: Highcharts.TooltipFormatterContextObject[] | undefined
+) => {
     if (!points || points.length === 0) return { labelData: [], total: 0 };
 
     let total = 0;
@@ -139,7 +161,7 @@ export const getTooltipData = (points: Highcharts.TooltipFormatterContextObject[
         label: string;
         count: number;
         color: string;
-    }> = points.map(point => {
+    }> = points.map((point) => {
         total += point.y || 0;
         return {
             label: point.series.name,
@@ -151,7 +173,10 @@ export const getTooltipData = (points: Highcharts.TooltipFormatterContextObject[
     return { labelData, total };
 };
 
-export const calculateAverage = (count: number, timerange: { from: string; to: string }) => {
+export const calculateAverage = (
+    count: number,
+    timerange: { from: string; to: string }
+) => {
     const from = dayjs(timerange.from);
     const to = dayjs(timerange.to);
 

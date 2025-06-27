@@ -1,5 +1,13 @@
 import { faker } from '@faker-js/faker';
-import { Gender, PartyType, PreferredCommunicationType, State, Country, TrustType, EntityType } from '@zinnia/api-types/types/sor';
+import {
+    Gender,
+    PartyType,
+    PreferredCommunicationType,
+    State,
+    Country,
+    TrustType,
+    EntityType,
+} from '@zinnia/api-types/types/sor';
 
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { Party } from '@deps/models/policy-sor-touchups/Party';
@@ -20,12 +28,25 @@ export const generateParty = (partyId: string): Party => {
         .toISOString()
         .split('T')[0];
 
-    const identifications = Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => generateIdentification());
-    const addresses = Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => generateAddress());
-    const phones = Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => generatePhone());
-    const emails = Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => generateEmail());
-    const bankDetails = Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () =>
-        generateBankDetails(partyId, `${firstName} ${lastName}`)
+    const identifications = Array.from(
+        { length: faker.number.int({ min: 1, max: 3 }) },
+        () => generateIdentification()
+    );
+    const addresses = Array.from(
+        { length: faker.number.int({ min: 1, max: 3 }) },
+        () => generateAddress()
+    );
+    const phones = Array.from(
+        { length: faker.number.int({ min: 1, max: 3 }) },
+        () => generatePhone()
+    );
+    const emails = Array.from(
+        { length: faker.number.int({ min: 1, max: 3 }) },
+        () => generateEmail()
+    );
+    const bankDetails = Array.from(
+        { length: faker.number.int({ min: 1, max: 3 }) },
+        () => generateBankDetails(partyId, `${firstName} ${lastName}`)
     );
 
     return {
@@ -39,16 +60,22 @@ export const generateParty = (partyId: string): Party => {
         fullName: `${firstName} ${lastName}`,
         gender: gender.toUpperCase() as Gender,
         dateOfBirth: dateOfBirth,
-        attainedAge: new Date().getFullYear() - new Date(dateOfBirth).getFullYear(),
+        attainedAge:
+            new Date().getFullYear() - new Date(dateOfBirth).getFullYear(),
         birthCountry: Country.US,
         birthState: faker.location.state({ abbreviated: true }) as State,
         trustDate: faker.date.past({ years: 20 }).toISOString().split('T')[0],
         trustType: TrustType.INDIVIDUALTRUST,
         doingBusinessAs: `${firstName} Enterprises`,
         abbreviatedName: firstName,
-        organizationCode: `${faker.number.int({ min: 100, max: 999 })}-${faker.string.alpha(3)}`,
+        organizationCode: `${faker.number.int({
+            min: 100,
+            max: 999,
+        })}-${faker.string.alpha(3)}`,
         entityType: EntityType.SOLEPROPRIETORSHIP,
-        preferredCommunicationType: faker.helpers.arrayElement(Object.values(PreferredCommunicationType)),
+        preferredCommunicationType: faker.helpers.arrayElement(
+            Object.values(PreferredCommunicationType)
+        ),
         identifications: identifications,
         addresses: addresses,
         phones: phones,

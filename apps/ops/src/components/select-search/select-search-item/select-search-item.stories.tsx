@@ -7,7 +7,7 @@ export default {
     title: 'Components/SelectSearchItem',
     component: SelectSearchItem,
     decorators: [
-        Story => (
+        (Story) => (
             <div className=" container max-w-[1302px]">
                 <Story />
             </div>
@@ -15,5 +15,13 @@ export default {
     ],
 } as Meta<typeof SelectSearchItem>;
 
-export const Default = () => <SelectSearchItem fieldLabel="Menu Text" data="Menu Text" href="zinnia.com" />;
-export const NoLink = () => <SelectSearchItem fieldLabel="Menu Text" data="Menu Text" />;
+export const Default = () => (
+    <SelectSearchItem
+        fieldLabel="Menu Text"
+        data="Menu Text"
+        href="zinnia.com"
+    />
+);
+export const NoLink = () => (
+    <SelectSearchItem fieldLabel="Menu Text" data="Menu Text" />
+);

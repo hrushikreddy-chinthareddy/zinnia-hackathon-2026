@@ -3,10 +3,17 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 import xss from 'xss';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
-import { TransactionOption, TransactionTypes } from '@deps/helpers/transaction-options.helpers';
+import {
+    TransactionOption,
+    TransactionTypes,
+} from '@deps/helpers/transaction-options.helpers';
 import { TargetFundAllocation } from '@deps/models/case/task';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getProductFunds } from '@deps/queries/api/integration';
@@ -20,15 +27,27 @@ interface RenewalPeriodMultiSectionProps {
     planCode: string;
 }
 
-export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly, planCode }: RenewalPeriodMultiSectionProps) {
-    const { setSubsequentTargetFunds, transOption, formErrors, document } = useContext(RenewalFormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
+export default function RenewalPeriodMultiSection({
+    options,
+    isFormStateReadOnly,
+    planCode,
+}: RenewalPeriodMultiSectionProps) {
+    const { setSubsequentTargetFunds, transOption, formErrors, document } =
+        useContext(RenewalFormDataContext);
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseRenewal.request',
+    });
     const router = useRouter();
 
-    const [fundAllocations, setFundAllocations] = useState<TargetFundAllocation[]>([]);
+    const [fundAllocations, setFundAllocations] = useState<
+        TargetFundAllocation[]
+    >([]);
     const [loader, setLoader] = useState(false);
-    const [transOptions, setTransOptions] = useState<TransactionTypes>((transOption || TransactionTypes.Percentage) as TransactionTypes);
-    const [selectedTransaction, setSelectedTransaction] = useState<TransactionOption>({} as TransactionOption);
+    const [transOptions, setTransOptions] = useState<TransactionTypes>(
+        (transOption || TransactionTypes.Percentage) as TransactionTypes
+    );
+    const [selectedTransaction, setSelectedTransaction] =
+        useState<TransactionOption>({} as TransactionOption);
 
     useEffect(() => {
         const getFundsList = async () => {
@@ -47,7 +66,7 @@ export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly
                 }
 
                 // filtering out duplicate funds coming back from the funds list
-                const uniqueFunds = fundsList.map(fund => {
+                const uniqueFunds = fundsList.map((fund) => {
                     return {
                         fundName: fund.fundName,
                         fundCode: fund.fundCode,
@@ -61,9 +80,14 @@ export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly
 
                 setLoader(false);
             } catch (e) {
-                console.error('RenewalPeriodMultiSelection::Error retrieving funds list', e);
+                console.error(
+                    'RenewalPeriodMultiSelection::Error retrieving funds list',
+                    e
+                );
                 setLoader(false);
-                router.push(`/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_FUNDS_LIST}`);
+                router.push(
+                    `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_FUNDS_LIST}`
+                );
             }
         };
 
@@ -71,8 +95,8 @@ export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly
     }, []);
 
     const setFundAllocation = (fundName: string, val: string) => {
-        setFundAllocations(allocations => {
-            return allocations.map(allocation => {
+        setFundAllocations((allocations) => {
+            return allocations.map((allocation) => {
                 if (allocation.fundName === fundName) {
                     return {
                         ...allocation,
@@ -85,19 +109,28 @@ export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly
     };
 
     useEffect(() => {
-        const funds = fundAllocations.filter(fund => fund.value !== '' && fund.value !== null);
+        const funds = fundAllocations.filter(
+            (fund) => fund.value !== '' && fund.value !== null
+        );
         setSubsequentTargetFunds(funds);
     }, [fundAllocations]);
 
     useEffect(() => {
-        const selectedOption = options.find(item => item.value === transOptions) || ({} as TransactionOption);
+        const selectedOption =
+            options.find((item) => item.value === transOptions) ||
+            ({} as TransactionOption);
         setSelectedTransaction(selectedOption);
     }, [transOptions]);
 
-    const validationError = formErrors?.period ? 'border-2 border-solid border-semantic-error p-2' : 'p2';
+    const validationError = formErrors?.period
+        ? 'border-2 border-solid border-semantic-error p-2'
+        : 'p2';
     return (
         <>
-            <Typography variant={TypographyVariant.H3} className="mb-2 flex flex-wrap gap-5">
+            <Typography
+                variant={TypographyVariant.H3}
+                className="mb-2 flex flex-wrap gap-5"
+            >
                 {t(`period`)}
             </Typography>
 
@@ -105,7 +138,7 @@ export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly
                 label={t(`transactionOption`) as string}
                 className="my-4 w-full max-w-[200px]"
                 options={options}
-                onChange={val => setTransOptions(val as TransactionTypes)}
+                onChange={(val) => setTransOptions(val as TransactionTypes)}
                 size={FieldSize.Small}
                 value={transOptions}
                 disabled={isFormStateReadOnly}
@@ -116,19 +149,36 @@ export default function RenewalPeriodMultiSection({ options, isFormStateReadOnly
             >
                 {fundAllocations.map((fundAlloc, index) => (
                     <div key={index} className="my-2 grid grid-cols-2 gap-4">
-                        <Typography variant={TypographyVariant.LabelMd}>{fundAlloc?.sourceFundName}</Typography>
+                        <Typography variant={TypographyVariant.LabelMd}>
+                            {fundAlloc?.sourceFundName}
+                        </Typography>
 
                         <Field
                             aria-labelledby={`fund-code-${fundAlloc.sourceFundName}`}
-                            onChange={e => {
-                                setFundAllocation(fundAlloc.fundName, xss(e?.target?.value));
+                            onChange={(e) => {
+                                setFundAllocation(
+                                    fundAlloc.fundName,
+                                    xss(e?.target?.value)
+                                );
                             }}
                             value={fundAlloc?.value || ''}
                             size={FieldSize.Small}
-                            trailing={selectedTransaction?.trailing && <div>{selectedTransaction?.trailing}</div>}
-                            leading={selectedTransaction?.leading && <div>{selectedTransaction?.leading}</div>}
+                            trailing={
+                                selectedTransaction?.trailing && (
+                                    <div>{selectedTransaction?.trailing}</div>
+                                )
+                            }
+                            leading={
+                                selectedTransaction?.leading && (
+                                    <div>{selectedTransaction?.leading}</div>
+                                )
+                            }
                             type={FieldType.BaseActive}
-                            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                            variant={
+                                isFormStateReadOnly
+                                    ? FieldVariant.Inactive
+                                    : FieldVariant.Default
+                            }
                         />
                     </div>
                 ))}

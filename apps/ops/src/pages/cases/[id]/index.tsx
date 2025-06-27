@@ -8,7 +8,10 @@ import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import CaseOverview from '@deps/containers/case-sub-page/index';
 import { CaseActivityProvider } from '@deps/contexts/CaseActivityContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Case } from '@deps/models/case/case';
@@ -17,10 +20,20 @@ import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import getCase from '@deps/queries/server/case/get-case';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 interface BaseCaseDetailsPageProps {
     caseDetails: Case;
@@ -30,7 +43,12 @@ interface BaseCaseDetailsPageProps {
 
 type CaseDetailsPageProps = BaseCaseDetailsPageProps & SegmentTrackedPageProps;
 
-const CaseDetailsPage = ({ caseDetails, id, tab, user }: CaseDetailsPageProps) => {
+const CaseDetailsPage = ({
+    caseDetails,
+    id,
+    tab,
+    user,
+}: CaseDetailsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.CaseDetails, { caseId: id });
 
     return (
@@ -58,12 +76,32 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
                 return serverSidePropsLogout();
             }
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
 
-            const hasPermissionToReadCaseManagement = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]
-                ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY, loggingContext)
-                : await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement, loggingContext);
-            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
+            const hasPermissionToReadCaseManagement = featureFlagDecisions?.[
+                FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
+            ]
+                ? await checkTuplePage(
+                      context,
+                      FgaRelation.UiAccess,
+                      FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
+                      loggingContext
+                  )
+                : await doesUserHavePagePermissions(
+                      context,
+                      UserPermission.AllowReadCaseManagement,
+                      loggingContext
+                  );
+            const isAdvisorsExcel = await checkTuplePage(
+                context,
+                FgaRelation.Party,
+                AE_FGA_ROLE,
+                loggingContext
+            );
 
             if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
                 return {
@@ -77,7 +115,10 @@ export const getServerSideProps = withPageAuthAndLogging(
             const id = (params?.id as string) || '';
             const tab = (params?.tab as string) || '';
 
-            const translations = await serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+            const translations = await serverSideTranslations(locale, [
+                TranslationFiles.COMMON,
+                TranslationFiles.COLDEFS,
+            ]);
             const caseDetails = await getCase({
                 partyId: user.partyId,
                 caseId: id,
@@ -114,7 +155,11 @@ export const getServerSideProps = withPageAuthAndLogging(
             };
         },
     },
-    { file: 'cases/[id]/index', function: 'getServerSideProps', page: 'cases/:id' }
+    {
+        file: 'cases/[id]/index',
+        function: 'getServerSideProps',
+        page: 'cases/:id',
+    }
 );
 
 export default CaseDetailsPage;

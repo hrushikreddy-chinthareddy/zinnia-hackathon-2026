@@ -3,11 +3,16 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { WithdrawalSelectionValues } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { AmountType, CaseStatus } from '@deps/models/case/withdrawal/case';
 
-import FormProgramPartialWithdrawal, { PartialWithdrawalOption } from './form-program-partial-withdrawal';
+import FormProgramPartialWithdrawal, {
+    PartialWithdrawalOption,
+} from './form-program-partial-withdrawal';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({
@@ -41,7 +46,8 @@ describe.skip('Partial Withdrawal component', () => {
             {
                 label: 'caseWithdrawal.request.amountDetails.partialWithdrawal.freeWithdrawalAmountOnly',
                 value: WithdrawalSelectionValues.TotalFreeWithdrawal,
-                generatePayloadFromSelection: generatePayloadTotalFreeWithdrawal,
+                generatePayloadFromSelection:
+                    generatePayloadTotalFreeWithdrawal,
             },
             {
                 label: 'caseWithdrawal.request.amountDetails.partialWithdrawal.netWithdrawal',
@@ -106,7 +112,10 @@ describe.skip('Partial Withdrawal component', () => {
         };
         render(
             <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                <FormProgramPartialWithdrawal options={partialWithdrawalOptions} selectionIdentifier={identifySelectedFormProgramOption} />
+                <FormProgramPartialWithdrawal
+                    options={partialWithdrawalOptions}
+                    selectionIdentifier={identifySelectedFormProgramOption}
+                />
             </FormDataContext.Provider>
         );
         it('should render the title', () => {
@@ -117,7 +126,13 @@ describe.skip('Partial Withdrawal component', () => {
 
         it('should render Partial withdrawal options', async () => {
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formProgram }}>
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        formProgram,
+                    }}
+                >
                     <FormProgramPartialWithdrawal
                         options={partialWithdrawalOptions}
                         selectionIdentifier={identifySelectedFormProgramOption}
@@ -125,37 +140,53 @@ describe.skip('Partial Withdrawal component', () => {
                 </FormDataContext.Provider>
             );
 
-            const withdrawalOptions = await screen.getByTestId('pleaseChooseOne-amountField');
+            const withdrawalOptions = await screen.getByTestId(
+                'pleaseChooseOne-amountField'
+            );
             expect(withdrawalOptions).toBeInTheDocument();
 
             await userEvent.click(withdrawalOptions);
 
-            const option1 = screen.getByText('caseWithdrawal.request.amountDetails.partialWithdrawal.freeWithdrawalAmountOnly', {
-                ignore: 'option',
-            });
+            const option1 = screen.getByText(
+                'caseWithdrawal.request.amountDetails.partialWithdrawal.freeWithdrawalAmountOnly',
+                {
+                    ignore: 'option',
+                }
+            );
             expect(option1).toBeInTheDocument();
 
-            const option2 = screen.getByText('caseWithdrawal.request.amountDetails.partialWithdrawal.netWithdrawal', {
-                ignore: 'option',
-            });
+            const option2 = screen.getByText(
+                'caseWithdrawal.request.amountDetails.partialWithdrawal.netWithdrawal',
+                {
+                    ignore: 'option',
+                }
+            );
             expect(option2).toBeInTheDocument();
 
-            const option3 = screen.getByText('caseWithdrawal.request.amountDetails.partialWithdrawal.grossWithdrawal', {
-                ignore: 'option',
-            });
+            const option3 = screen.getByText(
+                'caseWithdrawal.request.amountDetails.partialWithdrawal.grossWithdrawal',
+                {
+                    ignore: 'option',
+                }
+            );
             expect(option3).toBeInTheDocument();
         });
 
         it('should change the payload on freeWithdrawalAmountOnly selection', async () => {
             let setMethodArgs;
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 setMethodArgs = typeof cb === 'function' ? cb(formProgram) : cb;
                 return setMethodArgs;
             });
 
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formProgram, setFormProgram: setMockData }}
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        formProgram,
+                        setFormProgram: setMockData,
+                    }}
                 >
                     <FormProgramPartialWithdrawal
                         options={partialWithdrawalOptions}
@@ -169,9 +200,12 @@ describe.skip('Partial Withdrawal component', () => {
 
             await userEvent.click(withdrawalOptions);
 
-            const option1 = screen.getByText('caseWithdrawal.request.amountDetails.partialWithdrawal.freeWithdrawalAmountOnly', {
-                ignore: 'option',
-            });
+            const option1 = screen.getByText(
+                'caseWithdrawal.request.amountDetails.partialWithdrawal.freeWithdrawalAmountOnly',
+                {
+                    ignore: 'option',
+                }
+            );
 
             expect(option1).toBeInTheDocument();
             await userEvent.click(option1);
@@ -182,13 +216,18 @@ describe.skip('Partial Withdrawal component', () => {
 
         it('should change the payload on netWithdrawal selection', async () => {
             let setMethodArgs;
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 setMethodArgs = typeof cb === 'function' ? cb(formProgram) : cb;
                 return setMethodArgs;
             });
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formProgram, setFormProgram: setMockData }}
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        formProgram,
+                        setFormProgram: setMockData,
+                    }}
                 >
                     <FormProgramPartialWithdrawal
                         options={partialWithdrawalOptions}
@@ -201,9 +240,12 @@ describe.skip('Partial Withdrawal component', () => {
 
             await userEvent.click(withdrawalOptions);
 
-            const option1 = screen.getByText('caseWithdrawal.request.amountDetails.partialWithdrawal.netWithdrawal', {
-                ignore: 'option',
-            });
+            const option1 = screen.getByText(
+                'caseWithdrawal.request.amountDetails.partialWithdrawal.netWithdrawal',
+                {
+                    ignore: 'option',
+                }
+            );
 
             expect(option1).toBeInTheDocument();
             await userEvent.click(option1);
@@ -218,14 +260,19 @@ describe.skip('Partial Withdrawal component', () => {
 
         it('should change the payload on grossWithdrawal selection', async () => {
             let setMethodArgs;
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 setMethodArgs = typeof cb === 'function' ? cb(formProgram) : cb;
                 return setMethodArgs;
             });
 
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formProgram, setFormProgram: setMockData }}
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        formProgram,
+                        setFormProgram: setMockData,
+                    }}
                 >
                     <FormProgramPartialWithdrawal
                         options={partialWithdrawalOptions}
@@ -239,9 +286,12 @@ describe.skip('Partial Withdrawal component', () => {
             expect(withdrawalOptions).toBeInTheDocument();
 
             await userEvent.click(withdrawalOptions);
-            const option1 = screen.getByText('caseWithdrawal.request.amountDetails.partialWithdrawal.grossWithdrawal', {
-                ignore: 'option',
-            });
+            const option1 = screen.getByText(
+                'caseWithdrawal.request.amountDetails.partialWithdrawal.grossWithdrawal',
+                {
+                    ignore: 'option',
+                }
+            );
 
             expect(option1).toBeInTheDocument();
             await userEvent.click(option1);
@@ -256,7 +306,13 @@ describe.skip('Partial Withdrawal component', () => {
 
         it('should show contract replaced component', async () => {
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formProgram }}>
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        formProgram,
+                    }}
+                >
                     <FormProgramPartialWithdrawal
                         options={partialWithdrawalOptions}
                         selectionIdentifier={identifySelectedFormProgramOption}

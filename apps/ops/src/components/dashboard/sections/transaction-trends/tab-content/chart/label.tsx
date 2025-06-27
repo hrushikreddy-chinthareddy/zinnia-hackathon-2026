@@ -16,18 +16,27 @@ interface Props {
     total: number;
 }
 
-export const LabelComponent: React.FC<Props> = ({ labelData, dateStr, total }) => {
+export const LabelComponent: React.FC<Props> = ({
+    labelData,
+    dateStr,
+    total,
+}) => {
     return (
         <div className={styles.labelWrapper}>
             {labelData.map((value, index) => (
                 <div key={index} className={styles.label}>
-                    <div className={styles.color} style={{ backgroundColor: value.color }} />
+                    <div
+                        className={styles.color}
+                        style={{ backgroundColor: value.color }}
+                    />
                     <div className={styles.labelText}>
                         {value.label}: <b>{value.count.toLocaleString()}</b>
                     </div>
                 </div>
             ))}
-            <div className={clsx('typography-labels-label-sm-alt', styles.date)}>
+            <div
+                className={clsx('typography-labels-label-sm-alt', styles.date)}
+            >
                 <i>Closed date: {dateStr}</i>
             </div>
             <div className={styles.total}>

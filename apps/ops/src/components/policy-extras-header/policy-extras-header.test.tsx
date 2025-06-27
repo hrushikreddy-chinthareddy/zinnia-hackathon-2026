@@ -1,9 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { toSentenceCase } from '@deps/helpers/string.helpers';
-import { PolicyExtrasTest, PopoverTest } from '@deps/jest/constants/test-id-constants';
+import {
+    PolicyExtrasTest,
+    PopoverTest,
+} from '@deps/jest/constants/test-id-constants';
 
-import PolicyExtrasHeader, { PolicyExtrasHeaderProps } from './policy-extras-header';
+import PolicyExtrasHeader, {
+    PolicyExtrasHeaderProps,
+} from './policy-extras-header';
 import { ContentVariant } from '../content/content';
 
 describe('PolicyExtrasHeader', () => {
@@ -28,9 +33,16 @@ describe('PolicyExtrasHeader', () => {
     describe('Layout', () => {
         it('renders correctly', () => {
             renderComponent();
-            const headerElement = screen.getByTestId(PolicyExtrasTest.CONTAINER);
+            const headerElement = screen.getByTestId(
+                PolicyExtrasTest.CONTAINER
+            );
             expect(headerElement).toBeInTheDocument();
-            expect(headerElement).toHaveClass('flex', 'flex-col', 'justify-start', 'content-start');
+            expect(headerElement).toHaveClass(
+                'flex',
+                'flex-col',
+                'justify-start',
+                'content-start'
+            );
         });
     });
 
@@ -53,15 +65,21 @@ describe('PolicyExtrasHeader', () => {
             renderComponent();
             // need to use test id instead of text because
             // <b> breaks the matcher
-            const subheaderElement = screen.getByTestId(PolicyExtrasTest.SUBHEADER);
+            const subheaderElement = screen.getByTestId(
+                PolicyExtrasTest.SUBHEADER
+            );
             expect(subheaderElement).toBeInTheDocument();
         });
 
         it('meets design requirements', () => {
             renderComponent();
-            const subheaderElement = screen.getByTestId(PolicyExtrasTest.SUBHEADER);
+            const subheaderElement = screen.getByTestId(
+                PolicyExtrasTest.SUBHEADER
+            );
             const subheaderContainer = subheaderElement.parentElement;
-            expect(subheaderContainer).toHaveClass(`content-${ContentVariant.Body}`);
+            expect(subheaderContainer).toHaveClass(
+                `content-${ContentVariant.Body}`
+            );
         });
     });
 
@@ -92,8 +110,14 @@ describe('PolicyExtrasHeader', () => {
             fireEvent.click(popoverElement);
             const popoverTitle = await screen.findByTestId(PopoverTest.Popover);
             const popoverBody = await screen.findByTestId(PopoverTest.Body);
-            const requiredElements = [popoverElement, popoverBody, popoverTitle];
-            requiredElements.forEach(element => expect(element).toBeInTheDocument());
+            const requiredElements = [
+                popoverElement,
+                popoverBody,
+                popoverTitle,
+            ];
+            requiredElements.forEach((element) =>
+                expect(element).toBeInTheDocument()
+            );
         });
     });
 });

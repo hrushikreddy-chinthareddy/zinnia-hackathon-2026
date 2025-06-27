@@ -6,20 +6,32 @@ import { removeAllFilters } from '@deps/components/history/filters/filter.helper
 import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 import TypeFilters from '@deps/components/history/filters/type-filters';
 import YearFilter from '@deps/components/history/filters/year-filter';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import SideSheet from '@deps/components/side-sheet/side-sheet';
 import { TranslationFiles } from '@deps/config/translations';
-import { HistoryFilters, useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
+import {
+    HistoryFilters,
+    useHistoryFiltersContext,
+} from '@deps/contexts/HistoryFiltersContext';
 
 interface SideSheetHistoryProps {
     isSideSheetOpen: boolean;
     setIsSideSheetOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const SideSheetHistory = ({ isSideSheetOpen, setIsSideSheetOpen }: SideSheetHistoryProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'policy.history.filter' });
+const SideSheetHistory = ({
+    isSideSheetOpen,
+    setIsSideSheetOpen,
+}: SideSheetHistoryProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'policy.history.filter',
+    });
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
-    const [historyFilterCopy, setHistoryFilterCopy] = useState<HistoryFilters>(historyFilters);
+    const [historyFilterCopy, setHistoryFilterCopy] =
+        useState<HistoryFilters>(historyFilters);
 
     useEffect(() => {
         if (!isSideSheetOpen) setHistoryFilterCopy(historyFilters);
@@ -40,7 +52,11 @@ const SideSheetHistory = ({ isSideSheetOpen, setIsSideSheetOpen }: SideSheetHist
     };
 
     return (
-        <SideSheet handleClose={() => handleClose()} header="Filter Events" open={isSideSheetOpen}>
+        <SideSheet
+            handleClose={() => handleClose()}
+            header="Filter Events"
+            open={isSideSheetOpen}
+        >
             <div className="flex flex-col gap-10 px-8 pt-8">
                 <div className="flex flex-col gap-6">
                     <TransactionStatusFilter />
@@ -48,10 +64,18 @@ const SideSheetHistory = ({ isSideSheetOpen, setIsSideSheetOpen }: SideSheetHist
                     <TypeFilters />
                 </div>
                 <div className="flex items-center gap-4">
-                    <Button onClick={() => handleApply()} size={ButtonSize.Small} type={ButtonType.Primary}>
+                    <Button
+                        onClick={() => handleApply()}
+                        size={ButtonSize.Small}
+                        type={ButtonType.Primary}
+                    >
                         {t('applyFilters')}
                     </Button>
-                    <NavElement onClick={() => handleClear()} size={NavElementSize.Small} type={NavElementType.Button}>
+                    <NavElement
+                        onClick={() => handleClear()}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Button}
+                    >
                         {t('clearAllFilters')}
                     </NavElement>
                 </div>

@@ -1,7 +1,13 @@
-import { DisbursementPaymentForm, Frequency } from '@zinnia/api-types/types/sor';
+import {
+    DisbursementPaymentForm,
+    Frequency,
+} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
-export const getPaymentType = (paymentType: DisbursementPaymentForm | null, t: TFunction): string | null => {
+export const getPaymentType = (
+    paymentType: DisbursementPaymentForm | null,
+    t: TFunction
+): string | null => {
     switch (paymentType) {
         case DisbursementPaymentForm.EFT:
             return t('payeeSummaryCard.paymentType.eft');

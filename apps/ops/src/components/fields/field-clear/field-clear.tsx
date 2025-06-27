@@ -12,13 +12,21 @@ interface FieldClearProps {
     inputRef: RefObject<HTMLInputElement>;
 }
 
-export default function FieldClear({ onChange, onClear, label, value, inputRef }: FieldClearProps) {
+export default function FieldClear({
+    onChange,
+    onClear,
+    label,
+    value,
+    inputRef,
+}: FieldClearProps) {
     const { t } = useTranslation();
 
     if (!value) return null;
 
     /* Faking an event with an empty value to clear the input */
-    const clearFakeEvent = { target: inputRef.current } as any as ChangeEvent<HTMLInputElement>;
+    const clearFakeEvent = {
+        target: inputRef.current,
+    } as any as ChangeEvent<HTMLInputElement>;
 
     return (
         <button

@@ -6,7 +6,8 @@ import { OwnerInformation } from '@deps/models/case/task';
 import getDlicConfig from './dlic-form.helpers';
 
 describe('#DLIC renewal form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
 
     const dlicConfig = getDlicConfig(t);
     describe('Config existence', () => {
@@ -47,7 +48,9 @@ describe('#DLIC renewal form config', () => {
         ];
 
         it('should provide no errors for a valid form', () => {
-            expect(formValidation({ ownerInformation, subsequentTargetFunds })).toEqual({});
+            expect(
+                formValidation({ ownerInformation, subsequentTargetFunds })
+            ).toEqual({});
         });
     });
 });

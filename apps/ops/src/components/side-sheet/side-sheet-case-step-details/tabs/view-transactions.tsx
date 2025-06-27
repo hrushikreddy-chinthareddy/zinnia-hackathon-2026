@@ -2,15 +2,22 @@ import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 
 import { ViewTransactionsProps } from './transactions-step-additional-data.types';
 import TransactionsTable from './transactions-table';
 
-export function ViewTransactions({ stepAdditionalData, prop }: ViewTransactionsProps) {
+export function ViewTransactions({
+    stepAdditionalData,
+    prop,
+}: ViewTransactionsProps) {
     const { t } = useTranslation();
     const entityId = stepAdditionalData.value;
     const {
@@ -21,7 +28,9 @@ export function ViewTransactions({ stepAdditionalData, prop }: ViewTransactionsP
         queryKey: ['claimsTransactions', entityId],
         queryFn: () => getTransactionEntityQuery(entityId),
     });
-    const programs = transactionEntity ? transactionEntity?.entity?.stopPrograms?.[prop] : [];
+    const programs = transactionEntity
+        ? transactionEntity?.entity?.stopPrograms?.[prop]
+        : [];
 
     const displayNoTransactions = () => {
         return (
@@ -30,11 +39,17 @@ export function ViewTransactions({ stepAdditionalData, prop }: ViewTransactionsP
                     <AssistiveText
                         text={t('transactionListing.noTransactionsFoundTitle')}
                         variant={AssistiveTextVariant.Default}
-                        iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                        iconOverride={
+                            <Icon
+                                width={16}
+                                height={16}
+                                type={IconType.DOCUMENT_TEXT}
+                            />
+                        }
                     />
                 </div>
             </div>
-        )
+        );
     };
 
     if (isLoading) {
@@ -50,7 +65,10 @@ export function ViewTransactions({ stepAdditionalData, prop }: ViewTransactionsP
                     />
                 </div>
                 <div>
-                    <Typography variant={TypographyVariant.BodySmBold} className={'text-gray-600'}>
+                    <Typography
+                        variant={TypographyVariant.BodySmBold}
+                        className={'text-gray-600'}
+                    >
                         {t('transactionListing.loadingTransactions')}
                     </Typography>
                 </div>
@@ -62,10 +80,19 @@ export function ViewTransactions({ stepAdditionalData, prop }: ViewTransactionsP
         return (
             <div className="flex w-full flex-col">
                 <div className="mt-0.5">
-                    <InProgressIcon height={18} width={18} role="presentation" aria-hidden={true} className="shrink-0 text-gray-600" />
+                    <InProgressIcon
+                        height={18}
+                        width={18}
+                        role="presentation"
+                        aria-hidden={true}
+                        className="shrink-0 text-gray-600"
+                    />
                 </div>
                 <div>
-                    <Typography variant={TypographyVariant.BodySmBold} className={'text-gray-600'}>
+                    <Typography
+                        variant={TypographyVariant.BodySmBold}
+                        className={'text-gray-600'}
+                    >
                         {t('transactionListing.errorGettingTransactions')}
                     </Typography>
                 </div>
@@ -80,12 +107,11 @@ export function ViewTransactions({ stepAdditionalData, prop }: ViewTransactionsP
                     {t('transactionListing.stoppedTransactions')}
                 </Typography>
             </div>
-            { programs && programs?.length > 0 ? (
-                    <TransactionsTable transactions={programs} t={t} />
-                ) : (
-                    displayNoTransactions()
-                )
-            }
+            {programs && programs?.length > 0 ? (
+                <TransactionsTable transactions={programs} t={t} />
+            ) : (
+                displayNoTransactions()
+            )}
         </div>
     );
-};
+}

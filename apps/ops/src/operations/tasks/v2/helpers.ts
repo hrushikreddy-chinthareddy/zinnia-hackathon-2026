@@ -1,8 +1,14 @@
 import { TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, ActiveWithdrawalCaseData } from '@deps/models/case/withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    ActiveWithdrawalCaseData,
+} from '@deps/models/case/withdrawal/case';
 
-export const mapTaskToActiveWithdrawalCaseTask = (data: ManagementTask<TaskStatus>, payload: ActiveWithdrawalCaseData): ActiveWithdrawalCase => {
+export const mapTaskToActiveWithdrawalCaseTask = (
+    data: ManagementTask<TaskStatus>,
+    payload: ActiveWithdrawalCaseData
+): ActiveWithdrawalCase => {
     return {
         taskId: data.id,
         carrier: data.carrier,
@@ -12,11 +18,14 @@ export const mapTaskToActiveWithdrawalCaseTask = (data: ManagementTask<TaskStatu
         updatedDate: data.updatedAt,
         createdDate: data.createdAt,
         source: 'Zinnia.TaskManagement',
-        data: payload
-    }
-}
+        data: payload,
+    };
+};
 
-export const mapTaskToActiveRenewalCaseTask = (data: ManagementTask<TaskStatus>, payload: any): any => {
+export const mapTaskToActiveRenewalCaseTask = (
+    data: ManagementTask<TaskStatus>,
+    payload: any
+): any => {
     return {
         taskId: data.id,
         carrier: data.carrier,
@@ -27,6 +36,6 @@ export const mapTaskToActiveRenewalCaseTask = (data: ManagementTask<TaskStatus>,
         createdDate: data.createdAt,
         createdByPartyId: data?.createdByPartyId,
         source: 'Zinnia.TaskManagement',
-        data: payload
-    }
-}
+        data: payload,
+    };
+};

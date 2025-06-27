@@ -1,4 +1,9 @@
-import { FlatExtraType, Party, PolicyCoverage, SystematicProgram } from '@zinnia/api-types/types/sor';
+import {
+    FlatExtraType,
+    Party,
+    PolicyCoverage,
+    SystematicProgram,
+} from '@zinnia/api-types/types/sor';
 
 import { getBankDetails, getFlatExtra, getParty } from './payments.helpers';
 
@@ -11,7 +16,10 @@ describe('payments.helper.ts', () => {
             const systematicProgram: SystematicProgram = {
                 party: [{ bankId: '1' }],
             };
-            expect(getBankDetails(party, systematicProgram)).toEqual({ accountNumber: '12345', bankId: '1' });
+            expect(getBankDetails(party, systematicProgram)).toEqual({
+                accountNumber: '12345',
+                bankId: '1',
+            });
         });
 
         it('should return undefined if party and systematicprogram is undefined', () => {
@@ -40,11 +48,19 @@ describe('payments.helper.ts', () => {
             const coverage: PolicyCoverage = {
                 coverageLayers: [
                     {
-                        coverageParticipants: [{ flatExtra: [{ flatExtraType: FlatExtraType.TEMP }] }],
+                        coverageParticipants: [
+                            {
+                                flatExtra: [
+                                    { flatExtraType: FlatExtraType.TEMP },
+                                ],
+                            },
+                        ],
                     },
                 ],
             };
-            expect(getFlatExtra(coverage)).toEqual([{ flatExtraType: FlatExtraType.TEMP }]);
+            expect(getFlatExtra(coverage)).toEqual([
+                { flatExtraType: FlatExtraType.TEMP },
+            ]);
         });
 
         it('should return an empty array if coverage is undefined', () => {
@@ -77,7 +93,10 @@ describe('payments.helper.ts', () => {
             const systematicProgram: SystematicProgram = {
                 party: [{ partyId: '2' }],
             };
-            expect(getParty(parties, systematicProgram)).toEqual({ partyId: '2', firstName: 'Party-2' });
+            expect(getParty(parties, systematicProgram)).toEqual({
+                partyId: '2',
+                firstName: 'Party-2',
+            });
         });
 
         it('should return undefined if parties is undefined', () => {

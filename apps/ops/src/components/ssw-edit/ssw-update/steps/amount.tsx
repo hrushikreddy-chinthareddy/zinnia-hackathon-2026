@@ -2,11 +2,19 @@ import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import xss from 'xss';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '@deps/components/fields/field-date-select/field-date-select';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import SelectSimple from '@deps/components/select/select';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Frequency } from '@deps/models/case/withdrawal/case';
@@ -43,9 +51,19 @@ type AmountProps = {
     isReadOnly: boolean;
 };
 
-const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate.tabs.amount' });
-    const formNextDate = updateProgram?.nextDate ? dayjs(updateProgram?.nextDate, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT) : '';
+const Amount = ({
+    updateProgram,
+    onProgramUpdate,
+    isReadOnly,
+}: AmountProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'sswUpdate.tabs.amount',
+    });
+    const formNextDate = updateProgram?.nextDate
+        ? dayjs(updateProgram?.nextDate, ZAHARA_API_DATE_FORMAT).format(
+              DATE_PICKER_FORMAT
+          )
+        : '';
     const { goToNext } = useWorkflow();
     const setSSWData = <Type,>(val: Type, key: string) => {
         onProgramUpdate((fs: SSWProgram) => ({
@@ -57,7 +75,11 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
     const handleNextDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onProgramUpdate((fs: SSWProgram) => ({
             ...fs,
-            nextDate: formNextDate ? dayjs(e.target.value, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) : '',
+            nextDate: formNextDate
+                ? dayjs(e.target.value, DATE_PICKER_FORMAT).format(
+                      ZAHARA_API_DATE_FORMAT
+                  )
+                : '',
         }));
     };
 
@@ -78,14 +100,18 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
                 <div>
                     <Field
                         label={t(`programAmount`) as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setSSWData(xss(e?.target?.value), 'amount');
                         }}
                         value={updateProgram?.amount || ''}
                         size={FieldSize.Small}
                         leading={<div>$</div>}
                         type={FieldType.BaseActive}
-                        variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         data-testid={`amount`}
                         formatOptions={{
                             format: '',
@@ -100,7 +126,9 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
                         className="max-w-lg my-2"
                         label={t('programFrequency') as string}
                         options={frequencyOptions(t)}
-                        onChange={(val: string) => setSSWData(val as Frequency, 'frequency')}
+                        onChange={(val: string) =>
+                            setSSWData(val as Frequency, 'frequency')
+                        }
                         size={FieldSize.Small}
                         value={updateProgram?.frequency}
                         name="frequency"
@@ -108,9 +136,13 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
                     />
 
                     <Field
-                        variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         label={t(`programDuration`) as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setSSWData(xss(e?.target?.value), 'duration');
                         }}
                         value={updateProgram?.duration || ''}
@@ -126,11 +158,15 @@ const Amount = ({ updateProgram, onProgramUpdate, isReadOnly }: AmountProps) => 
                     />
 
                     <FieldDateSelect
-                        variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         label={t('programNextDate') as string}
                         id="nextDate"
                         isFutureDateDisabled={false}
-                        onChange={e => handleNextDateChange(e)}
+                        onChange={(e) => handleNextDateChange(e)}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={formNextDate}

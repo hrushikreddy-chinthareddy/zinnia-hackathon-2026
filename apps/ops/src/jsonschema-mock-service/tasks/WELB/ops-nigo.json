@@ -144,7 +144,13 @@
                     "required": ["issueResolved"]
                 },
                 "uiSchema": {
-                    "ui:order": ["issuesList", "details", "issueResolved", "uploadDocuments", "attachments"],
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "issueResolved",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:submitButtonOptions": {
                         "norender": true
                     },

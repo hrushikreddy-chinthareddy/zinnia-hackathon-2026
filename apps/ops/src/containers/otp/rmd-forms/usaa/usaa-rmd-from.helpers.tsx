@@ -29,7 +29,7 @@ import {
     PhoneTypes,
     AddressTypes,
     FormDisbursement,
-    AccountType
+    AccountType,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -40,41 +40,66 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import { FormSubtype, spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import {
+    FormSubtype,
+    spousalSignatureStateCodes,
+} from '../../withdrawal-forms/flic-withdrawal-form.helpers';
 
 export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
-    const rmdFormValidation = ({ formSignature, formDisbursement, formProgram }: Partial<FormParts> = {}): FormValidationErrors => {
+    const rmdFormValidation = ({
+        formSignature,
+        formDisbursement,
+        formProgram,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
-        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
             ) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
             }
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
             ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
             }
         }
         const ownerSignature = formSignature?.signatures?.find(
-            sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
         );
 
         const rmds = formProgram?.rmd?.rmdPrograms;
 
         if (rmds && rmds?.length === 0) {
-            errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
+            errors['rmdMinimumRequiredProgram'] = t(
+                'rmdMethod.rmdWarnings.minimumRequiredProgram'
+            );
         }
 
         // No choice made for signature
-        if (ownerSignature && ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                'formValidation.signaturePresentOptionMustBeSelected'
-            );
+        if (
+            ownerSignature &&
+            ownerSignature?.isSigned !== false &&
+            !ownerSignature?.isSigned
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+            ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
         return errors;
@@ -114,7 +139,10 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -127,11 +155,16 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -150,7 +183,8 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
                 };
@@ -185,7 +219,8 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -212,23 +247,38 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     component: DisbursementFields.BankAddress,
                 },
             ],
-            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+            getDefaultPayload: ({
+                paymentMethod,
+                paymentMailType,
+                isDifferentPayeeOrAddress,
+                payee,
+            }: FormDisbursement) => {
+                if (
+                    paymentMethod.text === PaymentMailType.Check &&
+                    paymentMailType.text === null
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        selectIfPayeeIsDifferent:
+                            isDifferentPayeeOrAddress.text ?? '',
                         address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
                         payeeName: payee?.name?.text ?? '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                selectIfPayeeIsDifferent,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
-                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    isDifferentPayeeOrAddress: {
+                        text: selectIfPayeeIsDifferent || false,
+                    },
                     payee: {
                         name: { text: payeeName || null },
                         addresses: [address || DEFAULT_ADDRESS],
@@ -284,7 +334,8 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
             ],
             agentRecommendation: {
                 label: t('additionalInformation.isAgentOrBrokerRecommended'),
-                shouldDisplay: (formSubtype: FormSubtype) => formSubtype === FormSubtype.FullWithdrawal,
+                shouldDisplay: (formSubtype: FormSubtype) =>
+                    formSubtype === FormSubtype.FullWithdrawal,
             },
         },
         {
@@ -320,8 +371,14 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Prorata,
+        },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const irsSignatureConfig = [
@@ -379,7 +436,9 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -402,9 +461,12 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
             shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
-                return isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[]);
+                return isIrrevocableBeneficiaryExistsLC(
+                    parties as LifeCadParty[]
+                );
             },
         },
         {
@@ -424,8 +486,15 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
+                return (
+                    !!ownerStateOfResidence &&
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
+                );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },

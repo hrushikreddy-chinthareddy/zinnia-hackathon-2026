@@ -21,7 +21,12 @@ export enum ViewState {
     Warn = 'warn',
 }
 
-export const handleResponse = ({ response, setViewState, setValidationResults, setNewCaseId }: HandleResponse) => {
+export const handleResponse = ({
+    response,
+    setViewState,
+    setValidationResults,
+    setNewCaseId,
+}: HandleResponse) => {
     switch (response?.status) {
         case StatusCode.Accepted:
             setViewState(ViewState.Success);

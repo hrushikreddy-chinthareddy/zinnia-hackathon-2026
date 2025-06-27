@@ -3,16 +3,27 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import SideSheetAllocations from '@deps/components/side-sheet/side-sheet-allocations/side-sheet-allocations';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    numberFormatify,
+    percentFormatify,
+} from '@deps/helpers/numbers.helpers';
 import { safeString } from '@deps/helpers/string.helpers';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 
 export interface AllocationCardProps {
@@ -37,7 +48,10 @@ export interface RelationshipToInsuredProps {
     relationshipToInsured?: string;
 }
 
-const getEstimatedAmount = (allocation: number | undefined, deathBenefit: number | undefined) => {
+const getEstimatedAmount = (
+    allocation: number | undefined,
+    deathBenefit: number | undefined
+) => {
     if (allocation && deathBenefit) {
         return (allocation / 100) * deathBenefit;
     } else {
@@ -45,37 +59,60 @@ const getEstimatedAmount = (allocation: number | undefined, deathBenefit: number
     }
 };
 
-export const AllocationPercentage = ({ allocation }: AllocationPercentageProps) => {
+export const AllocationPercentage = ({
+    allocation,
+}: AllocationPercentageProps) => {
     const { t } = useTranslation();
 
     return (
         <div className="mr-8 flex flex-col items-start ">
-            <Label variant={LabelVariant.FieldLabel} label={t('people.card.allocation.label')} />
-            <Typography variant={TypographyVariant.Value}>{percentFormatify(allocation, { isInteger: true })}</Typography>
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={t('people.card.allocation.label')}
+            />
+            <Typography variant={TypographyVariant.Value}>
+                {percentFormatify(allocation, { isInteger: true })}
+            </Typography>
         </div>
     );
 };
 
-const AllocationAmount = ({ allocation, deathBenefit }: AllocationAmountProps) => {
+const AllocationAmount = ({
+    allocation,
+    deathBenefit,
+}: AllocationAmountProps) => {
     const { t } = useTranslation();
     const estimatedAmount = getEstimatedAmount(allocation, deathBenefit);
     return (
         <div className="flex flex-col items-start">
             <div className="flex">
-                <Label variant={LabelVariant.FieldLabel} className="mr-2" label={t('people.card.allocation.amount')} />
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    className="mr-2"
+                    label={t('people.card.allocation.amount')}
+                />
             </div>
-            <Typography variant={TypographyVariant.Value}>{numberFormatify(estimatedAmount)}</Typography>
+            <Typography variant={TypographyVariant.Value}>
+                {numberFormatify(estimatedAmount)}
+            </Typography>
         </div>
     );
 };
 
-const RelationshipToInsuredInfo = ({ relationshipToInsured }: RelationshipToInsuredProps) => {
+const RelationshipToInsuredInfo = ({
+    relationshipToInsured,
+}: RelationshipToInsuredProps) => {
     const { t } = useTranslation();
 
     return (
         <div className="flex flex-col items-start">
-            <Label variant={LabelVariant.FieldLabel} label={t('people.card.allocation.relationshipToInsured')} />
-            <Typography variant={TypographyVariant.BodySm}>{safeString(relationshipToInsured)}</Typography>
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={t('people.card.allocation.relationshipToInsured')}
+            />
+            <Typography variant={TypographyVariant.BodySm}>
+                {safeString(relationshipToInsured)}
+            </Typography>
         </div>
     );
 };
@@ -93,7 +130,10 @@ const AllocationCard = ({
     const sideSheet = useSideSheetContext();
     const openSidesheet = () => {
         sideSheet.changeSideSheetContent(
-            <SideSheetPeopleHeader action={NonFinancialTransactionActions.Edit} transaction={NonFinancialTransactions.Allocations} />,
+            <SideSheetPeopleHeader
+                action={NonFinancialTransactionActions.Edit}
+                transaction={NonFinancialTransactions.Allocations}
+            />,
             <SideSheetAllocations
                 policy={policy}
                 refreshPolicy={refreshPolicy}
@@ -113,13 +153,18 @@ const AllocationCard = ({
             <div className="flex flex-wrap gap-x-4 gap-y-2 font-primary md:max-w-full lg:pl-8">
                 <div className="flex flex-nowrap">
                     <AllocationPercentage allocation={allocation} />
-                    <AllocationAmount allocation={allocation} deathBenefit={deathBenefit} />
+                    <AllocationAmount
+                        allocation={allocation}
+                        deathBenefit={deathBenefit}
+                    />
                 </div>
 
                 {isIndividual && (
                     <>
                         <hr className="m-0 h-0 border-0 xs:basis-full md:basis-0 " />
-                        <RelationshipToInsuredInfo relationshipToInsured={relationshipToInsured} />
+                        <RelationshipToInsuredInfo
+                            relationshipToInsured={relationshipToInsured}
+                        />
                     </>
                 )}
             </div>
@@ -128,13 +173,19 @@ const AllocationCard = ({
         estimatedValue = (
             <div className="flex font-primary lg:pl-8">
                 <AllocationPercentage allocation={allocation} />
-                {isIndividual && <RelationshipToInsuredInfo relationshipToInsured={relationshipToInsured} />}
+                {isIndividual && (
+                    <RelationshipToInsuredInfo
+                        relationshipToInsured={relationshipToInsured}
+                    />
+                )}
             </div>
         );
     }
 
     return (
-        <CardContainer classNames={'flex w-full flex-col items-start text-gray-900'}>
+        <CardContainer
+            classNames={'flex w-full flex-col items-start text-gray-900'}
+        >
             <div className="flex w-full flex-col">
                 <div className="mb-4 flex flex-row items-center">
                     <Typography variant={TypographyVariant.H2} className="mr-5">

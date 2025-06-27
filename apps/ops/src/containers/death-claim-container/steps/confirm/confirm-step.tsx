@@ -4,8 +4,14 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-claim.helpers';
@@ -19,14 +25,34 @@ interface ConfirmStepProps {
 }
 
 const ConfirmStep = ({ policy }: ConfirmStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.confirmStep' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'deathClaims.confirmStep',
+    });
     const router = useRouter();
-    const { submitFailed, setSubmitFailed, notifiers, owners, beneficiaries, setCaseId, caseId, onbaseCaseId, onbaseDocumentNumber } = useDeathClaim();
+    const {
+        submitFailed,
+        setSubmitFailed,
+        notifiers,
+        owners,
+        beneficiaries,
+        setCaseId,
+        caseId,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+    } = useDeathClaim();
     const [isLoading, setIsLoading] = useState(false);
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(policy, null, notifiers, owners, beneficiaries, onbaseCaseId, onbaseDocumentNumber);
+        const payload = buildClaimPaylod(
+            policy,
+            null,
+            notifiers,
+            owners,
+            beneficiaries,
+            onbaseCaseId,
+            onbaseDocumentNumber
+        );
         browserLogInfo('ConfirmStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,
@@ -67,7 +93,13 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <CardInfo
-                icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                icon={
+                    <CircleCheckIcon
+                        className="text-semantic-success"
+                        height={50}
+                        width={50}
+                    />
+                }
                 subtitle={t('subTitle', { caseId: caseId })}
                 title={t('title')}
                 cta={{
@@ -79,7 +111,11 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
                 secondaryCta={
                     <NavElement
                         aria-label={t('secondaryCta') as string}
-                        onClick={() => router.push(`/policies/${policy.product?.planCode}/${policy.policyNumber}`)}
+                        onClick={() =>
+                            router.push(
+                                `/policies/${policy.product?.planCode}/${policy.policyNumber}`
+                            )
+                        }
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
                         variant={NavElementVariant.Default}

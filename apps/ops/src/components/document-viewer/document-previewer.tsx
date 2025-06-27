@@ -2,9 +2,16 @@ import { useTranslation } from 'next-i18next';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { CaseDocumentClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import {
+    CaseDocumentClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '../nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '../nav-element/nav-element';
 import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
 export interface DocumentPreviewerProps {
@@ -29,12 +36,15 @@ export default function DocumentPreviewer({
     const { sessionId, partyId } = usePermissionsContext();
 
     const trackDocumentPreview = () => {
-        segmentAnalyticsTrackEvent<CaseDocumentClickedEvent>(SegmentTrackedEventName.CaseDocumentClicked, {
-            session_id: sessionId,
-            userId: partyId,
-            type: 'Preview',
-            documentId,
-        });
+        segmentAnalyticsTrackEvent<CaseDocumentClickedEvent>(
+            SegmentTrackedEventName.CaseDocumentClicked,
+            {
+                session_id: sessionId,
+                userId: partyId,
+                type: 'Preview',
+                documentId,
+            }
+        );
     };
 
     return (

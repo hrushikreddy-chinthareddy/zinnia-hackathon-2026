@@ -4,16 +4,29 @@ import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import ButtonGroup from '@deps/components/button-group/button-group';
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import SelectSimple from '@deps/components/select/select';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
+import {
+    WithdrawalType,
+    useWithdrawal,
+} from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
@@ -34,16 +47,24 @@ export type AmountType = {
 };
 
 const Amount = ({ policy }: WithdrawalContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'withdrawals.amount' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'withdrawals.amount',
+    });
     const { goToNext } = useWorkflow();
     const { withdrawal, setWithdrawal } = useWithdrawal();
-    const { disbursementType, type: withdrawalType, effectiveDate } = withdrawal;
+    const {
+        disbursementType,
+        type: withdrawalType,
+        effectiveDate,
+    } = withdrawal;
     const [formError, setFormError] = useState<null | string>(null);
 
     const incompleteError = t('incompleteForm');
     const missingAmountError = t('missingAmount');
     const exceedMaximumError = t('exceedMaximum', {
-        maxAmountToWithdrawal: numberFormatify(policy.withdrawalValues?.maximumWithdrawalAmount),
+        maxAmountToWithdrawal: numberFormatify(
+            policy.withdrawalValues?.maximumWithdrawalAmount
+        ),
     });
     const invalidDate = t('effectiveDateError');
 
@@ -65,7 +86,9 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
 
     const toggleLabels = (t: TFunction): LabelValue<WithdrawalType>[] => [
         {
-            label: `${t('surrender')} (${numberFormatify(policy.accountValues?.surrenderValue || 0)})`,
+            label: `${t('surrender')} (${numberFormatify(
+                policy.accountValues?.surrenderValue || 0
+            )})`,
             value: WithdrawalType.Surrender,
             testId: WithdrawalType.Surrender,
         },
@@ -92,15 +115,32 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
         }
 
         // Cleaning formatted string dollar to parseable number string
-        const isCustom = Number((withdrawal.withdrawalAmount as string).replace(/[^0-9.-]+/g, '')) === 0;
-        const withdrawalAmount = isCustom ? withdrawal.withdrawalCustomAmount : withdrawal.withdrawalAmount;
-        const roundedMaxAmt = Math.round(Number(policy.withdrawalValues?.maximumWithdrawalAmount) * 100) / 100;
+        const isCustom =
+            Number(
+                (withdrawal.withdrawalAmount as string).replace(
+                    /[^0-9.-]+/g,
+                    ''
+                )
+            ) === 0;
+        const withdrawalAmount = isCustom
+            ? withdrawal.withdrawalCustomAmount
+            : withdrawal.withdrawalAmount;
+        const roundedMaxAmt =
+            Math.round(
+                Number(policy.withdrawalValues?.maximumWithdrawalAmount) * 100
+            ) / 100;
 
         if (isPartial && !withdrawalAmount) {
             return setFormError(missingAmountError);
         }
 
-        if (isPartial && roundedMaxAmt < parseFloat((withdrawalAmount as string).replace(/[^0-9.-]+/g, ''))) {
+        if (
+            isPartial &&
+            roundedMaxAmt <
+                parseFloat(
+                    (withdrawalAmount as string).replace(/[^0-9.-]+/g, '')
+                )
+        ) {
             return setFormError(exceedMaximumError);
         }
 
@@ -125,19 +165,39 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
 
     useEffect(() => {
         if (isSurrender) {
-            setWithdrawal(prevState => ({ ...prevState, disbursementType: DisbursementType.GROSS }));
+            setWithdrawal((prevState) => ({
+                ...prevState,
+                disbursementType: DisbursementType.GROSS,
+            }));
         }
     }, [isSurrender, setWithdrawal]);
 
     useEffect(() => {
         if (withdrawalType === WithdrawalType.Surrender) {
-            setWithdrawal(prevState => ({ ...prevState, amount: parseFloat((policy.accountValues?.surrenderValue || 0).toFixed(2)) }));
+            setWithdrawal((prevState) => ({
+                ...prevState,
+                amount: parseFloat(
+                    (policy.accountValues?.surrenderValue || 0).toFixed(2)
+                ),
+            }));
         } else {
-            const isCustom = Number((withdrawal.withdrawalAmount as string).replace(/[^0-9.-]+/g, '')) === 0;
-            const partialAmount = isCustom ? withdrawal.withdrawalCustomAmount : withdrawal.withdrawalAmount;
-            const partialAmountNum = Number(partialAmount?.replace(/[^0-9.-]+/g, '')) || 0;
+            const isCustom =
+                Number(
+                    (withdrawal.withdrawalAmount as string).replace(
+                        /[^0-9.-]+/g,
+                        ''
+                    )
+                ) === 0;
+            const partialAmount = isCustom
+                ? withdrawal.withdrawalCustomAmount
+                : withdrawal.withdrawalAmount;
+            const partialAmountNum =
+                Number(partialAmount?.replace(/[^0-9.-]+/g, '')) || 0;
 
-            setWithdrawal(prevState => ({ ...prevState, amount: partialAmountNum }));
+            setWithdrawal((prevState) => ({
+                ...prevState,
+                amount: partialAmountNum,
+            }));
         }
     }, [
         policy.accountValues?.surrenderValue,
@@ -148,7 +208,9 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
     ]);
     // TODO MG: pass in trackEventProps so we dont have to do this in every step
     const transactionType = useMemo(() => {
-        return withdrawal.type === WithdrawalType.Surrender ? TransactionType.FULL_SURRENDER : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+        return withdrawal.type === WithdrawalType.Surrender
+            ? TransactionType.FULL_SURRENDER
+            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     return (
@@ -160,60 +222,112 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
                     parentPage={ParentPage.Withdrawals}
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
-                    trackEventProps={{ type: transactionType, step: TransactionStep.Amount }}
+                    trackEventProps={{
+                        type: transactionType,
+                        step: TransactionStep.Amount,
+                    }}
                 />
             }
         >
             <div className="flex flex-col gap-10">
-                <div className="flex flex-col gap-4" data-testid="withdrawal-amount">
-                    <Typography variant={TypographyVariant.LabelLg} data-testid="withdrawal-amount-label">
+                <div
+                    className="flex flex-col gap-4"
+                    data-testid="withdrawal-amount"
+                >
+                    <Typography
+                        variant={TypographyVariant.LabelLg}
+                        data-testid="withdrawal-amount-label"
+                    >
                         {t('withdrawalTypeLabel')}
                     </Typography>
-                    <div className="flex flex-col" data-testid="withdrawal-amount-radio">
+                    <div
+                        className="flex flex-col"
+                        data-testid="withdrawal-amount-radio"
+                    >
                         <div
-                            className={withdrawalType === WithdrawalType.Partial ? 'mb-6 flex flex-col gap-2' : 'flex flex-col gap-2'}
+                            className={
+                                withdrawalType === WithdrawalType.Partial
+                                    ? 'mb-6 flex flex-col gap-2'
+                                    : 'flex flex-col gap-2'
+                            }
                             data-testid={WithdrawalType}
                         >
                             <ButtonGroup
                                 activeValue={withdrawalType}
                                 groupLabel={t('distributionType')}
                                 labels={toggleLabels(t)}
-                                toggle={value => setWithdrawal({ ...withdrawal, type: value as WithdrawalType })}
+                                toggle={(value) =>
+                                    setWithdrawal({
+                                        ...withdrawal,
+                                        type: value as WithdrawalType,
+                                    })
+                                }
                             />
-                            {isSurrender && <AssistiveText variant={AssistiveTextVariant.Info} text={t('assistiveText')}></AssistiveText>}
+                            {isSurrender && (
+                                <AssistiveText
+                                    variant={AssistiveTextVariant.Info}
+                                    text={t('assistiveText')}
+                                ></AssistiveText>
+                            )}
                         </div>
                         {withdrawalType !== WithdrawalType.Default && (
                             <>
                                 <SelectSimple
-                                    className={isSurrender ? 'my-6 flex max-w-[155px]' : 'mb-6 flex max-w-[155px]'}
-                                    labelTooltip={t('disbursementType') as string}
-                                    labelTooltipBody={t('disbursementTypeTooltip') as string}
+                                    className={
+                                        isSurrender
+                                            ? 'my-6 flex max-w-[155px]'
+                                            : 'mb-6 flex max-w-[155px]'
+                                    }
+                                    labelTooltip={
+                                        t('disbursementType') as string
+                                    }
+                                    labelTooltipBody={
+                                        t('disbursementTypeTooltip') as string
+                                    }
                                     label={t('disbursementType') as string}
                                     aria-label={t('disbursementType') as string}
                                     options={disbursementTypes}
                                     value={disbursementType}
-                                    onChange={value => {
+                                    onChange={(value) => {
                                         if (isPartial) {
-                                            setWithdrawal({ ...withdrawal, disbursementType: value as DisbursementType });
+                                            setWithdrawal({
+                                                ...withdrawal,
+                                                disbursementType:
+                                                    value as DisbursementType,
+                                            });
                                         }
                                     }}
                                     disabled={isSurrender}
                                     size={FieldSize.Small}
-                                    variant={isSurrender ? FieldVariant.Inactive : undefined}
+                                    variant={
+                                        isSurrender
+                                            ? FieldVariant.Inactive
+                                            : undefined
+                                    }
                                 />
                                 <FieldDateSelect
                                     isFutureDateDisabled={false}
                                     formatOptions={{ format: '##/##/####' }}
                                     className="flex max-w-[160px]"
                                     labelTooltip={t('effectiveDate') as string}
-                                    labelTooltipBody={t('effectiveDateTooltip') as string}
+                                    labelTooltipBody={
+                                        t('effectiveDateTooltip') as string
+                                    }
                                     label={t('effectiveDate') as string}
                                     value={effectiveDate}
                                     onChange={handleDateChange}
                                     size={FieldSize.Small}
                                     type={FieldType.BaseActive}
-                                    variant={isDateValid(effectiveDate) ? FieldVariant.Default : FieldVariant.Error}
-                                    message={isDateValid(effectiveDate) ? undefined : invalidDate}
+                                    variant={
+                                        isDateValid(effectiveDate)
+                                            ? FieldVariant.Default
+                                            : FieldVariant.Error
+                                    }
+                                    message={
+                                        isDateValid(effectiveDate)
+                                            ? undefined
+                                            : invalidDate
+                                    }
                                 />
                             </>
                         )}
@@ -230,7 +344,11 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
                             formError !== invalidDate &&
                             formError !== missingAmountError &&
                             !withdrawalType && (
-                                <AssistiveText className="mt-2" variant={AssistiveTextVariant.Error} text={formError}></AssistiveText>
+                                <AssistiveText
+                                    className="mt-2"
+                                    variant={AssistiveTextVariant.Error}
+                                    text={formError}
+                                ></AssistiveText>
                             )}
                     </div>
                 </div>

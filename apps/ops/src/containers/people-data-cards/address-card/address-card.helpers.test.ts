@@ -23,7 +23,10 @@ describe('sortAddressesByType', () => {
 
     it('should prioritize preferred addresses', () => {
         const preferredAddressIndicator = '3';
-        const sortedAddresses = sortAddressesByType({ addresses, preferredAddressIndicator });
+        const sortedAddresses = sortAddressesByType({
+            addresses,
+            preferredAddressIndicator,
+        });
         expect(sortedAddresses[0].addressId).toBe(preferredAddressIndicator);
     });
 });

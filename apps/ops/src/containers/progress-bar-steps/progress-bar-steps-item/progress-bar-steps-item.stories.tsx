@@ -14,7 +14,7 @@ export default {
         onClick: { action: 'clicked' },
     },
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>

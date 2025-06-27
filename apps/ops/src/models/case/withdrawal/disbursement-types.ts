@@ -1,7 +1,10 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { BankDetailsInputMethod, BankingFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
+import {
+    BankDetailsInputMethod,
+    BankingFields,
+} from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import { SignatureValidationField } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation';
 import { RadioItem } from '@deps/components/radio/radio';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -20,7 +23,11 @@ type FieldData = {
 };
 
 // Selection options for payment method
-export const FormDisbursementSelections = { ...PaymentMethod, ...PaymentMailType, SimpleBrokerage: 'SimpleBrokerage' };
+export const FormDisbursementSelections = {
+    ...PaymentMethod,
+    ...PaymentMailType,
+    SimpleBrokerage: 'SimpleBrokerage',
+};
 export type FormDisbursementSelections = typeof FormDisbursementSelections;
 
 export enum DisbursementToggleType {
@@ -41,7 +48,11 @@ export type BankFieldConfig = {
     maxLength?: number;
     isBankingField?: boolean;
     maskOnBlur?: boolean;
-    validator?: (operation: SupportedValidationOperation, currentValue: string, allValues: DisbursementParts) => string;
+    validator?: (
+        operation: SupportedValidationOperation,
+        currentValue: string,
+        allValues: DisbursementParts
+    ) => string;
     error?: string;
     disableCopyPaste?: boolean;
 };
@@ -65,10 +76,14 @@ export interface PaymentMethodOption extends Omit<RadioItem, 'subelement'> {
     disabled?: boolean;
     consentAvailableConfig?: SignatureValidationField[];
     getDefaultPayload: (val: FormDisbursement) => DisbursementParts;
-    generatePayloadFromSelection: (val: DisbursementParts) => FormDisbursementType;
+    generatePayloadFromSelection: (
+        val: DisbursementParts
+    ) => FormDisbursementType;
 }
 
-export type DisbursementInformation = BankFieldConfig & { isFormStateReadOnly: boolean } & {
+export type DisbursementInformation = BankFieldConfig & {
+    isFormStateReadOnly: boolean;
+} & {
     disbursementInformation: DisbursementParts;
     onDataChange: Dispatch<SetStateAction<DisbursementParts>>;
 };
@@ -79,7 +94,10 @@ export type DisbursementConfig = {
 } & BankFieldConfig;
 
 // Payment mail types that map to paymentMailType in the API
-export const API_PAYMENT_MAIL_TYPE_ENUMS = [PaymentMailType.Check, PaymentMailType.ExpressCheck];
+export const API_PAYMENT_MAIL_TYPE_ENUMS = [
+    PaymentMailType.Check,
+    PaymentMailType.ExpressCheck,
+];
 
 // Payment methods that require banking information
 export const BANKING_INFORMATION_ENUMS = [

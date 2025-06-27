@@ -25,7 +25,7 @@ export type CaseAdditionalData = {
 };
 
 export type CaseAdditionalStepData = {
-    id: string,
+    id: string;
     label: string;
     value: string;
     type: string;

@@ -3,7 +3,12 @@ import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -30,13 +35,28 @@ export default withAuthAndLogging(
         };
 
         try {
-            const { data } = await serverApi.post<any, AxiosResponse>(url, formData, config, loggingContext);
-            logTrace('addressvalidation::success', { ...loggingContext, duration: performance.now() - now });
+            const { data } = await serverApi.post<any, AxiosResponse>(
+                url,
+                formData,
+                config,
+                loggingContext
+            );
+            logTrace('addressvalidation::success', {
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
             res.json(data);
         } catch (error) {
-            logWarn('addressvalidation::error', { ...parseErrorInformation(error), ...loggingContext, duration: performance.now() - now });
+            logWarn('addressvalidation::error', {
+                ...parseErrorInformation(error),
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
             res.status(500).json(null);
         }
     },
-    { file: 'api/validation/v1/:clientCode/addressvalidation', function: 'routeHandler' }
+    {
+        file: 'api/validation/v1/:clientCode/addressvalidation',
+        function: 'routeHandler',
+    }
 );

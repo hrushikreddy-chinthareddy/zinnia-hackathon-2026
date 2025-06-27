@@ -14,7 +14,7 @@ export default {
     title: 'Components/SideSheet',
     component: SideSheetDocumentItem,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -32,9 +32,21 @@ export const DocumentItems = () => {
             <div className="width-20">
                 <Button onClick={() => setOpen(true)}>Open SideSheet</Button>
             </div>
-            <SideSheet open={open} handleClose={handleClose} header={t('sideSheet.documents', { count: mockDocuments.length }) as string}>
-                {mockDocuments.map(document => (
-                    <SideSheetDocumentItem key={document.documentID} document={document} activeDocType={DocumentTypeView.Correspondence} />
+            <SideSheet
+                open={open}
+                handleClose={handleClose}
+                header={
+                    t('sideSheet.documents', {
+                        count: mockDocuments.length,
+                    }) as string
+                }
+            >
+                {mockDocuments.map((document) => (
+                    <SideSheetDocumentItem
+                        key={document.documentID}
+                        document={document}
+                        activeDocType={DocumentTypeView.Correspondence}
+                    />
                 ))}
             </SideSheet>
         </div>

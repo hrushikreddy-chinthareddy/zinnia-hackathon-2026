@@ -1,4 +1,7 @@
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { Breadcrumb as BreadcrumbDataProps } from '@deps/hooks/useBreadcrumbs';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 interface BreadcrumbProps extends BreadcrumbDataProps {

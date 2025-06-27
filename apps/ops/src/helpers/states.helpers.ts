@@ -88,18 +88,27 @@ export function getStateName(input: string | undefined) {
     if (statesAndTerritories[upperInput as keyof typeof statesAndTerritories]) {
         return toTitleCase(upperInput);
     }
-    const stateName = (Object.keys(statesAndTerritories) as (keyof typeof statesAndTerritories)[]).find(
-        key => statesAndTerritories[key] === upperInput
-    );
+    const stateName = (
+        Object.keys(
+            statesAndTerritories
+        ) as (keyof typeof statesAndTerritories)[]
+    ).find((key) => statesAndTerritories[key] === upperInput);
     return stateName ? toTitleCase(stateName) : DEFAULT_ERROR_STRING;
 }
 
 export function getStateCode(input: string) {
     const upperInput = input.toUpperCase();
     if (
-        (Object.keys(statesAndTerritories) as (keyof typeof statesAndTerritories)[]).find(key => statesAndTerritories[key] === upperInput)
+        (
+            Object.keys(
+                statesAndTerritories
+            ) as (keyof typeof statesAndTerritories)[]
+        ).find((key) => statesAndTerritories[key] === upperInput)
     ) {
         return upperInput;
     }
-    return statesAndTerritories[upperInput as keyof typeof statesAndTerritories] || DEFAULT_ERROR_STRING;
+    return (
+        statesAndTerritories[upperInput as keyof typeof statesAndTerritories] ||
+        DEFAULT_ERROR_STRING
+    );
 }

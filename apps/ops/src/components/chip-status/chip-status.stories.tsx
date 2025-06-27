@@ -9,7 +9,7 @@ export default {
     title: 'Components/Chip/Status',
     component: ChipStatus,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen w-screen p-10">
                 <div
                     style={{

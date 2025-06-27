@@ -10,10 +10,19 @@ import {
     TransactionSubType,
     TransactionType,
 } from '@deps/models/case/send-document';
-import { StatementTypes, StatementTypesResponse } from '@deps/models/case/send-statement';
+import {
+    StatementTypes,
+    StatementTypesResponse,
+} from '@deps/models/case/send-statement';
 import { client } from '@deps/queries/api-utils/client';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { logError, LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 import { baseAppUrl, contactCenterBaseUrlV2 } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
@@ -24,10 +33,17 @@ export const getTransactionTypesSSR = async (
     accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<TransactionType[] | null> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/c2web', function: 'getTransactionTypes' };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/c2web',
+        function: 'getTransactionTypes',
+    };
 
     if (!accessToken) {
-        logWarn('getPolicyDetailsSSR::No accessToken to fetch transaction types', loggingContext);
+        logWarn(
+            'getPolicyDetailsSSR::No accessToken to fetch transaction types',
+            loggingContext
+        );
         return null;
     }
 
@@ -42,23 +58,37 @@ export const getTransactionTypesSSR = async (
             },
         };
 
-        const { data } = await serverApi.get<any, AxiosResponse<TransactionType[]>>(url, config, loggingContext);
+        const { data } = await serverApi.get<
+            any,
+            AxiosResponse<TransactionType[]>
+        >(url, config, loggingContext);
         return data;
     } catch (error: any) {
-        logError('c2web: getTransactionTypes', { ...parseErrorInformation(error), ...loggingContext });
+        logError('c2web: getTransactionTypes', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+        });
         return null;
     }
 };
 
-export const getTransactionSubTypes = async (transactionType: string): Promise<TransactionSubType[] | null> => {
+export const getTransactionSubTypes = async (
+    transactionType: string
+): Promise<TransactionSubType[] | null> => {
     try {
-        const { data } = await client.get<any, AxiosResponse<TransactionSubType[]>>(
+        const { data } = await client.get<
+            any,
+            AxiosResponse<TransactionSubType[]>
+        >(
             `${baseUrl}/referencedata/TRANSACTION_TYPE/${transactionType}/subreferencedata/TRANSACTION_SUB_TYPE`
         );
 
         return data;
     } catch (e: any) {
-        browserLogError('c2web::getTransactionSubTypes::error', { ...parseErrorInformation(e), transactionType });
+        browserLogError('c2web::getTransactionSubTypes::error', {
+            ...parseErrorInformation(e),
+            transactionType,
+        });
         return null;
     }
 };
@@ -68,10 +98,17 @@ export const getSearchTransactionsSSR = async (
     accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<SearchTransactionResponseBody | null> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/c2web', function: 'getSearchTransactionsSSR' };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/c2web',
+        function: 'getSearchTransactionsSSR',
+    };
 
     if (!accessToken) {
-        logWarn('getSearchTransactionsSSR::No accessToken to fetch transaction types', loggingContext);
+        logWarn(
+            'getSearchTransactionsSSR::No accessToken to fetch transaction types',
+            loggingContext
+        );
         return null;
     }
 
@@ -84,19 +121,28 @@ export const getSearchTransactionsSSR = async (
             },
         };
 
-        const { data } = await client.post<SearchTransactionRequestBody, AxiosResponse<SearchTransactionResponseBody>>(
+        const { data } = await client.post<
+            SearchTransactionRequestBody,
+            AxiosResponse<SearchTransactionResponseBody>
+        >(
             `${contactCenterBaseUrlV2}/referencedata/transactions/search`,
             requestBody,
             config
         );
         return data;
     } catch (error: any) {
-        logError('c2web: getSearchTransactionsSSR', { ...parseErrorInformation(error), ...loggingContext });
+        logError('c2web: getSearchTransactionsSSR', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+        });
         return null;
     }
 };
 
-export const searchForms = async (requestBody: SearchFormRequestBody, loggingContext?: object): Promise<FormDetails[] | null> => {
+export const searchForms = async (
+    requestBody: SearchFormRequestBody,
+    loggingContext?: object
+): Promise<FormDetails[] | null> => {
     try {
         browserLogInfo('contactCenterSearchForms', {
             ...loggingContext,
@@ -104,7 +150,10 @@ export const searchForms = async (requestBody: SearchFormRequestBody, loggingCon
             url: `${baseUrl}/forms/search`,
             function: 'c2web.searchForms',
         });
-        const { data } = await client.post<SearchFormRequestBody, AxiosResponse<FormDetails[]>>(`${baseUrl}/forms/search`, requestBody);
+        const { data } = await client.post<
+            SearchFormRequestBody,
+            AxiosResponse<FormDetails[]>
+        >(`${baseUrl}/forms/search`, requestBody);
         return data;
     } catch (e) {
         browserLogError('contactCenterSearchForms', {
@@ -119,7 +168,9 @@ export const searchForms = async (requestBody: SearchFormRequestBody, loggingCon
     }
 };
 
-export const downloadFormById = async (formId: number): Promise<string | null> => {
+export const downloadFormById = async (
+    formId: number
+): Promise<string | null> => {
     try {
         if (!formId) {
             throw new Error('No formId provided');
@@ -129,7 +180,9 @@ export const downloadFormById = async (formId: number): Promise<string | null> =
             url: `${baseUrl}/forms/${formId}/download`,
             function: 'c2web.downloadFormById',
         });
-        const { data } = await client.get<string, AxiosResponse<string>>(`${baseUrl}/forms/${formId}/download`);
+        const { data } = await client.get<string, AxiosResponse<string>>(
+            `${baseUrl}/forms/${formId}/download`
+        );
 
         return data;
     } catch (e: any) {
@@ -144,7 +197,9 @@ export const downloadFormById = async (formId: number): Promise<string | null> =
     }
 };
 
-export const sendCommunication = async (requestBody: SendCommunicationRequestBody): Promise<Confirm | null> => {
+export const sendCommunication = async (
+    requestBody: SendCommunicationRequestBody
+): Promise<Confirm | null> => {
     if (!requestBody?.correlationId) {
         throw new Error('No correlationId provided');
     }
@@ -155,10 +210,10 @@ export const sendCommunication = async (requestBody: SendCommunicationRequestBod
             url: `${baseUrl}/forms/communication`,
             function: 'c2web.contactCenterSendCommunication',
         });
-        const { data } = await client.post<SendCommunicationRequestBody, AxiosResponse<Confirm>>(
-            `${baseUrl}/forms/communication`,
-            requestBody
-        );
+        const { data } = await client.post<
+            SendCommunicationRequestBody,
+            AxiosResponse<Confirm>
+        >(`${baseUrl}/forms/communication`, requestBody);
 
         return data;
     } catch (error: any) {
@@ -178,9 +233,17 @@ export const getApplicableStatementsSSR = async (
     accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<StatementTypes[] | null> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/c2web', function: 'getActiveStatementsSSR', inputs: { planCode } };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/c2web',
+        function: 'getActiveStatementsSSR',
+        inputs: { planCode },
+    };
     if (!accessToken) {
-        logWarn('getApplicableStatementsSSR::No accessToken to fetch applicable statements', loggingContext);
+        logWarn(
+            'getApplicableStatementsSSR::No accessToken to fetch applicable statements',
+            loggingContext
+        );
         return null;
     }
     const url = `${contactCenterBaseUrlV2}/anniversary/statements/search`;
@@ -199,20 +262,31 @@ export const getApplicableStatementsSSR = async (
 
         const {
             data: { applicableStatement },
-        } = await serverApi.post<any, AxiosResponse<StatementTypesResponse>>(url, requestBody, config, loggingContext);
+        } = await serverApi.post<any, AxiosResponse<StatementTypesResponse>>(
+            url,
+            requestBody,
+            config,
+            loggingContext
+        );
         return applicableStatement;
     } catch (error: any) {
-        logError('c2web: getApplicableStatementsSSR', { ...parseErrorInformation(error), ...loggingContext, url });
+        logError('c2web: getApplicableStatementsSSR', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+            url,
+        });
         return null;
     }
 };
 
-export const getSearchTransactions = async (requestBody: SearchTransactionRequestBody): Promise<SearchTransactionResponseBody | null> => {
+export const getSearchTransactions = async (
+    requestBody: SearchTransactionRequestBody
+): Promise<SearchTransactionResponseBody | null> => {
     try {
-        const { data } = await client.post<SearchTransactionRequestBody, AxiosResponse<SearchTransactionResponseBody>>(
-            `${baseUrl}/referencedata/transactions/search`,
-            requestBody
-        );
+        const { data } = await client.post<
+            SearchTransactionRequestBody,
+            AxiosResponse<SearchTransactionResponseBody>
+        >(`${baseUrl}/referencedata/transactions/search`, requestBody);
         browserLogInfo('getSearchTransactions::Fetched transactions', {
             payload: requestBody,
             url: `${baseUrl}/referencedata/transactions/search`,
@@ -221,12 +295,15 @@ export const getSearchTransactions = async (requestBody: SearchTransactionReques
 
         return data;
     } catch (error: any) {
-        browserLogError('getSearchTransactions:: Failed to fetch transactions', {
-            ...parseErrorInformation(error),
-            payload: requestBody,
-            url: `${baseUrl}/referencedata/transactions/search`,
-            function: 'c2web.getSearchTransactions',
-        });
+        browserLogError(
+            'getSearchTransactions:: Failed to fetch transactions',
+            {
+                ...parseErrorInformation(error),
+                payload: requestBody,
+                url: `${baseUrl}/referencedata/transactions/search`,
+                function: 'c2web.getSearchTransactions',
+            }
+        );
         return null;
     }
 };

@@ -3,7 +3,10 @@ import { useState } from 'react';
 import { v4 as uuid4 } from 'uuid';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -12,7 +15,11 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ReactComponent as AlertExclamationIcon } from '@deps/styles/elements/icons/alert/alert-exclamation.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as HexExclamationIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
-import { TransactionContinueClickedEvent, SegmentTrackedEventName, ExtendedTransactionType } from '@deps/types/segment-analytics';
+import {
+    TransactionContinueClickedEvent,
+    SegmentTrackedEventName,
+    ExtendedTransactionType,
+} from '@deps/types/segment-analytics';
 
 import { HELP_DESK_LINK } from '../non-financial-transactions/states/api-error-state';
 import LoadingState from '../non-financial-transactions/states/loading-state';
@@ -45,15 +52,25 @@ export default function SidesheetCancelPending({
 
     const callCancelTransaction = async () => {
         setViewState(ViewState.Loading);
-        const result = await cancelTransaction(planCode, policyNumber, transactionId, undefined, undefined, correlationId);
-
-        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
-            session_id: sessionId,
-            userId: partyId,
-            type: ExtendedTransactionType.CancelTransaction,
-            correlationId,
+        const result = await cancelTransaction(
+            planCode,
+            policyNumber,
             transactionId,
-        });
+            undefined,
+            undefined,
+            correlationId
+        );
+
+        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
+            SegmentTrackedEventName.TransactionContinueClicked,
+            {
+                session_id: sessionId,
+                userId: partyId,
+                type: ExtendedTransactionType.CancelTransaction,
+                correlationId,
+                transactionId,
+            }
+        );
 
         if (result.status !== StatusCode.Accepted) {
             setViewState(ViewState.ApiError);
@@ -62,20 +79,41 @@ export default function SidesheetCancelPending({
         }
     };
 
-    const amountString = <span className="font-bold">{numberFormatify(amount)}</span>;
+    const amountString = (
+        <span className="font-bold">{numberFormatify(amount)}</span>
+    );
 
     switch (viewState) {
         case ViewState.ApiError:
             return (
                 <CardInfo
                     className="mt-8"
-                    cta={{ action: callCancelTransaction, text: t(`policy.history.cancelSidesheet.cta.${transactionType}`) }}
-                    icon={<HexExclamationIcon className="text-semantic-error" height={50} width={50} />}
+                    cta={{
+                        action: callCancelTransaction,
+                        text: t(
+                            `policy.history.cancelSidesheet.cta.${transactionType}`
+                        ),
+                    }}
+                    icon={
+                        <HexExclamationIcon
+                            className="text-semantic-error"
+                            height={50}
+                            width={50}
+                        />
+                    }
                     subtitle={
                         <>
-                            {t('policy.history.cancelSidesheet.apiError.subtitle')}
-                            <NavElement href={HELP_DESK_LINK} target="_blank" type={NavElementType.Link}>
-                                {t('policy.history.cancelSidesheet.apiError.submitHelpDeskTicket')}
+                            {t(
+                                'policy.history.cancelSidesheet.apiError.subtitle'
+                            )}
+                            <NavElement
+                                href={HELP_DESK_LINK}
+                                target="_blank"
+                                type={NavElementType.Link}
+                            >
+                                {t(
+                                    'policy.history.cancelSidesheet.apiError.submitHelpDeskTicket'
+                                )}
                             </NavElement>
                         </>
                     }
@@ -90,9 +128,17 @@ export default function SidesheetCancelPending({
                     className="mt-8"
                     cta={{
                         action: callCancelTransaction,
-                        text: t(`policy.history.cancelSidesheet.cta.${transactionType}`),
+                        text: t(
+                            `policy.history.cancelSidesheet.cta.${transactionType}`
+                        ),
                     }}
-                    icon={<AlertExclamationIcon className="text-semantic-warning" height={50} width={50} />}
+                    icon={
+                        <AlertExclamationIcon
+                            className="text-semantic-warning"
+                            height={50}
+                            width={50}
+                        />
+                    }
                     secondaryCta={
                         <NavElement
                             className="font-semibold text-secondary"
@@ -105,12 +151,21 @@ export default function SidesheetCancelPending({
                     }
                     subtitle={
                         <>
-                            {t('policy.history.cancelSidesheet.confirmationSubtitle')} {amountString}{' '}
-                            {t(`policy.history.cancelSidesheet.${transactionType}`).toLowerCase()}{' '}
-                            {t('policy.history.cancelSidesheet.confirmationSubtitle2')}
+                            {t(
+                                'policy.history.cancelSidesheet.confirmationSubtitle'
+                            )}{' '}
+                            {amountString}{' '}
+                            {t(
+                                `policy.history.cancelSidesheet.${transactionType}`
+                            ).toLowerCase()}{' '}
+                            {t(
+                                'policy.history.cancelSidesheet.confirmationSubtitle2'
+                            )}
                         </>
                     }
-                    title={t(`policy.history.cancelSidesheet.title.${transactionType}`)}
+                    title={t(
+                        `policy.history.cancelSidesheet.title.${transactionType}`
+                    )}
                 />
             );
         case ViewState.Success:
@@ -118,11 +173,25 @@ export default function SidesheetCancelPending({
                 <CardInfo
                     className="mt-8"
                     cta={{ action: closeSidesheet, text: t('general.close') }}
-                    icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                    icon={
+                        <CircleCheckIcon
+                            className="text-semantic-success"
+                            height={50}
+                            width={50}
+                        />
+                    }
                     subtitle={
                         <>
-                            {t(`policy.history.cancelSidesheet.${transactionType}`)} {t('policy.history.cancelSidesheet.successSubtitle')}{' '}
-                            {amountString} {t('policy.history.cancelSidesheet.successSubtitle2')}
+                            {t(
+                                `policy.history.cancelSidesheet.${transactionType}`
+                            )}{' '}
+                            {t(
+                                'policy.history.cancelSidesheet.successSubtitle'
+                            )}{' '}
+                            {amountString}{' '}
+                            {t(
+                                'policy.history.cancelSidesheet.successSubtitle2'
+                            )}
                         </>
                     }
                     title={t('policy.history.cancelSidesheet.successTitle')}

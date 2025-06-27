@@ -13,7 +13,7 @@ const meta: Meta<typeof Popover> = {
         placement: PopoverPlacement.TopLeft,
     },
     decorators: [
-        Story => (
+        (Story) => (
             <div className="mt-20">
                 <div className="mx-auto block max-w-[20px]">
                     <Story />
@@ -23,7 +23,12 @@ const meta: Meta<typeof Popover> = {
     ],
     argTypes: {
         placement: {
-            options: [PopoverPlacement.BottomLeft, PopoverPlacement.BottomRight, PopoverPlacement.TopLeft, PopoverPlacement.TopRight],
+            options: [
+                PopoverPlacement.BottomLeft,
+                PopoverPlacement.BottomRight,
+                PopoverPlacement.TopLeft,
+                PopoverPlacement.TopRight,
+            ],
             defaultValue: PopoverPlacement.BottomLeft,
         },
     },

@@ -10,8 +10,12 @@ describe('PageHeader with icon, headerText', () => {
     const icon = <div>icon</div>;
     const breadcrumbText = 'breadcrumbText';
     const breadcrumbUrl = 'breadcrumbUrl';
-    const headerTextSiblingsGroupOne = <div>Header text siblings group one</div>;
-    const headerTextSiblingsGroupTwo = <div>Header text siblings group two</div>;
+    const headerTextSiblingsGroupOne = (
+        <div>Header text siblings group one</div>
+    );
+    const headerTextSiblingsGroupTwo = (
+        <div>Header text siblings group two</div>
+    );
     const belowHeaderTextChildren = <div>Below header text children</div>;
 
     let props: JSX.IntrinsicAttributes & PageHeaderProps;

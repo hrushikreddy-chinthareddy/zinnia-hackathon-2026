@@ -3,7 +3,10 @@ import { TFunction } from 'next-i18next';
 import { SignaturesConfig } from '@deps/components/otp-renewal-form/signature-validation/signature-validation';
 import { SignatureFields } from '@deps/components/otp-renewal-form/signature-validation/single-signature';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
-import { getTrasanctionsByIds, TransactionTypes } from '@deps/helpers/transaction-options.helpers';
+import {
+    getTrasanctionsByIds,
+    TransactionTypes,
+} from '@deps/helpers/transaction-options.helpers';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { renewalsFormParts } from '@deps/models/case/task';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
@@ -42,7 +45,10 @@ export default function getSbgcRenewalConfig(t: TFunction) {
         return errors;
     };
 
-    const transList = getTrasanctionsByIds([TransactionTypes.Dollar, TransactionTypes.Percentage]);
+    const transList = getTrasanctionsByIds([
+        TransactionTypes.Dollar,
+        TransactionTypes.Percentage,
+    ]);
 
     const formPartyConfigs: OwnerConfig[] = [
         {

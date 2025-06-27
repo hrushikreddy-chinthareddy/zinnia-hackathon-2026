@@ -2,7 +2,9 @@ import { useTranslation } from 'next-i18next';
 
 import { PageHeader } from '@deps/components/page-header/page-header';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { toTitleCase } from '@deps/helpers/string.helpers';
@@ -18,7 +20,11 @@ interface CoverageHeaderItemProps {
     body: string;
     value: string;
 }
-const CoverageHeaderItem = ({ title, body, value }: CoverageHeaderItemProps) => {
+const CoverageHeaderItem = ({
+    title,
+    body,
+    value,
+}: CoverageHeaderItemProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'pageHeader.coverage',
     });
@@ -26,7 +32,10 @@ const CoverageHeaderItem = ({ title, body, value }: CoverageHeaderItemProps) => 
     return (
         <div>
             <div className="flex items-center gap-2">
-                <Typography variant={TypographyVariant.FieldLabel} htmlFor={title}>
+                <Typography
+                    variant={TypographyVariant.FieldLabel}
+                    htmlFor={title}
+                >
                     {title}
                 </Typography>
                 <Popover
@@ -52,20 +61,35 @@ const CoverageHeaderItem = ({ title, body, value }: CoverageHeaderItemProps) => 
     );
 };
 
-const CoveragePageHeaderContainer = ({ policyDetails }: CoveragePageHeaderContainerProps) => {
+const CoveragePageHeaderContainer = ({
+    policyDetails,
+}: CoveragePageHeaderContainerProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'pageHeader.coverage',
     });
     const currency = policyDetails?.currency;
-    const currencyFormat: Intl.NumberFormatOptions = { style: 'currency', currency };
+    const currencyFormat: Intl.NumberFormatOptions = {
+        style: 'currency',
+        currency,
+    };
     const coveragePageHeaderItems = {
-        grossDeathBenefit: !(policyDetails?.cumulativeGrossDeathBenefitAmount == null)
-            ? numberFormatify(policyDetails?.cumulativeGrossDeathBenefitAmount, currencyFormat)
+        grossDeathBenefit: !(
+            policyDetails?.cumulativeGrossDeathBenefitAmount == null
+        )
+            ? numberFormatify(
+                  policyDetails?.cumulativeGrossDeathBenefitAmount,
+                  currencyFormat
+              )
             : DEFAULT_ERROR_STRING,
         netDeathBenefit: !(policyDetails?.netDeathBenefitAmount == null)
-            ? numberFormatify(policyDetails?.netDeathBenefitAmount, currencyFormat)
+            ? numberFormatify(
+                  policyDetails?.netDeathBenefitAmount,
+                  currencyFormat
+              )
             : DEFAULT_ERROR_STRING,
-        deathBenefitOption: toTitleCase(policyDetails?.deathBenefitOption ?? DEFAULT_ERROR_STRING),
+        deathBenefitOption: toTitleCase(
+            policyDetails?.deathBenefitOption ?? DEFAULT_ERROR_STRING
+        ),
     };
 
     const belowHeaderTextChildren = (
@@ -83,7 +107,10 @@ const CoveragePageHeaderContainer = ({ policyDetails }: CoveragePageHeaderContai
 
     return (
         <div className="content-divider flex items-center rounded-t bg-white">
-            <PageHeader headerText={t('headerText') as string} belowHeaderTextChildren={belowHeaderTextChildren} />
+            <PageHeader
+                headerText={t('headerText') as string}
+                belowHeaderTextChildren={belowHeaderTextChildren}
+            />
         </div>
     );
 };

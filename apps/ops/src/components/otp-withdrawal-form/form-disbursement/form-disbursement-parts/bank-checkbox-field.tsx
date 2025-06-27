@@ -14,7 +14,7 @@ const BankCheckboxField = ({
     const value = !!disbursementInformation[fieldName];
 
     const setDataChange = (value: boolean) => {
-        onDataChange(ogData => ({
+        onDataChange((ogData) => ({
             ...ogData,
             [fieldName]: value ?? null,
         }));

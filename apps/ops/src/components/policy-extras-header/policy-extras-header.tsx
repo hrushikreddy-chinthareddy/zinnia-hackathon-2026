@@ -19,9 +19,19 @@ export type PolicyExtrasHeaderProps = HTMLProps<HTMLElement> & {
 const renderSubheader = (subheader: (string | null)[]) =>
     subheader ? (
         subheader.map((sentence, index) => (
-            <span key={`subheader-sentence-${index}`} className={`content-${ContentVariant.Body} leading-5`}>
-                <Skeleton loading={sentence === null} maxWidth="580px" height="24px">
-                    <Typography data-testid={PolicyExtrasTest.SUBHEADER} variant={TypographyVariant.Body}>
+            <span
+                key={`subheader-sentence-${index}`}
+                className={`content-${ContentVariant.Body} leading-5`}
+            >
+                <Skeleton
+                    loading={sentence === null}
+                    maxWidth="580px"
+                    height="24px"
+                >
+                    <Typography
+                        data-testid={PolicyExtrasTest.SUBHEADER}
+                        variant={TypographyVariant.Body}
+                    >
                         {sentence}
                     </Typography>
                 </Skeleton>
@@ -31,8 +41,18 @@ const renderSubheader = (subheader: (string | null)[]) =>
         <></>
     );
 
-const PolicyExtrasHeader = ({ headerText, subheader, labelText, tooltipBody, tooltipPlacement, tooltipTitle }: PolicyExtrasHeaderProps) => (
-    <header data-testid={PolicyExtrasTest.CONTAINER} className="align-center flex flex-col content-start justify-start">
+const PolicyExtrasHeader = ({
+    headerText,
+    subheader,
+    labelText,
+    tooltipBody,
+    tooltipPlacement,
+    tooltipTitle,
+}: PolicyExtrasHeaderProps) => (
+    <header
+        data-testid={PolicyExtrasTest.CONTAINER}
+        className="align-center flex flex-col content-start justify-start"
+    >
         <Label
             className="order-first h-6"
             sentenceCase={false}
@@ -46,7 +66,9 @@ const PolicyExtrasHeader = ({ headerText, subheader, labelText, tooltipBody, too
                 tooltipTitle,
             })}
         />
-        <Title variant={TitleVariant.SubTitle}>{toSentenceCase(headerText)}</Title>
+        <Title variant={TitleVariant.SubTitle}>
+            {toSentenceCase(headerText)}
+        </Title>
         <div className="break-words">{renderSubheader(subheader)}</div>
     </header>
 );

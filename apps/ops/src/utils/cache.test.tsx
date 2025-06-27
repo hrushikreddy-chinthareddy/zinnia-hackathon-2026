@@ -27,7 +27,9 @@ describe('Cache Functions', () => {
             const cacheData = storage.getItem(cacheKey) as any;
             expect(cacheData.data).toEqual(data);
             expect(cacheData.timestamp).toBeGreaterThanOrEqual(Date.now());
-            expect(cacheData.timestamp).toBeLessThanOrEqual(Date.now() + expirationMinutes * 60 * 1000);
+            expect(cacheData.timestamp).toBeLessThanOrEqual(
+                Date.now() + expirationMinutes * 60 * 1000
+            );
         });
     });
 
@@ -45,7 +47,8 @@ describe('Cache Functions', () => {
         });
 
         it('should return null and remove from cache when data is expired', () => {
-            const expiredTimestamp = Date.now() - (expirationMinutes + 1) * 60 * 1000;
+            const expiredTimestamp =
+                Date.now() - (expirationMinutes + 1) * 60 * 1000;
             storage.setItem(cacheKey, {
                 data,
                 timestamp: expiredTimestamp,

@@ -8,12 +8,27 @@ describe('FieldValue', () => {
     const label = <Label>Amount</Label>;
 
     it('renders with default props', () => {
-        render(<FieldValue name="field-value" label={label} errorMessage="Error" onChange={() => {}} />);
+        render(
+            <FieldValue
+                name="field-value"
+                label={label}
+                errorMessage="Error"
+                onChange={() => {}}
+            />
+        );
         expect(screen.getByLabelText('Amount')).toBeInTheDocument();
     });
 
     it('displays currency symbol', () => {
-        render(<FieldValue name="field-value" label={label} currencySymbol="£" errorMessage="Error" onChange={() => {}} />);
+        render(
+            <FieldValue
+                name="field-value"
+                label={label}
+                currencySymbol="£"
+                errorMessage="Error"
+                onChange={() => {}}
+            />
+        );
         expect(screen.getByText('£')).toBeInTheDocument();
     });
 
@@ -31,19 +46,41 @@ describe('FieldValue', () => {
     });
 
     it('disables input when disabled is true', () => {
-        render(<FieldValue name="field-value" label={label} disabled errorMessage="Error" onChange={() => {}} />);
+        render(
+            <FieldValue
+                name="field-value"
+                label={label}
+                disabled
+                errorMessage="Error"
+                onChange={() => {}}
+            />
+        );
         expect(screen.getByLabelText('Amount')).toBeDisabled();
     });
 
     it('handles input change', () => {
-        render(<FieldValue name="field-value" label={label} errorMessage="Error" value={'123'} />);
+        render(
+            <FieldValue
+                name="field-value"
+                label={label}
+                errorMessage="Error"
+                value={'123'}
+            />
+        );
         const input = screen.getByLabelText('Amount');
         fireEvent.change(input, { target: { value: '123' } });
         expect(input).toHaveValue('123');
     });
 
     it('does not accept non-numeric input', () => {
-        render(<FieldValue name="field-value" label={label} errorMessage="Error" onChange={() => {}} />);
+        render(
+            <FieldValue
+                name="field-value"
+                label={label}
+                errorMessage="Error"
+                onChange={() => {}}
+            />
+        );
         const input = screen.getByLabelText('Amount');
         fireEvent.change(input, { target: { value: 'abc' } });
         expect(input).toHaveValue('');
@@ -51,7 +88,14 @@ describe('FieldValue', () => {
 
     it('uses custom onChange handler', () => {
         const handleChange = jest.fn();
-        render(<FieldValue name="field-value" label={label} onChange={handleChange} errorMessage="Error" />);
+        render(
+            <FieldValue
+                name="field-value"
+                label={label}
+                onChange={handleChange}
+                errorMessage="Error"
+            />
+        );
         const input = screen.getByLabelText('Amount');
         fireEvent.change(input, { target: { value: '123' } });
         expect(handleChange).toHaveBeenCalled();

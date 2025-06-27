@@ -12,12 +12,15 @@ describe('BaseCoverageCard', () => {
         const clonedPolicy = { ...mockPolicy };
 
         if (clonedPolicy.coverage?.coverageLayers?.[0]) {
-            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate = '2022-01-01';
+            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate =
+                '2022-01-01';
             clonedPolicy.coverage.coverageLayers[0].currentAmount = 100000;
             clonedPolicy.coverage.coverageLayers[0].originalCoverageAmount = 200000;
         }
 
-        render(<BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />);
+        render(
+            <BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />
+        );
 
         expect(screen.getByText('$100,000.00')).toBeInTheDocument();
         expect(screen.getByText('$200,000.00')).toBeInTheDocument();
@@ -28,12 +31,15 @@ describe('BaseCoverageCard', () => {
         const clonedPolicy = { ...mockPolicy };
 
         if (clonedPolicy.coverage?.coverageLayers?.[0]) {
-            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate = '2022-01-01';
+            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate =
+                '2022-01-01';
             clonedPolicy.coverage.coverageLayers[0].currentAmount = 100000;
             clonedPolicy.coverage.coverageLayers[0].originalCoverageAmount = 200000;
         }
 
-        render(<BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />);
+        render(
+            <BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />
+        );
 
         expect(screen.getByText('$100,000.00')).toBeInTheDocument();
     });
@@ -42,12 +48,15 @@ describe('BaseCoverageCard', () => {
         const clonedPolicy = { ...mockPolicy };
 
         if (clonedPolicy.coverage?.coverageLayers?.[0]) {
-            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate = '2022-01-01';
+            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate =
+                '2022-01-01';
             clonedPolicy.coverage.coverageLayers[0].currentAmount = 100000;
             clonedPolicy.coverage.coverageLayers[0].originalCoverageAmount = 200000;
         }
 
-        render(<BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />);
+        render(
+            <BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />
+        );
 
         expect(screen.getByText('$200,000.00')).toBeInTheDocument();
     });
@@ -56,12 +65,15 @@ describe('BaseCoverageCard', () => {
         const clonedPolicy = { ...mockPolicy };
 
         if (clonedPolicy.coverage?.coverageLayers?.[0]) {
-            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate = undefined;
+            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate =
+                undefined;
             clonedPolicy.coverage.coverageLayers[0].currentAmount = 100000;
             clonedPolicy.coverage.coverageLayers[0].originalCoverageAmount = 200000;
         }
 
-        render(<BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />);
+        render(
+            <BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />
+        );
 
         expect(screen.queryByText('$200,000.00')).not.toBeInTheDocument();
         expect(screen.queryByText('1/1/2022')).not.toBeInTheDocument();
@@ -71,12 +83,15 @@ describe('BaseCoverageCard', () => {
         const clonedPolicy = { ...mockPolicy };
 
         if (clonedPolicy.coverage?.coverageLayers?.[0]) {
-            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate = '2022-01-01';
+            clonedPolicy.coverage.coverageLayers[0].coverageChangeEffectiveDate =
+                '2022-01-01';
             clonedPolicy.coverage.coverageLayers[0].currentAmount = 100000;
             clonedPolicy.coverage.coverageLayers[0].originalCoverageAmount = 200000;
         }
 
-        render(<BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />);
+        render(
+            <BaseCoverageCard policyDetails={new PolicyDetails(clonedPolicy)} />
+        );
 
         expect(screen.getByText('1/1/2022')).toBeInTheDocument();
     });

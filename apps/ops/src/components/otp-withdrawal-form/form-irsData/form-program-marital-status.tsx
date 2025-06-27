@@ -18,16 +18,29 @@ export interface SelectOneOption {
     value: maritalStatusType | MaritalStatusAllowances;
 }
 
-export default function FormProgramMaritalStatus({ isFormStateReadOnly, selected, setSelected, options }: FormProgramProcessDateProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.irsData' });
+export default function FormProgramMaritalStatus({
+    isFormStateReadOnly,
+    selected,
+    setSelected,
+    options,
+}: FormProgramProcessDateProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.irsData',
+    });
 
     return (
         <Radio
             items={options}
             label={t('maritalStatus') as string}
-            onChange={event => setSelected(event.target.value as maritalStatusType)}
+            onChange={(event) =>
+                setSelected(event.target.value as maritalStatusType)
+            }
             value={selected}
-            variant={isFormStateReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+            variant={
+                isFormStateReadOnly
+                    ? RadioVariant.Inactive
+                    : RadioVariant.Default
+            }
             className="!m-0"
             name={'maritalStatus-' + uuidv4()}
         />

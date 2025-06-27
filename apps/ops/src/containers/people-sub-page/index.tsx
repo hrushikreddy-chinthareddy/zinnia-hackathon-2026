@@ -9,7 +9,10 @@ import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import BeneficiaryCardContainer from '@deps/containers/people-card-container/beneficiary-card-container';
 import PeopleCardContainer from '@deps/containers/people-card-container/people-card-container';
-import { BeneficiaryType, PeopleCardData } from '@deps/containers/people-card-container/people-card-container.types';
+import {
+    BeneficiaryType,
+    PeopleCardData,
+} from '@deps/containers/people-card-container/people-card-container.types';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { PeopleRolesFilterContext } from '@deps/contexts/PeopleRolesFilter';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
@@ -64,23 +67,40 @@ export const PeopleSubPage: React.FC = () => {
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
     // if there's an enddate and the enddate is in the past, that role is no longer valid
     const extractedPartyRoles = useMemo(
-        () => policy?.partyRoles?.filter(role => !role.endDate || !isEndDated(role.endDate)) || [],
+        () =>
+            policy?.partyRoles?.filter(
+                (role) => !role.endDate || !isEndDated(role.endDate)
+            ) || [],
         [policy]
     );
-    const countedRoles = useMemo(() => countPartyRoles(extractedPartyRoles, t), [extractedPartyRoles, t]);
+    const countedRoles = useMemo(
+        () => countPartyRoles(extractedPartyRoles, t),
+        [extractedPartyRoles, t]
+    );
     const nameTags = useMemo(
         () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
         [extractedParties, extractedPartyRoles, t]
     );
 
-    const { peopleRolesFilter, setPeopleRolesFilter, clearPeopleRolesFilter } = useContext(PeopleRolesFilterContext);
+    const { peopleRolesFilter, setPeopleRolesFilter, clearPeopleRolesFilter } =
+        useContext(PeopleRolesFilterContext);
     const [chipEntered, setChipEntered] = useState(false);
     const sideSheet = useSideSheetContext();
-    const globalValuesData = useMemo(() => policyDataToGlobalValues(policyDetails, t), [policyDetails, t]);
+    const globalValuesData = useMemo(
+        () => policyDataToGlobalValues(policyDetails, t),
+        [policyDetails, t]
+    );
     const openSidesheet = () => {
         sideSheet.changeSideSheetContent(
-            <GlobalPolicyInfo tooltipPlacements={PopoverPlacement.BottomLeft} {...globalValuesData} />,
-            <SideSheetAllocations handleClose={() => sideSheet.handleOpen(false)} policy={policy} refreshPolicy={refreshPolicy} />
+            <GlobalPolicyInfo
+                tooltipPlacements={PopoverPlacement.BottomLeft}
+                {...globalValuesData}
+            />,
+            <SideSheetAllocations
+                handleClose={() => sideSheet.handleOpen(false)}
+                policy={policy}
+                refreshPolicy={refreshPolicy}
+            />
         );
         sideSheet.handleOpen(true);
     };
@@ -88,9 +108,12 @@ export const PeopleSubPage: React.FC = () => {
     // Fetch data for agents if there are any
     const agentParties = useMemo(
         () =>
-            nameTags?.filter(party => {
+            nameTags?.filter((party) => {
                 return (
-                    party.partyRoles.includes(PartyRole.PRIMARYSERVICINGAGENT) || party.partyRoles.includes(PartyRole.PRIMARYWRITINGAGENT)
+                    party.partyRoles.includes(
+                        PartyRole.PRIMARYSERVICINGAGENT
+                    ) ||
+                    party.partyRoles.includes(PartyRole.PRIMARYWRITINGAGENT)
                 );
             }),
         [nameTags]
@@ -98,15 +121,33 @@ export const PeopleSubPage: React.FC = () => {
     const clientCode = policy?.carrierId;
 
     const { data: agentData } = useQueries({
-        queries: agentParties?.map(agent => ({
-            queryKey: ['agentData', agent.agentExternalId, clientCode, policy?.policyNumber, policy?.product?.planCode, agent?.partyId],
-            queryFn: () => getAgentDataQuery(agent?.agentExternalId, clientCode, policy?.policyNumber, policy?.product?.planCode),
-            enabled: !!agent.agentExternalId && !!clientCode && !!policy.policyNumber && !!policy.product?.planCode,
-            select: (data: AgentData | undefined) => (data ? new AgentParty(data, agent) : undefined),
+        queries: agentParties?.map((agent) => ({
+            queryKey: [
+                'agentData',
+                agent.agentExternalId,
+                clientCode,
+                policy?.policyNumber,
+                policy?.product?.planCode,
+                agent?.partyId,
+            ],
+            queryFn: () =>
+                getAgentDataQuery(
+                    agent?.agentExternalId,
+                    clientCode,
+                    policy?.policyNumber,
+                    policy?.product?.planCode
+                ),
+            enabled:
+                !!agent.agentExternalId &&
+                !!clientCode &&
+                !!policy.policyNumber &&
+                !!policy.product?.planCode,
+            select: (data: AgentData | undefined) =>
+                data ? new AgentParty(data, agent) : undefined,
         })),
-        combine: results => {
+        combine: (results) => {
             return {
-                data: results.map(result => result.data),
+                data: results.map((result) => result.data),
             };
         },
     });
@@ -125,8 +166,12 @@ export const PeopleSubPage: React.FC = () => {
         peopleRolesFilter.filterValue === 'All'
             ? nameTags
             : sortByAndThenBy<NameTag>(
-                  nameTags.filter(nameTag =>
-                      nameTag.partyRoles.some(partyRole => normalizePartyRole(partyRole as PartyRole) === peopleRolesFilter.filterValue)
+                  nameTags.filter((nameTag) =>
+                      nameTag.partyRoles.some(
+                          (partyRole) =>
+                              normalizePartyRole(partyRole as PartyRole) ===
+                              peopleRolesFilter.filterValue
+                      )
                   ),
                   'fullName',
                   'fullName'
@@ -134,10 +179,14 @@ export const PeopleSubPage: React.FC = () => {
 
     // Add agent data if there is any
     if (agentData && agentData.length > 0) {
-        filteredNameTags = filteredNameTags.map(tag => {
-            const isAgent = agentData.some(agent => agent?.partyId === tag.partyId);
+        filteredNameTags = filteredNameTags.map((tag) => {
+            const isAgent = agentData.some(
+                (agent) => agent?.partyId === tag.partyId
+            );
             if (isAgent) {
-                const agent = agentData.find(agent => agent?.partyId === tag.partyId);
+                const agent = agentData.find(
+                    (agent) => agent?.partyId === tag.partyId
+                );
                 return agent?.party as NameTag;
             } else {
                 return tag;
@@ -145,7 +194,8 @@ export const PeopleSubPage: React.FC = () => {
         });
     }
     const isAgentSelected = peopleRolesFilter.filterValue === 'agent';
-    const isBeneficiarySelected = peopleRolesFilter.filterValue === 'beneficiary';
+    const isBeneficiarySelected =
+        peopleRolesFilter.filterValue === 'beneficiary';
 
     // Since policy can be undefined, we need to check if policy exists before accessing policyId
     const peopleCardData: PeopleCardData = {
@@ -165,7 +215,9 @@ export const PeopleSubPage: React.FC = () => {
             {filteredNameTags.length > 0 && (
                 <div className="mx-4 my-6 flex flex-col gap-6 md:mx-6 lg:mx-8 lg:flex-row">
                     <div className="lg:max-w-[308px]">
-                        <div className="field-label mb-2 text-gray-900">{t('people.filterByRole')}</div>
+                        <div className="field-label mb-2 text-gray-900">
+                            {t('people.filterByRole')}
+                        </div>
                         <RadioGroup.Root
                             className="flex flex-wrap gap-2"
                             value={peopleRolesFilter.filterValue ?? 'All'}
@@ -175,8 +227,12 @@ export const PeopleSubPage: React.FC = () => {
                             <RadioGroup.Item className="chip" value="All">
                                 All
                             </RadioGroup.Item>
-                            {countedRoles.map(role => (
-                                <RadioGroup.Item className="chip" key={`people-chip-${role.value}`} value={role.value}>
+                            {countedRoles.map((role) => (
+                                <RadioGroup.Item
+                                    className="chip"
+                                    key={`people-chip-${role.value}`}
+                                    value={role.value}
+                                >
                                     {role.text} ({role.quantity})
                                 </RadioGroup.Item>
                             ))}
@@ -188,16 +244,25 @@ export const PeopleSubPage: React.FC = () => {
                             <BeneficiaryCardContainer
                                 title={t('people.primaryAllocation')}
                                 peopleCardData={peopleCardData}
-                                filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.PRIMARY)}
+                                filteredData={beneficiaryDataByType(
+                                    filteredNameTags,
+                                    BeneficiaryType.PRIMARY
+                                )}
                                 classNames="mb-10"
                                 openAllocationSideSheet={openSidesheet}
                                 type={BeneficiaryType.PRIMARY}
                             />
-                            {beneficiaryDataByType(filteredNameTags, BeneficiaryType.CONTIGENT)?.length ? (
+                            {beneficiaryDataByType(
+                                filteredNameTags,
+                                BeneficiaryType.CONTIGENT
+                            )?.length ? (
                                 <BeneficiaryCardContainer
                                     title={t('people.contingentAllocation')}
                                     peopleCardData={peopleCardData}
-                                    filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.CONTIGENT)}
+                                    filteredData={beneficiaryDataByType(
+                                        filteredNameTags,
+                                        BeneficiaryType.CONTIGENT
+                                    )}
                                     type={BeneficiaryType.CONTIGENT}
                                     openAllocationSideSheet={openSidesheet}
                                 />
@@ -210,7 +275,10 @@ export const PeopleSubPage: React.FC = () => {
                             <BeneficiaryCardContainer
                                 title={t('people.primaryAllocation')}
                                 peopleCardData={peopleCardData}
-                                filteredData={beneficiaryDataByType(filteredNameTags, BeneficiaryType.PRIMARY)}
+                                filteredData={beneficiaryDataByType(
+                                    filteredNameTags,
+                                    BeneficiaryType.PRIMARY
+                                )}
                                 classNames="mb-10"
                                 type={BeneficiaryType.PRIMARY}
                             />
@@ -218,14 +286,21 @@ export const PeopleSubPage: React.FC = () => {
                             <BeneficiaryCardContainer
                                 title={'Other'}
                                 peopleCardData={peopleCardData}
-                                filteredData={filteredNameTags.filter(fd => isNullEmptyOrUndefined(fd.beneficiaryPercentage || ''))}
+                                filteredData={filteredNameTags.filter((fd) =>
+                                    isNullEmptyOrUndefined(
+                                        fd.beneficiaryPercentage || ''
+                                    )
+                                )}
                                 showAllocationBar={false}
                             />
                         </div>
                     )}
 
                     {!isBeneficiarySelected && !isAgentSelected && (
-                        <PeopleCardContainer peopleCardData={peopleCardData} filteredData={filteredNameTags} />
+                        <PeopleCardContainer
+                            peopleCardData={peopleCardData}
+                            filteredData={filteredNameTags}
+                        />
                     )}
                 </div>
             )}

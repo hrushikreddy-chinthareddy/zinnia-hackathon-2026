@@ -74,12 +74,24 @@ describe('AddressCard', () => {
             phones: [],
             emails: [],
         };
-        const { container } = render(<AddressCard party={party} partyRoles={[]} planCode="PLANCODE" policyNumber="12345" />);
-        const formattedAddressElements = container.querySelectorAll('span.line-clamp-2');
+        const { container } = render(
+            <AddressCard
+                party={party}
+                partyRoles={[]}
+                planCode="PLANCODE"
+                policyNumber="12345"
+            />
+        );
+        const formattedAddressElements =
+            container.querySelectorAll('span.line-clamp-2');
         expect(formattedAddressElements.length).toBe(4);
-        expect(formattedAddressElements[0]).toHaveTextContent('123 Main Street');
+        expect(formattedAddressElements[0]).toHaveTextContent(
+            '123 Main Street'
+        );
         expect(formattedAddressElements[1]).toHaveTextContent('Apt 4');
-        expect(formattedAddressElements[2]).toHaveTextContent('New York, NY 10001');
+        expect(formattedAddressElements[2]).toHaveTextContent(
+            'New York, NY 10001'
+        );
         expect(formattedAddressElements[3]).toHaveTextContent('US');
     });
 });
@@ -246,7 +258,14 @@ describe('AddressCard', () => {
             emails: [],
         };
 
-        render(<AddressCard party={party} partyRoles={[]} planCode="PLANCODE" policyNumber="12345" />);
+        render(
+            <AddressCard
+                party={party}
+                partyRoles={[]}
+                planCode="PLANCODE"
+                policyNumber="12345"
+            />
+        );
         const residentialAddressElement = screen.getByText('123 Main Street');
         expect(residentialAddressElement).toBeInTheDocument();
         const boxAddressElement = screen.getByText('Po Box 789');
@@ -281,7 +300,14 @@ describe('AddressCard', () => {
             phones: [],
             emails: [],
         };
-        render(<AddressCard party={party} partyRoles={[]} planCode="PLANCODE" policyNumber="12345" />);
+        render(
+            <AddressCard
+                party={party}
+                partyRoles={[]}
+                planCode="PLANCODE"
+                policyNumber="12345"
+            />
+        );
         const residentialAddressElement = screen.queryByText('123 Main Street');
         expect(residentialAddressElement).not.toBeInTheDocument();
         const boxAddressElement = screen.queryByText('Po Box 789');

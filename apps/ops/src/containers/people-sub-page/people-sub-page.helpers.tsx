@@ -1,8 +1,17 @@
-import { PartyRole, PartyType, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    PartyType,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { PartyRoleChipToText } from '@deps/constants/party-roles';
-import { orderObjectsByFirstString, orderObjectsByString, sortByAndThenBy } from '@deps/helpers/sort.helpers';
+import {
+    orderObjectsByFirstString,
+    orderObjectsByString,
+    sortByAndThenBy,
+} from '@deps/helpers/sort.helpers';
 import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
@@ -82,7 +91,10 @@ export const convertToChipText = (text: string | undefined, t: TFunction) => {
 
 // Generalize partyRole into a category or return original partyRole
 export const normalizePartyRole = (partyRole: PartyRole): string => {
-    if (partyRole === 'PRIMARYBENEFICIARY' || partyRole === 'CONTINGENTBENEFICIARY') {
+    if (
+        partyRole === 'PRIMARYBENEFICIARY' ||
+        partyRole === 'CONTINGENTBENEFICIARY'
+    ) {
         return 'beneficiary';
     } else if (partyRole === 'AGENT') {
         return 'agent';
@@ -106,10 +118,13 @@ export const simplifyPartyRoles = (partyRole: PartyRole): string => {
 
 // Count the occurrence of each partyRole or generalized category, and create an array of RoleCountItems
 // arranged in hierarchical order
-export const countPartyRoles = (arr: Array<PolicyPartyRoles>, t: TFunction): Array<RoleCountItem> => {
+export const countPartyRoles = (
+    arr: Array<PolicyPartyRoles>,
+    t: TFunction
+): Array<RoleCountItem> => {
     const roleCount: Record<string, number> = {};
 
-    arr.forEach(obj => {
+    arr.forEach((obj) => {
         if (obj.partyRole) {
             const normalizedRole = normalizePartyRole(obj.partyRole);
 
@@ -121,15 +136,23 @@ export const countPartyRoles = (arr: Array<PolicyPartyRoles>, t: TFunction): Arr
         }
     });
 
-    const roleCountItems = Object.entries(roleCount).map(([value, quantity]) => ({
-        value,
-        text: convertToChipText(value, t),
-        quantity,
-    }));
+    const roleCountItems = Object.entries(roleCount).map(
+        ([value, quantity]) => ({
+            value,
+            text: convertToChipText(value, t),
+            quantity,
+        })
+    );
 
     // Arrange according to hierarchy
-    const orderedRoles: string[] = t('colDefs:people.chipOrderedRoles', { returnObjects: true });
-    const orderedRoleCountItems = orderObjectsByString(roleCountItems, orderedRoles, 'text');
+    const orderedRoles: string[] = t('colDefs:people.chipOrderedRoles', {
+        returnObjects: true,
+    });
+    const orderedRoleCountItems = orderObjectsByString(
+        roleCountItems,
+        orderedRoles,
+        'text'
+    );
     return orderedRoleCountItems;
 };
 
@@ -140,15 +163,25 @@ export interface NameTag extends Party {
     partyRoleIds: any[];
 }
 
-export const combineNameAndRoles = (policyPartiesArr: Party[], partyRolesArr: PolicyPartyRoles[], t: TFunction): NameTag[] => {
+export const combineNameAndRoles = (
+    policyPartiesArr: Party[],
+    partyRolesArr: PolicyPartyRoles[],
+    t: TFunction
+): NameTag[] => {
     let nameTags: NameTag[] = [];
-    const orderedTags: string[] = t('colDefs:people.orderedRoles', { returnObjects: true });
+    const orderedTags: string[] = t('colDefs:people.orderedRoles', {
+        returnObjects: true,
+    });
 
-    partyRolesArr.forEach(partyRoleObj => {
+    partyRolesArr.forEach((partyRoleObj) => {
         const partyRole = partyRoleObj.partyRole || '';
         const partyRoleId = partyRoleObj?.partyRoleId || '';
-        const convertedPartyRole: TagKey = { text: convertToChipText(partyRole, t) };
-        const policyParty = policyPartiesArr.find(pp => pp.partyId === partyRoleObj.partyId);
+        const convertedPartyRole: TagKey = {
+            text: convertToChipText(partyRole, t),
+        };
+        const policyParty = policyPartiesArr.find(
+            (pp) => pp.partyId === partyRoleObj.partyId
+        );
         const partyType = policyParty?.partyType || '';
 
         if (!policyParty) return;
@@ -158,9 +191,16 @@ export const combineNameAndRoles = (policyPartiesArr: Party[], partyRolesArr: Po
             in identification-card.tsx for example. These names get displayed in the people cards and have a PII Wrapper on them
             in card-people.tsx.
         */
-        const { firstName, lastName, fullName, organizationCode, beneficiaryPercentage, partyId } = policyParty;
+        const {
+            firstName,
+            lastName,
+            fullName,
+            organizationCode,
+            beneficiaryPercentage,
+            partyId,
+        } = policyParty;
 
-        const existingNameTag = nameTags.find(nt => {
+        const existingNameTag = nameTags.find((nt) => {
             return nt.partyId === partyId;
         });
 
@@ -197,7 +237,10 @@ export const combineNameAndRoles = (policyPartiesArr: Party[], partyRolesArr: Po
         }
     });
 
-    nameTags = nameTags.map(nt => ({ ...nt, tags: orderObjectsByString(nt.tags, orderedTags, 'text') }));
+    nameTags = nameTags.map((nt) => ({
+        ...nt,
+        tags: orderObjectsByString(nt.tags, orderedTags, 'text'),
+    }));
     nameTags = orderObjectsByFirstString(nameTags, orderedTags, 'tags');
 
     return nameTags;
@@ -226,8 +269,12 @@ export const convertToTagText = (value: string, t: TFunction): string[] => {
 // Sort by allocation percentage and then by first name then by last
 export const beneficiaryDataByType = (data: NameTag[], type: BeneficiaryType) =>
     sortByAndThenBy<NameTag>(
-        data.filter(nameTag =>
-            nameTag.partyRoles.some(partyRole => simplifyPartyRoles(partyRole as PartyRole) === type.toLocaleLowerCase())
+        data.filter((nameTag) =>
+            nameTag.partyRoles.some(
+                (partyRole) =>
+                    simplifyPartyRoles(partyRole as PartyRole) ===
+                    type.toLocaleLowerCase()
+            )
         ),
         'beneficiaryPercentage',
         'firstName',

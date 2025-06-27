@@ -27,7 +27,9 @@ export const generateFlatExtra = (): FlatExtra => ({
         min: 15,
     }),
     flatExtraStartDate: `${faker.date.past()}`,
-    flatExtraType: faker.helpers.arrayElement(Object.keys(FlatExtraType)) as FlatExtraType,
+    flatExtraType: faker.helpers.arrayElement(
+        Object.keys(FlatExtraType)
+    ) as FlatExtraType,
 });
 
 export const generateAdditionalCharges = (x: number, tooltips = false) =>

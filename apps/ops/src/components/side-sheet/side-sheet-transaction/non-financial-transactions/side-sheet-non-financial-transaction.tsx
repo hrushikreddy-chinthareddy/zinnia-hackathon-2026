@@ -1,14 +1,25 @@
-import { Address as PolicyAddress, Policy, Transaction, TransactionType, FeatureType } from '@zinnia/api-types/types/sor';
+import {
+    Address as PolicyAddress,
+    Policy,
+    Transaction,
+    TransactionType,
+    FeatureType,
+} from '@zinnia/api-types/types/sor';
 import { Address, AddressProps, Tag } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import { ReactNode } from 'react';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
-import { getChangedParty, getPeopleChangeType } from '@deps/components/history-event-card/history-event-card.helpers';
+import {
+    getChangedParty,
+    getPeopleChangeType,
+} from '@deps/components/history-event-card/history-event-card.helpers';
 import { PeopleChangeType } from '@deps/components/history-event-card/types';
 import Title, { TitleVariant } from '@deps/components/title/title';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
@@ -18,22 +29,32 @@ import {
     mapEmailTypeToTranslation,
     mapPhoneTypeToTranslation,
 } from '@deps/helpers/translation.helpers';
-import { DEFAULT_ERROR_STRING, DEFAULT_EXTENDED_DAY_DATE_FORMAT } from '@deps/types/constants';
+import {
+    DEFAULT_ERROR_STRING,
+    DEFAULT_EXTENDED_DAY_DATE_FORMAT,
+} from '@deps/types/constants';
 
 import { SideSheetTransactionProps } from '../types';
 import { getNonFinancialTransactionSideSheetValues } from './side-sheet-non-financial-transactions.helpers';
 
-const changeTable = (vals: { updated: ReactNode; original: ReactNode; label: string }[], t: TFunction) => {
+const changeTable = (
+    vals: { updated: ReactNode; original: ReactNode; label: string }[],
+    t: TFunction
+) => {
     return (
         <table className="w-full table-fixed border-separate border-spacing-0 rounded-lg border border-gray-200">
             <thead>
                 <tr>
                     <th className="sr-only" scope="row"></th>
                     <th className="w-1/2 rounded-tl-lg border-b border-gray-200 bg-gray-50 px-4 py-2.5 text-left">
-                        <Typography variant={TypographyVariant.BodySmBold}>{t('policy.history.sidesheet.updated')}</Typography>
+                        <Typography variant={TypographyVariant.BodySmBold}>
+                            {t('policy.history.sidesheet.updated')}
+                        </Typography>
                     </th>
                     <th className="w-1/2 border-b border-gray-200 px-4 py-2.5 text-left">
-                        <Typography variant={TypographyVariant.BodySmBold}>{t('policy.history.sidesheet.original')}</Typography>
+                        <Typography variant={TypographyVariant.BodySmBold}>
+                            {t('policy.history.sidesheet.original')}
+                        </Typography>
                     </th>
                 </tr>
             </thead>
@@ -43,14 +64,26 @@ const changeTable = (vals: { updated: ReactNode; original: ReactNode; label: str
                         <th className="sr-only" scope="row">
                             {label}
                         </th>
-                        <td className={`w-1/2 px-4 py-2 align-bottom ${index + 1 === vals.length ? 'rounded-bl-lg' : ''} bg-gray-50`}>
-                            <Typography variant={TypographyVariant.Label}>{label}</Typography>
-                            <Typography className="text-wrap !block break-words" variant={TypographyVariant.BodySm}>
+                        <td
+                            className={`w-1/2 px-4 py-2 align-bottom ${
+                                index + 1 === vals.length ? 'rounded-bl-lg' : ''
+                            } bg-gray-50`}
+                        >
+                            <Typography variant={TypographyVariant.Label}>
+                                {label}
+                            </Typography>
+                            <Typography
+                                className="text-wrap !block break-words"
+                                variant={TypographyVariant.BodySm}
+                            >
                                 {updated}
                             </Typography>
                         </td>
                         <td className="w-1/2 px-4 py-2 align-bottom">
-                            <Typography className="text-wrap !block w-full break-words" variant={TypographyVariant.BodySm}>
+                            <Typography
+                                className="text-wrap !block w-full break-words"
+                                variant={TypographyVariant.BodySm}
+                            >
                                 {original}
                             </Typography>
                         </td>
@@ -61,7 +94,11 @@ const changeTable = (vals: { updated: ReactNode; original: ReactNode; label: str
     );
 };
 
-const getAddressChanges = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
+const getAddressChanges = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction
+): ReactNode => {
     if (!policy || !transaction) {
         return null;
     }
@@ -72,8 +109,12 @@ const getAddressChanges = (policy: Policy, transaction: Transaction, t: TFunctio
         return null;
     }
 
-    const newAddress = party.addresses.find(a => a.addressId === transaction.partyPolicyNewReferenceId);
-    const oldAddress = party.addresses.find(a => a.addressId === transaction.partyPolicyChangeReferenceId);
+    const newAddress = party.addresses.find(
+        (a) => a.addressId === transaction.partyPolicyNewReferenceId
+    );
+    const oldAddress = party.addresses.find(
+        (a) => a.addressId === transaction.partyPolicyChangeReferenceId
+    );
 
     const makeAddress = (address: PolicyAddress | undefined) => {
         if (!address) {
@@ -92,10 +133,16 @@ const getAddressChanges = (policy: Policy, transaction: Transaction, t: TFunctio
         const tableArgs = [
             {
                 updated: newAddress?.addressType
-                    ? mapAddressTypeToTranslation({ addressType: newAddress.addressType, t })
+                    ? mapAddressTypeToTranslation({
+                          addressType: newAddress.addressType,
+                          t,
+                      })
                     : DEFAULT_ERROR_STRING,
                 original: oldAddress?.addressType
-                    ? mapAddressTypeToTranslation({ addressType: oldAddress?.addressType, t })
+                    ? mapAddressTypeToTranslation({
+                          addressType: oldAddress?.addressType,
+                          t,
+                      })
                     : DEFAULT_ERROR_STRING,
                 label: t('policy.history.sidesheet.type'),
             },
@@ -113,10 +160,15 @@ const getAddressChanges = (policy: Policy, transaction: Transaction, t: TFunctio
             <div className="grid w-full grid-cols-2 gap-8">
                 <FieldData label={t('policy.history.sidesheet.type')}>
                     {newAddress?.addressType
-                        ? mapAddressTypeToTranslation({ addressType: newAddress.addressType, t })
+                        ? mapAddressTypeToTranslation({
+                              addressType: newAddress.addressType,
+                              t,
+                          })
                         : DEFAULT_ERROR_STRING}
                 </FieldData>
-                <FieldData label={t('policy.history.sidesheet.address')}>{makeAddress(newAddress)}</FieldData>
+                <FieldData label={t('policy.history.sidesheet.address')}>
+                    {makeAddress(newAddress)}
+                </FieldData>
             </div>
         );
     }
@@ -124,14 +176,20 @@ const getAddressChanges = (policy: Policy, transaction: Transaction, t: TFunctio
     if (changeType === PeopleChangeType.Remove) {
         return (
             <div className="grid w-full grid-cols-2 gap-8">
-                <FieldData label={t('policy.history.sidesheet.address')}>{makeAddress(oldAddress)}</FieldData>
+                <FieldData label={t('policy.history.sidesheet.address')}>
+                    {makeAddress(oldAddress)}
+                </FieldData>
             </div>
         );
     }
     return null;
 };
 
-const getBankAccountChanges = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
+const getBankAccountChanges = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction
+): ReactNode => {
     if (!policy || !transaction) {
         return null;
     }
@@ -142,22 +200,32 @@ const getBankAccountChanges = (policy: Policy, transaction: Transaction, t: TFun
         return null;
     }
 
-    const displayAccountNumber = (accountNumber: string | undefined): string => {
+    const displayAccountNumber = (
+        accountNumber: string | undefined
+    ): string => {
         if (!accountNumber) {
             return DEFAULT_ERROR_STRING;
         }
-        return t('policy.history.sidesheet.endingIn', { accountNumber: formatAccountNumber(accountNumber, true) });
+        return t('policy.history.sidesheet.endingIn', {
+            accountNumber: formatAccountNumber(accountNumber, true),
+        });
     };
 
-    const newBank = party.bankDetails.find(a => a.bankId === transaction.partyPolicyNewReferenceId);
-    const oldBank = party.bankDetails.find(a => a.bankId === transaction.partyPolicyChangeReferenceId);
+    const newBank = party.bankDetails.find(
+        (a) => a.bankId === transaction.partyPolicyNewReferenceId
+    );
+    const oldBank = party.bankDetails.find(
+        (a) => a.bankId === transaction.partyPolicyChangeReferenceId
+    );
 
     // change
     if (changeType === PeopleChangeType.Update) {
         const tableArgs = [
             {
-                updated: newBank?.branchName?.toUpperCase() ?? DEFAULT_ERROR_STRING,
-                original: oldBank?.branchName?.toUpperCase() ?? DEFAULT_ERROR_STRING,
+                updated:
+                    newBank?.branchName?.toUpperCase() ?? DEFAULT_ERROR_STRING,
+                original:
+                    oldBank?.branchName?.toUpperCase() ?? DEFAULT_ERROR_STRING,
                 label: t('policy.history.sidesheet.bankName'),
             },
             {
@@ -171,8 +239,12 @@ const getBankAccountChanges = (policy: Policy, transaction: Transaction, t: TFun
                 label: t('policy.history.sidesheet.routingNumber'),
             },
             {
-                updated: newBank?.accountType ? mapAccountTypeToTranslation(newBank.accountType, t) : DEFAULT_ERROR_STRING,
-                original: oldBank?.accountType ? mapAccountTypeToTranslation(oldBank.accountType, t) : DEFAULT_ERROR_STRING,
+                updated: newBank?.accountType
+                    ? mapAccountTypeToTranslation(newBank.accountType, t)
+                    : DEFAULT_ERROR_STRING,
+                original: oldBank?.accountType
+                    ? mapAccountTypeToTranslation(oldBank.accountType, t)
+                    : DEFAULT_ERROR_STRING,
                 label: t('policy.history.sidesheet.accountType'),
             },
         ];
@@ -186,10 +258,16 @@ const getBankAccountChanges = (policy: Policy, transaction: Transaction, t: TFun
                     {newBank?.branchName?.toUpperCase() ?? DEFAULT_ERROR_STRING}
                 </FieldData>
                 <FieldData label={t('policy.history.sidesheet.accountType')}>
-                    {newBank?.accountType ? mapAccountTypeToTranslation(newBank.accountType, t) : DEFAULT_ERROR_STRING}
+                    {newBank?.accountType
+                        ? mapAccountTypeToTranslation(newBank.accountType, t)
+                        : DEFAULT_ERROR_STRING}
                 </FieldData>
-                <FieldData label={t('policy.history.sidesheet.routingNumber')}>{newBank?.routingNumber ?? DEFAULT_ERROR_STRING}</FieldData>
-                <FieldData label={t('policy.history.sidesheet.accountNumber')}>{displayAccountNumber(newBank?.accountNumber)}</FieldData>
+                <FieldData label={t('policy.history.sidesheet.routingNumber')}>
+                    {newBank?.routingNumber ?? DEFAULT_ERROR_STRING}
+                </FieldData>
+                <FieldData label={t('policy.history.sidesheet.accountNumber')}>
+                    {displayAccountNumber(newBank?.accountNumber)}
+                </FieldData>
             </div>
         );
     }
@@ -201,17 +279,27 @@ const getBankAccountChanges = (policy: Policy, transaction: Transaction, t: TFun
                     {oldBank?.branchName?.toUpperCase() ?? DEFAULT_ERROR_STRING}
                 </FieldData>
                 <FieldData label={t('policy.history.sidesheet.accountType')}>
-                    {oldBank?.accountType ? mapAccountTypeToTranslation(oldBank.accountType, t) : DEFAULT_ERROR_STRING}
+                    {oldBank?.accountType
+                        ? mapAccountTypeToTranslation(oldBank.accountType, t)
+                        : DEFAULT_ERROR_STRING}
                 </FieldData>
-                <FieldData label={t('policy.history.sidesheet.routingNumber')}>{oldBank?.routingNumber ?? DEFAULT_ERROR_STRING}</FieldData>
-                <FieldData label={t('policy.history.sidesheet.accountNumber')}>{displayAccountNumber(oldBank?.accountNumber)}</FieldData>
+                <FieldData label={t('policy.history.sidesheet.routingNumber')}>
+                    {oldBank?.routingNumber ?? DEFAULT_ERROR_STRING}
+                </FieldData>
+                <FieldData label={t('policy.history.sidesheet.accountNumber')}>
+                    {displayAccountNumber(oldBank?.accountNumber)}
+                </FieldData>
             </div>
         );
     }
     return null;
 };
 
-const getEmailChanges = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
+const getEmailChanges = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction
+): ReactNode => {
     if (!policy || !transaction) {
         return null;
     }
@@ -222,8 +310,12 @@ const getEmailChanges = (policy: Policy, transaction: Transaction, t: TFunction)
         return null;
     }
 
-    const newEmail = party.emails.find(a => a.emailId === transaction.partyPolicyNewReferenceId);
-    const oldEmail = party.emails.find(a => a.emailId === transaction.partyPolicyChangeReferenceId);
+    const newEmail = party.emails.find(
+        (a) => a.emailId === transaction.partyPolicyNewReferenceId
+    );
+    const oldEmail = party.emails.find(
+        (a) => a.emailId === transaction.partyPolicyChangeReferenceId
+    );
 
     // change
     if (changeType === PeopleChangeType.Update) {
@@ -241,9 +333,13 @@ const getEmailChanges = (policy: Policy, transaction: Transaction, t: TFunction)
         return (
             <div className="grid w-full grid-cols-2 gap-8">
                 <FieldData label={t('policy.history.sidesheet.type')}>
-                    {newEmail?.emailType ? mapEmailTypeToTranslation(newEmail.emailType, t) : DEFAULT_ERROR_STRING}
+                    {newEmail?.emailType
+                        ? mapEmailTypeToTranslation(newEmail.emailType, t)
+                        : DEFAULT_ERROR_STRING}
                 </FieldData>
-                <FieldData label={t('policy.history.sidesheet.email')}>{newEmail?.emailAddress ?? DEFAULT_ERROR_STRING}</FieldData>
+                <FieldData label={t('policy.history.sidesheet.email')}>
+                    {newEmail?.emailAddress ?? DEFAULT_ERROR_STRING}
+                </FieldData>
             </div>
         );
     }
@@ -252,16 +348,24 @@ const getEmailChanges = (policy: Policy, transaction: Transaction, t: TFunction)
         return (
             <div className="grid w-full grid-cols-2 gap-8">
                 <FieldData label={t('policy.history.sidesheet.type')}>
-                    {oldEmail?.emailType ? mapEmailTypeToTranslation(oldEmail.emailType, t) : DEFAULT_ERROR_STRING}
+                    {oldEmail?.emailType
+                        ? mapEmailTypeToTranslation(oldEmail.emailType, t)
+                        : DEFAULT_ERROR_STRING}
                 </FieldData>
-                <FieldData label={t('policy.history.sidesheet.email')}>{oldEmail?.emailAddress ?? DEFAULT_ERROR_STRING}</FieldData>
+                <FieldData label={t('policy.history.sidesheet.email')}>
+                    {oldEmail?.emailAddress ?? DEFAULT_ERROR_STRING}
+                </FieldData>
             </div>
         );
     }
     return null;
 };
 
-const getPhoneChanges = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
+const getPhoneChanges = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction
+): ReactNode => {
     if (!policy || !transaction) {
         return null;
     }
@@ -272,15 +376,23 @@ const getPhoneChanges = (policy: Policy, transaction: Transaction, t: TFunction)
         return null;
     }
 
-    const newPhone = party.phones.find(a => a.phoneId === transaction.partyPolicyNewReferenceId);
-    const oldPhone = party.phones.find(a => a.phoneId === transaction.partyPolicyChangeReferenceId);
+    const newPhone = party.phones.find(
+        (a) => a.phoneId === transaction.partyPolicyNewReferenceId
+    );
+    const oldPhone = party.phones.find(
+        (a) => a.phoneId === transaction.partyPolicyChangeReferenceId
+    );
 
     // change
     if (changeType === PeopleChangeType.Update) {
         const tableArgs = [
             {
-                updated: newPhone ? formatPhoneNumberWithExtension(newPhone) : DEFAULT_ERROR_STRING,
-                original: oldPhone ? formatPhoneNumberWithExtension(oldPhone) : DEFAULT_ERROR_STRING,
+                updated: newPhone
+                    ? formatPhoneNumberWithExtension(newPhone)
+                    : DEFAULT_ERROR_STRING,
+                original: oldPhone
+                    ? formatPhoneNumberWithExtension(oldPhone)
+                    : DEFAULT_ERROR_STRING,
                 label: t('policy.history.sidesheet.phone'),
             },
             {
@@ -301,13 +413,23 @@ const getPhoneChanges = (policy: Policy, transaction: Transaction, t: TFunction)
         return (
             <div className="grid w-full grid-cols-2 gap-8">
                 <FieldData label={t('policy.history.sidesheet.type')}>
-                    {newPhone?.phoneType ? mapPhoneTypeToTranslation(newPhone.phoneType, t) : DEFAULT_ERROR_STRING}
+                    {newPhone?.phoneType
+                        ? mapPhoneTypeToTranslation(newPhone.phoneType, t)
+                        : DEFAULT_ERROR_STRING}
                 </FieldData>
                 <FieldData label={t('policy.history.sidesheet.number')}>
-                    {newPhone ? formatPhoneNumberWithExtension(newPhone) : DEFAULT_ERROR_STRING}
+                    {newPhone
+                        ? formatPhoneNumberWithExtension(newPhone)
+                        : DEFAULT_ERROR_STRING}
                 </FieldData>
-                <FieldData label={t('policy.history.sidesheet.bestTimeToContact')}>{newPhone?.bestTime ?? DEFAULT_ERROR_STRING}</FieldData>
-                <FieldData label={t('policy.history.sidesheet.timeZone')}>{newPhone?.timezone ?? DEFAULT_ERROR_STRING}</FieldData>
+                <FieldData
+                    label={t('policy.history.sidesheet.bestTimeToContact')}
+                >
+                    {newPhone?.bestTime ?? DEFAULT_ERROR_STRING}
+                </FieldData>
+                <FieldData label={t('policy.history.sidesheet.timeZone')}>
+                    {newPhone?.timezone ?? DEFAULT_ERROR_STRING}
+                </FieldData>
             </div>
         );
     }
@@ -316,7 +438,9 @@ const getPhoneChanges = (policy: Policy, transaction: Transaction, t: TFunction)
         return (
             <div className="grid w-full grid-cols-2 gap-8">
                 <FieldData label={t('policy.history.sidesheet.number')}>
-                    {oldPhone ? formatPhoneNumberWithExtension(oldPhone) : DEFAULT_ERROR_STRING}
+                    {oldPhone
+                        ? formatPhoneNumberWithExtension(oldPhone)
+                        : DEFAULT_ERROR_STRING}
                 </FieldData>
             </div>
         );
@@ -324,15 +448,30 @@ const getPhoneChanges = (policy: Policy, transaction: Transaction, t: TFunction)
     return null;
 };
 
-const getPolicyLapse = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
+const getPolicyLapse = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction
+): ReactNode => {
     const { policyFeatures } = policy;
-    const reinstatement = policyFeatures?.find(pf => pf.featureType === FeatureType.REINSTATEMENT);
-    const pendingLapse = policyFeatures?.find(pf => pf.featureType === FeatureType.LAPSEASSESSMENT);
+    const reinstatement = policyFeatures?.find(
+        (pf) => pf.featureType === FeatureType.REINSTATEMENT
+    );
+    const pendingLapse = policyFeatures?.find(
+        (pf) => pf.featureType === FeatureType.LAPSEASSESSMENT
+    );
 
-    const gracePeriodText = t('policy.history.sidesheet.lapseGracePeriodValue', {
-        startDate: dayjs(pendingLapse?.startDate).format(DEFAULT_EXTENDED_DAY_DATE_FORMAT),
-        endDate: dayjs(pendingLapse?.endDate).format(DEFAULT_EXTENDED_DAY_DATE_FORMAT),
-    });
+    const gracePeriodText = t(
+        'policy.history.sidesheet.lapseGracePeriodValue',
+        {
+            startDate: dayjs(pendingLapse?.startDate).format(
+                DEFAULT_EXTENDED_DAY_DATE_FORMAT
+            ),
+            endDate: dayjs(pendingLapse?.endDate).format(
+                DEFAULT_EXTENDED_DAY_DATE_FORMAT
+            ),
+        }
+    );
 
     let reinstatementPeriodText;
 
@@ -344,7 +483,9 @@ const getPolicyLapse = (policy: Policy, transaction: Transaction, t: TFunction):
             reinstatementPeriodText = t('common:temporal.oneYear');
             break;
         default:
-            reinstatementPeriodText = t('common:temporal.nYears', { n: reinstatement?.period });
+            reinstatementPeriodText = t('common:temporal.nYears', {
+                n: reinstatement?.period,
+            });
             break;
     }
 
@@ -353,9 +494,13 @@ const getPolicyLapse = (policy: Policy, transaction: Transaction, t: TFunction):
             <FieldData
                 label={t('policy.history.sidesheet.lapseProcessDate')}
                 tooltipTitle={t('policy.history.sidesheet.lapseProcessDate')}
-                tooltipBody={t('policy.history.sidesheet.lapseProcessDateTooltip')}
+                tooltipBody={t(
+                    'policy.history.sidesheet.lapseProcessDateTooltip'
+                )}
             >
-                {dayjs(transaction.processDate).format(DEFAULT_EXTENDED_DAY_DATE_FORMAT) || DEFAULT_ERROR_STRING}
+                {dayjs(transaction.processDate).format(
+                    DEFAULT_EXTENDED_DAY_DATE_FORMAT
+                ) || DEFAULT_ERROR_STRING}
             </FieldData>
 
             <FieldData
@@ -363,26 +508,41 @@ const getPolicyLapse = (policy: Policy, transaction: Transaction, t: TFunction):
                 tooltipTitle={t('policy.history.sidesheet.lapseDate')}
                 tooltipBody={t('policy.history.sidesheet.lapseDateTooltip')}
             >
-                {dayjs(transaction.effectiveDate).format(DEFAULT_EXTENDED_DAY_DATE_FORMAT) || DEFAULT_ERROR_STRING}
+                {dayjs(transaction.effectiveDate).format(
+                    DEFAULT_EXTENDED_DAY_DATE_FORMAT
+                ) || DEFAULT_ERROR_STRING}
             </FieldData>
             <FieldData
                 label={t('policy.history.sidesheet.lapseGracePeriod')}
                 tooltipTitle={t('policy.history.sidesheet.lapseGracePeriod')}
-                tooltipBody={t('policy.history.sidesheet.lapseGracePeriodTooltip')}
+                tooltipBody={t(
+                    'policy.history.sidesheet.lapseGracePeriodTooltip'
+                )}
             >
                 {gracePeriodText || DEFAULT_ERROR_STRING}
             </FieldData>
             <FieldData
                 label={t('policy.history.sidesheet.lapseGracePeriodMinPayment')}
-                tooltipTitle={t('policy.history.sidesheet.lapseGracePeriodMinPayment')}
-                tooltipBody={t('policy.history.sidesheet.lapseGracePeriodMinPaymentTooltip')}
+                tooltipTitle={t(
+                    'policy.history.sidesheet.lapseGracePeriodMinPayment'
+                )}
+                tooltipBody={t(
+                    'policy.history.sidesheet.lapseGracePeriodMinPaymentTooltip'
+                )}
             >
-                {numberFormatify(pendingLapse?.totalMinimumRequiredAmount || DEFAULT_ERROR_STRING)}
+                {numberFormatify(
+                    pendingLapse?.totalMinimumRequiredAmount ||
+                        DEFAULT_ERROR_STRING
+                )}
             </FieldData>
             <FieldData
                 label={t('policy.history.sidesheet.lapseReinstatementPeriod')}
-                tooltipTitle={t('policy.history.sidesheet.lapseReinstatementPeriod')}
-                tooltipBody={t('policy.history.sidesheet.lapseReinstatementPeriodTooltip')}
+                tooltipTitle={t(
+                    'policy.history.sidesheet.lapseReinstatementPeriod'
+                )}
+                tooltipBody={t(
+                    'policy.history.sidesheet.lapseReinstatementPeriodTooltip'
+                )}
             >
                 {reinstatementPeriodText || DEFAULT_ERROR_STRING}
             </FieldData>
@@ -390,7 +550,11 @@ const getPolicyLapse = (policy: Policy, transaction: Transaction, t: TFunction):
     );
 };
 
-const getChanges = (policy: Policy, transaction: Transaction, t: TFunction): ReactNode => {
+const getChanges = (
+    policy: Policy,
+    transaction: Transaction,
+    t: TFunction
+): ReactNode => {
     if (!policy || !transaction?.transactionType) {
         return null;
     }
@@ -411,22 +575,33 @@ const getChanges = (policy: Policy, transaction: Transaction, t: TFunction): Rea
     }
 };
 
-const SideSheetNonFinancialTransaction = ({ policy, transaction }: SideSheetTransactionProps) => {
+const SideSheetNonFinancialTransaction = ({
+    policy,
+    transaction,
+}: SideSheetTransactionProps) => {
     const { t } = useTranslation();
-    const { effectiveDate, name, roleTags } = getNonFinancialTransactionSideSheetValues(policy, transaction, t);
+    const { effectiveDate, name, roleTags } =
+        getNonFinancialTransactionSideSheetValues(policy, transaction, t);
 
     return (
         <div className="p-8">
             <div className="flex flex-col gap-8">
                 {!TransactionType.LAPSE && (
                     <>
-                        <FieldData label={t('policy.history.sidesheet.effectiveDate')}>{effectiveDate}</FieldData>
+                        <FieldData
+                            label={t('policy.history.sidesheet.effectiveDate')}
+                        >
+                            {effectiveDate}
+                        </FieldData>
                         <div className="flex flex-col gap-1">
-                            <Title variant={TitleVariant.SubTitleAlt} className="text-start leading-[27px]">
+                            <Title
+                                variant={TitleVariant.SubTitleAlt}
+                                className="text-start leading-[27px]"
+                            >
                                 {name}
                             </Title>
                             <div className="flex flex-wrap gap-1">
-                                {roleTags?.map(tag => (
+                                {roleTags?.map((tag) => (
                                     <Tag key={tag} text={tag} />
                                 ))}
                             </div>

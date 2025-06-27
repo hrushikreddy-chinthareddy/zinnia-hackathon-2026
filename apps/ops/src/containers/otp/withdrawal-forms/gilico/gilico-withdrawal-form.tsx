@@ -25,7 +25,9 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 import getGilicoConfig, { FormSubtype } from './gilico-withdrawal-form.helpers';
 
 export default function GilicoWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
 
     const {
         formSubtype,
@@ -70,9 +72,13 @@ export default function GilicoWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.FLIC}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.FLIC
+            }_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.FLIC}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.FLIC
+                }_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -86,14 +92,25 @@ export default function GilicoWithdrawalForm() {
         }
     }, [formParty]);
 
-    const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
+    const isMaritalStatusAllowances = contractIssueState
+        ? validateMaritalStatusAllowances(contractIssueState as USStates)
+        : false;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormType isFormStateReadOnly={isFormStateReadOnly} formSubtypeOptions={formSubtypeOptions} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />
+            <FormType
+                isFormStateReadOnly={isFormStateReadOnly}
+                formSubtypeOptions={formSubtypeOptions}
+            />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <DistributionReason
+                reasonOptions={reasonOptions}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
 
             {formSubtype === FormSubtype.FullWithdrawal ? (
                 <FormProgramFullWithdrawal
@@ -112,7 +129,11 @@ export default function GilicoWithdrawalForm() {
                     <FormDistribution
                         isFormStateReadOnly={isFormStateReadOnly}
                         fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                        title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                        title={
+                            t(
+                                'distributionInstruction.investmentSelectionForDistribution'
+                            ) as string
+                        }
                     />
                 </>
             )}
@@ -121,17 +142,33 @@ export default function GilicoWithdrawalForm() {
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
                 meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
             />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
             {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

@@ -35,8 +35,15 @@ const ButtonGrp = ({
     hideLabel,
     isFullWidth,
 }: ButtonGroupProps) => {
-    const baseClassnames = clsx('relative box-border h-[42px] justify-center px-6 font-secondary text-md leading-5.5');
-    const classNames = getClasses(size, variant, `whitespace-nowrap rounded-full font-primary ${className}`, disabled);
+    const baseClassnames = clsx(
+        'relative box-border h-[42px] justify-center px-6 font-secondary text-md leading-5.5'
+    );
+    const classNames = getClasses(
+        size,
+        variant,
+        `whitespace-nowrap rounded-full font-primary ${className}`,
+        disabled
+    );
 
     const labelsLength = labels.length;
     const gridLayoutClassNames = clsx('box-border grid', {
@@ -54,9 +61,12 @@ const ButtonGrp = ({
         'grid-cols-12': labelsLength === 12,
     });
 
-    const labelClassNames = clsx('my-0 mb-1 inline-block font-primary text-sm font-bold leading-[18px]', {
-        'sr-only': hideLabel || !groupLabel,
-    });
+    const labelClassNames = clsx(
+        'my-0 mb-1 inline-block font-primary text-sm font-bold leading-[18px]',
+        {
+            'sr-only': hideLabel || !groupLabel,
+        }
+    );
 
     const radioGroupClassNames = clsx({
         'w-full': isFullWidth,
@@ -66,26 +76,58 @@ const ButtonGrp = ({
 
     return (
         <div className="flex">
-            <RadioGroup value={activeValue} onChange={toggle} data-testid={ButtonGroupTest.TOGGLE} className={radioGroupClassNames}>
-                <RadioGroup.Label className={labelClassNames}>{groupLabel}</RadioGroup.Label>
+            <RadioGroup
+                value={activeValue}
+                onChange={toggle}
+                data-testid={ButtonGroupTest.TOGGLE}
+                className={radioGroupClassNames}
+            >
+                <RadioGroup.Label className={labelClassNames}>
+                    {groupLabel}
+                </RadioGroup.Label>
                 <div className={gridLayoutClassNames}>
-                    {labels.map(({ value, label, testId, disabled: itemDisabled = false }, i) => {
-                        return (
-                            <RadioGroup.Option disabled={true} value={value ?? ''} key={label} aria-label={label}>
-                                {({ checked }) => (
-                                    <ButtonGroupItem
-                                        checked={checked}
-                                        disabled={disabled || itemDisabled}
-                                        label={label}
-                                        onClick={() => toggle(value ?? '')}
-                                        className={`${baseClassnames} ${classNames}`}
-                                        position={i === 0 ? 'first' : i === labels.length - 1 ? 'end' : 'middle'}
-                                        dataTestId={testId ? testId : `${ButtonGroupTest.LABEL}-${label}`}
-                                    />
-                                )}
-                            </RadioGroup.Option>
-                        );
-                    })}
+                    {labels.map(
+                        (
+                            {
+                                value,
+                                label,
+                                testId,
+                                disabled: itemDisabled = false,
+                            },
+                            i
+                        ) => {
+                            return (
+                                <RadioGroup.Option
+                                    disabled={true}
+                                    value={value ?? ''}
+                                    key={label}
+                                    aria-label={label}
+                                >
+                                    {({ checked }) => (
+                                        <ButtonGroupItem
+                                            checked={checked}
+                                            disabled={disabled || itemDisabled}
+                                            label={label}
+                                            onClick={() => toggle(value ?? '')}
+                                            className={`${baseClassnames} ${classNames}`}
+                                            position={
+                                                i === 0
+                                                    ? 'first'
+                                                    : i === labels.length - 1
+                                                    ? 'end'
+                                                    : 'middle'
+                                            }
+                                            dataTestId={
+                                                testId
+                                                    ? testId
+                                                    : `${ButtonGroupTest.LABEL}-${label}`
+                                            }
+                                        />
+                                    )}
+                                </RadioGroup.Option>
+                            );
+                        }
+                    )}
                 </div>
             </RadioGroup>
         </div>

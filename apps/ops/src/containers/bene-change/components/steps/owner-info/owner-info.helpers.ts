@@ -3,7 +3,11 @@ import { TFunction } from 'next-i18next';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
-import { PartyRoles, AddressTypes, PhoneTypes } from '@deps/models/case/withdrawal/case';
+import {
+    PartyRoles,
+    AddressTypes,
+    PhoneTypes,
+} from '@deps/models/case/withdrawal/case';
 
 export function getConfigFlic(t: TFunction) {
     const formPartyConfigs: PartyConfig[] = [

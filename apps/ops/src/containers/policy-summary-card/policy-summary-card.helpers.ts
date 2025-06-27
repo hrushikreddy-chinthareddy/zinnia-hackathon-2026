@@ -17,7 +17,7 @@ export const deathClaimNotApplicableStatuses: any[] = [
     PolicyStatus.TERMINATED,
     PolicyStatus.DEATHCLAIMPENDING,
     PolicyStatus.LIVINGCLAIMPENDING,
-    PolicyStatus.PAYOUTPARTCLM
+    PolicyStatus.PAYOUTPARTCLM,
 ];
 
 export const deathClaimApplicableStatuses: any[] = [
@@ -27,36 +27,65 @@ export const deathClaimApplicableStatuses: any[] = [
     PolicyStatus.EXTENDEDFREEL,
     PolicyStatus.ACTIVEGUARANTEE,
     PolicyStatus.NONLIFEPAYOUT,
-    PolicyStatus.RESTRICTION
+    PolicyStatus.RESTRICTION,
 ];
 
-export const getCancelledPolicyStatuses = (policyStatus: string, t: TFunction) => {
+export const getCancelledPolicyStatuses = (
+    policyStatus: string,
+    t: TFunction
+) => {
     switch (policyStatus) {
         case PolicyStatus.CANCELEDNOPREMIUM:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyCancelled');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyCancelled'
+            );
         case PolicyStatus.COMMUTED:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyCommuted');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyCommuted'
+            );
         case PolicyStatus.NOTISSUED:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyAppEntry');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyAppEntry'
+            );
         case PolicyStatus.SURRENDERED:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyTerminated');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyTerminated'
+            );
         case PolicyStatus.DEATHCLAIMPAID:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyDeathClaimPaid');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyDeathClaimPaid'
+            );
         case PolicyStatus.PENDINGISSUED:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyPendingOverIssue');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyPendingOverIssue'
+            );
         case PolicyStatus.FREELOOKPER:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyFreeLookPeriod');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyFreeLookPeriod'
+            );
         case PolicyStatus.CANCELEDFREELOOK:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicySurrender');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicySurrender'
+            );
         case PolicyStatus.PNDOUTSTNDREQ:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyPendingRequirement');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyPendingRequirement'
+            );
         case PolicyStatus.PNDAWAITFUNDS:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyPendingFunds');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyPendingFunds'
+            );
         case PolicyStatus.REJECTED:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyRejected');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyRejected'
+            );
         case PolicyStatus.TERMINATED:
-            return t('dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyWithdrawn');
+            return t(
+                'dashboard.search.results.policySummaryCard.unableToProceedWithDeathClaimPolicyWithdrawn'
+            );
         default:
-            return t('dashboard.search.results.policySummaryCard.deathClaimNotApplicable');
+            return t(
+                'dashboard.search.results.policySummaryCard.deathClaimNotApplicable'
+            );
     }
 };

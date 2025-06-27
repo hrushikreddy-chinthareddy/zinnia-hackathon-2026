@@ -3,7 +3,9 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 
-import ProgressBarStepsItem, { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import ProgressBarStepsItem, {
+    Step,
+} from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { scrollToElement } from '@deps/helpers/routing.helpers';
 import { DEFAULT_STEP_WIDTH, SCREEN_BREAKPOINTS } from '@deps/types/constants';
 
@@ -18,7 +20,13 @@ interface ProgressBarStepsProps {
     stepWidth?: number;
 }
 
-const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWidth = DEFAULT_STEP_WIDTH }: ProgressBarStepsProps) => {
+const ProgressBarSteps = ({
+    steps,
+    currentStepIndex,
+    onClick,
+    classNames,
+    stepWidth = DEFAULT_STEP_WIDTH,
+}: ProgressBarStepsProps) => {
     const { t } = useTranslation();
 
     const [isMounted, setIsMounted] = useState(false);
@@ -35,7 +43,10 @@ const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWi
     useEffect(() => {
         if (steps.length > 0) {
             const stepsWidth = steps.length * stepWidth;
-            setIsScrollable(stepsWidth + MARGIN > SCREEN_BREAKPOINTS.page || stepsWidth > windowWidth);
+            setIsScrollable(
+                stepsWidth + MARGIN > SCREEN_BREAKPOINTS.page ||
+                    stepsWidth > windowWidth
+            );
         }
     }, [stepWidth, steps, windowWidth]);
 
@@ -59,15 +70,22 @@ const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWi
     // This is because the scrollbar obscures the box shadow and border radius on the entire container
 
     return (
-        <div className={clsx(isScrollable && styles.progressBar__scrollable)} ref={containerRef}>
+        <div
+            className={clsx(isScrollable && styles.progressBar__scrollable)}
+            ref={containerRef}
+        >
             <div
                 className={clsx(styles.progressBar__steps, classNames)}
-                style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(${stepWidth}px, max-content))` }}
+                style={{
+                    gridTemplateColumns: `repeat(${steps.length}, minmax(${stepWidth}px, max-content))`,
+                }}
             >
                 {steps.map((step, index) => {
                     const isActive = step.index === currentStepIndex;
-                    const isDisabled = step.isDisabled || step.index > currentStepIndex;
-                    const isCompleted = step.isCompleted || step.index < currentStepIndex;
+                    const isDisabled =
+                        step.isDisabled || step.index > currentStepIndex;
+                    const isCompleted =
+                        step.isCompleted || step.index < currentStepIndex;
 
                     return (
                         <ProgressBarStepsItem
@@ -76,7 +94,10 @@ const ProgressBarSteps = ({ steps, currentStepIndex, onClick, classNames, stepWi
                             isActive={isActive}
                             isDisabled={isDisabled}
                             isCompleted={isCompleted}
-                            screenReaderLabel={t('progressBarSteps.stepCount', { step: index + 1, endStep: steps.length })}
+                            screenReaderLabel={t('progressBarSteps.stepCount', {
+                                step: index + 1,
+                                endStep: steps.length,
+                            })}
                             onClick={() => onClick(step)}
                             stepWidth={stepWidth}
                         />

@@ -11,9 +11,15 @@ import { CommunicationTypes } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 const getPrimaryEmail = (policy: Policy) => {
-    const eDeliveryRoleId = policy.partyRoles?.find(party => party.partyRole === ('E-DELIVERY' as PartyRole))?.partyId;
+    const eDeliveryRoleId = policy.partyRoles?.find(
+        (party) => party.partyRole === ('E-DELIVERY' as PartyRole)
+    )?.partyId;
     const primaryEmails =
-        policy.parties?.find(policy => policy.partyType === PartyType.INDIVIDUAL && policy.partyId === eDeliveryRoleId)?.emails || [];
+        policy.parties?.find(
+            (policy) =>
+                policy.partyType === PartyType.INDIVIDUAL &&
+                policy.partyId === eDeliveryRoleId
+        )?.emails || [];
     return primaryEmails?.length > 0 ? primaryEmails[0].emailAddress || '' : '';
 };
 type CorrespondenceProps = {
@@ -41,11 +47,23 @@ const CorrespondenceCard = ({
 
     const emailId = getPrimaryEmail(policy);
 
-    const [communicationType, setCommunicationType] = useState(selectedCommunicationType || '');
-    const [emails, setEmails] = useState(
-        selectedCommunicationType === CommunicationTypes.Email ? (recipients.length ? recipients : emailId ? [emailId.trim()] : []) : []
+    const [communicationType, setCommunicationType] = useState(
+        selectedCommunicationType || ''
     );
-    const [fax, setFax] = useState(selectedCommunicationType === CommunicationTypes.Fax ? recipients || [] : []);
+    const [emails, setEmails] = useState(
+        selectedCommunicationType === CommunicationTypes.Email
+            ? recipients.length
+                ? recipients
+                : emailId
+                ? [emailId.trim()]
+                : []
+            : []
+    );
+    const [fax, setFax] = useState(
+        selectedCommunicationType === CommunicationTypes.Fax
+            ? recipients || []
+            : []
+    );
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
     const [ccEmails, setCCEmails] = useState<string[]>([]);
 
@@ -67,13 +85,17 @@ const CorrespondenceCard = ({
     useEffect(() => {
         setCorrespondenceData({
             type: communicationType,
-            recipients: communicationType === CommunicationTypes.Email ? emails : fax,
-            ccList: communicationType === CommunicationTypes.Email ? ccEmails : [],
+            recipients:
+                communicationType === CommunicationTypes.Email ? emails : fax,
+            ccList:
+                communicationType === CommunicationTypes.Email ? ccEmails : [],
             mailDetails: address,
         });
     }, [emails, fax, address, setCorrespondenceData, communicationType]);
 
-    function renderReceiptComponent(communicationType: string): React.ReactNode {
+    function renderReceiptComponent(
+        communicationType: string
+    ): React.ReactNode {
         switch (communicationType) {
             case CommunicationTypes.Email:
                 return (
@@ -88,9 +110,19 @@ const CorrespondenceCard = ({
                     </>
                 );
             case CommunicationTypes.Fax:
-                return <FaxNumber fax={fax.length ? fax[0] : ''} setFax={(val: string) => setFax(val ? [val] : [])} />;
+                return (
+                    <FaxNumber
+                        fax={fax.length ? fax[0] : ''}
+                        setFax={(val: string) => setFax(val ? [val] : [])}
+                    />
+                );
             case CommunicationTypes.Mail:
-                return <ContactCenterAddress policy={policy} setAddress={setAddress} />;
+                return (
+                    <ContactCenterAddress
+                        policy={policy}
+                        setAddress={setAddress}
+                    />
+                );
             default:
                 null;
         }
@@ -101,8 +133,10 @@ const CorrespondenceCard = ({
             <Radio
                 items={communicationOptions ?? communicationTypes}
                 label={t('correspondence.label') as string}
-                onChange={event => {
-                    setCommunicationType(event.target.value as CommunicationTypes);
+                onChange={(event) => {
+                    setCommunicationType(
+                        event.target.value as CommunicationTypes
+                    );
                     setError({});
                 }}
                 value={communicationType}

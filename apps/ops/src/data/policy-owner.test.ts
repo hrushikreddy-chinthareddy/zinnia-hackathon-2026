@@ -98,13 +98,17 @@ describe('Policy Owner Data helper', () => {
     it('returns a formatted name', () => {
         const result = toPolicyOwnerDto(partyInfo);
 
-        expect(result.fullName).toEqual(`${partyInfo.firstName} ${partyInfo.middleName?.[0]}. ${partyInfo.lastName} ${partyInfo.suffix}`);
+        expect(result.fullName).toEqual(
+            `${partyInfo.firstName} ${partyInfo.middleName?.[0]}. ${partyInfo.lastName} ${partyInfo.suffix}`
+        );
     });
 
     it('returns a formatted ssn', () => {
         const result = toPolicyOwnerDto(partyInfo);
 
-        expect(result.ssn).toEqual(partyInfo.identifications?.[0].identificationValue);
+        expect(result.ssn).toEqual(
+            partyInfo.identifications?.[0].identificationValue
+        );
     });
 
     it('returns a formatted birthday', () => {
@@ -123,7 +127,13 @@ describe('Policy Owner Data helper', () => {
         const initialPhone = partyInfo.phones?.[0];
         const newPhone = { ...initialPhone, dialNumber: '1234567' };
 
-        const result = toPolicyOwnerDto({ ...partyInfo, phones: [{ ...initialPhone, endDate: initialPhone?.startDate }, newPhone] });
+        const result = toPolicyOwnerDto({
+            ...partyInfo,
+            phones: [
+                { ...initialPhone, endDate: initialPhone?.startDate },
+                newPhone,
+            ],
+        });
 
         expect(result.primaryPhone).toEqual(newPhone);
     });
@@ -137,7 +147,13 @@ describe('Policy Owner Data helper', () => {
     it('returns the correct email address when one is past endDate', () => {
         const initialEmail = partyInfo.emails?.[0];
         const newEmail = { ...initialEmail, emailAddress: 'test@testing.com' };
-        const result = toPolicyOwnerDto({ ...partyInfo, emails: [{ ...initialEmail, endDate: initialEmail?.startDate }, newEmail] });
+        const result = toPolicyOwnerDto({
+            ...partyInfo,
+            emails: [
+                { ...initialEmail, endDate: initialEmail?.startDate },
+                newEmail,
+            ],
+        });
 
         expect(result.email).toEqual(newEmail);
     });
@@ -149,18 +165,33 @@ describe('Policy Owner Data helper', () => {
     });
 
     it('returns the preferred address', () => {
-        const unpreferredAddress = { ...partyInfo.addresses?.[0], addressLine1: '123 Unpreferred Road' };
-        const result = toPolicyOwnerDto({ ...partyInfo, addresses: [...(partyInfo.addresses as Address[]), unpreferredAddress] });
+        const unpreferredAddress = {
+            ...partyInfo.addresses?.[0],
+            addressLine1: '123 Unpreferred Road',
+        };
+        const result = toPolicyOwnerDto({
+            ...partyInfo,
+            addresses: [
+                ...(partyInfo.addresses as Address[]),
+                unpreferredAddress,
+            ],
+        });
 
         expect(result.mailingAddress).toEqual(partyInfo.addresses?.[0]);
     });
 
     it('returns the unpreferred address if the preferred address is past end date', () => {
         const initialAddress = partyInfo.addresses?.[0];
-        const unpreferredAddress = { ...initialAddress, addressLine1: '123 Unpreferred Road' };
+        const unpreferredAddress = {
+            ...initialAddress,
+            addressLine1: '123 Unpreferred Road',
+        };
         const result = toPolicyOwnerDto({
             ...partyInfo,
-            addresses: [unpreferredAddress, { ...initialAddress, endDate: initialAddress?.startDate }],
+            addresses: [
+                unpreferredAddress,
+                { ...initialAddress, endDate: initialAddress?.startDate },
+            ],
         });
 
         expect(result.mailingAddress).toEqual(unpreferredAddress);

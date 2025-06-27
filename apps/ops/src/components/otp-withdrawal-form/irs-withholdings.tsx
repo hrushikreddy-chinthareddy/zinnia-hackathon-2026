@@ -2,37 +2,70 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useContext, useMemo } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import SignatureValidation, {
     SignatureValidationField,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { Party, TaxWithholdingPlace, AmountType, WithholdingType, IrsFormType } from '@deps/models/case/withdrawal/case';
+import {
+    Party,
+    TaxWithholdingPlace,
+    AmountType,
+    WithholdingType,
+    IrsFormType,
+} from '@deps/models/case/withdrawal/case';
 
 import { getDefaultSignature } from './signature-validation/signature-validations';
 
 export interface IrsWithholdingProps {
     signatureFields: SignatureValidationField[];
-    isFormStateReadOnly?: boolean,
+    isFormStateReadOnly?: boolean;
 }
 
-export default function IrsWithholding({ signatureFields, isFormStateReadOnly }: IrsWithholdingProps) {
+export default function IrsWithholding({
+    signatureFields,
+    isFormStateReadOnly,
+}: IrsWithholdingProps) {
     const amountFormat = { format: '###' };
-    const { formIrsData, setFormIrsData, formParty } = useContext(FormDataContext);
-    const IrsW4rData = useMemo(() => (
-        Array.isArray(formIrsData) ? formIrsData.find(data => data?.irsFormType && data.irsFormType === 'W4R') : null
-    ), [formIrsData]);
+    const { formIrsData, setFormIrsData, formParty } =
+        useContext(FormDataContext);
+    const IrsW4rData = useMemo(
+        () =>
+            Array.isArray(formIrsData)
+                ? formIrsData.find(
+                      (data) => data?.irsFormType && data.irsFormType === 'W4R'
+                  )
+                : null,
+        [formIrsData]
+    );
     // TODO - use PartyRoleType enum once created for FormParty work
-    const owner = formParty.parties.find(party => party.partyRoleType === 'OWNER') as Party;
+    const owner = formParty.parties.find(
+        (party) => party.partyRoleType === 'OWNER'
+    ) as Party;
 
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.irsData' });
-    const [isIrsChecked, setIrsChecked] = useState(IrsW4rData?.irsApplicable || false);
-    const [amount, setAmount] = useState(IrsW4rData?.irsTaxWithholding?.[0]?.amount?.text || '');
-    const [taxId, setTaxId] = useState(IrsW4rData?.formParty?.taxId || owner?.taxId || '');
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.irsData',
+    });
+    const [isIrsChecked, setIrsChecked] = useState(
+        IrsW4rData?.irsApplicable || false
+    );
+    const [amount, setAmount] = useState(
+        IrsW4rData?.irsTaxWithholding?.[0]?.amount?.text || ''
+    );
+    const [taxId, setTaxId] = useState(
+        IrsW4rData?.formParty?.taxId || owner?.taxId || ''
+    );
 
-    const [signature, setSignature] = useState(IrsW4rData?.irsSignature || getDefaultSignature(SignatureValidationTypeWithdrawal.Owner));
+    const [signature, setSignature] = useState(
+        IrsW4rData?.irsSignature ||
+            getDefaultSignature(SignatureValidationTypeWithdrawal.Owner)
+    );
 
     useEffect(() => {
         const irsDetails = {
@@ -42,32 +75,38 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly }:
             irsSpecified: amount ? true : false,
             formParty: { ...owner, taxId: taxId } as Party,
             irsSignature: signature,
-            irsTaxWithholding: amount ? [{
-                place: {
-                    text: TaxWithholdingPlace.Federal,
-                },
-                type: {
-                    text: WithholdingType.SpecifiedTaxWithholding,
-                },
-                amount: {
-                    text: amount,
-                    amountType: AmountType.Percent,
-                },
-                additionalAmount: {
-                    text: null,
-                    amountType: null,
-                },
-                filingStatus: {
-                    text: null,
-                },
-                exemption: {
-                    text: null,
-                },
-            }] : [],
+            irsTaxWithholding: amount
+                ? [
+                      {
+                          place: {
+                              text: TaxWithholdingPlace.Federal,
+                          },
+                          type: {
+                              text: WithholdingType.SpecifiedTaxWithholding,
+                          },
+                          amount: {
+                              text: amount,
+                              amountType: AmountType.Percent,
+                          },
+                          additionalAmount: {
+                              text: null,
+                              amountType: null,
+                          },
+                          filingStatus: {
+                              text: null,
+                          },
+                          exemption: {
+                              text: null,
+                          },
+                      },
+                  ]
+                : [],
         };
         // setting formIRSData only if isIrsChecked checkbox checked
-        const index = formIrsData?.findIndex(data => data?.irsFormType === 'W4R');
-        const updateFormIrsData = [...formIrsData]
+        const index = formIrsData?.findIndex(
+            (data) => data?.irsFormType === 'W4R'
+        );
+        const updateFormIrsData = [...formIrsData];
 
         if (index !== -1) {
             updateFormIrsData[index] = irsDetails;
@@ -75,11 +114,13 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly }:
             updateFormIrsData[0] = irsDetails;
         }
         setFormIrsData(updateFormIrsData);
-
     }, [isIrsChecked, amount, taxId, signature]);
 
     return (
-        <CardContainer containerClassNames="border-b-2 border-gray-100" classNames="w-full">
+        <CardContainer
+            containerClassNames="border-b-2 border-gray-100"
+            classNames="w-full"
+        >
             <div className="flex flex-wrap gap-8 max-md:flex-col">
                 <div className="flex-1">
                     <CheckboxText
@@ -91,29 +132,39 @@ export default function IrsWithholding({ signatureFields, isFormStateReadOnly }:
                 </div>
             </div>
             {isIrsChecked && (
-                <div className={`my-4 flex flex-col gap-4 md:grid md:grid-cols-2 md:grid-rows-2 lg:grid-cols-auto-4 lg:grid-rows-1`}>
+                <div
+                    className={`my-4 flex flex-col gap-4 md:grid md:grid-cols-2 md:grid-rows-2 lg:grid-cols-auto-4 lg:grid-rows-1`}
+                >
                     <Field
                         className="col-1 max-w-lg"
                         label={t(`irsAmount`) as string}
-                        onChange={e => setAmount(e.target.value)}
+                        onChange={(e) => setAmount(e.target.value)}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={amount}
                         formatOptions={amountFormat}
                         trailing={<div>%</div>}
                         data-testid="irsAmount"
-                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                     />
 
                     <Field
                         className="col-1 max-w-lg"
                         label={t(`ssn`) as string}
-                        onChange={e => setTaxId(e.target.value)}
+                        onChange={(e) => setTaxId(e.target.value)}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={taxId}
                         data-testid="ssn"
-                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                     />
                     <div className="col-2 max-w-lg">
                         <SignatureValidation

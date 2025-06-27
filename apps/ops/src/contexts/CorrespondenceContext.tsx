@@ -1,6 +1,18 @@
-import { createContext, Dispatch, PropsWithChildren, useContext, useMemo, useReducer } from 'react';
+import {
+    createContext,
+    Dispatch,
+    PropsWithChildren,
+    useContext,
+    useMemo,
+    useReducer,
+} from 'react';
 
-import { Correspondence, CorrespondenceAction, CorrespondenceActions, CorrespondenceFormParts } from '@deps/models/case/correspondence';
+import {
+    Correspondence,
+    CorrespondenceAction,
+    CorrespondenceActions,
+    CorrespondenceFormParts,
+} from '@deps/models/case/correspondence';
 import { Confirm } from '@deps/models/case/send-document';
 
 const initialState = {
@@ -18,9 +30,14 @@ type CorrespondenceContextProps = {
     state: CorrespondenceFormParts;
     dispatch: Dispatch<CorrespondenceActions>;
 };
-export const CorrespondenceContext = createContext<CorrespondenceContextProps | undefined>(defaultCorrespondenceState);
+export const CorrespondenceContext = createContext<
+    CorrespondenceContextProps | undefined
+>(defaultCorrespondenceState);
 
-function reducer(state: CorrespondenceFormParts, action: CorrespondenceActions) {
+function reducer(
+    state: CorrespondenceFormParts,
+    action: CorrespondenceActions
+) {
     switch (action.type) {
         case CorrespondenceAction.Correspondence: {
             return { ...state, correspondence: { ...action.payload } };
@@ -44,14 +61,20 @@ export const CorrespondenceProvider = ({ children }: PropsWithChildren) => {
         return { state, dispatch };
     }, [state, dispatch]);
 
-    return <CorrespondenceContext.Provider value={contextValue}>{children}</CorrespondenceContext.Provider>;
+    return (
+        <CorrespondenceContext.Provider value={contextValue}>
+            {children}
+        </CorrespondenceContext.Provider>
+    );
 };
 
 export const useCorrespondence = () => {
     const context = useContext(CorrespondenceContext);
 
     if (!context) {
-        throw new Error('useCorrespondence must be used within a CorrespondenceProvider');
+        throw new Error(
+            'useCorrespondence must be used within a CorrespondenceProvider'
+        );
     }
     return context;
 };

@@ -1,13 +1,19 @@
 import { normalizeFormData } from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
-import { MatchingCase, PotentialMatches } from '@deps/models/case/task/doc-matching-payment';
+import {
+    MatchingCase,
+    PotentialMatches,
+} from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 
 import { browserLogError } from '../browser-logging';
 import { parseErrorInformation } from '../server-logging';
 
-export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTask) => {
+export const buildTaskPayload = (
+    task: ManagementTask,
+    initialTask: ManagementTask
+) => {
     let updateTask = { ...task };
     switch (task.taskType) {
         case TaskType.PURCHASE_DOCUMENT_MATCHING: {
@@ -21,22 +27,29 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
             }
 
             // match found & duplicate case
-            if (![MatchingCase.REINDEX].includes(correlationId) && duplicateCase) {
+            if (
+                ![MatchingCase.REINDEX].includes(correlationId) &&
+                duplicateCase
+            ) {
                 matchingResult = duplicateCase;
 
                 const potentialMatch = initialTask.data.potentialMatches?.find(
-                    (item: PotentialMatches) => item.correlationid === correlationId
+                    (item: PotentialMatches) =>
+                        item.correlationid === correlationId
                 );
 
                 const matchData =
                     potentialMatch ||
-                    task.data?.transactionOptions?.find((item: any) => item.value === task.data?.transactions)?.subElement ||
+                    task.data?.transactionOptions?.find(
+                        (item: any) => item.value === task.data?.transactions
+                    )?.subElement ||
                     task.data;
 
                 const entityType = matchData?.entityType;
                 const recordId = matchData?.recordId;
                 const zlCaseId = matchData?.zlCaseId ?? task?.data?.zlCaseId;
-                const policyNumber = matchData?.policyNumber ?? task?.data?.policyNumber;
+                const policyNumber =
+                    matchData?.policyNumber ?? task?.data?.policyNumber;
 
                 const paymentRecordId = task?.data?.transactions ?? null;
 
@@ -70,9 +83,14 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
             let matchedData = {};
             let matchingResult = task?.data?.matchingResult;
 
-            if (![MatchingCase.NO_MATCH, MatchingCase.NOT_APPLICABLE].includes(correlationId)) {
+            if (
+                ![MatchingCase.NO_MATCH, MatchingCase.NOT_APPLICABLE].includes(
+                    correlationId
+                )
+            ) {
                 const potentialMatch = initialTask.data.potentialMatches?.find(
-                    (item: PotentialMatches) => item.correlationid === correlationId
+                    (item: PotentialMatches) =>
+                        item.correlationid === correlationId
                 );
 
                 if (correlationId === MatchingCase.ENTERED) {
@@ -81,7 +99,15 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                         policyNumber: task.data?.policyNumber ?? '',
                     };
                 } else {
-                    const { entityType, recordId, zlCaseId, policyNumber, taskId, firstName, lastName } = potentialMatch;
+                    const {
+                        entityType,
+                        recordId,
+                        zlCaseId,
+                        policyNumber,
+                        taskId,
+                        firstName,
+                        lastName,
+                    } = potentialMatch;
                     matchedData = {
                         entityType,
                         recordId,
@@ -104,7 +130,13 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
                     existingDocumentId: attachment[0]?.documentId,
                 };
             }
-            const { attachments, caseOverview, matchCaseId, matchedCaseId, ...filteredData } = task.data ?? {};
+            const {
+                attachments,
+                caseOverview,
+                matchCaseId,
+                matchedCaseId,
+                ...filteredData
+            } = task.data ?? {};
 
             updateTask = {
                 ...task,
@@ -130,8 +162,12 @@ export const buildTaskPayload = (task: ManagementTask, initialTask: ManagementTa
 export const cleanForm = (formData: any, taskMetadata: FormMetadata) => {
     const finalFormData = normalizeFormData(formData);
 
-    const removeOmittedProperties = (schema: any, data: any, parentPath: string[] = []) => {
-        Object.keys(schema).forEach(key => {
+    const removeOmittedProperties = (
+        schema: any,
+        data: any,
+        parentPath: string[] = []
+    ) => {
+        Object.keys(schema).forEach((key) => {
             if (key.includes('ui')) return;
             const currentPath = [...parentPath, key];
             const options = schema[key]?.['ui:options'];
@@ -142,17 +178,27 @@ export const cleanForm = (formData: any, taskMetadata: FormMetadata) => {
                     if (!target) return;
                 }
                 if (target) delete target[key];
-            } else if (typeof schema[key] === 'object' && schema[key] !== null) {
+            } else if (
+                typeof schema[key] === 'object' &&
+                schema[key] !== null
+            ) {
                 removeOmittedProperties(schema[key], data, currentPath);
             }
         });
     };
 
-    removeOmittedProperties(taskMetadata.uiSchema, finalFormData.data || finalFormData);
+    removeOmittedProperties(
+        taskMetadata.uiSchema,
+        finalFormData.data || finalFormData
+    );
     return finalFormData;
 };
 
-export const attachFilesToMappedDocuments = async (attachment: any, task: ManagementTask, correlationId: string): Promise<boolean> => {
+export const attachFilesToMappedDocuments = async (
+    attachment: any,
+    task: ManagementTask,
+    correlationId: string
+): Promise<boolean> => {
     try {
         const attachments = [...(task.data?.attachments || []), attachment];
         await updateTask(

@@ -25,10 +25,12 @@ export const getTagVariant = (action: string, t: TFunction) => {
 
 export const DEFAULT_BENE_ADDRESS = {
     addressType: ENTERPRISE_ADDRESS_TYPE.HOME,
-    country: 'US'
+    country: 'US',
 };
 
 export const isEqualObjects = (obj1: any, obj2: any) => {
-    const diffInFields = Object.entries(obj2).filter(([field, obj2Value]) => obj1[field] !== obj2Value);
+    const diffInFields = Object.entries(obj2).filter(
+        ([field, obj2Value]) => obj1[field] !== obj2Value
+    );
     return diffInFields.length > 0 ? false : true;
 };

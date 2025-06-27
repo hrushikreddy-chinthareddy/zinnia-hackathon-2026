@@ -1,4 +1,4 @@
-import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
@@ -6,8 +6,12 @@ import { useTranslation } from 'next-i18next';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
 import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
-import PayorStep, { PayorStepSetState } from '@deps/components/workflows/payor-step/payor-step';
-import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import PayorStep, {
+    PayorStepSetState,
+} from '@deps/components/workflows/payor-step/payor-step';
+import StartStep, {
+    StartStepSetState,
+} from '@deps/components/workflows/start-step/start-step';
 import Amount from '@deps/containers/financial-transactions/premium/new-premium/amount/amount';
 import Confirm from '@deps/containers/financial-transactions/premium/new-premium/confirm/confirm';
 import Summary from '@deps/containers/financial-transactions/premium/new-premium/summary/summary';
@@ -40,7 +44,11 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
     const validateCall = () => {
         const query = buildNewPremiumRequestBody(premium);
 
-        return validateOneTimePremium(policy.product?.planCode, policy.policyNumber, query);
+        return validateOneTimePremium(
+            policy.product?.planCode,
+            policy.policyNumber,
+            query
+        );
     };
 
     const steps: Step[] = [
@@ -54,7 +62,10 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                     state={premium}
                     title={t('newPremium.start.title') as string}
                     subtitle={t('newPremium.start.subtitle') as string}
-                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Start }}
+                    trackEventProps={{
+                        type: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+                        step: TransactionStep.Start,
+                    }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -74,7 +85,10 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                     policy={policy}
                     setState={setPremium as PayorStepSetState}
                     state={premium}
-                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Payor }}
+                    trackEventProps={{
+                        type: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+                        step: TransactionStep.Payor,
+                    }}
                 />
             ),
             screenReaderLabel: payorLabel,
@@ -89,7 +103,10 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                     setState={setPremium as unknown as PaymentStepSetState}
                     state={premium}
                     validateTransaction={validateCall}
-                    trackEventProps={{ type: TransactionType.PAYMENT_ONE_TIME_PREMIUM, step: TransactionStep.Payment }}
+                    trackEventProps={{
+                        type: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+                        step: TransactionStep.Payment,
+                    }}
                 />
             ),
             screenReaderLabel: paymentLabel,

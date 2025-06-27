@@ -87,7 +87,10 @@ export class PolicyParty {
         this.partyId = party.partyId;
         this.suffix = party.suffix;
 
-        this.addresses = new Addresses(party.addresses, party.preferredAddressIndicator);
+        this.addresses = new Addresses(
+            party.addresses,
+            party.preferredAddressIndicator
+        );
         this.banks = new Banks(party.bankDetails);
         // to do - this is fake right now since there is no citizenCountry key on PartyBase yet
         this.citizenCountry = Country['US'];
@@ -112,31 +115,49 @@ export class PolicyParty {
 
     public get driversLicense() {
         return this.party.identifications?.find(
-            identification => identification.identificationType === ('DRIVERLICENSE' as IdentificationType)
+            (identification) =>
+                identification.identificationType ===
+                ('DRIVERLICENSE' as IdentificationType)
         );
     }
 
     public get passports() {
-        return this.party.identifications?.filter(identification => identification.identificationType === IdentificationType.PASSPORT);
+        return this.party.identifications?.filter(
+            (identification) =>
+                identification.identificationType ===
+                IdentificationType.PASSPORT
+        );
     }
 
     public get ssn(): string | undefined {
-        return this.party.identifications?.find(identification => identification.identificationType === 'SSN')?.identificationValue;
+        return this.party.identifications?.find(
+            (identification) => identification.identificationType === 'SSN'
+        )?.identificationValue;
     }
 
     public get stateId() {
-        return this.party.identifications?.find(identification => identification.identificationType === IdentificationType.STATEPHOTOID);
+        return this.party.identifications?.find(
+            (identification) =>
+                identification.identificationType ===
+                IdentificationType.STATEPHOTOID
+        );
     }
 
     public get taxId() {
-        return this.party.identifications?.find(identification => identification.identificationType === IdentificationType.TIN);
+        return this.party.identifications?.find(
+            (identification) =>
+                identification.identificationType === IdentificationType.TIN
+        );
     }
 
     public get partyRoles(): PolicyPartyRoles[] {
         return this.partyRolesList
-            .filter(role => !isEndDated(role.endDate))
+            .filter((role) => !isEndDated(role.endDate))
             .sort((a, b) => {
-                return orderedRoles.indexOf(a.partyRole as PartyRole) - orderedRoles.indexOf(b.partyRole as PartyRole);
+                return (
+                    orderedRoles.indexOf(a.partyRole as PartyRole) -
+                    orderedRoles.indexOf(b.partyRole as PartyRole)
+                );
             });
     }
 
@@ -149,7 +170,10 @@ export class PolicyParty {
     }
 
     public get preferredCommunicationType(): PreferredCommunicationType {
-        return this.party.preferredCommunicationType ?? PreferredCommunicationType.NOPREFERENCESPECIFIED;
+        return (
+            this.party.preferredCommunicationType ??
+            PreferredCommunicationType.NOPREFERENCESPECIFIED
+        );
     }
 
     public get preferredCommunication(): Address | Email | Phone | undefined {
@@ -192,7 +216,7 @@ export class Parties {
     private partiesById: Map<string, PolicyParty> = new Map();
     private partiesByRole: Map<PartyRole, PolicyParty[]> = new Map();
     constructor({ parties = [], partyRoles = [] }: Policy = {}) {
-        parties?.forEach(party => {
+        parties?.forEach((party) => {
             if (!party.partyId) {
                 return;
             }
@@ -200,7 +224,7 @@ export class Parties {
             this.parties.push(newParty);
             this.partiesById.set(party.partyId, newParty);
         });
-        partyRoles?.forEach(role => {
+        partyRoles?.forEach((role) => {
             if (!role.partyId || !role.partyRole) {
                 return;
             }
@@ -228,6 +252,9 @@ export class Parties {
     }
 
     public get allOwners(): PolicyParty[] {
-        return [...this.getPartiesWithRole(PartyRole.OWNER), ...this.getPartiesWithRole(PartyRole.JOINTOWNER)];
+        return [
+            ...this.getPartiesWithRole(PartyRole.OWNER),
+            ...this.getPartiesWithRole(PartyRole.JOINTOWNER),
+        ];
     }
 }

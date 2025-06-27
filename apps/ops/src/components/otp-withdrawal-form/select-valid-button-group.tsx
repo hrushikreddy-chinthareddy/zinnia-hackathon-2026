@@ -15,8 +15,16 @@ interface SelectValidButtonGroupProps {
     disabled?: boolean;
 }
 
-const SelectValidButtonGroup = ({ options, label, isValid, disabled, setIsValid }: SelectValidButtonGroupProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.oftProcess' });
+const SelectValidButtonGroup = ({
+    options,
+    label,
+    isValid,
+    disabled,
+    setIsValid,
+}: SelectValidButtonGroupProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.oftProcess',
+    });
     const defaultOptions = [
         { label: t('valid'), value: stringifyTrueFalseNull(true) },
         { label: t('notValid'), value: stringifyTrueFalseNull(false) },
@@ -25,7 +33,12 @@ const SelectValidButtonGroup = ({ options, label, isValid, disabled, setIsValid 
     return (
         <ButtonGrp
             activeValue={isValid}
-            groupLabel={label || t(`caseWithdrawal.request.distributionMethod.isVoidCheckAttached`)}
+            groupLabel={
+                label ||
+                t(
+                    `caseWithdrawal.request.distributionMethod.isVoidCheckAttached`
+                )
+            }
             toggle={setIsValid}
             labels={options || defaultOptions}
             disabled={disabled}

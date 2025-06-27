@@ -8,12 +8,17 @@ import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-wi
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    DEFAULT_DATE_FORMAT,
+    DEFAULT_ERROR_STRING,
+} from '@deps/types/constants';
 
 export type WithdrawalRulesProps = {
     policy: Policy;
@@ -36,12 +41,13 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
             maximumWithdrawalRequestDuringVestingPeriod,
             maximumWithdrawalRequestAfterVestingPeriod,
             minimumWithdrawalAmount,
-        ].every(x => x === undefined)
+        ].every((x) => x === undefined)
     ) {
         return null;
     }
 
-    const totalAnnualAmount = policyDetails.requiredMinimumDistribution.totalAnnualAmount;
+    const totalAnnualAmount =
+        policyDetails.requiredMinimumDistribution.totalAnnualAmount;
 
     let badgeLabel: string;
     let badgeTooltipText: string;
@@ -58,11 +64,16 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
     }
 
     return (
-        <CardContainer classNames="flex w-full flex-col items-start" containerClassNames="rounded-b">
+        <CardContainer
+            classNames="flex w-full flex-col items-start"
+            containerClassNames="rounded-b"
+        >
             <div className="flex w-full flex-col">
                 <div className="flex items-center mb-4">
                     <Typography variant={TypographyVariant.H2} className="mr-5">
-                        {policyDetails.isAnnuity ? t('withdrawals.rmd.title') : t('withdrawals.rules.title')}
+                        {policyDetails.isAnnuity
+                            ? t('withdrawals.rmd.title')
+                            : t('withdrawals.rules.title')}
                     </Typography>
                     {policyDetails.isAnnuity && (
                         <BadgeWithTooltip
@@ -83,30 +94,58 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
                                     <Label
                                         sentenceCase={false}
                                         variant={LabelVariant.FieldLabel}
-                                        tooltipTitle={t('withdrawals.rmd.totalRMDAmount')}
-                                        tooltipBody={t('withdrawals.rmd.totalRMDAmountTooltip')}
-                                        label={t('withdrawals.rmd.totalRMDAmount')}
+                                        tooltipTitle={t(
+                                            'withdrawals.rmd.totalRMDAmount'
+                                        )}
+                                        tooltipBody={t(
+                                            'withdrawals.rmd.totalRMDAmountTooltip'
+                                        )}
+                                        label={t(
+                                            'withdrawals.rmd.totalRMDAmount'
+                                        )}
                                     />
-                                    <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {numberFormatify(policyDetails.requiredMinimumDistribution.totalAnnualAmount, {
-                                            style: 'currency',
-                                            currency: 'USD',
-                                        })}
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="mt-[5px]"
+                                    >
+                                        {numberFormatify(
+                                            policyDetails
+                                                .requiredMinimumDistribution
+                                                .totalAnnualAmount,
+                                            {
+                                                style: 'currency',
+                                                currency: 'USD',
+                                            }
+                                        )}
                                     </Typography>
                                 </div>
                                 <div className="flex w-[208px] flex-col items-start xl:w-fit">
                                     <Label
                                         sentenceCase={false}
                                         variant={LabelVariant.FieldLabel}
-                                        tooltipTitle={t('withdrawals.rmd.remainingRMDAmount')}
-                                        tooltipBody={t('withdrawals.rmd.remainingRMDAmountTooltip')}
-                                        label={t('withdrawals.rmd.remainingRMDAmount')}
+                                        tooltipTitle={t(
+                                            'withdrawals.rmd.remainingRMDAmount'
+                                        )}
+                                        tooltipBody={t(
+                                            'withdrawals.rmd.remainingRMDAmountTooltip'
+                                        )}
+                                        label={t(
+                                            'withdrawals.rmd.remainingRMDAmount'
+                                        )}
                                     />
-                                    <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {numberFormatify(policyDetails.requiredMinimumDistribution.remainingAmount, {
-                                            style: 'currency',
-                                            currency: 'USD',
-                                        })}
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="mt-[5px]"
+                                    >
+                                        {numberFormatify(
+                                            policyDetails
+                                                .requiredMinimumDistribution
+                                                .remainingAmount,
+                                            {
+                                                style: 'currency',
+                                                currency: 'USD',
+                                            }
+                                        )}
                                     </Typography>
                                 </div>
                             </div>
@@ -115,28 +154,56 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
                                 <div className="flex w-[208px] flex-col items-start xl:w-fit">
                                     <Label
                                         variant={LabelVariant.FieldLabel}
-                                        tooltipTitle={t('withdrawals.rmd.calculationDate')}
-                                        tooltipBody={t('withdrawals.rmd.calculationDateTooltip')}
-                                        label={t('withdrawals.rmd.calculationDate')}
+                                        tooltipTitle={t(
+                                            'withdrawals.rmd.calculationDate'
+                                        )}
+                                        tooltipBody={t(
+                                            'withdrawals.rmd.calculationDateTooltip'
+                                        )}
+                                        label={t(
+                                            'withdrawals.rmd.calculationDate'
+                                        )}
                                     />
-                                    <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {policyDetails?.requiredMinimumDistribution?.calculationDate
-                                            ? dayjs(policyDetails.requiredMinimumDistribution.calculationDate).format(DEFAULT_DATE_FORMAT)
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="mt-[5px]"
+                                    >
+                                        {policyDetails
+                                            ?.requiredMinimumDistribution
+                                            ?.calculationDate
+                                            ? dayjs(
+                                                  policyDetails
+                                                      .requiredMinimumDistribution
+                                                      .calculationDate
+                                              ).format(DEFAULT_DATE_FORMAT)
                                             : DEFAULT_ERROR_STRING}
                                     </Typography>
                                 </div>
                                 <div className="flex w-[208px] flex-col items-start xl:w-fit">
                                     <Label
                                         variant={LabelVariant.FieldLabel}
-                                        tooltipTitle={t('withdrawals.rmd.calculationType')}
-                                        tooltipBody={t('withdrawals.rmd.calculationTypeTooltip')}
-                                        label={t('withdrawals.rmd.calculationType')}
+                                        tooltipTitle={t(
+                                            'withdrawals.rmd.calculationType'
+                                        )}
+                                        tooltipBody={t(
+                                            'withdrawals.rmd.calculationTypeTooltip'
+                                        )}
+                                        label={t(
+                                            'withdrawals.rmd.calculationType'
+                                        )}
                                     />
-                                    <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {policyDetails.requiredMinimumDistribution.calculationOption
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="mt-[5px]"
+                                    >
+                                        {policyDetails
+                                            .requiredMinimumDistribution
+                                            .calculationOption
                                             ? t(
                                                   `withdrawals.${convertToCamelCase(
-                                                      policyDetails.requiredMinimumDistribution.calculationOption
+                                                      policyDetails
+                                                          .requiredMinimumDistribution
+                                                          .calculationOption
                                                   )}`
                                               )
                                             : DEFAULT_ERROR_STRING}
@@ -150,29 +217,53 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
                                 <div className="flex w-[208px] flex-col items-start xl:w-fit">
                                     <Label
                                         variant={LabelVariant.FieldLabel}
-                                        tooltipTitle={t('withdrawals.rules.minWithdrawal')}
-                                        tooltipBody={t('withdrawals.rules.minWithdrawalTooltip')}
-                                        label={t('withdrawals.rules.minWithdrawal')}
+                                        tooltipTitle={t(
+                                            'withdrawals.rules.minWithdrawal'
+                                        )}
+                                        tooltipBody={t(
+                                            'withdrawals.rules.minWithdrawalTooltip'
+                                        )}
+                                        label={t(
+                                            'withdrawals.rules.minWithdrawal'
+                                        )}
                                     />
-                                    <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {numberFormatify(minimumWithdrawalAmount, {
-                                            style: 'currency',
-                                            currency: 'USD',
-                                        })}
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="mt-[5px]"
+                                    >
+                                        {numberFormatify(
+                                            minimumWithdrawalAmount,
+                                            {
+                                                style: 'currency',
+                                                currency: 'USD',
+                                            }
+                                        )}
                                     </Typography>
                                 </div>
                                 <div className="flex w-[208px] flex-col items-start xl:w-fit">
                                     <Label
                                         variant={LabelVariant.FieldLabel}
-                                        tooltipTitle={t('withdrawals.rules.maxWithdrawal')}
-                                        tooltipBody={t('withdrawals.rules.maxWithdrawalTooltip')}
-                                        label={t('withdrawals.rules.maxWithdrawal')}
+                                        tooltipTitle={t(
+                                            'withdrawals.rules.maxWithdrawal'
+                                        )}
+                                        tooltipBody={t(
+                                            'withdrawals.rules.maxWithdrawalTooltip'
+                                        )}
+                                        label={t(
+                                            'withdrawals.rules.maxWithdrawal'
+                                        )}
                                     />
-                                    <Typography variant={TypographyVariant.BodySm} className="mt-[5px]">
-                                        {numberFormatify(maximumWithdrawalAmount, {
-                                            style: 'currency',
-                                            currency: 'USD',
-                                        })}
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="mt-[5px]"
+                                    >
+                                        {numberFormatify(
+                                            maximumWithdrawalAmount,
+                                            {
+                                                style: 'currency',
+                                                currency: 'USD',
+                                            }
+                                        )}
                                     </Typography>
                                 </div>
                             </div>

@@ -2,7 +2,9 @@ import clsx from 'clsx';
 import { ElementType, ReactNode } from 'react';
 
 import Label, { LabelProps, LabelVariant } from '@deps/components/label/label';
-import ResponsiveFlex, { ResponsiveFlexProps } from '@deps/components/responsive-flex/responsive-flex';
+import ResponsiveFlex, {
+    ResponsiveFlexProps,
+} from '@deps/components/responsive-flex/responsive-flex';
 import {
     LayoutDirection,
     LayoutAlignment,
@@ -10,7 +12,9 @@ import {
     VerticalResizing,
     ItemSpacing,
 } from '@deps/components/responsive-flex/responsive-flex.types';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { filterTruthyProps } from '@deps/helpers/data-transform.helpers';
 
 export enum FieldDataTest {
@@ -140,11 +144,19 @@ const FieldData = ({
     <ResponsiveFlex
         data-testid={FieldDataTest.Container}
         {...filterTruthyProps(fieldDataMapping[variant].container)}
-        className={clsx(fieldDataMapping[variant].container.className, className)}
+        className={clsx(
+            fieldDataMapping[variant].container.className,
+            className
+        )}
     >
-        <ResponsiveFlex data-testid={FieldDataTest.Label} {...filterTruthyProps(fieldDataMapping[variant].label)}>
+        <ResponsiveFlex
+            data-testid={FieldDataTest.Label}
+            {...filterTruthyProps(fieldDataMapping[variant].label)}
+        >
             <Label
-                variant={fieldDataMapping[variant].label.typography as LabelVariant}
+                variant={
+                    fieldDataMapping[variant].label.typography as LabelVariant
+                }
                 label={label}
                 sentenceCase={sentenceCase}
                 editable={editable}
@@ -152,12 +164,31 @@ const FieldData = ({
                 {...filterTruthyProps(tooltipProps)}
             />
         </ResponsiveFlex>
-        <ResponsiveFlex data-testid={FieldDataTest.Value} {...filterTruthyProps(fieldDataMapping[variant].value)}>
-            <Typography variant={fieldDataMapping[variant].value.typography as TypographyVariant}>{children}</Typography>
+        <ResponsiveFlex
+            data-testid={FieldDataTest.Value}
+            {...filterTruthyProps(fieldDataMapping[variant].value)}
+        >
+            <Typography
+                variant={
+                    fieldDataMapping[variant].value
+                        .typography as TypographyVariant
+                }
+            >
+                {children}
+            </Typography>
         </ResponsiveFlex>
         {!!caption && (
-            <ResponsiveFlex data-testid={FieldDataTest.Caption} {...filterTruthyProps(fieldDataMapping[variant].caption)}>
-                <Typography asTag={captionTag} variant={fieldDataMapping[variant].caption.typography as TypographyVariant}>
+            <ResponsiveFlex
+                data-testid={FieldDataTest.Caption}
+                {...filterTruthyProps(fieldDataMapping[variant].caption)}
+            >
+                <Typography
+                    asTag={captionTag}
+                    variant={
+                        fieldDataMapping[variant].caption
+                            .typography as TypographyVariant
+                    }
+                >
                     {caption}
                 </Typography>
             </ResponsiveFlex>

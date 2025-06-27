@@ -31,12 +31,20 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         queryKey: ['caseDetails', caseDetails?.id],
         queryFn: () => getCaseDetailsQuery(caseDetails?.id),
         initialData: caseDetails,
-        refetchInterval: tabVal === CaseDetailsTabValues.progress && featureFlags[FEATURE_FLAGS.AUTO_REFRESH_CASE_DETAILS] ? 5000 : false,
+        refetchInterval:
+            tabVal === CaseDetailsTabValues.progress &&
+            featureFlags[FEATURE_FLAGS.AUTO_REFRESH_CASE_DETAILS]
+                ? 5000
+                : false,
     });
 
     const handleTabChange = (val: string) => {
         // We do not want to send the user to a new page, just update the URL in response to a user action
-        window.history.replaceState(window.history.state, '', `${baseAppUrl}/cases/${caseDetails?.id}/${val}`);
+        window.history.replaceState(
+            window.history.state,
+            '',
+            `${baseAppUrl}/cases/${caseDetails?.id}/${val}`
+        );
         setTabVal(val);
     };
 
@@ -54,7 +62,11 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
             />
             <div className="flex w-full flex-col justify-between gap-2 pt-2 lg:flex-row">
                 <CaseSideNav caseDetails={caseDetailsModel} />
-                <CaseSubPage caseDetails={caseDetailsModel} tab={tabVal} handleTabChange={handleTabChange} />
+                <CaseSubPage
+                    caseDetails={caseDetailsModel}
+                    tab={tabVal}
+                    handleTabChange={handleTabChange}
+                />
             </div>
         </div>
     );

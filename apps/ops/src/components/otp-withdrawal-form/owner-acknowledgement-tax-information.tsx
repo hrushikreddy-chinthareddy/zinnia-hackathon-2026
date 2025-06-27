@@ -6,8 +6,14 @@ import xss from 'xss';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { SignPresent } from '@deps/models/case/renewal/signature-validation';
 import { convertIsSignedFromValue } from '@deps/models/case/utils';
-import { OwnerAcknowledgement, PartyRoles } from '@deps/models/case/withdrawal/case';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    OwnerAcknowledgement,
+    PartyRoles,
+} from '@deps/models/case/withdrawal/case';
+import {
+    NUMERIC_DATE_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 
 import Field, { FieldSize, FieldType, FieldVariant } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
@@ -20,15 +26,27 @@ interface OwnerAcknowledgementOfTaxInformationProps {
     isFormStateReadOnly: boolean;
 }
 
-export default function OwnerAcknowledgementOfTaxInformation(props: OwnerAcknowledgementOfTaxInformationProps) {
+export default function OwnerAcknowledgementOfTaxInformation(
+    props: OwnerAcknowledgementOfTaxInformationProps
+) {
     const { ownerAcknowledgement, onChange, isFormStateReadOnly } = props;
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.ownerAcknowledgementOfTaxInformation' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix:
+            'caseWithdrawal.request.ownerAcknowledgementOfTaxInformation',
+    });
 
-    const [type, setType] = useState<string>(ownerAcknowledgement?.type?.text || PartyRoles.OWNER);
-    const [signPresent, setSignPresent] = useState<SignPresent>(convertIsSignedFromValue(ownerAcknowledgement?.isSigned?.text));
+    const [type, setType] = useState<string>(
+        ownerAcknowledgement?.type?.text || PartyRoles.OWNER
+    );
+    const [signPresent, setSignPresent] = useState<SignPresent>(
+        convertIsSignedFromValue(ownerAcknowledgement?.isSigned?.text)
+    );
     const [date, setDate] = useState<string>(
         ownerAcknowledgement?.signDate?.text
-            ? dayjs(ownerAcknowledgement?.signDate?.text, ZAHARA_API_DATE_FORMAT).format(NUMERIC_DATE_FORMAT)
+            ? dayjs(
+                  ownerAcknowledgement?.signDate?.text,
+                  ZAHARA_API_DATE_FORMAT
+              ).format(NUMERIC_DATE_FORMAT)
             : ''
     );
 
@@ -45,7 +63,11 @@ export default function OwnerAcknowledgementOfTaxInformation(props: OwnerAcknowl
             },
             isSigned: { text: signPresent === SignPresent.Yes },
             signDate: {
-                text: date && dayjs(date, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT),
+                text:
+                    date &&
+                    dayjs(date, NUMERIC_DATE_FORMAT).format(
+                        ZAHARA_API_DATE_FORMAT
+                    ),
             },
         });
     }, [type, signPresent, date, onChange]);
@@ -60,7 +82,7 @@ export default function OwnerAcknowledgementOfTaxInformation(props: OwnerAcknowl
                     <div className="flex-1">
                         <Field
                             label={t('type') as string}
-                            onChange={e => setType(xss(e.target.value))}
+                            onChange={(e) => setType(xss(e.target.value))}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={type}
@@ -84,14 +106,18 @@ export default function OwnerAcknowledgementOfTaxInformation(props: OwnerAcknowl
                         <FieldDateSelect
                             isFutureDateDisabled={false}
                             label={t('date') as string}
-                            onChange={e => {
+                            onChange={(e) => {
                                 setDate(e.target.value);
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={date}
                             disabled={isFormStateReadOnly}
-                            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                            variant={
+                                isFormStateReadOnly
+                                    ? FieldVariant.Inactive
+                                    : FieldVariant.Default
+                            }
                         />
                     </div>
                 </div>

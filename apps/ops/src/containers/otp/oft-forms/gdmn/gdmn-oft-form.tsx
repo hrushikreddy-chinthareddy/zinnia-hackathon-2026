@@ -15,7 +15,11 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { ProcessType } from '@deps/models/case/enums';
-import { Carrier, ProgramType, QualTypes } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    ProgramType,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
 
 import useGdmnOftConfig from './gdmn-oft-form.helpers';
 
@@ -23,8 +27,12 @@ type GdmnOftWithdrawalFormProps = {
     qualType: QualTypes | '';
 };
 
-export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFormProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+export default function GdmnOftWithdrawalForm({
+    qualType,
+}: GdmnOftWithdrawalFormProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -58,11 +66,15 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
     }, []);
 
     useEffect(() => {
-        setFormData(fs => ({
+        setFormData((fs) => ({
             ...fs,
-            formExtName: `${initialForm?.carrier || Carrier.GDMN}_${ProcessType.OFT}_DIGITAL_FORM`,
+            formExtName: `${initialForm?.carrier || Carrier.GDMN}_${
+                ProcessType.OFT
+            }_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.GDMN}_${ProcessType.OFT}_DIGITAL_FORM`,
+                formType: `${initialForm?.carrier || Carrier.GDMN}_${
+                    ProcessType.OFT
+                }_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -82,31 +94,58 @@ export default function GdmnOftWithdrawalForm({ qualType }: GdmnOftWithdrawalFor
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            {is403b && <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />}
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            {is403b && (
+                <DistributionReason
+                    reasonOptions={reasonOptions}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
-                title={t('amountDetails.surrenderingInstructions.title') as string}
+                title={
+                    t('amountDetails.surrenderingInstructions.title') as string
+                }
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
             {selectedOption === ProgramType.FullSurrender && (
-                <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} isLoanRepayment={true} />
+                <LoanAcknowledgement
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    isLoanRepayment={true}
+                />
             )}
-            {is403b && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            {is403b && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
 
-            <CedingCompanyDistribution qualificationOptions={qualificationOptions} isFormStateReadOnly={isFormStateReadOnly} />
+            <CedingCompanyDistribution
+                qualificationOptions={qualificationOptions}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                title={t('distributionMethod.cedingCompanyDistribution') as string}
+                title={
+                    t('distributionMethod.cedingCompanyDistribution') as string
+                }
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

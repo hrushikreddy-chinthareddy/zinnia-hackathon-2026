@@ -1,4 +1,8 @@
-import { DisbursementCriteriaEnum, FundAccountTypeEnum, FundUsageInfo } from '@deps/models/funds/fund-information';
+import {
+    DisbursementCriteriaEnum,
+    FundAccountTypeEnum,
+    FundUsageInfo,
+} from '@deps/models/funds/fund-information';
 
 export interface CarrierFundsResponse {
     data: string[];

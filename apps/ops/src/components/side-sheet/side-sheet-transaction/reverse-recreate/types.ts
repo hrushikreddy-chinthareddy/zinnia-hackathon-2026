@@ -17,7 +17,9 @@ export type ReverseTransactionSidesheetValues = {
     transactionId?: string;
     transactionValue?: number;
     reversalDate?: string;
-    getAsyncSideSheetValues?: () => Promise<Partial<ReverseTransactionSidesheetOriginalTransactionValues>>;
+    getAsyncSideSheetValues?: () => Promise<
+        Partial<ReverseTransactionSidesheetOriginalTransactionValues>
+    >;
 } & ReverseTransactionSidesheetOriginalTransactionValues;
 
 export interface SideSheetReversedTransactionModel extends BaseCardModel {

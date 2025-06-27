@@ -2,13 +2,19 @@ import { faker } from '@faker-js/faker';
 import { render } from '@testing-library/react';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { convertKebabedDateString, toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    convertKebabedDateString,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { generateBankDetails } from '@deps/utils/mock/mockBankDetails';
 import { generateKebabDate } from '@deps/utils/mock/mockDates';
 import { generateAdditionalCharges } from '@deps/utils/mock/mockPolicyValues';
 
 import UpcomingPaymentCard from './card-upcoming-payment';
-import { UpcomingPaymentCardTest, UpcomingPaymentCardProps } from './card-upcoming-payment.types';
+import {
+    UpcomingPaymentCardTest,
+    UpcomingPaymentCardProps,
+} from './card-upcoming-payment.types';
 import { CardTransactionsTest } from '../card-transactions/card-transactions';
 
 jest.mock('@deps/queries/api/cases', () => {
@@ -37,7 +43,8 @@ describe('UpcomingPaymentCard', () => {
         props = defaultProps;
     });
 
-    const renderComponent = () => render(<UpcomingPaymentCard data-testid="jfjfj" {...props} />);
+    const renderComponent = () =>
+        render(<UpcomingPaymentCard data-testid="jfjfj" {...props} />);
 
     it('renders without crashing', () => {
         const { getByTestId } = renderComponent();
@@ -99,17 +106,24 @@ describe('UpcomingPaymentCard', () => {
 
         it('renders correct content', () => {
             expect(element).toBeInTheDocument();
-            [convertKebabedDateString(paymentDate), toTitleCase(paymentDateText)].map(prop => expect(element).toHaveTextContent(prop));
+            [
+                convertKebabedDateString(paymentDate),
+                toTitleCase(paymentDateText),
+            ].map((prop) => expect(element).toHaveTextContent(prop));
         });
 
         it('title cases correct props', () => {
             expect(element).toBeInTheDocument();
-            [toTitleCase(paymentText)].map(prop => expect(element).toHaveTextContent(prop));
+            [toTitleCase(paymentText)].map((prop) =>
+                expect(element).toHaveTextContent(prop)
+            );
         });
 
         it('only shows last 4 digits in account', () => {
             expect(element).toBeInTheDocument();
-            expect(element).toHaveTextContent(bankDetails.accountNumber?.slice(-4) as string);
+            expect(element).toHaveTextContent(
+                bankDetails.accountNumber?.slice(-4) as string
+            );
         });
     });
 
@@ -136,7 +150,7 @@ describe('UpcomingPaymentCard', () => {
                 toTitleCase(inactiveHeaderText),
                 inactiveText,
                 inactiveIcon,
-            ].map(text => expect(element).toHaveTextContent(text));
+            ].map((text) => expect(element).toHaveTextContent(text));
             expect(element).toHaveTextContent(inactiveText);
             expect(element).toHaveTextContent(toTitleCase(inactiveHeaderText));
             expect(element).toHaveTextContent(inactiveIcon);
@@ -172,11 +186,17 @@ describe('UpcomingPaymentCard', () => {
 
         it('shows custom titles', () => {
             expect(element).toBeInTheDocument();
-            [toTitleCase(paymentFrequencyText), toTitleCase(additionalChargesTitle)].map(text => expect(element).toHaveTextContent(text));
+            [
+                toTitleCase(paymentFrequencyText),
+                toTitleCase(additionalChargesTitle),
+            ].map((text) => expect(element).toHaveTextContent(text));
         });
 
         it('adds up additional charges to equal premium', () => {
-            const additionalChargesTotal = additionalCharges.reduce((acc, { amount = 0 }) => (acc += amount), 0);
+            const additionalChargesTotal = additionalCharges.reduce(
+                (acc, { amount = 0 }) => (acc += amount),
+                0
+            );
             const total = autopayAmount + additionalChargesTotal;
             expect(element).toHaveTextContent(numberFormatify(total));
         });
@@ -184,7 +204,9 @@ describe('UpcomingPaymentCard', () => {
 
     describe('footer links', () => {
         const numberOfLinks = faker.number.int({ min: 1, max: 10 });
-        const footerLinksLabels = faker.helpers.uniqueArray(faker.lorem.word, numberOfLinks).map(word => ({ text: word, href: '#' }));
+        const footerLinksLabels = faker.helpers
+            .uniqueArray(faker.lorem.word, numberOfLinks)
+            .map((word) => ({ text: word, href: '#' }));
         beforeEach(() => {
             props = {
                 ...defaultProps,
@@ -195,7 +217,9 @@ describe('UpcomingPaymentCard', () => {
         });
         it('shows correct number of footer links', () => {
             expect(element).toBeInTheDocument();
-            footerLinksLabels.map(link => expect(element).toHaveTextContent(link.text));
+            footerLinksLabels.map((link) =>
+                expect(element).toHaveTextContent(link.text)
+            );
         });
     });
 });

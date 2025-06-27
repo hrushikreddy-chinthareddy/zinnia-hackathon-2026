@@ -1,7 +1,11 @@
 import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
 
 export interface TaxFormPreviewer {
@@ -28,7 +32,9 @@ export default function TaxFormPreviewer({
         <NavElement
             className={className}
             href={
-                `/documents/tax-forms/${taxForm?.formId}?contractNumber=${policyNumber}&clientCode=${carrier}&fChar=${
+                `/documents/tax-forms/${
+                    taxForm?.formId
+                }?contractNumber=${policyNumber}&clientCode=${carrier}&fChar=${
                     (taxForm as TaxForm)?.fChar ?? taxForm?.fchar
                 }` +
                 (taxForm?.taxYear ? `&taxYear=${taxForm?.taxYear}` : '') +

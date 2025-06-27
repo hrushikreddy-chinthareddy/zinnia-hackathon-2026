@@ -10,7 +10,7 @@ export default {
     title: 'Components/QuickLinks',
     component: QuickLinks,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -28,7 +28,12 @@ export const QuickLinksComponent = () => {
                 ]}
                 sessionId="123"
                 userPartyId="userPartyId"
-                policy={{ isLife: true, freeLookPeriodDetails: { isInFreeLookPeriod: true } } as PolicyDetails}
+                policy={
+                    {
+                        isLife: true,
+                        freeLookPeriodDetails: { isInFreeLookPeriod: true },
+                    } as PolicyDetails
+                }
             />
         </div>
     );

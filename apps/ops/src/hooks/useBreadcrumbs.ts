@@ -22,7 +22,10 @@ function useBreadcrumb() {
             const current = (storage.getItem('current') as any) || {};
             const pathHistory = (storage.getItem('pathHistory') as any) || [];
 
-            const prev = pathHistory.length > 0 ? pathHistory[pathHistory.length - 1] : null;
+            const prev =
+                pathHistory.length > 0
+                    ? pathHistory[pathHistory.length - 1]
+                    : null;
 
             if (prev) {
                 setBreadcrumb({

@@ -1,9 +1,15 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { AmountType, ProcessRequestType } from '@deps/models/case/withdrawal/case';
+import {
+    AmountType,
+    ProcessRequestType,
+} from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import AsOfDateComponent from './as-of-date';
@@ -68,9 +74,13 @@ describe('AsOfDate component', () => {
                 </FormDataContext.Provider>
             );
 
-            const asOfDateElemenent = screen.getByTestId('field-container-test-id');
+            const asOfDateElemenent = screen.getByTestId(
+                'field-container-test-id'
+            );
 
-            const dateInput = asOfDateElemenent.querySelector('[inputmode="numeric"]');
+            const dateInput = asOfDateElemenent.querySelector(
+                '[inputmode="numeric"]'
+            );
             if (dateInput !== null) {
                 fireEvent.change(dateInput, { target: { value: '03072014' } });
             }
@@ -132,7 +142,7 @@ describe('AsOfDate component', () => {
             };
 
             let setMethodArgs;
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 setMethodArgs = cb(mockAsOfDateData);
                 return setMethodArgs;
             });
@@ -151,7 +161,9 @@ describe('AsOfDate component', () => {
 
             const dateElement = screen.getByTestId('field-container-test-id');
 
-            const dateInput = dateElement.querySelector('[inputmode="numeric"]');
+            const dateInput = dateElement.querySelector(
+                '[inputmode="numeric"]'
+            );
             if (dateInput !== null) {
                 fireEvent.change(dateInput, { target: { value: '11242023' } });
             }

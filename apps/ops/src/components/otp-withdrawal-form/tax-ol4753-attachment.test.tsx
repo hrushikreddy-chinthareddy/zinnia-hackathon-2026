@@ -3,7 +3,10 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { AddressTypes, CaseStatus } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
@@ -135,14 +138,19 @@ describe('TAX OL4753 Attachment Component', () => {
                     setFormOL4753Data,
                 }}
             >
-                <TaxOL4753Attachment isFormStateReadOnly={false} shouldShowDOBInOl4573={true} />
+                <TaxOL4753Attachment
+                    isFormStateReadOnly={false}
+                    shouldShowDOBInOl4573={true}
+                />
             </FormDataContext.Provider>
         );
         const checkbox = getByLabelText(/isOL4753Attached/i);
 
         fireEvent.click(checkbox);
 
-        const addressLine1Field = getByRole('textbox', { name: /mailingaddress/i });
+        const addressLine1Field = getByRole('textbox', {
+            name: /mailingaddress/i,
+        });
         expect(addressLine1Field).toBeInTheDocument();
         const cityField = getByRole('textbox', { name: /city/i });
         expect(cityField).toBeInTheDocument();
@@ -169,18 +177,25 @@ describe('TAX OL4753 Attachment Component', () => {
                     setFormOL4753Data,
                 }}
             >
-                <TaxOL4753Attachment isFormStateReadOnly={false} shouldShowDOBInOl4573={true} />
+                <TaxOL4753Attachment
+                    isFormStateReadOnly={false}
+                    shouldShowDOBInOl4573={true}
+                />
             </FormDataContext.Provider>
         );
         const checkbox = getByLabelText(/isOL4753Attached/i);
 
         await waitFor(() => fireEvent.click(checkbox));
 
-        const addressLine1Field = getByRole('textbox', { name: /mailingaddress/i });
+        const addressLine1Field = getByRole('textbox', {
+            name: /mailingaddress/i,
+        });
         expect(addressLine1Field).toBeInTheDocument();
         const addressLine1 = '560 calle de la sierra';
         const expectedAddressLine1 = addressLine1.toUpperCase();
-        fireEvent.change(addressLine1Field, { target: { value: addressLine1 } });
+        fireEvent.change(addressLine1Field, {
+            target: { value: addressLine1 },
+        });
         expect(addressLine1Field).toHaveValue(expectedAddressLine1);
 
         const cityField = getByRole('textbox', { name: /city/i });
@@ -215,17 +230,24 @@ describe('TAX OL4753 Attachment Component', () => {
                     setFormOL4753Data,
                 }}
             >
-                <TaxOL4753Attachment isFormStateReadOnly={false} shouldShowDOBInOl4573={false} />
+                <TaxOL4753Attachment
+                    isFormStateReadOnly={false}
+                    shouldShowDOBInOl4573={false}
+                />
             </FormDataContext.Provider>
         );
         const checkbox = getByLabelText(/isOL4753Attached/i);
 
         await fireEvent.click(checkbox);
-        const addressLine1Field = getByRole('textbox', { name: /mailingaddress/i });
+        const addressLine1Field = getByRole('textbox', {
+            name: /mailingaddress/i,
+        });
         expect(addressLine1Field).toBeInTheDocument();
         const addressLine1 = '560 calle de la sierra';
         const expectedAddressLine1 = addressLine1.toUpperCase();
-        fireEvent.change(addressLine1Field, { target: { value: addressLine1 } });
+        fireEvent.change(addressLine1Field, {
+            target: { value: addressLine1 },
+        });
         expect(addressLine1Field).toHaveValue(expectedAddressLine1);
 
         const cityField = getByRole('textbox', { name: /city/i });

@@ -1,5 +1,10 @@
 import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
-import { logError, LoggingContext, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    logWarn,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 import { se2ApiServerUrl } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
@@ -16,15 +21,26 @@ export const NigoSearch = async (
     accessToken: string | undefined,
     logCtx: LoggingContext
 ): Promise<NigoExceptionResponse[] | null> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/exception-refs', function: 'searchNigoExceptions', inputs: { filters } };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/exception-refs',
+        function: 'searchNigoExceptions',
+        inputs: { filters },
+    };
 
     if (!accessToken) {
-        logWarn('exception-refs::No accessToken to fetch nigo exceptions', loggingContext);
+        logWarn(
+            'exception-refs::No accessToken to fetch nigo exceptions',
+            loggingContext
+        );
         return null;
     }
 
     if (!filters?.businessProcess) {
-        logWarn('exception-refs::No process or carrier specified to fetch nigo exceptions', loggingContext);
+        logWarn(
+            'exception-refs::No process or carrier specified to fetch nigo exceptions',
+            loggingContext
+        );
         return null;
     }
 
@@ -42,10 +58,18 @@ export const NigoSearch = async (
             },
         };
 
-        const { data } = await serverApi.post<any>(`${nigoBaseUrl}/nigos/search`, formData, config, loggingContext);
+        const { data } = await serverApi.post<any>(
+            `${nigoBaseUrl}/nigos/search`,
+            formData,
+            config,
+            loggingContext
+        );
         return data;
     } catch (error: any) {
-        logError('exception-refs::searchNigoExceptions', { ...parseErrorInformation(error), ...loggingContext });
+        logError('exception-refs::searchNigoExceptions', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+        });
         return null;
     }
 };

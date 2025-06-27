@@ -8,7 +8,9 @@ export default {
     component: PageNumber,
 } as Meta<typeof PageNumber>;
 
-const PageNumberTemplate: React.VFC<PageNumberProps> = args => <PageNumber {...args} />;
+const PageNumberTemplate: React.VFC<PageNumberProps> = (args) => (
+    <PageNumber {...args} />
+);
 
 export const CurrentPage = {
     ...PageNumberTemplate,

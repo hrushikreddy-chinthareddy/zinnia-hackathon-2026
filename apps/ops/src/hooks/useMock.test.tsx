@@ -37,7 +37,7 @@ jest.mock('cookies-next', () => ({
             default:
                 return true;
         }
-    })
+    }),
 }));
 
 describe('Use Mock Hook', () => {
@@ -54,7 +54,7 @@ describe('Use Mock Hook', () => {
         setCookie(MOCK_COOKIE_KEY, 'on');
         const { result } = renderHook(() => useMock());
         const { mockText, isMockOn } = result.current;
-        
+
         expect(isMockOn).toBe(true);
         expect(mockText).toBe('Turn Mocks Off');
     });

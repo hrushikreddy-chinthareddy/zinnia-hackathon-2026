@@ -6,7 +6,12 @@ export type NavButtonProps = {
     disabled?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export default function NavButton({ disabled, children, startIcon, ...rest }: NavButtonProps) {
+export default function NavButton({
+    disabled,
+    children,
+    startIcon,
+    ...rest
+}: NavButtonProps) {
     return (
         <button disabled={disabled} {...rest}>
             {startIcon}

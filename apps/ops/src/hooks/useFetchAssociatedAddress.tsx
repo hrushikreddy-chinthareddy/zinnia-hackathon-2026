@@ -16,7 +16,11 @@ export const useFetchAssociatedAddresses = (
 
         try {
             setLoading(true);
-            const { data } = await getAssociatedAddresses(policyCode, policyNumber, partyId);
+            const { data } = await getAssociatedAddresses(
+                policyCode,
+                policyNumber,
+                partyId
+            );
 
             // Uncomment this to mock
             // const { data } = mockRolesContractTable;
@@ -25,7 +29,10 @@ export const useFetchAssociatedAddresses = (
             }
             setLoading(false);
         } catch (err) {
-            console.error('useFetchAssociatedAddresses::error fetching associated address', err);
+            console.error(
+                'useFetchAssociatedAddresses::error fetching associated address',
+                err
+            );
             setError((err as Error).message);
             setAddressesResponse(null);
             setLoading(false);

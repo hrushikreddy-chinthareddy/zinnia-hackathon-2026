@@ -5,7 +5,8 @@ import { DataDefinition } from '@deps/types/data';
 
 export type PolicyValuesDto = AccountValues;
 
-export const toPolicyValuesDto = (policy: Policy): PolicyValuesDto => policy.accountValues as AccountValues;
+export const toPolicyValuesDto = (policy: Policy): PolicyValuesDto =>
+    policy.accountValues as AccountValues;
 
 export const PolicyValuesInfo = (): DataDefinition<PolicyValuesDto>[] => [
     {

@@ -3,15 +3,22 @@ import { Policy } from '@zinnia/api-types/types/sor';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
-import { buildTransactionCards, getApplicationDetailsData, mapPolicyTimelineValues } from './policy-details.helpers';
+import {
+    buildTransactionCards,
+    getApplicationDetailsData,
+    mapPolicyTimelineValues,
+} from './policy-details.helpers';
 
-const tSpy = jest.fn(str => str);
+const tSpy = jest.fn((str) => str);
 
 let policyDetails: PolicyDetails;
 describe('policy details helpers', () => {
     describe('buildTransactionCards', () => {
         it('should build the transaction cards for the policy', () => {
-            const result = buildTransactionCards(new PolicyDetails(mockPolicy), tSpy);
+            const result = buildTransactionCards(
+                new PolicyDetails(mockPolicy),
+                tSpy
+            );
 
             expect(result).toEqual([
                 {
@@ -54,10 +61,17 @@ describe('policy details helpers', () => {
                 issueState: 'NY',
                 policyNumber: '12345',
                 currency: 'USD',
-                accountValues: { endingAccountValue: 1000, cumulativePremiumSinceIssue: 500, totalYearToDatePremiumAmount: 250 },
+                accountValues: {
+                    endingAccountValue: 1000,
+                    cumulativePremiumSinceIssue: 500,
+                    totalYearToDatePremiumAmount: 250,
+                },
                 coverage, //: { totalCoverageAmount: 200000 },
                 loanValues: { totalNumberOfLoan: 2, totalLoanBalance: 10000 },
-                withdrawalValues: { numberOfWithdrawal: 3, totalWithdrawalAmount: 2000 },
+                withdrawalValues: {
+                    numberOfWithdrawal: 3,
+                    totalWithdrawalAmount: 2000,
+                },
                 policyDates: {
                     issueDate: '2023-01-01',
                     maturityDate: '2033-01-01',
@@ -86,7 +100,8 @@ describe('policy details helpers', () => {
                 applicationSourceDetails: '--',
                 issueState: 'New York',
                 originalPolicyNumber: '--',
-                salesChannel: 'policy.distributionType.thirdPartyDirectToConsumer',
+                salesChannel:
+                    'policy.distributionType.thirdPartyDirectToConsumer',
                 multiPolicyDiscount: null,
             });
         });

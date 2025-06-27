@@ -241,7 +241,9 @@ describe('String Helper', () => {
             const text = 'NOT APPROVED TO SELL REQUIRED PRODUCTS';
             const sentenceCasedText = toSentenceCase(text);
 
-            expect(sentenceCasedText).toBe('Not approved to sell required products');
+            expect(sentenceCasedText).toBe(
+                'Not approved to sell required products'
+            );
         });
 
         it('should handle empty strings', () => {
@@ -284,7 +286,9 @@ describe('String Helper', () => {
             const suffix = ' [trimmed]';
             const expectedOutput =
                 'This is a very very very very very very very very very very very very very very very very long string that exceeds the maximum length of 150 character [trimmed]';
-            expect(trimStringByCharacterCount(input, 150, suffix)).toEqual(expectedOutput);
+            expect(trimStringByCharacterCount(input, 150, suffix)).toEqual(
+                expectedOutput
+            );
         });
     });
 
@@ -316,7 +320,10 @@ describe('String Helper', () => {
         it('should return only the last 4 digits if trim only is marked as true', () => {
             const accountNumber = '123456789';
 
-            const formattedAccountNumber = formatAccountNumber(accountNumber, true);
+            const formattedAccountNumber = formatAccountNumber(
+                accountNumber,
+                true
+            );
 
             expect(formattedAccountNumber).toBe('6789');
         });

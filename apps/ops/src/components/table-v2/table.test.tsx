@@ -6,7 +6,12 @@ import { ColumnType } from './table.types';
 
 const sampleCols = [
     { field: 'name', headerName: 'Name', type: ColumnType.Text },
-    { field: 'age', headerName: 'Age', editable: true, type: ColumnType.Number },
+    {
+        field: 'age',
+        headerName: 'Age',
+        editable: true,
+        type: ColumnType.Number,
+    },
     { field: 'percentage', headerName: 'Percentage', type: ColumnType.Number },
     { field: 'marks', headerName: 'Marks', type: ColumnType.Number },
 ];
@@ -65,9 +70,13 @@ describe('Table Component', () => {
         render(<Table {...defaultProps} disablePagination />);
 
         const columnToSort = sampleCols[0].headerName;
-        const initialData = sampleData.map(obj => ({ ...obj }));
-        const sortedDataAsc = initialData.sort((a, b) => a.name.localeCompare(b.name));
-        const sortedDataDesc = initialData.sort((a, b) => b.name.localeCompare(a.name));
+        const initialData = sampleData.map((obj) => ({ ...obj }));
+        const sortedDataAsc = initialData.sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+        const sortedDataDesc = initialData.sort((a, b) =>
+            b.name.localeCompare(a.name)
+        );
 
         fireEvent.click(screen.getByText(columnToSort));
 
@@ -78,13 +87,17 @@ describe('Table Component', () => {
         fireEvent.click(screen.getByText(columnToSort));
 
         for (let i = 0; i < sortedDataDesc.length; i++) {
-            expect(screen.getByText(sortedDataDesc[i].name)).toBeInTheDocument();
+            expect(
+                screen.getByText(sortedDataDesc[i].name)
+            ).toBeInTheDocument();
         }
     });
 
     it('should update table correctly when handleOnInputChange is called', () => {
         render(<Table {...defaultProps} disablePagination={false} />);
-        const inputElement = screen.getByDisplayValue(sampleData[0].age.toString());
+        const inputElement = screen.getByDisplayValue(
+            sampleData[0].age.toString()
+        );
 
         fireEvent.change(inputElement, { target: { value: 'New Name' } });
         // expect(screen.getByDisplayValue('New Name')).toBeInTheDocument();

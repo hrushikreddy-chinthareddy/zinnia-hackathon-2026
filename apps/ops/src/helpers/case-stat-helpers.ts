@@ -1,4 +1,7 @@
-export const getCaseCompletionDurationStats = (caseObj: { createdAt: string | number | Date; updatedAt: string | number | Date }) => {
+export const getCaseCompletionDurationStats = (caseObj: {
+    createdAt: string | number | Date;
+    updatedAt: string | number | Date;
+}) => {
     // Convert dates to milliseconds
     const startDateMs = new Date(caseObj.createdAt).getTime();
     const endDateMs = new Date(caseObj.updatedAt).getTime();
@@ -15,7 +18,10 @@ export const getCaseCompletionDurationStats = (caseObj: { createdAt: string | nu
     };
 };
 
-export const getCaseInProgressDurationStats = (caseObj: { createdAt: string | number | Date; updatedAt: string | number | Date }) => {
+export const getCaseInProgressDurationStats = (caseObj: {
+    createdAt: string | number | Date;
+    updatedAt: string | number | Date;
+}) => {
     // Convert dates to milliseconds
     const startDateMs = new Date(caseObj.createdAt).getTime();
     const endDateMs = new Date().getTime();

@@ -9,7 +9,10 @@ import { baseAppUrl } from '../api-config';
 
 const baseUrl = baseAppUrl + '/api/process/orkestr/v1/';
 
-export const submitServiceRequestForm = async (requestBody: DefaultDataEntryTask, loggingContext?: object): Promise<any> => {
+export const submitServiceRequestForm = async (
+    requestBody: DefaultDataEntryTask,
+    loggingContext?: object
+): Promise<any> => {
     try {
         browserLogInfo('SubmitServiceRequestForm', {
             ...loggingContext,
@@ -17,7 +20,10 @@ export const submitServiceRequestForm = async (requestBody: DefaultDataEntryTask
             url: `${baseUrl}/opsreview`,
             function: 'process.submitServiceRequestForm',
         });
-        const { data } = await client.post<DefaultDataEntryTask, AxiosResponse<any>>(`${baseUrl}/opsreview`, requestBody);
+        const { data } = await client.post<
+            DefaultDataEntryTask,
+            AxiosResponse<any>
+        >(`${baseUrl}/opsreview`, requestBody);
         return data;
     } catch (e) {
         browserLogError('SubmitServiceRequestForm', {

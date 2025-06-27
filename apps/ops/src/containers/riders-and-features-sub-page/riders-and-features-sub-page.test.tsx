@@ -1,4 +1,10 @@
-import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import {
+    render,
+    screen,
+    cleanup,
+    fireEvent,
+    waitFor,
+} from '@testing-library/react';
 import { PolicyFeature, Rider, Status } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
@@ -30,20 +36,34 @@ describe('Riders and Features Container', () => {
     describe('Verify the correct labels are passed', () => {
         it('should contain the correct h1', () => {
             render(
-                <PolicyData.Provider value={{ policy: mockPolicy, policyDetails: new PolicyDetails(mockPolicy), refreshPolicy: jest.fn() }}>
+                <PolicyData.Provider
+                    value={{
+                        policy: mockPolicy,
+                        policyDetails: new PolicyDetails(mockPolicy),
+                        refreshPolicy: jest.fn(),
+                    }}
+                >
                     <RidersAndFeaturesContainer />
                 </PolicyData.Provider>
             );
 
             expect(screen.getByTestId('header-text')).toBeInTheDocument();
-            expect(screen.getByTestId('header-text')).toHaveTextContent('title');
+            expect(screen.getByTestId('header-text')).toHaveTextContent(
+                'title'
+            );
         });
     });
 
     describe('filter chips', () => {
         it('should contain the correct chips', () => {
             render(
-                <PolicyData.Provider value={{ policy: mockPolicy, policyDetails: new PolicyDetails(mockPolicy), refreshPolicy: jest.fn() }}>
+                <PolicyData.Provider
+                    value={{
+                        policy: mockPolicy,
+                        policyDetails: new PolicyDetails(mockPolicy),
+                        refreshPolicy: jest.fn(),
+                    }}
+                >
                     <RidersAndFeaturesContainer />
                 </PolicyData.Provider>
             );
@@ -60,32 +80,74 @@ describe('Riders and Features Container', () => {
 
         it('should start with correct initial checked states', () => {
             render(
-                <PolicyData.Provider value={{ policy: mockPolicy, policyDetails: new PolicyDetails(mockPolicy), refreshPolicy: jest.fn() }}>
+                <PolicyData.Provider
+                    value={{
+                        policy: mockPolicy,
+                        policyDetails: new PolicyDetails(mockPolicy),
+                        refreshPolicy: jest.fn(),
+                    }}
+                >
                     <RidersAndFeaturesContainer />
                 </PolicyData.Provider>
             );
 
-            expect(screen.getByText('All')).toHaveAttribute('aria-checked', 'true');
-            expect(screen.getByText('filter.Rider')).toHaveAttribute('aria-checked', 'false');
-            expect(screen.getByText('filter.Feature')).toHaveAttribute('aria-checked', 'false');
-            expect(screen.getByText('filter.active')).toHaveAttribute('aria-checked', 'false');
-            expect(screen.getByText('filter.available')).toHaveAttribute('aria-checked', 'false');
-            expect(screen.getByText('filter.terminated')).toHaveAttribute('aria-checked', 'false');
-            expect(screen.getByText('filter.notElected')).toHaveAttribute('aria-checked', 'false');
+            expect(screen.getByText('All')).toHaveAttribute(
+                'aria-checked',
+                'true'
+            );
+            expect(screen.getByText('filter.Rider')).toHaveAttribute(
+                'aria-checked',
+                'false'
+            );
+            expect(screen.getByText('filter.Feature')).toHaveAttribute(
+                'aria-checked',
+                'false'
+            );
+            expect(screen.getByText('filter.active')).toHaveAttribute(
+                'aria-checked',
+                'false'
+            );
+            expect(screen.getByText('filter.available')).toHaveAttribute(
+                'aria-checked',
+                'false'
+            );
+            expect(screen.getByText('filter.terminated')).toHaveAttribute(
+                'aria-checked',
+                'false'
+            );
+            expect(screen.getByText('filter.notElected')).toHaveAttribute(
+                'aria-checked',
+                'false'
+            );
         });
 
         it('should change chip states correctly when one is clicked', () => {
             render(
-                <PolicyData.Provider value={{ policy: mockPolicy, policyDetails: new PolicyDetails(mockPolicy), refreshPolicy: jest.fn() }}>
+                <PolicyData.Provider
+                    value={{
+                        policy: mockPolicy,
+                        policyDetails: new PolicyDetails(mockPolicy),
+                        refreshPolicy: jest.fn(),
+                    }}
+                >
                     <RidersAndFeaturesContainer />
                 </PolicyData.Provider>
             );
 
-            expect(screen.getByText('All')).toHaveAttribute('aria-checked', 'true');
-            expect(screen.getByText('filter.Rider')).toHaveAttribute('aria-checked', 'false');
+            expect(screen.getByText('All')).toHaveAttribute(
+                'aria-checked',
+                'true'
+            );
+            expect(screen.getByText('filter.Rider')).toHaveAttribute(
+                'aria-checked',
+                'false'
+            );
             fireEvent.click(screen.getByText('filter.Rider'));
             waitFor(() => {
-                expect(screen.getByText('filter.Rider')).toHaveAttribute('aria-checked', 'true');
+                expect(screen.getByText('filter.Rider')).toHaveAttribute(
+                    'aria-checked',
+                    'true'
+                );
             });
         });
     });
@@ -94,10 +156,21 @@ describe('Riders and Features Container', () => {
 describe('Riders and Features Helpers', () => {
     describe('calculaterFilterProps', () => {
         it('returns the correct values for each filter type, including variant', () => {
-            const futureEndDate = dayjs().add(11, 'y').format(ZAHARA_API_DATE_FORMAT);
-            const pastDate = dayjs().subtract(11, 'y').format(ZAHARA_API_DATE_FORMAT);
+            const futureEndDate = dayjs()
+                .add(11, 'y')
+                .format(ZAHARA_API_DATE_FORMAT);
+            const pastDate = dayjs()
+                .subtract(11, 'y')
+                .format(ZAHARA_API_DATE_FORMAT);
 
-            const [riders, features, active, available, terminated, notElected] = calculaterFilterProps({
+            const [
+                riders,
+                features,
+                active,
+                available,
+                terminated,
+                notElected,
+            ] = calculaterFilterProps({
                 riders: [
                     { status: Status.TERMINATED },
                     { status: Status.PENDING },
@@ -107,7 +180,11 @@ describe('Riders and Features Helpers', () => {
                 ] as Rider[],
                 // terminated, active, available, available, not elected
                 features: [
-                    { approvalDate: pastDate, startDate: pastDate, endDate: futureEndDate },
+                    {
+                        approvalDate: pastDate,
+                        startDate: pastDate,
+                        endDate: futureEndDate,
+                    },
                     { startDate: pastDate, endDate: futureEndDate },
                     { startDate: pastDate, endDate: pastDate },
                 ] as PolicyFeature[],
@@ -159,7 +236,14 @@ describe('Riders and Features Helpers', () => {
         });
 
         it('returns the correct order', () => {
-            const [riders, available, terminated, notElected, features, active] = calculaterFilterProps({
+            const [
+                riders,
+                available,
+                terminated,
+                notElected,
+                features,
+                active,
+            ] = calculaterFilterProps({
                 riders: [
                     { status: Status.TERMINATED },
                     { status: Status.TERMINATED },

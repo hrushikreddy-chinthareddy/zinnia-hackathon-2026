@@ -7,14 +7,21 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IssueCountsByStatusContext } from '../../context/issue-counts-by-status-context';
 
 export const IssueCountsByStatusHeader = () => {
-    const { issueCountsByStatusData, issueCountsByStatusDataFetching, exceptionStatus } = useContext(IssueCountsByStatusContext);
+    const {
+        issueCountsByStatusData,
+        issueCountsByStatusDataFetching,
+        exceptionStatus,
+    } = useContext(IssueCountsByStatusContext);
     const issueStatusText =
-        exceptionStatus.includes(ExceptionStatus.UNRESOLVED) && exceptionStatus.includes(ExceptionStatus.RESOLVED)
+        exceptionStatus.includes(ExceptionStatus.UNRESOLVED) &&
+        exceptionStatus.includes(ExceptionStatus.RESOLVED)
             ? 'Issues'
             : exceptionStatus.includes(ExceptionStatus.UNRESOLVED)
             ? `${ExceptionStatus.UNRESOLVED} issues`
             : `${ExceptionStatus.RESOLVED} issues`;
-    const totalCount = issueCountsByStatusData?.totalElements?.toLocaleString() || DEFAULT_ERROR_STRING;
+    const totalCount =
+        issueCountsByStatusData?.totalElements?.toLocaleString() ||
+        DEFAULT_ERROR_STRING;
 
     const totalIssues = issueCountsByStatusDataFetching ? (
         <div className="blur">

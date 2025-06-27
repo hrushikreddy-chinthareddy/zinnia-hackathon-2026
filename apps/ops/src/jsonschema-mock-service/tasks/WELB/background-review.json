@@ -236,7 +236,9 @@
                         "ui:widget": "radio",
                         "ui:options": {
                             "label": true,
-                            "enumNames": ["No, there are one or more issues that need to be logged."]
+                            "enumNames": [
+                                "No, there are one or more issues that need to be logged."
+                            ]
                         }
                     },
                     "declineReason": {

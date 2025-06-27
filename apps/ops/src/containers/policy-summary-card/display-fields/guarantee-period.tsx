@@ -14,8 +14,14 @@ const GuaranteePeriod = ({ guaranteePeriod }: GuaranteePeriodProps) => {
 
     return (
         <div>
-            <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.guaranteePeriod')} />
-            <Content details={guaranteePeriod || DEFAULT_ERROR_STRING} variant={ContentVariant.BodySm} />
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={t('colDefs:policySummary.guaranteePeriod')}
+            />
+            <Content
+                details={guaranteePeriod || DEFAULT_ERROR_STRING}
+                variant={ContentVariant.BodySm}
+            />
         </div>
     );
 };

@@ -27,7 +27,9 @@ export default function DateRangeFields({
     updatedStartOnChange,
     updatedEndOnChange,
 }: DateRangeFieldsProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'caseManagementDashboard.refineResultsOptions' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'caseManagementDashboard.refineResultsOptions',
+    });
     return (
         <div className="flex flex-col gap-8 border-b-2 border-b-gray-100 py-8">
             <FieldDateSelectRange
@@ -37,9 +39,19 @@ export default function DateRangeFields({
                 endLabel={t(`createdEnd`) as string}
                 startOnChange={createdStartOnChange}
                 endOnChange={createdEndOnChange}
-                startVariant={errors?.createdDateStart ? FieldVariant.Error : FieldVariant.Default}
-                endVariant={errors?.createdDateEnd ? FieldVariant.Error : FieldVariant.Default}
-                startMessage={errors?.createdDateStart ? errors.createdDateStart : ''}
+                startVariant={
+                    errors?.createdDateStart
+                        ? FieldVariant.Error
+                        : FieldVariant.Default
+                }
+                endVariant={
+                    errors?.createdDateEnd
+                        ? FieldVariant.Error
+                        : FieldVariant.Default
+                }
+                startMessage={
+                    errors?.createdDateStart ? errors.createdDateStart : ''
+                }
                 endMessage={errors?.createdDateEnd ? errors.createdDateEnd : ''}
                 placeholder={t(`selectDate`) as string}
                 closeOnDateSelect={true}
@@ -52,9 +64,19 @@ export default function DateRangeFields({
                 endLabel={t(`updatedEnd`) as string}
                 startOnChange={updatedStartOnChange}
                 endOnChange={updatedEndOnChange}
-                startVariant={errors?.updatedDateStart ? FieldVariant.Error : FieldVariant.Default}
-                endVariant={errors?.updatedDateEnd ? FieldVariant.Error : FieldVariant.Default}
-                startMessage={errors?.updatedDateStart ? errors.updatedDateStart : ''}
+                startVariant={
+                    errors?.updatedDateStart
+                        ? FieldVariant.Error
+                        : FieldVariant.Default
+                }
+                endVariant={
+                    errors?.updatedDateEnd
+                        ? FieldVariant.Error
+                        : FieldVariant.Default
+                }
+                startMessage={
+                    errors?.updatedDateStart ? errors.updatedDateStart : ''
+                }
                 endMessage={errors?.updatedDateEnd ? errors.updatedDateEnd : ''}
                 placeholder={t(`selectDate`) as string}
                 closeOnDateSelect={true}

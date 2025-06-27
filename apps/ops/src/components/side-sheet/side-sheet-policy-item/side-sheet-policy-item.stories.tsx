@@ -1,7 +1,10 @@
 import { Meta } from '@storybook/react';
 
 import Button from '@deps/components/button/button';
-import { SideSheetProvider, useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import {
+    SideSheetProvider,
+    useSideSheetContext,
+} from '@deps/contexts/SideSheetContext';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
 import '@deps/styles/styles.css';
@@ -12,7 +15,7 @@ export default {
     title: 'Components/SideSheet',
     component: SideSheetPolicyItemForStoryBook,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <SideSheetProvider>
                     <Story />

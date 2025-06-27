@@ -3,7 +3,10 @@ import { FC, useContext } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseStatusFilter } from '@deps/components/dashboard/filters/case-status-filter';
-import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
+import {
+    CaseTypeFilter,
+    ExtendedProcesses,
+} from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { ActiveAgingContext } from '@deps/components/dashboard/sections/active-aging/context/active-aging-context';
 import { FieldSize } from '@deps/components/fields/field';
@@ -28,15 +31,38 @@ export const ActiveAgingFilters: FC = () => {
     const controlledTimeRangeText = getFormattedDateRange(timeframe);
 
     const groupByOptions = [
-        { label: 'Carrier', value: CaseCountGroupByEnum.CARRIER, disabled: filter.carrier?.length === 1 },
+        {
+            label: 'Carrier',
+            value: CaseCountGroupByEnum.CARRIER,
+            disabled: filter.carrier?.length === 1,
+        },
         { label: 'Case subtype', value: CaseCountGroupByEnum.PROCESS_SUB_TYPE },
-        { label: 'Distribution partner', value: CaseCountGroupByEnum.BROKER_DEALER_NAME },
+        {
+            label: 'Distribution partner',
+            value: CaseCountGroupByEnum.BROKER_DEALER_NAME,
+        },
     ];
 
-    const caseStatusOptions: { label: string; displayText: string; value: Statuses }[] = [
-        { label: 'In progress', displayText: 'In progress', value: Statuses.InProgress },
-        { label: 'Not in good order', displayText: 'Not in good order', value: Statuses.Exception },
-        { label: 'Not started', displayText: 'Not started', value: Statuses.NotStarted },
+    const caseStatusOptions: {
+        label: string;
+        displayText: string;
+        value: Statuses;
+    }[] = [
+        {
+            label: 'In progress',
+            displayText: 'In progress',
+            value: Statuses.InProgress,
+        },
+        {
+            label: 'Not in good order',
+            displayText: 'Not in good order',
+            value: Statuses.Exception,
+        },
+        {
+            label: 'Not started',
+            displayText: 'Not started',
+            value: Statuses.NotStarted,
+        },
     ];
 
     return (
@@ -49,7 +75,9 @@ export const ActiveAgingFilters: FC = () => {
                         options={groupByOptions}
                         value={groupBy}
                         size={FieldSize.XS}
-                        onChange={val => setGroupBy(val as CaseCountGroupByEnum)}
+                        onChange={(val) =>
+                            setGroupBy(val as CaseCountGroupByEnum)
+                        }
                     />
 
                     <CaseTypeFilter
@@ -59,13 +87,19 @@ export const ActiveAgingFilters: FC = () => {
                         value={selectedProcess}
                     />
                 </div>
-                <CaseStatusFilter caseStatus={caseStatus} handleChangeCallback={setCaseStatus} options={caseStatusOptions} />
+                <CaseStatusFilter
+                    caseStatus={caseStatus}
+                    handleChangeCallback={setCaseStatus}
+                    options={caseStatusOptions}
+                />
             </div>
             <div className="w-1/2">
                 <TimeFilter
                     defaultValue={timeframe}
                     timeframeOptions={ActiveAgingTimeRange}
-                    onRadioChange={val => setTimeframe(val as ActiveAgingTimeRange)}
+                    onRadioChange={(val) =>
+                        setTimeframe(val as ActiveAgingTimeRange)
+                    }
                     controlledTimeValue={timeframe}
                     timerange={controlledTimeRangeText}
                 />

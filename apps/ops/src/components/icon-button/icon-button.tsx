@@ -7,7 +7,12 @@ interface IconButtonProps extends HTMLAttributes<HTMLButtonElement> {
     disabled?: boolean;
 }
 
-export default function IconButton({ children, disabled, onClick, ...rest }: IconButtonProps) {
+export default function IconButton({
+    children,
+    disabled,
+    onClick,
+    ...rest
+}: IconButtonProps) {
     const { className, ...newRest } = rest;
 
     return (
@@ -15,7 +20,7 @@ export default function IconButton({ children, disabled, onClick, ...rest }: Ico
             className={clsx(styles.iconButton)}
             disabled={disabled}
             onClick={onClick}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.stopPropagation();
                     onClick;

@@ -1,7 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import { Fragment } from 'react';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { CardColumnsTest } from '@deps/jest/constants/test-id-constants';
 
 interface CardColumnsProps {
@@ -27,7 +29,9 @@ const CardColumns = ({
     keepFormattingOnAllSize = false,
 }: CardColumnsProps): JSX.Element => {
     const titleClassName = `${
-        variant === CardColumnsVariant.SIDE_SHEET ? 'text-gray-900 leading-7.5' : ''
+        variant === CardColumnsVariant.SIDE_SHEET
+            ? 'text-gray-900 leading-7.5'
+            : ''
     } pb-3 font-primary text-xl font-medium`;
 
     const { t } = useTranslation();
@@ -43,21 +47,38 @@ const CardColumns = ({
                                     data-testid={`${CardColumnsTest.ITEMS}-${title}`}
                                     className={`mt-12 grow first:mt-0 md:mt-0 lg:border-r lg:border-r-gray-100 lg:pl-8 lg:first:pl-0 lg:last:border-none`}
                                 >
-                                    {variant === CardColumnsVariant.SIDE_SHEET ? (
-                                        <h2 className={titleClassName}>{title}</h2>
+                                    {variant ===
+                                    CardColumnsVariant.SIDE_SHEET ? (
+                                        <h2 className={titleClassName}>
+                                            {title}
+                                        </h2>
                                     ) : (
-                                        <h3 className={titleClassName}>{title}</h3>
+                                        <h3 className={titleClassName}>
+                                            {title}
+                                        </h3>
                                     )}
                                     {subHeader && (
-                                        <Typography className="pb-8 pt-5" variant={TypographyVariant.Body}>
+                                        <Typography
+                                            className="pb-8 pt-5"
+                                            variant={TypographyVariant.Body}
+                                        >
                                             {t(`${subHeader}`)}
                                         </Typography>
                                     )}
-                                    <div className={`flex gap-8 ${keepFormattingOnAllSize ? 'md:flex' : 'md:block'} lg:flex`}>
+                                    <div
+                                        className={`flex gap-8 ${
+                                            keepFormattingOnAllSize
+                                                ? 'md:flex'
+                                                : 'md:block'
+                                        } lg:flex`}
+                                    >
                                         {items[index]}
                                     </div>
                                     {footer && (
-                                        <Typography className="py-8" variant={TypographyVariant.Body}>
+                                        <Typography
+                                            className="py-8"
+                                            variant={TypographyVariant.Body}
+                                        >
                                             {t(`${footer}`)}
                                         </Typography>
                                     )}

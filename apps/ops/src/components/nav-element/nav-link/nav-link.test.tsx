@@ -1,4 +1,4 @@
-import { fireEvent , cleanup, render, screen } from '@testing-library/react';
+import { fireEvent, cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import NavLink from './nav-link';

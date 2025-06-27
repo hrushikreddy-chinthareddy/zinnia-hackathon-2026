@@ -1,24 +1,45 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import {
+    Dispatch,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
 
 import Button, { ButtonType } from '@deps/components/button/button';
 import { FieldSize } from '@deps/components/fields/field';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import Select from '@deps/components/select/select';
-import { CaseSearchAdditionalFilters, CaseSearchFilters, initialAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
+import {
+    CaseSearchAdditionalFilters,
+    CaseSearchFilters,
+    initialAdditionalFilters,
+} from '@deps/contexts/CaseManagementFilters';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { ReferenceDataQuery, getReferenceData } from '@deps/queries/api/cases';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import { FilterClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
-import { getCarrierListItem, getCarrierNameByClientId, getClientIdsByCarrierName, getSelectedCarriers } from '@deps/utils/carriers';
+import {
+    FilterClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
+import {
+    getCarrierListItem,
+    getCarrierNameByClientId,
+    getClientIdsByCarrierName,
+    getSelectedCarriers,
+} from '@deps/utils/carriers';
 
 import DateRangeFields from './date-range-fields';
 import MultiselectField from './multiselect-field';
 
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
-const REFINE_RESULTS_ERROR_BASE_KEY = 'caseManagementDashboard.refineResultsErrors.';
+const REFINE_RESULTS_ERROR_BASE_KEY =
+    'caseManagementDashboard.refineResultsErrors.';
 
 type Errors = {
     createdDateStart?: string;
@@ -44,22 +65,31 @@ export default function SideSheetRefineResults({
     const { sessionId, partyId } = usePermissionsContext();
 
     const carrierFilterItems = authorizedCarriers.map((carrierCode: string) => {
-        const valueAndDisplay = getCarrierNameByClientId(carrierCode) || carrierCode.toUpperCase();
+        const valueAndDisplay =
+            getCarrierNameByClientId(carrierCode) || carrierCode.toUpperCase();
 
         return {
-            value: getClientIdsByCarrierName(authorizedCarriers, valueAndDisplay) || carrierCode.toUpperCase(),
+            value:
+                getClientIdsByCarrierName(
+                    authorizedCarriers,
+                    valueAndDisplay
+                ) || carrierCode.toUpperCase(),
             displayText: valueAndDisplay,
             label: getCarrierListItem(carrierCode),
         };
     });
     // if only one carrier filter exists, select it by default
     if (carrierFilterItems.length === 1) {
-        filters.carriers = { [carrierFilterItems[0].value]: carrierFilterItems[0].displayText };
+        filters.carriers = {
+            [carrierFilterItems[0].value]: carrierFilterItems[0].displayText,
+        };
     }
     const [additionalFilters, setAdditionalFilters] = useState(filters);
     const [productNameOptions, setProductNameOptions] = useState<string[]>([]);
     const [processListOptions, setProcessListOptions] = useState<string[]>([]);
-    const [requestSubTypeOptions, setRequestSubTypeOptions] = useState<string[]>([]);
+    const [requestSubTypeOptions, setRequestSubTypeOptions] = useState<
+        string[]
+    >([]);
     const [loadingProductName, setLoadingProductName] = useState(false);
     const [loadingProcessList, setLoadingProcessList] = useState(false);
     const [loadingRequestSubType, setLoadingRequestSubType] = useState(false);
@@ -69,7 +99,7 @@ export default function SideSheetRefineResults({
         const carrierLabels = new Set();
 
         const uniqueCarrierFilterItems = (
-            carrierFilterItems.filter(item => {
+            carrierFilterItems.filter((item) => {
                 if (carrierLabels.has(item.displayText)) {
                     return false;
                 }
@@ -77,29 +107,38 @@ export default function SideSheetRefineResults({
                 carrierLabels.add(item.displayText);
                 return true;
             }) as typeof carrierFilterItems
-        ).sort((item1, item2) => item1.displayText.localeCompare(item2.displayText));
+        ).sort((item1, item2) =>
+            item1.displayText.localeCompare(item2.displayText)
+        );
         return uniqueCarrierFilterItems;
     };
 
     // update ProductName when carrier changes
     useEffect(() => {
-        const selectedCarriers = getSelectedCarriers(additionalFilters.carriers);
+        const selectedCarriers = getSelectedCarriers(
+            additionalFilters.carriers
+        );
 
         if (selectedCarriers.length) {
             setLoadingProductName(true);
 
             const getProductNameRefData = async () => {
                 const results = await getReferenceData({
-                    carrier: selectedCarriers.map(perm => perm.toUpperCase()),
+                    carrier: selectedCarriers.map((perm) => perm.toUpperCase()),
                     keys: ['productName'] as ReferenceDataQuery['keys'],
                 });
-                const newProductNames = results?.referenceData?.productName?.filter(Boolean) || [];
+                const newProductNames =
+                    results?.referenceData?.productName?.filter(Boolean) || [];
 
                 setProductNameOptions(newProductNames);
-                setAdditionalFilters(prevFilters => {
+                setAdditionalFilters((prevFilters) => {
                     const updatedProducts = new Set(prevFilters.products);
                     const newProducts = new Set(newProductNames);
-                    updatedProducts.forEach(product => !newProducts.has(product) && updatedProducts.delete(product));
+                    updatedProducts.forEach(
+                        (product) =>
+                            !newProducts.has(product) &&
+                            updatedProducts.delete(product)
+                    );
 
                     return { ...prevFilters, products: updatedProducts };
                 });
@@ -108,7 +147,10 @@ export default function SideSheetRefineResults({
             getProductNameRefData().then(() => setLoadingProductName(false));
         } else {
             setProductNameOptions([]);
-            setAdditionalFilters(prevFilters => ({ ...prevFilters, products: filters.products }));
+            setAdditionalFilters((prevFilters) => ({
+                ...prevFilters,
+                products: filters.products,
+            }));
         }
     }, [authorizedCarriers, additionalFilters.carriers, filters.products]);
 
@@ -117,19 +159,28 @@ export default function SideSheetRefineResults({
         setLoadingProcessList(true);
 
         const getProcessListRefData = async () => {
-            const selectedCarriers = getSelectedCarriers(additionalFilters.carriers);
-            const queryCarriers = selectedCarriers.length ? selectedCarriers : Object.keys(authorizedCarriers);
+            const selectedCarriers = getSelectedCarriers(
+                additionalFilters.carriers
+            );
+            const queryCarriers = selectedCarriers.length
+                ? selectedCarriers
+                : Object.keys(authorizedCarriers);
             const results = await getReferenceData({
-                carrier: queryCarriers.map(perm => perm.toUpperCase()),
+                carrier: queryCarriers.map((perm) => perm.toUpperCase()),
                 keys: ['processList'] as ReferenceDataQuery['keys'],
             });
-            const newProcessList = results?.referenceData.processList.filter(Boolean) || [];
+            const newProcessList =
+                results?.referenceData.processList.filter(Boolean) || [];
 
             setProcessListOptions(newProcessList);
-            setAdditionalFilters(prevFilters => {
+            setAdditionalFilters((prevFilters) => {
                 const updatedProcessList = new Set(prevFilters.processTypes);
                 const newProcessListSet = new Set(newProcessList);
-                updatedProcessList.forEach(processType => !newProcessListSet.has(processType) && updatedProcessList.delete(processType));
+                updatedProcessList.forEach(
+                    (processType) =>
+                        !newProcessListSet.has(processType) &&
+                        updatedProcessList.delete(processType)
+                );
 
                 return { ...prevFilters, processTypes: updatedProcessList };
             });
@@ -146,39 +197,60 @@ export default function SideSheetRefineResults({
             setLoadingRequestSubType(true);
 
             const getRequestSubTypeRefData = async () => {
-                const selectedCarriers = getSelectedCarriers(additionalFilters.carriers);
-                const queryCarriers = selectedCarriers.length ? selectedCarriers : Object.keys(authorizedCarriers);
+                const selectedCarriers = getSelectedCarriers(
+                    additionalFilters.carriers
+                );
+                const queryCarriers = selectedCarriers.length
+                    ? selectedCarriers
+                    : Object.keys(authorizedCarriers);
                 const results = await getReferenceData({
-                    carrier: queryCarriers.map(perm => perm.toUpperCase()),
+                    carrier: queryCarriers.map((perm) => perm.toUpperCase()),
                     process: selectedProcesses,
                     keys: ['requestSubType'] as ReferenceDataQuery['keys'],
                 });
-                const newRequestSubTypes = results?.referenceData.requestSubType.filter(Boolean) || [];
+                const newRequestSubTypes =
+                    results?.referenceData.requestSubType.filter(Boolean) || [];
 
                 setRequestSubTypeOptions(newRequestSubTypes);
-                setAdditionalFilters(prevFilters => {
+                setAdditionalFilters((prevFilters) => {
                     const updatedSubTypes = new Set(prevFilters.requestSubType);
                     const newSubTypes = new Set(newRequestSubTypes);
-                    updatedSubTypes.forEach(subType => !newSubTypes.has(subType) && updatedSubTypes.delete(subType));
+                    updatedSubTypes.forEach(
+                        (subType) =>
+                            !newSubTypes.has(subType) &&
+                            updatedSubTypes.delete(subType)
+                    );
 
                     return { ...prevFilters, requestSubType: updatedSubTypes };
                 });
             };
 
-            getRequestSubTypeRefData().then(() => setLoadingRequestSubType(false));
+            getRequestSubTypeRefData().then(() =>
+                setLoadingRequestSubType(false)
+            );
         } else {
             setRequestSubTypeOptions([]);
-            setAdditionalFilters(prevFilters => ({ ...prevFilters, requestSubType: filters.requestSubType }));
+            setAdditionalFilters((prevFilters) => ({
+                ...prevFilters,
+                requestSubType: filters.requestSubType,
+            }));
         }
-    }, [authorizedCarriers, additionalFilters.carriers, additionalFilters.processTypes, filters.requestSubType]);
+    }, [
+        authorizedCarriers,
+        additionalFilters.carriers,
+        additionalFilters.processTypes,
+        filters.requestSubType,
+    ]);
 
     // Field Handlers
     const createdStartOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newStartValue = e.target.value;
 
-        const isAfter = dayjs(newStartValue, NUMERIC_DATE_FORMAT).isAfter(dayjs(additionalFilters.createdDateEnd, NUMERIC_DATE_FORMAT));
+        const isAfter = dayjs(newStartValue, NUMERIC_DATE_FORMAT).isAfter(
+            dayjs(additionalFilters.createdDateEnd, NUMERIC_DATE_FORMAT)
+        );
 
-        setAdditionalFilters(prevFilters => ({
+        setAdditionalFilters((prevFilters) => ({
             ...prevFilters,
             createdDateStart: newStartValue,
             createdDateEnd: isAfter ? '' : prevFilters.createdDateEnd,
@@ -188,11 +260,15 @@ export default function SideSheetRefineResults({
     const createdEndOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newEndValue = e.target.value;
 
-        setAdditionalFilters(prevFilters => {
-            const isBefore = dayjs(newEndValue, NUMERIC_DATE_FORMAT).isBefore(dayjs(prevFilters.createdDateStart, NUMERIC_DATE_FORMAT));
+        setAdditionalFilters((prevFilters) => {
+            const isBefore = dayjs(newEndValue, NUMERIC_DATE_FORMAT).isBefore(
+                dayjs(prevFilters.createdDateStart, NUMERIC_DATE_FORMAT)
+            );
             return {
                 ...prevFilters,
-                createdDateStart: isBefore ? newEndValue : prevFilters.createdDateStart,
+                createdDateStart: isBefore
+                    ? newEndValue
+                    : prevFilters.createdDateStart,
                 createdDateEnd: isBefore ? '' : newEndValue,
             };
         });
@@ -201,8 +277,10 @@ export default function SideSheetRefineResults({
     const updatedStartOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newStartValue = e.target.value;
 
-        setAdditionalFilters(prevFilters => {
-            const isAfter = dayjs(newStartValue, NUMERIC_DATE_FORMAT).isAfter(dayjs(prevFilters.updatedDateEnd, NUMERIC_DATE_FORMAT));
+        setAdditionalFilters((prevFilters) => {
+            const isAfter = dayjs(newStartValue, NUMERIC_DATE_FORMAT).isAfter(
+                dayjs(prevFilters.updatedDateEnd, NUMERIC_DATE_FORMAT)
+            );
             return {
                 ...prevFilters,
                 updatedDateStart: newStartValue,
@@ -214,11 +292,15 @@ export default function SideSheetRefineResults({
     const updatedEndOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newEndValue = e.target.value;
 
-        setAdditionalFilters(prevFilters => {
-            const isBefore = dayjs(newEndValue, NUMERIC_DATE_FORMAT).isBefore(dayjs(prevFilters.updatedDateStart, NUMERIC_DATE_FORMAT));
+        setAdditionalFilters((prevFilters) => {
+            const isBefore = dayjs(newEndValue, NUMERIC_DATE_FORMAT).isBefore(
+                dayjs(prevFilters.updatedDateStart, NUMERIC_DATE_FORMAT)
+            );
             return {
                 ...prevFilters,
-                updatedDateStart: isBefore ? newEndValue : prevFilters.updatedDateStart,
+                updatedDateStart: isBefore
+                    ? newEndValue
+                    : prevFilters.updatedDateStart,
                 updatedDateEnd: isBefore ? '' : newEndValue,
             };
         });
@@ -233,13 +315,16 @@ export default function SideSheetRefineResults({
             newProcessTypes.add(clickedProcessType);
         }
 
-        setAdditionalFilters(prevFilters => ({
+        setAdditionalFilters((prevFilters) => ({
             ...prevFilters,
             processTypes: newProcessTypes,
         }));
     };
 
-    const updateCarrierFilters = (clickedCarrier: string, displayText: string) => {
+    const updateCarrierFilters = (
+        clickedCarrier: string,
+        displayText: string
+    ) => {
         const newCarriersFilters = { ...additionalFilters.carriers };
 
         if (newCarriersFilters[clickedCarrier]) {
@@ -248,7 +333,7 @@ export default function SideSheetRefineResults({
             newCarriersFilters[clickedCarrier] = displayText;
         }
 
-        setAdditionalFilters(prevFilters => ({
+        setAdditionalFilters((prevFilters) => ({
             ...prevFilters,
             carriers: newCarriersFilters,
         }));
@@ -263,7 +348,7 @@ export default function SideSheetRefineResults({
             newProductNameFilters.add(clickedProductName);
         }
 
-        setAdditionalFilters(prevFilters => ({
+        setAdditionalFilters((prevFilters) => ({
             ...prevFilters,
             products: newProductNameFilters,
         }));
@@ -278,7 +363,7 @@ export default function SideSheetRefineResults({
             newRequestSubTypes.add(clickedSubType);
         }
 
-        setAdditionalFilters(prevFilters => ({
+        setAdditionalFilters((prevFilters) => ({
             ...prevFilters,
             requestSubType: newRequestSubTypes,
         }));
@@ -287,17 +372,61 @@ export default function SideSheetRefineResults({
     const handleSubmit = useCallback(() => {
         const validateForm = () => {
             let errors: Errors = {};
-            if (additionalFilters.createdDateStart && dayjs(additionalFilters.createdDateStart, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-                errors = { ...errors, createdDateStart: t(`${REFINE_RESULTS_ERROR_BASE_KEY}date`) as string };
+            if (
+                additionalFilters.createdDateStart &&
+                dayjs(
+                    additionalFilters.createdDateStart,
+                    NUMERIC_DATE_FORMAT
+                ).isAfter(dayjs())
+            ) {
+                errors = {
+                    ...errors,
+                    createdDateStart: t(
+                        `${REFINE_RESULTS_ERROR_BASE_KEY}date`
+                    ) as string,
+                };
             }
-            if (additionalFilters.createdDateEnd && dayjs(additionalFilters.createdDateEnd, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-                errors = { ...errors, createdDateEnd: t(`${REFINE_RESULTS_ERROR_BASE_KEY}date`) as string };
+            if (
+                additionalFilters.createdDateEnd &&
+                dayjs(
+                    additionalFilters.createdDateEnd,
+                    NUMERIC_DATE_FORMAT
+                ).isAfter(dayjs())
+            ) {
+                errors = {
+                    ...errors,
+                    createdDateEnd: t(
+                        `${REFINE_RESULTS_ERROR_BASE_KEY}date`
+                    ) as string,
+                };
             }
-            if (additionalFilters.updatedDateStart && dayjs(additionalFilters.updatedDateStart, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-                errors = { ...errors, updatedDateStart: t(`${REFINE_RESULTS_ERROR_BASE_KEY}date`) as string };
+            if (
+                additionalFilters.updatedDateStart &&
+                dayjs(
+                    additionalFilters.updatedDateStart,
+                    NUMERIC_DATE_FORMAT
+                ).isAfter(dayjs())
+            ) {
+                errors = {
+                    ...errors,
+                    updatedDateStart: t(
+                        `${REFINE_RESULTS_ERROR_BASE_KEY}date`
+                    ) as string,
+                };
             }
-            if (additionalFilters.updatedDateEnd && dayjs(additionalFilters.updatedDateEnd, NUMERIC_DATE_FORMAT).isAfter(dayjs())) {
-                errors = { ...errors, updatedDateEnd: t(`${REFINE_RESULTS_ERROR_BASE_KEY}date`) as string };
+            if (
+                additionalFilters.updatedDateEnd &&
+                dayjs(
+                    additionalFilters.updatedDateEnd,
+                    NUMERIC_DATE_FORMAT
+                ).isAfter(dayjs())
+            ) {
+                errors = {
+                    ...errors,
+                    updatedDateEnd: t(
+                        `${REFINE_RESULTS_ERROR_BASE_KEY}date`
+                    ) as string,
+                };
             }
             setErrors(errors);
             return Object.keys(errors).length === 0;
@@ -306,39 +435,78 @@ export default function SideSheetRefineResults({
             return;
         }
 
-        setCaseManagementFilters(prevFilters => ({
+        setCaseManagementFilters((prevFilters) => ({
             ...prevFilters,
             offset: 0,
             additionalFilters,
         }));
         closeSideSheet();
 
-        const selectedFilters = Object.keys(additionalFilters).reduce((acc, key) => {
-            if (additionalFilters[key as keyof typeof additionalFilters] instanceof Set) {
-                const arrayVersionOfSet = Array.from(additionalFilters[key as keyof typeof additionalFilters] as Set<string>);
-                if (arrayVersionOfSet.length > 0) {
-                    acc[key] = arrayVersionOfSet;
+        const selectedFilters = Object.keys(additionalFilters).reduce(
+            (acc, key) => {
+                if (
+                    additionalFilters[
+                        key as keyof typeof additionalFilters
+                    ] instanceof Set
+                ) {
+                    const arrayVersionOfSet = Array.from(
+                        additionalFilters[
+                            key as keyof typeof additionalFilters
+                        ] as Set<string>
+                    );
+                    if (arrayVersionOfSet.length > 0) {
+                        acc[key] = arrayVersionOfSet;
+                    }
+                } else if (
+                    Array.isArray(
+                        additionalFilters[key as keyof typeof additionalFilters]
+                    ) &&
+                    (
+                        additionalFilters[
+                            key as keyof typeof additionalFilters
+                        ] as string[]
+                    ).length > 0
+                ) {
+                    acc[key] =
+                        additionalFilters[
+                            key as keyof typeof additionalFilters
+                        ];
+                } else if (
+                    additionalFilters[key as keyof typeof additionalFilters]
+                ) {
+                    acc[key] =
+                        additionalFilters[
+                            key as keyof typeof additionalFilters
+                        ];
                 }
-            } else if (
-                Array.isArray(additionalFilters[key as keyof typeof additionalFilters]) &&
-                (additionalFilters[key as keyof typeof additionalFilters] as string[]).length > 0
-            ) {
-                acc[key] = additionalFilters[key as keyof typeof additionalFilters];
-            } else if (additionalFilters[key as keyof typeof additionalFilters]) {
-                acc[key] = additionalFilters[key as keyof typeof additionalFilters];
-            }
-            return acc;
-        }, {} as { [key: string]: any });
+                return acc;
+            },
+            {} as { [key: string]: any }
+        );
 
-        segmentAnalyticsTrackEvent<FilterClickedEvent>(SegmentTrackedEventName.FilterApplied, {
-            selectedItemName: JSON.stringify(selectedFilters),
-            session_id: sessionId,
-            userId: partyId,
-        });
-    }, [additionalFilters, sessionId, partyId, closeSideSheet, setCaseManagementFilters, t]);
+        segmentAnalyticsTrackEvent<FilterClickedEvent>(
+            SegmentTrackedEventName.FilterApplied,
+            {
+                selectedItemName: JSON.stringify(selectedFilters),
+                session_id: sessionId,
+                userId: partyId,
+            }
+        );
+    }, [
+        additionalFilters,
+        sessionId,
+        partyId,
+        closeSideSheet,
+        setCaseManagementFilters,
+        t,
+    ]);
 
     const handleReset = () => {
-        setCaseManagementFilters(prevFilters => ({ ...prevFilters, offset: 0, additionalFilters: initialAdditionalFilters }));
+        setCaseManagementFilters((prevFilters) => ({
+            ...prevFilters,
+            offset: 0,
+            additionalFilters: initialAdditionalFilters,
+        }));
         closeSideSheet();
     };
 
@@ -356,29 +524,47 @@ export default function SideSheetRefineResults({
                         value={selectedCarriers}
                         onChange={updateCarrierFilters}
                         size={FieldSize.Small}
-                        placeholder={t(`${REFINE_RESULTS_BASE_KEY}selectCarrier`) as string}
+                        placeholder={
+                            t(
+                                `${REFINE_RESULTS_BASE_KEY}selectCarrier`
+                            ) as string
+                        }
                         disabled={carrierFilterItems.length === 1}
                         name="carrier-dropdown-btn"
                     />
                     <MultiselectField
                         isLoading={loadingProductName}
-                        label={t(`${REFINE_RESULTS_BASE_KEY}productName`) as string}
+                        label={
+                            t(`${REFINE_RESULTS_BASE_KEY}productName`) as string
+                        }
                         options={productNameOptions}
                         value={additionalFilters.products ?? {}}
                         handleChange={updateProductNameFilters}
                     />
                 </div>
-                <div className={Object.keys(selectedCarriers).length ? `border-b-2 border-b-gray-100 pb-8` : ''}>
+                <div
+                    className={
+                        Object.keys(selectedCarriers).length
+                            ? `border-b-2 border-b-gray-100 pb-8`
+                            : ''
+                    }
+                >
                     <MultiselectField
                         isLoading={loadingProcessList}
-                        label={t(`${REFINE_RESULTS_BASE_KEY}processType`) as string}
+                        label={
+                            t(`${REFINE_RESULTS_BASE_KEY}processType`) as string
+                        }
                         options={processListOptions}
                         value={additionalFilters.processTypes ?? {}}
                         handleChange={updateProcessFilters}
                     />
                     <MultiselectField
                         isLoading={loadingRequestSubType}
-                        label={t(`${REFINE_RESULTS_BASE_KEY}requestSubtype`) as string}
+                        label={
+                            t(
+                                `${REFINE_RESULTS_BASE_KEY}requestSubtype`
+                            ) as string
+                        }
                         options={requestSubTypeOptions}
                         value={additionalFilters.requestSubType ?? {}}
                         handleChange={updateRequestSubTypeFilters}
@@ -396,16 +582,38 @@ export default function SideSheetRefineResults({
             <div className="flex flex-col gap-12 py-8">
                 <Select
                     options={[
-                        { label: `${t('temporal.days', { min: 0, max: 7 })}`, value: '7' },
-                        { label: `${t('temporal.days', { min: 7, max: 14 })}`, value: '14' },
-                        { label: `${t('temporal.days', { min: 15, max: 30 })}`, value: '30' },
-                        { label: `${t('temporal.daysMax', { min: 31 })}`, value: '31' },
+                        {
+                            label: `${t('temporal.days', { min: 0, max: 7 })}`,
+                            value: '7',
+                        },
+                        {
+                            label: `${t('temporal.days', { min: 7, max: 14 })}`,
+                            value: '14',
+                        },
+                        {
+                            label: `${t('temporal.days', {
+                                min: 15,
+                                max: 30,
+                            })}`,
+                            value: '30',
+                        },
+                        {
+                            label: `${t('temporal.daysMax', { min: 31 })}`,
+                            value: '31',
+                        },
                     ]}
-                    onChange={(value: string) => setAdditionalFilters(prevFilters => ({ ...prevFilters, age: value }))}
+                    onChange={(value: string) =>
+                        setAdditionalFilters((prevFilters) => ({
+                            ...prevFilters,
+                            age: value,
+                        }))
+                    }
                     value={additionalFilters.age || ''}
                     size={FieldSize.Small}
                     label={t(`${REFINE_RESULTS_BASE_KEY}age`) as string}
-                    placeholder={t(`${REFINE_RESULTS_BASE_KEY}selectDayRange`) as string}
+                    placeholder={
+                        t(`${REFINE_RESULTS_BASE_KEY}selectDayRange`) as string
+                    }
                     className="!w-[198px]"
                 />
                 <div className="flex flex-row">
@@ -415,7 +623,9 @@ export default function SideSheetRefineResults({
                         aria-label={t('ariaLabel.applyFilters') as string}
                         className="mr-6"
                     >
-                        <p className="font-primary text-[18px] font-semibold leading-6.5">{t(`${REFINE_RESULTS_BASE_KEY}applyFilters`)}</p>
+                        <p className="font-primary text-[18px] font-semibold leading-6.5">
+                            {t(`${REFINE_RESULTS_BASE_KEY}applyFilters`)}
+                        </p>
                     </Button>
                     <NavElement
                         type={NavElementType.Button}

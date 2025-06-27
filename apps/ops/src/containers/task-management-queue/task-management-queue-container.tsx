@@ -3,13 +3,20 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import Button, { ButtonSize, ButtonType, ButtonVariant } from '@deps/components/button/button';
+import Button, {
+    ButtonSize,
+    ButtonType,
+    ButtonVariant,
+} from '@deps/components/button/button';
 import { TranslationFiles } from '@deps/config/translations';
 import { MessageType } from '@deps/models/case/task';
 import { AssignedTask, UnassignedTask } from '@deps/models/case/task-instance';
 import { additionalDataProps } from '@deps/pages/home';
 import { claimNextTask } from '@deps/queries/api/v1/claim-task';
-import { getAssignedTasks, getUnassignedTasks } from '@deps/queries/api/v1/task';
+import {
+    getAssignedTasks,
+    getUnassignedTasks,
+} from '@deps/queries/api/v1/task';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import TaskQueueTable from './task-queue-table';
@@ -22,9 +29,17 @@ type TaskManagementQueueProps = {
     additionalData?: additionalDataProps;
 };
 
-const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalData }: TaskManagementQueueProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
-    const [taskDetails, setTaskDetails] = useState<(AssignedTask | UnassignedTask)[]>([]);
+const TaskManagementQueue = ({
+    featureFlagDecisions,
+    showClaimTask,
+    additionalData,
+}: TaskManagementQueueProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'taskManagementQueue',
+    });
+    const [taskDetails, setTaskDetails] = useState<
+        (AssignedTask | UnassignedTask)[]
+    >([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [errorType, setErrorType] = useState(MessageType.Error);
@@ -80,7 +95,7 @@ const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalDa
             if (isHomePage()) {
                 if (assignedTaskData.length > 0) {
                     setTaskDetails(
-                        assignedTaskData.map(taskData => {
+                        assignedTaskData.map((taskData) => {
                             return {
                                 ...taskData,
                                 assignee,
@@ -91,12 +106,14 @@ const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalDa
                 } else {
                     const unassignedTaskData = await getUnassignedTasks();
                     if (unassignedTaskData.length > 0) {
-                        setTaskDetails([{ ...unassignedTaskData[0], assignee: NO_ASSIGNEE }]);
+                        setTaskDetails([
+                            { ...unassignedTaskData[0], assignee: NO_ASSIGNEE },
+                        ]);
                     }
                 }
             } else {
                 setTaskDetails(
-                    assignedTaskData.map(task => ({
+                    assignedTaskData.map((task) => ({
                         ...task,
                         assignee: assignee,
                         assigneePartyId,
@@ -137,7 +154,11 @@ const TaskManagementQueue = ({ featureFlagDecisions, showClaimTask, additionalDa
                 {errorMessage && (
                     <AssistiveText
                         text={errorMessage}
-                        variant={errorType == MessageType.Info ? AssistiveTextVariant.Info : AssistiveTextVariant.Error}
+                        variant={
+                            errorType == MessageType.Info
+                                ? AssistiveTextVariant.Info
+                                : AssistiveTextVariant.Error
+                        }
                         className="my-4"
                     />
                 )}

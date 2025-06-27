@@ -14,7 +14,7 @@ export default {
     title: 'Components/ButtonGroup',
     component: ButtonGroup,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>
@@ -24,9 +24,13 @@ export default {
 
 export const PrimaryButton = () => {
     const { t } = useTranslation();
-    const [activeToggleBtn, setActiveToggleBtn] = useState('policyNumber' as PolicySearchKeys);
+    const [activeToggleBtn, setActiveToggleBtn] = useState(
+        'policyNumber' as PolicySearchKeys
+    );
 
-    const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys | 'accessDenied'>[] => [
+    const toggleLabels = (
+        t: TFunction
+    ): LabelValue<PolicySearchKeys | 'accessDenied'>[] => [
         {
             label: t('dashboard.search.buttons.policyNumber'),
             value: 'policyNumber',

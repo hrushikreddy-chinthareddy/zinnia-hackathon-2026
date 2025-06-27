@@ -18,7 +18,13 @@ const options = [
 describe('Autocomplete Component', () => {
     it('renders a Autocomplete component with a label when provided', async () => {
         render(
-            <Autocomplete label="Autoselect Label" placeholder="Pick a card, any card" options={options} value={''} onChange={() => null} />
+            <Autocomplete
+                label="Autoselect Label"
+                placeholder="Pick a card, any card"
+                options={options}
+                value={''}
+                onChange={() => null}
+            />
         );
 
         const label = await screen.findByText('Autoselect Label');
@@ -27,7 +33,13 @@ describe('Autocomplete Component', () => {
 
     it('renders a Autocomplete component with a placeholder', async () => {
         render(
-            <Autocomplete label="Autoselect Label" placeholder="Pick a card, any card" options={options} value={''} onChange={() => null} />
+            <Autocomplete
+                label="Autoselect Label"
+                placeholder="Pick a card, any card"
+                options={options}
+                value={''}
+                onChange={() => null}
+            />
         );
 
         const placeholder = await screen.findByText('Pick a card, any card');
@@ -46,13 +58,21 @@ describe('Autocomplete Component', () => {
             />
         );
 
-        const errorMessage = await screen.findByText('This is an error message');
+        const errorMessage = await screen.findByText(
+            'This is an error message'
+        );
         expect(errorMessage).toBeInTheDocument();
     });
 
     it('renders a Autocomplete component with options', async () => {
         const { getByRole } = render(
-            <Autocomplete label="Autoselect Label" options={options} value="" placeholder="Select an option!" onChange={() => {}} />
+            <Autocomplete
+                label="Autoselect Label"
+                options={options}
+                value=""
+                placeholder="Select an option!"
+                onChange={() => {}}
+            />
         );
 
         // Open the dropdown menu
@@ -67,12 +87,21 @@ describe('Autocomplete Component', () => {
     it('selects an Autocomplete option when clicked', async () => {
         const onChange = jest.fn();
 
-        const { getByRole } = render(<Autocomplete label="Autoselect Label" options={options} value="asc" onChange={onChange} />);
+        const { getByRole } = render(
+            <Autocomplete
+                label="Autoselect Label"
+                options={options}
+                value="asc"
+                onChange={onChange}
+            />
+        );
 
         // Open the dropdown menu
         await userEvent.click(getByRole('combobox'));
 
-        const option2 = await screen.findByText('Option 2', { ignore: 'option' });
+        const option2 = await screen.findByText('Option 2', {
+            ignore: 'option',
+        });
         userEvent.click(option2);
 
         waitFor(() => {
@@ -82,7 +111,15 @@ describe('Autocomplete Component', () => {
 });
 
 it('renders the Autocomplete component as disabled', async () => {
-    render(<Autocomplete label="Autoselect Label" options={options} value="" onChange={() => {}} disabled />);
+    render(
+        <Autocomplete
+            label="Autoselect Label"
+            options={options}
+            value=""
+            onChange={() => {}}
+            disabled
+        />
+    );
 
     waitFor(() => {
         expect(screen.getByRole('button')).toBeDisabled();
@@ -90,7 +127,14 @@ it('renders the Autocomplete component as disabled', async () => {
 });
 
 it('opens the menu when the select is clicked', async () => {
-    render(<Autocomplete label="Autoselect Label" options={options} value="option1" onChange={() => {}} />);
+    render(
+        <Autocomplete
+            label="Autoselect Label"
+            options={options}
+            value="option1"
+            onChange={() => {}}
+        />
+    );
 
     expect(screen.queryByText('Option 2', { ignore: 'option' })).toBeNull();
 
@@ -101,10 +145,19 @@ it('opens the menu when the select is clicked', async () => {
 });
 
 it('should close the menu when an option is selected', async () => {
-    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {}); // optional
+    const consoleErrorMock = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {}); // optional
 
     // Render the Autocomplete component
-    const { getByRole } = render(<Autocomplete options={options} value="" onChange={() => {}} placeholder="Select an option" />);
+    const { getByRole } = render(
+        <Autocomplete
+            options={options}
+            value=""
+            onChange={() => {}}
+            placeholder="Select an option"
+        />
+    );
 
     // Open the dropdown menu
     await userEvent.click(getByRole('combobox'));

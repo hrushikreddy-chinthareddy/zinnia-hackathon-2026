@@ -1,7 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
 import { Processes } from '@deps/models/case/case';
 
@@ -17,7 +19,11 @@ import UpdatedDateChip from './chips/updated-date-chip';
 const Clear = ({ onReset }: { onReset: () => void }) => {
     const { t } = useTranslation();
     return (
-        <NavElement type={NavElementType.Button} className="flex self-center whitespace-nowrap" onClick={onReset}>
+        <NavElement
+            type={NavElementType.Button}
+            className="flex self-center whitespace-nowrap"
+            onClick={onReset}
+        >
             {t('caseManagementDashboard.refineResultsOptions.clearAll')}
         </NavElement>
     );
@@ -30,36 +36,60 @@ export interface ActiveFiltersProps {
     authorizedCarriers: string[];
 }
 
-export default function ActiveFilters({ filters, removeFilter, onReset, authorizedCarriers }: ActiveFiltersProps) {
+export default function ActiveFilters({
+    filters,
+    removeFilter,
+    onReset,
+    authorizedCarriers,
+}: ActiveFiltersProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseManagementDashboard.refineResultsFilters',
     });
 
     const [filtersActive, setFiltersActive] = useState(false);
-    const createdDateStart = filters.createdDateStart && filters.createdDateStart !== '';
-    const updatedDateStart = filters.updatedDateStart && filters.updatedDateStart !== '';
+    const createdDateStart =
+        filters.createdDateStart && filters.createdDateStart !== '';
+    const updatedDateStart =
+        filters.updatedDateStart && filters.updatedDateStart !== '';
     const ageRange = filters.age;
     const hasProcessTypeFilters = filters.processTypes.size !== 0;
-    const hasCarriers = filters.carriers && !!Object.keys(filters.carriers).length;
+    const hasCarriers =
+        filters.carriers && !!Object.keys(filters.carriers).length;
     const hasProducts = filters.products.size !== 0;
     const hasSubtypes = filters.requestSubType.size !== 0;
-    const hasBrokerDealerName = filters.brokerDealerName && filters.brokerDealerName !== '';
+    const hasBrokerDealerName =
+        filters.brokerDealerName && filters.brokerDealerName !== '';
 
     useEffect(() => {
-        if (createdDateStart || updatedDateStart || ageRange || hasProcessTypeFilters || hasCarriers || hasBrokerDealerName)
+        if (
+            createdDateStart ||
+            updatedDateStart ||
+            ageRange ||
+            hasProcessTypeFilters ||
+            hasCarriers ||
+            hasBrokerDealerName
+        )
             return setFiltersActive(true);
         setFiltersActive(false);
-    }, [createdDateStart, ageRange, hasProcessTypeFilters, hasCarriers, hasBrokerDealerName, updatedDateStart]);
+    }, [
+        createdDateStart,
+        ageRange,
+        hasProcessTypeFilters,
+        hasCarriers,
+        hasBrokerDealerName,
+        updatedDateStart,
+    ]);
 
-    const handleRemoveFilter = (removedFilters: { [key: string]: '' | boolean | object | Set<Processes> }) =>
-        removeFilter({ ...filters, ...removedFilters });
+    const handleRemoveFilter = (removedFilters: {
+        [key: string]: '' | boolean | object | Set<Processes>;
+    }) => removeFilter({ ...filters, ...removedFilters });
 
     if (!filtersActive) return null;
 
     return (
         <div className="mb-6 mt-4 flex max-w-full flex-row flex-wrap items-center justify-start gap-2">
             {hasCarriers &&
-                Object.keys({ ...filters.carriers }).map(carrierCode => (
+                Object.keys({ ...filters.carriers }).map((carrierCode) => (
                     <CarrierChip
                         authorizedCarriers={authorizedCarriers}
                         key={`carrier-filter-${carrierCode}`}
@@ -78,7 +108,7 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
                 />
             )}
             {hasProducts &&
-                Array.from(filters.products).map(productCode => (
+                Array.from(filters.products).map((productCode) => (
                     <ProductChip
                         key={`product-filter-${productCode}`}
                         productCode={productCode}
@@ -88,7 +118,7 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
                     />
                 ))}
             {hasProcessTypeFilters &&
-                Array.from(filters.processTypes).map(process => (
+                Array.from(filters.processTypes).map((process) => (
                     <ProcessTypeChip
                         key={process}
                         process={process}
@@ -98,7 +128,7 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
                     />
                 ))}
             {hasSubtypes &&
-                Array.from(filters.requestSubType).map(subTypeCode => (
+                Array.from(filters.requestSubType).map((subTypeCode) => (
                     <SubTypeChip
                         key={`subtype-filter-${subTypeCode}`}
                         subTypeCode={subTypeCode}
@@ -123,7 +153,13 @@ export default function ActiveFilters({ filters, removeFilter, onReset, authoriz
                     t={t}
                 />
             )}
-            {!!ageRange && <AgeRangeChip ageRange={ageRange} handleRemoveFilter={handleRemoveFilter} t={t} />}
+            {!!ageRange && (
+                <AgeRangeChip
+                    ageRange={ageRange}
+                    handleRemoveFilter={handleRemoveFilter}
+                    t={t}
+                />
+            )}
             {!!filtersActive && <Clear onReset={onReset} />}
         </div>
     );

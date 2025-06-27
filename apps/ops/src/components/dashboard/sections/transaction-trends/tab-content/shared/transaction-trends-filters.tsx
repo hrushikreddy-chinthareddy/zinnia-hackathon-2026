@@ -27,9 +27,16 @@ export const TransactionTrendsFilters: FC = () => {
 
     const groupByOptions = [
         { label: 'Case subtype', value: GroupByOptions.ProcessSubType },
-        { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
+        {
+            label: 'Carrier',
+            value: GroupByOptions.Carrier,
+            disabled: filter.carrier?.length === 1,
+        },
         { label: 'Product', value: GroupByOptions.ProductName },
-        { label: 'Distribution partner', value: GroupByOptions.BrokerDealerName },
+        {
+            label: 'Distribution partner',
+            value: GroupByOptions.BrokerDealerName,
+        },
     ];
 
     return (
@@ -41,7 +48,7 @@ export const TransactionTrendsFilters: FC = () => {
                     options={groupByOptions}
                     value={groupBy}
                     size={FieldSize.XS}
-                    onChange={val => setGroupBy(val as CaseCountGroupByEnum)}
+                    onChange={(val) => setGroupBy(val as CaseCountGroupByEnum)}
                 />
                 <CaseTypeFilter
                     onValueChange={setSelectedProcess}
@@ -53,7 +60,11 @@ export const TransactionTrendsFilters: FC = () => {
             <div className="w-1/2">
                 <TimeFilter
                     defaultValue={timeframeRadio}
-                    onRadioChange={val => handleTimeframeRadioChange(val as TimeframeFilterOptions)}
+                    onRadioChange={(val) =>
+                        handleTimeframeRadioChange(
+                            val as TimeframeFilterOptions
+                        )
+                    }
                     controlledTimeValue={timeframeRadio}
                     timerange={timerange}
                     handleTimerangeChange={handleRangeChange}

@@ -1,7 +1,9 @@
 import { TFunction, useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import CardCaseDocument from '@deps/components/card/card-case-document/card-case-document';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { ViewState } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
@@ -15,7 +17,9 @@ export const PROCESS_WITHOUT_CASE_DOCUMENT = '';
 
 type CaseId = { caseId?: string } | undefined;
 export type SetStateCaseId = Dispatch<SetStateAction<CaseId>>;
-type SetStateCaseDocumentOptions = Dispatch<SetStateAction<CaseDocumentOption[]>>;
+type SetStateCaseDocumentOptions = Dispatch<
+    SetStateAction<CaseDocumentOption[]>
+>;
 type SetStateViewState = Dispatch<SetStateAction<ViewState>>;
 
 export interface CaseDocumentSelectProps {
@@ -54,11 +58,17 @@ interface GetCaseDocumentOptions {
 
 const getAssistiveText = ({ caseId, currentErrors, t }: GetAssistiveText) => {
     if (caseId === PROCESS_WITHOUT_CASE_DOCUMENT) {
-        return { text: t('transactions.caseDocumentSelect.noDocumentAssistiveText'), variant: AssistiveTextVariant.Info };
+        return {
+            text: t('transactions.caseDocumentSelect.noDocumentAssistiveText'),
+            variant: AssistiveTextVariant.Info,
+        };
     }
 
     if (currentErrors?.caseId) {
-        return { text: currentErrors.caseId, variant: AssistiveTextVariant.Error };
+        return {
+            text: currentErrors.caseId,
+            variant: AssistiveTextVariant.Error,
+        };
     }
 
     return null;
@@ -77,24 +87,32 @@ const getCaseDocumentOptions = async ({
     setViewState(ViewState.Loading);
 
     const noDocument = {
-        documentNumber: t('transactions.caseDocumentSelect.processWithoutDocument'),
-        caseId:"",
+        documentNumber: t(
+            'transactions.caseDocumentSelect.processWithoutDocument'
+        ),
+        caseId: '',
         value: PROCESS_WITHOUT_CASE_DOCUMENT,
     };
 
-    const response = await getCases({
-        limit: 25,
-        notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
-        policyNumber,
-        process: [processType],
-    }, featureFlags);
+    const response = await getCases(
+        {
+            limit: 25,
+            notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
+            policyNumber,
+            process: [processType],
+        },
+        featureFlags
+    );
 
     if (response && 'total' in response) {
         const mappedCaseOptions = response.data
-            .map(caseItem => {
-                const documentNumber = getCaseIdentifierValue(caseItem.identifiers, CaseIdentifier.DocumentNumber);
+            .map((caseItem) => {
+                const documentNumber = getCaseIdentifierValue(
+                    caseItem.identifiers,
+                    CaseIdentifier.DocumentNumber
+                );
                 return {
-                    documentNumber: documentNumber||"",
+                    documentNumber: documentNumber || '',
                     caseId: caseItem.id,
                     tag: `${caseItem.process} - ${caseItem.processSubType}`,
                     value: caseItem.id,
@@ -108,7 +126,9 @@ const getCaseDocumentOptions = async ({
         setCaseDocumentOptions([noDocument]);
         setViewState(ViewState.Default);
 
-        throw new Error(response?.data?.err ? response.data.err : 'Error fetching cases');
+        throw new Error(
+            response?.data?.err ? response.data.err : 'Error fetching cases'
+        );
     }
 };
 
@@ -131,25 +151,44 @@ const CaseDocumentSelect = ({
         if (caseDocumentOptions?.length) {
             return;
         } else {
-            getCaseDocumentOptions({ policyNumber, processType, setCaseDocumentOptions, setViewState, t, featureFlags });
+            getCaseDocumentOptions({
+                policyNumber,
+                processType,
+                setCaseDocumentOptions,
+                setViewState,
+                t,
+                featureFlags,
+            });
         }
-    }, [caseDocumentOptions, featureFlags, policyNumber, processType, setCaseDocumentOptions, setViewState, t]);
+    }, [
+        caseDocumentOptions,
+        featureFlags,
+        policyNumber,
+        processType,
+        setCaseDocumentOptions,
+        setViewState,
+        t,
+    ]);
 
     return (
         <div className="flex flex-col gap-2">
-            <Label label={t('transactions.caseDocumentSelect.label')} sentenceCase={false} variant={LabelVariant.LabelLg} />
+            <Label
+                label={t('transactions.caseDocumentSelect.label')}
+                sentenceCase={false}
+                variant={LabelVariant.LabelLg}
+            />
             <div className="flex flex-col gap-2">
-                {caseDocumentOptions.map(caseDocumentOption => (
+                {caseDocumentOptions.map((caseDocumentOption) => (
                     <CardCaseDocument
                         caseDocumentOption={caseDocumentOption}
                         key={caseDocumentOption.value}
                         isSelected={caseId === caseDocumentOption.value}
                         onChange={(value: string) => {
-                            setCurrentErrors(prevState => {
+                            setCurrentErrors((prevState) => {
                                 const { caseId, ...errors } = prevState ?? {};
                                 return errors;
                             });
-                            setBody(prevState => ({
+                            setBody((prevState) => ({
                                 ...prevState,
                                 caseId: value,
                             }));
@@ -157,7 +196,12 @@ const CaseDocumentSelect = ({
                     />
                 ))}
 
-                {assistiveText && <AssistiveText text={assistiveText.text} variant={assistiveText.variant} />}
+                {assistiveText && (
+                    <AssistiveText
+                        text={assistiveText.text}
+                        variant={assistiveText.variant}
+                    />
+                )}
             </div>
         </div>
     );

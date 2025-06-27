@@ -1,4 +1,8 @@
-import { AccountType, Carrier, FormDisbursement } from '@deps/models/case/withdrawal/case';
+import {
+    AccountType,
+    Carrier,
+    FormDisbursement,
+} from '@deps/models/case/withdrawal/case';
 import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
 
 import AccountTypes from './form-disbursement-parts/account-type';
@@ -109,8 +113,15 @@ export enum BankDetailsInputMethod {
     Envison = 'envison',
 }
 
-export const getUpdatedData = (preFillBankInfo: DisbursementParts, method: BankDetailsInputMethod, carrier: string): DisbursementParts => {
-    const bankDetailsMap: Record<string, Record<string, Partial<DisbursementParts>>> = {
+export const getUpdatedData = (
+    preFillBankInfo: DisbursementParts,
+    method: BankDetailsInputMethod,
+    carrier: string
+): DisbursementParts => {
+    const bankDetailsMap: Record<
+        string,
+        Record<string, Partial<DisbursementParts>>
+    > = {
         [Carrier.MASS]: {
             [BankDetailsInputMethod.Auto]: {
                 payeeName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY',
@@ -151,7 +162,9 @@ export const getUpdatedData = (preFillBankInfo: DisbursementParts, method: BankD
     return preFillBankInfo;
 };
 
-export const getPreselectedWireOption = (payeeName: string): BankDetailsInputMethod => {
+export const getPreselectedWireOption = (
+    payeeName: string
+): BankDetailsInputMethod => {
     const payeeToMethodMap: Record<string, BankDetailsInputMethod> = {
         'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY': BankDetailsInputMethod.Auto,
         'MASSACHUSETTS MUTUAL LIFE INS CO': BankDetailsInputMethod.Envison,

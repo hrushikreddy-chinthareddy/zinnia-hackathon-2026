@@ -3,7 +3,10 @@ import { TaxformDownloadResponse } from '@zinnia/api-types/types/documents-v3';
 import { AxiosError, AxiosRequestConfig, AxiosResponse, isCancel } from 'axios';
 
 import { DocumentDownloadV2 } from '@deps/models/case/document';
-import { SearchTaxFormRequestBody, SearchTaxFormResponseBody } from '@deps/models/case/send-tax-forms';
+import {
+    SearchTaxFormRequestBody,
+    SearchTaxFormResponseBody,
+} from '@deps/models/case/send-tax-forms';
 import { client } from '@deps/queries/api-utils/client';
 import { ApiResponse } from '@deps/types/api-response';
 
@@ -18,7 +21,9 @@ export const searchTaxForms = async (
     signal?: AbortSignal
 ): Promise<ApiResponse<SearchTaxFormResponseBody>> => {
     try {
-        let url = `${useV3 ? baseUrlV3 + 'tax-forms' : baseUrl + 'taxForms'}?contractNumber=${requestBody.contractNumber}&clientCode=${
+        let url = `${
+            useV3 ? baseUrlV3 + 'tax-forms' : baseUrl + 'taxForms'
+        }?contractNumber=${requestBody.contractNumber}&clientCode=${
             requestBody.clientCode
         }`;
 
@@ -43,7 +48,10 @@ export const searchTaxForms = async (
             function: 'tax-forms.searchTaxForms',
         });
 
-        const { data } = await client.get<SearchTaxFormRequestBody, AxiosResponse<SearchTaxFormResponseBody>>(url, options);
+        const { data } = await client.get<
+            SearchTaxFormRequestBody,
+            AxiosResponse<SearchTaxFormResponseBody>
+        >(url, options);
         return { data, error: null };
     } catch (e) {
         datadogLogs.logger.error('searchTaxForms', {
@@ -59,8 +67,14 @@ export const searchTaxForms = async (
             return {
                 data: {} as SearchTaxFormResponseBody,
                 error: {
-                    status: (e as AxiosResponse)?.status || (e as AxiosError)?.response?.status || 500,
-                    message: (e as AxiosResponse)?.statusText || (e as AxiosError)?.response?.statusText || 'Search taxforms error',
+                    status:
+                        (e as AxiosResponse)?.status ||
+                        (e as AxiosError)?.response?.status ||
+                        500,
+                    message:
+                        (e as AxiosResponse)?.statusText ||
+                        (e as AxiosError)?.response?.statusText ||
+                        'Search taxforms error',
                     name: 'Search taxforms error',
                 },
             };
@@ -93,7 +107,10 @@ export const downloadTaxFormById = async (
             url,
             function: 'tax-forms.downloadTaxFormById',
         });
-        const { data } = await client.get<string, AxiosResponse<DocumentDownloadV2 | TaxformDownloadResponse>>(url);
+        const { data } = await client.get<
+            string,
+            AxiosResponse<DocumentDownloadV2 | TaxformDownloadResponse>
+        >(url);
 
         return data;
     } catch (e: any) {

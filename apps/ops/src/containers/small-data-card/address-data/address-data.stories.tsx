@@ -1,5 +1,10 @@
 import { Meta } from '@storybook/react';
-import { Address, AddressType, State, Country } from '@zinnia/api-types/types/sor';
+import {
+    Address,
+    AddressType,
+    State,
+    Country,
+} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -50,7 +55,7 @@ export const AddressData = () => {
     return (
         <div className="flex h-screen w-full items-center justify-center">
             <div className="flex gap-4">
-                {addresses.map(address => (
+                {addresses.map((address) => (
                     <AddressDataCard
                         key={address.addressId}
                         address={address}

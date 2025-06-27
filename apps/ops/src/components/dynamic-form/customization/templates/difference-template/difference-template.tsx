@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
-import classes from "./difference-template.module.css";
+import classes from './difference-template.module.css';
 import { calculateDifference } from '../../../helpers/object.helpers';
 import styles from '../field-template/field-template.module.css';
 
@@ -17,9 +17,22 @@ type FormContextOptions = {
 };
 
 const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
-    const { id, schema, required, description, errors, children, readonly, formData, classNames, uiSchema, hideError = false } = props;
+    const {
+        id,
+        schema,
+        required,
+        description,
+        errors,
+        children,
+        readonly,
+        formData,
+        classNames,
+        uiSchema,
+        hideError = false,
+    } = props;
 
-    const formContextOptions: FormContextOptions = uiSchema?.['ui:options']?.formContext as FormContextOptions;
+    const formContextOptions: FormContextOptions = uiSchema?.['ui:options']
+        ?.formContext as FormContextOptions;
 
     const uiOptions = getUiOptions(uiSchema);
     const helpText = uiOptions.help;
@@ -32,15 +45,27 @@ const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
 
     const helpInformation = helpText && (
         <Tooltip
-            trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
+            trigger={
+                <CircleInfoIcon
+                    onClick={(e) => e.preventDefault()}
+                    height={'16px'}
+                    width={'16px'}
+                    className="text-primary"
+                />
+            }
             placement={TooltipPlacement.TopRight}
         >
             {helpText}
         </Tooltip>
     );
-    const fieldLabel = schema?.title ? `${schema.title} ${required ? '*' : ''}` : '';
+    const fieldLabel = schema?.title
+        ? `${schema.title} ${required ? '*' : ''}`
+        : '';
 
-    const difference = calculateDifference(props.formContext, formContextOptions);
+    const difference = calculateDifference(
+        props.formContext,
+        formContextOptions
+    );
 
     if (typeof difference === 'number') {
         return (
@@ -48,13 +73,29 @@ const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
                 <div className={styles.children}>
                     {fieldLabel && (
                         <div className="mb-2">
-                            <Label labelFor={props.id} interactiveElements={[helpInformation]}>
-                                <span className={clsx('text-[14px] font-bold', style as string)}>{fieldLabel}</span>
+                            <Label
+                                labelFor={props.id}
+                                interactiveElements={[helpInformation]}
+                            >
+                                <span
+                                    className={clsx(
+                                        'text-[14px] font-bold',
+                                        style as string
+                                    )}
+                                >
+                                    {fieldLabel}
+                                </span>
                             </Label>
                         </div>
                     )}
                     {description}
-                    <div className={readonly ? 'max-w-sm' : `${classes.field} max-w-sm`}>{difference}</div>
+                    <div
+                        className={
+                            readonly ? 'max-w-sm' : `${classes.field} max-w-sm`
+                        }
+                    >
+                        {difference}
+                    </div>
                     {!hideError && errors}
                 </div>
             </>

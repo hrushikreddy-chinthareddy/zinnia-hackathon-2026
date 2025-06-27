@@ -2,20 +2,35 @@ import { Phone } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import Toggle, { ToggleSize, ToggleVariant } from '@deps/components/toggle/toggle';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import Toggle, {
+    ToggleSize,
+    ToggleVariant,
+} from '@deps/components/toggle/toggle';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 import { PersonCardProps } from '@deps/containers/people-data-cards/people-data-card-props';
-import { Phones, sortPhonesByType } from '@deps/containers/people-data-cards/phone-card/phone-card.helpers';
+import {
+    Phones,
+    sortPhonesByType,
+} from '@deps/containers/people-data-cards/phone-card/phone-card.helpers';
 import { SideSheetPhone } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone';
 import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
 interface OpenSideSheet {
@@ -23,21 +38,38 @@ interface OpenSideSheet {
     header: SideSheetPeopleHeaderProps;
 }
 
-const PhoneCard = ({ editable = false, infoOnly, party, planCode, policyNumber }: PersonCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.card.phone' });
+const PhoneCard = ({
+    editable = false,
+    infoOnly,
+    party,
+    planCode,
+    policyNumber,
+}: PersonCardProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.card.phone',
+    });
 
     const sideSheet = useSideSheetContext();
 
     const [showAdditional, setShowAdditional] = useState(false);
 
     const { phones } = party ?? {};
-    const [currentPhones, setCurrentPhones] = useState<Phone[]>(sortPhonesByType({ phones }));
+    const [currentPhones, setCurrentPhones] = useState<Phone[]>(
+        sortPhonesByType({ phones })
+    );
 
     const showToggle = currentPhones.length > 4;
 
-    const openSideSheet = ({ phone, header: { action, transaction, typeTranslation } }: OpenSideSheet) => {
+    const openSideSheet = ({
+        phone,
+        header: { action, transaction, typeTranslation },
+    }: OpenSideSheet) => {
         sideSheet.changeSideSheetContent(
-            <SideSheetPeopleHeader action={action} transaction={transaction} typeTranslation={typeTranslation} />,
+            <SideSheetPeopleHeader
+                action={action}
+                transaction={transaction}
+                typeTranslation={typeTranslation}
+            />,
             <SideSheetPhone
                 onCancel={() => sideSheet.handleOpen(false)}
                 party={party}
@@ -52,7 +84,12 @@ const PhoneCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
 
     const PhonesBody = (
         <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
-            <Phones onEditClick={openSideSheet} editable={editable} phones={currentPhones} showAdditional={showAdditional} />
+            <Phones
+                onEditClick={openSideSheet}
+                editable={editable}
+                phones={currentPhones}
+                showAdditional={showAdditional}
+            />
         </div>
     );
 
@@ -71,8 +108,11 @@ const PhoneCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
                                 openSideSheet({
                                     header: {
                                         action: NonFinancialTransactionActions.Add,
-                                        transaction: NonFinancialTransactions.Number,
-                                        typeTranslation: t('general.new') as string,
+                                        transaction:
+                                            NonFinancialTransactions.Number,
+                                        typeTranslation: t(
+                                            'general.new'
+                                        ) as string,
                                     },
                                 })
                             }
@@ -99,7 +139,11 @@ const PhoneCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
                 )}
             </div>
 
-            {currentPhones.length ? PhonesBody : <EmptyCard text={t('general.empty') as string} />}
+            {currentPhones.length ? (
+                PhonesBody
+            ) : (
+                <EmptyCard text={t('general.empty') as string} />
+            )}
         </CardContainer>
     );
 };

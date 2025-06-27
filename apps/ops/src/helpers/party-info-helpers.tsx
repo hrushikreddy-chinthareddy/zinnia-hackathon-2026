@@ -16,7 +16,9 @@ import {
 } from '@zinnia/api-types/types/sor';
 import { I18n, i18n, TFunction } from 'next-i18next';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { ReactComponent as User } from '@deps/styles/elements/icons/actions/user.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
@@ -31,12 +33,27 @@ import { formatPhone, safeString, toTitleCase } from './string.helpers';
 export const getHeaderIcon = (partyType: string | undefined): JSX.Element => {
     switch (partyType) {
         case PartyType.TRUST:
-            return <DocumentIcon height={24} width={24} className="self-center" />;
+            return (
+                <DocumentIcon height={24} width={24} className="self-center" />
+            );
         case PartyType.ORGANIZATION:
-            return <OfficeBuildingIcon height={24} width={24} className="self-center" />;
+            return (
+                <OfficeBuildingIcon
+                    height={24}
+                    width={24}
+                    className="self-center"
+                />
+            );
         case PartyType.INDIVIDUAL:
         default:
-            return <User role="presentation" height={24} width={24} className="self-center" />;
+            return (
+                <User
+                    role="presentation"
+                    height={24}
+                    width={24}
+                    className="self-center"
+                />
+            );
     }
 };
 
@@ -54,20 +71,26 @@ export const getPartyFullName = (partyInfo: Party | undefined): string => {
     }
 };
 
-export const getHeaderText = (partyInfo: Party | undefined): string | JSX.Element => {
+export const getHeaderText = (
+    partyInfo: Party | undefined
+): string | JSX.Element => {
     const { partyType } = partyInfo || {};
     switch (partyType) {
         case PartyType.INDIVIDUAL:
             if (!partyInfo?.firstName && !!partyInfo?.fullName) {
-                return <PiiWrapper>{toTitleCase(partyInfo?.fullName)}</PiiWrapper>;
+                return (
+                    <PiiWrapper>{toTitleCase(partyInfo?.fullName)}</PiiWrapper>
+                );
             } else {
                 return (
                     <PiiWrapper className="flex whitespace-nowrap xs:flex-col xs:gap-0 lg:flex-row lg:gap-2">
                         <span>
-                            {`${safeString(toTitleCase(partyInfo?.firstName))}`} {`${toTitleCase(partyInfo?.middleName)} `}
+                            {`${safeString(toTitleCase(partyInfo?.firstName))}`}{' '}
+                            {`${toTitleCase(partyInfo?.middleName)} `}
                         </span>
                         <span>
-                            {`${safeString(toTitleCase(partyInfo?.lastName))}`} {`${toTitleCase(partyInfo?.suffix)}`}
+                            {`${safeString(toTitleCase(partyInfo?.lastName))}`}{' '}
+                            {`${toTitleCase(partyInfo?.suffix)}`}
                         </span>
                     </PiiWrapper>
                 );
@@ -83,9 +106,14 @@ export const getHeaderText = (partyInfo: Party | undefined): string | JSX.Elemen
     }
 };
 
-export const getSelectedPolicyParty = (policy: Policy, personId: string | string[] | undefined): Party | null => {
+export const getSelectedPolicyParty = (
+    policy: Policy,
+    personId: string | string[] | undefined
+): Party | null => {
     if (!personId || typeof personId !== 'string') return null;
-    return policy.parties?.find(person => person.partyId === personId) ?? null;
+    return (
+        policy.parties?.find((person) => person.partyId === personId) ?? null
+    );
 };
 
 function formatAddress(address: Address) {
@@ -101,7 +129,10 @@ function formatAddress(address: Address) {
     return formatted.join('<br/>');
 }
 
-export const getPrefCommunicationType = (partyInfo: Party | null, t: TFunction): JSX.Element | null => {
+export const getPrefCommunicationType = (
+    partyInfo: Party | null,
+    t: TFunction
+): JSX.Element | null => {
     const { preferredCommunicationType } = partyInfo || {};
     let text: string | null = null;
     let contactValue = '';
@@ -110,26 +141,41 @@ export const getPrefCommunicationType = (partyInfo: Party | null, t: TFunction):
         case PreferredCommunicationType.EMAIL: {
             text = t('people.party.contact.preferred.email');
 
-            const emailInfo = partyInfo?.emails?.find(email => !isEndDated(email?.endDate));
-            contactValue = emailInfo && emailInfo.emailAddress ? emailInfo?.emailAddress?.toLowerCase() : '';
+            const emailInfo = partyInfo?.emails?.find(
+                (email) => !isEndDated(email?.endDate)
+            );
+            contactValue =
+                emailInfo && emailInfo.emailAddress
+                    ? emailInfo?.emailAddress?.toLowerCase()
+                    : '';
             break;
         }
         case PreferredCommunicationType.PHONE:
         case PreferredCommunicationType.TEXT: {
-            text = t(`people.party.contact.preferred.${preferredCommunicationType.toLowerCase()}`);
-            const phoneInfo = partyInfo?.phones?.find(phone => !isEndDated(phone?.endDate));
+            text = t(
+                `people.party.contact.preferred.${preferredCommunicationType.toLowerCase()}`
+            );
+            const phoneInfo = partyInfo?.phones?.find(
+                (phone) => !isEndDated(phone?.endDate)
+            );
             contactValue = phoneInfo ? formatPhone(phoneInfo) : '';
             break;
         }
         case PreferredCommunicationType.REGULARMAIL: {
             text = t('people.party.contact.preferred.mail');
-            const addressInfo = partyInfo?.addresses?.find(address => !isEndDated(address?.endDate));
+            const addressInfo = partyInfo?.addresses?.find(
+                (address) => !isEndDated(address?.endDate)
+            );
             contactValue = addressInfo ? formatAddress(addressInfo) : '';
             break;
         }
         default: {
-            const defaultAddressInfo = partyInfo?.addresses?.find(address => !isEndDated(address?.endDate));
-            contactValue = defaultAddressInfo ? formatAddress(defaultAddressInfo) : '';
+            const defaultAddressInfo = partyInfo?.addresses?.find(
+                (address) => !isEndDated(address?.endDate)
+            );
+            contactValue = defaultAddressInfo
+                ? formatAddress(defaultAddressInfo)
+                : '';
             break;
         }
     }
@@ -137,11 +183,18 @@ export const getPrefCommunicationType = (partyInfo: Party | null, t: TFunction):
     if (contactValue) {
         return (
             <div className="mr-8 break-all">
-                <p className="typography-labels-field-label">{t('people.party.contact.method')}</p>
+                <p className="typography-labels-field-label">
+                    {t('people.party.contact.method')}
+                </p>
                 <p className="typography-content-body-sm">
                     <PiiWrapper>{contactValue}</PiiWrapper>
                 </p>
-                {text && <AssistiveText text={text} variant={AssistiveTextVariant.Success} />}
+                {text && (
+                    <AssistiveText
+                        text={text}
+                        variant={AssistiveTextVariant.Success}
+                    />
+                )}
             </div>
         );
     } else {
@@ -149,7 +202,10 @@ export const getPrefCommunicationType = (partyInfo: Party | null, t: TFunction):
     }
 };
 
-export const getRelationshipToInsured = (relationshipToInsured: RelationshipToParty | null, t: TFunction): string | null => {
+export const getRelationshipToInsured = (
+    relationshipToInsured: RelationshipToParty | null,
+    t: TFunction
+): string | null => {
     switch (relationshipToInsured) {
         case RelationshipToParty.CHILD:
             return t('relationshipToInsured.child');
@@ -190,7 +246,11 @@ export const getRelationshipToInsured = (relationshipToInsured: RelationshipToPa
     }
 };
 
-export const getBankAccountType = (accountType: AccountType | undefined, t: TFunction, appendAccount = false): string => {
+export const getBankAccountType = (
+    accountType: AccountType | undefined,
+    t: TFunction,
+    appendAccount = false
+): string => {
     if (accountType == null) return DEFAULT_ERROR_STRING;
 
     let accountString;
@@ -219,10 +279,15 @@ export const getBankAccountType = (accountType: AccountType | undefined, t: TFun
     return appendAccount ? `${accountString} ${t('account')}` : accountString;
 };
 
-export const findCoverageParticipant = (coverage: PolicyCoverage, partyID: string | undefined): CoverageParticipants | null => {
+export const findCoverageParticipant = (
+    coverage: PolicyCoverage,
+    partyID: string | undefined
+): CoverageParticipants | null => {
     if (coverage.coverageLayers) {
         for (const layer of coverage.coverageLayers) {
-            const participant = layer.coverageParticipants?.find(p => p.partyId === partyID);
+            const participant = layer.coverageParticipants?.find(
+                (p) => p.partyId === partyID
+            );
             if (participant) {
                 return participant;
             }
@@ -231,56 +296,98 @@ export const findCoverageParticipant = (coverage: PolicyCoverage, partyID: strin
     return null;
 };
 
-export const getRiskClass = (riskClass: RiskClass | undefined): string | undefined => {
+export const getRiskClass = (
+    riskClass: RiskClass | undefined
+): string | undefined => {
     const { t } = i18n as I18n;
     switch (riskClass) {
         case RiskClass.ULTRANONTOBACCO:
-            return t('people.card.underwritingInfo.riskClassOptions.ultraNonTobacco') as string;
+            return t(
+                'people.card.underwritingInfo.riskClassOptions.ultraNonTobacco'
+            ) as string;
         case RiskClass.ELITENONTOBACCO:
-            return t('people.card.underwritingInfo.riskClassOptions.eliteNonTobacco') as string;
+            return t(
+                'people.card.underwritingInfo.riskClassOptions.eliteNonTobacco'
+            ) as string;
         case RiskClass.PREFERREDNONTOBACCO:
-            return t('people.card.underwritingInfo.riskClassOptions.preferredNonTobacco') as string;
+            return t(
+                'people.card.underwritingInfo.riskClassOptions.preferredNonTobacco'
+            ) as string;
         case RiskClass.STANDARDNONTOBACCO:
-            return t('people.card.underwritingInfo.riskClassOptions.standardNonTobacco') as string;
+            return t(
+                'people.card.underwritingInfo.riskClassOptions.standardNonTobacco'
+            ) as string;
         case RiskClass.STANDARDTOBACCO:
-            return t('people.card.underwritingInfo.riskClassOptions.standardTobacco') as string;
+            return t(
+                'people.card.underwritingInfo.riskClassOptions.standardTobacco'
+            ) as string;
         case RiskClass.STANDARDAGGREGATE:
-            return t('people.card.underwritingInfo.riskClassOptions.standardAggregate') as string;
+            return t(
+                'people.card.underwritingInfo.riskClassOptions.standardAggregate'
+            ) as string;
         case RiskClass.SUBSTANDARDNONTOBACCO:
-            return t('people.card.underwritingInfo.riskClassOptions.substandardNonTobacco') as string;
+            return t(
+                'people.card.underwritingInfo.riskClassOptions.substandardNonTobacco'
+            ) as string;
         case RiskClass.SUBSTANDARDTOBACCO:
-            return t('people.card.underwritingInfo.riskClassOptions.substandardTobacco') as string;
+            return t(
+                'people.card.underwritingInfo.riskClassOptions.substandardTobacco'
+            ) as string;
         default:
             return riskClass;
     }
 };
 
-export const getSubstandardRating = (substandardRating: SubStandardRating | undefined, t: TFunction): string | undefined => {
+export const getSubstandardRating = (
+    substandardRating: SubStandardRating | undefined,
+    t: TFunction
+): string | undefined => {
     switch (substandardRating) {
         case SubStandardRating.NONETABLE:
-            return t('people.card.underwritingInfo.substandardRatingOptions.none') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.none'
+            ) as string;
         case SubStandardRating.TABLEA:
-            return t('people.card.underwritingInfo.substandardRatingOptions.tableA') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.tableA'
+            ) as string;
         case SubStandardRating.TABLEB:
-            return t('people.card.underwritingInfo.substandardRatingOptions.tableB') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.tableB'
+            ) as string;
         case SubStandardRating.TABLEC:
-            return t('people.card.underwritingInfo.substandardRatingOptions.tableC') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.tableC'
+            ) as string;
         case SubStandardRating.TABLED:
-            return t('people.card.underwritingInfo.substandardRatingOptions.tableD') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.tableD'
+            ) as string;
         case SubStandardRating.TABLEE:
-            return t('people.card.underwritingInfo.substandardRatingOptions.tableE') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.tableE'
+            ) as string;
         case SubStandardRating.TABLEF:
-            return t('people.card.underwritingInfo.substandardRatingOptions.tableF') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.tableF'
+            ) as string;
         case SubStandardRating.TABLEG:
-            return t('people.card.underwritingInfo.substandardRatingOptions.tableG') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.tableG'
+            ) as string;
         case SubStandardRating.TABLEH:
-            return t('people.card.underwritingInfo.substandardRatingOptions.tableH') as string;
+            return t(
+                'people.card.underwritingInfo.substandardRatingOptions.tableH'
+            ) as string;
         default:
             return substandardRating;
     }
 };
 
-export const getSexAtBirth = (sexAtBirth: Gender | undefined, t: TFunction): string | undefined => {
+export const getSexAtBirth = (
+    sexAtBirth: Gender | undefined,
+    t: TFunction
+): string | undefined => {
     switch (sexAtBirth) {
         case Gender.MALE:
             return t('people.card.underwritingInfo.gender.male') as string;
@@ -291,38 +398,68 @@ export const getSexAtBirth = (sexAtBirth: Gender | undefined, t: TFunction): str
     }
 };
 
-export const getEmploymentStatus = (employmentStatus: EmploymentStatus | undefined, t: TFunction): string | undefined => {
+export const getEmploymentStatus = (
+    employmentStatus: EmploymentStatus | undefined,
+    t: TFunction
+): string | undefined => {
     switch (employmentStatus) {
         case EmploymentStatus.ACTIVE:
-            return t('people.card.underwritingInfo.employmentStatus.active') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.active'
+            ) as string;
         case EmploymentStatus.RETIRED:
-            return t('people.card.underwritingInfo.employmentStatus.retired') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.retired'
+            ) as string;
         case EmploymentStatus.DISABLED:
-            return t('people.card.underwritingInfo.employmentStatus.disabled') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.disabled'
+            ) as string;
         case EmploymentStatus.LAIDOFF:
-            return t('people.card.underwritingInfo.employmentStatus.laidOff') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.laidOff'
+            ) as string;
         case EmploymentStatus.LEAVEDUETOCHILDBIRTH:
-            return t('people.card.underwritingInfo.employmentStatus.leaveDueToChildbirth') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.leaveDueToChildbirth'
+            ) as string;
         case EmploymentStatus.LEAVEDUETOMILITARYSERVICE:
-            return t('people.card.underwritingInfo.employmentStatus.leaveDueToMilitaryService') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.leaveDueToMilitaryService'
+            ) as string;
         case EmploymentStatus.LEAVEOFABSENCE:
-            return t('people.card.underwritingInfo.employmentStatus.leaveOfAbsence') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.leaveOfAbsence'
+            ) as string;
         case EmploymentStatus.RESIGNED:
-            return t('people.card.underwritingInfo.employmentStatus.resigned') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.resigned'
+            ) as string;
         case EmploymentStatus.SHORTTERMDISABILITY:
-            return t('people.card.underwritingInfo.employmentStatus.shortTermDisability') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.shortTermDisability'
+            ) as string;
         case EmploymentStatus.TERMINATED:
-            return t('people.card.underwritingInfo.employmentStatus.terminated') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.terminated'
+            ) as string;
         case EmploymentStatus.UNKNOWN:
-            return t('people.card.underwritingInfo.employmentStatus.unknown') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.unknown'
+            ) as string;
         case EmploymentStatus.OTHER:
-            return t('people.card.underwritingInfo.employmentStatus.other') as string;
+            return t(
+                'people.card.underwritingInfo.employmentStatus.other'
+            ) as string;
         default:
             return employmentStatus;
     }
 };
 
-export const getAddressType = (addressType: AddressType | undefined, t: TFunction): string | null => {
+export const getAddressType = (
+    addressType: AddressType | undefined,
+    t: TFunction
+): string | null => {
     switch (addressType) {
         default:
         case AddressType.RESIDENCE:
@@ -341,7 +478,11 @@ export const getFullName = (party: Party | undefined): string => {
 
     const { prefix, firstName, middleName, lastName, suffix } = party;
 
-    return toTitleCase([prefix, firstName, middleName, lastName, suffix].filter(Boolean).join(' '));
+    return toTitleCase(
+        [prefix, firstName, middleName, lastName, suffix]
+            .filter(Boolean)
+            .join(' ')
+    );
 };
 
 /**
@@ -360,7 +501,9 @@ export const getFirstLastName = (party: Party | undefined): string => {
 
     const { prefix, firstName, lastName, suffix } = party;
 
-    return toTitleCase([prefix, firstName, lastName, suffix].filter(Boolean).join(' '));
+    return toTitleCase(
+        [prefix, firstName, lastName, suffix].filter(Boolean).join(' ')
+    );
 };
 
 export const getName = (party: Party | undefined): string => {

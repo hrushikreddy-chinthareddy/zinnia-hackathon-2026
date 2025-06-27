@@ -3,7 +3,12 @@ import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logInfo, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -32,16 +37,25 @@ export default withAuthAndLogging(
                 },
                 loggingContext
             );
-            logInfo('initialdeathclaim::exists::success::Successfully checked initial deathe claim existence', { ...loggingContext, data, duration: performance.now() - now });
+            logInfo(
+                'initialdeathclaim::exists::success::Successfully checked initial deathe claim existence',
+                { ...loggingContext, data, duration: performance.now() - now }
+            );
             return res.json(data);
         } catch (error) {
-            logWarn('initialdeathclaim::exists::error::Unable to check initial deathe claim existence', {
-                ...parseErrorInformation(error),
-                ...loggingContext,
-                duration: performance.now() - now,
-            });
+            logWarn(
+                'initialdeathclaim::exists::error::Unable to check initial deathe claim existence',
+                {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                }
+            );
             return res.status(500).json(null);
         }
     },
-    { file: 'webnonfinancial/claim/v1/initialdeathclaim/exist', function: 'routeHandler' }
+    {
+        file: 'webnonfinancial/claim/v1/initialdeathclaim/exist',
+        function: 'routeHandler',
+    }
 );

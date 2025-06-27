@@ -33,7 +33,9 @@ const handleKeyDown = (e: React.KeyboardEvent, onClick: () => void) => {
 
 function Arrow({ direction, disabled, selected, onClick }: ArrowProps) {
     const ariaLabel = () => {
-        return direction === ArrowDirections.Left ? 'Paginate back' : 'Paginate forward';
+        return direction === ArrowDirections.Left
+            ? 'Paginate back'
+            : 'Paginate forward';
     };
 
     return (
@@ -44,23 +46,41 @@ function Arrow({ direction, disabled, selected, onClick }: ArrowProps) {
             id={`pagination-arrow-${direction}`}
             aria-label={ariaLabel()}
             role="navigation"
-            onKeyDown={e => handleKeyDown(e, onClick)}
+            onKeyDown={(e) => handleKeyDown(e, onClick)}
             disabled={disabled}
         >
             <Icon
                 type={IconType.CHEVRON}
                 height={20}
                 width={20}
-                className={`transform ${direction === ArrowDirections.Left ? 'rotate-90' : 'rotate-270'}`}
+                className={`transform ${
+                    direction === ArrowDirections.Left
+                        ? 'rotate-90'
+                        : 'rotate-270'
+                }`}
             />
         </button>
     );
 }
 
-export const ArrowLeft: React.FC<PaginationArrowProps> = ({ disabled, onClick }) => (
-    <Arrow direction={ArrowDirections.Left} disabled={disabled} onClick={onClick} />
+export const ArrowLeft: React.FC<PaginationArrowProps> = ({
+    disabled,
+    onClick,
+}) => (
+    <Arrow
+        direction={ArrowDirections.Left}
+        disabled={disabled}
+        onClick={onClick}
+    />
 );
 
-export const ArrowRight: React.FC<PaginationArrowProps> = ({ disabled, onClick }) => (
-    <Arrow direction={ArrowDirections.Right} disabled={disabled} onClick={onClick} />
+export const ArrowRight: React.FC<PaginationArrowProps> = ({
+    disabled,
+    onClick,
+}) => (
+    <Arrow
+        direction={ArrowDirections.Right}
+        disabled={disabled}
+        onClick={onClick}
+    />
 );

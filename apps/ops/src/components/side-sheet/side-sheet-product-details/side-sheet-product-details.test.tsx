@@ -36,24 +36,40 @@ describe('SideSheetProductDetails', () => {
         render(<SideSheetProductDetails globalValues={globalValues} />);
 
         // Assert
-        expect(await screen.findByText('dashboard.productDetails')).toBeInTheDocument();
+        expect(
+            await screen.findByText('dashboard.productDetails')
+        ).toBeInTheDocument();
 
-        expect(await screen.findByText('globalPolicyInfo.carrierName')).toBeInTheDocument();
-        expect(await screen.findByText(getCarrierNameByClientId('SBUL'))).toBeInTheDocument();
+        expect(
+            await screen.findByText('globalPolicyInfo.carrierName')
+        ).toBeInTheDocument();
+        expect(
+            await screen.findByText(getCarrierNameByClientId('SBUL'))
+        ).toBeInTheDocument();
 
-        expect(await screen.findByText('globalPolicyInfo.productMarketingName')).toBeInTheDocument();
+        expect(
+            await screen.findByText('globalPolicyInfo.productMarketingName')
+        ).toBeInTheDocument();
         expect(await screen.findByText('Product A')).toBeInTheDocument();
 
-        expect(await screen.findByText('globalPolicyInfo.productName')).toBeInTheDocument();
+        expect(
+            await screen.findByText('globalPolicyInfo.productName')
+        ).toBeInTheDocument();
         expect(await screen.findByText('Plan A')).toBeInTheDocument();
 
-        expect(await screen.findByText('globalPolicyInfo.productType')).toBeInTheDocument();
+        expect(
+            await screen.findByText('globalPolicyInfo.productType')
+        ).toBeInTheDocument();
         expect(await screen.findByText('UNIVERSALLIFE')).toBeInTheDocument();
 
-        expect(await screen.findByText('globalPolicyInfo.productCode')).toBeInTheDocument();
+        expect(
+            await screen.findByText('globalPolicyInfo.productCode')
+        ).toBeInTheDocument();
         expect(await screen.findByText('123')).toBeInTheDocument();
 
-        expect(await screen.findByText('globalPolicyInfo.planCode')).toBeInTheDocument();
+        expect(
+            await screen.findByText('globalPolicyInfo.planCode')
+        ).toBeInTheDocument();
         expect(await screen.findByText('456')).toBeInTheDocument();
     });
 });

@@ -16,7 +16,10 @@ import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
-import { getCarrierLogoByClientId, getCarrierNameByClientId } from '@deps/utils/carriers';
+import {
+    getCarrierLogoByClientId,
+    getCarrierNameByClientId,
+} from '@deps/utils/carriers';
 
 import { Coverage } from './Coverage';
 import { Features } from './Features';
@@ -83,18 +86,23 @@ export class PolicyDetails {
 
         this.coverage = new Coverage(this.policyRaw);
 
-        this.systematicPrograms = new SystematicPrograms(this.policyRaw.systematicPrograms || []);
+        this.systematicPrograms = new SystematicPrograms(
+            this.policyRaw.systematicPrograms || []
+        );
 
         this.accountValue = policy?.accountValues?.endingAccountValue;
         this.carrierId = policy?.carrierId;
-        this.contestabilityStartDate = policy?.policyDates?.contestabilityStartDate;
+        this.contestabilityStartDate =
+            policy?.policyDates?.contestabilityStartDate;
         this.contestabilityEndDate = policy?.policyDates?.contestabilityEndDate;
         this.costBasis = policy?.costBasis?.costBasis;
-        this.cumulativeGrossDeathBenefitAmount = policy?.coverage?.cumulativeGrossDeathBenefitAmount;
+        this.cumulativeGrossDeathBenefitAmount =
+            policy?.coverage?.cumulativeGrossDeathBenefitAmount;
         this.currency = policy?.currency;
         this.claimApprovalDate = policy.policyDates?.claimApprovalDate;
         this.deathBenefitOption = policy?.deathBenefit?.deathBenefitOption;
-        this.dateOfDeathReportedNotification = policy.policyDates?.dateOfDeathReportedNotification;
+        this.dateOfDeathReportedNotification =
+            policy.policyDates?.dateOfDeathReportedNotification;
         this.distribution = policy.product?.distribution;
         this.fixedCostPeriod = policy.fixedCostPeriod;
         this.generalLedgerPlanCode = policy?.product?.generalLedgerPlanCode;
@@ -102,7 +110,8 @@ export class PolicyDetails {
         // ToDo: remove once this is fixed
         this.isAnnuity =
             policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY ||
-            policy?.product?.lineOfBusiness === ('Annuity Product' as LineOfBusiness);
+            policy?.product?.lineOfBusiness ===
+                ('Annuity Product' as LineOfBusiness);
         this.isLife = policy?.product?.lineOfBusiness === LineOfBusiness.LIFE;
         this.isTerm = policy.product?.productType === ProductType.TERM;
         this.issueDate = policy.policyDates?.issueDate;
@@ -128,7 +137,9 @@ export class PolicyDetails {
     }
 
     public get carrierName(): string | undefined {
-        return getCarrierNameByClientId(this.carrierId as string) || this.carrierId;
+        return (
+            getCarrierNameByClientId(this.carrierId as string) || this.carrierId
+        );
     }
 
     // This will give you an svg of the carrier's logo or a placeholder
@@ -154,7 +165,10 @@ export class PolicyDetails {
         //     coveredPartyRole = PartyRole.INSURED;
         // }
 
-        return [...this.parties.getPartiesWithRole('ANNUITANT' as PartyRole), ...this.parties.getPartiesWithRole(PartyRole.INSURED)];
+        return [
+            ...this.parties.getPartiesWithRole('ANNUITANT' as PartyRole),
+            ...this.parties.getPartiesWithRole(PartyRole.INSURED),
+        ];
     }
 
     public get baseDeathBenefit(): number | undefined {
@@ -166,7 +180,10 @@ export class PolicyDetails {
     }
 
     public get fixedCostPeriodLeft(): number | undefined {
-        if (!isNullEmptyOrUndefined(this.fixedCostPeriod) && !isNullEmptyOrUndefined(this.policyYear)) {
+        if (
+            !isNullEmptyOrUndefined(this.fixedCostPeriod) &&
+            !isNullEmptyOrUndefined(this.policyYear)
+        ) {
             return Number(this.fixedCostPeriod) - Number(this.policyYear);
         }
         return undefined;
@@ -186,7 +203,9 @@ export class PolicyDetails {
         return this.parties.getPartiesWithRole(role);
     }
 
-    public getFeaturesByType(featureType: FeatureType | undefined): PolicyFeature[] {
+    public getFeaturesByType(
+        featureType: FeatureType | undefined
+    ): PolicyFeature[] {
         if (!featureType) {
             return [];
         }
@@ -211,8 +230,13 @@ export class PolicyDetails {
      *          - `isInFreeLookPeriod`: A boolean indicating if the policy is still in the free look period.
      *          - `endDate`: The date the free look period ends.
      */
-    public get freeLookPeriodDetails(): { isInFreeLookPeriod: boolean; endDate: any } {
-        const freeLookCancellationDate = this.features.getFirstFeatureByType(FeatureType.FREELOOK)?.endDate;
+    public get freeLookPeriodDetails(): {
+        isInFreeLookPeriod: boolean;
+        endDate: any;
+    } {
+        const freeLookCancellationDate = this.features.getFirstFeatureByType(
+            FeatureType.FREELOOK
+        )?.endDate;
         const hadEndDate = !isNullEmptyOrUndefined(freeLookCancellationDate);
 
         return {
@@ -220,8 +244,16 @@ export class PolicyDetails {
             // so they still have access to the cancellation functionality. The 15 is based on... a number that was chosen.
             // In the banner we still display the ACTUAL end date of the free look period.
             isInFreeLookPeriod:
-                this.policyStatus === PolicyStatus.ACTIVE && hadEndDate && dayjs().isBefore(dayjs(freeLookCancellationDate).add(15, 'day')),
-            endDate: hadEndDate ? dayjs(freeLookCancellationDate).format(DEFAULT_DATE_DISPLAY_FORMAT) : DEFAULT_ERROR_STRING,
+                this.policyStatus === PolicyStatus.ACTIVE &&
+                hadEndDate &&
+                dayjs().isBefore(
+                    dayjs(freeLookCancellationDate).add(15, 'day')
+                ),
+            endDate: hadEndDate
+                ? dayjs(freeLookCancellationDate).format(
+                      DEFAULT_DATE_DISPLAY_FORMAT
+                  )
+                : DEFAULT_ERROR_STRING,
         };
     }
 

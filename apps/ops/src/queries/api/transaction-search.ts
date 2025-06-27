@@ -14,9 +14,12 @@ export interface SearchTransactionPayload {
     identifiers: { identifier: string; value: string }[];
 }
 
-const transactionSearchUrl = apiServerBaseUrl + '/transactions/v1/transaction/search';
+const transactionSearchUrl =
+    apiServerBaseUrl + '/transactions/v1/transaction/search';
 
-export const searchTransactionsByPaymentRecordId = async (filters: SearchTransactionFilters): Promise<TransactionData[] | null> => {
+export const searchTransactionsByPaymentRecordId = async (
+    filters: SearchTransactionFilters
+): Promise<TransactionData[] | null> => {
     const loggingContext = {
         file: 'queries/api/transaction-search',
         function: 'searchTransactionsByPaymentRecordId',
@@ -33,10 +36,16 @@ export const searchTransactionsByPaymentRecordId = async (filters: SearchTransac
             ],
         };
 
-        const { data } = await client.post<any, AxiosResponse<TransactionData[]>>(transactionSearchUrl, payload);
+        const { data } = await client.post<
+            any,
+            AxiosResponse<TransactionData[]>
+        >(transactionSearchUrl, payload);
         return data;
     } catch (e: any) {
-        browserLogError('transactions::getTransactionsByCorrelationId::error', { ...parseErrorInformation(e), ...loggingContext });
+        browserLogError('transactions::getTransactionsByCorrelationId::error', {
+            ...parseErrorInformation(e),
+            ...loggingContext,
+        });
         return null;
     }
 };

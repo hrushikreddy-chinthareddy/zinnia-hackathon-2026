@@ -1,12 +1,22 @@
 import { ICellRendererParams } from 'ag-grid-community/dist/lib/rendering/cellRenderers/iCellRenderer';
 
-import NavElement, { NavElementType, NavElementSize, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+    NavElementSize,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import DepTable from '@deps/components/table/table';
 import { getSlug } from '@deps/helpers/string.helpers';
 
 import { Task, TaskTableRow, TasksListingProps } from './task-listing.types';
 
-export const buildTaskLink = (taskId: string, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
+export const buildTaskLink = (
+    taskId: string,
+    caseId: string,
+    caseType: string,
+    documentNumber: string,
+    clientId: string
+) => {
     const caseSlug = getSlug(caseType);
     const link = `/create-case/${caseSlug}/${caseId}?taskId=${taskId}&doc=${documentNumber}&clientId=${clientId}`;
     return link;
@@ -16,10 +26,22 @@ export function CellLink(params: ICellRendererParams) {
     return <a href={params.data.taskInfoLink}>{params.data.taskId}</a>;
 }
 
-export const toFormattedTask = (task: Task, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
+export const toFormattedTask = (
+    task: Task,
+    caseId: string,
+    caseType: string,
+    documentNumber: string,
+    clientId: string
+) => {
     return {
         taskId: task.id,
-        taskInfoLink: buildTaskLink(task.id, caseId, caseType, documentNumber, clientId),
+        taskInfoLink: buildTaskLink(
+            task.id,
+            caseId,
+            caseType,
+            documentNumber,
+            clientId
+        ),
         status: task.status,
         taskName: task.taskName,
         statusDuration: '-',
@@ -27,10 +49,22 @@ export const toFormattedTask = (task: Task, caseId: string, caseType: string, do
     };
 };
 
-export default function TasksListing({ tasks, config, caseId, caseType, documentNumber, clientId }: TasksListingProps) {
-    let taskTableRows: TaskTableRow[] = tasks?.map(task => toFormattedTask(task, caseId, caseType, documentNumber, clientId)) || [];
+export default function TasksListing({
+    tasks,
+    config,
+    caseId,
+    caseType,
+    documentNumber,
+    clientId,
+}: TasksListingProps) {
+    let taskTableRows: TaskTableRow[] =
+        tasks?.map((task) =>
+            toFormattedTask(task, caseId, caseType, documentNumber, clientId)
+        ) || [];
 
-    taskTableRows = taskTableRows.filter(task => task.status === 'NEW' || task.status === 'COMPLETED');
+    taskTableRows = taskTableRows.filter(
+        (task) => task.status === 'NEW' || task.status === 'COMPLETED'
+    );
 
     const onFirstDataRendered = (params: any) => {
         params.api.sizeColumnsToFit();
@@ -46,7 +80,9 @@ export default function TasksListing({ tasks, config, caseId, caseType, document
         <div className="pb-6 pt-12">
             <div className="grid grid-cols-2">
                 <div className="col-span-1">
-                    <p className="leading-7.5 mb-4 font-primary text-xl font-medium text-gray-900">{config.searchResults}</p>
+                    <p className="leading-7.5 mb-4 font-primary text-xl font-medium text-gray-900">
+                        {config.searchResults}
+                    </p>
                 </div>
                 <div className="col-span-1">
                     <NavElement

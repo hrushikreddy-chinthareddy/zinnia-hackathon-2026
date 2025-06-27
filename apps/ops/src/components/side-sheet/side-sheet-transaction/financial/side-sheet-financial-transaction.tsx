@@ -1,4 +1,7 @@
-import { TransactionStatus, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    TransactionStatus,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import { Button, Loader, LoaderVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -23,7 +26,10 @@ import SidesheetReverseRecreate from '../reverse-recreate/side-sheet-reverse-rec
 import { replacesReverseInitiator } from '../reverse-recreate/side-sheet-reverse-recreate.helpers';
 import SideSheetReversedTransaction from '../reverse-recreate/side-sheet-reversed-transaction';
 import { getFinancialTransactionSideSheetValues } from '../side-sheet-transaction.helpers';
-import { SideSheetTransactionProps, TransactionSideSheetValues } from '../types';
+import {
+    SideSheetTransactionProps,
+    TransactionSideSheetValues,
+} from '../types';
 import SideSheetWithdrawalContent from '../withdrawal/side-sheet-withdrawal-content';
 import { WithdrawalSideSheetValues } from '../withdrawal/types';
 
@@ -46,8 +52,15 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     const { handleOpen, changeSideSheetContent } = useSideSheetContext();
     const { policy, transaction, refreshTransactions } = props || {};
 
-    const [sideSheetValues, setSideSheetValues] = useState<TransactionSideSheetValues | WithdrawalSideSheetValues>(
-        getFinancialTransactionSideSheetValues(policy, transaction, t, featureFlags)
+    const [sideSheetValues, setSideSheetValues] = useState<
+        TransactionSideSheetValues | WithdrawalSideSheetValues
+    >(
+        getFinancialTransactionSideSheetValues(
+            policy,
+            transaction,
+            t,
+            featureFlags
+        )
     );
 
     const {
@@ -91,15 +104,24 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
 
             // if there are no reverseInitiators, then we can just return
             // there is nothing else to check
-            if (!reverseInitiators.length) return setView(SidesheetViews.default);
+            if (!reverseInitiators.length)
+                return setView(SidesheetViews.default);
 
             // if there are reverseInitiators, then we need to check if this transaction
             // or any of its parents replaces a reverseInitiator
             // which we will know if any of the transactions
             // have an originalTransactionId present in the reverseInitiator array
-            const isReverseInitiator = await replacesReverseInitiator(transaction, reverseInitiators, policy);
+            const isReverseInitiator = await replacesReverseInitiator(
+                transaction,
+                reverseInitiators,
+                policy
+            );
 
-            return setView(isReverseInitiator ? SidesheetViews.reverseInitiator : SidesheetViews.default);
+            return setView(
+                isReverseInitiator
+                    ? SidesheetViews.reverseInitiator
+                    : SidesheetViews.default
+            );
         }
 
         return () => {
@@ -114,10 +136,12 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
         const getValues = async () => {
             setLoading(true);
 
-            const asyncValues = getAsyncSideSheetValues ? await getAsyncSideSheetValues() : {};
+            const asyncValues = getAsyncSideSheetValues
+                ? await getAsyncSideSheetValues()
+                : {};
             setAsyncValues(asyncValues);
 
-            setSideSheetValues(vals => {
+            setSideSheetValues((vals) => {
                 return { ...vals, ...asyncValues };
             });
             setLoading(false);
@@ -131,16 +155,34 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     switch (true) {
         case transactionType === TransactionType.NEW_LOAN:
             SidesheetContent = (
-                <SideSheetNewLoanTransactionContent t={t} values={sideSheetValues as NewLoanTransactionSideSheetValues} loading={loading} />
+                <SideSheetNewLoanTransactionContent
+                    t={t}
+                    values={
+                        sideSheetValues as NewLoanTransactionSideSheetValues
+                    }
+                    loading={loading}
+                />
             );
             break;
-        case withdrawalFinancialTransactions.includes(transactionType as TransactionType):
-            SidesheetContent = <SideSheetWithdrawalContent t={t} values={sideSheetValues as WithdrawalSideSheetValues} loading={loading} />;
+        case withdrawalFinancialTransactions.includes(
+            transactionType as TransactionType
+        ):
+            SidesheetContent = (
+                <SideSheetWithdrawalContent
+                    t={t}
+                    values={sideSheetValues as WithdrawalSideSheetValues}
+                    loading={loading}
+                />
+            );
             break;
 
         default:
             SidesheetContent = (
-                <SideSheetFinancialTransactionContent t={t} values={sideSheetValues as TransactionSideSheetValues} loading={loading} />
+                <SideSheetFinancialTransactionContent
+                    t={t}
+                    values={sideSheetValues as TransactionSideSheetValues}
+                    loading={loading}
+                />
             );
             break;
     }
@@ -153,7 +195,12 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                 </div>
             );
         case SidesheetViews.reverseInitiator:
-            return <SideSheetReversedTransaction transaction={transaction} policy={policy} />;
+            return (
+                <SideSheetReversedTransaction
+                    transaction={transaction}
+                    policy={policy}
+                />
+            );
         case SidesheetViews.cancel:
             return (
                 <SidesheetCancelPending
@@ -191,17 +238,28 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                 <div className="p-8">
                     <div className={`flex flex-col gap-4`}>
                         <div className="flex flex-col">
-                            {![...withdrawalFinancialTransactions, TransactionType.NEW_LOAN].includes(
-                                transactionType as TransactionType
-                            ) && (
+                            {![
+                                ...withdrawalFinancialTransactions,
+                                TransactionType.NEW_LOAN,
+                            ].includes(transactionType as TransactionType) && (
                                 <div className={cancelCta ? 'mb-4' : ''}>
-                                    <Content details={numberFormatify(transactionValue)} variant={ContentVariant.Value} />
+                                    <Content
+                                        details={numberFormatify(
+                                            transactionValue
+                                        )}
+                                        variant={ContentVariant.Value}
+                                    />
                                     <Content
                                         className="text-gray-600"
                                         details={
-                                            t('policy.history.sidesheet.effective', {
-                                                date: convertKebabedDateString(effectiveDate),
-                                            }) as string
+                                            t(
+                                                'policy.history.sidesheet.effective',
+                                                {
+                                                    date: convertKebabedDateString(
+                                                        effectiveDate
+                                                    ),
+                                                }
+                                            ) as string
                                         }
                                         variant={ContentVariant.Caption}
                                     />
@@ -211,7 +269,11 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                 <div>
                                     <Button
                                         onClick={() => {
-                                            changeSideSheetContent(t('policy.history.reverseRecreateSidesheet.title'));
+                                            changeSideSheetContent(
+                                                t(
+                                                    'policy.history.reverseRecreateSidesheet.title'
+                                                )
+                                            );
                                             setView(SidesheetViews.reverse);
                                         }}
                                         mode="link"
@@ -232,7 +294,10 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                         size="small"
                                         className={clsx(
                                             '!justify-start !p-0',
-                                            transactionType === TransactionType.FULL_SURRENDER ? 'mb-6' : ''
+                                            transactionType ===
+                                                TransactionType.FULL_SURRENDER
+                                                ? 'mb-6'
+                                                : ''
                                         )}
                                     >
                                         {cancelCta}
@@ -244,7 +309,13 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                 <ChipStatus
                                     classNames="mb-4"
                                     status={'Canceled' as Statuses}
-                                    statusText={t('status.canceledOn', { date: convertKebabedDateString(processDate) }) as string}
+                                    statusText={
+                                        t('status.canceledOn', {
+                                            date: convertKebabedDateString(
+                                                processDate
+                                            ),
+                                        }) as string
+                                    }
                                 />
                             )}
                         </div>

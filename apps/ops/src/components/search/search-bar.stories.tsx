@@ -12,7 +12,7 @@ export default {
     title: 'Components/SearchBar',
     component: SearchBar,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>

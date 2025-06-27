@@ -9,15 +9,21 @@ export const useOutsideClick = (
 ) => {
     useEffect(() => {
         const onMouseDown = (e: MouseEvent) => {
-            const isDescendantOfRoot = ref.current && ref.current.contains(e.target as Node);
+            const isDescendantOfRoot =
+                ref.current && ref.current.contains(e.target as Node);
             if (!isDescendantOfRoot) {
-                document.addEventListener('mouseup', onMouseUp, { capture: useCapture });
+                document.addEventListener('mouseup', onMouseUp, {
+                    capture: useCapture,
+                });
             }
         };
 
         const onMouseUp = (e: MouseEvent) => {
-            const isDescendantOfRoot = ref.current && ref.current.contains(e.target as Node);
-            document.removeEventListener('mouseup', onMouseUp, { capture: useCapture });
+            const isDescendantOfRoot =
+                ref.current && ref.current.contains(e.target as Node);
+            document.removeEventListener('mouseup', onMouseUp, {
+                capture: useCapture,
+            });
 
             if (!isDescendantOfRoot) {
                 setIsOpen(false);
@@ -29,12 +35,18 @@ export const useOutsideClick = (
         };
 
         if (isOpen) {
-            document.addEventListener('mousedown', onMouseDown, { capture: useCapture });
+            document.addEventListener('mousedown', onMouseDown, {
+                capture: useCapture,
+            });
         }
 
         return () => {
-            document.removeEventListener('mousedown', onMouseDown, { capture: useCapture });
-            document.removeEventListener('mouseup', onMouseUp, { capture: useCapture });
+            document.removeEventListener('mousedown', onMouseDown, {
+                capture: useCapture,
+            });
+            document.removeEventListener('mouseup', onMouseUp, {
+                capture: useCapture,
+            });
         };
     }, [isOpen, useCapture, onOutsideClick, setIsOpen]);
 

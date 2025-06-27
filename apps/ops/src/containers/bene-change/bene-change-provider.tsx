@@ -14,7 +14,7 @@ const INITIAL_FORM_DATA: any = {
     caseId: undefined,
     businessKey: undefined,
     isPrimaryBeneInfoOnFile: false,
-    isContingentBeneInfoOnFile: false
+    isContingentBeneInfoOnFile: false,
 };
 
 /*interface BeneData {
@@ -42,8 +42,13 @@ export const BeneChangeProvider = ({ children }: BeneChangeProviderProps) => {
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [beneData, setBeneData] = useState<any>([]);
     const [deletedBene, setDeletedBene] = useState<any>([]);
-    const [peopleSelection, setPeopleSelection] = useState<PeopleState>(initialPeopleState);
-    const [signatureData, setSignatureData] = useState<SignatureState>({ signatures: [], isIrrevocableBene: false, isSpousePresent: null });
+    const [peopleSelection, setPeopleSelection] =
+        useState<PeopleState>(initialPeopleState);
+    const [signatureData, setSignatureData] = useState<SignatureState>({
+        signatures: [],
+        isIrrevocableBene: false,
+        isSpousePresent: null,
+    });
     const [isPeopleView, setIsPeopleView] = useState<boolean>(true);
     const [ownerInfo, setOwnerInfo] = useState({});
 
@@ -65,7 +70,7 @@ export const BeneChangeProvider = ({ children }: BeneChangeProviderProps) => {
                 setSignatureData,
                 setIsPeopleView,
                 setOwnerInfo,
-                setDeletedBene
+                setDeletedBene,
             }}
         >
             {children}
@@ -77,7 +82,9 @@ export const useBeneChange = () => {
     const context = useContext(BeneChangeContext);
 
     if (!context) {
-        throw new Error('useBeneChange must be used within a BeneChangeProvider');
+        throw new Error(
+            'useBeneChange must be used within a BeneChangeProvider'
+        );
     }
     return context;
 };

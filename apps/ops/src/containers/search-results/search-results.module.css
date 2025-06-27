@@ -19,7 +19,8 @@
     align-items: center;
     justify-content: center;
     padding: var(--measure-dimension-padding-4xl);
-    border: var(--measure-dimension-stroke-sm) dashed var(--color-base-border-border-subtle);
+    border: var(--measure-dimension-stroke-sm) dashed
+        var(--color-base-border-border-subtle);
 }
 
 .secondaryText {

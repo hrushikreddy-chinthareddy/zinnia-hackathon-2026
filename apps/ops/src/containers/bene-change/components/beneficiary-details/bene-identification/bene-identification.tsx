@@ -4,14 +4,26 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '@deps/components/fields/field-date-select/field-date-select';
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { Errors, genderOption, prefixOption, trustOption, TrustType } from './bene-identification.helpers';
+import {
+    Errors,
+    genderOption,
+    prefixOption,
+    trustOption,
+    TrustType,
+} from './bene-identification.helpers';
 import PartyTypes from './party-type';
 
 const DEFAULT_PARTY_INSTANCE = {
@@ -34,19 +46,41 @@ export interface BeneficiaryIdentificationProps {
     isReadOnly?: boolean;
 }
 
-const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }: BeneficiaryIdentificationProps) => {
-    const containerClasses = clsx('flex flex-col', 'w-full  ', 'rounded border-2 border-gray-100', 'my-3 bg-gray-50');
+const BeneficiaryIdentification = ({
+    setCurrentParty,
+    updateParty,
+    isReadOnly,
+}: BeneficiaryIdentificationProps) => {
+    const containerClasses = clsx(
+        'flex flex-col',
+        'w-full  ',
+        'rounded border-2 border-gray-100',
+        'my-3 bg-gray-50'
+    );
     const sectionClasses = 'flex flex-col p-4 md:p-6 lg:p-8';
 
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.identification' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails.identification',
+    });
 
-    const [partyIdentification, setPartyIdentification] = useState<PartyType>(updateParty?.partyType || PartyType.INDIVIDUAL);
-    const [party, setParty] = useState<any>(updateParty ?? DEFAULT_PARTY_INSTANCE);
+    const [partyIdentification, setPartyIdentification] = useState<PartyType>(
+        updateParty?.partyType || PartyType.INDIVIDUAL
+    );
+    const [party, setParty] = useState<any>(
+        updateParty ?? DEFAULT_PARTY_INSTANCE
+    );
     const [currentErrors, setCurrentErrors] = useState<Errors>();
 
     useEffect(() => {
-        if (partyIdentification === PartyType.TRUST || partyIdentification === PartyType.ORGANIZATION) {
-            setParty((prevState: any) => ({ ...prevState, partyType: partyIdentification, lastName: '' }));
+        if (
+            partyIdentification === PartyType.TRUST ||
+            partyIdentification === PartyType.ORGANIZATION
+        ) {
+            setParty((prevState: any) => ({
+                ...prevState,
+                partyType: partyIdentification,
+                lastName: '',
+            }));
         } else if (partyIdentification === PartyType.INDIVIDUAL) {
             setParty((prevState: any) => ({
                 ...prevState,
@@ -54,28 +88,48 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                 lastName: updateParty ? updateParty.lastName : '',
             }));
         } else {
-            setParty((prevState: any) => ({ ...prevState, partyType: partyIdentification }));
+            setParty((prevState: any) => ({
+                ...prevState,
+                partyType: partyIdentification,
+            }));
         }
     }, [partyIdentification]);
 
     const dob =
-        party?.dateOfBirth && dayjs(party?.dateOfBirth, ZAHARA_API_DATE_FORMAT).isValid()
-            ? dayjs(party?.dateOfBirth, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
+        party?.dateOfBirth &&
+        dayjs(party?.dateOfBirth, ZAHARA_API_DATE_FORMAT).isValid()
+            ? dayjs(party?.dateOfBirth, ZAHARA_API_DATE_FORMAT).format(
+                  DATE_PICKER_FORMAT
+              )
             : '';
     const [dateOfBirth, setDateOfBirth] = useState(dob);
 
     useEffect(() => {
         setCurrentParty((prevState: any) => ({ ...prevState, ...party }));
         if (partyIdentification === PartyType.INDIVIDUAL && !party.firstName) {
-            setCurrentErrors((prevState: any) => ({ ...prevState, firstName: t('formValidations.firstName') }));
+            setCurrentErrors((prevState: any) => ({
+                ...prevState,
+                firstName: t('formValidations.firstName'),
+            }));
         }
-        if ((partyIdentification === PartyType.TRUST || partyIdentification === PartyType.ORGANIZATION) && !party.lastName) {
-            setCurrentErrors((prevState: any) => ({ ...prevState, lastName: t('formValidations.lastName') }));
+        if (
+            (partyIdentification === PartyType.TRUST ||
+                partyIdentification === PartyType.ORGANIZATION) &&
+            !party.lastName
+        ) {
+            setCurrentErrors((prevState: any) => ({
+                ...prevState,
+                lastName: t('formValidations.lastName'),
+            }));
         }
     }, [party, setCurrentParty, partyIdentification, t]);
 
     useEffect(() => {
-        const dob = dateOfBirth ? dayjs(dateOfBirth, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) : null;
+        const dob = dateOfBirth
+            ? dayjs(dateOfBirth, DATE_PICKER_FORMAT).format(
+                  ZAHARA_API_DATE_FORMAT
+              )
+            : null;
         setParty((prevState: any) => ({ ...prevState, dateOfBirth: dob }));
     }, [dateOfBirth]);
 
@@ -83,7 +137,11 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
         <div>
             <div className={containerClasses}>
                 <div className={sectionClasses}>
-                    <PartyTypes partyIdentification={partyIdentification} onPartyChange={setPartyIdentification} isReadOnly={isReadOnly} />
+                    <PartyTypes
+                        partyIdentification={partyIdentification}
+                        onPartyChange={setPartyIdentification}
+                        isReadOnly={isReadOnly}
+                    />
                 </div>
             </div>
 
@@ -94,7 +152,12 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                             <SelectSimple
                                 label={t('prefix') as string}
                                 options={prefixOption(t)}
-                                onChange={value => setParty((prevState: any) => ({ ...prevState, prefix: value }))}
+                                onChange={(value) =>
+                                    setParty((prevState: any) => ({
+                                        ...prevState,
+                                        prefix: value,
+                                    }))
+                                }
                                 size={FieldSize.Small}
                                 value={party?.prefix || ''}
                                 variant={FieldVariant.Default}
@@ -103,12 +166,16 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                             <Field
                                 label={t('firstName') as string}
                                 message={currentErrors?.firstName}
-                                onChange={event => {
+                                onChange={(event) => {
                                     setCurrentErrors((prevState: any) => {
-                                        const { firstName, ...errors } = prevState ?? {};
+                                        const { firstName, ...errors } =
+                                            prevState ?? {};
                                         return errors;
                                     });
-                                    setParty((prevState: any) => ({ ...prevState, firstName: event.target.value }));
+                                    setParty((prevState: any) => ({
+                                        ...prevState,
+                                        firstName: event.target.value,
+                                    }));
                                 }}
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
@@ -125,36 +192,57 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                             />
                             <Field
                                 label={t(`middleName`) as string}
-                                onChange={event => {
-                                    setParty((prevState: any) => ({ ...prevState, middleName: event.target.value }));
+                                onChange={(event) => {
+                                    setParty((prevState: any) => ({
+                                        ...prevState,
+                                        middleName: event.target.value,
+                                    }));
                                 }}
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={party?.middleName || ''}
                                 maxLength={15}
-                                variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                                variant={
+                                    isReadOnly
+                                        ? FieldVariant.Inactive
+                                        : FieldVariant.Default
+                                }
                             />
                             <Field
                                 label={t(`lastName`) as string}
-                                onChange={event => {
-                                    setParty((prevState: any) => ({ ...prevState, lastName: event.target.value }));
+                                onChange={(event) => {
+                                    setParty((prevState: any) => ({
+                                        ...prevState,
+                                        lastName: event.target.value,
+                                    }));
                                 }}
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={party?.lastName || ''}
                                 maxLength={40}
-                                variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                                variant={
+                                    isReadOnly
+                                        ? FieldVariant.Inactive
+                                        : FieldVariant.Default
+                                }
                             />
                             <Field
                                 label={t(`suffix`) as string}
-                                onChange={event => {
-                                    setParty((prevState: any) => ({ ...prevState, suffix: event.target.value }));
+                                onChange={(event) => {
+                                    setParty((prevState: any) => ({
+                                        ...prevState,
+                                        suffix: event.target.value,
+                                    }));
                                 }}
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={party?.suffix || ''}
                                 maxLength={4}
-                                variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                                variant={
+                                    isReadOnly
+                                        ? FieldVariant.Inactive
+                                        : FieldVariant.Default
+                                }
                             />
                         </div>
                     )}
@@ -164,12 +252,16 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                                 <Field
                                     label={t(`trustName`) as string}
                                     message={currentErrors?.lastName}
-                                    onChange={event => {
+                                    onChange={(event) => {
                                         setCurrentErrors((prevState: any) => {
-                                            const { lastName, ...errors } = prevState ?? {};
+                                            const { lastName, ...errors } =
+                                                prevState ?? {};
                                             return errors;
                                         });
-                                        setParty((prevState: any) => ({ ...prevState, lastName: event.target.value }));
+                                        setParty((prevState: any) => ({
+                                            ...prevState,
+                                            lastName: event.target.value,
+                                        }));
                                     }}
                                     size={FieldSize.Small}
                                     type={FieldType.BaseActive}
@@ -187,9 +279,16 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                                 <SelectSimple
                                     label={t('trustType') as string}
                                     options={trustOption(t)}
-                                    onChange={value => setParty((prevState: any) => ({ ...prevState, trustType: value }))}
+                                    onChange={(value) =>
+                                        setParty((prevState: any) => ({
+                                            ...prevState,
+                                            trustType: value,
+                                        }))
+                                    }
                                     size={FieldSize.Small}
-                                    value={party.trustType ?? TrustType.Individual}
+                                    value={
+                                        party.trustType ?? TrustType.Individual
+                                    }
                                     variant={FieldVariant.Default}
                                     disabled={isReadOnly}
                                 />
@@ -202,19 +301,27 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                             <Field
                                 label={t(`companyName`) as string}
                                 message={currentErrors?.lastName}
-                                onChange={event => {
+                                onChange={(event) => {
                                     setCurrentErrors((prevState: any) => {
-                                        const { lastName, ...errors } = prevState ?? {};
+                                        const { lastName, ...errors } =
+                                            prevState ?? {};
                                         return errors;
                                     });
-                                    setParty((prevState: any) => ({ ...prevState, lastName: event.target.value }));
+                                    setParty((prevState: any) => ({
+                                        ...prevState,
+                                        lastName: event.target.value,
+                                    }));
                                 }}
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={party?.lastName || ''}
                                 maxLength={40}
                                 variant={
-                                    isReadOnly ? FieldVariant.Inactive : currentErrors?.lastName ? FieldVariant.Error : FieldVariant.Default
+                                    isReadOnly
+                                        ? FieldVariant.Inactive
+                                        : currentErrors?.lastName
+                                        ? FieldVariant.Error
+                                        : FieldVariant.Default
                                 }
                                 required
                             />
@@ -230,27 +337,41 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                             <div className="mb-7">
                                 <Field
                                     label={t('ssn') as string}
-                                    onChange={event => {
-                                        setParty((prevState: any) => ({ ...prevState, ssn: event.target.value }));
+                                    onChange={(event) => {
+                                        setParty((prevState: any) => ({
+                                            ...prevState,
+                                            ssn: event.target.value,
+                                        }));
                                     }}
                                     formatOptions={{ format: '#########' }}
                                     size={FieldSize.Small}
                                     type={FieldType.BaseActive}
                                     value={party?.ssn || ''}
                                     maxLength={9}
-                                    variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                                    variant={
+                                        isReadOnly
+                                            ? FieldVariant.Inactive
+                                            : FieldVariant.Default
+                                    }
                                 />
                             </div>
                             <div className="mb-7">
                                 <Radio
                                     label={t('gender') as string}
                                     items={genderOption(t)}
-                                    onChange={event => {
-                                        setParty((prevState: any) => ({ ...prevState, gender: event.target.value }));
+                                    onChange={(event) => {
+                                        setParty((prevState: any) => ({
+                                            ...prevState,
+                                            gender: event.target.value,
+                                        }));
                                     }}
                                     disabled={isReadOnly}
                                     value={party?.gender || ''}
-                                    variant={isReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+                                    variant={
+                                        isReadOnly
+                                            ? RadioVariant.Inactive
+                                            : RadioVariant.Default
+                                    }
                                     name={'gender' + Math.random()}
                                 />
                             </div>
@@ -260,7 +381,7 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                                     id="dateOfBirth"
                                     data-testid="dateOfBirth"
                                     isFutureDateDisabled={false}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                         setDateOfBirth(e.target.value);
                                     }}
                                     size={FieldSize.Small}
@@ -268,7 +389,11 @@ const BeneficiaryIdentification = ({ setCurrentParty, updateParty, isReadOnly }:
                                     value={dateOfBirth}
                                     maxLength={10}
                                     disabled={isReadOnly}
-                                    variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                                    variant={
+                                        isReadOnly
+                                            ? FieldVariant.Inactive
+                                            : FieldVariant.Default
+                                    }
                                 />
                             </div>
                         </div>

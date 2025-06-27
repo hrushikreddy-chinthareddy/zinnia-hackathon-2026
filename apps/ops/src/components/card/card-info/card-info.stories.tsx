@@ -20,7 +20,8 @@ type Story = StoryObj<CardInfoStoryProps>;
 export const Default: Story = {
     args: {
         title: 'Remove address?',
-        subtitle: "If you remove the policy's mailing address, one will be chosen for you.",
+        subtitle:
+            "If you remove the policy's mailing address, one will be chosen for you.",
         cta: {
             action: () => console.log('Clicked cta'),
             text: 'Remove residential address',
@@ -51,12 +52,19 @@ export const Default: Story = {
 export const WithBorder: Story = {
     args: {
         title: 'Search Error',
-        subtitle: 'Your search could not be completed. Please refine your search criteria and try again.',
+        subtitle:
+            'Your search could not be completed. Please refine your search criteria and try again.',
     },
     render: ({ subtitle, title }) => (
         <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-semantic-error bg-white shadow-sm">
             <CardInfoComponent
-                icon={<CogIcon className="text-semantic-error" height={50} width={50} />}
+                icon={
+                    <CogIcon
+                        className="text-semantic-error"
+                        height={50}
+                        width={50}
+                    />
+                }
                 title={title}
                 subtitle={subtitle}
             />

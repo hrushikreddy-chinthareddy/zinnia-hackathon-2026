@@ -1,6 +1,13 @@
 import { AllocationOption } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
+import {
+    Dispatch,
+    PropsWithChildren,
+    SetStateAction,
+    createContext,
+    useContext,
+    useState,
+} from 'react';
 
 import { AmountType } from '@deps/models/funds/enums';
 import { TransactionResponse } from '@deps/queries/api/bpm';
@@ -19,8 +26,16 @@ export type FundTransfer = {
         amountType: AmountType;
     };
     funds: {
-        transferFrom: { fundId: string; fundName: string; requestedAmount: string | number }[];
-        transferTo: { fundId: string; fundName: string; requestedAmount: string | number }[];
+        transferFrom: {
+            fundId: string;
+            fundName: string;
+            requestedAmount: string | number;
+        }[];
+        transferTo: {
+            fundId: string;
+            fundName: string;
+            requestedAmount: string | number;
+        }[];
     };
     validationResponse?: TransactionResponse;
 };
@@ -63,10 +78,13 @@ const defaultValue: FundTransferContextType = {
     setFundTransfer: () => {},
 };
 
-const FundTransferContext = createContext<FundTransferContextType>(defaultValue);
+const FundTransferContext =
+    createContext<FundTransferContextType>(defaultValue);
 
 export const FundTransferProvider = ({ children }: PropsWithChildren) => {
-    const [fundTransfer, setFundTransfer] = useState<FundTransfer>(defaultValue.fundTransfer);
+    const [fundTransfer, setFundTransfer] = useState<FundTransfer>(
+        defaultValue.fundTransfer
+    );
 
     return (
         <FundTransferContext.Provider
@@ -84,7 +102,9 @@ export const useFundTransfer = () => {
     const context = useContext(FundTransferContext);
 
     if (!context) {
-        throw new Error('useFundTransfer must be used within a FundTransferProvider');
+        throw new Error(
+            'useFundTransfer must be used within a FundTransferProvider'
+        );
     }
     return context;
 };

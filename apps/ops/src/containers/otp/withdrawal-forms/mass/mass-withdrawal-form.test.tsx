@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
@@ -58,7 +61,7 @@ describe('MassWithdrawalForm', () => {
     describe('form sub types', () => {
         it('should set the form type partial default', () => {
             let args = {};
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 args = cb(FormData);
                 return args;
             });
@@ -106,7 +109,9 @@ describe('MassWithdrawalForm', () => {
             );
 
             // Get the form subtype select element
-            const formSubtypeSelect = screen.getByTestId('form-type') as HTMLInputElement;
+            const formSubtypeSelect = screen.getByTestId(
+                'form-type'
+            ) as HTMLInputElement;
             expect(formSubtypeSelect).toBeInTheDocument();
 
             const option = screen.getByText('formSubtype.partialWithdrawal', {
@@ -126,7 +131,7 @@ describe('MassWithdrawalForm', () => {
         });
         it('should able to set subtype successfully to full', async () => {
             let args = {};
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 args = cb(FormData);
                 return args;
             });
@@ -190,7 +195,7 @@ describe('MassWithdrawalForm', () => {
     describe('form party', () => {
         it('should render personal information if configs is passed', () => {
             let args = {};
-            const setMockData = jest.fn(cb => {
+            const setMockData = jest.fn((cb) => {
                 args = cb(FormData);
                 return args;
             });
@@ -235,7 +240,9 @@ describe('MassWithdrawalForm', () => {
                 </FormDataContext.Provider>
             );
 
-            expect(screen.getByTestId('data-testid-form-party-title')).toBeInTheDocument();
+            expect(
+                screen.getByTestId('data-testid-form-party-title')
+            ).toBeInTheDocument();
         });
     });
 });

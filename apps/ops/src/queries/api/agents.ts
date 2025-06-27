@@ -12,13 +12,21 @@ type GetAgentDataQuery = {
     planCode: string | undefined;
 };
 
-export const getAgentData = async ({ clientCode, id, policyNumber, planCode }: GetAgentDataQuery): Promise<AgentData | undefined> => {
+export const getAgentData = async ({
+    clientCode,
+    id,
+    policyNumber,
+    planCode,
+}: GetAgentDataQuery): Promise<AgentData | undefined> => {
     try {
         let url = `${baseAppUrl}/api/mcs/${clientCode}/salesentity?idType=external&skip=0&take=1&id=${id}&IsClientChild=true`;
         if (policyNumber && planCode) {
             url += `&policyNumber=${policyNumber}&planCode=${planCode}`;
         }
-        const response = await client.get<AgentDataResponse, AxiosResponse<AgentDataResponse>>(url);
+        const response = await client.get<
+            AgentDataResponse,
+            AxiosResponse<AgentDataResponse>
+        >(url);
 
         const agentData = response?.data?.items?.[0];
 

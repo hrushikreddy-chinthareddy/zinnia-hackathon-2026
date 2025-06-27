@@ -1,6 +1,9 @@
 import '@deps/styles/styles.css';
 
-import BannerAlert, { BannerAlertProps, BannerVariant } from '@deps/components/banner-alert/banner-alert';
+import BannerAlert, {
+    BannerAlertProps,
+    BannerVariant,
+} from '@deps/components/banner-alert/banner-alert';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -9,7 +12,8 @@ const meta: Meta<typeof BannerAlert> = {
     component: BannerAlert,
     tags: ['autodocs'],
     args: {
-        children: 'Insert body text about reminders, updates, and/or notifications.',
+        children:
+            'Insert body text about reminders, updates, and/or notifications.',
         canDismiss: true,
     },
     argTypes: {

@@ -26,21 +26,33 @@ export interface BannerAlertProps {
     variant?: BannerVariant;
 }
 
-const BannerAlert = ({ canDismiss = true, children, cta, variant = BannerVariant.Default }: BannerAlertProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'bannerAlert' });
+const BannerAlert = ({
+    canDismiss = true,
+    children,
+    cta,
+    variant = BannerVariant.Default,
+}: BannerAlertProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'bannerAlert',
+    });
     const [show, setShow] = useState(true);
 
     if (!show) return null;
 
-    const wrapperStyles = 'flex max-w-[1130px] gap-2 rounded-lg border-1 p-2 shadow-elevation-light-08';
+    const wrapperStyles =
+        'flex max-w-[1130px] gap-2 rounded-lg border-1 p-2 shadow-elevation-light-08';
     const textStyles = 'font-primary text-sm font-medium leading-[16px]';
 
     const variantStyles = {
         [BannerVariant.Default]: 'border-gray-900 text-white bg-gray-900',
-        [BannerVariant.Error]: 'border-semantic-error text-semantic-error bg-semantic-error-light',
-        [BannerVariant.Information]: 'border-semantic-info text-semantic-info bg-semantic-info-light',
-        [BannerVariant.Success]: 'border-semantic-success text-semantic-success bg-semantic-success-light',
-        [BannerVariant.Warning]: 'border-semantic-warning text-semantic-warning bg-semantic-warning-light',
+        [BannerVariant.Error]:
+            'border-semantic-error text-semantic-error bg-semantic-error-light',
+        [BannerVariant.Information]:
+            'border-semantic-info text-semantic-info bg-semantic-info-light',
+        [BannerVariant.Success]:
+            'border-semantic-success text-semantic-success bg-semantic-success-light',
+        [BannerVariant.Warning]:
+            'border-semantic-warning text-semantic-warning bg-semantic-warning-light',
     };
 
     const icons = {
@@ -55,10 +67,19 @@ const BannerAlert = ({ canDismiss = true, children, cta, variant = BannerVariant
     const hasCta = cta != null;
 
     return (
-        <div className={clsx(wrapperStyles, variantStyles[variant])} data-testid="banner-alert">
+        <div
+            className={clsx(wrapperStyles, variantStyles[variant])}
+            data-testid="banner-alert"
+        >
             <IconVariant className="shrink-0" height={24} width={24} />
             <div className="my-auto flex grow flex-col gap-2">
-                <p className={clsx(textStyles, { 'text-gray-900': variant !== BannerVariant.Default })}>{children}</p>
+                <p
+                    className={clsx(textStyles, {
+                        'text-gray-900': variant !== BannerVariant.Default,
+                    })}
+                >
+                    {children}
+                </p>
 
                 {hasCta && (
                     <a
@@ -71,7 +92,11 @@ const BannerAlert = ({ canDismiss = true, children, cta, variant = BannerVariant
             </div>
 
             {!hasCta && canDismiss && (
-                <button aria-label={t('close') as string} className="default-focus-icons rounded-xl" onClick={() => setShow(false)}>
+                <button
+                    aria-label={t('close') as string}
+                    className="default-focus-icons rounded-xl"
+                    onClick={() => setShow(false)}
+                >
                     <CancelIcon height={24} width={24} />
                 </button>
             )}

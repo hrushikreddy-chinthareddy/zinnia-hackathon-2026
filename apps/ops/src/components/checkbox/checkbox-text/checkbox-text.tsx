@@ -1,7 +1,9 @@
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import Content, { ContentVariant } from '@deps/components/content/content';
 
 import Checkbox from '../checkbox';
@@ -22,7 +24,14 @@ export type CheckboxTextProps = {
 } & Omit<HTMLAttributes<HTMLInputElement>, 'onChange'>;
 
 const CheckboxText = (props: CheckboxTextProps) => {
-    const { assistiveText, isDisabled, readonly, label, className, ...restProps } = props;
+    const {
+        assistiveText,
+        isDisabled,
+        readonly,
+        label,
+        className,
+        ...restProps
+    } = props;
 
     const labelClasses = clsx(
         'flex items-center space-x-2',
@@ -36,10 +45,23 @@ const CheckboxText = (props: CheckboxTextProps) => {
     return (
         <div className="flex flex-col gap-6">
             <label className={labelClasses}>
-                <Checkbox isDisabled={isDisabled} readonly={readonly} {...restProps} />
-                <Content details={label} variant={ContentVariant.BodySm} contentClassName="items-center flex" />
+                <Checkbox
+                    isDisabled={isDisabled}
+                    readonly={readonly}
+                    {...restProps}
+                />
+                <Content
+                    details={label}
+                    variant={ContentVariant.BodySm}
+                    contentClassName="items-center flex"
+                />
             </label>
-            {!!assistiveText?.text && <AssistiveText text={assistiveText.text} variant={assistiveText.variant} />}
+            {!!assistiveText?.text && (
+                <AssistiveText
+                    text={assistiveText.text}
+                    variant={assistiveText.variant}
+                />
+            )}
         </div>
     );
 };

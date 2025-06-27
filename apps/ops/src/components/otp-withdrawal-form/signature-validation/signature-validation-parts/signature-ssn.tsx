@@ -7,15 +7,21 @@ import { SignatureFieldNames, SignaturePartProps } from './signature-parts';
 import { selectVarientByConfig } from '../../form-party/form-party';
 import { SignatureValidationContext } from '../signature-validation-context';
 
-export default function SignatureSsn({ isFormStateReadOnly = false }: SignaturePartProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.signatureValidation' });
-    const { errors, ssn, setSsn, signType } = useContext(SignatureValidationContext);
+export default function SignatureSsn({
+    isFormStateReadOnly = false,
+}: SignaturePartProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.signatureValidation',
+    });
+    const { errors, ssn, setSsn, signType } = useContext(
+        SignatureValidationContext
+    );
 
     return (
         <Field
             label={t('signatureSsn') as string}
             message={errors[SignatureFieldNames.SignatureSsn]}
-            onChange={e => {
+            onChange={(e) => {
                 setSsn({ text: e.target.value });
             }}
             size={FieldSize.Small}

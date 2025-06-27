@@ -25,20 +25,47 @@ afterEach(cleanup);
 
 describe('Button Group Component', () => {
     it('should render an MUI button group component', () => {
-        render(<ButtonGrp groupLabel={groupLabel} labels={buttonGroupLabels} activeValue={buttonGroupActive} toggle={buttonGroupToggle} />);
+        render(
+            <ButtonGrp
+                groupLabel={groupLabel}
+                labels={buttonGroupLabels}
+                activeValue={buttonGroupActive}
+                toggle={buttonGroupToggle}
+            />
+        );
         expect(screen.getByTestId(ButtonGroupTest.TOGGLE)).toBeInTheDocument();
     });
 
     it('should render each of the labels from props', () => {
-        render(<ButtonGrp groupLabel={groupLabel} labels={buttonGroupLabels} activeValue={buttonGroupActive} toggle={buttonGroupToggle} />);
-        buttonGroupLabels.forEach(item => {
-            expect(screen.getByTestId(`${ButtonGroupTest.LABEL}-${item.label}`)).toBeInTheDocument();
+        render(
+            <ButtonGrp
+                groupLabel={groupLabel}
+                labels={buttonGroupLabels}
+                activeValue={buttonGroupActive}
+                toggle={buttonGroupToggle}
+            />
+        );
+        buttonGroupLabels.forEach((item) => {
+            expect(
+                screen.getByTestId(`${ButtonGroupTest.LABEL}-${item.label}`)
+            ).toBeInTheDocument();
         });
     });
 
     it('should trigger the toggle function when the toggle button is clicked', () => {
-        render(<ButtonGrp groupLabel={groupLabel} labels={buttonGroupLabels} activeValue={buttonGroupActive} toggle={buttonGroupToggle} />);
-        fireEvent.click(screen.getByTestId(`${ButtonGroupTest.LABEL}-${buttonGroupLabels[1].label}`));
+        render(
+            <ButtonGrp
+                groupLabel={groupLabel}
+                labels={buttonGroupLabels}
+                activeValue={buttonGroupActive}
+                toggle={buttonGroupToggle}
+            />
+        );
+        fireEvent.click(
+            screen.getByTestId(
+                `${ButtonGroupTest.LABEL}-${buttonGroupLabels[1].label}`
+            )
+        );
         expect(buttonGroupActive).toBe(buttonGroupLabels[1].value);
     });
 });

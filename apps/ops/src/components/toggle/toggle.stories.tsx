@@ -8,7 +8,7 @@ export default {
     title: 'Components/Toggle',
     component: Toggle,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -22,9 +22,24 @@ export const ToggleComponent = () => {
     return (
         <div className="flex flex-col gap-5">
             <Toggle value={value} handleToggle={setValue} label="Default" />
-            <Toggle value={value} handleToggle={setValue} label="Large" size={ToggleSize.Large} />
-            <Toggle value={value} handleToggle={setValue} label="With Text" text="Text" />
-            <Toggle value={value} handleToggle={setValue} label="Inactive" variant={ToggleVariant.Inactive} />
+            <Toggle
+                value={value}
+                handleToggle={setValue}
+                label="Large"
+                size={ToggleSize.Large}
+            />
+            <Toggle
+                value={value}
+                handleToggle={setValue}
+                label="With Text"
+                text="Text"
+            />
+            <Toggle
+                value={value}
+                handleToggle={setValue}
+                label="Inactive"
+                variant={ToggleVariant.Inactive}
+            />
         </div>
     );
 };

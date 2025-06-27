@@ -3,9 +3,17 @@ import { useTranslation } from 'next-i18next';
 import { useState, useContext, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '@deps/components/fields/field-date-select/field-date-select';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { RMD } from '@deps/models/case/withdrawal/case';
@@ -42,9 +50,13 @@ export function useJLEFields({
     dob: ogDob,
     taxId: ogTaxId,
 }: JointLifeExpectancy) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.personalDetails' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.personalDetails',
+    });
 
-    const formDob = ogDob?.text ? dayjs(ogDob?.text, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT) : '';
+    const formDob = ogDob?.text
+        ? dayjs(ogDob?.text, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
+        : '';
     const ssnFormat = { format: '#########' };
 
     const [firstName, setFirstName] = useState(ogFirst || '');
@@ -56,11 +68,15 @@ export function useJLEFields({
     const firstNameField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             label={label || (t(`firstName`) as string)}
-            onChange={e => setFirstName(e.target.value)}
+            onChange={(e) => setFirstName(e.target.value)}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={firstName}
-            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+            variant={
+                isFormStateReadOnly
+                    ? FieldVariant.Inactive
+                    : FieldVariant.Default
+            }
             data-testid="first-name-test-id"
         />
     );
@@ -68,11 +84,15 @@ export function useJLEFields({
     const middleNameField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             label={label || (t(`middleName`) as string)}
-            onChange={e => setMiddleName(e.target.value)}
+            onChange={(e) => setMiddleName(e.target.value)}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={middleName}
-            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+            variant={
+                isFormStateReadOnly
+                    ? FieldVariant.Inactive
+                    : FieldVariant.Default
+            }
             data-testid="middle-name-test-id"
         />
     );
@@ -80,11 +100,15 @@ export function useJLEFields({
     const lastNameField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
             label={label || (t(`lastName`) as string)}
-            onChange={e => setLastName(e.target.value)}
+            onChange={(e) => setLastName(e.target.value)}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={lastName}
-            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+            variant={
+                isFormStateReadOnly
+                    ? FieldVariant.Inactive
+                    : FieldVariant.Default
+            }
             data-testid="last-name-test-id"
         />
     );
@@ -92,13 +116,17 @@ export function useJLEFields({
     const dobField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <FieldDateSelect
             label={label || (t(`dob`) as string)}
-            onChange={e => setDob(e.target.value)}
+            onChange={(e) => setDob(e.target.value)}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={dob}
             data-testid="dob-test-id"
             disabled={isFormStateReadOnly}
-            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+            variant={
+                isFormStateReadOnly
+                    ? FieldVariant.Inactive
+                    : FieldVariant.Default
+            }
         />
     );
 
@@ -106,7 +134,7 @@ export function useJLEFields({
         <Field
             label={label || (t(`ssn`) as string)}
             formatOptions={ssnFormat}
-            onChange={e => setTaxId(e.target.value)}
+            onChange={(e) => setTaxId(e.target.value)}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={taxId}
@@ -115,18 +143,56 @@ export function useJLEFields({
         />
     );
 
-    const renderField = (field: JLEFieldConfig, isFormStateReadOnly: boolean): JSX.Element | null => {
+    const renderField = (
+        field: JLEFieldConfig,
+        isFormStateReadOnly: boolean
+    ): JSX.Element | null => {
         switch (field.fieldName) {
             case PartyFields.FirstName:
-                return <div key={field.fieldName}>{firstNameField({ label: field.fieldLabel, isFormStateReadOnly })}</div>;
+                return (
+                    <div key={field.fieldName}>
+                        {firstNameField({
+                            label: field.fieldLabel,
+                            isFormStateReadOnly,
+                        })}
+                    </div>
+                );
             case PartyFields.MiddleName:
-                return <div key={field.fieldName}>{middleNameField({ label: field.fieldLabel, isFormStateReadOnly })}</div>;
+                return (
+                    <div key={field.fieldName}>
+                        {middleNameField({
+                            label: field.fieldLabel,
+                            isFormStateReadOnly,
+                        })}
+                    </div>
+                );
             case PartyFields.LastName:
-                return <div key={field.fieldName}>{lastNameField({ label: field.fieldLabel, isFormStateReadOnly })}</div>;
+                return (
+                    <div key={field.fieldName}>
+                        {lastNameField({
+                            label: field.fieldLabel,
+                            isFormStateReadOnly,
+                        })}
+                    </div>
+                );
             case PartyFields.Dob:
-                return <div key={field.fieldName}>{dobField({ label: field.fieldLabel, isFormStateReadOnly })}</div>;
+                return (
+                    <div key={field.fieldName}>
+                        {dobField({
+                            label: field.fieldLabel,
+                            isFormStateReadOnly,
+                        })}
+                    </div>
+                );
             case PartyFields.TaxId:
-                return <div key={field.fieldName}>{taxIdField({ label: field.fieldLabel, isFormStateReadOnly })}</div>;
+                return (
+                    <div key={field.fieldName}>
+                        {taxIdField({
+                            label: field.fieldLabel,
+                            isFormStateReadOnly,
+                        })}
+                    </div>
+                );
 
             default:
                 return null;
@@ -138,27 +204,42 @@ export function useJLEFields({
         firstName,
         middleName,
         lastName,
-        dob: { text: dob ? dayjs(dob, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) : '' },
+        dob: {
+            text: dob
+                ? dayjs(dob, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT)
+                : '',
+        },
         taxId: { text: taxId },
     };
 }
 
-type JointLifeExpectancy = Pick<RMD, 'firstName' | 'middleName' | 'lastName' | 'dob' | 'taxId'>;
+type JointLifeExpectancy = Pick<
+    RMD,
+    'firstName' | 'middleName' | 'lastName' | 'dob' | 'taxId'
+>;
 
 export interface JointLifeExpectancyProps {
     configs: JointLifeExpectancyConfig;
     isFormStateReadOnly?: boolean;
 }
-export default function JointLifeExpectancy({ configs, isFormStateReadOnly = false }: JointLifeExpectancyProps) {
+export default function JointLifeExpectancy({
+    configs,
+    isFormStateReadOnly = false,
+}: JointLifeExpectancyProps) {
     const { formProgram, setFormProgram } = useContext(FormDataContext);
-    const [isJointLifeExpectancy, setisJointLifeExpectancy] = useState(formProgram?.rmd?.isJointLifeExpectancy || false);
-    const { renderField, firstName, middleName, lastName, dob, taxId } = useJLEFields(formProgram?.rmd || DEFAULT_LIFE_EXPECTANCY);
+    const [isJointLifeExpectancy, setisJointLifeExpectancy] = useState(
+        formProgram?.rmd?.isJointLifeExpectancy || false
+    );
+    const { renderField, firstName, middleName, lastName, dob, taxId } =
+        useJLEFields(formProgram?.rmd || DEFAULT_LIFE_EXPECTANCY);
 
     useEffect(() => {
         // reset to default when isJointLifeExpectancy is false
-        const jointLifeExpectancy = isJointLifeExpectancy ? { firstName, middleName, lastName, dob, taxId } : DEFAULT_LIFE_EXPECTANCY;
+        const jointLifeExpectancy = isJointLifeExpectancy
+            ? { firstName, middleName, lastName, dob, taxId }
+            : DEFAULT_LIFE_EXPECTANCY;
 
-        setFormProgram(ogFp => {
+        setFormProgram((ogFp) => {
             return {
                 ...ogFp,
                 rmd: {
@@ -168,10 +249,20 @@ export default function JointLifeExpectancy({ configs, isFormStateReadOnly = fal
                 },
             };
         });
-    }, [isJointLifeExpectancy, firstName, middleName, lastName, dob?.text, taxId?.text]);
+    }, [
+        isJointLifeExpectancy,
+        firstName,
+        middleName,
+        lastName,
+        dob?.text,
+        taxId?.text,
+    ]);
 
     return (
-        <CardContainer containerClassNames="border-b-2 border-gray-100" classNames="w-full">
+        <CardContainer
+            containerClassNames="border-b-2 border-gray-100"
+            classNames="w-full"
+        >
             {configs.title && (
                 <Typography variant={TypographyVariant.H3} className="my-4">
                     {configs.title}
@@ -192,7 +283,11 @@ export default function JointLifeExpectancy({ configs, isFormStateReadOnly = fal
             </div>
 
             {isJointLifeExpectancy && (
-                <div className="my-4 grid grid-cols-5 gap-2">{configs.fields?.map(field => renderField(field, isFormStateReadOnly))}</div>
+                <div className="my-4 grid grid-cols-5 gap-2">
+                    {configs.fields?.map((field) =>
+                        renderField(field, isFormStateReadOnly)
+                    )}
+                </div>
             )}
         </CardContainer>
     );

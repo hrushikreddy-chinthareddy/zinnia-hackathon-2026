@@ -9,8 +9,13 @@ import { FieldSize } from '@deps/components/fields/field';
 import SendDocument from '@deps/components/otp-send-document/components/document';
 import { Loader } from '@deps/components/page-loader';
 import SelectSimple from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
+import {
+    AvailableFormsTransaction,
+    SendDocumentFormParts,
+} from '@deps/models/case/send-document';
 
 import { Policy } from '@zinnia/api-types/types/sor';
 
@@ -33,10 +38,12 @@ function TransactionDocumentSelection({
     correlationId,
 }: FormSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
-    const transactionTypes = availableFormsTransactions?.map(transaction => {
+    const transactionTypes = availableFormsTransactions?.map((transaction) => {
         return { label: transaction.name, value: transaction.id };
     });
-    const [transactionSubTypeOptions, setTransactionSubTypeOptions] = useState<SimpleOption[]>(formDetails?.transactionSubType?.list || []);
+    const [transactionSubTypeOptions, setTransactionSubTypeOptions] = useState<
+        SimpleOption[]
+    >(formDetails?.transactionSubType?.list || []);
     const [error, setError] = useState<string>('');
     const [loader, setLoader] = useState(false);
     const [document, setDocument] = useState(formDetails);
@@ -46,9 +53,12 @@ function TransactionDocumentSelection({
     }, [document]);
 
     const onTransactionTypeChange = (transactionType: string) => {
-        setDocument(ogFormDetails => ({
+        setDocument((ogFormDetails) => ({
             ...ogFormDetails,
-            transactionType: { selected: transactionType, list: transactionTypes },
+            transactionType: {
+                selected: transactionType,
+                list: transactionTypes,
+            },
             document: { selected: null, list: null },
         }));
 
@@ -57,14 +67,20 @@ function TransactionDocumentSelection({
                 try {
                     const options =
                         availableFormsTransactions
-                            .find(option => option.id === transactionType)
-                            ?.transactionSubType.map(transaction => {
-                                return { label: transaction.name, value: transaction.id };
+                            .find((option) => option.id === transactionType)
+                            ?.transactionSubType.map((transaction) => {
+                                return {
+                                    label: transaction.name,
+                                    value: transaction.id,
+                                };
                             }) || [];
 
                     setTransactionSubTypeOptions(options);
                 } catch (e: any) {
-                    console.error('GetTransactionSubTypes::Error retrieving transaction sub types', e);
+                    console.error(
+                        'GetTransactionSubTypes::Error retrieving transaction sub types',
+                        e
+                    );
                 }
             }
         };
@@ -76,12 +92,19 @@ function TransactionDocumentSelection({
         setError('');
         const getForms = async (tranSubType: string) => {
             setLoader(true);
-            setDocument(ogForomdetais => ({
+            setDocument((ogForomdetais) => ({
                 ...ogForomdetais,
-                transactionSubType: { selected: transactionSubType, list: transactionSubTypeOptions },
+                transactionSubType: {
+                    selected: transactionSubType,
+                    list: transactionSubTypeOptions,
+                },
             }));
 
-            if (transactionSubType !== '' && formDetails.transactionType.selected !== null && policy) {
+            if (
+                transactionSubType !== '' &&
+                formDetails.transactionType.selected !== null &&
+                policy
+            ) {
                 const formSearchRequestBody = {
                     contractNumber: policy.policyNumber ?? '',
                     planCode: policy.product?.planCode ?? '',
@@ -93,9 +116,11 @@ function TransactionDocumentSelection({
                 };
 
                 try {
-                    const response = await searchForms(formSearchRequestBody, { correlationId });
+                    const response = await searchForms(formSearchRequestBody, {
+                        correlationId,
+                    });
                     if (response) {
-                        setDocument(ogFormDetails => ({
+                        setDocument((ogFormDetails) => ({
                             ...ogFormDetails,
                             document: { selected: response[0], list: response },
                         }));
@@ -104,7 +129,10 @@ function TransactionDocumentSelection({
                 } catch (e: any) {
                     setLoader(false);
                     setError(e?.message as string);
-                    console.error('GetCallCenterForms::Error call center forms', e);
+                    console.error(
+                        'GetCallCenterForms::Error call center forms',
+                        e
+                    );
                 }
             }
         };
@@ -134,25 +162,38 @@ function TransactionDocumentSelection({
                 value={formDetails.transactionSubType?.selected || ''}
                 data-testid="transactionSubType"
                 labelTooltip={t(`formSelection.transactionSubType`) as string}
-                labelTooltipBody={t(`formSelection.transactionSubType`) as string}
+                labelTooltipBody={
+                    t(`formSelection.transactionSubType`) as string
+                }
             />
             {loader ? (
                 <Loader />
             ) : (
                 <>
                     {formDetails?.document?.list?.length === 0 ? (
-                        <Typography variant={TypographyVariant.FieldLabel} className="mt-4">
+                        <Typography
+                            variant={TypographyVariant.FieldLabel}
+                            className="mt-4"
+                        >
                             {t('formSelection.noFormsFound')}
                         </Typography>
                     ) : (
                         <SendDocument
                             documents={formDetails?.document?.list || []}
-                            selectedFormId={formDetails?.document?.selected?.formId}
+                            selectedFormId={
+                                formDetails?.document?.selected?.formId
+                            }
                         />
                     )}
                 </>
             )}
-            {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
+            {error && (
+                <AssistiveText
+                    text={error}
+                    variant={AssistiveTextVariant.Error}
+                    className="mt-2"
+                />
+            )}
         </>
     );
 }

@@ -2,7 +2,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import MenuContextual, { MenuContextualProps } from '@deps/components/menu-contextual/menu-contextual';
+import MenuContextual, {
+    MenuContextualProps,
+} from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import { NOOP } from '@deps/types/constants';
@@ -27,7 +29,11 @@ describe('MenuContextual', () => {
 
         const mergedProps = { ...defaultProps, ...props };
 
-        return render(<MenuContextual {...mergedProps}>{mergedProps.children}</MenuContextual>);
+        return render(
+            <MenuContextual {...mergedProps}>
+                {mergedProps.children}
+            </MenuContextual>
+        );
     };
 
     it('renders the trigger content', () => {

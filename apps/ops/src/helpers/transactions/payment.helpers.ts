@@ -1,6 +1,11 @@
-import { DisbursementPaymentForm, PaymentForm } from '@zinnia/api-types/types/bpm';
+import {
+    DisbursementPaymentForm,
+    PaymentForm,
+} from '@zinnia/api-types/types/bpm';
 
-export const getDisbursementPaymentForm = (paymentForm?: PaymentForm): DisbursementPaymentForm => {
+export const getDisbursementPaymentForm = (
+    paymentForm?: PaymentForm
+): DisbursementPaymentForm => {
     switch (paymentForm) {
         case PaymentForm.CHECK:
             return DisbursementPaymentForm.CHECK;

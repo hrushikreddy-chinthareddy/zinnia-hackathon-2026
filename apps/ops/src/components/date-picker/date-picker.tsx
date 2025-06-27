@@ -88,7 +88,11 @@ type QuartersProps = {
     handleQuarterSelection: (_year: number, _quarter: Quarter) => void;
     handleYearSelection: (_year: number) => void;
     quartersOpen: boolean;
-    getDisabledQuarterClasses: (_year: number, _quarter?: number, pickerDirection?: DatePickerDirection) => string;
+    getDisabledQuarterClasses: (
+        _year: number,
+        _quarter?: number,
+        pickerDirection?: DatePickerDirection
+    ) => string;
     getSelectedQuarterClasses: (_month: number, _quarter: Quarter) => string;
     year: number;
     datePickerType: DatePickerTypes;
@@ -99,12 +103,15 @@ interface RangeDaysProps extends CommonDayProps {
 }
 
 // Primary classes are used for everything other than the short day names; secondary text is used for the short day names
-const primaryTextClasses = 'font-primary font-semibold text-md leading-[21px] text-gray-900 whitespace-nowrap';
-const secondaryTextClasses = 'font-secondary font-normal text-sm leading-4.5 text-gray-300 whitespace-nowrap';
+const primaryTextClasses =
+    'font-primary font-semibold text-md leading-[21px] text-gray-900 whitespace-nowrap';
+const secondaryTextClasses =
+    'font-secondary font-normal text-sm leading-4.5 text-gray-300 whitespace-nowrap';
 
 // Used for the individual year, month, and day items on the panel
 const hoverClasses = 'hover:border-accent1 hover:border-2';
-const activeClasses = 'active:border-primary active:border-2 active:bg-primary-lightest';
+const activeClasses =
+    'active:border-primary active:border-2 active:bg-primary-lightest';
 const containerClasses = `${hoverClasses} ${activeClasses} cursor-pointer border-2 border-transparent rounded-lg p-2`;
 
 export const getQuarter = (date: dayjs.Dayjs): number => {
@@ -112,7 +119,9 @@ export const getQuarter = (date: dayjs.Dayjs): number => {
 };
 
 const Years = ({ handleCloseYears, isRange, year, yearsOpen }: YearsProps) => {
-    const [yearsStart, setYearsStart] = useState(Math.floor(year / 10) * 10 - 1);
+    const [yearsStart, setYearsStart] = useState(
+        Math.floor(year / 10) * 10 - 1
+    );
     const years = Array.from({ length: 12 }, (_, i) => yearsStart + i);
 
     if (!yearsOpen) return null;
@@ -120,7 +129,10 @@ const Years = ({ handleCloseYears, isRange, year, yearsOpen }: YearsProps) => {
     return (
         <div className="flex flex-col gap-4 p-4">
             <div className="align-center flex flex-row justify-between text-gray-900">
-                <div className={containerClasses} onClick={() => setYearsStart(prev => prev - 10)}>
+                <div
+                    className={containerClasses}
+                    onClick={() => setYearsStart((prev) => prev - 10)}
+                >
                     <ArrowLeftMediumIcon width={21} height={21} />
                 </div>
                 <div className={`${containerClasses} !pointer-events-none`}>
@@ -128,11 +140,18 @@ const Years = ({ handleCloseYears, isRange, year, yearsOpen }: YearsProps) => {
                         {yearsStart} - {yearsStart + 11}
                     </p>
                 </div>
-                <div className={containerClasses} onClick={() => setYearsStart(prev => prev + 10)}>
+                <div
+                    className={containerClasses}
+                    onClick={() => setYearsStart((prev) => prev + 10)}
+                >
                     <ArrowRightMediumIcon width={21} height={21} />
                 </div>
             </div>
-            <div className={`grid gap-6 ${isRange ? 'grid-cols-6' : 'grid-cols-4'}`}>
+            <div
+                className={`grid gap-6 ${
+                    isRange ? 'grid-cols-6' : 'grid-cols-4'
+                }`}
+            >
                 {years.map((yearItem, index) => (
                     <div
                         key={index}
@@ -147,7 +166,14 @@ const Years = ({ handleCloseYears, isRange, year, yearsOpen }: YearsProps) => {
     );
 };
 
-const Months = ({ handleCloseMonths, handleOpenYears, isRange, monthsOpen, setYear, year }: MonthsProps) => {
+const Months = ({
+    handleCloseMonths,
+    handleOpenYears,
+    isRange,
+    monthsOpen,
+    setYear,
+    year,
+}: MonthsProps) => {
     const months = dayjs.monthsShort();
 
     if (!monthsOpen) return null;
@@ -155,17 +181,32 @@ const Months = ({ handleCloseMonths, handleOpenYears, isRange, monthsOpen, setYe
     return (
         <div className="flex flex-col gap-4 p-4">
             <div className="flex flex-row justify-between text-gray-900">
-                <div className={containerClasses} onClick={() => setYear(prev => prev - 1)}>
+                <div
+                    className={containerClasses}
+                    onClick={() => setYear((prev) => prev - 1)}
+                >
                     <ArrowLeftMediumIcon width={21} height={21} />
                 </div>
-                <div className={containerClasses} onClick={() => handleOpenYears()}>
-                    <p className={`${primaryTextClasses} cursor-pointer`}>{year}</p>
+                <div
+                    className={containerClasses}
+                    onClick={() => handleOpenYears()}
+                >
+                    <p className={`${primaryTextClasses} cursor-pointer`}>
+                        {year}
+                    </p>
                 </div>
-                <div className={containerClasses} onClick={() => setYear(prev => prev + 1)}>
+                <div
+                    className={containerClasses}
+                    onClick={() => setYear((prev) => prev + 1)}
+                >
                     <ArrowRightMediumIcon width={21} height={21} />
                 </div>
             </div>
-            <div className={`grid gap-6 ${isRange ? 'grid-cols-6' : 'grid-cols-4'}`}>
+            <div
+                className={`grid gap-6 ${
+                    isRange ? 'grid-cols-6' : 'grid-cols-4'
+                }`}
+            >
                 {months.map((monthItem, index) => (
                     <div
                         key={index}
@@ -194,79 +235,154 @@ const Days = ({
     const weekdays = dayjs.weekdaysShort();
 
     // Used to determine what weekday the month begins on
-    const firstDayOfCurrentMonth = dayjs().year(year).month(month).date(1).day();
+    const firstDayOfCurrentMonth = dayjs()
+        .year(year)
+        .month(month)
+        .date(1)
+        .day();
 
     // Used to determine how many days from the current month to display
     const currentMonth = dayjs().year(year).month(month).month();
     const daysInCurrentMonth = dayjs().year(year).month(month).daysInMonth();
-    const daysOfCurrentMonth = Array.from({ length: daysInCurrentMonth }, (_, i) => i + 1);
+    const daysOfCurrentMonth = Array.from(
+        { length: daysInCurrentMonth },
+        (_, i) => i + 1
+    );
 
     // Used to determine how many days from the previous month to display
-    const previousMonth = dayjs().year(year).month(currentMonth).subtract(1, 'month').month();
-    const daysInPreviousMonth = dayjs().year(year).month(month).subtract(1, 'month').daysInMonth();
-    const daysOfPreviousMonth = Array.from({ length: firstDayOfCurrentMonth }, (_, i) => daysInPreviousMonth - i).sort();
+    const previousMonth = dayjs()
+        .year(year)
+        .month(currentMonth)
+        .subtract(1, 'month')
+        .month();
+    const daysInPreviousMonth = dayjs()
+        .year(year)
+        .month(month)
+        .subtract(1, 'month')
+        .daysInMonth();
+    const daysOfPreviousMonth = Array.from(
+        { length: firstDayOfCurrentMonth },
+        (_, i) => daysInPreviousMonth - i
+    ).sort();
 
     // Used to determine how many days from the next month to display
-    const nextMonth = dayjs().year(year).month(currentMonth).add(1, 'month').month();
+    const nextMonth = dayjs()
+        .year(year)
+        .month(currentMonth)
+        .add(1, 'month')
+        .month();
     const daysInNextMonth =
-        (daysOfPreviousMonth.length + daysInCurrentMonth) % 7 === 0 ? 0 : 7 - ((daysOfPreviousMonth.length + daysInCurrentMonth) % 7);
-    const daysOfNextMonth = Array.from({ length: daysInNextMonth }, (_, i) => i + 1);
+        (daysOfPreviousMonth.length + daysInCurrentMonth) % 7 === 0
+            ? 0
+            : 7 - ((daysOfPreviousMonth.length + daysInCurrentMonth) % 7);
+    const daysOfNextMonth = Array.from(
+        { length: daysInNextMonth },
+        (_, i) => i + 1
+    );
 
     if (!daysOpen) return null;
 
     return (
         <div className="flex flex-col gap-4 p-4">
             <div className="flex flex-row justify-between text-gray-900">
-                <div className={containerClasses} onClick={() => handleMonthChange(month, -1)}>
+                <div
+                    className={containerClasses}
+                    onClick={() => handleMonthChange(month, -1)}
+                >
                     <ArrowLeftMediumIcon width={21} height={21} />
                 </div>
-                <div className={containerClasses} onClick={() => handleOpenMonths()}>
-                    <p className={`${primaryTextClasses} cursor-pointer`}>{`${dayjs.months()[month]} ${year}`}</p>
+                <div
+                    className={containerClasses}
+                    onClick={() => handleOpenMonths()}
+                >
+                    <p className={`${primaryTextClasses} cursor-pointer`}>{`${
+                        dayjs.months()[month]
+                    } ${year}`}</p>
                 </div>
-                <div className={containerClasses} onClick={() => handleMonthChange(month, 1)}>
+                <div
+                    className={containerClasses}
+                    onClick={() => handleMonthChange(month, 1)}
+                >
                     <ArrowRightMediumIcon width={21} height={21} />
                 </div>
             </div>
             <div className="grid grid-cols-7">
                 {weekdays.map((dayItem, index) => (
-                    <div key={index} className="flex items-center justify-center">
+                    <div
+                        key={index}
+                        className="flex items-center justify-center"
+                    >
                         <p className={secondaryTextClasses}>{dayItem}</p>
                     </div>
                 ))}
                 {daysOfPreviousMonth.map((dayItem, index) => (
                     <div
                         key={index}
-                        className={`${containerClasses} ${getSelectedClasses(previousMonth, dayItem)} ${getDisabledClasses(
+                        className={`${containerClasses} ${getSelectedClasses(
+                            previousMonth,
+                            dayItem
+                        )} ${getDisabledClasses(
                             previousMonth,
                             dayItem
                         )} flex items-center justify-center`}
-                        onClick={() => handleDateSelect(year, previousMonth, dayItem)}
+                        onClick={() =>
+                            handleDateSelect(year, previousMonth, dayItem)
+                        }
                     >
-                        <p className={`${primaryTextClasses} ${getDisabledClasses(previousMonth, dayItem)}`}>{dayItem}</p>
+                        <p
+                            className={`${primaryTextClasses} ${getDisabledClasses(
+                                previousMonth,
+                                dayItem
+                            )}`}
+                        >
+                            {dayItem}
+                        </p>
                     </div>
                 ))}
                 {daysOfCurrentMonth.map((dayItem, index) => (
                     <div
                         key={index}
-                        className={`${containerClasses} ${getSelectedClasses(month, dayItem)} ${getDisabledClasses(
+                        className={`${containerClasses} ${getSelectedClasses(
+                            month,
+                            dayItem
+                        )} ${getDisabledClasses(
                             month,
                             dayItem
                         )} flex items-center justify-center`}
                         onClick={() => handleDateSelect(year, month, dayItem)}
                     >
-                        <p className={`${primaryTextClasses} ${getDisabledClasses(month, dayItem)}`}>{dayItem}</p>
+                        <p
+                            className={`${primaryTextClasses} ${getDisabledClasses(
+                                month,
+                                dayItem
+                            )}`}
+                        >
+                            {dayItem}
+                        </p>
                     </div>
                 ))}
                 {daysOfNextMonth.map((dayItem, index) => (
                     <div
                         key={index}
-                        className={`${containerClasses} ${getSelectedClasses(nextMonth, dayItem)} ${getDisabledClasses(
+                        className={`${containerClasses} ${getSelectedClasses(
+                            nextMonth,
+                            dayItem
+                        )} ${getDisabledClasses(
                             nextMonth,
                             dayItem
                         )} flex items-center justify-center`}
-                        onClick={() => handleDateSelect(year, nextMonth, dayItem)}
+                        onClick={() =>
+                            handleDateSelect(year, nextMonth, dayItem)
+                        }
                     >
-                        <p className={`${primaryTextClasses} ${getDisabledClasses(nextMonth, dayItem)}`}>{dayItem}</p>
+                        <p
+                            className={`${primaryTextClasses} ${getDisabledClasses(
+                                nextMonth,
+                                dayItem
+                            )}`}
+                        >
+                            {dayItem}
+                        </p>
                     </div>
                 ))}
             </div>
@@ -285,24 +401,40 @@ const Quarters = ({
     datePickerType,
 }: QuartersProps) => {
     // Used to determine what weekday the month begins on
-    const disableQuarters = datePickerType === DatePickerTypes.Annually ? '!cursor-auto !pointer-events-none !text-gray-300' : '';
+    const disableQuarters =
+        datePickerType === DatePickerTypes.Annually
+            ? '!cursor-auto !pointer-events-none !text-gray-300'
+            : '';
     if (!quartersOpen) return null;
 
     return (
         <div className="flex flex-col gap-4 p-4">
             <div className="flex flex-row justify-between text-gray-900">
                 <div
-                    className={`${containerClasses} ${getDisabledQuarterClasses(year, undefined, DatePickerDirection.start)}`}
-                    onClick={() => setYear(prev => prev - 1)}
+                    className={`${containerClasses} ${getDisabledQuarterClasses(
+                        year,
+                        undefined,
+                        DatePickerDirection.start
+                    )}`}
+                    onClick={() => setYear((prev) => prev - 1)}
                 >
                     <ArrowLeftMediumIcon width={21} height={21} />
                 </div>
-                <div className={containerClasses} onClick={() => handleYearSelection(year)}>
-                    <p className={`${primaryTextClasses} cursor-pointer`}>{`${year}`}</p>
+                <div
+                    className={containerClasses}
+                    onClick={() => handleYearSelection(year)}
+                >
+                    <p
+                        className={`${primaryTextClasses} cursor-pointer`}
+                    >{`${year}`}</p>
                 </div>
                 <div
-                    className={`${containerClasses} ${getDisabledQuarterClasses(year, undefined, DatePickerDirection.end)}`}
-                    onClick={() => setYear(prev => prev + 1)}
+                    className={`${containerClasses} ${getDisabledQuarterClasses(
+                        year,
+                        undefined,
+                        DatePickerDirection.end
+                    )}`}
+                    onClick={() => setYear((prev) => prev + 1)}
                 >
                     <ArrowRightMediumIcon width={21} height={21} />
                 </div>
@@ -320,7 +452,9 @@ const Quarters = ({
                                 quarterItem.month + 1,
                                 DatePickerDirection.start
                             )} ${disableQuarters}  flex items-center justify-center`}
-                            onClick={() => handleQuarterSelection(year, quarterItem?.value)}
+                            onClick={() =>
+                                handleQuarterSelection(year, quarterItem?.value)
+                            }
                         >
                             <p
                                 className={`${primaryTextClasses} ${getDisabledQuarterClasses(
@@ -362,15 +496,27 @@ const RangeDays = ({
 
     // Used to determine how many days from the current month to display
     const daysInFirstMonth = dayjs().year(year).month(month).daysInMonth();
-    const daysOfFirstMonth = Array.from({ length: daysInFirstMonth }, (_, i) => i + 1);
-    const firstMonthStartBuffer = Array.from({ length: firstDayOfFirstMonth }, (_, i) => i + 1);
+    const daysOfFirstMonth = Array.from(
+        { length: daysInFirstMonth },
+        (_, i) => i + 1
+    );
+    const firstMonthStartBuffer = Array.from(
+        { length: firstDayOfFirstMonth },
+        (_, i) => i + 1
+    );
 
     const daysInSecondMonth = dayjs()
         .year(year)
         .month(month + 1)
         .daysInMonth();
-    const daysOfSecondMonth = Array.from({ length: daysInSecondMonth }, (_, i) => i + 1);
-    const secondMonthStartBuffer = Array.from({ length: firstDayOfSecondMonth }, (_, i) => i + 1);
+    const daysOfSecondMonth = Array.from(
+        { length: daysInSecondMonth },
+        (_, i) => i + 1
+    );
+    const secondMonthStartBuffer = Array.from(
+        { length: firstDayOfSecondMonth },
+        (_, i) => i + 1
+    );
 
     const secondMonth = month + 1 === 12 ? 0 : month + 1;
     const secondYear = month + 1 === 12 ? year + 1 : year;
@@ -381,11 +527,19 @@ const RangeDays = ({
         <div className="flex flex-row">
             <div className="flex flex-col gap-4 p-4 pr-2">
                 <div className="flex flex-row justify-between text-gray-900">
-                    <div className={containerClasses} onClick={() => handleMonthChange(month, -1)}>
+                    <div
+                        className={containerClasses}
+                        onClick={() => handleMonthChange(month, -1)}
+                    >
                         <ArrowLeftMediumIcon width={21} height={21} />
                     </div>
-                    <div className={containerClasses} onClick={() => handleOpenMonths()}>
-                        <p className={`${primaryTextClasses} cursor-pointer`}>{`${dayjs.months()[month]} ${year}`}</p>
+                    <div
+                        className={containerClasses}
+                        onClick={() => handleOpenMonths()}
+                    >
+                        <p
+                            className={`${primaryTextClasses} cursor-pointer`}
+                        >{`${dayjs.months()[month]} ${year}`}</p>
                     </div>
                     <div className={`${containerClasses} invisible`}>
                         <ArrowRightMediumIcon width={21} height={21} />
@@ -393,23 +547,41 @@ const RangeDays = ({
                 </div>
                 <div className="grid grid-cols-7">
                     {weekdays.map((dayItem, index) => (
-                        <div key={index} className="flex items-center justify-center">
+                        <div
+                            key={index}
+                            className="flex items-center justify-center"
+                        >
                             <p className={secondaryTextClasses}>{dayItem}</p>
                         </div>
                     ))}
-                    {firstMonthStartBuffer.map(index => (
-                        <div key={index} className="flex items-center justify-center" />
+                    {firstMonthStartBuffer.map((index) => (
+                        <div
+                            key={index}
+                            className="flex items-center justify-center"
+                        />
                     ))}
                     {daysOfFirstMonth.map((dayItem, index) => (
                         <div
                             key={index}
-                            className={`${containerClasses} ${getSelectedRangeClasses(month, dayItem)} ${getDisabledClasses(
+                            className={`${containerClasses} ${getSelectedRangeClasses(
+                                month,
+                                dayItem
+                            )} ${getDisabledClasses(
                                 month,
                                 dayItem
                             )} flex items-center justify-center`}
-                            onClick={() => handleDateSelect(year, month, dayItem)}
+                            onClick={() =>
+                                handleDateSelect(year, month, dayItem)
+                            }
                         >
-                            <p className={`${primaryTextClasses} ${getDisabledClasses(month, dayItem)}`}>{dayItem}</p>
+                            <p
+                                className={`${primaryTextClasses} ${getDisabledClasses(
+                                    month,
+                                    dayItem
+                                )}`}
+                            >
+                                {dayItem}
+                            </p>
                         </div>
                     ))}
                 </div>
@@ -419,32 +591,58 @@ const RangeDays = ({
                     <div className={`${containerClasses} invisible`}>
                         <ArrowLeftMediumIcon width={21} height={21} />
                     </div>
-                    <div className={containerClasses} onClick={() => handleOpenMonths()}>
-                        <p className={`${primaryTextClasses} cursor-pointer`}>{`${dayjs.months()[secondMonth]} ${secondYear}`}</p>
+                    <div
+                        className={containerClasses}
+                        onClick={() => handleOpenMonths()}
+                    >
+                        <p
+                            className={`${primaryTextClasses} cursor-pointer`}
+                        >{`${dayjs.months()[secondMonth]} ${secondYear}`}</p>
                     </div>
-                    <div className={containerClasses} onClick={() => handleMonthChange(month, 1)}>
+                    <div
+                        className={containerClasses}
+                        onClick={() => handleMonthChange(month, 1)}
+                    >
                         <ArrowRightMediumIcon width={21} height={21} />
                     </div>
                 </div>
                 <div className="grid grid-cols-7">
                     {weekdays.map((dayItem, index) => (
-                        <div key={index} className="flex items-center justify-center">
+                        <div
+                            key={index}
+                            className="flex items-center justify-center"
+                        >
                             <p className={secondaryTextClasses}>{dayItem}</p>
                         </div>
                     ))}
-                    {secondMonthStartBuffer.map(index => (
-                        <div key={index} className="flex items-center justify-center" />
+                    {secondMonthStartBuffer.map((index) => (
+                        <div
+                            key={index}
+                            className="flex items-center justify-center"
+                        />
                     ))}
                     {daysOfSecondMonth.map((dayItem, index) => (
                         <div
                             key={index}
-                            className={`${containerClasses} ${getSelectedRangeClasses(month + 1, dayItem)} ${getDisabledClasses(
+                            className={`${containerClasses} ${getSelectedRangeClasses(
+                                month + 1,
+                                dayItem
+                            )} ${getDisabledClasses(
                                 month + 1,
                                 dayItem
                             )} flex items-center justify-center`}
-                            onClick={() => handleDateSelect(year, month + 1, dayItem)}
+                            onClick={() =>
+                                handleDateSelect(year, month + 1, dayItem)
+                            }
                         >
-                            <p className={`${primaryTextClasses} ${getDisabledClasses(month + 1, dayItem)}`}>{dayItem}</p>
+                            <p
+                                className={`${primaryTextClasses} ${getDisabledClasses(
+                                    month + 1,
+                                    dayItem
+                                )}`}
+                            >
+                                {dayItem}
+                            </p>
                         </div>
                     ))}
                 </div>
@@ -467,7 +665,8 @@ export default function DatePicker({
     const isRange = date && 'start' in date && 'end' in date;
     const [currentDate] = useState(() => {
         if (date === null) return dayjs().toDate();
-        if (isRange && date.start instanceof Date) return dayjs(date.start).toDate();
+        if (isRange && date.start instanceof Date)
+            return dayjs(date.start).toDate();
         if (date instanceof Date) return dayjs(date).toDate();
 
         return dayjs().toDate();
@@ -516,22 +715,23 @@ export default function DatePicker({
     // When the user navigates to the previous or next month, we must check if the year has also changed before setting the month and year state
     const handleMonthChange = (_month: number, delta: number) => {
         if (month + delta < 0) {
-            setYear(prev => prev - 1);
+            setYear((prev) => prev - 1);
             setMonth(11);
             return;
         }
 
         if (month + delta > 11) {
-            setYear(prev => prev + 1);
+            setYear((prev) => prev + 1);
             setMonth(0);
             return;
         }
 
-        setMonth(prev => prev + delta);
+        setMonth((prev) => prev + delta);
     };
 
     const getDisabledClasses = (_month: number, _day: number) => {
-        const disabledClasses = '!cursor-auto !pointer-events-none !text-gray-300';
+        const disabledClasses =
+            '!cursor-auto !pointer-events-none !text-gray-300';
         const dayjsDate = dayjs().year(year).month(_month).date(_day);
         const dateAllowed = isDateAllowed(dayjsDate);
 
@@ -539,17 +739,25 @@ export default function DatePicker({
             return disabledClasses;
         }
 
-        if ((isPastDateDisabled && dayjsDate.isBefore(dayjs(), 'day'))
-            || (isFutureDateDisabled && dayjsDate.isAfter(dayjs(), 'day'))
+        if (
+            (isPastDateDisabled && dayjsDate.isBefore(dayjs(), 'day')) ||
+            (isFutureDateDisabled && dayjsDate.isAfter(dayjs(), 'day'))
         ) {
             return disabledClasses;
         }
         return '';
     };
 
-    const getDisabledQuarterClasses = (_year: number, _quarter?: number, pickerDirection?: DatePickerDirection) => {
+    const getDisabledQuarterClasses = (
+        _year: number,
+        _quarter?: number,
+        pickerDirection?: DatePickerDirection
+    ) => {
         const today = dayjs();
-        const { year, quarter } = { year: today.year(), quarter: getQuarter(today) };
+        const { year, quarter } = {
+            year: today.year(),
+            quarter: getQuarter(today),
+        };
 
         const disabledQuarter = _quarter ? quarter <= _quarter : true;
         const disabledYear = _year >= year;
@@ -561,12 +769,21 @@ export default function DatePicker({
                 .date(1)
         );
 
-        const disabledClasses = '!cursor-auto !pointer-events-none !text-gray-300';
+        const disabledClasses =
+            '!cursor-auto !pointer-events-none !text-gray-300';
 
-        if (!isCurrentDateAllowed && pickerDirection === DatePickerDirection.start) {
+        if (
+            !isCurrentDateAllowed &&
+            pickerDirection === DatePickerDirection.start
+        ) {
             return disabledClasses;
         }
-        if (pickerDirection === DatePickerDirection.end && disabledYear && disabledQuarter) return disabledClasses;
+        if (
+            pickerDirection === DatePickerDirection.end &&
+            disabledYear &&
+            disabledQuarter
+        )
+            return disabledClasses;
 
         return '';
     };
@@ -578,12 +795,20 @@ export default function DatePicker({
         const selectedDay = (date as Date).getDate();
         const selectedMonth = (date as Date).getMonth();
         const selectedYear = (date as Date).getFullYear();
-        if (selectedDay === _day && selectedMonth === _month && selectedYear === year) return selectedClasses;
+        if (
+            selectedDay === _day &&
+            selectedMonth === _month &&
+            selectedYear === year
+        )
+            return selectedClasses;
 
         return '';
     };
 
-    const getSelectedQuarterClasses = (_year: number, _quarter: Quarter | null) => {
+    const getSelectedQuarterClasses = (
+        _year: number,
+        _quarter: Quarter | null
+    ) => {
         const selectedClasses = '!border-primary border-2 bg-primary-lightest';
         if (!date) return '';
         const { year, quarter } = date as DateQuarter;
@@ -600,19 +825,40 @@ export default function DatePicker({
 
         if (!date || !(date as DateRange).start) return '';
         const selectedStartDay = ((date as DateRange).start as Date).getDate();
-        const selectedStartMonth = ((date as DateRange).start as Date).getMonth();
-        const selectedStartYear = ((date as DateRange).start as Date).getFullYear();
-        if (selectedStartDay === _day && selectedStartMonth === _month && selectedStartYear === year) return selectedClasses;
+        const selectedStartMonth = (
+            (date as DateRange).start as Date
+        ).getMonth();
+        const selectedStartYear = (
+            (date as DateRange).start as Date
+        ).getFullYear();
+        if (
+            selectedStartDay === _day &&
+            selectedStartMonth === _month &&
+            selectedStartYear === year
+        )
+            return selectedClasses;
 
         if (!date || !(date as DateRange).end) return '';
         const selectedEndDay = ((date as DateRange).end as Date).getDate();
         const selectedEndMonth = ((date as DateRange).end as Date).getMonth();
         const selectedEndYear = ((date as DateRange).end as Date).getFullYear();
-        if (selectedEndDay === _day && selectedEndMonth === _month && selectedEndYear === year) return selectedClasses;
+        if (
+            selectedEndDay === _day &&
+            selectedEndMonth === _month &&
+            selectedEndYear === year
+        )
+            return selectedClasses;
 
-        const start = dayjs().year(selectedStartYear).month(selectedStartMonth).date(selectedStartDay);
-        const end = dayjs().year(selectedEndYear).month(selectedEndMonth).date(selectedEndDay);
-        if (current.isAfter(start) && current.isBefore(end)) return rangeClasses;
+        const start = dayjs()
+            .year(selectedStartYear)
+            .month(selectedStartMonth)
+            .date(selectedStartDay);
+        const end = dayjs()
+            .year(selectedEndYear)
+            .month(selectedEndMonth)
+            .date(selectedEndDay);
+        if (current.isAfter(start) && current.isBefore(end))
+            return rangeClasses;
 
         return '';
     };
@@ -626,7 +872,12 @@ export default function DatePicker({
 
     return (
         <div>
-            <Years handleCloseYears={handleCloseYears} isRange={isRange} year={year} yearsOpen={yearsOpen} />
+            <Years
+                handleCloseYears={handleCloseYears}
+                isRange={isRange}
+                year={year}
+                yearsOpen={yearsOpen}
+            />
             {showMonths && (
                 <Months
                     handleCloseMonths={handleCloseMonths}
@@ -638,9 +889,11 @@ export default function DatePicker({
                 />
             )}
             {!isRange &&
-                handleCustomSelection &&
-                datePickerType &&
-                [DatePickerTypes.Annually, DatePickerTypes.Quarterly].includes(datePickerType) ? (
+            handleCustomSelection &&
+            datePickerType &&
+            [DatePickerTypes.Annually, DatePickerTypes.Quarterly].includes(
+                datePickerType
+            ) ? (
                 <Quarters
                     quartersOpen={daysOpen}
                     getDisabledQuarterClasses={getDisabledQuarterClasses}

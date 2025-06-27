@@ -6,7 +6,7 @@ export default {
     title: 'Components/AllocationColorBar',
     component: AllocationColorBar,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -50,6 +50,10 @@ const cbColors: AllocationColor[] = [
     },
 ];
 
-export const PrimaryBeneficiaryColorBar = (args: any) => <AllocationColorBar colors={pbColors} {...args} />;
+export const PrimaryBeneficiaryColorBar = (args: any) => (
+    <AllocationColorBar colors={pbColors} {...args} />
+);
 
-export const ContigentBeneficiaryColorBar = (args: any) => <AllocationColorBar colors={cbColors} {...args} />;
+export const ContigentBeneficiaryColorBar = (args: any) => (
+    <AllocationColorBar colors={cbColors} {...args} />
+);

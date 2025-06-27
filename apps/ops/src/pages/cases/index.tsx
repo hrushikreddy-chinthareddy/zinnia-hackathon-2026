@@ -5,15 +5,29 @@ import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+    KeyboardEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 
 import FilterButton from '@deps/components/filter-button/filter-button';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
+import {
+    PageLoader,
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import SearchBar from '@deps/components/search/search-bar';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import StatusFilter from '@deps/containers/active-filters/status-filter';
@@ -27,8 +41,16 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { formatCaseTotals, getAdditionalFilters, getSearchValueObject, toggleLabels } from '@deps/helpers/case-management';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    formatCaseTotals,
+    getAdditionalFilters,
+    getSearchValueObject,
+    toggleLabels,
+} from '@deps/helpers/case-management';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -37,22 +59,47 @@ import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { CaseStatsQuery } from '@deps/queries/cases';
-import { getCaseSearchQuery, postCaseStatsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
+import {
+    getCaseSearchQuery,
+    postCaseStatsQuery,
+} from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { FgaRelation } from '@deps/types/fga';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
-import { SearchSubmittedEvent, SegmentPageName, SegmentTrackedEventName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SearchSubmittedEvent,
+    SegmentPageName,
+    SegmentTrackedEventName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
 
 // Lazy Loaded Components
-const SideSheetRefineResults = dynamic(() => import('@deps/components/side-sheet/side-sheet-refine-results/side-sheet-refine-results'));
-const ActiveFilters = dynamic(() => import('@deps/containers/active-filters/active-filters'));
-const SearchResultsErrorCard = dynamic(() => import('@deps/containers/search-results/search-results-error-card/search-results-error-card'));
-const PaginationControls = dynamic(() => import('@deps/components/pagination/pagination'));
+const SideSheetRefineResults = dynamic(
+    () =>
+        import(
+            '@deps/components/side-sheet/side-sheet-refine-results/side-sheet-refine-results'
+        )
+);
+const ActiveFilters = dynamic(
+    () => import('@deps/containers/active-filters/active-filters')
+);
+const SearchResultsErrorCard = dynamic(
+    () =>
+        import(
+            '@deps/containers/search-results/search-results-error-card/search-results-error-card'
+        )
+);
+const PaginationControls = dynamic(
+    () => import('@deps/components/pagination/pagination')
+);
 
 // extend dayjs with isBetween plugin outside of the component to avoid re-initializing it on every render
 dayjs.extend(isBetween);
@@ -62,12 +109,17 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
     isAdvisorsExcel: boolean;
 }
 
-const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: CaseManagementDashboardProps) => {
-    const [caseManagementFilters, setCaseManagementFilters] = useCaseFilterQueryStore();
+const CaseManagementDashboard = ({
+    authorizedCarriers,
+    isAdvisorsExcel,
+    user,
+}: CaseManagementDashboardProps) => {
+    const [caseManagementFilters, setCaseManagementFilters] =
+        useCaseFilterQueryStore();
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
     const handleCreatedBySort = useCallback(() => {
-        setCaseManagementFilters(prevFilters => ({
+        setCaseManagementFilters((prevFilters) => ({
             ...prevFilters,
             sortDirection: prevFilters.sortDirection === 'asc' ? 'desc' : 'asc',
             offset: 0,
@@ -76,16 +128,21 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
-    const enableAdditionalAdvisorsExcelCarriers = featureFlags?.case_advisors_excel_additional_carrier_support;
+    const enableAdditionalAdvisorsExcelCarriers =
+        featureFlags?.case_advisors_excel_additional_carrier_support;
 
     useSegmentPageTracker(user, SegmentPageName.CaseManagementDashboard);
 
     // Data Fetcher(s)
     const caseStatsRequestObject = useMemo(() => {
         // We don't want to use the status filters when getting counts for the search results
-        const { caseStatus, notInCaseStatus, ...additionalFilters } = getAdditionalFilters(caseManagementFilters.additionalFilters);
+        const { caseStatus, notInCaseStatus, ...additionalFilters } =
+            getAdditionalFilters(caseManagementFilters.additionalFilters);
 
-        const searchValueObject = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
+        const searchValueObject = getSearchValueObject(
+            caseManagementFilters.searchValue,
+            caseManagementFilters.toggleValue
+        );
 
         let caseStatsRequest: CaseStatsQuery = {
             ...additionalFilters,
@@ -94,7 +151,9 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
         };
 
         if (isAdvisorsExcel) {
-            const advisorsExcelParams = getAdvisorsExcelCaseParams(enableAdditionalAdvisorsExcelCarriers);
+            const advisorsExcelParams = getAdvisorsExcelCaseParams(
+                enableAdditionalAdvisorsExcelCarriers
+            );
 
             caseStatsRequest = {
                 ...caseStatsRequest,
@@ -122,12 +181,17 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             [Statuses.Canceled]: 0,
         },
         enabled: loadedStoredFilters,
-        select: result => formatCaseTotals(result.count, result.stats[0]),
+        select: (result) => formatCaseTotals(result.count, result.stats[0]),
     });
 
     const searchValueObject = useMemo(() => {
-        const svo = getSearchValueObject(caseManagementFilters.searchValue, caseManagementFilters.toggleValue);
-        const additionalFilters = getAdditionalFilters(caseManagementFilters.additionalFilters);
+        const svo = getSearchValueObject(
+            caseManagementFilters.searchValue,
+            caseManagementFilters.toggleValue
+        );
+        const additionalFilters = getAdditionalFilters(
+            caseManagementFilters.additionalFilters
+        );
 
         return {
             ...svo,
@@ -165,36 +229,58 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 ...caseManagementFilters,
                 additionalFilters: {
                     ...caseManagementFilters.additionalFilters,
-                    processTypes: Array.from(caseManagementFilters.additionalFilters.processTypes),
-                    products: Array.from(caseManagementFilters.additionalFilters.products),
-                    brokerDealerName: caseManagementFilters.additionalFilters.brokerDealerName,
-                    requestSubType: Array.from(caseManagementFilters.additionalFilters.requestSubType),
+                    processTypes: Array.from(
+                        caseManagementFilters.additionalFilters.processTypes
+                    ),
+                    products: Array.from(
+                        caseManagementFilters.additionalFilters.products
+                    ),
+                    brokerDealerName:
+                        caseManagementFilters.additionalFilters
+                            .brokerDealerName,
+                    requestSubType: Array.from(
+                        caseManagementFilters.additionalFilters.requestSubType
+                    ),
                 },
             });
         }
     }, [caseManagementFilters, loadedStoredFilters]);
 
     useEffect(() => {
-        const filtersFromStorage = storage.getItem('CASE_MANAGEMENT_FILTERS') as CaseSearchFilters;
+        const filtersFromStorage = storage.getItem(
+            'CASE_MANAGEMENT_FILTERS'
+        ) as CaseSearchFilters;
         if (filtersFromStorage) {
             const processTypesFromStorage =
-                typeof filtersFromStorage?.additionalFilters?.processTypes?.[Symbol.iterator] === 'function'
+                typeof filtersFromStorage?.additionalFilters?.processTypes?.[
+                    Symbol.iterator
+                ] === 'function'
                     ? filtersFromStorage.additionalFilters.processTypes
                     : [];
-            filtersFromStorage.additionalFilters.processTypes = new Set(processTypesFromStorage);
+            filtersFromStorage.additionalFilters.processTypes = new Set(
+                processTypesFromStorage
+            );
 
             // Original products were an empty object.  Checking to make sure type is iterable before creating a set from them
             const productFromStorage =
-                typeof filtersFromStorage?.additionalFilters?.products?.[Symbol.iterator] === 'function'
+                typeof filtersFromStorage?.additionalFilters?.products?.[
+                    Symbol.iterator
+                ] === 'function'
                     ? filtersFromStorage.additionalFilters.products
                     : [];
-            filtersFromStorage.additionalFilters.products = new Set(productFromStorage);
+            filtersFromStorage.additionalFilters.products = new Set(
+                productFromStorage
+            );
             // Original products were an empty object.  Checking to make sure type is iterable before creating a set from them
             const requestSubTypeFromStorage =
-                typeof filtersFromStorage?.additionalFilters?.requestSubType?.[Symbol.iterator] === 'function'
+                typeof filtersFromStorage?.additionalFilters?.requestSubType?.[
+                    Symbol.iterator
+                ] === 'function'
                     ? filtersFromStorage.additionalFilters.requestSubType
                     : [];
-            filtersFromStorage.additionalFilters.requestSubType = new Set(requestSubTypeFromStorage);
+            filtersFromStorage.additionalFilters.requestSubType = new Set(
+                requestSubTypeFromStorage
+            );
             setCaseManagementFilters(filtersFromStorage);
         }
 
@@ -215,22 +301,34 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     };
 
     const removeAdditionalFilter = (filters: CaseSearchAdditionalFilters) =>
-        setCaseManagementFilters(prevFilters => ({ ...prevFilters, additionalFilters: filters, offset: 0 }));
+        setCaseManagementFilters((prevFilters) => ({
+            ...prevFilters,
+            additionalFilters: filters,
+            offset: 0,
+        }));
 
     const handleSearch = useCallback(
         (value: SearchViewQuery) => {
-            segmentAnalyticsTrackEvent<SearchSubmittedEvent>(SegmentTrackedEventName.SearchSubmitted, {
-                agentName: !!value?.agentFirstName || !!value?.agentLastName,
-                caseID: value?.caseId,
-                firmName: value?.firmName,
-                ssnUsed: !!value?.ssn,
-                firstNameUsed: !!value?.ownerFirstName,
-                lastNameUsed: !!value?.ownerLastName,
-                policyNumber: value?.policyNumber,
-                session_id: user.sid,
-                userId: user.partyId,
-            });
-            setCaseManagementFilters(prevFilters => ({ ...prevFilters, searchValue: value, offset: 0 }));
+            segmentAnalyticsTrackEvent<SearchSubmittedEvent>(
+                SegmentTrackedEventName.SearchSubmitted,
+                {
+                    agentName:
+                        !!value?.agentFirstName || !!value?.agentLastName,
+                    caseID: value?.caseId,
+                    firmName: value?.firmName,
+                    ssnUsed: !!value?.ssn,
+                    firstNameUsed: !!value?.ownerFirstName,
+                    lastNameUsed: !!value?.ownerLastName,
+                    policyNumber: value?.policyNumber,
+                    session_id: user.sid,
+                    userId: user.partyId,
+                }
+            );
+            setCaseManagementFilters((prevFilters) => ({
+                ...prevFilters,
+                searchValue: value,
+                offset: 0,
+            }));
         },
         [setCaseManagementFilters, user.sid, user.partyId]
     );
@@ -240,7 +338,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
             if (searchField) {
                 const prevSearch = caseManagementFilters.searchValue;
                 delete prevSearch?.[searchField];
-                setCaseManagementFilters(prevFilters => ({
+                setCaseManagementFilters((prevFilters) => ({
                     ...prevFilters,
                     searchValue: { ...prevSearch },
                     offset: 0,
@@ -251,7 +349,11 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
     );
 
     const handleToggle = useCallback(
-        (value: PolicySearchKeys) => setCaseManagementFilters(prevFilters => ({ ...prevFilters, toggleValue: value })),
+        (value: PolicySearchKeys) =>
+            setCaseManagementFilters((prevFilters) => ({
+                ...prevFilters,
+                toggleValue: value,
+            })),
         [setCaseManagementFilters]
     );
 
@@ -271,7 +373,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     const paginationControls = useMemo(() => {
         const goToPage = (pageNumber: number) => {
-            setCaseManagementFilters(prevFilters => ({
+            setCaseManagementFilters((prevFilters) => ({
                 ...prevFilters,
                 offset: (pageNumber - 1) * limit,
             }));
@@ -287,10 +389,16 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 goToPage={goToPage}
             />
         );
-    }, [caseSearchData, caseManagementFilters.offset, limit, setCaseManagementFilters]);
+    }, [
+        caseSearchData,
+        caseManagementFilters.offset,
+        limit,
+        setCaseManagementFilters,
+    ]);
 
     const tableContent = useMemo(() => {
-        if (caseSearchLoading) return <PageLoader variant={PageLoaderVariant.Center} />;
+        if (caseSearchLoading)
+            return <PageLoader variant={PageLoaderVariant.Center} />;
         if (caseSearchError) return <SearchResultsErrorCard />;
 
         return (
@@ -305,12 +413,19 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                     <Typography
                         variant={TypographyVariant.BodySm}
-                        className={`mb-6 lg:mb-0 ${(caseSearchData?.total || 0) < 1 ? 'hidden' : ''}`}
+                        className={`mb-6 lg:mb-0 ${
+                            (caseSearchData?.total || 0) < 1 ? 'hidden' : ''
+                        }`}
                     >
                         {t('policy.documents.xToYOfZ', {
                             x: caseManagementFilters.offset + 1,
-                            y: Math.min(caseManagementFilters.offset + limit, caseSearchData?.total || 0),
-                            z: `${caseSearchData?.total?.toLocaleString() ?? '0'}${caseSearchData?.total === 10000 ? '+' : ''}`,
+                            y: Math.min(
+                                caseManagementFilters.offset + limit,
+                                caseSearchData?.total || 0
+                            ),
+                            z: `${
+                                caseSearchData?.total?.toLocaleString() ?? '0'
+                            }${caseSearchData?.total === 10000 ? '+' : ''}`,
                         })}
                     </Typography>
                     {paginationControls}
@@ -351,7 +466,9 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
 
     // JSX
     return (
-        <CaseManagementFiltersContext.Provider value={[caseManagementFilters, setCaseManagementFilters]}>
+        <CaseManagementFiltersContext.Provider
+            value={[caseManagementFilters, setCaseManagementFilters]}
+        >
             <PageHead titleKey="caseManagement" />
             <Typography variant={TypographyVariant.H1} className="mb-4">
                 {t('caseManagementDashboard.h1')}
@@ -361,10 +478,14 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                 <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
                     <StatusFilter
                         caseTotals={caseTotals}
-                        onChange={vals =>
-                            setCaseManagementFilters(prev => {
-                                const { notInCaseStatus = [] } = prev.additionalFilters;
-                                const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
+                        onChange={(vals) =>
+                            setCaseManagementFilters((prev) => {
+                                const { notInCaseStatus = [] } =
+                                    prev.additionalFilters;
+                                const nonConflictingNicsVals =
+                                    notInCaseStatus.filter(
+                                        (val) => !vals.includes(val)
+                                    ); // remove any values that are both in caseStatus and notInCaseStatus
                                 return {
                                     ...prev,
                                     offset: 0,
@@ -378,7 +499,9 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         }
                         sessionId={user.sid}
                         userId={user.partyId}
-                        values={caseManagementFilters.additionalFilters.caseStatus}
+                        values={
+                            caseManagementFilters.additionalFilters.caseStatus
+                        }
                     />
                     <NavElement
                         tabIndex={0}
@@ -386,7 +509,9 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                         type={NavElementType.Button}
                         startIcon={<FilterButton />}
                         className="flex items-center whitespace-nowrap"
-                        aria-label={t('ariaLabel.openRefineResultsButton') as string}
+                        aria-label={
+                            t('ariaLabel.openRefineResultsButton') as string
+                        }
                         onClick={openRefineResultsSidesheet}
                         onKeyDown={handleKeyDown}
                     >
@@ -409,14 +534,34 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
 
-            const doesUserHasPagePermissions = featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]
-                ? await checkTuplePage(context, FgaRelation.UiAccess, FgaRoles.CASE_MANAGEMENT_ZL_ENTITY, loggingContext)
-                : await doesUserHavePagePermissions(context, UserPermission.AllowReadCaseManagement, loggingContext);
+            const doesUserHasPagePermissions = featureFlagDecisions?.[
+                FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
+            ]
+                ? await checkTuplePage(
+                      context,
+                      FgaRelation.UiAccess,
+                      FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
+                      loggingContext
+                  )
+                : await doesUserHavePagePermissions(
+                      context,
+                      UserPermission.AllowReadCaseManagement,
+                      loggingContext
+                  );
 
             // DEPU-2835
-            const isAdvisorsExcel = await checkTuplePage(context, FgaRelation.Party, AE_FGA_ROLE, loggingContext);
+            const isAdvisorsExcel = await checkTuplePage(
+                context,
+                FgaRelation.Party,
+                AE_FGA_ROLE,
+                loggingContext
+            );
 
             if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
                 return {
@@ -436,9 +581,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
 
-            const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement, loggingContext);
+            const authorizedCarriers = await listCarriersPage(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            );
 
-            return { props: { authorizedCarriers, isAdvisorsExcel, user, locale, ...translations } };
+            return {
+                props: {
+                    authorizedCarriers,
+                    isAdvisorsExcel,
+                    user,
+                    locale,
+                    ...translations,
+                },
+            };
         },
     },
     { file: 'cases/index', function: 'getServerSideProps', page: 'cases' }

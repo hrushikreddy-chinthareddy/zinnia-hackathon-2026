@@ -1,6 +1,12 @@
 import { Button } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import {
+    Dispatch,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
 
 import { ButtonSize } from '@deps/components/button/button';
 import { Loading } from '@deps/components/loading';
@@ -42,7 +48,8 @@ export const CaseListContainer = ({
     setErrorMessage,
     setPolicyNumber,
 }: CaseListContainerProps) => {
-    const { cases, total, loading, error, fetchCases, filters, setFilters } = useFetchCases();
+    const { cases, total, loading, error, fetchCases, filters, setFilters } =
+        useFetchCases();
     const [selectedCaseData, setSelectedCaseData] = useState<Case | null>(null);
     const [showCreateCase, setShowCreateCase] = useState<boolean>(false);
 
@@ -69,17 +76,34 @@ export const CaseListContainer = ({
                     process: [CaseTypeToProcessesMap[caseType]],
                 });
             }
-            if (!policyNumber && caseType === CaseType.Reg60 && document?.documentNumber) {
+            if (
+                !policyNumber &&
+                caseType === CaseType.Reg60 &&
+                document?.documentNumber
+            ) {
                 const parmas = {
                     ...initialCaseSearchCriteria,
-                    identifiers: [{'identifier': 'documentNumber' , value: document?.documentNumber }],
+                    identifiers: [
+                        {
+                            identifier: 'documentNumber',
+                            value: document?.documentNumber,
+                        },
+                    ],
                     carrier: [clientId.toUpperCase()],
                     process: [CaseTypeToProcessesMap[caseType]],
-                }
+                };
                 setFilters(parmas);
             }
         }
-    }, [policyNumber, clientId, caseType, setFilters, caseId, isInvalid, document?.documentNumber]);
+    }, [
+        policyNumber,
+        clientId,
+        caseType,
+        setFilters,
+        caseId,
+        isInvalid,
+        document?.documentNumber,
+    ]);
 
     useEffect(() => {
         if (!isEmptyObject(filters)) {
@@ -89,7 +113,9 @@ export const CaseListContainer = ({
     }, [filters, fetchCases]);
 
     useEffect(() => {
-        const completedCases = cases?.filter(item => item.caseStatus == Statuses.Completed);
+        const completedCases = cases?.filter(
+            (item) => item.caseStatus == Statuses.Completed
+        );
         if (completedCases && completedCases.length === total) {
             setShowCreateCase(true);
         }
@@ -125,7 +151,11 @@ export const CaseListContainer = ({
                 clientId,
                 file: 'case-list-container',
             });
-            setErrorMessage(t('caseRenewal.caseCreate.createError', { documentNumber: document.documentNumber }) as string);
+            setErrorMessage(
+                t('caseRenewal.caseCreate.createError', {
+                    documentNumber: document.documentNumber,
+                }) as string
+            );
             setShowLoader(false);
         }
         browserLogInfo('caseListContainer::Created a case', {
@@ -147,14 +177,21 @@ export const CaseListContainer = ({
         <>
             {loading && <Loading />}
             {total ? (
-                <div className="flex flex-col" data-testid="case-list-container">
+                <div
+                    className="flex flex-col"
+                    data-testid="case-list-container"
+                >
                     {showCreateCase && (
                         <div className="my-3 flex justify-end">
                             <div className="self-center xl:mt-5 xl:self-baseline">
                                 <Button
                                     onClick={onCreateCase}
                                     data-testid="create-case-button"
-                                    aria-label={t('caseRenewal.caseCreate.createCase') as string}
+                                    aria-label={
+                                        t(
+                                            'caseRenewal.caseCreate.createCase'
+                                        ) as string
+                                    }
                                     size={ButtonSize.Small}
                                 >
                                     {t('caseRenewal.caseCreate.createCase')}
@@ -176,7 +213,11 @@ export const CaseListContainer = ({
                             ></CaseListItem>
                         ))}
                     </div>
-                    <CaseListControls total={total} filters={filters} setFilters={setFilters}></CaseListControls>
+                    <CaseListControls
+                        total={total}
+                        filters={filters}
+                        setFilters={setFilters}
+                    ></CaseListControls>
                 </div>
             ) : null}
         </>

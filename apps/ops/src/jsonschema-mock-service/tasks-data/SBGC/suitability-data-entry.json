@@ -1,243 +1,230 @@
 {
-  "id": "TA000000023487",
-  "caseId": "CA0000406244",
-  "source": "BPM.Suitability",
-  "templateId": "42ecf69a-3a0b-4f42-b0af-27091a83c57b",
-  "process": "New Business",
-  "carrier": "SBGC",
-  "taskType": "SUITABILITY_DATA_ENTRY",
-  "taskName": "Other",
-  "taskDetails": "As part of the data entry process, one or more paper forms/documents require digitization and verification to ensure accuracy and completeness before proceeding with further processing. This involves converting physical documents into electronic records and addressing gaps by collecting or validating missing data/documents to ensure compliance with systematic requirements.",
-  "status": "INPROGRESS",
-  "data": {
-      "details": {
-
-
-          "financialObjectives": {
-              "purchaseReason": [
-              ],
-              "annuityMeetsFinancialNeeds": "YES"
-          },
-          "suitabilityId": "39088981-f355-4937-8a85-0e336fa623b6",
-          "clientId": "SBGC",
-          "policyData": {
-              "productType": "Advanced Choice Annuity",
-              "qualPlanType": "NON_QUALIFIED",
-              "annualPaymentAmt": "50000",
-              "productCode": "677"
-          },
-          "policyNumber": "9450007137",
-          "investmentRiskInfo": {
-              "riskTolerance": "CONSERVATIVE",
-              "annuityFitsRiskTolerance": "YES"
-          },
-          "agentAcknowledgment": {
-              "maApplicationQuestionnaire": {
-                  "soldPoliciesToApplicant": "NO"
-              },
-              "financialAcknowledgement": {
-                  "evaluatedInformation": "YES",
-                  "informedOfFeatures": "YES",
-                  "communicatedBasis": "YES",
-                  "disclosureRetention": "YES"
-              },
-              "disclosureAcknowledgement": {
-                  "scopeAndTerms": "YES",
-                  "typesOfProducts": "YES",
-                  "authorizedInsurers": "YES",
-                  "compensationDescription": "YES",
-                  "rightToRequestInfo": "YES",
-                  "compensationEstimate": "YES",
-                  "conflictsOfInterest": "YES"
-              }
-          },
-          "signatureInfo": [
-              {
-                  "signatureRoleCode": "OWNER",
-                  "signatureDate": "2025-04-07",
-                  "signatureState": "FL"
-              },
-              {
-                  "signatureRoleCode": "AGENT",
-                  "signatureDate": "2025-04-07",
-                  "signatureState": "FL"
-              }
-          ],
-          "fiscalData": {
-              "annualIncome": "84000",
-              "netWorth": "820000",
-              "liquidNetWorth": "200000",
-              "sourceOfIncome": [
-                  "OTHERS"
-              ],
-              "totalAssets": "820000",
-              "totalDebt": "0",
-              "annualExpenses": "60000",
-              "sourceOfFunds": [
-                  "STOCKS_BONDS_MF"
-              ],
-              "federalTaxBand": "12",
-              "surrPeriodMaterialChangeExp": "NO",
-              "sourceOfIncomeOther": "SS PENSION"
-          },
-          "parties": [
-              {
-                  "partyType": "PERSON",
-                  "roleType": "OWNER",
-                  "fullName": "Ioward T Etzkowitz",
-                  "person": {
-                      "firstName": "Ioward",
-                      "middleName": "T",
-                      "lastName": "Etzkowitz",
-                      "gender": "MALE",
-                      "age": "60"
-                  },
-                  "govtIdInfo": [
-                      {
-                          "govtId": "614587918",
-                          "govtIdType": "SSN"
-                      }
-                  ],
-                  "addresses": [
-                      {
-                          "addressType": "RESIDENCE",
-                          "line1": "24818 Riverboat Bend",
-                          "city": "Leesburg",
-                          "state": "FL",
-                          "country": "US",
-                          "zip": "34748"
-                      }
-                  ],
-                  "employment": {
-                      "employmentStatus": "YES"
-                  }
-              },
-              {
-                  "partyType": "PERSON",
-                  "roleType": "AGENT",
-                  "fullName": "MICHAEL FISCHER",
-                  "person": {
-                      "firstName": "MICHAEL",
-                      "lastName": "FISCHER",
-                      "gender": "MALE",
-                      "age": "125"
-                  },
-                  "govtIdInfo": [
-                      {
-                          "govtId": "211520427",
-                          "govtIdType": "SSN"
-                      }
-                  ],
-                  "addresses": [
-                  ]
-              }
-          ],
-          "additionalInfo": {
-              "currentResidenceOption": "NURSING_HOME",
-              "extraFundAvailable": "YES",
-              "resideInNursingHomeOrAssistedLiving": "YES"
-          },
-          "correlationId": "0286d010-d097-4684-b446-e5901846f5fa",
-          "financialExperience": {
-              "rateChangeAcknowledgment": "YES",
-              "totalAnnuityValue": "425000",
-              "financialProducts": {
-                  "assetsDistribution": [
-                      {
-                          "productType": "CHECKING_SAVING_ACCOUNT",
-                          "qualificationType": "QUALIFIED",
-                          "amount": "32000"
-                      },
-                      {
-                          "productType": "STOCKS_BONDS_MF",
-                          "qualificationType": "NON_QUALIFIED",
-                          "amount": "350000"
-                      },
-                      {
-                          "productType": "MONEY_MARKET",
-                          "qualificationType": "QUALIFIED",
-                          "amount": "235000"
-                      },
-                      {
-                          "productType": "MONEY_MARKET",
-                          "qualificationType": "QUALIFIED",
-                          "amount": "50000"
-                      },
-                      {
-                          "productType": "MONEY_MARKET",
-                          "qualificationType": "NON_QUALIFIED",
-                          "amount": "100000"
-                      },
-                      {
-                          "productType": "FIXED_ANNUITIES",
-                          "qualificationType": "QUALIFIED",
-                          "amount": "90000"
-                      },
-                      {
-                          "productType": "LIFE_INSURENCE",
-                          "qualificationType": "NON_QUALIFIED",
-                          "amount": "13000"
-                      }
-                  ],
-                  "totalAsset": [
-                  ]
-              }
-          },
-          "applicationId": "9824SBL004025071V01",
-          "applicationInfo": {
-              "replacementInd": "NO"
-          },
-          "liquidityOptions": {
-              "fundsAccessExplanation": "YES",
-              "futureDistributionMethods": [
-              ],
-              "firstPayoutOption": "NONE_ANTICIPATED",
-              "surrenderChargeConsentUnderAge": "YES",
-              "possibleReductionInValue": "YES",
-              "planToHoldAnnuity": "4",
-              "explainedOtherCharges": "YES",
-              "holdUntilSurrenderPeriod": "YES",
-              "benefitAnnuityQuestions": {
-                  "understandIncomeAdjustmentFactor": "YES",
-                  "consideredFinancialNeedsAfter10Years": "YES",
-                  "planForIncomeDecreaseAfter10Years": [
-                  ]
-              }
-          }
-      }
-  },
-  "mappedExceptions": [
-  ],
-  "mappedDocuments": [
-  ],
-  "queue": "suitability_data_entry",
-  "escalated": false,
-  "assignee": "Jagadish.Singh2@zinnia.com",
-  "assigneePartyId": "8702d93e29c3429c931e4b97ec1a2972",
-  "assignedAt": "2025-04-07T16:04:45Z",
-  "createdBy": "SYSTEM",
-  "createdByPartyId": "SYSTEM",
-  "createdAt": "2025-04-07T14:57:24Z",
-  "updatedBy": "Jagadish.Singh2@zinnia.com",
-  "updatedByPartyId": "8702d93e29c3429c931e4b97ec1a2972",
-  "updatedAt": "2025-04-07T16:29:24Z",
-  "identifiers": [
-      {
-          "identifier": "contractNumber",
-          "value": "9450007137"
-      },
-      {
-          "identifier": "zlCaseId",
-          "value": "CA0000406244"
-      },
-      {
-          "identifier": "policyNumber",
-          "value": "9450007137"
-      },
-      {
-          "identifier": "applicationId",
-          "value": "9824SBL004025071V01"
-      }
-  ],
-  "externalId": "7e5f561b-8ba4-4ba1-b16c-d557fe67b3dc"
+    "id": "TA000000023487",
+    "caseId": "CA0000406244",
+    "source": "BPM.Suitability",
+    "templateId": "42ecf69a-3a0b-4f42-b0af-27091a83c57b",
+    "process": "New Business",
+    "carrier": "SBGC",
+    "taskType": "SUITABILITY_DATA_ENTRY",
+    "taskName": "Other",
+    "taskDetails": "As part of the data entry process, one or more paper forms/documents require digitization and verification to ensure accuracy and completeness before proceeding with further processing. This involves converting physical documents into electronic records and addressing gaps by collecting or validating missing data/documents to ensure compliance with systematic requirements.",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "financialObjectives": {
+                "purchaseReason": [],
+                "annuityMeetsFinancialNeeds": "YES"
+            },
+            "suitabilityId": "39088981-f355-4937-8a85-0e336fa623b6",
+            "clientId": "SBGC",
+            "policyData": {
+                "productType": "Advanced Choice Annuity",
+                "qualPlanType": "NON_QUALIFIED",
+                "annualPaymentAmt": "50000",
+                "productCode": "677"
+            },
+            "policyNumber": "9450007137",
+            "investmentRiskInfo": {
+                "riskTolerance": "CONSERVATIVE",
+                "annuityFitsRiskTolerance": "YES"
+            },
+            "agentAcknowledgment": {
+                "maApplicationQuestionnaire": {
+                    "soldPoliciesToApplicant": "NO"
+                },
+                "financialAcknowledgement": {
+                    "evaluatedInformation": "YES",
+                    "informedOfFeatures": "YES",
+                    "communicatedBasis": "YES",
+                    "disclosureRetention": "YES"
+                },
+                "disclosureAcknowledgement": {
+                    "scopeAndTerms": "YES",
+                    "typesOfProducts": "YES",
+                    "authorizedInsurers": "YES",
+                    "compensationDescription": "YES",
+                    "rightToRequestInfo": "YES",
+                    "compensationEstimate": "YES",
+                    "conflictsOfInterest": "YES"
+                }
+            },
+            "signatureInfo": [
+                {
+                    "signatureRoleCode": "OWNER",
+                    "signatureDate": "2025-04-07",
+                    "signatureState": "FL"
+                },
+                {
+                    "signatureRoleCode": "AGENT",
+                    "signatureDate": "2025-04-07",
+                    "signatureState": "FL"
+                }
+            ],
+            "fiscalData": {
+                "annualIncome": "84000",
+                "netWorth": "820000",
+                "liquidNetWorth": "200000",
+                "sourceOfIncome": ["OTHERS"],
+                "totalAssets": "820000",
+                "totalDebt": "0",
+                "annualExpenses": "60000",
+                "sourceOfFunds": ["STOCKS_BONDS_MF"],
+                "federalTaxBand": "12",
+                "surrPeriodMaterialChangeExp": "NO",
+                "sourceOfIncomeOther": "SS PENSION"
+            },
+            "parties": [
+                {
+                    "partyType": "PERSON",
+                    "roleType": "OWNER",
+                    "fullName": "Ioward T Etzkowitz",
+                    "person": {
+                        "firstName": "Ioward",
+                        "middleName": "T",
+                        "lastName": "Etzkowitz",
+                        "gender": "MALE",
+                        "age": "60"
+                    },
+                    "govtIdInfo": [
+                        {
+                            "govtId": "614587918",
+                            "govtIdType": "SSN"
+                        }
+                    ],
+                    "addresses": [
+                        {
+                            "addressType": "RESIDENCE",
+                            "line1": "24818 Riverboat Bend",
+                            "city": "Leesburg",
+                            "state": "FL",
+                            "country": "US",
+                            "zip": "34748"
+                        }
+                    ],
+                    "employment": {
+                        "employmentStatus": "YES"
+                    }
+                },
+                {
+                    "partyType": "PERSON",
+                    "roleType": "AGENT",
+                    "fullName": "MICHAEL FISCHER",
+                    "person": {
+                        "firstName": "MICHAEL",
+                        "lastName": "FISCHER",
+                        "gender": "MALE",
+                        "age": "125"
+                    },
+                    "govtIdInfo": [
+                        {
+                            "govtId": "211520427",
+                            "govtIdType": "SSN"
+                        }
+                    ],
+                    "addresses": []
+                }
+            ],
+            "additionalInfo": {
+                "currentResidenceOption": "NURSING_HOME",
+                "extraFundAvailable": "YES",
+                "resideInNursingHomeOrAssistedLiving": "YES"
+            },
+            "correlationId": "0286d010-d097-4684-b446-e5901846f5fa",
+            "financialExperience": {
+                "rateChangeAcknowledgment": "YES",
+                "totalAnnuityValue": "425000",
+                "financialProducts": {
+                    "assetsDistribution": [
+                        {
+                            "productType": "CHECKING_SAVING_ACCOUNT",
+                            "qualificationType": "QUALIFIED",
+                            "amount": "32000"
+                        },
+                        {
+                            "productType": "STOCKS_BONDS_MF",
+                            "qualificationType": "NON_QUALIFIED",
+                            "amount": "350000"
+                        },
+                        {
+                            "productType": "MONEY_MARKET",
+                            "qualificationType": "QUALIFIED",
+                            "amount": "235000"
+                        },
+                        {
+                            "productType": "MONEY_MARKET",
+                            "qualificationType": "QUALIFIED",
+                            "amount": "50000"
+                        },
+                        {
+                            "productType": "MONEY_MARKET",
+                            "qualificationType": "NON_QUALIFIED",
+                            "amount": "100000"
+                        },
+                        {
+                            "productType": "FIXED_ANNUITIES",
+                            "qualificationType": "QUALIFIED",
+                            "amount": "90000"
+                        },
+                        {
+                            "productType": "LIFE_INSURENCE",
+                            "qualificationType": "NON_QUALIFIED",
+                            "amount": "13000"
+                        }
+                    ],
+                    "totalAsset": []
+                }
+            },
+            "applicationId": "9824SBL004025071V01",
+            "applicationInfo": {
+                "replacementInd": "NO"
+            },
+            "liquidityOptions": {
+                "fundsAccessExplanation": "YES",
+                "futureDistributionMethods": [],
+                "firstPayoutOption": "NONE_ANTICIPATED",
+                "surrenderChargeConsentUnderAge": "YES",
+                "possibleReductionInValue": "YES",
+                "planToHoldAnnuity": "4",
+                "explainedOtherCharges": "YES",
+                "holdUntilSurrenderPeriod": "YES",
+                "benefitAnnuityQuestions": {
+                    "understandIncomeAdjustmentFactor": "YES",
+                    "consideredFinancialNeedsAfter10Years": "YES",
+                    "planForIncomeDecreaseAfter10Years": []
+                }
+            }
+        }
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "suitability_data_entry",
+    "escalated": false,
+    "assignee": "Jagadish.Singh2@zinnia.com",
+    "assigneePartyId": "8702d93e29c3429c931e4b97ec1a2972",
+    "assignedAt": "2025-04-07T16:04:45Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-04-07T14:57:24Z",
+    "updatedBy": "Jagadish.Singh2@zinnia.com",
+    "updatedByPartyId": "8702d93e29c3429c931e4b97ec1a2972",
+    "updatedAt": "2025-04-07T16:29:24Z",
+    "identifiers": [
+        {
+            "identifier": "contractNumber",
+            "value": "9450007137"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000406244"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "9450007137"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "9824SBL004025071V01"
+        }
+    ],
+    "externalId": "7e5f561b-8ba4-4ba1-b16c-d557fe67b3dc"
 }

@@ -2,9 +2,17 @@ import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { AccountCloseReason, AmountType, CaseStatus, ProcessRequestType } from '@deps/models/case/withdrawal/case';
+import {
+    AccountCloseReason,
+    AmountType,
+    CaseStatus,
+    ProcessRequestType,
+} from '@deps/models/case/withdrawal/case';
 
 import AsOfDateComponent from './as-of-date';
 import FormProgramFullWithdrawal from './form-program-full-withdrawal';
@@ -102,7 +110,10 @@ describe('Full Withdrawal component', () => {
         ];
 
         const selectOneOptions: SelectOneOption[] = [
-            { label: 'amountDetails.processTimeframe.immediately', value: ProcessRequestType.Immediately },
+            {
+                label: 'amountDetails.processTimeframe.immediately',
+                value: ProcessRequestType.Immediately,
+            },
             {
                 label: 'amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges',
                 value: ProcessRequestType.NoLongerSubject,
@@ -117,7 +128,9 @@ describe('Full Withdrawal component', () => {
         it('should render the title', () => {
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                    <FormProgramFullWithdrawal selectOneOptions={selectOneOptions} />
+                    <FormProgramFullWithdrawal
+                        selectOneOptions={selectOneOptions}
+                    />
                 </FormDataContext.Provider>
             );
 
@@ -129,13 +142,18 @@ describe('Full Withdrawal component', () => {
         it('should render full withdrawal options ', async () => {
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                    <FormProgramFullWithdrawal selectOneOptions={selectOneOptions} fullWithdrawalOptions={fullWithdrawalOptions} />
+                    <FormProgramFullWithdrawal
+                        selectOneOptions={selectOneOptions}
+                        fullWithdrawalOptions={fullWithdrawalOptions}
+                    />
                 </FormDataContext.Provider>
             );
 
             await waitFor(() => {
-                fullWithdrawalOptions.map(item => {
-                    const fullWithdrawalOptionElement = screen.getByTestId(item.value);
+                fullWithdrawalOptions.map((item) => {
+                    const fullWithdrawalOptionElement = screen.getByTestId(
+                        item.value
+                    );
                     expect(fullWithdrawalOptionElement).toBeInTheDocument();
                 });
             });
@@ -144,14 +162,24 @@ describe('Full Withdrawal component', () => {
         it('should pre-populate the payload selection', async () => {
             const setMockData = jest.fn();
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, formProgram, setFormProgram: setMockData }}>
-                    <FormProgramFullWithdrawal fullWithdrawalOptions={fullWithdrawalOptions} />
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        formProgram,
+                        setFormProgram: setMockData,
+                    }}
+                >
+                    <FormProgramFullWithdrawal
+                        fullWithdrawalOptions={fullWithdrawalOptions}
+                    />
                 </FormDataContext.Provider>
             );
 
             await waitFor(() => {
-                fullWithdrawalOptions.map(item => {
-                    const fullWithdrawalOptionElement = screen.getByTestId(item.value);
+                fullWithdrawalOptions.map((item) => {
+                    const fullWithdrawalOptionElement = screen.getByTestId(
+                        item.value
+                    );
                     expect(fullWithdrawalOptionElement).toBeInTheDocument();
                     expect(fullWithdrawalOptionElement).toBeChecked();
                 });
@@ -178,19 +206,26 @@ describe('Full Withdrawal component', () => {
                         setFormProgram: setMockData,
                     }}
                 >
-                    <FormProgramFullWithdrawal selectOneOptions={selectOneOptions} fullWithdrawalOptions={fullWithdrawalOptions} />
+                    <FormProgramFullWithdrawal
+                        selectOneOptions={selectOneOptions}
+                        fullWithdrawalOptions={fullWithdrawalOptions}
+                    />
                 </FormDataContext.Provider>
             );
 
             await waitFor(() => {
-                fullWithdrawalOptions.map(item => {
-                    const fullWithdrawalOptionElement = screen.getByTestId(item.value);
+                fullWithdrawalOptions.map((item) => {
+                    const fullWithdrawalOptionElement = screen.getByTestId(
+                        item.value
+                    );
                     expect(fullWithdrawalOptionElement).toBeInTheDocument();
                     expect(fullWithdrawalOptionElement).not.toBeChecked();
                 });
             });
 
-            const surrenderElement = screen.getByTestId(AccountCloseReason.Surrender);
+            const surrenderElement = screen.getByTestId(
+                AccountCloseReason.Surrender
+            );
             userEvent.click(surrenderElement);
 
             await waitFor(() => {

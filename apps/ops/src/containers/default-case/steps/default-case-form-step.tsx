@@ -5,7 +5,9 @@ import { createRef, memo, useCallback, useEffect, useState } from 'react';
 
 import AssistiveText from '@deps/components/assistive-text/assistive-text';
 import PageLoader from '@deps/components/page-loader/page-loader';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useDefaultCase } from '@deps/contexts/DefaultCaseContext';
@@ -34,7 +36,9 @@ const DefaultCaseFormStep = ({
     isSaveAsDraftEnabled = false,
     isContinueButtonEnabled,
 }: DefaultCaseFormStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: `taskManagement.taskForm`,
+    });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
 
     const { defaultCaseData, setDefaultCaseData } = useDefaultCase();
@@ -91,7 +95,11 @@ const DefaultCaseFormStep = ({
             subtitle={taskMetadata?.description as string}
             footerContent={
                 <TransactionNavigationButtons
-                    submitLabel={isSubmit ? (t('submit') as string) : (t('continue') as string)}
+                    submitLabel={
+                        isSubmit
+                            ? (t('submit') as string)
+                            : (t('continue') as string)
+                    }
                     cancelLabel={t('cancel') as string}
                     isSubmit={true}
                     handleContinue={handleStepContinue}
@@ -99,7 +107,11 @@ const DefaultCaseFormStep = ({
                     isDraft={isSaveAsDraftEnabled}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
-                    disableContinue={isContinueButtonEnabled ? !isContinueButtonEnabled : !isValidForm}
+                    disableContinue={
+                        isContinueButtonEnabled
+                            ? !isContinueButtonEnabled
+                            : !isValidForm
+                    }
                 />
             }
         >
@@ -117,7 +129,13 @@ const DefaultCaseFormStep = ({
                         isSubmit={isSubmit}
                         taskMetadata={taskMetadata}
                     />
-                    {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
+                    {error && (
+                        <AssistiveText
+                            text={error}
+                            variant={AssistiveTextVariant.Error}
+                            className="mt-2"
+                        />
+                    )}
                 </div>
             </div>
         </WorkflowCard>

@@ -1,5 +1,12 @@
 import { TransactionStatus } from '@zinnia/api-types/types/sor';
-import { Dispatch, SetStateAction, createContext, useContext, useMemo, useState } from 'react';
+import {
+    Dispatch,
+    SetStateAction,
+    createContext,
+    useContext,
+    useMemo,
+    useState,
+} from 'react';
 
 import { NOOP } from '@deps/types/constants';
 
@@ -47,7 +54,11 @@ export interface EventFilters {
 
 export type YearFilters = string;
 
-export type AllFilters = EventFilterKeys | PolicyFilters | TransactionFilters | PeopleFilters;
+export type AllFilters =
+    | EventFilterKeys
+    | PolicyFilters
+    | TransactionFilters
+    | PeopleFilters;
 
 export interface HistoryFilters {
     eventFilter?: EventFilters;
@@ -62,7 +73,9 @@ interface HistoryFiltersProps {
     setHistoryFilters: SetHistoryFilters;
 }
 
-export const initialFilter: HistoryFilters = { statusFilter: TransactionStatus.COMPLETED };
+export const initialFilter: HistoryFilters = {
+    statusFilter: TransactionStatus.COMPLETED,
+};
 
 export const HistoryFiltersContext = createContext<HistoryFiltersProps>({
     historyFilters: initialFilter,
@@ -72,9 +85,16 @@ export const HistoryFiltersContext = createContext<HistoryFiltersProps>({
 export const HistoryFiltersProvider = ({ children }: any) => {
     const [historyFilters, setHistoryFilters] = useState(initialFilter);
 
-    const memoizedValues = useMemo(() => ({ historyFilters, setHistoryFilters }), [historyFilters]);
+    const memoizedValues = useMemo(
+        () => ({ historyFilters, setHistoryFilters }),
+        [historyFilters]
+    );
 
-    return <HistoryFiltersContext.Provider value={memoizedValues}>{children}</HistoryFiltersContext.Provider>;
+    return (
+        <HistoryFiltersContext.Provider value={memoizedValues}>
+            {children}
+        </HistoryFiltersContext.Provider>
+    );
 };
 
 export const useHistoryFiltersContext = (): HistoryFiltersProps => {

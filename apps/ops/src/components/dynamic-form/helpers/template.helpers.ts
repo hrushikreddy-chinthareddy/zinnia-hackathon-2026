@@ -11,14 +11,20 @@ import FileInfoTemplate from '../customization/templates/object-field-template/f
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import TextListTemplate from '../customization/templates/text-list-template';
 
-export const UIArrayTemplateMap: Record<string, (props: ArrayFieldTemplateProps) => React.JSX.Element> = {
+export const UIArrayTemplateMap: Record<
+    string,
+    (props: ArrayFieldTemplateProps) => React.JSX.Element
+> = {
     ['ArrayFieldTemplate']: ArrayFieldTemplate,
     ['ArrayFieldTableTemplate']: ArrayFieldTableTemplate,
     ['TextListTemplate']: TextListTemplate,
     ['FileInfoTemplate']: FileInfoTemplate,
 };
 
-export const UIObjectTemplateMap: Record<string, (props: any) => React.JSX.Element> = {
+export const UIObjectTemplateMap: Record<
+    string,
+    (props: any) => React.JSX.Element
+> = {
     ['CardTemplate']: CardTemplate,
     ['InstructionsTemplate']: InstructionsTemplate,
     ['AddressFieldTemplate']: AddressFieldTemplate,
@@ -28,15 +34,23 @@ export const UIObjectTemplateMap: Record<string, (props: any) => React.JSX.Eleme
 };
 
 export const ApplyUITemplates = (uiSchema: UiSchema) => {
-    Object.keys(uiSchema).forEach(key => {
+    Object.keys(uiSchema).forEach((key) => {
         if (isObject(uiSchema[key])) {
             if (key.indexOf('ui:options') !== -1) {
-                Object.keys(uiSchema[key]).forEach(optionKey => {
-                    if (UIArrayTemplateMap[uiSchema[key][optionKey]] !== undefined) {
-                        uiSchema[key][optionKey] = UIArrayTemplateMap[uiSchema[key][optionKey]];
+                Object.keys(uiSchema[key]).forEach((optionKey) => {
+                    if (
+                        UIArrayTemplateMap[uiSchema[key][optionKey]] !==
+                        undefined
+                    ) {
+                        uiSchema[key][optionKey] =
+                            UIArrayTemplateMap[uiSchema[key][optionKey]];
                     }
-                    if (UIObjectTemplateMap[uiSchema[key][optionKey]] !== undefined) {
-                        uiSchema[key][optionKey] = UIObjectTemplateMap[uiSchema[key][optionKey]];
+                    if (
+                        UIObjectTemplateMap[uiSchema[key][optionKey]] !==
+                        undefined
+                    ) {
+                        uiSchema[key][optionKey] =
+                            UIObjectTemplateMap[uiSchema[key][optionKey]];
                     }
                 });
             } else if (key.indexOf('ui:') === -1) {

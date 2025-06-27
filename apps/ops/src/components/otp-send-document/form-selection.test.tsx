@@ -4,7 +4,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import { PermissionsProvider } from '@deps/contexts/PermissionsContext';
-import { defaultSendDocumentState, SendDocumentContext } from '@deps/contexts/SendDocumentContext';
+import {
+    defaultSendDocumentState,
+    SendDocumentContext,
+} from '@deps/contexts/SendDocumentContext';
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { SendDocumentFormParts } from '@deps/models/case/send-document';
 
@@ -72,10 +75,17 @@ describe('Form selection component', () => {
             <QueryClientProvider client={queryClient}>
                 <UserProvider>
                     <PermissionsProvider>
-                        <SendDocumentContext.Provider value={{ ...defaultSendDocumentState, dispatch: setMockDispatch }}>
+                        <SendDocumentContext.Provider
+                            value={{
+                                ...defaultSendDocumentState,
+                                dispatch: setMockDispatch,
+                            }}
+                        >
                             <WorkflowProvider>
                                 <FormSelection
-                                    availableFormsTransactions={mockAvailableFormsTransactions}
+                                    availableFormsTransactions={
+                                        mockAvailableFormsTransactions
+                                    }
                                     policy={{}}
                                     ctiCallNumber=""
                                     formDetails={[] as SendDocumentFormParts[]}
@@ -89,15 +99,24 @@ describe('Form selection component', () => {
         );
         const continueButton = getByText('continue');
         fireEvent.click(continueButton);
-        await waitFor(() => expect(getByText('errors.formId')).toBeInTheDocument());
+        await waitFor(() =>
+            expect(getByText('errors.formId')).toBeInTheDocument()
+        );
     });
 
     it('renders the component', () => {
         const { getByText } = render(
-            <SendDocumentContext.Provider value={{ ...defaultSendDocumentState, dispatch: setMockDispatch }}>
+            <SendDocumentContext.Provider
+                value={{
+                    ...defaultSendDocumentState,
+                    dispatch: setMockDispatch,
+                }}
+            >
                 <WorkflowProvider>
                     <FormSelection
-                        availableFormsTransactions={mockAvailableFormsTransactions}
+                        availableFormsTransactions={
+                            mockAvailableFormsTransactions
+                        }
                         policy={{}}
                         ctiCallNumber=""
                         formDetails={[] as SendDocumentFormParts[]}

@@ -18,7 +18,11 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Carrier, FASTQualTypes, QualTypes } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FASTQualTypes,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import useMassWithdrawalConfig from './mass-withdrawal-form-helpers';
@@ -28,7 +32,9 @@ type MassWithdrawalFormProps = {
     qualType: QualTypes | FASTQualTypes | '';
 };
 const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
 
     const {
         formValidation,
@@ -63,11 +69,15 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
 
     useEffect(() => {
         if (formSubtype) {
-            setFormData(fs => ({
+            setFormData((fs) => ({
                 ...fs,
-                formExtName: `${initialForm?.carrier || Carrier.MASS}_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
+                formExtName: `${
+                    initialForm?.carrier || Carrier.MASS
+                }_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
                 metaData: {
-                    formType: `${initialForm?.carrier || Carrier.MASS}_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
+                    formType: `${
+                        initialForm?.carrier || Carrier.MASS
+                    }_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                     formId: null,
                     formNumber: '',
                 },
@@ -79,21 +89,40 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         setFormValidator(() => formValidation);
     }, [setFormValidator]);
 
-    const isLC = !isFastFeatureEnabled(initialForm?.taskType, featureFlagDecisions);
+    const isLC = !isFastFeatureEnabled(
+        initialForm?.taskType,
+        featureFlagDecisions
+    );
     const verificationReason = formSignature?.signVerificationReason ?? [];
     // Fast mapping for  QualTypes.KEOGHHR10 is FASTQualTypes.QUALIFIED
-    const isKeogh = isLC ? qualType === QualTypes.KEOGHHR10 : qualType === FASTQualTypes.QUALIFIED;
+    const isKeogh = isLC
+        ? qualType === QualTypes.KEOGHHR10
+        : qualType === FASTQualTypes.QUALIFIED;
     const signaturesConfig = getSignaturesConfig(isKeogh);
-    const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
+    const isMaritalStatusAllowances = contractIssueState
+        ? validateMaritalStatusAllowances(contractIssueState as USStates)
+        : false;
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormType isFormStateReadOnly={isFormStateReadOnly} formSubtypeOptions={formSubtypeOptions} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={distributionReasonOptions} />
+            <FormType
+                isFormStateReadOnly={isFormStateReadOnly}
+                formSubtypeOptions={formSubtypeOptions}
+            />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <DistributionReason
+                isFormStateReadOnly={isFormStateReadOnly}
+                reasonOptions={distributionReasonOptions}
+            />
             {formSubtype === FormSubtype.FullWithdrawal ? (
                 <>
-                    <FormProgramFullWithdrawal isFormStateReadOnly={isFormStateReadOnly} selectOneOptions={selectOneOptions} />
+                    <FormProgramFullWithdrawal
+                        isFormStateReadOnly={isFormStateReadOnly}
+                        selectOneOptions={selectOneOptions}
+                    />
                 </>
             ) : (
                 <>
@@ -106,33 +135,60 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
                     <FormDistribution
                         isFormStateReadOnly={isFormStateReadOnly}
                         fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                        title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                        title={
+                            t(
+                                'distributionInstruction.investmentSelectionForDistribution'
+                            ) as string
+                        }
                     />
                 </>
             )}
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
-                isMaritalStatusAllowances={isMaritalStatusAllowances && formSubtype === FormSubtype.PartialWithdrawal}
+                isMaritalStatusAllowances={
+                    isMaritalStatusAllowances &&
+                    formSubtype === FormSubtype.PartialWithdrawal
+                }
                 specifiedView={true}
             />
             {formSubtype === FormSubtype.FullWithdrawal && (
-                <FormWaivers config={waiverItemsConfig} isFormStateReadOnly={isFormStateReadOnly} />
+                <FormWaivers
+                    config={waiverItemsConfig}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
             )}
-            <IrsWithholding signatureFields={irsSignatureConfig} isFormStateReadOnly={isFormStateReadOnly} />
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
-            <SignatureValidations config={signaturesConfig} isFormStateReadOnly={isFormStateReadOnly}>
+            <IrsWithholding
+                signatureFields={irsSignatureConfig}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
+            <SignatureValidations
+                config={signaturesConfig}
+                isFormStateReadOnly={isFormStateReadOnly}
+            >
                 {isKeogh ? (
                     <SignatureVerificationReasons
                         isFormStateReadOnly={isFormStateReadOnly}
                         config={signVerificationReasonConfig}
-                        checkedItems={verificationReason.length ? verificationReason.map(signReason => signReason.text) : []}
+                        checkedItems={
+                            verificationReason.length
+                                ? verificationReason.map(
+                                      (signReason) => signReason.text
+                                  )
+                                : []
+                        }
                     ></SignatureVerificationReasons>
                 ) : null}
             </SignatureValidations>
 
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

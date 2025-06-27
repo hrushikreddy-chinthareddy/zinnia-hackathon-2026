@@ -2,7 +2,9 @@ import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
@@ -12,49 +14,64 @@ import CallForInformation from './call-for-information';
 import { UpdatedBeneficiaryRecord } from './claims.type';
 
 type TaskReviewStepProps = {
-  taskType: TaskType;
-  beneficiary: UpdatedBeneficiaryRecord;
-  setBeneficiary: React.Dispatch<React.SetStateAction<UpdatedBeneficiaryRecord>>;
+    taskType: TaskType;
+    beneficiary: UpdatedBeneficiaryRecord;
+    setBeneficiary: React.Dispatch<
+        React.SetStateAction<UpdatedBeneficiaryRecord>
+    >;
 };
 
-export const Claims150Call = ({ taskType, beneficiary, setBeneficiary }: TaskReviewStepProps) => {
-  const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${convertToCamelCase(taskType)}.callForInformation` });
-  const { task, correlationId, setTask, setSubmitFailed, formErrors, setFormErrors } = useContext(TaskDataContext);
-  const [handleContinueFn, setHandleContinueFn] = useState<() => void>(() => () => { });
+export const Claims150Call = ({
+    taskType,
+    beneficiary,
+    setBeneficiary,
+}: TaskReviewStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: `${convertToCamelCase(taskType)}.callForInformation`,
+    });
+    const {
+        task,
+        correlationId,
+        setTask,
+        setSubmitFailed,
+        formErrors,
+        setFormErrors,
+    } = useContext(TaskDataContext);
+    const [handleContinueFn, setHandleContinueFn] = useState<() => void>(
+        () => () => {}
+    );
 
-
-
-  return (
-    <WorkflowCard
-      title={t('title')}
-      subtitle={t('subTitle') as string}
-      footerContent={
-        <TransactionNavigationButtons
-          className="mt-4"
-          submitLabel={t('submit') as string}
-          handleContinue={handleContinueFn}
-          isSubmit={true}
-          disableContinue={Object.keys(formErrors).length > 0}
-          parentPage={ParentPage.CreateCase}
-          leaveTransactionLink="/create-case"
-          cancelLabel={t('cancel') as string}
-        />
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <CallForInformation
-          task={task}
-          setTask={setTask}
-          onContinueReady={setHandleContinueFn}
-          correlationId={correlationId}
-          setSubmitFailed={setSubmitFailed}
-          formErrors={formErrors}
-          setFormErrors={setFormErrors}
-          beneficiary={beneficiary}
-          setBeneficiary={setBeneficiary}
-          t={t}
-        />
-      </div>
-    </WorkflowCard>
-  );
+    return (
+        <WorkflowCard
+            title={t('title')}
+            subtitle={t('subTitle') as string}
+            footerContent={
+                <TransactionNavigationButtons
+                    className="mt-4"
+                    submitLabel={t('submit') as string}
+                    handleContinue={handleContinueFn}
+                    isSubmit={true}
+                    disableContinue={Object.keys(formErrors).length > 0}
+                    parentPage={ParentPage.CreateCase}
+                    leaveTransactionLink="/create-case"
+                    cancelLabel={t('cancel') as string}
+                />
+            }
+        >
+            <div className="flex flex-col gap-4">
+                <CallForInformation
+                    task={task}
+                    setTask={setTask}
+                    onContinueReady={setHandleContinueFn}
+                    correlationId={correlationId}
+                    setSubmitFailed={setSubmitFailed}
+                    formErrors={formErrors}
+                    setFormErrors={setFormErrors}
+                    beneficiary={beneficiary}
+                    setBeneficiary={setBeneficiary}
+                    t={t}
+                />
+            </div>
+        </WorkflowCard>
+    );
 };

@@ -4,7 +4,12 @@ import { StageInstance } from '@deps/models/case/stage-instance';
 import { StepInstance } from '@deps/models/case/step-instance';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
-import { getSearchValueObject, getAdditionalFilters, isSearchValueObjectEmpty, insertStepDetails } from './case-management';
+import {
+    getSearchValueObject,
+    getAdditionalFilters,
+    isSearchValueObjectEmpty,
+    insertStepDetails,
+} from './case-management';
 
 const baseFilters = {
     processTypes: new Set([]),
@@ -45,7 +50,10 @@ describe('case-management.ts helper functions', () => {
 
             const result = getSearchValueObject(searchValue, toggleValue);
 
-            expect(result).toEqual({ ownerFirstName: 'John', ownerLastName: 'Doe' });
+            expect(result).toEqual({
+                ownerFirstName: 'John',
+                ownerLastName: 'Doe',
+            });
         });
 
         it('should return an object with ownerName when toggleValue is ownerLastName and ownerFirstName and ownerLastName are provided', () => {
@@ -57,7 +65,10 @@ describe('case-management.ts helper functions', () => {
 
             const result = getSearchValueObject(searchValue, toggleValue);
 
-            expect(result).toEqual({ ownerFirstName: 'John', ownerLastName: 'Doe' });
+            expect(result).toEqual({
+                ownerFirstName: 'John',
+                ownerLastName: 'Doe',
+            });
         });
 
         it('should return an empty object when no matching values are found', () => {
@@ -128,11 +139,19 @@ describe('case-management.ts helper functions', () => {
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate
+                createdDateStart: `${startDate.getFullYear()}-${(
+                    startDate.getMonth() + 1
+                )
+                    .toString()
+                    .padStart(2, '0')}-${startDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}T00:00:00.000Z`,
-                createdDateEnd: `${endDate.getFullYear()}-${(endDate.getMonth() + 1).toString().padStart(2, '0')}-${endDate
+                createdDateEnd: `${endDate.getFullYear()}-${(
+                    endDate.getMonth() + 1
+                )
+                    .toString()
+                    .padStart(2, '0')}-${endDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}T00:00:00.000Z`,
@@ -153,11 +172,19 @@ describe('case-management.ts helper functions', () => {
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate
+                createdDateStart: `${startDate.getFullYear()}-${(
+                    startDate.getMonth() + 1
+                )
+                    .toString()
+                    .padStart(2, '0')}-${startDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}T00:00:00.000Z`,
-                createdDateEnd: `${endDate.getFullYear()}-${(endDate.getMonth() + 1).toString().padStart(2, '0')}-${endDate
+                createdDateEnd: `${endDate.getFullYear()}-${(
+                    endDate.getMonth() + 1
+                )
+                    .toString()
+                    .padStart(2, '0')}-${endDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}T00:00:00.000Z`,
@@ -178,11 +205,19 @@ describe('case-management.ts helper functions', () => {
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate
+                createdDateStart: `${startDate.getFullYear()}-${(
+                    startDate.getMonth() + 1
+                )
+                    .toString()
+                    .padStart(2, '0')}-${startDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}T00:00:00.000Z`,
-                createdDateEnd: `${endDate.getFullYear()}-${(endDate.getMonth() + 1).toString().padStart(2, '0')}-${endDate
+                createdDateEnd: `${endDate.getFullYear()}-${(
+                    endDate.getMonth() + 1
+                )
+                    .toString()
+                    .padStart(2, '0')}-${endDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}T00:00:00.000Z`,
@@ -202,11 +237,19 @@ describe('case-management.ts helper functions', () => {
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate
+                createdDateStart: `${startDate.getFullYear()}-${(
+                    startDate.getMonth() + 1
+                )
+                    .toString()
+                    .padStart(2, '0')}-${startDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}T00:00:00.000Z`,
-                createdDateEnd: `${endDate.getFullYear()}-${(endDate.getMonth() + 1).toString().padStart(2, '0')}-${endDate
+                createdDateEnd: `${endDate.getFullYear()}-${(
+                    endDate.getMonth() + 1
+                )
+                    .toString()
+                    .padStart(2, '0')}-${endDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}T00:00:00.000Z`,

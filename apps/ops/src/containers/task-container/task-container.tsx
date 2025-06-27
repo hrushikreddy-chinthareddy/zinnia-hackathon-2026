@@ -27,7 +27,9 @@ const TaskContainer = ({
 }: TaskContainerProps) => {
     const { task, isReadyForDataEntry } = useContext(TaskDataContext);
     const { carrier, caseId, id, taskType } = task;
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagement.taskForm' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'taskManagement.taskForm',
+    });
 
     const steps = stepsProvider.getSteps(taskType as TaskType, {
         carrierId: carrier,
@@ -47,7 +49,11 @@ const TaskContainer = ({
 
     return (
         <WorkflowProvider>
-            <TaskWorkflowContent steps={steps} caseId={caseId} carrierId={carrier} />
+            <TaskWorkflowContent
+                steps={steps}
+                caseId={caseId}
+                carrierId={carrier}
+            />
         </WorkflowProvider>
     );
 };

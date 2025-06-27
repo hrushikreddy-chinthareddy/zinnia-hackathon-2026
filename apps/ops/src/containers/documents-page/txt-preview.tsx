@@ -1,6 +1,12 @@
-export default function TxtPreview({ documentBinary }: { documentBinary: string }) {
+export default function TxtPreview({
+    documentBinary,
+}: {
+    documentBinary: string;
+}) {
     const binaryString = atob(documentBinary);
-    const bytes = new Uint8Array(binaryString.split('').map(char => char.charCodeAt(0)));
+    const bytes = new Uint8Array(
+        binaryString.split('').map((char) => char.charCodeAt(0))
+    );
     const decodedText = new TextDecoder('utf-8').decode(bytes);
 
     let formattedText = decodedText;
@@ -11,5 +17,9 @@ export default function TxtPreview({ documentBinary }: { documentBinary: string 
         // If parsing fails, keeping plain text as it is.
     }
 
-    return <div style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>{formattedText}</div>;
+    return (
+        <div style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>
+            {formattedText}
+        </div>
+    );
 }

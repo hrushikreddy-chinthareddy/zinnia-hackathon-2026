@@ -13,32 +13,47 @@ import {
     PaymentMethod,
     SSWType,
 } from '@deps/models/case/withdrawal/case';
-import { DEFAULT_DISBURSEMENT_UPDATE, DisbursementParts, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DisbursementParts,
+    DEFAULT_BANK_DETAILS,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 import usesSbgcConfig from './sbgc-ssw-form-helpers';
 
-jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormDisbursementValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormDisbursementValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
-jest.mock('@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers');
-    return {
-        ...originalModule,
-        getDefaultSSWFormProgramValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultSSWFormProgramValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
 describe('SBGC SSW form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
 
     const {
         result: { current },
@@ -86,8 +101,12 @@ describe('SBGC SSW form config', () => {
 
         describe('payload generation', () => {
             it('should generate a correct payload for an eft bank type full selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
-                expect(eftOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const eftOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+                expect(
+                    eftOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -99,22 +118,30 @@ describe('SBGC SSW form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                             reEnterAccountNumber: '',
                             reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: bankingDetails?.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: bankingDetails?.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        bankingDetails?.doesCheckMeetSecurityRequirements,
                 });
             });
 
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions.find(option => option.value === PaymentMailType.Check);
-                expect(checkOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const checkOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                expect(
+                    checkOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
@@ -134,8 +161,14 @@ describe('SBGC SSW form config', () => {
                 duration: { text: '1' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.FixDollar);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.FixDollar
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 thisIsMocked: true,
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.FixDollar },
@@ -145,7 +178,10 @@ describe('SBGC SSW form config', () => {
                     fixedPeriodYear: { text: null },
                     duration: formProgram.duration,
                 },
-                programAmount: { text: formProgram.amount?.text, amountType: AmountType.Dollar },
+                programAmount: {
+                    text: formProgram.amount?.text,
+                    amountType: AmountType.Dollar,
+                },
             });
         });
 
@@ -156,8 +192,14 @@ describe('SBGC SSW form config', () => {
                 depleteFundYears: { text: '12' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.FixPeriod);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.FixPeriod
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 thisIsMocked: true,
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.FixPeriod },
@@ -177,8 +219,14 @@ describe('SBGC SSW form config', () => {
                 duration: { text: '12' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.AnnualFree);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.AnnualFree
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 thisIsMocked: true,
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.AnnualFree },
@@ -198,8 +246,15 @@ describe('SBGC SSW form config', () => {
                 duration: { text: '12' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.InterestEarningDividendsGains);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) =>
+                    option.value === SSWType.InterestEarningDividendsGains
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 thisIsMocked: true,
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.InterestEarningDividendsGains },

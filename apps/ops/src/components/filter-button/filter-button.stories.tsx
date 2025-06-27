@@ -7,7 +7,7 @@ export default {
     title: 'Components/FilterButton',
     component: FilterButton,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen w-screen p-10">
                 <div
                     style={{
@@ -26,7 +26,9 @@ export default {
     },
 } as Meta<typeof FilterButton>;
 
-export const FilterButtonComponent = (args: FilterButtonProps) => <FilterButton {...args} />;
+export const FilterButtonComponent = (args: FilterButtonProps) => (
+    <FilterButton {...args} />
+);
 FilterButtonComponent.args = {
     selected: true,
 };

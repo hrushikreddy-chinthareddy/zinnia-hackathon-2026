@@ -2,12 +2,18 @@ import { Meta } from '@storybook/react';
 import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import { t } from 'i18next';
 
-import { getBadgeStatus, getBadgeStatusVariant } from '@deps/components/badge/badge.helpers';
+import {
+    getBadgeStatus,
+    getBadgeStatusVariant,
+} from '@deps/components/badge/badge.helpers';
 import { FindKeyValueSearch } from '@deps/components/global-values/find-key-value-search/find-key-value-search';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { WithdrawalInfo } from '@deps/components/global-values/withdrawal-info/withdrawal-info';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { generateParty } from '@deps/utils/mock/mockParty';
 
@@ -15,7 +21,7 @@ export default {
     title: 'Components/GlobalValues/GlobalValuesBar',
     container: GlobalValuesBar,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen bg-white">
                 <Story />
             </div>
@@ -67,7 +73,10 @@ export const GlobalValuesBarFindKeyValueSearch = () => {
             }
             variant={getBadgeStatusVariant(policyBadgeStatus)}
         >
-            <FindKeyValueSearch planCode={planCode} policyNumber={policyNumber} />
+            <FindKeyValueSearch
+                planCode={planCode}
+                policyNumber={policyNumber}
+            />
         </GlobalValuesBar>
     );
 };

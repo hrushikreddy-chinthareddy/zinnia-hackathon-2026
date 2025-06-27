@@ -2,8 +2,14 @@ import { Transition } from '@headlessui/react';
 import { Address, AddressType } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
@@ -44,7 +50,14 @@ interface GetFormErrors {
     t: TFunction;
 }
 
-export const AdditionalAddressLine = ({ disabled, label, onChange, removeAddressLine, show, value }: AdditionalAddressLineProps) => {
+export const AdditionalAddressLine = ({
+    disabled,
+    label,
+    onChange,
+    removeAddressLine,
+    show,
+    value,
+}: AdditionalAddressLineProps) => {
     const { t } = useTranslation();
 
     return (
@@ -66,10 +79,14 @@ export const AdditionalAddressLine = ({ disabled, label, onChange, removeAddress
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
                 value={toTitleCase(value)}
-                variant={disabled ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={
+                    disabled ? FieldVariant.Inactive : FieldVariant.Default
+                }
             />
             <IconButton
-                aria-label={`${t('people.sideSheet.address.general.remove')} ${label}`}
+                aria-label={`${t(
+                    'people.sideSheet.address.general.remove'
+                )} ${label}`}
                 disabled={disabled}
                 onClick={removeAddressLine}
             >
@@ -79,13 +96,21 @@ export const AdditionalAddressLine = ({ disabled, label, onChange, removeAddress
     );
 };
 
-export const AddressDetails = ({ address, isSelectedMailingAddress, condensed = false }: AddressDetailsProps) => {
+export const AddressDetails = ({
+    address,
+    isSelectedMailingAddress,
+    condensed = false,
+}: AddressDetailsProps) => {
     const { t } = useTranslation();
 
     return (
         <>
             <Label
-                label={condensed ? address.addressType ?? '' : t('people.sideSheet.transactions.address')}
+                label={
+                    condensed
+                        ? address.addressType ?? ''
+                        : t('people.sideSheet.transactions.address')
+                }
                 variant={LabelVariant.FieldLabel}
             />
             <FormattedAddress address={address} />
@@ -102,13 +127,27 @@ export const AddressDetails = ({ address, isSelectedMailingAddress, condensed = 
 
 export const getAddressTypeOptions = ({ t }: GetAddressTypeOptions) => {
     return [
-        { label: t('people.card.address.addressOptions.residence') as string, value: AddressType.RESIDENCE },
-        { label: t('people.card.address.addressOptions.business') as string, value: AddressType.BUSINESS },
-        { label: t('people.card.address.addressOptions.poBox') as string, value: AddressType.POBOX },
+        {
+            label: t('people.card.address.addressOptions.residence') as string,
+            value: AddressType.RESIDENCE,
+        },
+        {
+            label: t('people.card.address.addressOptions.business') as string,
+            value: AddressType.BUSINESS,
+        },
+        {
+            label: t('people.card.address.addressOptions.poBox') as string,
+            value: AddressType.POBOX,
+        },
     ];
 };
 
-export const getFormErrors = ({ address, caseId, isDelete, t }: GetFormErrors) => {
+export const getFormErrors = ({
+    address,
+    caseId,
+    isDelete,
+    t,
+}: GetFormErrors) => {
     let errors: Errors = {};
 
     const { addressLine1, city, state, zipCode } = address;
@@ -122,7 +161,10 @@ export const getFormErrors = ({ address, caseId, isDelete, t }: GetFormErrors) =
     }
 
     if (!addressLine1) {
-        errors = { ...errors, addressLine1: t('errors.streetAddress') as string };
+        errors = {
+            ...errors,
+            addressLine1: t('errors.streetAddress') as string,
+        };
     }
 
     if (!city) {

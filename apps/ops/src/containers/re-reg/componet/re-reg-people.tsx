@@ -4,11 +4,17 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import PeoplePageHeaderContainer from '@deps/containers/page-header/people-page-header';
 import BeneficiaryCardContainer from '@deps/containers/people-card-container/beneficiary-card-container';
 import PeopleCardContainer from '@deps/containers/people-card-container/people-card-container';
-import { BeneficiaryType, PeopleCardData } from '@deps/containers/people-card-container/people-card-container.types';
+import {
+    BeneficiaryType,
+    PeopleCardData,
+} from '@deps/containers/people-card-container/people-card-container.types';
 import {
     beneficiaryDataByType,
     combineNameAndRoles,
@@ -28,7 +34,10 @@ interface ReRegPeopleViewProps {
     onManageBeneficiaryClick?: () => void;
 }
 
-export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopleViewProps) => {
+export const ReRegPeopleView = ({
+    policy,
+    onManageBeneficiaryClick,
+}: ReRegPeopleViewProps) => {
     const { t } = useTranslation();
     const { peopleSelection, setPeopleSelection } = useBeneChange();
     const { breadcrumb } = useBreadcrumb();
@@ -36,8 +45,14 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
 
     const [chipEntered, setChipEntered] = useState(false);
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
-    const extractedPartyRoles = useMemo(() => policy?.partyRoles || [], [policy]);
-    const countedRoles = useMemo(() => countPartyRoles(extractedPartyRoles, t), [extractedPartyRoles, t]);
+    const extractedPartyRoles = useMemo(
+        () => policy?.partyRoles || [],
+        [policy]
+    );
+    const countedRoles = useMemo(
+        () => countPartyRoles(extractedPartyRoles, t),
+        [extractedPartyRoles, t]
+    );
     const nameTags = useMemo(
         () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
         [extractedParties, extractedPartyRoles, t]
@@ -45,7 +60,7 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
 
     useEffect(() => {
         if (nameTags?.length > 0) {
-            setPeopleSelection(prevState => ({
+            setPeopleSelection((prevState) => ({
                 ...prevState,
                 cardActionData: {
                     ...prevState.cardActionData,
@@ -58,14 +73,14 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
 
     const handleChipClick = (chipValue: string) => {
         const tagList = convertToTagText(chipValue, t);
-        setPeopleSelection(prevState => ({
+        setPeopleSelection((prevState) => ({
             ...prevState,
             selectedChip: chipValue,
             selectedTagList: tagList,
         }));
 
         if (chipValue === 'All') {
-            setPeopleSelection(prevState => ({
+            setPeopleSelection((prevState) => ({
                 ...prevState,
                 cardActionData: {
                     filteredData: nameTags,
@@ -75,11 +90,17 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
             }));
         } else {
             const filteredNameTags = sortByAndThenBy<NameTag>(
-                nameTags.filter(nameTag => nameTag.partyRoles.some(partyRole => normalizePartyRole(partyRole as PartyRole) === chipValue)),
+                nameTags.filter((nameTag) =>
+                    nameTag.partyRoles.some(
+                        (partyRole) =>
+                            normalizePartyRole(partyRole as PartyRole) ===
+                            chipValue
+                    )
+                ),
                 'fullName',
                 'fullName'
             );
-            setPeopleSelection(prevState => ({
+            setPeopleSelection((prevState) => ({
                 ...prevState,
                 cardActionData: {
                     filteredData: filteredNameTags,
@@ -97,15 +118,22 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
         policyNumber: policy?.policyNumber,
         accessibilityText: t('people.card.allocationText'),
         accessibilityClickText: t('ariaLabel.openPeople'),
-        isBeneficiarySelected: peopleSelection.cardActionData.isBeneficiarySelected,
+        isBeneficiarySelected:
+            peopleSelection.cardActionData.isBeneficiarySelected,
     };
 
-    const filteredRoles = countedRoles.filter(role => role.value === 'beneficiary');
+    const filteredRoles = countedRoles.filter(
+        (role) => role.value === 'beneficiary'
+    );
 
     return (
         <ChipEnterContext.Provider value={{ chipEntered, setChipEntered }}>
             <div className="grow rounded bg-white shadow-elevation-light-04">
-                <PeoplePageHeaderContainer hideControls={true} breadcrumbText={breadcrumb?.text} breadcrumbUrl={breadcrumb?.url} />
+                <PeoplePageHeaderContainer
+                    hideControls={true}
+                    breadcrumbText={breadcrumb?.text}
+                    breadcrumbUrl={breadcrumb?.url}
+                />
                 <hr className="h-0.5 border-none bg-gray-100" />
 
                 {filteredRoles.length === 0 && (
@@ -126,7 +154,9 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
                 {peopleSelection.cardActionData.filteredData.length > 0 && (
                     <div className="mx-4 my-6 flex flex-col gap-6 md:mx-6 md:mb-0 lg:mx-8 lg:flex-row">
                         <div className="lg:max-w-[308px]">
-                            <div className="field-label mb-2 text-gray-900">{t('people.filterByRole')}</div>
+                            <div className="field-label mb-2 text-gray-900">
+                                {t('people.filterByRole')}
+                            </div>
                             <RadioGroup.Root
                                 className="mb-10 flex flex-wrap gap-2"
                                 value={peopleSelection.selectedChip ?? 'All'}
@@ -136,14 +166,19 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
                                 <RadioGroup.Item className="chip" value="All">
                                     All
                                 </RadioGroup.Item>
-                                {filteredRoles.map(role => (
-                                    <RadioGroup.Item className="chip" key={`people-chip-${role.value}`} value={role.value}>
+                                {filteredRoles.map((role) => (
+                                    <RadioGroup.Item
+                                        className="chip"
+                                        key={`people-chip-${role.value}`}
+                                        value={role.value}
+                                    >
                                         {role.text} ({role.quantity})
                                     </RadioGroup.Item>
                                 ))}
                             </RadioGroup.Root>
                         </div>
-                        {peopleSelection.cardActionData.isBeneficiarySelected && (
+                        {peopleSelection.cardActionData
+                            .isBeneficiarySelected && (
                             <div className="w-full mb-5">
                                 <div className="mb-5 mt-7 flex bg-gray-50 p-3">
                                     <NavElement
@@ -153,26 +188,33 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
                                         tabIndex={0}
                                         className="flex h-[21px] items-center self-center whitespace-nowrap leading-[21px] [&_svg]:mr-1"
                                     >
-                                        {t('quickActions.people.manageBeneficiaries')}
+                                        {t(
+                                            'quickActions.people.manageBeneficiaries'
+                                        )}
                                     </NavElement>
                                 </div>
                                 <BeneficiaryCardContainer
                                     title={t('people.primaryAllocation')}
                                     peopleCardData={peopleCardData}
                                     filteredData={beneficiaryDataByType(
-                                        peopleSelection.cardActionData.filteredData,
+                                        peopleSelection.cardActionData
+                                            .filteredData,
                                         BeneficiaryType.PRIMARY
                                     )}
                                     classNames="mb-10"
                                     type={BeneficiaryType.PRIMARY}
                                     isRereg={true}
                                 />
-                                {beneficiaryDataByType(peopleSelection.cardActionData.filteredData, BeneficiaryType.CONTIGENT)?.length ? (
+                                {beneficiaryDataByType(
+                                    peopleSelection.cardActionData.filteredData,
+                                    BeneficiaryType.CONTIGENT
+                                )?.length ? (
                                     <BeneficiaryCardContainer
                                         title={t('people.contingentAllocation')}
                                         peopleCardData={peopleCardData}
                                         filteredData={beneficiaryDataByType(
-                                            peopleSelection.cardActionData.filteredData,
+                                            peopleSelection.cardActionData
+                                                .filteredData,
                                             BeneficiaryType.CONTIGENT
                                         )}
                                         type={BeneficiaryType.CONTIGENT}
@@ -182,15 +224,20 @@ export const ReRegPeopleView = ({ policy, onManageBeneficiaryClick }: ReRegPeopl
                             </div>
                         )}
 
-                        {!peopleSelection.cardActionData.isBeneficiarySelected && !peopleSelection.cardActionData.isAgentSelected && (
-                            <div className="mb-10 w-full">
-                                <PeopleCardContainer
-                                    peopleCardData={peopleCardData}
-                                    filteredData={peopleSelection.cardActionData.filteredData}
-                                    isRereg={true}
-                                />
-                            </div>
-                        )}
+                        {!peopleSelection.cardActionData
+                            .isBeneficiarySelected &&
+                            !peopleSelection.cardActionData.isAgentSelected && (
+                                <div className="mb-10 w-full">
+                                    <PeopleCardContainer
+                                        peopleCardData={peopleCardData}
+                                        filteredData={
+                                            peopleSelection.cardActionData
+                                                .filteredData
+                                        }
+                                        isRereg={true}
+                                    />
+                                </div>
+                            )}
                     </div>
                 )}
             </div>

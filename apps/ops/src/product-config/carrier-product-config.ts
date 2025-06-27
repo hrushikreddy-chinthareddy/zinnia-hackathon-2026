@@ -1,5 +1,9 @@
 import { ProductType } from '@zinnia/api-types/types/sor';
-import { ProductOverrides, ProductTypeVisibilityRules } from '../types/policy-visibility';
+
+import {
+    ProductOverrides,
+    ProductTypeVisibilityRules,
+} from '../types/policy-visibility';
 
 // Base visibility rules by product type
 export const productTypeVisibilityRules: ProductTypeVisibilityRules = {
@@ -15,5 +19,4 @@ export const productTypeVisibilityRules: ProductTypeVisibilityRules = {
 // This can be expanded with more carriers and products as needed
 export const planCodeProductOverrides: Record<string, ProductOverrides> = {
     // Override rules for specific planCodes
- 
 };

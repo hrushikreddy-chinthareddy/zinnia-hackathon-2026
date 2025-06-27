@@ -1,4 +1,9 @@
-import { Address, BankAccount, Email, Phone } from '@zinnia/api-types/types/sor';
+import {
+    Address,
+    BankAccount,
+    Email,
+    Phone,
+} from '@zinnia/api-types/types/sor';
 import { Dispatch, SetStateAction } from 'react';
 
 import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
@@ -21,13 +26,16 @@ export interface UpdateOptimistically {
     action: NonFinancialTransactionActions;
     idKey: NonFinancialTransactionIdKeys;
     newItem: Address | BankAccount | Email | Phone;
-    setState: Dispatch<SetStateAction<Address[] | BankAccount[] | Email[] | Phone[]>>;
+    setState: Dispatch<
+        SetStateAction<Address[] | BankAccount[] | Email[] | Phone[]>
+    >;
 }
 
 // accept all non financial transactions with their namespaced id keys, i.e. address.addressId
 export type LooseIdObject = { [key in NonFinancialTransactionIdKeys]: string };
 
-export interface NonFinancialTransactionSideSheetValues extends BaseTransactionSideSheetValues {
+export interface NonFinancialTransactionSideSheetValues
+    extends BaseTransactionSideSheetValues {
     effectiveDate?: string;
     name?: string;
     roleTags?: string[];

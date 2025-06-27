@@ -25,7 +25,9 @@ type MassWithdrawalFormProps = {
 };
 
 export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         formSignature,
         formParty,
@@ -53,11 +55,15 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
     } = useMassWithdrawalConfig(t);
 
     useEffect(() => {
-        setFormData(fs => ({
+        setFormData((fs) => ({
             ...fs,
-            formExtName: `${initialForm?.carrier || Carrier.MASS}_SSW_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.MASS
+            }_SSW_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.MASS}_SSW_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.MASS
+                }_SSW_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -71,16 +77,31 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
     const verificationReason = formSignature?.signVerificationReason ?? [];
     const isKeogh = qualType === QualTypes.KEOGHHR10;
     const signaturesConfig = getSignaturesConfig(isKeogh);
-    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const isMaritalStatusAllowances = contractIssueState ? validateMaritalStatusAllowances(contractIssueState as USStates) : false;
+    const ownerStateOfResidence =
+        formParty?.parties?.[0]?.addresses?.[0]?.state;
+    const isMaritalStatusAllowances = contractIssueState
+        ? validateMaritalStatusAllowances(contractIssueState as USStates)
+        : false;
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <SswEditSelection carrier={Carrier.MASS} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <DistributionReason isFormStateReadOnly={isFormStateReadOnly} reasonOptions={reasonOptions} />
-            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
-            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <DistributionReason
+                isFormStateReadOnly={isFormStateReadOnly}
+                reasonOptions={reasonOptions}
+            />
+            <AmountDetails
+                isFormStateReadOnly={isFormStateReadOnly}
+                isOnlyWithdrawalTypeControls={true}
+            />
+            <SystematicWithdrawalProgram
+                isReadOnly={isFormStateReadOnly}
+                options={systematicWithdrawalOptions}
+            />
 
             <TaxWithholdings
                 specifiedView={true}
@@ -88,20 +109,37 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
                 ownerStateOfResidence={ownerStateOfResidence}
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
             />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig}>
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            >
                 {isKeogh ? (
                     <SignatureVerificationReasons
                         isFormStateReadOnly={isFormStateReadOnly}
                         config={signVerificationReasonConfig}
-                        checkedItems={verificationReason.length ? verificationReason.map(signReason => signReason.text) : []}
+                        checkedItems={
+                            verificationReason.length
+                                ? verificationReason.map(
+                                      (signReason) => signReason.text
+                                  )
+                                : []
+                        }
                     ></SignatureVerificationReasons>
                 ) : null}
             </SignatureValidations>
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

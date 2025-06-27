@@ -15,8 +15,14 @@ import { Carrier } from '@deps/models/case/withdrawal/case';
 
 import getFlicOftConfig from './flic-oft-form.helpers';
 
-export default function FlicOftWithdrawalForm({ qualType }: { qualType: string }) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+export default function FlicOftWithdrawalForm({
+    qualType,
+}: {
+    qualType: string;
+}) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -51,9 +57,13 @@ export default function FlicOftWithdrawalForm({ qualType }: { qualType: string }
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.FLIC}_OFT_DIGITAL_FORM`,
+            formExtName: `${
+                initialForm?.carrier || Carrier.FLIC
+            }_OFT_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.FLIC}_OFT_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.FLIC
+                }_OFT_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -69,25 +79,40 @@ export default function FlicOftWithdrawalForm({ qualType }: { qualType: string }
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
-                title={t('amountDetails.surrenderingInstructions.title') as string}
+                title={
+                    t('amountDetails.surrenderingInstructions.title') as string
+                }
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            <CedingCompanyDistribution qualificationOptions={qualificationOptions} isFormStateReadOnly={isFormStateReadOnly} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            <CedingCompanyDistribution
+                qualificationOptions={qualificationOptions}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                title={t('distributionMethod.cedingCompanyDistribution') as string}
+                title={
+                    t('distributionMethod.cedingCompanyDistribution') as string
+                }
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

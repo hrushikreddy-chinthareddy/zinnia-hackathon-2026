@@ -16,15 +16,34 @@ type BankUpdateContainerProps = {
     document: DocumentData;
 };
 
-const BankUpdateContainer = ({ clientCode, policy, document }: BankUpdateContainerProps) => {
+const BankUpdateContainer = ({
+    clientCode,
+    policy,
+    document,
+}: BankUpdateContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
-    const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
+    const globalValuesData = useMemo(
+        () => policyDataToGlobalValues(new PolicyDetails(policy), t),
+        [policy, t]
+    );
 
-    const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
-    const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
+    const {
+        marketingName,
+        planCode,
+        policyNumber,
+        productType,
+        status,
+        tooltip,
+        variant,
+    } = globalValuesData;
+    const policyOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.OWNER
+    )?.partyId;
 
-    const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
+    const policyOwner = policy?.parties?.find(
+        (party) => party.partyId === policyOwnerId
+    );
 
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center bg-gray-100 py-4">

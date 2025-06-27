@@ -24,11 +24,15 @@ jest.mock('@deps/queries/api/bpm');
 jest.mock('@deps/queries/api/product-rate');
 const mockedLoanEligibility = jest.mocked(BpmQueries.checkEligibilityNewLoan);
 const mockedInterestRate = jest.mocked(ProductRateQueries.getLoanInterestRate);
-const mockedCreditRate = jest.mocked(ProductRateQueries.getBorrowingInterestRate);
+const mockedCreditRate = jest.mocked(
+    ProductRateQueries.getBorrowingInterestRate
+);
 
 describe('verify correct labels and fields are present', () => {
     beforeEach(() => {
-        mockedLoanEligibility.mockResolvedValue(Promise.resolve({ status: 'success' }));
+        mockedLoanEligibility.mockResolvedValue(
+            Promise.resolve({ status: 'success' })
+        );
         mockedInterestRate.mockResolvedValue(Promise.resolve(2));
         mockedCreditRate.mockResolvedValue(Promise.resolve(3));
     });
@@ -39,7 +43,10 @@ describe('verify correct labels and fields are present', () => {
         await act(async () => {
             render(
                 <QueryClientProvider client={queryClient}>
-                    <LoansPageHeaderContainer loanCarryingBalance={true} policy={mockPolicy} />
+                    <LoansPageHeaderContainer
+                        loanCarryingBalance={true}
+                        policy={mockPolicy}
+                    />
                 </QueryClientProvider>
             );
         });
@@ -47,31 +54,45 @@ describe('verify correct labels and fields are present', () => {
         const allHeaders = screen.getAllByText('pageHeader.loans.headerText');
         expect(allHeaders).toHaveLength(1);
 
-        const h1Headers = allHeaders.filter(element => element.tagName.toLowerCase() === 'h1');
+        const h1Headers = allHeaders.filter(
+            (element) => element.tagName.toLowerCase() === 'h1'
+        );
         expect(h1Headers).toHaveLength(1); // Assuming only one of them should be an h1
     });
 
     it('should display the correct fields if a user has no outstanding loans', async () => {
         render(
             <QueryClientProvider client={queryClient}>
-                <LoansPageHeaderContainer loanCarryingBalance={false} policy={mockPolicy} />
+                <LoansPageHeaderContainer
+                    loanCarryingBalance={false}
+                    policy={mockPolicy}
+                />
             </QueryClientProvider>
         );
 
         await expect(
-            screen.findByText('pageHeader.loans.fields.estimatedNetDeathBenefit', {
-                exact: false,
-            })
+            screen.findByText(
+                'pageHeader.loans.fields.estimatedNetDeathBenefit',
+                {
+                    exact: false,
+                }
+            )
         ).rejects.toThrowError(); // We don't expect this to show up.
         expect(
-            await screen.findByText('pageHeader.loans.fields.availableLoanInterestRate', {
-                exact: false,
-            })
+            await screen.findByText(
+                'pageHeader.loans.fields.availableLoanInterestRate',
+                {
+                    exact: false,
+                }
+            )
         ).toBeInTheDocument();
         expect(
-            await screen.findByText('pageHeader.loans.fields.availableLoanCreditRate', {
-                exact: false,
-            })
+            await screen.findByText(
+                'pageHeader.loans.fields.availableLoanCreditRate',
+                {
+                    exact: false,
+                }
+            )
         ).toBeInTheDocument();
     });
 
@@ -86,24 +107,36 @@ describe('verify correct labels and fields are present', () => {
 
         render(
             <QueryClientProvider client={queryClient}>
-                <LoansPageHeaderContainer loanCarryingBalance={true} policy={modifiedMockPolicy} />
+                <LoansPageHeaderContainer
+                    loanCarryingBalance={true}
+                    policy={modifiedMockPolicy}
+                />
             </QueryClientProvider>
         );
 
         expect(
-            await screen.findByText('pageHeader.loans.fields.estimatedNetDeathBenefit', {
-                exact: false,
-            })
+            await screen.findByText(
+                'pageHeader.loans.fields.estimatedNetDeathBenefit',
+                {
+                    exact: false,
+                }
+            )
         ).toBeInTheDocument();
         await expect(
-            screen.findByText('pageHeader.loans.fields.availableLoanInterestRate', {
-                exact: false,
-            })
+            screen.findByText(
+                'pageHeader.loans.fields.availableLoanInterestRate',
+                {
+                    exact: false,
+                }
+            )
         ).rejects.toThrowError();
         await expect(
-            screen.findByText('pageHeader.loans.fields.availableLoanCreditRate', {
-                exact: false,
-            })
+            screen.findByText(
+                'pageHeader.loans.fields.availableLoanCreditRate',
+                {
+                    exact: false,
+                }
+            )
         ).rejects.toThrowError();
     });
 });
@@ -128,11 +161,16 @@ describe('verify quick links render appropriately', () => {
 
         render(
             <QueryClientProvider client={queryClient}>
-                <LoansPageHeaderContainer loanCarryingBalance={false} policy={modifiedMockPolicy} />
+                <LoansPageHeaderContainer
+                    loanCarryingBalance={false}
+                    policy={modifiedMockPolicy}
+                />
             </QueryClientProvider>
         );
 
-        const startLoanLink = await screen.findByTestId(LoansTest.START_LOAN_LINK);
+        const startLoanLink = await screen.findByTestId(
+            LoansTest.START_LOAN_LINK
+        );
 
         expect(startLoanLink).toBeInTheDocument();
     });

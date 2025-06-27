@@ -1,7 +1,12 @@
 import { useTranslation } from 'next-i18next';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
+import TempNavInactive, {
+    isStillInactive,
+} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
 import { ReactComponent as UserAdd } from '@deps/styles/elements/icons/icons_outlined/user-add.svg';
 
@@ -12,7 +17,12 @@ interface PeoplePageHeaderContainerProps {
     hideControls?: boolean;
 }
 
-const PeoplePageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, onClick, hideControls = false }: PeoplePageHeaderContainerProps) => {
+const PeoplePageHeaderContainer = ({
+    breadcrumbText,
+    breadcrumbUrl,
+    onClick,
+    hideControls = false,
+}: PeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
 
     const headerTextSiblingsGroupTwo = (
@@ -29,7 +39,10 @@ const PeoplePageHeaderContainer = ({ breadcrumbText, breadcrumbUrl, onClick, hid
 
     const unavailableTransactionsHeaderSiblingsGroupTwo = (
         // https://zinnia.atlassian.net/browse/DEPU-1936
-        <TempNavInactive triggerClassName="self-center" tooltipBody={isStillInactive.peoplePageHeader}>
+        <TempNavInactive
+            triggerClassName="self-center"
+            tooltipBody={isStillInactive.peoplePageHeader}
+        >
             {t('pageHeader.people.actionButton.addANewPerson')}
         </TempNavInactive>
     );

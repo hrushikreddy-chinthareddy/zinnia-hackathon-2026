@@ -1,6 +1,13 @@
-import { ClaimActionTypes, ClaimCommunicationTypes } from '@deps/containers/death-claim-container/death-claim.types';
+import {
+    ClaimActionTypes,
+    ClaimCommunicationTypes,
+} from '@deps/containers/death-claim-container/death-claim.types';
 import { Party } from '@deps/models/case/withdrawal/case';
-import { AddressBase, AddressType, EmailType } from '@deps/models/policy/sor-policy';
+import {
+    AddressBase,
+    AddressType,
+    EmailType,
+} from '@deps/models/policy/sor-policy';
 
 export enum DeliveryMethods {
     Email = 'EMAIL',

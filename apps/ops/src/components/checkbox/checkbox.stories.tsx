@@ -7,7 +7,7 @@ export default {
     title: 'Components/Checkbox',
     component: Checkbox,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>
@@ -21,7 +21,11 @@ export const CheckboxDefault = () => {
             <CheckboxText label="Default" />
             <CheckboxText label="Default Selected" checked={true} />
             <CheckboxText isDisabled={true} label="Disabled" />
-            <CheckboxText isDisabled={true} checked={true} label="Disabled Selected" />
+            <CheckboxText
+                isDisabled={true}
+                checked={true}
+                label="Disabled Selected"
+            />
         </div>
     );
 
@@ -31,8 +35,15 @@ export const CheckboxDefault = () => {
 export const CheckboxIndeterminate = () => {
     const checkboxes = (
         <div className="flex flex-col space-y-2">
-            <CheckboxText isIndeterminate={true} label="Indeterminate Default" />
-            <CheckboxText isIndeterminate={true} isDisabled={true} label="Indeterminate Disabled" />
+            <CheckboxText
+                isIndeterminate={true}
+                label="Indeterminate Default"
+            />
+            <CheckboxText
+                isIndeterminate={true}
+                isDisabled={true}
+                label="Indeterminate Disabled"
+            />
         </div>
     );
 

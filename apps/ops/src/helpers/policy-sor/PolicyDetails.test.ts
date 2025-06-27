@@ -1,4 +1,8 @@
-import { PartyRole, PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    PolicyStatus,
+    ProductType,
+} from '@zinnia/api-types/types/sor';
 
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
 
@@ -49,7 +53,9 @@ describe('PolicyDetails', () => {
         expect(policyDetails.currency).toEqual('USD');
         expect(policyDetails.marketingName).toEqual('Everly IUL TermVest+');
         expect(policyDetails.generalLedgerPlanCode).toEqual('IU201');
-        expect(policyDetails.productType).toEqual(ProductType.INDEXEDUNIVERSALLIFE);
+        expect(policyDetails.productType).toEqual(
+            ProductType.INDEXEDUNIVERSALLIFE
+        );
         expect(policyDetails.maturityDate).toEqual('2096-06-01');
         expect(policyDetails.issueDate).toEqual('2024-06-01');
         expect(policyDetails.planCode).toEqual('ELIULV01');

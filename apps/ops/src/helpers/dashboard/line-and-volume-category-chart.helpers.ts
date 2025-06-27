@@ -65,7 +65,9 @@ const createChartCategories = ({
 
         if (currentDate.isSame(currentDate.startOf('month'), 'day')) {
             monthlyCategories.push({
-                earliestDate: currentDate.startOf('month').format(defaultDateFormat),
+                earliestDate: currentDate
+                    .startOf('month')
+                    .format(defaultDateFormat),
                 lastDate: currentDate.endOf('month').format(defaultDateFormat),
             });
         }
@@ -88,7 +90,9 @@ const createChartCategories = ({
         }
 
         monthlyCategories.push({
-            earliestDate: currentDate.startOf('month').format(defaultDateFormat),
+            earliestDate: currentDate
+                .startOf('month')
+                .format(defaultDateFormat),
             lastDate: currentDate.endOf('month').format(defaultDateFormat),
         });
 
@@ -100,7 +104,10 @@ const createChartCategories = ({
     };
 };
 
-const toolTipFormatter = (points: Highcharts.TooltipFormatterContextObject[] | undefined, dateStr = dayjs().format('M/D/YYYY')) => {
+const toolTipFormatter = (
+    points: Highcharts.TooltipFormatterContextObject[] | undefined,
+    dateStr = dayjs().format('M/D/YYYY')
+) => {
     if (!points || points.length === 0) return;
 
     let total = 0;
@@ -108,8 +115,11 @@ const toolTipFormatter = (points: Highcharts.TooltipFormatterContextObject[] | u
     const labelData: Array<{
         label: string;
         total: number;
-        color: string | Highcharts.GradientColorObject | Highcharts.PatternObject;
-    }> = points.map(point => {
+        color:
+            | string
+            | Highcharts.GradientColorObject
+            | Highcharts.PatternObject;
+    }> = points.map((point) => {
         total += point.y || 0;
         return {
             label: point.series.name,
@@ -134,7 +144,9 @@ const toolTipFormatter = (points: Highcharts.TooltipFormatterContextObject[] | u
         colorElement.style.height = '10px';
         colorElement.style.borderRadius = '50%';
         const titleElement = document.createElement('div');
-        titleElement.innerHTML = `${value.label}: <b>${value.total.toLocaleString()}</b>`;
+        titleElement.innerHTML = `${
+            value.label
+        }: <b>${value.total.toLocaleString()}</b>`;
         labelElement.appendChild(colorElement);
         labelElement.appendChild(titleElement);
         labelWrapper.appendChild(labelElement);
@@ -164,20 +176,30 @@ export const getTopChartConfig = (
     timeframe: TransactionTrendsTimeframe
 ): Highcharts.Options => {
     let interval = 'Weekly';
-    if ([TransactionTrendsTimeframe.Last60Days, TransactionTrendsTimeframe.LastMonth].includes(timeframe)) {
+    if (
+        [
+            TransactionTrendsTimeframe.Last60Days,
+            TransactionTrendsTimeframe.LastMonth,
+        ].includes(timeframe)
+    ) {
         interval = 'Daily';
     }
-    const plotlines = Array.from({ length: weeklyCategories.length }, (_, i) => {
-        const currentDate = weeklyCategoriesLabels[i].lastDate;
-        const prevDate = weeklyCategoriesLabels[i - 1]?.lastDate;
-        const shouldShow = prevDate && !dayjs(currentDate).isSame(dayjs(prevDate), 'month');
-        return {
-            color: shouldShow ? '#D3D3D3' : '#FFFFFF', // Color ticks for the edges of the month
-            width: 1,
-            value: i - 0.5, // Position of the gridline
-            zIndex: 1,
-        };
-    });
+    const plotlines = Array.from(
+        { length: weeklyCategories.length },
+        (_, i) => {
+            const currentDate = weeklyCategoriesLabels[i].lastDate;
+            const prevDate = weeklyCategoriesLabels[i - 1]?.lastDate;
+            const shouldShow =
+                prevDate &&
+                !dayjs(currentDate).isSame(dayjs(prevDate), 'month');
+            return {
+                color: shouldShow ? '#D3D3D3' : '#FFFFFF', // Color ticks for the edges of the month
+                width: 1,
+                value: i - 0.5, // Position of the gridline
+                zIndex: 1,
+            };
+        }
+    );
     // weeklySeries.push({
     //     data: Array.from({ length: weeklyCategories.length }, (_, i) => 25),
     //     name: 'Total',
@@ -233,7 +255,8 @@ export const getTopChartConfig = (
                         const idx = this.pos;
                         const { earliestDate } = weeklyCategoriesLabels[idx];
                         const middleOfMonth = dayjs(earliestDate).date(15);
-                        if (!dayjs(earliestDate).isSame(middleOfMonth, 'day')) return '';
+                        if (!dayjs(earliestDate).isSame(middleOfMonth, 'day'))
+                            return '';
                         return dayjs(earliestDate).format('MMM');
                     },
                     align: 'right',
@@ -287,14 +310,20 @@ export const getTopChartConfig = (
             shared: true, // Set shared to false
             formatter: function () {
                 const index = this.point.index;
-                const { earliestDate, lastDate } = weeklyCategoriesLabels[index];
+                const { earliestDate, lastDate } =
+                    weeklyCategoriesLabels[index];
                 const date = dayjs(earliestDate);
                 let dateStr = '';
 
-                if (timeframe === TransactionTrendsTimeframe.LastMonth || timeframe === TransactionTrendsTimeframe.Last60Days) {
+                if (
+                    timeframe === TransactionTrendsTimeframe.LastMonth ||
+                    timeframe === TransactionTrendsTimeframe.Last60Days
+                ) {
                     dateStr = date.format('M/D/YY');
                 } else {
-                    dateStr = `Week of ${date.format('M/D/YYYY')} - ${dayjs(lastDate).format('M/D/YYYY')}`;
+                    dateStr = `Week of ${date.format('M/D/YYYY')} - ${dayjs(
+                        lastDate
+                    ).format('M/D/YYYY')}`;
                 }
                 return toolTipFormatter(this.points, dateStr);
             },
@@ -310,7 +339,12 @@ export const getBottomChartConfig = (
     timeframe: TransactionTrendsTimeframe
 ): Highcharts.Options => {
     const interval = 'Monthly';
-    const pointWidth = 20 * Math.max(Object.values(TransactionTrendsTimeframe).indexOf(timeframe) + 1, 1);
+    const pointWidth =
+        20 *
+        Math.max(
+            Object.values(TransactionTrendsTimeframe).indexOf(timeframe) + 1,
+            1
+        );
 
     return {
         chart: {
@@ -439,7 +473,9 @@ export function processGroupedData(
         weeklySeries: {} as Highcharts.SeriesLineOptions,
         monthlyByLevel1Grouping: {},
         monthlySeries: {} as Highcharts.SeriesColumnOptions,
-        weeklyCategories: weeklyCategories.map(({ earliestDate }) => earliestDate),
+        weeklyCategories: weeklyCategories.map(
+            ({ earliestDate }) => earliestDate
+        ),
         monthlyCategories: monthlyCategories.map(() => 0),
         weeklyCategoriesLabels: weeklyCategories,
         monthlyCategoriesLabels: monthlyCategories,
@@ -449,8 +485,12 @@ export function processGroupedData(
     // ex: 'productName': { 'count': 10, 'key': 'productName', name: 'SBIC' }
     input.forEach((level1GroupedBy, i) => {
         // Initialize data arrays for weekly and monthly series
-        const weeklySeriesData: Array<number | null> = new Array(weeklyCategories.length).fill(0);
-        const monthlySeriesData: number[] = new Array(monthlyCategories.length).fill(0);
+        const weeklySeriesData: Array<number | null> = new Array(
+            weeklyCategories.length
+        ).fill(0);
+        const monthlySeriesData: number[] = new Array(
+            monthlyCategories.length
+        ).fill(0);
         const dataColor = colors[i % colors.length];
 
         const level1GroupedByName = level1GroupedBy.name;
@@ -487,7 +527,7 @@ export function processGroupedData(
         const groupedByDate: Record<string, number> = {};
         level1GroupedBy.values?.reduce((acc, level2GroupedBy) => {
             if (level2GroupedBy?.values?.length) {
-                level2GroupedBy.values.forEach(entry => {
+                level2GroupedBy.values.forEach((entry) => {
                     const date = entry.name; // Example: "2024-01-05"
                     const count = entry.count;
                     acc[date] = (acc[date] || 0) + count;
@@ -505,17 +545,20 @@ export function processGroupedData(
             const date = dayjs(dateString);
 
             // [] is inclusive of start and end dates
-            const weeklyIndex = weeklyCategories.findIndex(({ earliestDate, lastDate }) =>
-                date.isBetween(earliestDate, lastDate, 'day', '[]')
+            const weeklyIndex = weeklyCategories.findIndex(
+                ({ earliestDate, lastDate }) =>
+                    date.isBetween(earliestDate, lastDate, 'day', '[]')
             );
-            const monthlyIndex = monthlyCategories.findIndex(({ earliestDate, lastDate }) =>
-                date.isBetween(earliestDate, lastDate, 'day', '[]')
+            const monthlyIndex = monthlyCategories.findIndex(
+                ({ earliestDate, lastDate }) =>
+                    date.isBetween(earliestDate, lastDate, 'day', '[]')
             );
 
             if (weeklyIndex === -1 || monthlyIndex === -1) return;
 
             // Update weekly and monthly data arrays
-            weeklySeriesData[weeklyIndex] = (weeklySeriesData[weeklyIndex] || 0) + count;
+            weeklySeriesData[weeklyIndex] =
+                (weeklySeriesData[weeklyIndex] || 0) + count;
             monthlySeriesData[monthlyIndex] += count;
 
             // Update the total count for the monthly grouping
@@ -531,7 +574,9 @@ export function processGroupedData(
     });
 
     // Sort and trim the monthly grouping to the top 5
-    result.monthlyByLevel1Grouping = Object.entries(result.monthlyByLevel1Grouping)
+    result.monthlyByLevel1Grouping = Object.entries(
+        result.monthlyByLevel1Grouping
+    )
         .sort((a, b) => {
             return b[1].total - a[1].total;
         })
@@ -542,7 +587,7 @@ export function processGroupedData(
         }, {} as Record<string, ChartSeriesSummary>);
 
     // Update the total for each month
-    Object.values(result.monthlyByLevel1Grouping).forEach(seriesData => {
+    Object.values(result.monthlyByLevel1Grouping).forEach((seriesData) => {
         const data = seriesData.series.data ?? [];
         data.forEach((value, index) => {
             const newValue = typeof value === 'number' ? value : 0;

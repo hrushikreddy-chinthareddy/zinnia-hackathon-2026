@@ -2,7 +2,10 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import ComparisonContract from './comparison-contract';
 import { BenefitType } from './create-disclosure.types';
-import { amountCellFormatter, numberParser } from '../../mass-mutual/mass-mutual-reg60-form-helpers';
+import {
+    amountCellFormatter,
+    numberParser,
+} from '../../mass-mutual/mass-mutual-reg60-form-helpers';
 import { getCreateDisclosureInfo } from '../../utils/reg60-form-helpers';
 
 describe('ComparisonContract', () => {
@@ -224,13 +227,19 @@ describe('ComparisonContract', () => {
         expect(screen.getByText(title)).toBeInTheDocument();
         expect(screen.getByText('Comparison Type')).toBeInTheDocument();
         expect(screen.getByLabelText('Partial Request')).toBeInTheDocument();
-        expect(screen.getByLabelText('Good Faith Estimate Required')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Good Faith Estimate Required')
+        ).toBeInTheDocument();
         expect(screen.getByLabelText('Company Name')).toBeInTheDocument();
-        expect(screen.getByLabelText('Company Phone Number')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Company Phone Number')
+        ).toBeInTheDocument();
         expect(screen.getByLabelText('Contract Number')).toBeInTheDocument();
         expect(screen.getByLabelText('Issue Date')).toBeInTheDocument();
         expect(screen.getByLabelText('Account Value')).toBeInTheDocument();
-        expect(screen.getByLabelText('Surrender Charge Applies')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Surrender Charge Applies')
+        ).toBeInTheDocument();
         expect(screen.getByLabelText('MVA Applies')).toBeInTheDocument();
         expect(screen.getByLabelText('Surrender Value')).toBeInTheDocument();
     });
@@ -254,7 +263,9 @@ describe('ComparisonContract', () => {
         );
 
         // Assert
-        expect(screen.getByText(formConfigs.field.comparisonType.fieldLabel)).toBeInTheDocument();
+        expect(
+            screen.getByText(formConfigs.field.comparisonType.fieldLabel)
+        ).toBeInTheDocument();
     });
 
     it('should modify the surrender or death benefits data correctly when the table data is changed', () => {
@@ -293,7 +304,9 @@ describe('ComparisonContract', () => {
         );
 
         // Act
-        fireEvent.change(screen.getByLabelText('Surrender Value'), { target: { value: '50000' } });
+        fireEvent.change(screen.getByLabelText('Surrender Value'), {
+            target: { value: '50000' },
+        });
 
         // Assert
         expect(handleChange).toHaveBeenCalledWith({
@@ -325,7 +338,9 @@ describe('ComparisonContract', () => {
         );
 
         // Act
-        fireEvent.change(screen.getByLabelText('Issue Date'), { target: { value: '01012022' } });
+        fireEvent.change(screen.getByLabelText('Issue Date'), {
+            target: { value: '01012022' },
+        });
 
         // Assert
         expect(handleChange).toHaveBeenCalledWith({
@@ -394,13 +409,19 @@ describe('ComparisonContract', () => {
         expect(screen.getByText(title)).toBeInTheDocument();
         expect(screen.getByText('Comparison Type')).toBeInTheDocument();
         expect(screen.getByLabelText('Partial Request')).toBeInTheDocument();
-        expect(screen.getByLabelText('Good Faith Estimate Required')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Good Faith Estimate Required')
+        ).toBeInTheDocument();
         expect(screen.getByLabelText('Company Name')).toBeInTheDocument();
-        expect(screen.getByLabelText('Company Phone Number')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Company Phone Number')
+        ).toBeInTheDocument();
         expect(screen.getByLabelText('Contract Number')).toBeInTheDocument();
         expect(screen.getByLabelText('Issue Date')).toBeInTheDocument();
         expect(screen.getByLabelText('Account Value')).toBeInTheDocument();
-        expect(screen.getByLabelText('Surrender Charge Applies')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Surrender Charge Applies')
+        ).toBeInTheDocument();
         expect(screen.getByLabelText('MVA Applies')).toBeInTheDocument();
         expect(screen.getByLabelText('Surrender Value')).toBeInTheDocument();
     });
@@ -425,7 +446,9 @@ describe('ComparisonContract', () => {
         );
 
         // Act
-        fireEvent.change(screen.getByLabelText('Issue Date'), { target: { value: '01012022' } });
+        fireEvent.change(screen.getByLabelText('Issue Date'), {
+            target: { value: '01012022' },
+        });
 
         // Assert
         expect(handleChange).toHaveBeenCalledWith({
@@ -465,7 +488,10 @@ describe('ComparisonContract', () => {
 
         render(
             <ComparisonContract
-                comparisonContract={{ ...comparisonData, goodFaithEstimateRequired: true }}
+                comparisonContract={{
+                    ...comparisonData,
+                    goodFaithEstimateRequired: true,
+                }}
                 formConfigs={formConfigs}
                 title={title}
                 formErrors={formErrors}

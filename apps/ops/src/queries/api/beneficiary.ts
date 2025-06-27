@@ -1,9 +1,10 @@
 import { AxiosResponse } from 'axios';
+
 import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
+import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { apiServerBaseUrl } from '@deps/queries/api-config';
 
 export interface SearchTransactionFilters {
     zlCaseId: string;
@@ -15,9 +16,12 @@ export interface SearchTransactionPayload {
     entityType: string[];
 }
 
-const transactionSearchUrl = apiServerBaseUrl + '/transactions/v1/transaction/search';
+const transactionSearchUrl =
+    apiServerBaseUrl + '/transactions/v1/transaction/search';
 
-export const searchBeneficiaryByCaseId = async (filters: SearchTransactionFilters): Promise<BeneficiaryRecord[] | null> => {
+export const searchBeneficiaryByCaseId = async (
+    filters: SearchTransactionFilters
+): Promise<BeneficiaryRecord[] | null> => {
     const loggingContext = {
         file: 'queries/api/transaction-search',
         function: 'searchBeneficiaryByCaseId',
@@ -34,7 +38,10 @@ export const searchBeneficiaryByCaseId = async (filters: SearchTransactionFilter
             ],
             entityType: [filters.entityType],
         };
-        const { data } = await client.post<any, AxiosResponse<BeneficiaryRecord[]>>(transactionSearchUrl, payload);
+        const { data } = await client.post<
+            any,
+            AxiosResponse<BeneficiaryRecord[]>
+        >(transactionSearchUrl, payload);
         return data;
     } catch (e: any) {
         browserLogError('transactions::searchBeneficiaryByCaseId::error', {

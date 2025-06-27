@@ -3,11 +3,15 @@ import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import EffectiveDate from '@deps/components/workflows/effective-date-step/effective-date-step';
-import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
+import PayeesStep, {
+    PayeesStepSetState,
+} from '@deps/components/workflows/payees-step/payees-step';
 import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
 import PaymentStepMoneyOut from '@deps/components/workflows/payment-step/payment-step-money-out';
 import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
-import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import StartStep, {
+    StartStepSetState,
+} from '@deps/components/workflows/start-step/start-step';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -24,7 +28,8 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const { withdrawal, setWithdrawal } = useWithdrawal();
     const { featureFlags } = useOptimizely();
 
-    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
+    const wireCheckPaymentsEnabled =
+        featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
 
     const startLabel = t('cancelFreeLook.start.label');
     const dateLabel = t('cancelFreeLook.date.label');
@@ -43,7 +48,10 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     setState={setWithdrawal as StartStepSetState}
                     state={withdrawal}
                     title={t('cancelFreeLook.start.title') as string}
-                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Start }}
+                    trackEventProps={{
+                        type: TransactionType.FREE_LOOK_CANCELLATION,
+                        step: TransactionStep.Start,
+                    }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -55,7 +63,9 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                 <EffectiveDate
                     effectiveDate={withdrawal.effectiveDate}
                     policy={policy}
-                    setEffectiveDate={date => setWithdrawal({ ...withdrawal, effectiveDate: date })}
+                    setEffectiveDate={(date) =>
+                        setWithdrawal({ ...withdrawal, effectiveDate: date })
+                    }
                 />
             ),
             screenReaderLabel: dateLabel,
@@ -69,7 +79,10 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     policy={policy as Policy}
                     setState={setWithdrawal as PayeesStepSetState}
                     state={withdrawal}
-                    trackEventProps={{ type: TransactionType.FREE_LOOK_CANCELLATION, step: TransactionStep.Payees }}
+                    trackEventProps={{
+                        type: TransactionType.FREE_LOOK_CANCELLATION,
+                        step: TransactionStep.Payees,
+                    }}
                 />
             ),
             screenReaderLabel: payeeLabel,

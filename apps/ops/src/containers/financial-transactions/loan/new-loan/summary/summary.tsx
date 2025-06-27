@@ -1,14 +1,27 @@
-import { Address, DisbursementPaymentForm , Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    Address,
+    DisbursementPaymentForm,
+    Policy,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import BannerAlert, { BannerVariant } from '@deps/components/banner-alert/banner-alert';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import BannerAlert, {
+    BannerVariant,
+} from '@deps/components/banner-alert/banner-alert';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
@@ -18,7 +31,10 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
-import { DEFAULT_DATE_FORMAT, NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import {
+    DEFAULT_DATE_FORMAT,
+    NUMERIC_DATE_FORMAT,
+} from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface SummaryProps {
@@ -26,11 +42,14 @@ interface SummaryProps {
 }
 
 const Summary = ({ policy }: SummaryProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newLoan.summary' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'newLoan.summary',
+    });
     const { policyNumber, product } = policy;
     const { newLoan } = useNewLoan();
 
-    const [showSelectionError, setShowSelectionError] = useState<boolean>(false);
+    const [showSelectionError, setShowSelectionError] =
+        useState<boolean>(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const { goToNext } = useWorkflow();
     const {
@@ -44,7 +63,10 @@ const Summary = ({ policy }: SummaryProps) => {
         payeeFullName,
         validationResponse,
     } = newLoan;
-    const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
+    const validationSucceeded = useMemo(
+        () => validationResponse?.status === TransactionResponseStatus.Success,
+        [validationResponse]
+    );
 
     const handleContinue = async () => {
         if (!validationSucceeded && !isChecked) {
@@ -60,14 +82,26 @@ const Summary = ({ policy }: SummaryProps) => {
     return (
         <div>
             <CardContainer containerClassNames="border-b-2 border-gray-100">
-                <Typography variant={TypographyVariant.H1}>{t('label')}</Typography>
-                <Typography className="mb-6 mt-2" variant={TypographyVariant.Body}>
-                    {validationSucceeded ? t('status200subtitle') : t('status400subtitle')}
+                <Typography variant={TypographyVariant.H1}>
+                    {t('label')}
+                </Typography>
+                <Typography
+                    className="mb-6 mt-2"
+                    variant={TypographyVariant.Body}
+                >
+                    {validationSucceeded
+                        ? t('status200subtitle')
+                        : t('status400subtitle')}
                 </Typography>
                 <div className="flex w-full flex-row gap-8">
                     <div className="flex flex-col">
-                        <Label variant={LabelVariant.FieldLabel} label={t('loanAmount')} />
-                        <Typography variant={TypographyVariant.Value}>{numberFormatify(amount)}</Typography>
+                        <Label
+                            variant={LabelVariant.FieldLabel}
+                            label={t('loanAmount')}
+                        />
+                        <Typography variant={TypographyVariant.Value}>
+                            {numberFormatify(amount)}
+                        </Typography>
                     </div>
                     <div className="flex flex-col">
                         <Label
@@ -77,14 +111,20 @@ const Summary = ({ policy }: SummaryProps) => {
                             tooltipBody={t('effectiveDateTooltip')}
                         />
                         <Typography variant={TypographyVariant.Value}>
-                            {dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(DEFAULT_DATE_FORMAT)}
+                            {dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(
+                                DEFAULT_DATE_FORMAT
+                            )}
                         </Typography>
                     </div>
                 </div>
             </CardContainer>
             <CardContainer containerClassNames="border-b-2 border-gray-100">
                 <div className="mb-4 flex flex-row items-center">
-                    <UserIcon className="mr-2 text-primary" height={24} width={24} />
+                    <UserIcon
+                        className="mr-2 text-primary"
+                        height={24}
+                        width={24}
+                    />
                     <Typography variant={TypographyVariant.H2} className="mr-5">
                         {t('funds')}
                     </Typography>
@@ -96,12 +136,18 @@ const Summary = ({ policy }: SummaryProps) => {
                         tooltipTitle={t('fundAllocation')}
                         tooltipBody={t('fundAllocationTooltip')}
                     />
-                    <Typography variant={TypographyVariant.BodySm}>{t('proRata')}</Typography>
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {t('proRata')}
+                    </Typography>
                 </div>
             </CardContainer>
             <CardContainer>
                 <div className="mb-4 flex flex-row items-center">
-                    <UserIcon className="mr-2 text-primary" height={24} width={24} />
+                    <UserIcon
+                        className="mr-2 text-primary"
+                        height={24}
+                        width={24}
+                    />
                     <Typography variant={TypographyVariant.H2} className="mr-5">
                         {t('payee')}
                     </Typography>
@@ -112,7 +158,11 @@ const Summary = ({ policy }: SummaryProps) => {
                     branchName={paymentBranchName}
                     classNames="max-w-[524px]"
                     payeeName={payeeFullName}
-                    paymentType={getDisbursementPaymentForm(paymentForm) as DisbursementPaymentForm}
+                    paymentType={
+                        getDisbursementPaymentForm(
+                            paymentForm
+                        ) as DisbursementPaymentForm
+                    }
                     showFinancialData={false}
                     fboFfc={fboFfc}
                 />
@@ -120,32 +170,46 @@ const Summary = ({ policy }: SummaryProps) => {
                 {!validationSucceeded && (
                     <div className="mt-10 flex flex-col gap-6">
                         {validationResponse?.validationResult ? (
-                            validationResponse?.validationResult?.map(validationResult => {
-                                const { error, errorCode, resolution } = validationResult;
+                            validationResponse?.validationResult?.map(
+                                (validationResult) => {
+                                    const { error, errorCode, resolution } =
+                                        validationResult;
 
-                                return (
-                                    <BannerAlert
-                                        canDismiss={false}
-                                        key={`bpm-validation-banner-${errorCode}`}
-                                        variant={BannerVariant.Error}
-                                    >
-                                        <b>{error}</b> {resolution}
-                                    </BannerAlert>
-                                );
-                            })
+                                    return (
+                                        <BannerAlert
+                                            canDismiss={false}
+                                            key={`bpm-validation-banner-${errorCode}`}
+                                            variant={BannerVariant.Error}
+                                        >
+                                            <b>{error}</b> {resolution}
+                                        </BannerAlert>
+                                    );
+                                }
+                            )
                         ) : (
-                            <BannerAlert canDismiss={false} variant={BannerVariant.Error}>
+                            <BannerAlert
+                                canDismiss={false}
+                                variant={BannerVariant.Error}
+                            >
                                 <b>{t('bpm500Error')}</b>
                             </BannerAlert>
                         )}
                         <div className="flex flex-row">
-                            <CheckboxText label={t('submitWithErrorsText')} checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+                            <CheckboxText
+                                label={t('submitWithErrorsText')}
+                                checked={isChecked}
+                                onChange={() => setIsChecked(!isChecked)}
+                            />
                         </div>
                     </div>
                 )}
 
                 {showSelectionError && !isChecked && (
-                    <AssistiveText className="mt-2" variant={AssistiveTextVariant.Error} text={t('missingCheckToConfirm')} />
+                    <AssistiveText
+                        className="mt-2"
+                        variant={AssistiveTextVariant.Error}
+                        text={t('missingCheckToConfirm')}
+                    />
                 )}
 
                 <TransactionNavigationButtons
@@ -157,7 +221,10 @@ const Summary = ({ policy }: SummaryProps) => {
                     policyNumber={policyNumber}
                     submitLabel={t('submitLoan') as string}
                     // TODO MG: pass up correlationId
-                    trackEventProps={{ type: TransactionType.NEW_LOAN, step: TransactionStep.Summary }}
+                    trackEventProps={{
+                        type: TransactionType.NEW_LOAN,
+                        step: TransactionStep.Summary,
+                    }}
                 />
             </CardContainer>
         </div>

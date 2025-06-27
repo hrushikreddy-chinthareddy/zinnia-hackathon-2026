@@ -9,7 +9,9 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import ButtonGroup from '../button-group/button-group';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '../fields/field-date-select/field-date-select';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '../fields/field-date-select/field-date-select';
 import Typography, { TypographyVariant } from '../typography/typography';
 
 enum Authorized {
@@ -18,7 +20,9 @@ enum Authorized {
     No = 'no',
 }
 
-const convertAuthorizedFromValue = (isAuthorization: boolean | null | undefined): Authorized => {
+const convertAuthorizedFromValue = (
+    isAuthorization: boolean | null | undefined
+): Authorized => {
     if (isAuthorization === null || isAuthorization === undefined) {
         return Authorized.Unselected;
     }
@@ -26,30 +30,49 @@ const convertAuthorizedFromValue = (isAuthorization: boolean | null | undefined)
     return isAuthorization ? Authorized.Yes : Authorized.No;
 };
 
-const convertDateFromValue = (signature: SignatureWithdrawal | undefined): string | null => {
+const convertDateFromValue = (
+    signature: SignatureWithdrawal | undefined
+): string | null => {
     if (!signature?.signDate) {
         return null;
     }
 
-    return signature?.signDate?.text && dayjs(signature.signDate.text, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT);
+    return (
+        signature?.signDate?.text &&
+        dayjs(signature.signDate.text, ZAHARA_API_DATE_FORMAT).format(
+            DATE_PICKER_FORMAT
+        )
+    );
 };
 
 interface EmployerTpaAuthorizationProps {
     isFormStateReadOnly: boolean;
 }
 
-export default function EmployerTpaAuthorization({ isFormStateReadOnly }: EmployerTpaAuthorizationProps) {
-    const { formTpaAuthorization, setFormTpaAuthorization } = useContext(FormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.employerTpaAuthorization' });
+export default function EmployerTpaAuthorization({
+    isFormStateReadOnly,
+}: EmployerTpaAuthorizationProps) {
+    const { formTpaAuthorization, setFormTpaAuthorization } =
+        useContext(FormDataContext);
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.employerTpaAuthorization',
+    });
     const [authorized, setAuthorized] = useState<Authorized>(
-        convertAuthorizedFromValue(formTpaAuthorization?.isAuthorization?.text || null)
+        convertAuthorizedFromValue(
+            formTpaAuthorization?.isAuthorization?.text || null
+        )
     );
-    const [date, setDate] = useState<string>(convertDateFromValue(formTpaAuthorization?.signature) || '');
+    const [date, setDate] = useState<string>(
+        convertDateFromValue(formTpaAuthorization?.signature) || ''
+    );
 
     useEffect(() => {
         setFormTpaAuthorization({
             isAuthorization: {
-                text: authorized === Authorized.Unselected ? null : authorized === Authorized.Yes,
+                text:
+                    authorized === Authorized.Unselected
+                        ? null
+                        : authorized === Authorized.Yes,
             },
             isAgreementAttached: {
                 text: null,
@@ -60,7 +83,11 @@ export default function EmployerTpaAuthorization({ isFormStateReadOnly }: Employ
             signature: {
                 isSigned: false,
                 signDate: {
-                    text: date ? dayjs(date, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) : null,
+                    text: date
+                        ? dayjs(date, DATE_PICKER_FORMAT).format(
+                              ZAHARA_API_DATE_FORMAT
+                          )
+                        : null,
                 },
                 signExtension: null,
                 signName: null,
@@ -91,7 +118,7 @@ export default function EmployerTpaAuthorization({ isFormStateReadOnly }: Employ
             <div className="flex flex-wrap gap-8 max-md:flex-col">
                 <ButtonGroup
                     activeValue={authorized}
-                    toggle={value => {
+                    toggle={(value) => {
                         if (!value) {
                             value = authorized;
                         }
@@ -116,14 +143,18 @@ export default function EmployerTpaAuthorization({ isFormStateReadOnly }: Employ
                     <FieldDateSelect
                         isFutureDateDisabled={false}
                         label={t('date') as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setDate(e.target.value);
                         }}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={date}
                         disabled={isFormStateReadOnly}
-                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                     />
                 </div>
             </div>

@@ -1,16 +1,30 @@
 import { PaymentForm } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react';
+import {
+    Dispatch,
+    PropsWithChildren,
+    SetStateAction,
+    createContext,
+    useContext,
+    useState,
+} from 'react';
 
 import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 import { PayorType } from '@deps/components/workflows/payor-step/payor-step';
-import { AmountType, ReverseInitiatorType } from '@deps/containers/financial-transactions/loan/loan-payment/amount/amount';
+import {
+    AmountType,
+    ReverseInitiatorType,
+} from '@deps/containers/financial-transactions/loan/loan-payment/amount/amount';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 // ACH is the only supported payment type for MVP
 export const ACH = PaymentForm.ACH;
 
-export interface LoanPayment extends AmountType, PaymentMethodType, PayorType, ReverseInitiatorType {
+export interface LoanPayment
+    extends AmountType,
+        PaymentMethodType,
+        PayorType,
+        ReverseInitiatorType {
     caseId?: string;
 }
 
@@ -40,7 +54,9 @@ const defaultValue = {
 const LoanPaymentContext = createContext<LoanPaymentContextType>(defaultValue);
 
 export const LoanPaymentProvider = ({ children }: PropsWithChildren) => {
-    const [loanPayment, setLoanPayment] = useState<LoanPayment>(defaultValue.loanPayment);
+    const [loanPayment, setLoanPayment] = useState<LoanPayment>(
+        defaultValue.loanPayment
+    );
 
     return (
         <LoanPaymentContext.Provider
@@ -58,7 +74,9 @@ export const useLoanPayment = () => {
     const context = useContext(LoanPaymentContext);
 
     if (!context) {
-        throw new Error('useLoanPayment must be used within a LoanPaymentContext');
+        throw new Error(
+            'useLoanPayment must be used within a LoanPaymentContext'
+        );
     }
     return context;
 };

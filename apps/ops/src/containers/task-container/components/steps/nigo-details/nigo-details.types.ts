@@ -1,6 +1,5 @@
-
-export type SubException = { 
-    label: string; 
+export type SubException = {
+    label: string;
     value: string;
     displayText: string;
 };
@@ -10,11 +9,10 @@ export type NigoSubException = {
     subExceptions: SubException[];
 };
 
-export type NigoException = { 
-    label: string; 
+export type NigoException = {
+    label: string;
     value: string;
 };
-
 
 export type ExceptionSubRef = {
     subNmId: string;
@@ -30,4 +28,4 @@ export type NigoExceptionResponse = {
     reason: string;
     detailedReason: string;
     exceptionSubRefs: ExceptionSubRef[];
-}
+};

@@ -2,7 +2,11 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
 import { ReactComponent as HexExclamationIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 
@@ -15,7 +19,9 @@ interface ApiErrorCardProps {
 }
 
 const ApiErrorCard = ({ leaveRoute, submit }: ApiErrorCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'workflows.apiErrorCard' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'workflows.apiErrorCard',
+    });
     const router = useRouter();
 
     const { action, text } = submit;
@@ -27,7 +33,14 @@ const ApiErrorCard = ({ leaveRoute, submit }: ApiErrorCardProps) => {
                     action,
                     text,
                 }}
-                icon={<HexExclamationIcon className="text-semantic-error" height={50} role="presentation" width={50} />}
+                icon={
+                    <HexExclamationIcon
+                        className="text-semantic-error"
+                        height={50}
+                        role="presentation"
+                        width={50}
+                    />
+                }
                 secondaryCta={
                     <NavElement
                         aria-label={t('leaveTransaction') as string}

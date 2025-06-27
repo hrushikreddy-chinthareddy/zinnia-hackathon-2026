@@ -17,7 +17,10 @@ import { getSuitabilitySteps } from './suitability-steps';
 import { getTOANigoSteps } from './toa-nigo';
 import { GetStepsProps } from './types';
 
-export const getFormSteps = (taskType: TaskType, props: GetStepsProps): Step[] => {
+export const getFormSteps = (
+    taskType: TaskType,
+    props: GetStepsProps
+): Step[] => {
     let steps: Step[];
     switch (taskType) {
         case TaskType.SuitabilityDataEntry:

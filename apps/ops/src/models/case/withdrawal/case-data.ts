@@ -189,7 +189,8 @@ export const CaseDetails: DigitalFormWithdrawal = {
                             amountType: AmountType.Dollar,
                         },
                         fundCode: '056HJ0C',
-                        fundName: 'This is an even longer fund name, just to see what happens',
+                        fundName:
+                            'This is an even longer fund name, just to see what happens',
                     },
                 ],
             },
@@ -260,14 +261,20 @@ export const CaseDetails: DigitalFormWithdrawal = {
                 restrictions: [
                     {
                         //-- UI
-                        selectionOptions: { SeveranceDate: { text: '2021-08-01' } },
+                        selectionOptions: {
+                            SeveranceDate: { text: '2021-08-01' },
+                        },
                         text: RestrictionOption.Severance,
                     },
                 ],
                 hardship: [],
                 emergency: [
                     {
-                        selectionOptions: { DistribUnforseenDesc: { text: 'Testing that this will prepopulate' } },
+                        selectionOptions: {
+                            DistribUnforseenDesc: {
+                                text: 'Testing that this will prepopulate',
+                            },
+                        },
                         text: EmergencyOption.BeyondControl,
                     },
                 ],

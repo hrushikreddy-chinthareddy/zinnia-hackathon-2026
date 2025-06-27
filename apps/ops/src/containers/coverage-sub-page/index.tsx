@@ -20,7 +20,9 @@ export const CoverageSubPage = ({ policy }: CoverageSubPageProps) => {
             <CoveragePageHeaderContainer policyDetails={policyDetails} />
             <BaseCoverageCard policyDetails={policyDetails} />
             <CoveredPartyCard policy={policyDetails} />
-            {!policyDetails.isAnnuity && <ContestabilityCard policyDetails={policyDetails} />}
+            {!policyDetails.isAnnuity && (
+                <ContestabilityCard policyDetails={policyDetails} />
+            )}
             <AdditionalInformationCard policyDetails={policyDetails} />
         </>
     );

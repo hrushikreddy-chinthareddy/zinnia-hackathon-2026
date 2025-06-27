@@ -5,7 +5,7 @@ import { LabelValue } from '@deps/types/data';
 export enum SearchKeys {
     DocumentNumber = 'documentNumber',
     PolicyNumber = 'policyNumber',
-};
+}
 
 export const searchByLabels = (t: TFunction): LabelValue<SearchKeys>[] => [
     {
@@ -17,7 +17,11 @@ export const searchByLabels = (t: TFunction): LabelValue<SearchKeys>[] => [
     {
         label: t('caseRenewal.caseCreate.buttons.documentNumber'),
         value: SearchKeys.DocumentNumber,
-        placeholder:  t('caseRenewal.caseCreate.buttons.documentNumber') as string,
-        errorMessage: t('caseRenewal.caseCreate.error.documentNumber') as string,
+        placeholder: t(
+            'caseRenewal.caseCreate.buttons.documentNumber'
+        ) as string,
+        errorMessage: t(
+            'caseRenewal.caseCreate.error.documentNumber'
+        ) as string,
     },
 ];

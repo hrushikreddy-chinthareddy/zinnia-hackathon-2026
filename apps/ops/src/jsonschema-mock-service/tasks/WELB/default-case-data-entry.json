@@ -64,7 +64,11 @@
                                 "callDetails": {
                                     "type": "object",
                                     "title": "Call Details",
-                                    "required": ["callerRole", "callerName", "callerPhone"],
+                                    "required": [
+                                        "callerRole",
+                                        "callerName",
+                                        "callerPhone"
+                                    ],
                                     "properties": {
                                         "callerRole": {
                                             "type": "string",
@@ -383,11 +387,17 @@
                                                                 "title": "Address"
                                                             },
                                                             "addressLine2": {
-                                                                "type": ["string", "null"],
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ],
                                                                 "title": "Address 2"
                                                             },
                                                             "addressLine3": {
-                                                                "type": ["string", "null"],
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ],
                                                                 "title": "Address 3"
                                                             },
                                                             "city": {
@@ -468,7 +478,12 @@
                                                     "lineOfBusiness": {
                                                         "type": "string",
                                                         "title": "Line of Business",
-                                                        "enum": ["Life", "Annuity", "Health", "Other"]
+                                                        "enum": [
+                                                            "Life",
+                                                            "Annuity",
+                                                            "Health",
+                                                            "Other"
+                                                        ]
                                                     },
                                                     "contractNumber": {
                                                         "type": "string",
@@ -508,7 +523,12 @@
                                                     "lineOfBusiness": {
                                                         "type": "string",
                                                         "title": "Line of Business",
-                                                        "enum": ["Life", "Annuity", "Health", "Other"]
+                                                        "enum": [
+                                                            "Life",
+                                                            "Annuity",
+                                                            "Health",
+                                                            "Other"
+                                                        ]
                                                     },
                                                     "contractNumber": {
                                                         "type": "string",
@@ -553,7 +573,12 @@
                                                     "lineOfBusiness": {
                                                         "type": "string",
                                                         "title": "Line of Business",
-                                                        "enum": ["Life", "Annuity", "Health", "Other"]
+                                                        "enum": [
+                                                            "Life",
+                                                            "Annuity",
+                                                            "Health",
+                                                            "Other"
+                                                        ]
                                                     },
                                                     "contractNumber": {
                                                         "type": "string",

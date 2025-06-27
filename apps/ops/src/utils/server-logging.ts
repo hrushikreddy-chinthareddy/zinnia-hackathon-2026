@@ -8,7 +8,13 @@ import {
     withPageAuthRequired,
 } from '@auth0/nextjs-auth0';
 import { AxiosError, AxiosResponse } from 'axios';
-import { GetServerSideProps, GetServerSidePropsContext, NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import {
+    GetServerSideProps,
+    GetServerSidePropsContext,
+    NextApiHandler,
+    NextApiRequest,
+    NextApiResponse,
+} from 'next';
 import { v4 as uuidV4 } from 'uuid';
 
 import { UserProfile } from '@deps/models/user-profile';
@@ -21,7 +27,10 @@ type UserInfo = {
     userName: string;
 };
 
-type LoggingFunction = (message: string, serializableValues?: LoggingContext) => void;
+type LoggingFunction = (
+    message: string,
+    serializableValues?: LoggingContext
+) => void;
 
 export type APIErrorInformation = {
     requestData?: any;
@@ -64,12 +73,18 @@ export type LoggingContext = {
 };
 
 type RouteHandlerWithLoggingContext = (
-    ...args: [...Parameters<NextApiHandler>, ...[loggingContext: LoggingContext]]
+    ...args: [
+        ...Parameters<NextApiHandler>,
+        ...[loggingContext: LoggingContext]
+    ]
 ) => ReturnType<NextApiHandler>;
 
 // Define the type for the wrapped getServerSideProps function
 export type GetServerSidePropsWithLoggingContext = (
-    ...args: [...Parameters<GetServerSideProps>, ...[loggingContext: LoggingContext]]
+    ...args: [
+        ...Parameters<GetServerSideProps>,
+        ...[loggingContext: LoggingContext]
+    ]
 ) => ReturnType<GetServerSideProps>;
 
 // Define the type for the wrapper function
@@ -77,11 +92,19 @@ type WithPageAuthAndLogging = (
     opts: Omit<WithPageAuthRequiredOptions, 'getServerSideProps'> & {
         getServerSideProps: GetServerSidePropsWithLoggingContext;
     },
-    loggingContext: { file: string; function: string; page: string; [key: string]: any }
+    loggingContext: {
+        file: string;
+        function: string;
+        page: string;
+        [key: string]: any;
+    }
 ) => ReturnType<WithPageAuthRequired>;
 
 export const logCompliance: LoggingFunction = (message, serializableValues) => {
-    complianceLogger.compliance({ ...(serializableValues || {}), isCompliance: true }, message);
+    complianceLogger.compliance(
+        { ...(serializableValues || {}), isCompliance: true },
+        message
+    );
 };
 
 export const logFatal: LoggingFunction = (message, serializableValues) => {
@@ -109,11 +132,16 @@ export const logTrace: LoggingFunction = (message, serializableValues) => {
 };
 
 // TRY NOT TO USE THIS! Error without context are much less valuable than errors with context
-export const logErrorWithoutContext = (message: string, serializableValues?: any) => {
+export const logErrorWithoutContext = (
+    message: string,
+    serializableValues?: any
+) => {
     pino.error(serializableValues || {}, message);
 };
 
-export const parseFailedNetworkRequest = (error?: AxiosResponse): APIErrorInformation => {
+export const parseFailedNetworkRequest = (
+    error?: AxiosResponse
+): APIErrorInformation => {
     return {
         requestData: error?.data,
         requestHost: error?.request?.host,
@@ -125,14 +153,19 @@ export const parseFailedNetworkRequest = (error?: AxiosResponse): APIErrorInform
     };
 };
 
-export const parseErrorInformation = (error?: any): APIErrorInformation | MinimumRequiredErrorInformation => {
+export const parseErrorInformation = (
+    error?: any
+): APIErrorInformation | MinimumRequiredErrorInformation => {
     try {
         // The error is an Axios Error.  Parse the response to get the required fields.
         if ((error as AxiosError)?.response) {
             return parseFailedNetworkRequest(error.response);
         }
         // The error is an axios response from an axios error caught in our http client.  Parse the response to get the required fields.
-        if ((error as AxiosResponse)?.data || (error as AxiosResponse)?.request) {
+        if (
+            (error as AxiosResponse)?.data ||
+            (error as AxiosResponse)?.request
+        ) {
             return parseFailedNetworkRequest(error);
         }
 
@@ -147,7 +180,12 @@ export const parseErrorInformation = (error?: any): APIErrorInformation | Minimu
     }
 };
 
-const getContextFromRequest = (req: NextApiRequest): Pick<LoggingContext, 'method' | 'url' | 'inputs' | 'page' | 'params' | 'referrer'> => {
+const getContextFromRequest = (
+    req: NextApiRequest
+): Pick<
+    LoggingContext,
+    'method' | 'url' | 'inputs' | 'page' | 'params' | 'referrer'
+> => {
     if (!req) {
         return {
             method: '',
@@ -168,14 +206,25 @@ const getContextFromRequest = (req: NextApiRequest): Pick<LoggingContext, 'metho
     };
 };
 
-export const getUserInfoFromUser = (user: Claims | UserProfile | null | undefined) => {
-    return { sessionId: user?.sid, userId: user?.sub, userName: user?.name, partyId: user?.partyId, email: user?.email };
+export const getUserInfoFromUser = (
+    user: Claims | UserProfile | null | undefined
+) => {
+    return {
+        sessionId: user?.sid,
+        userId: user?.sub,
+        userName: user?.name,
+        partyId: user?.partyId,
+        email: user?.email,
+    };
 };
 
 export const getUserInfoFromSession = (session: Session | null | undefined) => {
     return { ...getUserInfoFromUser(session?.user) };
 };
-export const getUserInfoForLogging = async (req: NextApiRequest, res: NextApiResponse): Promise<UserInfo | undefined> => {
+export const getUserInfoForLogging = async (
+    req: NextApiRequest,
+    res: NextApiResponse
+): Promise<UserInfo | undefined> => {
     try {
         const session = await getSession(req, res);
         return getUserInfoFromSession(session);
@@ -221,14 +270,20 @@ export const buildNextPageLoggingContext = async (
             file,
             function: func,
             user: userInfo,
-            correlationId: req?.headers?.['x-correlation-id']?.toString() || query?.correlationId?.toString() || uuidV4(),
+            correlationId:
+                req?.headers?.['x-correlation-id']?.toString() ||
+                query?.correlationId?.toString() ||
+                uuidV4(),
         };
     } catch (error) {
         pino.warn('buildNextPageLoggingContext:: error', {
             ...parseErrorInformation(error),
         });
         return {
-            correlationId: context?.req?.headers?.['x-correlation-id']?.toString() || context?.query?.correlationId?.toString() || uuidV4(),
+            correlationId:
+                context?.req?.headers?.['x-correlation-id']?.toString() ||
+                context?.query?.correlationId?.toString() ||
+                uuidV4(),
             method: '',
             url: '',
             params: undefined,
@@ -243,7 +298,10 @@ export const buildNextPageLoggingContext = async (
 };
 
 // Wrapper method to provide logging context to route handlers
-export const withAuthAndLogging = (routeHandler: RouteHandlerWithLoggingContext, additionalContext: AdditionalContext): NextApiHandler => {
+export const withAuthAndLogging = (
+    routeHandler: RouteHandlerWithLoggingContext,
+    additionalContext: AdditionalContext
+): NextApiHandler => {
     return withApiAuthRequired(async (req, res) => {
         // Try and find a correlation id in the request.  Otherwise, generate one
         const correlationId =
@@ -266,13 +324,21 @@ export const withAuthAndLogging = (routeHandler: RouteHandlerWithLoggingContext,
 };
 
 // Wrapper method to provide logging context to getServerSideProps on page views
-export const withPageAuthAndLogging: WithPageAuthAndLogging = (options, logCtx) => {
+export const withPageAuthAndLogging: WithPageAuthAndLogging = (
+    options,
+    logCtx
+) => {
     const { getServerSideProps, ...otherOptions } = options;
     return withPageAuthRequired({
         ...otherOptions,
-        getServerSideProps: async context => {
+        getServerSideProps: async (context) => {
             const { page, file, function: func } = logCtx;
-            const loggingContext = await buildNextPageLoggingContext(context, page, file, func);
+            const loggingContext = await buildNextPageLoggingContext(
+                context,
+                page,
+                file,
+                func
+            );
             logTrace('next-server page view', loggingContext);
             return getServerSideProps(context, loggingContext);
         },

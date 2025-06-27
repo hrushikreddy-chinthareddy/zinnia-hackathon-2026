@@ -8,11 +8,11 @@ const meta: Meta<typeof ChipX> = {
     args: {
         label: 'Chip',
         onDelete: () => {
-          console.log('Deleting chip')
-        }
+            console.log('Deleting chip');
+        },
     },
     parameters: {
-      layout: 'centered',
+        layout: 'centered',
     },
 };
 

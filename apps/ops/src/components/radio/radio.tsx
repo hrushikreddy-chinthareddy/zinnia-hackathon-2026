@@ -1,4 +1,7 @@
-import { RadioGroupItemProps, RadioGroupProps } from '@radix-ui/react-radio-group';
+import {
+    RadioGroupItemProps,
+    RadioGroupProps,
+} from '@radix-ui/react-radio-group';
 import clsx from 'clsx';
 import { InputHTMLAttributes } from 'react';
 
@@ -50,10 +53,14 @@ export default function Radio({
 }: RadioProps) {
     const classes = radioClasses(variant);
 
-    const flexDirection = orientation === RadioOrientation.Vertical ? 'flex-col' : 'flex-row';
+    const flexDirection =
+        orientation === RadioOrientation.Vertical ? 'flex-col' : 'flex-row';
 
     return (
-        <div className={`flex ${flexDirection} ${alignItems} gap-4`} data-testid={RadioTest.Radio}>
+        <div
+            className={`flex ${flexDirection} ${alignItems} gap-4`}
+            data-testid={RadioTest.Radio}
+        >
             <FieldLabel label={label} required={required} classNames="!mb-0" />
             {items.map((item, index) => {
                 const containerClasses = clsx('flex flex-row gap-3', {
@@ -61,17 +68,26 @@ export default function Radio({
                     'items-center': !item.subElement,
                 });
 
-                const disabledClass = item?.disabled ?? disabled ? 'cursor-not-allowed !border-gray-300 !bg-gray-100' : 'cursor-pointer';
+                const disabledClass =
+                    item?.disabled ?? disabled
+                        ? 'cursor-not-allowed !border-gray-300 !bg-gray-100'
+                        : 'cursor-pointer';
 
-                const readonlyClass = readonly ? '!cursor-not-allowed opacity-50' : '';
+                const readonlyClass = readonly
+                    ? '!cursor-not-allowed opacity-50'
+                    : '';
 
                 const labelClasses = clsx('body-sm', {
                     hidden: !!item.subElement,
-                    'pointer-events-none': disabled || variant === RadioVariant.Inactive,
+                    'pointer-events-none':
+                        disabled || variant === RadioVariant.Inactive,
                 });
 
                 return (
-                    <div key={item.value} className={`${containerClasses} ${className}`}>
+                    <div
+                        key={item.value}
+                        className={`${containerClasses} ${className}`}
+                    >
                         <input
                             type="radio"
                             value={item.value}
@@ -93,7 +109,7 @@ export default function Radio({
                                 } as React.ChangeEvent<HTMLInputElement>;
                                 onChange(event);
                             }}
-                            onKeyDown={e => {
+                            onKeyDown={(e) => {
                                 if (variant === RadioVariant.Inactive) return;
                                 if (e.key === 'Enter' || e.key === ' ') {
                                     e.preventDefault();

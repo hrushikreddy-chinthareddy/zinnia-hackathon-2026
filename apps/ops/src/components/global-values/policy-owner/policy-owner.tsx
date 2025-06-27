@@ -1,7 +1,10 @@
 import { Party, PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
@@ -15,14 +18,31 @@ export interface PolicyOwnerProps {
     showLink?: boolean;
 }
 
-export const PolicyOwner = ({ owner, planCode, policyNumber, displaySSN, showLink }: PolicyOwnerProps) => {
-    const { t } = useTranslation(TranslationFiles.COLDEFS, { useSuspense: false });
+export const PolicyOwner = ({
+    owner,
+    planCode,
+    policyNumber,
+    displaySSN,
+    showLink,
+}: PolicyOwnerProps) => {
+    const { t } = useTranslation(TranslationFiles.COLDEFS, {
+        useSuspense: false,
+    });
 
     if (!owner) return null;
 
-    const { firstName, lastName, partyId, identifications, partyType, fullName } = owner;
+    const {
+        firstName,
+        lastName,
+        partyId,
+        identifications,
+        partyType,
+        fullName,
+    } = owner;
     const sanitizedIdentifications = sanitizeIdentifications(identifications);
-    const ssn = displaySSN ? sanitizedIdentifications?.[0]?.identificationValue ?? '-' : '';
+    const ssn = displaySSN
+        ? sanitizedIdentifications?.[0]?.identificationValue ?? '-'
+        : '';
 
     // DEPU-3511
     const ownerName =
@@ -33,7 +53,9 @@ export const PolicyOwner = ({ owner, planCode, policyNumber, displaySSN, showLin
     return (
         <div className="mt-4 flex shrink-0 items-center sm:ml-14 md:ml-0 md:mt-0">
             <div className="flex flex-col">
-                <label className="field-label">{t('policyDetails.groups.owner')}</label>
+                <label className="field-label">
+                    {t('policyDetails.groups.owner')}
+                </label>
                 {showLink ? (
                     <NavElement
                         size={NavElementSize.Small}

@@ -65,7 +65,9 @@ export class ToppanMerrillStorefrontAgent {
 
     addState(stateId: string) {
         this.root.User.States.StateId.push(stateId);
-        this.root.User.States.$.Counter = String(this.root.User.States.StateId.length);
+        this.root.User.States.$.Counter = String(
+            this.root.User.States.StateId.length
+        );
     }
 
     setFirstName(firstName: string) {

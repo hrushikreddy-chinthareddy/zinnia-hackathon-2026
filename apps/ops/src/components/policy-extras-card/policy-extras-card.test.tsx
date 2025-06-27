@@ -1,7 +1,11 @@
 jest.mock('@auth0/nextjs-auth0');
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { BadgeTest, PolicyExtrasTest, PopoverTest } from '@deps/jest/constants/test-id-constants';
+import {
+    BadgeTest,
+    PolicyExtrasTest,
+    PopoverTest,
+} from '@deps/jest/constants/test-id-constants';
 import { generateFields } from '@deps/utils/mock/mockPolicyExtrasFields';
 
 import PolicyExtrasCard, { PolicyExtrasCardProps } from './policy-extras-card';
@@ -13,7 +17,9 @@ describe('PolicyExtrasCard', () => {
     const labelText = 'label text';
     const badgeLabelText = 'Badge Label';
     const subheader = ['subheader 1'];
-    const badge = <Badge variant={BadgeVariant.Success} label={badgeLabelText} />;
+    const badge = (
+        <Badge variant={BadgeVariant.Success} label={badgeLabelText} />
+    );
     const numberOfFields = 1;
     const children = generateFields(numberOfFields);
 
@@ -35,17 +41,29 @@ describe('PolicyExtrasCard', () => {
         describe('header', () => {
             it('renders correctly', () => {
                 renderComponent();
-                const containerElement = screen.getByTestId(PolicyExtrasTest.CONTAINER);
+                const containerElement = screen.getByTestId(
+                    PolicyExtrasTest.CONTAINER
+                );
                 const headerElement = screen.getByText(headerText, {
                     exact: false,
                 });
                 const labelElement = screen.getByText(labelText, {
                     exact: false,
                 });
-                const subheaderElement = screen.getByTestId(PolicyExtrasTest.SUBHEADER);
+                const subheaderElement = screen.getByTestId(
+                    PolicyExtrasTest.SUBHEADER
+                );
                 const BadgeElement = screen.getByTestId(BadgeTest.Badge);
-                const requiredElements = [containerElement, headerElement, labelElement, subheaderElement, BadgeElement];
-                requiredElements.forEach(element => expect(element).toBeInTheDocument());
+                const requiredElements = [
+                    containerElement,
+                    headerElement,
+                    labelElement,
+                    subheaderElement,
+                    BadgeElement,
+                ];
+                requiredElements.forEach((element) =>
+                    expect(element).toBeInTheDocument()
+                );
             });
         });
 
@@ -62,17 +80,27 @@ describe('PolicyExtrasCard', () => {
                 renderComponent();
                 const popoverElement = screen.getByTestId(PopoverTest.Popover);
                 fireEvent.click(popoverElement);
-                const popoverTitle = await screen.findByTestId(PopoverTest.Popover);
+                const popoverTitle = await screen.findByTestId(
+                    PopoverTest.Popover
+                );
                 const popoverBody = await screen.findByTestId(PopoverTest.Body);
-                const requiredElements = [popoverElement, popoverBody, popoverTitle];
-                requiredElements.forEach(element => expect(element).toBeInTheDocument());
+                const requiredElements = [
+                    popoverElement,
+                    popoverBody,
+                    popoverTitle,
+                ];
+                requiredElements.forEach((element) =>
+                    expect(element).toBeInTheDocument()
+                );
             });
         });
 
         describe('children', () => {
             it('renders children', () => {
                 renderComponent();
-                const fieldElements = screen.getAllByTestId(PolicyExtrasTest.FIELD);
+                const fieldElements = screen.getAllByTestId(
+                    PolicyExtrasTest.FIELD
+                );
                 expect(fieldElements).toHaveLength(numberOfFields);
             });
         });
@@ -88,7 +116,7 @@ describe('PolicyExtrasCard', () => {
                 renderComponent();
                 const fields = screen.getAllByTestId(PolicyExtrasTest.FIELD);
 
-                fields.forEach(field => {
+                fields.forEach((field) => {
                     // randomized text means we just have to check if it exists
                     expect(field).toHaveTextContent(new RegExp('.+', 'i'));
                     expect(field).toHaveTextContent(new RegExp('.+', 'i'));

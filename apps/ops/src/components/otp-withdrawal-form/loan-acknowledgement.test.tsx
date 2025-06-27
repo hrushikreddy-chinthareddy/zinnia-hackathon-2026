@@ -1,7 +1,10 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
@@ -32,15 +35,24 @@ describe('formLoan component', () => {
         it('should render loan checkbox', () => {
             const setMockData = jest.fn();
             render(
-                <FormDataContext.Provider value={{ ...defaultFormDataContext, setFormLoan: setMockData }}>
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        setFormLoan: setMockData,
+                    }}
+                >
                     <LoanAcknowledgement />
                 </FormDataContext.Provider>
             );
-            const acknowledgementElement = screen.getByLabelText('loanAcknowledgement.acknowledgement');
+            const acknowledgementElement = screen.getByLabelText(
+                'loanAcknowledgement.acknowledgement'
+            );
             expect(acknowledgementElement).toBeInTheDocument();
             expect(acknowledgementElement).not.toBeChecked();
 
-            expect(setMockData).toHaveBeenCalledWith({ isLoanAck: { text: false } });
+            expect(setMockData).toHaveBeenCalledWith({
+                isLoanAck: { text: false },
+            });
         });
 
         it('should render the payload correctly on checkbox event', () => {
@@ -53,19 +65,27 @@ describe('formLoan component', () => {
 
             render(
                 <FormDataContext.Provider
-                    value={{ ...defaultFormDataContext, currentFormState: CaseStatus.Pending, formLoan, setFormLoan: setMockData }}
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        formLoan,
+                        setFormLoan: setMockData,
+                    }}
                 >
                     <LoanAcknowledgement />
                 </FormDataContext.Provider>
             );
-            const acknowledgementElement = screen.getByTestId('acknowledgement');
+            const acknowledgementElement =
+                screen.getByTestId('acknowledgement');
             expect(acknowledgementElement).not.toBeChecked();
 
             fireEvent.click(acknowledgementElement);
             expect(acknowledgementElement).toBeChecked();
 
             // expect(setMockData).toHaveBeenCalled();
-            expect(setMockData).toHaveBeenCalledWith({ isLoanAck: { text: true } });
+            expect(setMockData).toHaveBeenCalledWith({
+                isLoanAck: { text: true },
+            });
         });
     });
 });

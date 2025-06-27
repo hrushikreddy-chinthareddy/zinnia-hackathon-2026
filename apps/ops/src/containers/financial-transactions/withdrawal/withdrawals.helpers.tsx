@@ -20,7 +20,9 @@ export const buildWithdrawalsRequestBody = (
         return {
             caseId: withdrawal.caseId || '',
             correlationId: uuidV4(),
-            effectiveDate: dayjs(withdrawal.effectiveDate, 'MMDDYYYY').format(ZAHARA_API_DATE_FORMAT),
+            effectiveDate: dayjs(withdrawal.effectiveDate, 'MMDDYYYY').format(
+                ZAHARA_API_DATE_FORMAT
+            ),
             parties: [
                 {
                     allocationPercentage: 100,
@@ -52,7 +54,9 @@ export const buildWithdrawalsRequestBody = (
             transactionAmounts: {
                 amountType: AmountType.AMOUNT,
                 disbursementType: withdrawal.disbursementType,
-                disbursementPaymentForm: getDisbursementPaymentForm(withdrawal.paymentForm),
+                disbursementPaymentForm: getDisbursementPaymentForm(
+                    withdrawal.paymentForm
+                ),
                 requestedAmount: Number(withdrawal.amount),
             },
         };
@@ -61,7 +65,9 @@ export const buildWithdrawalsRequestBody = (
     return {
         caseId: withdrawal.caseId || '',
         correlationId: uuidV4(),
-        effectiveDate: dayjs(withdrawal.effectiveDate, 'MMDDYYYY').format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs(withdrawal.effectiveDate, 'MMDDYYYY').format(
+            ZAHARA_API_DATE_FORMAT
+        ),
         payeeOrBeneficiary: [
             {
                 allocationPercentage: 100,

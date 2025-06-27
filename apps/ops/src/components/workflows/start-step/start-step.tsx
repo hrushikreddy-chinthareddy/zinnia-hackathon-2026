@@ -2,11 +2,18 @@ import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import CardCaseDocument from '@deps/components/card/card-case-document/card-case-document';
-import { CaseDocumentOption, PROCESS_WITHOUT_CASE_DOCUMENT } from '@deps/components/case-document-select/case-document-select';
+import {
+    CaseDocumentOption,
+    PROCESS_WITHOUT_CASE_DOCUMENT,
+} from '@deps/components/case-document-select/case-document-select';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
@@ -53,8 +60,11 @@ const StartStep = ({
     const { goToNext } = useWorkflow();
 
     const { policyNumber, product } = policy;
-    const [selectedCaseId, setSelectedCaseId] = useState<string | undefined>(state.caseId);
-    const [showSelectionError, setShowSelectionError] = useState<boolean>(false);
+    const [selectedCaseId, setSelectedCaseId] = useState<string | undefined>(
+        state.caseId
+    );
+    const [showSelectionError, setShowSelectionError] =
+        useState<boolean>(false);
     const [caseOptions, setCaseOptions] = useState<CaseDocumentOption[]>([]);
 
     useEffect(() => {
@@ -75,19 +85,29 @@ const StartStep = ({
             );
 
             if (response && 'total' in response) {
-                const mappedCaseOptions: CaseDocumentOption[] = response.data.map(caseDetails => {
-                    const documentNumber = getCaseIdentifierValue(caseDetails.identifiers, CaseIdentifier.DocumentNumber);
-                    return {
-                        documentNumber: documentNumber || '',
-                        caseId: caseDetails.id,
-                        tag: `${caseDetails?.process || ''} - ${caseDetails?.processSubType || ''}`,
-                        value: caseDetails.id,
-                    };
-                });
+                const mappedCaseOptions: CaseDocumentOption[] =
+                    response.data.map((caseDetails) => {
+                        const documentNumber = getCaseIdentifierValue(
+                            caseDetails.identifiers,
+                            CaseIdentifier.DocumentNumber
+                        );
+                        return {
+                            documentNumber: documentNumber || '',
+                            caseId: caseDetails.id,
+                            tag: `${caseDetails?.process || ''} - ${
+                                caseDetails?.processSubType || ''
+                            }`,
+                            value: caseDetails.id,
+                        };
+                    });
                 setCaseOptions([...mappedCaseOptions, noDocument]);
             } else {
                 setCaseOptions([noDocument]);
-                browserLogError(response?.data?.err ? response.data.err : 'Error fetching cases');
+                browserLogError(
+                    response?.data?.err
+                        ? response.data.err
+                        : 'Error fetching cases'
+                );
             }
         }
 
@@ -96,7 +116,7 @@ const StartStep = ({
 
     const handleSelection = (caseId: string, documentNumber: string) => {
         if (selectedCaseId === caseId) {
-            setState(prevState => ({
+            setState((prevState) => ({
                 ...prevState,
                 caseId: undefined,
                 businessKey: undefined,
@@ -104,7 +124,7 @@ const StartStep = ({
 
             setSelectedCaseId(undefined);
         } else {
-            setState(prevState => ({
+            setState((prevState) => ({
                 ...prevState,
                 caseId,
                 businessKey: documentNumber,
@@ -116,7 +136,9 @@ const StartStep = ({
     };
 
     const handleContinue = async () => {
-        const selectedOption = caseOptions.find(option => option.value === selectedCaseId);
+        const selectedOption = caseOptions.find(
+            (option) => option.value === selectedCaseId
+        );
         if (!selectedOption) {
             setShowSelectionError(true);
             return;
@@ -150,29 +172,43 @@ const StartStep = ({
                         variant={LabelVariant.LabelLg}
                     />
                     <div className="grid max-w-[436px] gap-2">
-                        {caseOptions.map(option => (
+                        {caseOptions.map((option) => (
                             <CardCaseDocument
                                 caseDocumentOption={option}
                                 isSelected={state.caseId === option.value}
                                 key={option.value}
-                                onChange={() => handleSelection(option.value as string, option.documentNumber as string)}
+                                onChange={() =>
+                                    handleSelection(
+                                        option.value as string,
+                                        option.documentNumber as string
+                                    )
+                                }
                             />
                         ))}
                     </div>
-                    {(selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT || showSelectionError) && (
+                    {(selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT ||
+                        showSelectionError) && (
                         <div className="flex flex-col gap-2 mt-2">
-                            {selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT && (
+                            {selectedCaseId ===
+                                PROCESS_WITHOUT_CASE_DOCUMENT && (
                                 <AssistiveText
                                     variant={AssistiveTextVariant.Info}
                                     text={
                                         isOnBaseUpdateAssistiveText
-                                            ? t('workflows.start.processWithoutDocAssistiveTextWithOnBaseUpdate')
-                                            : t('workflows.start.processWithoutDocAssistiveText')
+                                            ? t(
+                                                  'workflows.start.processWithoutDocAssistiveTextWithOnBaseUpdate'
+                                              )
+                                            : t(
+                                                  'workflows.start.processWithoutDocAssistiveText'
+                                              )
                                     }
                                 />
                             )}
                             {showSelectionError && (
-                                <AssistiveText variant={AssistiveTextVariant.Error} text={t('workflows.start.missingSelection')} />
+                                <AssistiveText
+                                    variant={AssistiveTextVariant.Error}
+                                    text={t('workflows.start.missingSelection')}
+                                />
                             )}
                         </div>
                     )}

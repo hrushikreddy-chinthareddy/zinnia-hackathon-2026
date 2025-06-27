@@ -16,10 +16,17 @@ import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { friendlyGroupByName, generateCaseLink } from '@deps/components/dashboard/utils';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import {
+    friendlyGroupByName,
+    generateCaseLink,
+} from '@deps/components/dashboard/utils';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
@@ -56,7 +63,9 @@ export const ActiveAgingTable = () => {
 
     // Filter by search
     const searchedData = useMemo(() => {
-        return dataByTimeframe.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+        return dataByTimeframe.filter((item) =>
+            item.name.toLowerCase().includes(searchText.toLowerCase())
+        );
     }, [dataByTimeframe, searchText]);
 
     const { handleSort, sortedData } = useTableOptions({
@@ -86,7 +95,7 @@ export const ActiveAgingTable = () => {
         (name: string, countByDay: { [key: string]: number }) => {
             return Object.keys(countByDay)
                 .reverse()
-                .map(key => {
+                .map((key) => {
                     const startDate = dayjs(key);
                     const daysActive = dayjs().diff(startDate, 'day');
                     return (
@@ -118,7 +127,13 @@ export const ActiveAgingTable = () => {
                     );
                 });
         },
-        [filter.brokerDealerName, filter.carrier, filter.caseStatus, groupBy, selectedProcess]
+        [
+            filter.brokerDealerName,
+            filter.carrier,
+            filter.caseStatus,
+            groupBy,
+            selectedProcess,
+        ]
     );
 
     return (
@@ -127,23 +142,35 @@ export const ActiveAgingTable = () => {
             <div className={sharedStyles.searchContainer}>
                 <FieldData
                     fieldSize={FieldSize.Small}
-                    placeholder={`Search by ${friendlyGroupByName[groupBy]?.toLocaleLowerCase()}`}
-                    onChange={e => setSearchText(e.target.value)}
+                    placeholder={`Search by ${friendlyGroupByName[
+                        groupBy
+                    ]?.toLocaleLowerCase()}`}
+                    onChange={(e) => setSearchText(e.target.value)}
                 />
             </div>
             <ActiveAgingFilters />
             <div className={sharedStyles.tableContainer}>
-                <BlurOverlayLoader loading={activeAgingDataFetching || activeAgingDataLoading}>
+                <BlurOverlayLoader
+                    loading={activeAgingDataFetching || activeAgingDataLoading}
+                >
                     {activeAgingDataError ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'Something went wrong fetching insights, please try again by refreshing the page'}
+                                {
+                                    'Something went wrong fetching insights, please try again by refreshing the page'
+                                }
                             </Typography>
                         </div>
                     ) : searchedData?.length === 0 ? (
                         <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
+                            <Typography
+                                variant={TypographyVariant.BodyBold}
+                                className="mt-4 flex flex-row gap-2"
+                            >
                                 <ChartBarsIcon height={'24px'} width={'24px'} />
                                 {'There is no data for this selection'}
                             </Typography>
@@ -152,8 +179,15 @@ export const ActiveAgingTable = () => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.NAME)} sortable>
-                                        {toSentenceCase(friendlyGroupByName[groupBy])}
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.NAME)
+                                        }
+                                        sortable
+                                    >
+                                        {toSentenceCase(
+                                            friendlyGroupByName[groupBy]
+                                        )}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -162,7 +196,12 @@ export const ActiveAgingTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell onClick={() => handleSort(SortByOptions.TOTAL)} sortable>
+                                    <TableHeaderCell
+                                        onClick={() =>
+                                            handleSort(SortByOptions.TOTAL)
+                                        }
+                                        sortable
+                                    >
                                         Total submissions
                                         <Icon
                                             className={sharedStyles.sortIcon}
@@ -172,12 +211,14 @@ export const ActiveAgingTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell>Days active</TableHeaderCell>
+                                    <TableHeaderCell>
+                                        Days active
+                                    </TableHeaderCell>
                                     <TableHeaderCell>Actions</TableHeaderCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {paginatedData.map(item => {
+                                {paginatedData.map((item) => {
                                     const startDate = startDates[timeframe];
                                     const endDate = calculateEndDate(timeframe);
                                     const link = generateCaseLink({
@@ -195,7 +236,10 @@ export const ActiveAgingTable = () => {
                                             key={`${item.name}-${item.count}`}
                                             isExpandable
                                             showChevron
-                                            expandedContent={generateExpandableContent(item.name, item.countByDay)}
+                                            expandedContent={generateExpandableContent(
+                                                item.name,
+                                                item.countByDay
+                                            )}
                                         >
                                             <TableCell>{item.name}</TableCell>
                                             <TableCell>{item.total}</TableCell>
@@ -219,7 +263,12 @@ export const ActiveAgingTable = () => {
                     )}
                     {!activeAgingDataError && searchedData?.length > 0 && (
                         <div className={sharedStyles.paginationContainer}>
-                            <Pagination limit={limit} offset={offset} total={searchedData?.length || 0} goToPage={goToPage} />
+                            <Pagination
+                                limit={limit}
+                                offset={offset}
+                                total={searchedData?.length || 0}
+                                goToPage={goToPage}
+                            />
                         </div>
                     )}
                 </BlurOverlayLoader>

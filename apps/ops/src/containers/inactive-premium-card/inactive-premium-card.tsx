@@ -14,10 +14,17 @@ export interface InactivePremiumCardProps {
     header: string;
 }
 
-const InactivePremiumCard = ({ text, icon, header }: InactivePremiumCardProps) => {
-    const contentClasses = clsx('w-full max-w-[339px] flex-shrink-0 text-center sm:w-auto', {
-        flex: typeof text === 'string',
-    });
+const InactivePremiumCard = ({
+    text,
+    icon,
+    header,
+}: InactivePremiumCardProps) => {
+    const contentClasses = clsx(
+        'w-full max-w-[339px] flex-shrink-0 text-center sm:w-auto',
+        {
+            flex: typeof text === 'string',
+        }
+    );
 
     return (
         <div
@@ -25,11 +32,20 @@ const InactivePremiumCard = ({ text, icon, header }: InactivePremiumCardProps) =
             className="flex h-[195px] w-full flex-col justify-center gap-4 rounded border-2 border-dashed border-gray-100 bg-gray-50 align-middle text-gray-900"
         >
             <div className="flex flex-col items-center justify-center gap-2 align-middle sm:flex-row">
-                {icon} <Label label={header || ''} variant={LabelVariant.LabelLg} className="text-center" />
+                {icon}{' '}
+                <Label
+                    label={header || ''}
+                    variant={LabelVariant.LabelLg}
+                    className="text-center"
+                />
             </div>
             <div className="flex w-full justify-center align-middle">
                 {typeof text === 'string' ? (
-                    <Content details={text as string} contentClassName={contentClasses} variant={ContentVariant.BodySm} />
+                    <Content
+                        details={text as string}
+                        contentClassName={contentClasses}
+                        variant={ContentVariant.BodySm}
+                    />
                 ) : (
                     <div className={contentClasses}>{text}</div>
                 )}

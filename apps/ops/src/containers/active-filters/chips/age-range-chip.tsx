@@ -15,7 +15,11 @@ const AgeRangeChip = ({
 
     return (
         <ChipX
-            ariaLabel={t('ariaLabel.clearFilter', { filter: t('ageRange').toLocaleLowerCase() }) as string}
+            ariaLabel={
+                t('ariaLabel.clearFilter', {
+                    filter: t('ageRange').toLocaleLowerCase(),
+                }) as string
+            }
             label={formattedString}
             onDelete={() => handleRemoveFilter({ age: '' })}
         />

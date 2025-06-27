@@ -260,14 +260,16 @@ export const mockPolicy: Policy = {
             },
             {
                 fundId: 'ELI002',
-                fundName: 'S AND P 500® Price Return Annual Point-to-Point with Cap Account',
+                fundName:
+                    'S AND P 500® Price Return Annual Point-to-Point with Cap Account',
                 fundAccountType: FundAccountType.INDEXED,
                 allocationPercentage: 25,
                 startDate: '2024-06-01',
             },
             {
                 fundId: 'ELI003',
-                fundName: 'S AND P 500® Price Return Annual Point-to-Point with Participation Rate Account',
+                fundName:
+                    'S AND P 500® Price Return Annual Point-to-Point with Participation Rate Account',
                 fundAccountType: FundAccountType.INDEXED,
                 allocationPercentage: 25,
                 startDate: '2024-06-01',
@@ -277,7 +279,8 @@ export const mockPolicy: Policy = {
             {
                 fundAccountType: FundAccountType.INDEXED,
                 fundId: 'ELI002',
-                fundName: 'S&P 500® Price Return Annual Point-to-Point with Participation Rate Account',
+                fundName:
+                    'S&P 500® Price Return Annual Point-to-Point with Participation Rate Account',
                 generalLedgerFundCode: 'XE2',
                 totalFundValue: 63.72,
                 fundSegments: [

@@ -13,7 +13,10 @@ type ContractAccountInfo = {
     planCode: string | '';
 };
 
-export const useContractAccountInfo = (contract: string, planCode: string): ContractAccountInfo => {
+export const useContractAccountInfo = (
+    contract: string,
+    planCode: string
+): ContractAccountInfo => {
     const [qualType, setQualType] = useState<FASTQualTypes | ''>('');
     const [issueState, setIssueState] = useState<string | ''>('');
     const [issueDate, setIssueDate] = useState<string | ''>('');
@@ -27,24 +30,36 @@ export const useContractAccountInfo = (contract: string, planCode: string): Cont
                     { limit: 1, offset: 0 }
                 );
 
-                const acctInfoResponse = await fetchPolicy(searchResults.results[0]?.policyNumber, searchResults.results[0]?.planCode);
+                const acctInfoResponse = await fetchPolicy(
+                    searchResults.results[0]?.policyNumber,
+                    searchResults.results[0]?.planCode
+                );
 
-                setQualType((acctInfoResponse?.qualificationType as unknown as FASTQualTypes) || ''); // BPB - Assuming FAST isn't in here yet, so this is a temporary fix
+                setQualType(
+                    (acctInfoResponse?.qualificationType as unknown as FASTQualTypes) ||
+                        ''
+                ); // BPB - Assuming FAST isn't in here yet, so this is a temporary fix
                 setIssueState(acctInfoResponse?.issueState || '');
                 setIssueDate(acctInfoResponse?.policyDates?.issueDate || '');
                 setContractStatus(acctInfoResponse?.policyStatus || '');
-                browserLogInfo('useContractAccountInfo::Retrieved account info', {
-                    policyNumber: contract,
-                    planCode: planCode,
-                    file: 'useContractAccountInfo',
-                });
+                browserLogInfo(
+                    'useContractAccountInfo::Retrieved account info',
+                    {
+                        policyNumber: contract,
+                        planCode: planCode,
+                        file: 'useContractAccountInfo',
+                    }
+                );
             } catch (e) {
-                browserLogError('useContractAccountInfo::Error retrieving account info', {
-                    ...parseErrorInformation(e),
-                    policyNumber: contract,
-                    planCode: planCode,
-                    file: 'useContractAccountInfo',
-                });
+                browserLogError(
+                    'useContractAccountInfo::Error retrieving account info',
+                    {
+                        ...parseErrorInformation(e),
+                        policyNumber: contract,
+                        planCode: planCode,
+                        file: 'useContractAccountInfo',
+                    }
+                );
             }
         };
 

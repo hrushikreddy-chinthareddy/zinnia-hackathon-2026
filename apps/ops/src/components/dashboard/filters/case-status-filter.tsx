@@ -18,7 +18,11 @@ interface CaseStatusFilterProps {
     options: CaseStatusOption[];
 }
 
-export const CaseStatusFilter: FC<CaseStatusFilterProps> = ({ caseStatus, handleChangeCallback, options }) => {
+export const CaseStatusFilter: FC<CaseStatusFilterProps> = ({
+    caseStatus,
+    handleChangeCallback,
+    options,
+}) => {
     const handleCaseStatusChange = (status: Statuses) => {
         const newStatus = { ...caseStatus };
 
@@ -39,10 +43,13 @@ export const CaseStatusFilter: FC<CaseStatusFilterProps> = ({ caseStatus, handle
     const caseStatusKeys = useMemo(() => Object.keys(caseStatus), [caseStatus]);
     const convertCaseStatusKeysToValuesInObject = useMemo(
         () =>
-            caseStatusKeys.reduce((acc: { [key in Statuses]?: string }, key) => {
-                acc[key as Statuses] = caseStatusMap[key as Statuses];
-                return acc;
-            }, {}),
+            caseStatusKeys.reduce(
+                (acc: { [key in Statuses]?: string }, key) => {
+                    acc[key as Statuses] = caseStatusMap[key as Statuses];
+                    return acc;
+                },
+                {}
+            ),
         [caseStatusKeys]
     );
 
@@ -55,7 +62,7 @@ export const CaseStatusFilter: FC<CaseStatusFilterProps> = ({ caseStatus, handle
             size={FieldSize.XS}
             isMultiselect
             className={sharedStyles.multiselectDropdowns}
-            onChange={val => handleCaseStatusChange(val as Statuses)}
+            onChange={(val) => handleCaseStatusChange(val as Statuses)}
         />
     );
 };

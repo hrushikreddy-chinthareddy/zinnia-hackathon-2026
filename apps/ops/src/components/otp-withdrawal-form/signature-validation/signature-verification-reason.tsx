@@ -15,17 +15,37 @@ export type ISignatureVerificationReasonsProps = {
     isFormStateReadOnly?: boolean;
 };
 
-export default function SignatureVerificationReasons({ config, checkedItems, isFormStateReadOnly }: ISignatureVerificationReasonsProps) {
+export default function SignatureVerificationReasons({
+    config,
+    checkedItems,
+    isFormStateReadOnly,
+}: ISignatureVerificationReasonsProps) {
     const formDataContext = useContext(FormDataContext);
 
     const onStatusChangeHandler = (value: SignVerificationReason) => () => {
-        formDataContext.setFormSignature(fs => {
+        formDataContext.setFormSignature((fs) => {
             if (fs.signVerificationReason) {
-                if (fs.signVerificationReason.some(item => item.text === value)) {
-                    return { ...fs, signVerificationReason: fs.signVerificationReason.filter(reason => reason.text !== value) };
+                if (
+                    fs.signVerificationReason.some(
+                        (item) => item.text === value
+                    )
+                ) {
+                    return {
+                        ...fs,
+                        signVerificationReason:
+                            fs.signVerificationReason.filter(
+                                (reason) => reason.text !== value
+                            ),
+                    };
                 }
 
-                return { ...fs, signVerificationReason: [...fs.signVerificationReason, { text: value }] };
+                return {
+                    ...fs,
+                    signVerificationReason: [
+                        ...fs.signVerificationReason,
+                        { text: value },
+                    ],
+                };
             } else {
                 return { ...fs, signVerificationReason: [{ text: value }] };
             }

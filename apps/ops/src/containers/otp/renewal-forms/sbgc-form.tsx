@@ -14,7 +14,9 @@ import { Channel } from '@deps/models/case/renewal/case-renewal';
 import getSbgcRenewalConfig from './sbgc-form.helpers';
 
 export default function SbgcRenewalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseRenewal.request',
+    });
 
     const {
         channel,
@@ -25,15 +27,21 @@ export default function SbgcRenewalForm() {
         setRenewalRequestSignDate,
         planCode,
     } = useContext(RenewalFormDataContext);
-    const { formPartyConfigs, signatureConfigs, formValidation, transList } = getSbgcRenewalConfig(t);
+    const { formPartyConfigs, signatureConfigs, formValidation, transList } =
+        getSbgcRenewalConfig(t);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
     }, []);
 
     useEffect(() => {
-        const owner = ownerInformation?.find(owner => owner.type === 'Primary');
-        const renewalDate = channel === Channel.Form ? owner?.signature?.signDate || 'NA' : renewalRequestSignDate;
+        const owner = ownerInformation?.find(
+            (owner) => owner.type === 'Primary'
+        );
+        const renewalDate =
+            channel === Channel.Form
+                ? owner?.signature?.signDate || 'NA'
+                : renewalRequestSignDate;
 
         setRenewalRequestSignDate(renewalDate);
     }, [channel, ownerInformation, renewalRequestSignDate]);
@@ -43,13 +51,27 @@ export default function SbgcRenewalForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <br />
             <GeneralInformation isFormStateReadOnly={isFormStateReadOnly} />
-            <OwnerInformation isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <OwnerInformation
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <ContractValue isFormStateReadOnly={isFormStateReadOnly} />
             <hr className="my-4 h-0.5 border-none bg-gray-100 px-4" />
-            <RenewalPeriodMultiSection isFormStateReadOnly={isFormStateReadOnly} options={transList} planCode={planCode} />
+            <RenewalPeriodMultiSection
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={transList}
+                planCode={planCode}
+            />
             <hr className="my-4 h-0.5 border-none bg-gray-100 px-4" />
-            {channel === Channel.Phone && <CallReceiveDate isFormStateReadOnly={isFormStateReadOnly} />}
-            {channel === Channel.Form && <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} configs={signatureConfigs} />}
+            {channel === Channel.Phone && (
+                <CallReceiveDate isFormStateReadOnly={isFormStateReadOnly} />
+            )}
+            {channel === Channel.Form && (
+                <SignatureValidations
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    configs={signatureConfigs}
+                />
+            )}
         </>
     );
 }

@@ -6,7 +6,14 @@ import { numberOfFieldsArgTypes } from '@deps/utils/storybook';
 import fullConfig from '@deps/utils/styles';
 
 import ResponsiveFlex, { ResponsiveFlexProps } from './responsive-flex';
-import { HorizontalResizing, ItemPadding, ItemSpacing, LayoutAlignment, LayoutDirection, VerticalResizing } from './responsive-flex.types';
+import {
+    HorizontalResizing,
+    ItemPadding,
+    ItemSpacing,
+    LayoutAlignment,
+    LayoutDirection,
+    VerticalResizing,
+} from './responsive-flex.types';
 
 type StoryProps = ResponsiveFlexProps & {
     numberOfFields: number;
@@ -23,7 +30,7 @@ const ResponsiveFlexMeta: Meta<StoryProps> = {
     title: 'Components/Layouts/ResponsiveFlex',
     component: ResponsiveFlex,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-[600px] w-full overflow-auto bg-gray-100">
                 <Story />
             </div>
@@ -95,9 +102,16 @@ const ResponsiveFlexMeta: Meta<StoryProps> = {
         className: 'bg-purple-50',
     },
 
-    render: ({ numberOfFields, rainbow, height, width, ...args }: StoryProps) => {
+    render: ({
+        numberOfFields,
+        rainbow,
+        height,
+        width,
+        ...args
+    }: StoryProps) => {
         const difference = numberOfFields - tempItems.length;
-        difference > 0 && tempItems.push(...generateFields(difference, rainbow));
+        difference > 0 &&
+            tempItems.push(...generateFields(difference, rainbow));
 
         return (
             <ResponsiveFlex

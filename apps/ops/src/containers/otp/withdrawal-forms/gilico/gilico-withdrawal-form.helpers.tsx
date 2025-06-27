@@ -74,10 +74,18 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) {
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
+export default function getGilicoConfig(
+    t: TFunction,
+    formSubtype: FormSubtype
+) {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null } => {
         if (formProgram?.programType?.text === ProgramType.TotalFreeAmt) {
-            return { selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal, amount: '' };
+            return {
+                selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal,
+                amount: '',
+            };
         }
         if (formProgram?.program?.text === ProgramType.Withdrawal) {
             const amount = formProgram?.partialAmount?.text || '';
@@ -94,14 +102,18 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
         {
-            label: t('amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'),
+            label: t(
+                'amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'
+            ),
             value: WithdrawalSelectionValues.TotalFreeWithdrawal,
             generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -115,7 +127,10 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     withdrawType: { text: WithdrawalType.Net },
                     programType: { text: ProgramType.NetWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                    partialNetAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -129,7 +144,10 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.GrossWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -147,8 +165,14 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Default,
+        },
+        {
+            label: t('distributionInstruction.specifyFunds'),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const validateMaritalStatusAllowances = (issueState: USStates) => {
@@ -218,7 +242,9 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -241,7 +267,8 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         },
         {
             key: `sig-val-spouse`,
@@ -260,11 +287,15 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
                 return (
                     !!ownerStateOfResidence &&
                     formSubtype === FormSubtype.FullWithdrawal &&
-                    spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase())
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
                 );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
@@ -359,7 +390,9 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -385,7 +418,10 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
 
                 {
@@ -399,11 +435,16 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -413,21 +454,30 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     isBankingField: true,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -464,7 +514,8 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -479,7 +530,9 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -503,7 +556,10 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -515,11 +571,16 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -528,21 +589,30 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -579,7 +649,8 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -613,8 +684,15 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, upsAccount }: FormDisbursement) {
-                if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                upsAccount,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === FormDisbursementSelections.Check &&
+                    paymentMailType.text === PaymentMailType.ExpressCheck
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         accountNumber: upsAccount?.accountNumber?.text ?? '',
@@ -652,21 +730,34 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
         {
-            label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t(
+                'amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+            ),
             value: ProcessRequestType.NoLongerSubject,
         },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
     const fullWithdrawalOptions = [
         {
-            label: t('amountDetails.fullWithdrawal.withdrawTheEntireContractValue'),
+            label: t(
+                'amountDetails.fullWithdrawal.withdrawTheEntireContractValue'
+            ),
             value: AccountCloseReason.Surrender,
         },
         {
-            label: t('amountDetails.fullWithdrawal.contractHasBeenLostOrDestroyed'),
+            label: t(
+                'amountDetails.fullWithdrawal.contractHasBeenLostOrDestroyed'
+            ),
             value: AccountCloseReason.ContractLost,
         },
     ];
@@ -674,8 +765,14 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
     const meritalStatusAllowanceConfig = {
         label: 'maritalStatusAllowancesMN',
         maritalStatusAllowancesOptions: [
-            { label: 'maritalStatusAllowanceItems.single', value: MaritalStatusAllowances.Single },
-            { label: 'maritalStatusAllowanceItems.married', value: MaritalStatusAllowances.Married },
+            {
+                label: 'maritalStatusAllowanceItems.single',
+                value: MaritalStatusAllowances.Single,
+            },
+            {
+                label: 'maritalStatusAllowanceItems.married',
+                value: MaritalStatusAllowances.Married,
+            },
         ],
     };
     const w4pSignaturesConfig = [
@@ -701,8 +798,16 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
     };
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
 
     return {
@@ -710,7 +815,8 @@ export default function getGilicoConfig(t: TFunction, formSubtype: FormSubtype) 
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,
-        formValidation: (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values),
+        formValidation: (values: Partial<FormParts> = {}) =>
+            commonOftFormValidation(t, values),
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         irsSignatureConfig,

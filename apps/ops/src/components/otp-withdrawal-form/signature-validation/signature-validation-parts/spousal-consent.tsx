@@ -10,22 +10,34 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 const SpousalConsent = () => {
     const { t } = useTranslation();
-    const { formSignature, currentFormState, setFormSignature, featureFlagDecisions } = useContext(FormDataContext);
-    const [spousalConsent, setSpousalConsent] = useState(formSignature?.isSpousalConsentRequired?.text || false);
+    const {
+        formSignature,
+        currentFormState,
+        setFormSignature,
+        featureFlagDecisions,
+    } = useContext(FormDataContext);
+    const [spousalConsent, setSpousalConsent] = useState(
+        formSignature?.isSpousalConsentRequired?.text || false
+    );
     const searchParams = useSearchParams();
 
-    const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+    const shouldShowNewExperience =
+        featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const isFormStateReadOnly = shouldShowNewExperience
-        ? (searchParams.get('action') === 'readonly' || ((currentFormState !== CaseStatus.Pending && currentFormState !== TaskStatus.New && currentFormState !== TaskStatus.InProgress) && searchParams.get('action') !== 'duplicate'))
+        ? searchParams.get('action') === 'readonly' ||
+          (currentFormState !== CaseStatus.Pending &&
+              currentFormState !== TaskStatus.New &&
+              currentFormState !== TaskStatus.InProgress &&
+              searchParams.get('action') !== 'duplicate')
         : false;
 
     useEffect(() => {
-        setFormSignature(fs => ({
+        setFormSignature((fs) => ({
             ...fs,
             isSpousalConsentRequired: { text: spousalConsent },
         }));
         return () => {
-            setFormSignature(fs => ({
+            setFormSignature((fs) => ({
                 ...fs,
                 isSpousalConsentRequired: null,
             }));
@@ -36,7 +48,9 @@ const SpousalConsent = () => {
         <div className="mt-4 flex flex-wrap gap-8 max-md:flex-col">
             <div className="flex-1">
                 <CheckboxText
-                    label={t('caseWithdrawal.request.signatureValidation.spouseConsentText')}
+                    label={t(
+                        'caseWithdrawal.request.signatureValidation.spouseConsentText'
+                    )}
                     checked={spousalConsent}
                     onChange={() => setSpousalConsent(!spousalConsent)}
                     isDisabled={isFormStateReadOnly}

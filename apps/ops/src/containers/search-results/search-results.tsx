@@ -1,7 +1,10 @@
 import { useTranslation } from 'next-i18next';
 import { ReactNode } from 'react';
 
-import { PageLoader, PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import {
+    PageLoader,
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
 
 import SearchResultsEmptyCard from './search-results-empty-card/search-results-empty-card';
@@ -28,7 +31,9 @@ const SearchResults = ({ query, children }: SearchResultsProps) => {
 
     const { t } = useTranslation(TranslationFiles.COMMON);
 
-    const header = <h2 className="typography-desktop-headline-2-d">{t('dashboard.h2')}</h2>;
+    const header = (
+        <h2 className="typography-desktop-headline-2-d">{t('dashboard.h2')}</h2>
+    );
 
     if (isLoading) {
         children = (

@@ -1,11 +1,15 @@
-import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
 import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
-import PayorStep, { PayorStepSetState } from '@deps/components/workflows/payor-step/payor-step';
-import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import PayorStep, {
+    PayorStepSetState,
+} from '@deps/components/workflows/payor-step/payor-step';
+import StartStep, {
+    StartStepSetState,
+} from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
@@ -24,7 +28,9 @@ export type LoanPaymentContainerProps = {
 };
 
 const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'loanPayment' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'loanPayment',
+    });
     const { loanPayment, setLoanPayment } = useLoanPayment();
 
     const startLabel = t('start.label');
@@ -37,7 +43,11 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
     const validateCall = () => {
         const query = buildLoanPaymentRequestBody(loanPayment);
 
-        return validateLoanPayment(policy.product?.planCode, policy.policyNumber, query);
+        return validateLoanPayment(
+            policy.product?.planCode,
+            policy.policyNumber,
+            query
+        );
     };
 
     const steps: Step[] = [
@@ -51,7 +61,10 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     state={loanPayment}
                     title={t('start.title') as string}
                     subtitle={t('start.subtitle') as string}
-                    trackEventProps={{ type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME, step: TransactionStep.Start }}
+                    trackEventProps={{
+                        type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+                        step: TransactionStep.Start,
+                    }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -71,7 +84,10 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     policy={policy}
                     setState={setLoanPayment as PayorStepSetState}
                     state={loanPayment}
-                    trackEventProps={{ type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME, step: TransactionStep.Payor }}
+                    trackEventProps={{
+                        type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+                        step: TransactionStep.Payor,
+                    }}
                 />
             ),
             screenReaderLabel: payorLabel,
@@ -86,7 +102,10 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     setState={setLoanPayment as PaymentStepSetState}
                     state={loanPayment}
                     validateTransaction={validateCall}
-                    trackEventProps={{ type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME, step: TransactionStep.Payment }}
+                    trackEventProps={{
+                        type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+                        step: TransactionStep.Payment,
+                    }}
                 />
             ),
             screenReaderLabel: paymentLabel,

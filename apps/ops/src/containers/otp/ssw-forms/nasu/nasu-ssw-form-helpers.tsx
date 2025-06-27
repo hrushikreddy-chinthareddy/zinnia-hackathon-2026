@@ -18,7 +18,10 @@ import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { ESignatureValidationTypeWithdrawal, SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import {
+    ESignatureValidationTypeWithdrawal,
+    SignatureValidationTypeWithdrawal,
+} from '@deps/models/case/renewal/signature-validation';
 import {
     FormParts,
     FormValidationErrors,
@@ -49,53 +52,76 @@ import { createValidator } from '../../utils/helper-utils';
 
 export default function useNassauConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement, formESignatureData }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({
+            formSignature,
+            formDisbursement,
+            formESignatureData,
+        }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
             const ownerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
             const ownerEsignature = formESignatureData?.eSignatures?.find(
-                (sigInfo: ESignature) => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo: ESignature) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
-            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                ownerSignature?.isSigned !== false &&
+                !ownerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
 
             if (
-                [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod) &&
+                [PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                ) &&
                 formDisbursement?.bank[0].isDirectDeposit?.text
             ) {
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                    formDisbursement?.bank[0].accountNumber !==
+                        formDisbursement?.bank[0].reEnterAccountNumber
                 ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterAccountNumber] = t(
+                        'formValidation.accountNumberDoesNotMatch'
+                    );
                 }
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                    formDisbursement?.bank[0].routingNumber !==
+                        formDisbursement?.bank[0].reEnterBankRoutingNumber
                 ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                        'formValidation.routingNumberDoesNotMatch'
+                    );
                 }
             }
 
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod) &&
+                [PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                ) &&
                 formDisbursement?.bank[0].isDirectDeposit?.text
             ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
             }
 
             if (ownerEsignature?.isSigned === null) {
-                errors[`${ESignatureValidationTypeWithdrawal.Owner}-signPresent`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+                errors[
+                    `${ESignatureValidationTypeWithdrawal.Owner}-signPresent`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
             return errors;
         },
@@ -172,7 +198,10 @@ export default function useNassauConfig(t: TFunction) {
             text: subType,
         },
         programFrequency: {
-            frequency: val.frequency.text === Frequency.None ? { text: '' as Frequency } : val.frequency,
+            frequency:
+                val.frequency.text === Frequency.None
+                    ? { text: '' as Frequency }
+                    : val.frequency,
             beginDate: val.startDate,
             fixedPeriodYear: [
                 SSWType.FixPeriod,
@@ -186,29 +215,38 @@ export default function useNassauConfig(t: TFunction) {
                 : { text: val.duration.text },
             duration: val.duration,
         },
-        ...(subType === SSWType.FixDollar && { programAmount: { text: val.amount?.text, amountType: AmountType.Dollar } }),
+        ...(subType === SSWType.FixDollar && {
+            programAmount: {
+                text: val.amount?.text,
+                amountType: AmountType.Dollar,
+            },
+        }),
     });
 
     const systematicWithdrawalOptions = [
         {
             label: t('sswProgram.sswOptions.fixedDollar'),
             value: SSWType.FixDollar,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixDollar),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.FixDollar),
         },
         {
             label: t('sswProgram.sswOptions.annualFreeWithdrawal'),
             value: SSWType.AnnualFree,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.AnnualFree),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.AnnualFree),
         },
         {
             label: t('sswProgram.sswOptions.interestEarningDividendsGains'),
             value: SSWType.InterestEarningDividendsGains,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
         },
         {
             label: t('sswProgram.sswOptions.gmwb'),
             value: SSWType.GMWB,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.GMWB),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.GMWB),
         },
     ];
 
@@ -217,7 +255,10 @@ export default function useNassauConfig(t: TFunction) {
             label: t(`distributionInstruction.prorata`),
             value: FundWithdrawnMethod.Prorata,
         },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const defaultValues = {
@@ -239,7 +280,9 @@ export default function useNassauConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.IsDirectDepositValid,
-                    fieldLabel: t('distributionMethod.isDirectDepositFormValid'),
+                    fieldLabel: t(
+                        'distributionMethod.isDirectDepositFormValid'
+                    ),
                     classNames: 'col-start-1',
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
@@ -266,7 +309,10 @@ export default function useNassauConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -279,11 +325,16 @@ export default function useNassauConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -306,7 +357,9 @@ export default function useNassauConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
                 {
@@ -317,22 +370,31 @@ export default function useNassauConfig(t: TFunction) {
                 },
             ],
 
-            getDefaultPayload({ paymentMethod, disbursmentConsent, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                disbursmentConsent,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    isDirectDepositValid: selectedBank?.isDirectDepositValid?.text ?? null,
+                    isDirectDepositValid:
+                        selectedBank?.isDirectDepositValid?.text ?? null,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
-                    consentAvailable: disbursmentConsent?.isConsent?.text ?? null,
+                    consentAvailable:
+                        disbursmentConsent?.isConsent?.text ?? null,
                 };
             },
             generatePayloadFromSelection: ({
@@ -363,7 +425,9 @@ export default function useNassauConfig(t: TFunction) {
                               bankFurtherCreditAccount,
                               bankFurtherCreditName,
                               isDirectDeposit: { text: true },
-                              isDirectDepositValid: { text: isDirectDepositValid ?? null },
+                              isDirectDepositValid: {
+                                  text: isDirectDepositValid ?? null,
+                              },
                           },
                       ]
                     : [
@@ -379,7 +443,10 @@ export default function useNassauConfig(t: TFunction) {
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
                     bank,
-                    disbursmentConsent: { ...defaultDisbursmentConsent, isConsent: { text: consentAvailable } },
+                    disbursmentConsent: {
+                        ...defaultDisbursmentConsent,
+                        isConsent: { text: consentAvailable },
+                    },
                 };
             },
         },
@@ -403,9 +470,15 @@ export default function useNassauConfig(t: TFunction) {
 
     const cslnCheckStates = ['CA'];
 
-    const handleShouldShowDOBInOl4573 = (parties: LifeCadParty[] | undefined): boolean => {
-        const partyDetails = parties?.find((party: LifeCadParty) => party.Role === LifeCadPartyRoles.PrimaryOwner);
-        const personTypeIndividual = partyDetails?.PersonType === LifeCadPartyPersonType.Individual;
+    const handleShouldShowDOBInOl4573 = (
+        parties: LifeCadParty[] | undefined
+    ): boolean => {
+        const partyDetails = parties?.find(
+            (party: LifeCadParty) =>
+                party.Role === LifeCadPartyRoles.PrimaryOwner
+        );
+        const personTypeIndividual =
+            partyDetails?.PersonType === LifeCadPartyPersonType.Individual;
         return personTypeIndividual;
     };
 
@@ -454,7 +527,9 @@ export default function useNassauConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
     ];

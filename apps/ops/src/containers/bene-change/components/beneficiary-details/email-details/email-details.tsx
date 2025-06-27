@@ -2,7 +2,11 @@ import { Email } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import { TranslationFiles } from '@deps/config/translations';
 
 import { INITIAL_EMAIL } from './email-details.helpers';
@@ -14,15 +18,22 @@ export interface EmailDetailsProps {
     isReadOnly?: boolean;
 }
 
-export default function EmailDetails({ setCurrentEmails, updateEmail, index, isReadOnly }: EmailDetailsProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.email' });
+export default function EmailDetails({
+    setCurrentEmails,
+    updateEmail,
+    index,
+    isReadOnly,
+}: EmailDetailsProps) {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails.email',
+    });
 
     //const [action, setAction] = useState(updateEmail ? NonFinancialTransactionActions.Edit : NonFinancialTransactionActions.Add);
     const [email, setEmail] = useState<Email>(updateEmail ?? INITIAL_EMAIL);
     const [currentErrors] = useState<any>();
 
     useEffect(() => {
-        setCurrentEmails(prevState => {
+        setCurrentEmails((prevState) => {
             prevState.splice(index, 1, { ...prevState[index], ...email });
             return prevState;
         });
@@ -35,14 +46,21 @@ export default function EmailDetails({ setCurrentEmails, updateEmail, index, isR
                     aria-label={t('labels.email') as string}
                     label={t('labels.email') as string}
                     message={currentErrors?.emailAddress}
-                    onChange={event => {
-                        setEmail(prevState => ({ ...prevState, emailAddress: event.target.value }));
+                    onChange={(event) => {
+                        setEmail((prevState) => ({
+                            ...prevState,
+                            emailAddress: event.target.value,
+                        }));
                     }}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={email.emailAddress || ''}
                     maxLength={48}
-                    variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                    variant={
+                        isReadOnly
+                            ? FieldVariant.Inactive
+                            : FieldVariant.Default
+                    }
                 />
             </div>
         </div>

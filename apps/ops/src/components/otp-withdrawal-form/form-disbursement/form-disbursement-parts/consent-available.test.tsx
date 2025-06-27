@@ -2,7 +2,10 @@ import '@testing-library/jest-dom';
 // eslint-disable-next-line import/order
 import { cleanup, render } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { TaskType } from '@deps/models/case/task';
 import { AccountType, CaseStatus } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
@@ -66,9 +69,21 @@ describe('consent Component', () => {
     };
     it('should render the component with initial signature and name values when provided with valid props', () => {
         const signatureFields = [
-            { key: '1', component: () => <div>Component 1</div>, displayLogic: () => true },
-            { key: '2', component: () => <div>Component 2</div>, displayLogic: () => true },
-            { key: '3', component: () => <div>Component 3</div>, displayLogic: () => true },
+            {
+                key: '1',
+                component: () => <div>Component 1</div>,
+                displayLogic: () => true,
+            },
+            {
+                key: '2',
+                component: () => <div>Component 2</div>,
+                displayLogic: () => true,
+            },
+            {
+                key: '3',
+                component: () => <div>Component 3</div>,
+                displayLogic: () => true,
+            },
         ];
 
         const isFormStateReadOnly = false;
@@ -121,18 +136,35 @@ describe('consent Component', () => {
                     },
                 }}
             >
-                <ConsentAvailable signatureFields={signatureFields} isFormStateReadOnly={isFormStateReadOnly} />
+                <ConsentAvailable
+                    signatureFields={signatureFields}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
             </FormDataContext.Provider>
         );
 
-        expect((getByLabelText(/consentorFullName/i) as HTMLInputElement).value).toBe('John Doe');
+        expect(
+            (getByLabelText(/consentorFullName/i) as HTMLInputElement).value
+        ).toBe('John Doe');
     });
 
     it('should handle null or undefined formDisbursement.disbursmentConsent gracefully', () => {
         const signatureFields = [
-            { key: '1', component: () => <div>Component 1</div>, displayLogic: () => true },
-            { key: '2', component: () => <div>Component 2</div>, displayLogic: () => true },
-            { key: '3', component: () => <div>Component 3</div>, displayLogic: () => true },
+            {
+                key: '1',
+                component: () => <div>Component 1</div>,
+                displayLogic: () => true,
+            },
+            {
+                key: '2',
+                component: () => <div>Component 2</div>,
+                displayLogic: () => true,
+            },
+            {
+                key: '3',
+                component: () => <div>Component 3</div>,
+                displayLogic: () => true,
+            },
         ];
 
         const isFormStateReadOnly = false;
@@ -148,11 +180,16 @@ describe('consent Component', () => {
                     },
                 }}
             >
-                <ConsentAvailable signatureFields={signatureFields} isFormStateReadOnly={isFormStateReadOnly} />
+                <ConsentAvailable
+                    signatureFields={signatureFields}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
             </FormDataContext.Provider>
         );
 
-        expect((getByLabelText(/consentorFullName/i) as HTMLInputElement).value).toBe('');
+        expect(
+            (getByLabelText(/consentorFullName/i) as HTMLInputElement).value
+        ).toBe('');
     });
 
     // calls onDataChange with correct values when signature or name changes
@@ -246,7 +283,7 @@ describe('consent Component', () => {
         };
 
         let setMethodArgs;
-        const setMockData = jest.fn(cb => {
+        const setMockData = jest.fn((cb) => {
             setMethodArgs = cb(mockAsOfDateData);
             return setMethodArgs;
         });
@@ -260,7 +297,10 @@ describe('consent Component', () => {
                     setFormDisbursement: setMockData,
                 }}
             >
-                <ConsentAvailable signatureFields={signatureFields} isFormStateReadOnly={isFormStateReadOnly} />
+                <ConsentAvailable
+                    signatureFields={signatureFields}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
             </FormDataContext.Provider>
         );
 

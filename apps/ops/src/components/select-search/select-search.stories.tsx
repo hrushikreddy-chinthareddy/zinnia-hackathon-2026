@@ -2,7 +2,9 @@ import '@deps/styles/styles.css';
 import { Meta } from '@storybook/react';
 
 import { FieldSize } from '@deps/components/fields/field';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 
 import SelectSearch from './select-search';
 
@@ -10,7 +12,7 @@ export default {
     title: 'Components/SelectSearch',
     component: SelectSearch,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -79,8 +81,21 @@ const errorMessage = (
     </>
 );
 
-export const Default = () => <SelectSearch classNames="max-w-[328px]" values={values} size={FieldSize.Small} errorMessage={errorMessage} />;
+export const Default = () => (
+    <SelectSearch
+        classNames="max-w-[328px]"
+        values={values}
+        size={FieldSize.Small}
+        errorMessage={errorMessage}
+    />
+);
 
 export const Group = () => (
-    <SelectSearch classNames="max-w-[328px]" values={values} size={FieldSize.Small} group={true} errorMessage={errorMessage} />
+    <SelectSearch
+        classNames="max-w-[328px]"
+        values={values}
+        size={FieldSize.Small}
+        group={true}
+        errorMessage={errorMessage}
+    />
 );

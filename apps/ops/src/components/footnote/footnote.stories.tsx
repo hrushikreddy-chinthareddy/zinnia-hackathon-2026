@@ -10,7 +10,7 @@ export default {
     title: 'Components/Footnote',
     component: Footnote,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="p-10">
                 <Story />
             </div>
@@ -19,5 +19,10 @@ export default {
 } as Meta<typeof Footnote>;
 
 export const FootnoteComponent = () => {
-    return <Footnote productMarketingName="Carrier" productType={ProductType.UNIVERSALLIFE} />;
+    return (
+        <Footnote
+            productMarketingName="Carrier"
+            productType={ProductType.UNIVERSALLIFE}
+        />
+    );
 };

@@ -88,7 +88,7 @@ describe('getPolicyOwners', () => {
     it('should not include non-owner roles', () => {
         const policyOwners = getPolicyOwners(parties);
 
-        policyOwners.forEach(policyOwner => {
+        policyOwners.forEach((policyOwner) => {
             expect(policyOwner.partyRole.includes(PartyRole.Owner)).toBe(true);
         });
     });
@@ -96,7 +96,9 @@ describe('getPolicyOwners', () => {
     it('should return the Primary Owner as the first item', () => {
         const policyOwners = getPolicyOwners(parties);
 
-        expect(policyOwners[0].partyRole.includes(PartyRole.Primary)).toBe(true);
+        expect(policyOwners[0].partyRole.includes(PartyRole.Primary)).toBe(
+            true
+        );
     });
 });
 
@@ -111,14 +113,14 @@ describe('getAgents', () => {
     it('should not include non-agent roles', () => {
         const agents = getAgents(parties);
 
-        agents.forEach(agent => {
+        agents.forEach((agent) => {
             expect(agent.partyRole.includes(PartyRole.Agent)).toBe(true);
         });
     });
 
     it('should return distinct agents based on their full names', () => {
         const agents = getAgents(parties);
-        const uniqueAgents = Array.from(new Set(agents.map(a => a.fullName)));
+        const uniqueAgents = Array.from(new Set(agents.map((a) => a.fullName)));
         expect(agents.length).toEqual(uniqueAgents.length);
     });
 });

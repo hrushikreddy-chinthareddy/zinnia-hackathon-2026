@@ -1,17 +1,33 @@
 import { useRouter } from 'next/router';
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+} from 'react';
 
-import SideSheet, { SideSheetLocation } from '@deps/components/side-sheet/side-sheet';
+import SideSheet, {
+    SideSheetLocation,
+} from '@deps/components/side-sheet/side-sheet';
 
 export interface SideSheetContextProps {
-    changeSideSheetContent: (header: string | React.ReactNode, body?: React.ReactNode) => void;
+    changeSideSheetContent: (
+        header: string | React.ReactNode,
+        body?: React.ReactNode
+    ) => void;
     handleLocation: (location: SideSheetLocation) => void;
     handleOpen: (isOpen: boolean) => void;
-    openSecondarySideSheet: (header: string | React.ReactNode, body?: React.ReactNode) => void;
+    openSecondarySideSheet: (
+        header: string | React.ReactNode,
+        body?: React.ReactNode
+    ) => void;
     onClose: () => void;
 }
 
-export const SideSheetContext = createContext<SideSheetContextProps>({} as SideSheetContextProps);
+export const SideSheetContext = createContext<SideSheetContextProps>(
+    {} as SideSheetContextProps
+);
 
 export const useSideSheetContext = () => {
     return useContext(SideSheetContext);
@@ -23,15 +39,23 @@ interface SideSheetProviderProps {
 
 export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
     const [header, setHeader] = useState<string | undefined>('');
-    const [headerComponent, setHeaderComponent] = useState<React.ReactNode>(<></>);
-    const [contentComponent, setContentComponent] = useState<React.ReactNode>(<></>);
-    const [location, setLocation] = useState<SideSheetLocation>(SideSheetLocation.Right);
+    const [headerComponent, setHeaderComponent] = useState<React.ReactNode>(
+        <></>
+    );
+    const [contentComponent, setContentComponent] = useState<React.ReactNode>(
+        <></>
+    );
+    const [location, setLocation] = useState<SideSheetLocation>(
+        SideSheetLocation.Right
+    );
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const { taskId, ..._rest } = router.query;
     const [secondarySideSheetOpen, setSecondarySideSheetOpen] = useState(false);
-    const [secondarySideSheetHeader, setSecondarySideSheetHeader] = useState<React.ReactNode>(null);
-    const [secondarySideSheetContent, setSecondarySideSheetContent] = useState<React.ReactNode>(null);
+    const [secondarySideSheetHeader, setSecondarySideSheetHeader] =
+        useState<React.ReactNode>(null);
+    const [secondarySideSheetContent, setSecondarySideSheetContent] =
+        useState<React.ReactNode>(null);
 
     const closeAll = useCallback(() => {
         onClose();
@@ -61,7 +85,10 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
         setSecondarySideSheetOpen(false);
     };
 
-    const handleComponentChange = (header: string | React.ReactNode, body?: React.ReactNode) => {
+    const handleComponentChange = (
+        header: string | React.ReactNode,
+        body?: React.ReactNode
+    ) => {
         if (typeof header == 'string') {
             setHeaderComponent(null);
             setHeader(header);
@@ -75,7 +102,10 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
         }
     };
 
-    const openSecondarySideSheet = (header: string | React.ReactNode, body?: React.ReactNode) => {
+    const openSecondarySideSheet = (
+        header: string | React.ReactNode,
+        body?: React.ReactNode
+    ) => {
         setSecondarySideSheetHeader(header);
         setSecondarySideSheetContent(body);
         setSecondarySideSheetOpen(true);
@@ -85,7 +115,13 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
 
     return (
         <SideSheetContext.Provider
-            value={{ handleOpen, handleLocation, changeSideSheetContent: handleComponentChange, openSecondarySideSheet, onClose }}
+            value={{
+                handleOpen,
+                handleLocation,
+                changeSideSheetContent: handleComponentChange,
+                openSecondarySideSheet,
+                onClose,
+            }}
         >
             {children}
             <SideSheet

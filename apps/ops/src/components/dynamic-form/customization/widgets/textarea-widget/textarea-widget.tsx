@@ -1,27 +1,55 @@
-import { FormContextType, getUiOptions, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import {
+    FormContextType,
+    getUiOptions,
+    RJSFSchema,
+    StrictRJSFSchema,
+    WidgetProps,
+} from '@rjsf/utils';
 
 import { csrApiHelper } from '@deps/helpers/csr-api-helpers';
 import { ApiProps, ApiResponseTypes } from '@deps/models/case/task';
 
 import styles from './textarea-widget.module.css';
 
-export type TextareaWidgetProps<T, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = WidgetProps<T, S, F>;
+export type TextareaWidgetProps<
+    T,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+> = WidgetProps<T, S, F>;
 
-function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    props: TextareaWidgetProps<T, S, F>
-) {
-    const { id, value, disabled, onChange, uiSchema, formContext, placeholder } = props;
+function TextareaWidget<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+>(props: TextareaWidgetProps<T, S, F>) {
+    const {
+        id,
+        value,
+        disabled,
+        onChange,
+        uiSchema,
+        formContext,
+        placeholder,
+    } = props;
     const { props: uiProps } = getUiOptions<T, S, F>(uiSchema);
-    const apiProps = typeof uiProps === 'object' ? (uiProps as ApiProps) : ({} as ApiProps);
+    const apiProps =
+        typeof uiProps === 'object' ? (uiProps as ApiProps) : ({} as ApiProps);
 
     const handleChange = async (event: any) => {
         onChange(event.target.value);
         if (apiProps.apiUrl) {
-            const response = await csrApiHelper(apiProps, { ...formContext?.customData, value: event.target.value });
+            const response = await csrApiHelper(apiProps, {
+                ...formContext?.customData,
+                value: event.target.value,
+            });
             if (apiProps.responseType === ApiResponseTypes.FormData) {
-                formContext?.setCustomData && formContext.setCustomData({ [apiProps?.dataKey]: response });
+                formContext?.setCustomData &&
+                    formContext.setCustomData({
+                        [apiProps?.dataKey]: response,
+                    });
             } else {
-                formContext?.updateSchema && formContext.updateSchema({ [apiProps?.dataKey]: response });
+                formContext?.updateSchema &&
+                    formContext.updateSchema({ [apiProps?.dataKey]: response });
             }
         }
     };

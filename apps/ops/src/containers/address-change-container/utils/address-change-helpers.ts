@@ -1,4 +1,9 @@
-import { Party, PartyRole, PartyType, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    Party,
+    PartyRole,
+    PartyType,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
@@ -51,14 +56,22 @@ const isRoleWithJointOption = (partyRoleId: string) => {
 };
 
 export const isJointOwnerExist = (partyRoles: PolicyPartyRoles[]) => {
-    return !!partyRoles?.find(item => item.partyRole === PartyRole.OWNER && isRoleWithJointOption(item?.partyRoleId?.toString() ?? ''));
+    return !!partyRoles?.find(
+        (item) =>
+            item.partyRole === PartyRole.OWNER &&
+            isRoleWithJointOption(item?.partyRoleId?.toString() ?? '')
+    );
 };
 
 export const isJointOwnerPresent = (partyRoles: PolicyPartyRoles[]) => {
-    return !!partyRoles?.find(item => item.partyRole === PartyRole.JOINTOWNER);
+    return !!partyRoles?.find(
+        (item) => item.partyRole === PartyRole.JOINTOWNER
+    );
 };
 
-export const transformSignatureStateToPayload = (data: SignatureState | null) => {
+export const transformSignatureStateToPayload = (
+    data: SignatureState | null
+) => {
     if (!data) return {};
 
     return {
@@ -85,12 +98,20 @@ export const getChannel = (documentId: string): Channel => {
     }
 };
 
-export const isAnnuitantSignatureRequired = (partyRoles: PolicyPartyRoles[], parties: Party[]) => {
-    const partyItem = partyRoles?.find(item => item.partyRole === PartyRole.OWNER);
+export const isAnnuitantSignatureRequired = (
+    partyRoles: PolicyPartyRoles[],
+    parties: Party[]
+) => {
+    const partyItem = partyRoles?.find(
+        (item) => item.partyRole === PartyRole.OWNER
+    );
     if (!partyItem) return false;
 
-    const policyParty = parties.find(pp => pp.partyId === partyItem?.partyId);
+    const policyParty = parties.find((pp) => pp.partyId === partyItem?.partyId);
     if (!policyParty) return false;
 
-    return policyParty.partyType === PartyType.ORGANIZATION || policyParty.partyType === PartyType.TRUST;
+    return (
+        policyParty.partyType === PartyType.ORGANIZATION ||
+        policyParty.partyType === PartyType.TRUST
+    );
 };

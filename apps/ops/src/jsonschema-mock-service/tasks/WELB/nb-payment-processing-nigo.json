@@ -195,7 +195,15 @@
                     }
                 },
                 "uiSchema": {
-                    "ui:order": ["issuesList", "details", "issueResolved", "effectiveAmount", "reason", "uploadDocuments", "attachments"],
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "issueResolved",
+                        "effectiveAmount",
+                        "reason",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:submitButtonOptions": {
                         "norender": true
                     },

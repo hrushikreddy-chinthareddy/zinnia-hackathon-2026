@@ -1,6 +1,8 @@
 import { Meta } from '@storybook/react';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 
 export const TypographyComponent = (args: any) => {
     return (
@@ -23,7 +25,13 @@ const meta: Meta<typeof Typography> = {
             },
         },
         variant: {
-            options: [TypographyVariant.H1, TypographyVariant.H2, TypographyVariant.H2acc, TypographyVariant.H3, TypographyVariant.H4],
+            options: [
+                TypographyVariant.H1,
+                TypographyVariant.H2,
+                TypographyVariant.H2acc,
+                TypographyVariant.H3,
+                TypographyVariant.H4,
+            ],
         },
         asTag: {
             options: ['h1', 'h2', 'h3', 'h4', 'h5', 'label', 'p'],

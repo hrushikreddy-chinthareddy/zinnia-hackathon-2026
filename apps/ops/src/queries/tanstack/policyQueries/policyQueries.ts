@@ -21,9 +21,15 @@ export const getPolicyQuery = async (id: string, planCode: string) => {
     return response;
 };
 
-export const getPoliciesQuery = async (value: SearchViewQuery, limit: number, offset: number) => {
+export const getPoliciesQuery = async (
+    value: SearchViewQuery,
+    limit: number,
+    offset: number
+) => {
     const transformedValue = Object.fromEntries(
-        Object.entries(value).map(([key, val]) => (key === 'ssn' ? [key, val?.replaceAll('-', '')] : [key, val]))
+        Object.entries(value).map(([key, val]) =>
+            key === 'ssn' ? [key, val?.replaceAll('-', '')] : [key, val]
+        )
     );
 
     const response = await searchPolicy(transformedValue, { limit, offset });
@@ -35,7 +41,12 @@ export const getPoliciesQuery = async (value: SearchViewQuery, limit: number, of
     return response;
 };
 
-export const getAgentDataQuery = async (agentId?: string, clientCode?: string, policyNumber?: string, planCode?: string) => {
+export const getAgentDataQuery = async (
+    agentId?: string,
+    clientCode?: string,
+    policyNumber?: string,
+    planCode?: string
+) => {
     const result = getAgentData({
         clientCode,
         id: agentId,

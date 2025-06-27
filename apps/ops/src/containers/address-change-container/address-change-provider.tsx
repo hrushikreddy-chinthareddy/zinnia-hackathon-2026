@@ -1,11 +1,22 @@
-import { Phone, PhoneType, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    Phone,
+    PhoneType,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 import { useContext, useState } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { AddressChangeContext } from '@deps/contexts/AddressChangeContext';
-import { FormValidationErrors, Address } from '@deps/models/case/withdrawal/case';
+import {
+    FormValidationErrors,
+    Address,
+} from '@deps/models/case/withdrawal/case';
 
-import { ApplyToRolesState, ContractUpdateOptions, SignatureState } from './types/address-change-types';
+import {
+    ApplyToRolesState,
+    ContractUpdateOptions,
+    SignatureState,
+} from './types/address-change-types';
 
 type AddressChangeProviderProps = {
     children: React.ReactNode;
@@ -29,10 +40,15 @@ const INITIAL_FORM_DATA: any = {
     },
 };
 
-export const AddressChangeProvider = ({ children }: AddressChangeProviderProps) => {
+export const AddressChangeProvider = ({
+    children,
+}: AddressChangeProviderProps) => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
-    const [signatureData, setSignatureData] = useState<SignatureState>({ signatures: [] });
-    const [contractUpdateOption, setContractUpdateOption] = useState<ContractUpdateOptions>(ContractUpdateOptions.currentContract);
+    const [signatureData, setSignatureData] = useState<SignatureState>({
+        signatures: [],
+    });
+    const [contractUpdateOption, setContractUpdateOption] =
+        useState<ContractUpdateOptions>(ContractUpdateOptions.currentContract);
     const [roleIdentifier, setRoleIdentifier] = useState<PolicyPartyRoles>({});
     const [applyToRoles, setApplyToRoles] = useState<ApplyToRolesState[]>([]);
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
@@ -78,7 +94,9 @@ export const useAddressChange = () => {
     const context = useContext(AddressChangeContext);
 
     if (!context) {
-        throw new Error('useAddressChange must be used within a AddressChangeProvider');
+        throw new Error(
+            'useAddressChange must be used within a AddressChangeProvider'
+        );
     }
     return context;
 };

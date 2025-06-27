@@ -89,7 +89,9 @@ export default function getSbgcConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -112,43 +114,63 @@ export default function getSbgcConfig(t: TFunction) {
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         },
     ];
 
-    const formValidation = ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
-        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
             ) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
             }
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
             ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
             }
         }
 
         const ownerSignature = formSignature?.signatures?.find(
-            sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
         );
 
         // No choice made for signature
         if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                'formValidation.signaturePresentOptionMustBeSelected'
-            );
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+            ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
         if (
             formDisbursement?.bank[0].accountType?.text === '' &&
-            [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
         ) {
-            errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
         }
         return errors;
     };
@@ -171,8 +193,11 @@ export default function getSbgcConfig(t: TFunction) {
                         classNames: 'col-start-1',
                     },
                     {
-                        fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
-                        fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
+                        fieldLabel: t(
+                            'distributionMethod.doesCheckMeetSecurityRequirements'
+                        ),
+                        fieldName:
+                            BankingFields.DoesCheckMeetSecurityRequirements,
                         component: DisbursementFields.BankBooleanButtonGroup,
                     },
                     {
@@ -193,12 +218,17 @@ export default function getSbgcConfig(t: TFunction) {
                     },
                     {
                         fieldName: BankingFields.ReEnterAccountNumber,
-                        fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+                        fieldLabel: t(
+                            'distributionMethod.reEnterAccountNumber'
+                        ),
                         component: DisbursementFields.BankTextField,
                         classNames: 'col-start-2',
                         isBankingField: true,
                         disableCopyPaste: true,
-                        validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                        validator: createValidator(
+                            'accountNumber',
+                            t('formValidation.accountNumberDoesNotMatch')
+                        ),
                     },
                     {
                         fieldName: BankingFields.BankRoutingNumber,
@@ -211,11 +241,16 @@ export default function getSbgcConfig(t: TFunction) {
                     },
                     {
                         fieldName: BankingFields.ReEnterBankRoutingNumber,
-                        fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                        fieldLabel: t(
+                            'distributionMethod.reEnterBankRoutingNumber'
+                        ),
                         component: DisbursementFields.BankTextField,
                         isBankingField: true,
                         disableCopyPaste: true,
-                        validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                        validator: createValidator(
+                            'bankRoutingNumber',
+                            t('formValidation.routingNumberDoesNotMatch')
+                        ),
                     },
                     {
                         fieldName: BankingFields.BankName,
@@ -231,18 +266,26 @@ export default function getSbgcConfig(t: TFunction) {
                         classNames: 'col-start-2',
                     },
                 ],
-                getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+                getDefaultPayload({
+                    paymentMethod,
+                    doesCheckMeetSecRequiremnt,
+                    voidCheck,
+                    bank,
+                }: FormDisbursement) {
                     if (paymentMethod.text !== PaymentMethod.EFT) {
                         return DEFAULT_DISBURSEMENT_UPDATE;
                     }
                     const selectedBank = bank[0];
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                        doesCheckMeetSecurityRequirements:
+                            doesCheckMeetSecRequiremnt,
                         isVoidCheckAttached: voidCheck,
                         accountHolder: selectedBank.nameOnBankAccount ?? '',
                         accountNumber: selectedBank.accountNumber ?? '',
-                        accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                        accountType:
+                            selectedBank.accountType?.text ??
+                            AccountType.Checking,
                         bankName: selectedBank.bankName ?? '',
                         bankRoutingNumber: selectedBank.routingNumber ?? '',
                     };
@@ -277,7 +320,8 @@ export default function getSbgcConfig(t: TFunction) {
                             },
                         ],
                         voidCheck: isVoidCheckAttached ?? null,
-                        doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                        doesCheckMeetSecRequiremnt:
+                            doesCheckMeetSecurityRequirements ?? null,
                     };
                 },
             },
@@ -292,8 +336,11 @@ export default function getSbgcConfig(t: TFunction) {
                         classNames: 'col-start-1',
                     },
                     {
-                        fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
-                        fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
+                        fieldLabel: t(
+                            'distributionMethod.doesCheckMeetSecurityRequirements'
+                        ),
+                        fieldName:
+                            BankingFields.DoesCheckMeetSecurityRequirements,
                         component: DisbursementFields.BankBooleanButtonGroup,
                     },
                     {
@@ -312,12 +359,17 @@ export default function getSbgcConfig(t: TFunction) {
                     },
                     {
                         fieldName: BankingFields.ReEnterAccountNumber,
-                        fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+                        fieldLabel: t(
+                            'distributionMethod.reEnterAccountNumber'
+                        ),
                         component: DisbursementFields.BankTextField,
                         classNames: 'col-start-2',
                         isBankingField: true,
                         disableCopyPaste: true,
-                        validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                        validator: createValidator(
+                            'accountNumber',
+                            t('formValidation.accountNumberDoesNotMatch')
+                        ),
                     },
                     {
                         fieldName: BankingFields.BankRoutingNumber,
@@ -328,11 +380,16 @@ export default function getSbgcConfig(t: TFunction) {
                     },
                     {
                         fieldName: BankingFields.ReEnterBankRoutingNumber,
-                        fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                        fieldLabel: t(
+                            'distributionMethod.reEnterBankRoutingNumber'
+                        ),
                         component: DisbursementFields.BankTextField,
                         isBankingField: true,
                         disableCopyPaste: true,
-                        validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                        validator: createValidator(
+                            'bankRoutingNumber',
+                            t('formValidation.routingNumberDoesNotMatch')
+                        ),
                     },
                     {
                         fieldName: BankingFields.BankName,
@@ -347,18 +404,26 @@ export default function getSbgcConfig(t: TFunction) {
                         classNames: 'col-start-2',
                     },
                 ],
-                getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+                getDefaultPayload({
+                    paymentMethod,
+                    doesCheckMeetSecRequiremnt,
+                    voidCheck,
+                    bank,
+                }: FormDisbursement) {
                     if (paymentMethod.text !== PaymentMethod.Wire) {
                         return DEFAULT_DISBURSEMENT_UPDATE;
                     }
                     const selectedBank = bank[0];
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                        doesCheckMeetSecurityRequirements:
+                            doesCheckMeetSecRequiremnt,
                         isVoidCheckAttached: voidCheck,
                         accountHolder: selectedBank.nameOnBankAccount ?? '',
                         accountNumber: selectedBank.accountNumber ?? '',
-                        accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                        accountType:
+                            selectedBank.accountType?.text ??
+                            AccountType.Checking,
                         bankName: selectedBank.bankName ?? '',
                         bankRoutingNumber: selectedBank.routingNumber ?? '',
                     };
@@ -393,7 +458,8 @@ export default function getSbgcConfig(t: TFunction) {
                             },
                         ],
                         voidCheck: isVoidCheckAttached ?? null,
-                        doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                        doesCheckMeetSecRequiremnt:
+                            doesCheckMeetSecurityRequirements ?? null,
                     };
                 },
             },
@@ -454,7 +520,10 @@ export default function getSbgcConfig(t: TFunction) {
                         classNames: 'col-start-1',
                     },
                 ],
-                getDefaultPayload({ paymentMethod, brokerage }: FormDisbursement) {
+                getDefaultPayload({
+                    paymentMethod,
+                    brokerage,
+                }: FormDisbursement) {
                     if (paymentMethod.text !== PaymentMethod.Brokerage) {
                         return DEFAULT_DISBURSEMENT_UPDATE;
                     }
@@ -467,7 +536,12 @@ export default function getSbgcConfig(t: TFunction) {
                         address: brokerage?.address ?? DEFAULT_ADDRESS,
                     };
                 },
-                generatePayloadFromSelection: ({ address, accountNumber, acordAttached, companyName }: DisbursementParts) => {
+                generatePayloadFromSelection: ({
+                    address,
+                    accountNumber,
+                    acordAttached,
+                    companyName,
+                }: DisbursementParts) => {
                     return {
                         ...getDefaultFormDisbursementValues(),
                         paymentMethod: { text: PaymentMethod.Brokerage },
@@ -504,8 +578,14 @@ export default function getSbgcConfig(t: TFunction) {
                               fieldLabel: '',
                           },
                       ],
-                      getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {
-                          if (paymentMethod.text !== PaymentMethod.AlternatePayeeAddress) {
+                      getDefaultPayload({
+                          paymentMethod,
+                          payee,
+                      }: FormDisbursement) {
+                          if (
+                              paymentMethod.text !==
+                              PaymentMethod.AlternatePayeeAddress
+                          ) {
                               return DEFAULT_DISBURSEMENT_UPDATE;
                           }
 
@@ -516,10 +596,16 @@ export default function getSbgcConfig(t: TFunction) {
                               fboDetails: payee?.fboDetails?.text || '',
                           };
                       },
-                      generatePayloadFromSelection: ({ payeeName, address, fboDetails }: DisbursementParts) => {
+                      generatePayloadFromSelection: ({
+                          payeeName,
+                          address,
+                          fboDetails,
+                      }: DisbursementParts) => {
                           return {
                               ...getDefaultFormDisbursementValues(),
-                              paymentMethod: { text: PaymentMethod.AlternatePayeeAddress },
+                              paymentMethod: {
+                                  text: PaymentMethod.AlternatePayeeAddress,
+                              },
                               payee: {
                                   name: {
                                       text: payeeName || null,
@@ -535,7 +621,7 @@ export default function getSbgcConfig(t: TFunction) {
                   }
                 : null,
         ];
-        return data.filter(item => item !== null);
+        return data.filter((item) => item !== null);
     };
     const formPartyConfigs: PartyConfig[] = [
         {
@@ -611,14 +697,29 @@ export default function getSbgcConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t(`distributionInstruction.default`), value: FundWithdrawnMethod.Default },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t(`distributionInstruction.default`),
+            value: FundWithdrawnMethod.Default,
+        },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const moneyTypeOptions = [
-        { label: t(`distributionInstruction.preTaxBalance`), value: MoneyType.PreTaxBalance },
-        { label: t(`distributionInstruction.afterTaxRothBalance`), value: MoneyType.AfterTaxRothBalance },
-        { label: t(`distributionInstruction.prorata`), value: MoneyType.ProRata },
+        {
+            label: t(`distributionInstruction.preTaxBalance`),
+            value: MoneyType.PreTaxBalance,
+        },
+        {
+            label: t(`distributionInstruction.afterTaxRothBalance`),
+            value: MoneyType.AfterTaxRothBalance,
+        },
+        {
+            label: t(`distributionInstruction.prorata`),
+            value: MoneyType.ProRata,
+        },
     ];
 
     const hardshipOptions = [
@@ -646,7 +747,10 @@ export default function getSbgcConfig(t: TFunction) {
             label: t('distributionReason.hardshipOptions.funeral'),
             value: HardshipOption.Funeral,
         },
-        { label: t('distributionReason.hardshipOptions.casualtyExpense'), value: HardshipOption.CasualtyExpense },
+        {
+            label: t('distributionReason.hardshipOptions.casualtyExpense'),
+            value: HardshipOption.CasualtyExpense,
+        },
         {
             label: t('distributionReason.hardshipOptions.federalDisaster'),
             value: HardshipOption.FederalDisaster,
@@ -655,26 +759,48 @@ export default function getSbgcConfig(t: TFunction) {
 
     const unforeseeableEmergencyOptions = [
         {
-            label: t('distributionReason.unforeseeableEmergencyOptions.unexpectedIll'),
+            label: t(
+                'distributionReason.unforeseeableEmergencyOptions.unexpectedIll'
+            ),
             value: EmergencyOption.UnexpectedIllness,
         },
         {
-            label: t('distributionReason.unforeseeableEmergencyOptions.lossOfProp'),
+            label: t(
+                'distributionReason.unforeseeableEmergencyOptions.lossOfProp'
+            ),
             value: EmergencyOption.LossOfProperty,
         },
         {
-            label: t('distributionReason.unforeseeableEmergencyOptions.beyondControl'),
+            label: t(
+                'distributionReason.unforeseeableEmergencyOptions.beyondControl'
+            ),
             value: EmergencyOption.BeyondControl,
             subElement: <Description />,
         },
     ];
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.age595'), value: RestrictionOption.Age595 },
-        { label: t('distributionReason.reasonOptions.overAge705'), value: RestrictionOption.OverAge705 },
-        { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
-        { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
-        { label: t('distributionReason.reasonOptions.planTermination'), value: RestrictionOption.PlanTermination },
+        {
+            label: t('distributionReason.reasonOptions.age595'),
+            value: RestrictionOption.Age595,
+        },
+        {
+            label: t('distributionReason.reasonOptions.overAge705'),
+            value: RestrictionOption.OverAge705,
+        },
+        {
+            label: t('distributionReason.reasonOptions.disabled'),
+            value: RestrictionOption.Disabled,
+        },
+        {
+            label: t('distributionReason.reasonOptions.severance'),
+            value: RestrictionOption.Severance,
+            subElement: <ReasonDate />,
+        },
+        {
+            label: t('distributionReason.reasonOptions.planTermination'),
+            value: RestrictionOption.PlanTermination,
+        },
         {
             label: t('distributionReason.reasonOptions.inSvcDistrib'),
             value: RestrictionOption.InServiceDistribution,
@@ -683,8 +809,16 @@ export default function getSbgcConfig(t: TFunction) {
             label: t('distributionReason.reasonOptions.adoptionChildBirth'),
             value: RestrictionOption.AdoptionChildBirth,
         },
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
 
     const w4pSignaturesConfig = [

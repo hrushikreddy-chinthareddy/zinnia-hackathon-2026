@@ -14,7 +14,7 @@ export default {
         },
     },
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>

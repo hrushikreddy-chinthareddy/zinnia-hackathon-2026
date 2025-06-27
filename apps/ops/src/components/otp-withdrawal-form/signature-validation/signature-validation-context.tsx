@@ -1,22 +1,41 @@
 import { createContext } from 'react';
 
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { FormValidationErrors, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
+import {
+    FormValidationErrors,
+    SignatureWithdrawal,
+} from '@deps/models/case/withdrawal/case';
 
 export interface SignatureState extends SignatureWithdrawal {
     errors: FormValidationErrors;
-    setIsSignatureValid: React.Dispatch<React.SetStateAction<boolean | null | undefined>>;
+    setIsSignatureValid: React.Dispatch<
+        React.SetStateAction<boolean | null | undefined>
+    >;
     setIsSigned: React.Dispatch<React.SetStateAction<boolean | null>>;
-    setSignatureComment: React.Dispatch<React.SetStateAction<string | undefined>>;
+    setSignatureComment: React.Dispatch<
+        React.SetStateAction<string | undefined>
+    >;
     setSignDate: React.Dispatch<React.SetStateAction<{ text: string | null }>>;
     setSignName: React.Dispatch<React.SetStateAction<string | null>>;
-    setCommissionExpiryDate: React.Dispatch<React.SetStateAction<{ text: string | null } | undefined>>;
+    setCommissionExpiryDate: React.Dispatch<
+        React.SetStateAction<{ text: string | null } | undefined>
+    >;
     setSignTitle: React.Dispatch<React.SetStateAction<{ text: string | null }>>;
-    setSignType: React.Dispatch<React.SetStateAction<{ text: SignatureValidationTypeWithdrawal | null }>>;
-    setIsNotaryValid: React.Dispatch<React.SetStateAction<boolean | null | undefined>>;
-    setSignGuaranteeStamp: React.Dispatch<React.SetStateAction<{ text: string | null } | undefined>>;
-    setSsn: React.Dispatch<React.SetStateAction<{ text: string | null } | undefined>>;
-    setIsSignatureCityProvided: React.Dispatch<React.SetStateAction<{ text: boolean | null} | undefined>>;
+    setSignType: React.Dispatch<
+        React.SetStateAction<{ text: SignatureValidationTypeWithdrawal | null }>
+    >;
+    setIsNotaryValid: React.Dispatch<
+        React.SetStateAction<boolean | null | undefined>
+    >;
+    setSignGuaranteeStamp: React.Dispatch<
+        React.SetStateAction<{ text: string | null } | undefined>
+    >;
+    setSsn: React.Dispatch<
+        React.SetStateAction<{ text: string | null } | undefined>
+    >;
+    setIsSignatureCityProvided: React.Dispatch<
+        React.SetStateAction<{ text: boolean | null } | undefined>
+    >;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -45,7 +64,9 @@ export const defaultSignatureState = {
     signTitle: { text: '' },
     signType: { text: null },
     commissionExpiryDate: { text: '' },
-    isSignatureCityProvided: { text: null }
+    isSignatureCityProvided: { text: null },
 };
 
-export const SignatureValidationContext = createContext<SignatureState>(defaultSignatureState as SignatureState);
+export const SignatureValidationContext = createContext<SignatureState>(
+    defaultSignatureState as SignatureState
+);

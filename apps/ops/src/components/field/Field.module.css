@@ -1,142 +1,153 @@
 .inputContainer {
-  display: flex;
-  align-items: center;
-  align-self: stretch;
-  border-radius: var(--measure-dimension-radius-md, 8px);
-  border: var(--measure-dimension-stroke-sm, 2px) solid var(--color-fields-border-field-default-border, #ccc);
-  color: var(--color-base-text-text-primary, #212121);
-  /* Make children obey the border-radius.*/
-  overflow: hidden;
-  position: relative;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    border-radius: var(--measure-dimension-radius-md, 8px);
+    border: var(--measure-dimension-stroke-sm, 2px) solid
+        var(--color-fields-border-field-default-border, #ccc);
+    color: var(--color-base-text-text-primary, #212121);
+    /* Make children obey the border-radius.*/
+    overflow: hidden;
+    position: relative;
 
-  &:has(.input:focus-visible) {
-    outline: 1px solid var(--color-semantics-color-semantic-focus);
-    outline-offset: 1px;
-  }
+    &:has(.input:focus-visible) {
+        outline: 1px solid var(--color-semantics-color-semantic-focus);
+        outline-offset: 1px;
+    }
 
-  &:has(.input:not(.error, .success):focus) {
-    border-color: var(--color-fields-border-field-active-border, #ff7500);
-  }
+    &:has(.input:not(.error, .success):focus) {
+        border-color: var(--color-fields-border-field-active-border, #ff7500);
+    }
 }
 
 .inactive {
-  background-color: var(--color-states-inactive-surface-inactive-fill, #ededed);
-  /* TODO: Update color to var-inactive-inactive-border .It is missing  */
-  border-color: var(--color-states-inactive-border-inactive-border);
-  color: var(--color-states-inactive-inactive-text, #b3b3b3);
+    background-color: var(
+        --color-states-inactive-surface-inactive-fill,
+        #ededed
+    );
+    /* TODO: Update color to var-inactive-inactive-border .It is missing  */
+    border-color: var(--color-states-inactive-border-inactive-border);
+    color: var(--color-states-inactive-inactive-text, #b3b3b3);
 
-  .symbolBox {
-    background-color: var(--color-states-inactive-surface-inactive-fill, #ededed);
-  }
+    .symbolBox {
+        background-color: var(
+            --color-states-inactive-surface-inactive-fill,
+            #ededed
+        );
+    }
 }
 
 .error {
-  border-color: var(--color-status-surface-status-error-border-alt, #db004f);
-  color: var(--color-status-text-status-error-text, #db004f);
+    border-color: var(--color-status-surface-status-error-border-alt, #db004f);
+    color: var(--color-status-text-status-error-text, #db004f);
 }
 
 .success {
-  border-color: var(--color-status-surface-status-success-border-alt, #007b5a);
+    border-color: var(
+        --color-status-surface-status-success-border-alt,
+        #007b5a
+    );
 }
 
 .selected {
-  border-color: var(--color-fields-border-field-active-border, #ff7500);
+    border-color: var(--color-fields-border-field-active-border, #ff7500);
 }
 
 .inputContainer:not(.inactive, .error, .success):hover {
-  border-color: var(--color-fields-border-field-hover-border, #ffc600);
+    border-color: var(--color-fields-border-field-hover-border, #ffc600);
 }
 
 .input {
-  flex: 1;
-  border: none;
-  outline: none;
-  padding: var(--measure-dimension-padding-lg, 8px) var(--measure-dimension-padding-2xl, 16px);
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: var(--measure-dimension-padding-lg, 8px)
+        var(--measure-dimension-padding-2xl, 16px);
 
-  &.large {
-    padding: var(--measure-dimension-padding-2xl, 16px);
-  }
+    &.large {
+        padding: var(--measure-dimension-padding-2xl, 16px);
+    }
 
-  &::placeholder {
-    color: var(--color-base-text-text-primary, #212121);
-  }
+    &::placeholder {
+        color: var(--color-base-text-text-primary, #212121);
+    }
 
-  &.error::placeholder {
-    color: var(--color-status-text-status-error-text, #db004f);
-  }
+    &.error::placeholder {
+        color: var(--color-status-text-status-error-text, #db004f);
+    }
 
-  &.inactive::placeholder {
-    color: var(--color-states-inactive-inactive-text, #b3b3b3);
-  }
+    &.inactive::placeholder {
+        color: var(--color-states-inactive-inactive-text, #b3b3b3);
+    }
 }
 
 .symbolBox {
-  display: flex;
-  width: var(--measure-dimension-z-space-8, 32px);
-  justify-content: center;
-  align-items: center;
-  align-self: stretch;
-  background-color: var(--color-base-surface-surface-secondary, #f8f8f8);
-  border-color: inherit;
+    display: flex;
+    width: var(--measure-dimension-z-space-8, 32px);
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    background-color: var(--color-base-surface-surface-secondary, #f8f8f8);
+    border-color: inherit;
 }
 
 /** Symbol box is on the right AFTER the input box */
 /* Style the input that precedes the element with .symbolBox */
 .input:has(+ .symbolBox) {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.input+.symbolBox {
-  border-left-width: var(--measure-dimension-stroke-sm, 2px);
+.input + .symbolBox {
+    border-left-width: var(--measure-dimension-stroke-sm, 2px);
 }
 
 /******************************************/
 
 /* Symbol box is on the left BEFORE the input*/
-.symbolBox+.input {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  text-align: right;
+.symbolBox + .input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    text-align: right;
 }
 
 /* Style the symbolBox that has input as next sibling */
 .symbolBox:has(+ .input) {
-  border-right-width: var(--measure-dimension-stroke-sm, 2px);
+    border-right-width: var(--measure-dimension-stroke-sm, 2px);
 }
 
 /*******************************************/
 
 .rightIconContainer {
-  position: absolute;
-  right: var(--measure-dimension-padding-2xl, 8px);
+    position: absolute;
+    right: var(--measure-dimension-padding-2xl, 8px);
 }
 
 .assistiveMessage {
-  padding-top: var(--measure-dimension-padding-lg, 8px);
+    padding-top: var(--measure-dimension-padding-lg, 8px);
 }
 
 .datePickerContainer {
-  display: flex;
-  justify-content: center;
-  padding: var(--measure-dimension-padding-xl);
-  box-shadow: var(--shadow-elevation-elevation-light-md);
-  background-color: var(--color-base-surface-surface-primary);
-  z-index: 9;
-  margin-top: var(--measure-dimension-gap-xl);
-  border-radius: var(--measure-dimension-radius-sm);
+    display: flex;
+    justify-content: center;
+    padding: var(--measure-dimension-padding-xl);
+    box-shadow: var(--shadow-elevation-elevation-light-md);
+    background-color: var(--color-base-surface-surface-primary);
+    z-index: 9;
+    margin-top: var(--measure-dimension-gap-xl);
+    border-radius: var(--measure-dimension-radius-sm);
 }
 
 /* Styles for disabled (greyed-out) days */
 .disabledDays {
-  opacity: 0.3;
+    opacity: 0.3;
 }
 
 @media (width > 390px) {
-  /* I know this is vile, but the width is calculated based on the input size on mobile otherwise its just content
+    /* I know this is vile, but the width is calculated based on the input size on mobile otherwise its just content
   i think this is the more efficient way of doing this rather than triggering a full rerender
   by using a window dimensions hook  */
-  .datePickerContainer {
-    width: fit-content !important;
-  }
+    .datePickerContainer {
+        width: fit-content !important;
+    }
 }

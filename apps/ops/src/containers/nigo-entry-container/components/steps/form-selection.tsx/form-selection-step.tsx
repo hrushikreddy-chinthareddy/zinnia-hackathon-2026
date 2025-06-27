@@ -1,11 +1,19 @@
-import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Loader,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useEffect, useState } from 'react';
 
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helpers';
@@ -15,7 +23,10 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DocumentData } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
-import { AvailableFormsTransaction, SendDocumentFormParts } from '@deps/models/case/send-document';
+import {
+    AvailableFormsTransaction,
+    SendDocumentFormParts,
+} from '@deps/models/case/send-document';
 import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { Policy } from '@zinnia/api-types/types/sor';
@@ -34,13 +45,28 @@ type FormSelectionProps = {
     clientCode: string;
 };
 
-function FormSelectionStep({ availableFormsTransactions, policy, documentData, clientCode, ctiCallNumber = '' }: FormSelectionProps) {
+function FormSelectionStep({
+    availableFormsTransactions,
+    policy,
+    documentData,
+    clientCode,
+    ctiCallNumber = '',
+}: FormSelectionProps) {
     const { isFormIdRequired } = getFormSelectionConfig(clientCode);
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formSelection' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'nigoEntry.formSelection',
+    });
     const { goToNext } = useWorkflow();
     const [error, setError] = useState<string>('');
-    const { transactionType, transactionSubType, document, setTransactionType, setTransactionSubType, setDocument } = useNigoEntry();
-    const transactionTypes = availableFormsTransactions?.map(transaction => {
+    const {
+        transactionType,
+        transactionSubType,
+        document,
+        setTransactionType,
+        setTransactionSubType,
+        setDocument,
+    } = useNigoEntry();
+    const transactionTypes = availableFormsTransactions?.map((transaction) => {
         return { label: transaction.name, value: transaction.id };
     });
     const [formDetails, setFormDetails] = useState<SendDocumentFormParts>({
@@ -56,26 +82,31 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
     const [timer] = useState(performance.now());
 
     useEffect(() => {
-        setTransactionType(ogData => ({
+        setTransactionType((ogData) => ({
             ...ogData,
             selected: formDetails?.transactionType?.selected,
             list: transactionTypes,
         }));
 
-        setTransactionSubType(ogData => ({
+        setTransactionSubType((ogData) => ({
             ...ogData,
             selected: formDetails?.transactionSubType?.selected,
             list: formDetails?.transactionSubType?.list,
         }));
 
-        setDocument(ogData => ({ ...ogData, selected: formDetails?.document?.selected, list: formDetails?.document?.list }));
+        setDocument((ogData) => ({
+            ...ogData,
+            selected: formDetails?.document?.selected,
+            list: formDetails?.document?.list,
+        }));
     }, [formDetails]);
 
     const submit = useCallback(async () => {
         setIsLoading(true);
 
         if (
-            TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 &&
+            TaskApiVersionMapper[formState.initialForm.taskType] ===
+                ApiVersion.v2 &&
             formState.initialForm.status !== TaskStatus.Completed
         ) {
             const successfulCaseUpdate = await updateTask(
@@ -99,10 +130,13 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
 
     useEffect(() => {
         if (
-            (isFormIdRequired && !isNullEmptyOrUndefined(document?.selected?.formId)) ||
-            (!isFormIdRequired && !isNullEmptyOrUndefined(transactionType.selected) && !isNullEmptyOrUndefined(transactionSubType.selected))
+            (isFormIdRequired &&
+                !isNullEmptyOrUndefined(document?.selected?.formId)) ||
+            (!isFormIdRequired &&
+                !isNullEmptyOrUndefined(transactionType.selected) &&
+                !isNullEmptyOrUndefined(transactionSubType.selected))
         ) {
-            setFormProgram(prevFormProgram => {
+            setFormProgram((prevFormProgram) => {
                 return {
                     ...prevFormProgram,
                     transactionType: {
@@ -126,21 +160,40 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
                 };
             });
         }
-    }, [clientCode, document?.selected, isFormIdRequired, setFormProgram, transactionSubType.selected, transactionType.selected]);
+    }, [
+        clientCode,
+        document?.selected,
+        isFormIdRequired,
+        setFormProgram,
+        transactionSubType.selected,
+        transactionType.selected,
+    ]);
 
     const handleStepContinue = useCallback(async () => {
-        if (isFormIdRequired == true && isNullEmptyOrUndefined(document?.selected?.formId)) {
+        if (
+            isFormIdRequired == true &&
+            isNullEmptyOrUndefined(document?.selected?.formId)
+        ) {
             return setError(t('errors.selectForm') as string);
         } else if (
             isFormIdRequired === false &&
-            (isNullEmptyOrUndefined(transactionType.selected) || isNullEmptyOrUndefined(transactionSubType.selected))
+            (isNullEmptyOrUndefined(transactionType.selected) ||
+                isNullEmptyOrUndefined(transactionSubType.selected))
         ) {
             return setError(t('errors.selectOptions') as string);
         } else {
             await submit();
             goToNext();
         }
-    }, [document?.selected?.formId, goToNext, isFormIdRequired, submit, t, transactionSubType.selected, transactionType.selected]);
+    }, [
+        document?.selected?.formId,
+        goToNext,
+        isFormIdRequired,
+        submit,
+        t,
+        transactionSubType.selected,
+        transactionType.selected,
+    ]);
 
     return (
         <WorkflowCard
@@ -155,7 +208,9 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
             }
         >
             <div className="mb-5 grid auto-rows-fr grid-cols-1 gap-2">
-                <Typography variant={TypographyVariant.LabelMd}>{t('label')}</Typography>
+                <Typography variant={TypographyVariant.LabelMd}>
+                    {t('label')}
+                </Typography>
             </div>
             {isLoading && (
                 <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
@@ -169,7 +224,13 @@ function FormSelectionStep({ availableFormsTransactions, policy, documentData, c
                 setFormDetails={setFormDetails}
                 availableFormsTransactions={availableFormsTransactions}
             />
-            {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-4" />}
+            {error && (
+                <AssistiveText
+                    text={error}
+                    variant={AssistiveTextVariant.Error}
+                    className="mt-4"
+                />
+            )}
         </WorkflowCard>
     );
 }

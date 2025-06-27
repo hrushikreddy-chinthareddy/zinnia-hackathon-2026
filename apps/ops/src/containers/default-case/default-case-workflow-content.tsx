@@ -18,13 +18,22 @@ type DefaultCaseWorkflowContentProps = {
     taskMetadata: FormMetadata[];
 };
 
-const DefaultCaseWorkflowContent = ({ taskMetadata }: DefaultCaseWorkflowContentProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagement.taskForm' });
+const DefaultCaseWorkflowContent = ({
+    taskMetadata,
+}: DefaultCaseWorkflowContentProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'taskManagement.taskForm',
+    });
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const { policy } = useDefaultCase();
     const owner = policyOwner(policy);
     const handleProgressBarClick = (step: Step) => {
-        if (step.isDisabled || step.isCompleted || currentStepIndex === step.index) return;
+        if (
+            step.isDisabled ||
+            step.isCompleted ||
+            currentStepIndex === step.index
+        )
+            return;
         setCurrentStepIndex(step.index);
     };
 

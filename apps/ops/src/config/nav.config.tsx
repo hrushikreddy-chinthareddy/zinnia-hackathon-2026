@@ -20,7 +20,11 @@ export interface NestedSubLink extends SubLink {
     parentKey?: ParentKeys;
 }
 
-export const getReRegNavLinks = (clientId: string, policyId: string, t: TFunction): NestedSubLink[] => [
+export const getReRegNavLinks = (
+    clientId: string,
+    policyId: string,
+    t: TFunction
+): NestedSubLink[] => [
     {
         text: t('site.navLinks.people.text'),
         href: `re-reg?policyNumber=${policyId}&clientId=${clientId}` || '',

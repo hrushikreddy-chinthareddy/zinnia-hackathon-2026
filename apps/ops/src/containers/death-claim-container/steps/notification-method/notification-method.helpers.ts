@@ -1,12 +1,25 @@
-import { Policy, EmailType, AddressType, PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    EmailType,
+    AddressType,
+    PartyRole,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 
 import { ClaimActionTypes, NotificationMethod } from '../../death-claim.types';
 
-export const getExtractedPartyRoles = (policy: Policy, roles: PartyRole[]): PolicyPartyRoles[] => {
-    return policy?.partyRoles?.filter(role => role.partyRole && roles.includes(role.partyRole)) || [];
+export const getExtractedPartyRoles = (
+    policy: Policy,
+    roles: PartyRole[]
+): PolicyPartyRoles[] => {
+    return (
+        policy?.partyRoles?.filter(
+            (role) => role.partyRole && roles.includes(role.partyRole)
+        ) || []
+    );
 };
 
 const getTransformAddress = (address: any) => {
@@ -34,17 +47,31 @@ const getTransformEmail = (email: any) => {
     };
 };
 
-export const getBeneficiariesByRole = (policy: Policy, roles: PartyRole[]): NotificationMethod[] => {
-    const extractedPartyRoles: PolicyPartyRoles[] = getExtractedPartyRoles(policy, roles);
+export const getBeneficiariesByRole = (
+    policy: Policy,
+    roles: PartyRole[]
+): NotificationMethod[] => {
+    const extractedPartyRoles: PolicyPartyRoles[] = getExtractedPartyRoles(
+        policy,
+        roles
+    );
     const beneficiaries: NotificationMethod[] = [];
 
-    extractedPartyRoles?.map(correspondingRole => {
-        const party = policy?.parties?.find(party => party.partyId === correspondingRole?.partyId);
+    extractedPartyRoles?.map((correspondingRole) => {
+        const party = policy?.parties?.find(
+            (party) => party.partyId === correspondingRole?.partyId
+        );
 
         if (party && correspondingRole) {
             const { addresses, emails } = party;
-            const personalEmail = emails?.filter(email => email.emailType === EmailType.PERSONAL)?.[0] || {};
-            const residentialAddresse = addresses?.filter(address => address.addressType === AddressType.RESIDENCE)?.[0] || {};
+            const personalEmail =
+                emails?.filter(
+                    (email) => email.emailType === EmailType.PERSONAL
+                )?.[0] || {};
+            const residentialAddresse =
+                addresses?.filter(
+                    (address) => address.addressType === AddressType.RESIDENCE
+                )?.[0] || {};
 
             const beneficiary = {
                 party: {
@@ -60,7 +87,8 @@ export const getBeneficiariesByRole = (policy: Policy, roles: PartyRole[]): Noti
                     fullName: party?.fullName || '',
                     gender: party?.gender || '',
                     dateOfBirth: party?.dateOfBirth || '',
-                    relationshipToInsured: correspondingRole?.relationshipToInsured || '',
+                    relationshipToInsured:
+                        correspondingRole?.relationshipToInsured || '',
                 },
                 email: {
                     ...getTransformEmail(personalEmail),
@@ -78,7 +106,9 @@ export const getBeneficiariesByRole = (policy: Policy, roles: PartyRole[]): Noti
 };
 
 export const isEqualObjects = (obj1: any, obj2: any) => {
-    const diffInFields = Object.entries(obj2).filter(([field, obj2Value]) => obj1[field] !== obj2Value);
+    const diffInFields = Object.entries(obj2).filter(
+        ([field, obj2Value]) => obj1[field] !== obj2Value
+    );
     return diffInFields.length > 0 ? false : true;
 };
 

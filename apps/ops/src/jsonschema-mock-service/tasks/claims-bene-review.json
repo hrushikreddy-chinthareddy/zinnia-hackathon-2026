@@ -75,12 +75,18 @@
                                                         "type": "object",
                                                         "properties": {
                                                             "address": {
-                                                                "type": ["string", "object"],
+                                                                "type": [
+                                                                    "string",
+                                                                    "object"
+                                                                ],
                                                                 "title": "Address",
                                                                 "dataType": "dirtyAddress"
                                                             },
                                                             "phone": {
-                                                                "type": ["string", "object"],
+                                                                "type": [
+                                                                    "string",
+                                                                    "object"
+                                                                ],
                                                                 "title": "",
                                                                 "dataType": "phone"
                                                             },
@@ -101,7 +107,9 @@
                                                 },
                                                 "dependencies": {
                                                     "isAccurate": {
-                                                        "required": ["isAccurate"],
+                                                        "required": [
+                                                            "isAccurate"
+                                                        ],
                                                         "if": {
                                                             "properties": {
                                                                 "isAccurate": {

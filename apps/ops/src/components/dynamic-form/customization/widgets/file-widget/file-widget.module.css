@@ -14,20 +14,29 @@
     --font-weight-semibold: 600;
     --button-border-width: 3px;
     --button-border-style: solid;
-    --button-border-radius: var(--measure-dimension-button-button-default-radius);
+    --button-border-radius: var(
+        --measure-dimension-button-button-default-radius
+    );
 
     align-items: center;
     border-radius: var(--button-border-radius);
     color: var(--color-button-primary-button-primary-default-text);
     cursor: pointer;
 
-    background-color: var(--color-button-primary-button-primary-default-fill, #fff);
-    border: var(--button-border-width) var(--button-border-style) var(--color-base-border-border-subtle);
+    background-color: var(
+        --color-button-primary-button-primary-default-fill,
+        #fff
+    );
+    border: var(--button-border-width) var(--button-border-style)
+        var(--color-base-border-border-subtle);
     color: var(--color-button-primary-button-primary-default-text);
 }
 .iconInput {
     --iconSize: 24px;
-    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-spacing-padding-lg));
+    padding-left: calc(
+        var(--iconSize) + var(--measure-dimension-gap-lg) +
+            var(--measure-spacing-padding-lg)
+    );
     padding-right: calc(var(--iconSize) + var(--measure-spacing-padding-lg));
     width: 100%;
     border-radius: var(--measure-border-radius-radius-md);
@@ -37,7 +46,10 @@
 .linkDocumentInput {
     border-radius: var(--measure-border-radius-radius-md);
     border-left-width: var(--measure-border-width-stroke-sm);
-    padding-left: calc(var(--iconSize) + var(--measure-dimension-gap-lg) + var(--measure-dimension-padding-2xl));
+    padding-left: calc(
+        var(--iconSize) + var(--measure-dimension-gap-lg) +
+            var(--measure-dimension-padding-2xl)
+    );
 }
 
 .linkedDocument {

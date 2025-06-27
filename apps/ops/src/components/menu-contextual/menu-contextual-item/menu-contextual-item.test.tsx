@@ -26,7 +26,14 @@ describe('MenuContextualItem', () => {
                 content="Test Content"
                 href="https://example.com"
                 // eslint-disable-next-line @next/next/no-img-element
-                icon={<img height={20} width={20} src="icon.svg" alt="test icon" />}
+                icon={
+                    <img
+                        height={20}
+                        width={20}
+                        src="icon.svg"
+                        alt="test icon"
+                    />
+                }
                 disabled={false}
             />
         );

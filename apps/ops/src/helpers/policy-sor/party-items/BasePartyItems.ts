@@ -1,8 +1,15 @@
-import { Address, BankAccount, Email, Phone } from '@zinnia/api-types/types/sor';
+import {
+    Address,
+    BankAccount,
+    Email,
+    Phone,
+} from '@zinnia/api-types/types/sor';
 
 import { isEndDated } from '@deps/helpers/date.helpers';
 
-export abstract class BasePartyItems<T extends Address | BankAccount | Email | Phone> {
+export abstract class BasePartyItems<
+    T extends Address | BankAccount | Email | Phone
+> {
     private contactsList: T[];
     constructor(contactsList: T[] = []) {
         this.contactsList = contactsList;
@@ -13,7 +20,9 @@ export abstract class BasePartyItems<T extends Address | BankAccount | Email | P
     abstract getById(id: string): T | undefined;
 
     get currentList(): T[] {
-        return this.contactsList.filter(contact => !isEndDated(contact.endDate));
+        return this.contactsList.filter(
+            (contact) => !isEndDated(contact.endDate)
+        );
     }
 
     get historicalList(): T[] {

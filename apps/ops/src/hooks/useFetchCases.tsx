@@ -1,4 +1,10 @@
-import { useState, useCallback, Dispatch, SetStateAction, useEffect } from 'react';
+import {
+    useState,
+    useCallback,
+    Dispatch,
+    SetStateAction,
+    useEffect,
+} from 'react';
 
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
@@ -41,7 +47,11 @@ export const useFetchCases = (): UseFetchCasesResult => {
                 setCases(response.data);
                 setTotal(response.total);
             } else {
-                throw new Error(response.data.err ? response.data.err : 'Error fetching cases');
+                throw new Error(
+                    response.data.err
+                        ? response.data.err
+                        : 'Error fetching cases'
+                );
             }
         } catch (err) {
             setError((err as Error).message);

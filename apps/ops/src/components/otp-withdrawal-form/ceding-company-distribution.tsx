@@ -4,24 +4,40 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { deStringifyTrueFalseNull, stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
-import { NonRegTypeReason, QualTypes, RegReason } from '@deps/models/case/withdrawal/case';
+import {
+    deStringifyTrueFalseNull,
+    stringifyTrueFalseNull,
+} from '@deps/helpers/string.helpers';
+import {
+    NonRegTypeReason,
+    QualTypes,
+    RegReason,
+} from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import SelectValidButtonGroup from './select-valid-button-group';
 import Autocomplete from '../autocomplete/autocomplete';
 import CheckboxText from '../checkbox/checkbox-text/checkbox-text';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '../fields/field-date-select/field-date-select';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '../fields/field-date-select/field-date-select';
 import Typography, { TypographyVariant } from '../typography/typography';
 
 // updating the registration type reasons on checkbox checked.
-function toggleOption<T>(val: T, setSelectedRegReasons: React.Dispatch<React.SetStateAction<RegReason<T>[]>>) {
+function toggleOption<T>(
+    val: T,
+    setSelectedRegReasons: React.Dispatch<React.SetStateAction<RegReason<T>[]>>
+) {
     return (shouldHaveReason: boolean) => {
-        setSelectedRegReasons(reasons => {
-            const hasReason = reasons.find(checkedReason => checkedReason.text === val);
+        setSelectedRegReasons((reasons) => {
+            const hasReason = reasons.find(
+                (checkedReason) => checkedReason.text === val
+            );
             if (hasReason && !shouldHaveReason) {
-                return reasons.filter(checkedReason => checkedReason.text !== val);
+                return reasons.filter(
+                    (checkedReason) => checkedReason.text !== val
+                );
             }
 
             // checking if selectedRegReasons has current value
@@ -56,23 +72,40 @@ const CedingCompanyDistribution = ({
     renderLoaDate = false,
     authorizedSignatureLabel,
 }: CedingCompanyDistributionProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.oftProcess' });
-    const { formSurrenderingCompany, setFormSurrenderingCompany } = useContext(FormDataContext);
-    const [qualType, setQualType] = useState(formSurrenderingCompany?.qualType?.text || '');
-    const [isMultipleQualType, setIsMultipleQualType] = useState<boolean>(formSurrenderingCompany?.multipleQualType?.text || false);
-    const [isSignValid, setIsSignValid] = useState<string>(
-        stringifyTrueFalseNull(formSurrenderingCompany?.authorizedOfficerSignature?.text)
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.oftProcess',
+    });
+    const { formSurrenderingCompany, setFormSurrenderingCompany } =
+        useContext(FormDataContext);
+    const [qualType, setQualType] = useState(
+        formSurrenderingCompany?.qualType?.text || ''
     );
-    const [isLoaAttached, setIsLoaAttached] = useState<string>(stringifyTrueFalseNull(formSurrenderingCompany?.loa?.text));
+    const [isMultipleQualType, setIsMultipleQualType] = useState<boolean>(
+        formSurrenderingCompany?.multipleQualType?.text || false
+    );
+    const [isSignValid, setIsSignValid] = useState<string>(
+        stringifyTrueFalseNull(
+            formSurrenderingCompany?.authorizedOfficerSignature?.text
+        )
+    );
+    const [isLoaAttached, setIsLoaAttached] = useState<string>(
+        stringifyTrueFalseNull(formSurrenderingCompany?.loa?.text)
+    );
     const loaDate = formSurrenderingCompany?.loaSignDate?.text;
     const [loaSignDate, setLoaSignDate] = useState<string>(
-        loaDate ? dayjs(loaDate, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT) : ''
+        loaDate
+            ? dayjs(loaDate, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
+            : ''
     );
-    const [isTitlePresent, setIsTitlePresent] = useState<string>(stringifyTrueFalseNull(formSurrenderingCompany?.isTitlePresent?.text));
+    const [isTitlePresent, setIsTitlePresent] = useState<string>(
+        stringifyTrueFalseNull(formSurrenderingCompany?.isTitlePresent?.text)
+    );
     const [isValidOwnerRegType, setIsValidOwnerRegType] = useState<string>(
         stringifyTrueFalseNull(formSurrenderingCompany?.registrationType?.text)
     );
-    const [selectedRegReasons, setSelectedRegReasons] = useState(formSurrenderingCompany?.nonRegTypeReason || []);
+    const [selectedRegReasons, setSelectedRegReasons] = useState(
+        formSurrenderingCompany?.nonRegTypeReason || []
+    );
 
     const validButtonGroupOptions = [
         { label: t('yes'), value: stringifyTrueFalseNull(true) },
@@ -85,18 +118,27 @@ const CedingCompanyDistribution = ({
     ];
 
     const invalidOwnerRegReasons = [
-        { label: t('nonRegTypeReason.jointOwnerAbsent'), value: NonRegTypeReason.JointOwnerAbsent },
-        { label: t('nonRegTypeReason.missingInfoLoa'), value: NonRegTypeReason.MissingInfoLoa },
-        { label: t('nonRegTypeReason.incorrectNameAnnuitant'), value: NonRegTypeReason.IncorrectNameAnnuitant },
+        {
+            label: t('nonRegTypeReason.jointOwnerAbsent'),
+            value: NonRegTypeReason.JointOwnerAbsent,
+        },
+        {
+            label: t('nonRegTypeReason.missingInfoLoa'),
+            value: NonRegTypeReason.MissingInfoLoa,
+        },
+        {
+            label: t('nonRegTypeReason.incorrectNameAnnuitant'),
+            value: NonRegTypeReason.IncorrectNameAnnuitant,
+        },
     ];
 
     // This was the solution to generic typing a method.
     function isChecked<T>(val: T, selectedRegReasons: RegReason<T>[]): boolean {
-        return !!selectedRegReasons.find(regReason => regReason.text === val);
+        return !!selectedRegReasons.find((regReason) => regReason.text === val);
     }
 
     useEffect(() => {
-        setFormSurrenderingCompany(oldFormSurrenderingCompany => {
+        setFormSurrenderingCompany((oldFormSurrenderingCompany) => {
             return {
                 ...oldFormSurrenderingCompany,
                 qualType: {
@@ -115,23 +157,42 @@ const CedingCompanyDistribution = ({
                     text: deStringifyTrueFalseNull(isTitlePresent) as boolean,
                 },
                 registrationType: {
-                    text: deStringifyTrueFalseNull(isValidOwnerRegType) as boolean,
+                    text: deStringifyTrueFalseNull(
+                        isValidOwnerRegType
+                    ) as boolean,
                 },
                 ...(renderIsLoaAttached &&
                     renderLoaDate &&
                     deStringifyTrueFalseNull(isLoaAttached) && {
                         loaSignDate: {
-                            text: loaSignDate ? dayjs(loaSignDate, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) : '',
+                            text: loaSignDate
+                                ? dayjs(loaSignDate, DATE_PICKER_FORMAT).format(
+                                      ZAHARA_API_DATE_FORMAT
+                                  )
+                                : '',
                         },
                     }),
                 nonRegTypeReason: selectedRegReasons,
             };
         });
-    }, [isTitlePresent, qualType, isMultipleQualType, isSignValid, isLoaAttached, isValidOwnerRegType, selectedRegReasons, loaSignDate]);
+    }, [
+        isTitlePresent,
+        qualType,
+        isMultipleQualType,
+        isSignValid,
+        isLoaAttached,
+        isValidOwnerRegType,
+        selectedRegReasons,
+        loaSignDate,
+    ]);
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
-            <Typography variant={TypographyVariant.H3} className="mb-4" data-testid="title">
+            <Typography
+                variant={TypographyVariant.H3}
+                className="mb-4"
+                data-testid="title"
+            >
                 {t('cedingCompanySignature.title')}
             </Typography>
 
@@ -144,7 +205,11 @@ const CedingCompanyDistribution = ({
                 value={qualType}
                 data-testid="accountType"
                 disabled={isFormStateReadOnly}
-                variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={
+                    isFormStateReadOnly
+                        ? FieldVariant.Inactive
+                        : FieldVariant.Default
+                }
             />
 
             <div className="my-4 ">
@@ -162,7 +227,12 @@ const CedingCompanyDistribution = ({
                         options={validButtonGroupOptions}
                         isValid={isSignValid}
                         setIsValid={setIsSignValid}
-                        label={authorizedSignatureLabel || (t('cedingCompanySignature.isSignatureValid') as string)}
+                        label={
+                            authorizedSignatureLabel ||
+                            (t(
+                                'cedingCompanySignature.isSignatureValid'
+                            ) as string)
+                        }
                         disabled={isFormStateReadOnly}
                     />
                 )}
@@ -172,7 +242,9 @@ const CedingCompanyDistribution = ({
                         options={validButtonGroupOptions}
                         isValid={isTitlePresent}
                         setIsValid={setIsTitlePresent}
-                        label={t('cedingCompanySignature.isTitlePresent') as string}
+                        label={
+                            t('cedingCompanySignature.isTitlePresent') as string
+                        }
                         disabled={isFormStateReadOnly}
                     />
                 )}
@@ -183,27 +255,39 @@ const CedingCompanyDistribution = ({
                         isValid={isLoaAttached}
                         setIsValid={setIsLoaAttached}
                         disabled={isFormStateReadOnly}
-                        label={t('cedingCompanySignature.isLoaAttached') as string}
+                        label={
+                            t('cedingCompanySignature.isLoaAttached') as string
+                        }
                     />
                 )}
 
-                {renderIsLoaAttached && renderLoaDate && deStringifyTrueFalseNull(isLoaAttached) && (
-                    <div className="self-end">
-                        <FieldDateSelect
-                            id="loa-date"
-                            isFutureDateDisabled={false}
-                            onChange={e => {
-                                setLoaSignDate(e.target.value);
-                            }}
-                            size={FieldSize.Small}
-                            type={FieldType.BaseActive}
-                            value={loaSignDate}
-                            label={t('cedingCompanySignature.loaSignDate') as string}
-                            disabled={isFormStateReadOnly}
-                            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
-                        />
-                    </div>
-                )}
+                {renderIsLoaAttached &&
+                    renderLoaDate &&
+                    deStringifyTrueFalseNull(isLoaAttached) && (
+                        <div className="self-end">
+                            <FieldDateSelect
+                                id="loa-date"
+                                isFutureDateDisabled={false}
+                                onChange={(e) => {
+                                    setLoaSignDate(e.target.value);
+                                }}
+                                size={FieldSize.Small}
+                                type={FieldType.BaseActive}
+                                value={loaSignDate}
+                                label={
+                                    t(
+                                        'cedingCompanySignature.loaSignDate'
+                                    ) as string
+                                }
+                                disabled={isFormStateReadOnly}
+                                variant={
+                                    isFormStateReadOnly
+                                        ? FieldVariant.Inactive
+                                        : FieldVariant.Default
+                                }
+                            />
+                        </div>
+                    )}
             </div>
 
             <div className="my-4 grid grid-cols-2 gap-10">
@@ -212,7 +296,9 @@ const CedingCompanyDistribution = ({
                     isValid={isValidOwnerRegType}
                     disabled={isFormStateReadOnly}
                     setIsValid={setIsValidOwnerRegType}
-                    label={t('cedingCompanySignature.validOwnerRegType') as string}
+                    label={
+                        t('cedingCompanySignature.validOwnerRegType') as string
+                    }
                 />
             </div>
 
@@ -224,7 +310,10 @@ const CedingCompanyDistribution = ({
                                 checked={isChecked(value, selectedRegReasons)}
                                 key={`hardshipSelect-${value}`}
                                 label={label}
-                                onChange={toggleOption(value, setSelectedRegReasons)}
+                                onChange={toggleOption(
+                                    value,
+                                    setSelectedRegReasons
+                                )}
                                 isDisabled={isFormStateReadOnly}
                             />
                         );

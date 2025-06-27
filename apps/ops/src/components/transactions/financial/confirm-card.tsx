@@ -3,10 +3,17 @@ import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
-import { numberFormatify, percentFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    numberFormatify,
+    percentFormatify,
+} from '@deps/helpers/numbers.helpers';
 import { AmountType } from '@deps/models/funds/enums';
 
 interface ConfirmProps {
@@ -19,11 +26,24 @@ interface ConfirmProps {
     amountType?: AmountType;
 }
 
-const ConfirmCard = ({ amount, caseId, isNigo, parentPage, payorPayeeName, type, amountType = AmountType.Amount }: ConfirmProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'financialTransaction.confirm' });
+const ConfirmCard = ({
+    amount,
+    caseId,
+    isNigo,
+    parentPage,
+    payorPayeeName,
+    type,
+    amountType = AmountType.Amount,
+}: ConfirmProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'financialTransaction.confirm',
+    });
     const router = useRouter();
 
-    const amountToDisplay = amountType === AmountType.Amount ? numberFormatify(amount) : percentFormatify(amount, { isInteger: true });
+    const amountToDisplay =
+        amountType === AmountType.Amount
+            ? numberFormatify(amount)
+            : percentFormatify(amount, { isInteger: true });
 
     const subtitle = useMemo(() => {
         if (isNigo) {

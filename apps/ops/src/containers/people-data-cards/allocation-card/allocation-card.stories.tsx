@@ -21,7 +21,12 @@ export const AllocationCardContainer = () => {
             <AllocationCard
                 allocation={allocation}
                 deathBenefit={deathBenefit}
-                relationshipToInsured={getRelationshipToInsured(relationshipToInsured, t) as RelationshipToParty}
+                relationshipToInsured={
+                    getRelationshipToInsured(
+                        relationshipToInsured,
+                        t
+                    ) as RelationshipToParty
+                }
                 selectedPartyId={''}
                 selectedPartyType="Individual"
                 editable={true}

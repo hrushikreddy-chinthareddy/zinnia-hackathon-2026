@@ -14,7 +14,10 @@ export const downloadDocumentV2 = async (
 ): Promise<DocumentDownloadV2WithMime | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/${documentNumber}/download?clientCode=${clientCode.toUpperCase()}&source=${docType}`;
-        const { data } = await client.get<DocumentDownloadV2WithMime, AxiosResponse>(url);
+        const { data } = await client.get<
+            DocumentDownloadV2WithMime,
+            AxiosResponse
+        >(url);
         return data;
     } catch (error: any) {
         browserLogWarn('An error occurred while downloading document', {

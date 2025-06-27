@@ -12,7 +12,9 @@ interface ExceptionRef {
 
 export const searchNigoExceptionRefs = async (): Promise<ExceptionRef[]> => {
     try {
-        const response = await client.post<ExceptionRef[]>(`/api/case/v1/exceptionrefs/nigos/search`);
+        const response = await client.post<ExceptionRef[]>(
+            `/api/case/v1/exceptionrefs/nigos/search`
+        );
         return response.data;
     } catch (error) {
         browserLogError('searchNigoExceptionRefs::Error', {

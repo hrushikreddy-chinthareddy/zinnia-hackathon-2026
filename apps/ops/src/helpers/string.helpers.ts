@@ -3,7 +3,11 @@ import { Phone, Party } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    DEFAULT_DATE_FORMAT,
+    DEFAULT_ERROR_STRING,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 
 import { calculateAgeNumber } from './age.helpers';
 
@@ -20,7 +24,7 @@ export const cleanCurrency = (value: string) => {
 export const nameToTwoLetters = (name?: string | null) => {
     if (!name) return name;
 
-    const names = name.split(' ').filter(n => n.trim() !== '');
+    const names = name.split(' ').filter((n) => n.trim() !== '');
 
     if (names.length < 2) return names[0][0];
 
@@ -30,14 +34,19 @@ export const nameToTwoLetters = (name?: string | null) => {
 export const firstNameAndLastInitial = (name?: string | null) => {
     if (!name) return name;
 
-    const names = name.split(' ').filter(n => n.trim() !== '');
+    const names = name.split(' ').filter((n) => n.trim() !== '');
 
     if (names.length < 2) return names[0][0];
 
     return `${names[0]} ${names[1][0]}.`;
 };
 
-export const buildFullName = (firstName?: string, middleName?: string, lastName?: string, suffix?: string) => {
+export const buildFullName = (
+    firstName?: string,
+    middleName?: string,
+    lastName?: string,
+    suffix?: string
+) => {
     const first = firstName || '';
     const middle = middleName ? `${middleName.charAt(0)}.` : '';
     const last = lastName || '';
@@ -125,14 +134,17 @@ export const formatPhoneWithAreacode = (phone: Phone) => {
 
 export const formatFaxNumber = (faxNumber: string | undefined) => {
     if (!faxNumber || typeof faxNumber !== 'string') {
-      return DEFAULT_ERROR_STRING;
+        return DEFAULT_ERROR_STRING;
     }
     const digits = faxNumber.replace(/\D/g, '');
     if (digits.length !== 10) {
-      return DEFAULT_ERROR_STRING;
+        return DEFAULT_ERROR_STRING;
     }
-    return `(${digits.substring(0, 3)}) ${digits.substring(3, 6)}-${digits.substring(6, 10)}`;
-  };
+    return `(${digits.substring(0, 3)}) ${digits.substring(
+        3,
+        6
+    )}-${digits.substring(6, 10)}`;
+};
 
 export const formatDate = (date: string | undefined) => {
     if (date === '' || date == null) return DEFAULT_ERROR_STRING;
@@ -157,8 +169,13 @@ export const formatDate = (date: string | undefined) => {
     return month[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
 };
 
-export const parseAndFormatDate = (inputFormat: string, outputFormat: string, date?: string) => {
-    if (dayjs(date, inputFormat).isValid()) return dayjs(date, inputFormat).format(outputFormat);
+export const parseAndFormatDate = (
+    inputFormat: string,
+    outputFormat: string,
+    date?: string
+) => {
+    if (dayjs(date, inputFormat).isValid())
+        return dayjs(date, inputFormat).format(outputFormat);
     return date;
 };
 
@@ -177,7 +194,9 @@ export const convertKebabedDateString = (date: string | undefined): string => {
     if (!year || !month || !day) {
         return date;
     }
-    const formattedDate = dayjs(date, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT);
+    const formattedDate = dayjs(date, ZAHARA_API_DATE_FORMAT).format(
+        DEFAULT_DATE_FORMAT
+    );
     if (!hasDigitsRegex.test(formattedDate)) {
         const error = new Error(`Invalid Date. Tried to parse ${date}`);
         datadogRum.addError(error);
@@ -263,7 +282,11 @@ export const toSentenceCase = (text: string | undefined): string => {
     return text?.charAt(0)?.toUpperCase() + text?.slice(1)?.toLowerCase();
 };
 
-export const trimStringByCharacterCount = (input?: string, maxCharacterCount = 150, suffix = '...'): string => {
+export const trimStringByCharacterCount = (
+    input?: string,
+    maxCharacterCount = 150,
+    suffix = '...'
+): string => {
     if (!input) return '';
 
     if (input.length <= maxCharacterCount) {
@@ -273,8 +296,15 @@ export const trimStringByCharacterCount = (input?: string, maxCharacterCount = 1
     }
 };
 
-export const calculateAge = (birthday: string | undefined, yearString: string): string => {
-    if (isNullEmptyOrUndefined(birthday) || !dayjs(birthday, ZAHARA_API_DATE_FORMAT).isValid()) return DEFAULT_ERROR_STRING;
+export const calculateAge = (
+    birthday: string | undefined,
+    yearString: string
+): string => {
+    if (
+        isNullEmptyOrUndefined(birthday) ||
+        !dayjs(birthday, ZAHARA_API_DATE_FORMAT).isValid()
+    )
+        return DEFAULT_ERROR_STRING;
     const age = calculateAgeNumber(birthday);
     if (age === undefined) {
         return DEFAULT_ERROR_STRING;
@@ -294,13 +324,18 @@ export const formatAccountNumber = (value = '', trimOnly = false): string => {
 
     // Mask the start of the string with asterisks, leaving the last 4 characters visible
     const maskedAccount =
-        cleanedAccount.substring(0, cleanedAccount.length - 4).replace(/./g, '*') + cleanedAccount.substring(cleanedAccount.length - 4);
+        cleanedAccount
+            .substring(0, cleanedAccount.length - 4)
+            .replace(/./g, '*') +
+        cleanedAccount.substring(cleanedAccount.length - 4);
 
     return maskedAccount;
 };
 
 // Format bank card expiration date
-export const formatCardExpirationDate = (expirationDate: string | undefined) => {
+export const formatCardExpirationDate = (
+    expirationDate: string | undefined
+) => {
     if (expirationDate) {
         const date = new Date(expirationDate);
         const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -310,7 +345,10 @@ export const formatCardExpirationDate = (expirationDate: string | undefined) => 
     return null;
 };
 
-export const translateYearOrYears = (age: number | undefined, t?: TFunction): string => {
+export const translateYearOrYears = (
+    age: number | undefined,
+    t?: TFunction
+): string => {
     if (isNullEmptyOrUndefined(age as number) || !t) {
         return DEFAULT_ERROR_STRING;
     }
@@ -326,15 +364,21 @@ export const escapeRegExp = (text: string): string => {
 };
 
 export const safeString = (value?: string | null): string => {
-    return !isNullEmptyOrUndefined(value) ? (value as string) : DEFAULT_ERROR_STRING;
+    return !isNullEmptyOrUndefined(value)
+        ? (value as string)
+        : DEFAULT_ERROR_STRING;
 };
 
 // otp withdrawals boolean to string
-export const stringifyTrueFalseNull = (val?: string | boolean | null): string => {
+export const stringifyTrueFalseNull = (
+    val?: string | boolean | null
+): string => {
     return val?.toString ? val.toString() : 'null';
 };
 
-export const deStringifyTrueFalseNull = (val: string | null): string | boolean | null => {
+export const deStringifyTrueFalseNull = (
+    val: string | null
+): string | boolean | null => {
     if (val === 'true') {
         return true;
     }

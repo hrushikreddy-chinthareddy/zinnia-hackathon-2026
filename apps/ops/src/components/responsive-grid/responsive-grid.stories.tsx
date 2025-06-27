@@ -44,7 +44,11 @@ const meta = {
 } as Meta<typeof ResponsiveGrid>;
 
 export const Default: StoryType = {
-    render: ({ numberOfFields, rainbow, ...args }) => <ResponsiveGrid {...args}>{generateFields(numberOfFields, rainbow)}</ResponsiveGrid>,
+    render: ({ numberOfFields, rainbow, ...args }) => (
+        <ResponsiveGrid {...args}>
+            {generateFields(numberOfFields, rainbow)}
+        </ResponsiveGrid>
+    ),
     args: {
         numberOfFields: 12,
         maxColumns: 4,

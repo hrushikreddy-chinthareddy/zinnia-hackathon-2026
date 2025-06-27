@@ -41,16 +41,28 @@ export const defaultDateFormat = 'YYYY-MM-DD';
 export const friendlyDateFormat = 'MMM D, YYYY';
 
 export const startDates: Record<TimeframeFilterOptions, string> = {
-    [TimeframeFilterOptions.Trailing12Months]: dayjs().subtract(12, 'month').format(defaultDateFormat),
-    [TimeframeFilterOptions.Last6Months]: dayjs().subtract(6, 'month').format(defaultDateFormat),
-    [TimeframeFilterOptions.Last3Months]: dayjs().subtract(3, 'month').format(defaultDateFormat),
-    [TimeframeFilterOptions.Last1Month]: dayjs().subtract(1, 'month').format(defaultDateFormat),
-    [TimeframeFilterOptions.LastWeek]: dayjs().subtract(1, 'week').format(defaultDateFormat),
+    [TimeframeFilterOptions.Trailing12Months]: dayjs()
+        .subtract(12, 'month')
+        .format(defaultDateFormat),
+    [TimeframeFilterOptions.Last6Months]: dayjs()
+        .subtract(6, 'month')
+        .format(defaultDateFormat),
+    [TimeframeFilterOptions.Last3Months]: dayjs()
+        .subtract(3, 'month')
+        .format(defaultDateFormat),
+    [TimeframeFilterOptions.Last1Month]: dayjs()
+        .subtract(1, 'month')
+        .format(defaultDateFormat),
+    [TimeframeFilterOptions.LastWeek]: dayjs()
+        .subtract(1, 'week')
+        .format(defaultDateFormat),
 };
 
 export const getDateRangeText = (to: string, from: string) => {
     const startDate = dayjs(from).format(friendlyDateFormat);
-    const endDate = to ? dayjs(to).format(friendlyDateFormat) : dayjs().format(friendlyDateFormat);
+    const endDate = to
+        ? dayjs(to).format(friendlyDateFormat)
+        : dayjs().format(friendlyDateFormat);
     return `${startDate} - ${endDate}`;
 };
 
@@ -63,7 +75,9 @@ export const getDateRangeText = (to: string, from: string) => {
 export const generateCarouselDataLengths = (chunkedResponseLengths: number[]) =>
     chunkedResponseLengths.map((chunkLength, index) => {
         const total = chunkedResponseLengths.reduce((acc, val) => acc + val, 0);
-        const chunkStartIndex = chunkedResponseLengths.slice(0, index).reduce((acc, val) => acc + val, 1);
+        const chunkStartIndex = chunkedResponseLengths
+            .slice(0, index)
+            .reduce((acc, val) => acc + val, 1);
         const chunkEndIndex = chunkStartIndex + chunkLength - 1;
         return {
             start: chunkStartIndex,
@@ -76,13 +90,21 @@ export const generateCarouselDataLengths = (chunkedResponseLengths: number[]) =>
  *
  * formats select dropdown options for processes.
  */
-export const formatProcessListOptions = (data: CaseCountOutputLevel1[] | undefined) => {
+export const formatProcessListOptions = (
+    data: CaseCountOutputLevel1[] | undefined
+) => {
     if (!data || !data.length) throw new Error('No data');
     return (
         data
             .reduce<SimpleOption[]>((prev, curr) => {
-                if (curr.name && !prev.some(item => item.value === curr.name)) {
-                    prev.push({ value: curr.name, label: `${dashboardChartTitleFormat(curr.name, false)}` });
+                if (
+                    curr.name &&
+                    !prev.some((item) => item.value === curr.name)
+                ) {
+                    prev.push({
+                        value: curr.name,
+                        label: `${dashboardChartTitleFormat(curr.name, false)}`,
+                    });
                 }
                 return prev;
             }, [])
@@ -95,8 +117,14 @@ export const formatProcessListOptions = (data: CaseCountOutputLevel1[] | undefin
  *
  * The main API call for the dashboard we use in tanstack queries
  */
-export const createBaseQuery = async (baseInsightQueryFilter: CaseCountInputFilter, groupBy: CaseCountGroupByEnum[]) => {
-    const response = await getCaseDashboardStatsQuery(baseInsightQueryFilter, groupBy);
+export const createBaseQuery = async (
+    baseInsightQueryFilter: CaseCountInputFilter,
+    groupBy: CaseCountGroupByEnum[]
+) => {
+    const response = await getCaseDashboardStatsQuery(
+        baseInsightQueryFilter,
+        groupBy
+    );
     if (!response?.data) {
         console.error(
             'createBaseQuery::An error occurred while getting case dashboard stats results',
@@ -155,9 +183,15 @@ export const generateCaseLink = ({
     status,
 }: generateLinkArgs) => {
     const statuses = status?.join('&caseStatus=') || '';
-    const carriers = Array.isArray(carrier) ? carrier?.join('&carrier=') : carrier;
+    const carriers = Array.isArray(carrier)
+        ? carrier?.join('&carrier=')
+        : carrier;
     const brokerDealers = brokerDealer?.join('&brokerDealerName=') || '';
-    const method = submissionMethod ? (submissionMethod === 'Electronic (E-App)' ? 'electronic' : 'paper') : '';
+    const method = submissionMethod
+        ? submissionMethod === 'Electronic (E-App)'
+            ? 'electronic'
+            : 'paper'
+        : '';
 
     const queryParams = [];
 
@@ -201,7 +235,10 @@ export const generateCaseLink = ({
     return `/cases?${queryParams.join('&')}`;
 };
 
-export const friendlyGroupByName: Record<CaseCountGroupByEnum | ExceptionCountGroupByEnum, string> = {
+export const friendlyGroupByName: Record<
+    CaseCountGroupByEnum | ExceptionCountGroupByEnum,
+    string
+> = {
     [CaseCountGroupByEnum.APPLICATION_TYPE]: 'Application type',
     [CaseCountGroupByEnum.BROKER_DEALER_NAME]: 'Distribution partner',
     [CaseCountGroupByEnum.PRODUCT_NAME]: 'Product',
@@ -212,7 +249,8 @@ export const friendlyGroupByName: Record<CaseCountGroupByEnum | ExceptionCountGr
     [CaseCountGroupByEnum.CREATED_DAY]: 'Created date',
     [CaseCountGroupByEnum.UPDATED_DAY]: 'Updated date',
     [ExceptionCountGroupByEnum.EXCEPTION_CATEGORY]: 'Exception category',
-    [ExceptionCountGroupByEnum.EXCEPTION_DETAILED_REASON]: 'Exception detailed reason',
+    [ExceptionCountGroupByEnum.EXCEPTION_DETAILED_REASON]:
+        'Exception detailed reason',
     [ExceptionCountGroupByEnum.EXCEPTION_REASON]: 'Exception reason',
     [ExceptionCountGroupByEnum.EXCEPTION_CREATED_DAY]: 'Exception created date',
     [ExceptionCountGroupByEnum.EXCEPTION_UPDATED_DAY]: 'Exception updated date',

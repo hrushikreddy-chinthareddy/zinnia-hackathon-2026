@@ -16,7 +16,7 @@ export default {
     title: 'Components/SideSheet',
     component: SideSheet,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="container">
                 <Story />
             </div>
@@ -50,7 +50,11 @@ export const PolicyHeader = () => {
             <div className="width-20">
                 <Button onClick={() => setOpen(true)}>Open SideSheet</Button>
             </div>
-            <SideSheet open={open} handleClose={handleClose} headerElement={mockHeader} />
+            <SideSheet
+                open={open}
+                handleClose={handleClose}
+                headerElement={mockHeader}
+            />
         </div>
     );
 };

@@ -37,16 +37,21 @@ const FINANCIAL_TRANSACTION_CASE_TYPES = [
 
 const useTransactionDetails = (caseDetails: Case): UseTransactionDetails => {
     const { policy, loadingPolicy } = useCaseActivityContext();
-    const transactionId = caseDetails?.identifiers?.find(id => id.identifier === CaseIdentifier.TransactionId)?.value;
-    const [transactionDetails, setTransactionDetails] = useState<TransactionDetails>({
-        effectiveDate: DEFAULT_ERROR_STRING,
-        transactionStatus: DEFAULT_ERROR_STRING,
-        submittedAmount: DEFAULT_ERROR_STRING,
-        appliedAmount: DEFAULT_ERROR_STRING,
-        transactionId: transactionId ?? '',
-    });
+    const transactionId = caseDetails?.identifiers?.find(
+        (id) => id.identifier === CaseIdentifier.TransactionId
+    )?.value;
+    const [transactionDetails, setTransactionDetails] =
+        useState<TransactionDetails>({
+            effectiveDate: DEFAULT_ERROR_STRING,
+            transactionStatus: DEFAULT_ERROR_STRING,
+            submittedAmount: DEFAULT_ERROR_STRING,
+            appliedAmount: DEFAULT_ERROR_STRING,
+            transactionId: transactionId ?? '',
+        });
     const [loadingTransaction, setLoadingTransaction] = useState(true);
-    const shouldShowTransactionDetails = !!transactionId && FINANCIAL_TRANSACTION_CASE_TYPES.includes(caseDetails.process);
+    const shouldShowTransactionDetails =
+        !!transactionId &&
+        FINANCIAL_TRANSACTION_CASE_TYPES.includes(caseDetails.process);
     useEffect(() => {
         if (loadingPolicy) {
             return;
@@ -58,33 +63,62 @@ const useTransactionDetails = (caseDetails: Case): UseTransactionDetails => {
         }
 
         const getTransaction = async () => {
-            const transaction = await getPolicyTransaction(policy?.planCode as string, policy.policyNumber as string, transactionId);
+            const transaction = await getPolicyTransaction(
+                policy?.planCode as string,
+                policy.policyNumber as string,
+                transactionId
+            );
 
-            const { effectiveDate, status, transactionAmounts } = transaction ?? {};
+            const { effectiveDate, status, transactionAmounts } =
+                transaction ?? {};
             const { appliedAmount, requestedAmount } = transactionAmounts ?? {};
 
             setTransactionDetails({
                 effectiveDate: convertKebabedDateString(effectiveDate),
                 transactionStatus: (status as string) ?? DEFAULT_ERROR_STRING,
-                appliedAmount: appliedAmount ? <AccessibleFormattedAmount amount={appliedAmount} /> : DEFAULT_ERROR_STRING,
-                submittedAmount: requestedAmount ? <AccessibleFormattedAmount amount={requestedAmount} /> : DEFAULT_ERROR_STRING,
+                appliedAmount: appliedAmount ? (
+                    <AccessibleFormattedAmount amount={appliedAmount} />
+                ) : (
+                    DEFAULT_ERROR_STRING
+                ),
+                submittedAmount: requestedAmount ? (
+                    <AccessibleFormattedAmount amount={requestedAmount} />
+                ) : (
+                    DEFAULT_ERROR_STRING
+                ),
                 transactionId,
             });
             setLoadingTransaction(false);
         };
 
         getTransaction();
-    }, [policy, loadingPolicy, transactionId, loadingTransaction, setLoadingTransaction, setTransactionDetails]);
+    }, [
+        policy,
+        loadingPolicy,
+        transactionId,
+        loadingTransaction,
+        setLoadingTransaction,
+        setTransactionDetails,
+    ]);
 
     if (!transactionId || !shouldShowTransactionDetails) {
-        return { shouldShowTransactionDetails: false, transactionDetails: {} as TransactionDetails, loading: false };
+        return {
+            shouldShowTransactionDetails: false,
+            transactionDetails: {} as TransactionDetails,
+            loading: false,
+        };
     }
-    return { shouldShowTransactionDetails, transactionDetails, loading: loadingPolicy || loadingTransaction };
+    return {
+        shouldShowTransactionDetails,
+        transactionDetails,
+        loading: loadingPolicy || loadingTransaction,
+    };
 };
 
 export default function Transactions({ caseDetails }: { caseDetails: Case }) {
     const { t } = useTranslation();
-    const { loading, shouldShowTransactionDetails, transactionDetails } = useTransactionDetails(caseDetails);
+    const { loading, shouldShowTransactionDetails, transactionDetails } =
+        useTransactionDetails(caseDetails);
 
     if (!shouldShowTransactionDetails) {
         return null;
@@ -105,7 +139,9 @@ export default function Transactions({ caseDetails }: { caseDetails: Case }) {
                 <div className="mt-2 grid w-full grid-cols-2 gap-x-8 gap-y-2 md:grid-cols-4 lg:grid-cols-2">
                     <div>
                         <div className="flex h-6 w-full items-center">
-                            <Label labelFor={`${transactionDetails.transactionId}-submittedAmount`}>
+                            <Label
+                                labelFor={`${transactionDetails.transactionId}-submittedAmount`}
+                            >
                                 {t('policy.history.sidesheet.submittedAmount')}
                             </Label>
                         </div>
@@ -118,7 +154,9 @@ export default function Transactions({ caseDetails }: { caseDetails: Case }) {
                     </div>
                     <div>
                         <div className="flex h-6 w-full items-center">
-                            <Label labelFor={`${transactionDetails.transactionId}-appliedAmount`}>
+                            <Label
+                                labelFor={`${transactionDetails.transactionId}-appliedAmount`}
+                            >
                                 {t('policy.history.sidesheet.appliedAmount')}
                             </Label>
                         </div>
@@ -131,8 +169,12 @@ export default function Transactions({ caseDetails }: { caseDetails: Case }) {
                     </div>
                     <div>
                         <div className="flex h-6 w-full items-center">
-                            <Label labelFor={`${transactionDetails.transactionId}-transactionStatus`}>
-                                {t('policy.history.sidesheet.transactionStatus')}
+                            <Label
+                                labelFor={`${transactionDetails.transactionId}-transactionStatus`}
+                            >
+                                {t(
+                                    'policy.history.sidesheet.transactionStatus'
+                                )}
                             </Label>
                         </div>
                         <Content
@@ -144,7 +186,9 @@ export default function Transactions({ caseDetails }: { caseDetails: Case }) {
                     </div>
                     <div>
                         <div className="flex h-6 w-full items-center">
-                            <Label labelFor={`${transactionDetails.transactionId}-effectiveDate`}>
+                            <Label
+                                labelFor={`${transactionDetails.transactionId}-effectiveDate`}
+                            >
                                 {t('policy.history.sidesheet.effectiveDate')}
                             </Label>
                         </div>

@@ -1,124 +1,115 @@
 {
-  "id": "TA000000024945",
-  "caseId": "CA0000409211",
-  "source": "BPM.AgentOnboarding",
-  "templateId": "8c8139e7-dcce-4697-a001-3d5572de3ed3",
-  "process": "Agent Onboarding",
-  "carrier": "WELB",
-  "taskType": "BACKGROUND_NIGO",
-  "taskName": "Review Background Check Results",
-  "status": "NEW",
-  "data": {
-      "details": {
-          "agentDetails": {
-              "agentNPN": "21439251",
-              "agentTaxId": "206590148",
-              "firstName": "Justin ",
-              "lastName": "Colvin"
-          },
-          "documents": [
-              {
-                  "documentId": "67c1b9655c3f6536d7f2ac69",
-                  "documentName": "WELB_080094943_R_20250228_00001.pdf",
-                  "documentExt": "pdf",
-                  "documentType": "LI APPOINTMENT"
-              },
-              {
-                  "documentId": "67c1b9655c3f6536d7f2ac6a",
-                  "documentName": "WELB_080094943_R_20250228_00002.pdf",
-                  "documentExt": "pdf",
-                  "documentType": "LI APPOINTMENT"
-              },
-              {
-                  "documentId": "67c1b9665c3f6536d7f2ac6b",
-                  "documentName": "WELB_080094943_R_20250228_00003.pdf",
-                  "documentExt": "pdf",
-                  "documentType": "LI APPOINTMENT"
-              },
-              {
-                  "documentId": "67c1b9665c3f6536d7f2ac6c",
-                  "documentName": "WELB_080094943_R_20250228_00004.pdf",
-                  "documentExt": "pdf",
-                  "documentType": "EMAIL"
-              }
-          ]
-      },
-      "issuesList": [
-          {
-              "id": "a8b3aa0c-3ad7-40d0-85cf-6f938eb90f86",
-              "nmid": "AO.EM.049",
-              "type": "NIGO",
-              "category": "Agent onboarding",
-              "reason": "Background Check",
-              "detailedReason": "Felony, Misdemeanor or other criminal verification issues.",
-              "processingInstruction": "Review background check results with agent.",
-              "processingReason": "Agent's background check has an exception.",
-              "processingResolution": "Review background check results with agent."
-          },
-          {
-              "id": "be6f3ec7-0238-46bd-8642-cab3723efebe",
-              "nmid": "AO.EM.050",
-              "type": "NIGO",
-              "category": "Agent onboarding",
-              "reason": "Background Check",
-              "detailedReason": "Credit Report verification issues.",
-              "processingInstruction": "Review background check results with agent.",
-              "processingReason": "Agent's background check has an exception.",
-              "processingResolution": "Review background check results with agent."
-          },
-          {
-              "id": "4ec2687b-fe5a-4eb2-853a-2b243be79961",
-              "nmid": "AO.EM.051",
-              "type": "NIGO",
-              "category": "Agent onboarding",
-              "reason": "Background Check",
-              "detailedReason": "Office Foreign Assets Control (OFAC) verification issues.",
-              "processingInstruction": "Review background check results with agent.",
-              "processingReason": "Agent's background check has an exception.",
-              "processingResolution": "Review background check results with agent."
-          },
-          {
-              "id": "d2b5d65b-72e7-4eec-b789-df7428b1d733",
-              "nmid": "AO.EM.044",
-              "type": "Note",
-              "category": "Agent onboarding",
-              "reason": "",
-              "detailedReason": "",
-              "processingInstruction": "Background check has been completed and requires additional review. Please contact agent to determine eligibility of candidate. Then select option below.",
-              "processingReason": "Agent's background check has an exception.",
-              "processingResolution": "Review background check results with agent."
-          }
-      ],
-      "nigos": [
-          "EX000000018962",
-          "EX000000018961",
-          "EX000000018963"
-      ]
-  },
-  "mappedExceptions": [
-      "EX000000018962",
-      "EX000000018961",
-      "EX000000018963"
-  ],
-  "mappedDocuments": [
-  ],
-  "queue": "distribution_and_compensation",
-  "escalated": false,
-  "createdBy": "SYSTEM",
-  "createdByPartyId": "SYSTEM",
-  "createdAt": "2025-04-17T04:55:04Z",
-  "updatedBy": "SYSTEM",
-  "updatedByPartyId": "SYSTEM",
-  "updatedAt": "2025-04-17T04:55:04Z",
-  "identifiers": [
-      {
-          "identifier": "zlCaseId",
-          "value": "CA0000409211"
-      },
-      {
-          "identifier": "agentTaxId",
-          "value": "206590148"
-      }
-  ],
-  "externalId": "8314894d-11d6-4975-9122-80e757c53110"
+    "id": "TA000000024945",
+    "caseId": "CA0000409211",
+    "source": "BPM.AgentOnboarding",
+    "templateId": "8c8139e7-dcce-4697-a001-3d5572de3ed3",
+    "process": "Agent Onboarding",
+    "carrier": "WELB",
+    "taskType": "BACKGROUND_NIGO",
+    "taskName": "Review Background Check Results",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "agentDetails": {
+                "agentNPN": "21439251",
+                "agentTaxId": "206590148",
+                "firstName": "Justin ",
+                "lastName": "Colvin"
+            },
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "WELB_080094943_R_20250228_00001.pdf",
+                    "documentExt": "pdf",
+                    "documentType": "LI APPOINTMENT"
+                },
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac6a",
+                    "documentName": "WELB_080094943_R_20250228_00002.pdf",
+                    "documentExt": "pdf",
+                    "documentType": "LI APPOINTMENT"
+                },
+                {
+                    "documentId": "67c1b9665c3f6536d7f2ac6b",
+                    "documentName": "WELB_080094943_R_20250228_00003.pdf",
+                    "documentExt": "pdf",
+                    "documentType": "LI APPOINTMENT"
+                },
+                {
+                    "documentId": "67c1b9665c3f6536d7f2ac6c",
+                    "documentName": "WELB_080094943_R_20250228_00004.pdf",
+                    "documentExt": "pdf",
+                    "documentType": "EMAIL"
+                }
+            ]
+        },
+        "issuesList": [
+            {
+                "id": "a8b3aa0c-3ad7-40d0-85cf-6f938eb90f86",
+                "nmid": "AO.EM.049",
+                "type": "NIGO",
+                "category": "Agent onboarding",
+                "reason": "Background Check",
+                "detailedReason": "Felony, Misdemeanor or other criminal verification issues.",
+                "processingInstruction": "Review background check results with agent.",
+                "processingReason": "Agent's background check has an exception.",
+                "processingResolution": "Review background check results with agent."
+            },
+            {
+                "id": "be6f3ec7-0238-46bd-8642-cab3723efebe",
+                "nmid": "AO.EM.050",
+                "type": "NIGO",
+                "category": "Agent onboarding",
+                "reason": "Background Check",
+                "detailedReason": "Credit Report verification issues.",
+                "processingInstruction": "Review background check results with agent.",
+                "processingReason": "Agent's background check has an exception.",
+                "processingResolution": "Review background check results with agent."
+            },
+            {
+                "id": "4ec2687b-fe5a-4eb2-853a-2b243be79961",
+                "nmid": "AO.EM.051",
+                "type": "NIGO",
+                "category": "Agent onboarding",
+                "reason": "Background Check",
+                "detailedReason": "Office Foreign Assets Control (OFAC) verification issues.",
+                "processingInstruction": "Review background check results with agent.",
+                "processingReason": "Agent's background check has an exception.",
+                "processingResolution": "Review background check results with agent."
+            },
+            {
+                "id": "d2b5d65b-72e7-4eec-b789-df7428b1d733",
+                "nmid": "AO.EM.044",
+                "type": "Note",
+                "category": "Agent onboarding",
+                "reason": "",
+                "detailedReason": "",
+                "processingInstruction": "Background check has been completed and requires additional review. Please contact agent to determine eligibility of candidate. Then select option below.",
+                "processingReason": "Agent's background check has an exception.",
+                "processingResolution": "Review background check results with agent."
+            }
+        ],
+        "nigos": ["EX000000018962", "EX000000018961", "EX000000018963"]
+    },
+    "mappedExceptions": ["EX000000018962", "EX000000018961", "EX000000018963"],
+    "mappedDocuments": [],
+    "queue": "distribution_and_compensation",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-04-17T04:55:04Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-04-17T04:55:04Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000409211"
+        },
+        {
+            "identifier": "agentTaxId",
+            "value": "206590148"
+        }
+    ],
+    "externalId": "8314894d-11d6-4975-9122-80e757c53110"
 }

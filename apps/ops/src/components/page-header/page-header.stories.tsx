@@ -12,17 +12,22 @@ import { ReactComponent as UserGroup } from '@deps/styles/elements/icons/icons_o
 
 import { PageHeader, PageHeaderProps } from './page-header';
 import '@deps/styles/styles.css';
-import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '../assistive-text/assistive-text';
 import Badge from '../badge/badge';
 import { BadgeVariant } from '../badge/badge.helpers';
-import NavElement, { NavElementType, NavElementSize } from '../nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+    NavElementSize,
+} from '../nav-element/nav-element';
 import Popover, { PopoverPlacement } from '../popover/popover';
 
 export default {
     title: 'Components/PageHeader',
     component: PageHeader,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen w-screen bg-gray-200 p-10">
                 <Story />
             </div>
@@ -41,7 +46,9 @@ export default {
     },
 } as Meta<typeof PageHeader>;
 
-export const HeaderWithGroupTwoSiblings = (args: PageHeaderProps) => <PageHeader {...args} />;
+export const HeaderWithGroupTwoSiblings = (args: PageHeaderProps) => (
+    <PageHeader {...args} />
+);
 HeaderWithGroupTwoSiblings.args = {
     headerText: 'People',
     headerTextSiblingsGroupTwo: (
@@ -57,7 +64,9 @@ HeaderWithGroupTwoSiblings.args = {
     ),
 };
 
-export const HeaderWithBreadcrumb = (args: PageHeaderProps) => <PageHeader {...args} />;
+export const HeaderWithBreadcrumb = (args: PageHeaderProps) => (
+    <PageHeader {...args} />
+);
 HeaderWithBreadcrumb.args = {
     headerText: 'People',
     breadcrumbText: 'Back to policy search',
@@ -76,7 +85,14 @@ HeaderWithBreadcrumb.args = {
 };
 
 const calendarSVG = (
-    <svg width="16px" height="16px" preserveAspectRatio="none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+        width="16px"
+        height="16px"
+        preserveAspectRatio="none"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
         <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -86,7 +102,14 @@ const calendarSVG = (
     </svg>
 );
 const currencyDollarSVG = (
-    <svg width="16px" height="16px" preserveAspectRatio="none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+        width="16px"
+        height="16px"
+        preserveAspectRatio="none"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
         <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -96,7 +119,9 @@ const currencyDollarSVG = (
     </svg>
 );
 
-export const HeaderWithFlags = (args: PageHeaderProps) => <PageHeader {...args} />;
+export const HeaderWithFlags = (args: PageHeaderProps) => (
+    <PageHeader {...args} />
+);
 HeaderWithFlags.args = {
     headerText: 'Premiums',
     breadcrumbText: 'Back to transactions',
@@ -105,40 +130,78 @@ HeaderWithFlags.args = {
         <div className="mt-4 flex xs:w-[328px] xs:flex-wrap xs:gap-4 md:w-full md:flex-nowrap md:gap-8">
             <div className="my-0 w-fit xs:mr-4 md:mr-0">
                 <div className="flex items-center gap-2">
-                    <span className="label relative font-primary text-sm font-bold leading-4.5">Label</span>
+                    <span className="label relative font-primary text-sm font-bold leading-4.5">
+                        Label
+                    </span>
 
-                    <Popover title={'Here is a popover'} body="here is the popover body" placement={PopoverPlacement.TopRight}>
-                        <CircleInfoIcon height={'13px'} width={'13px'} className="text-primary" />
+                    <Popover
+                        title={'Here is a popover'}
+                        body="here is the popover body"
+                        placement={PopoverPlacement.TopRight}
+                    >
+                        <CircleInfoIcon
+                            height={'13px'}
+                            width={'13px'}
+                            className="text-primary"
+                        />
                     </Popover>
                 </div>
 
-                <div id="ddId" className="mb-0 ml-0 h-[25px] break-words text-[22px] leading-[26px]">
+                <div
+                    id="ddId"
+                    className="mb-0 ml-0 h-[25px] break-words text-[22px] leading-[26px]"
+                >
                     Add Value
                 </div>
             </div>
             <div className="my-0 w-fit xs:mr-4 md:mr-0">
                 <div className="flex items-center gap-2">
-                    <span className="label relative font-primary text-sm font-bold leading-4.5">Label</span>
+                    <span className="label relative font-primary text-sm font-bold leading-4.5">
+                        Label
+                    </span>
 
-                    <Popover title={'Here is a popover'} body="here is the popover body" placement={PopoverPlacement.TopRight}>
-                        <CircleInfoIcon height={'13px'} width={'13px'} className="text-primary" />
+                    <Popover
+                        title={'Here is a popover'}
+                        body="here is the popover body"
+                        placement={PopoverPlacement.TopRight}
+                    >
+                        <CircleInfoIcon
+                            height={'13px'}
+                            width={'13px'}
+                            className="text-primary"
+                        />
                     </Popover>
                 </div>
 
-                <div id="ddId" className="mb-0 ml-0 h-[25px] break-words text-[22px] leading-[26px]">
+                <div
+                    id="ddId"
+                    className="mb-0 ml-0 h-[25px] break-words text-[22px] leading-[26px]"
+                >
                     Add Value
                 </div>
             </div>
             <div className="my-0 w-fit xs:mr-4 md:mr-0">
                 <div className="flex items-center gap-2">
-                    <span className="label relative font-primary text-sm font-bold leading-4.5">Label</span>
+                    <span className="label relative font-primary text-sm font-bold leading-4.5">
+                        Label
+                    </span>
 
-                    <Popover title={'Here is a popover'} body="here is the popover body" placement={PopoverPlacement.TopRight}>
-                        <CircleInfoIcon height={'13px'} width={'13px'} className="text-primary" />
+                    <Popover
+                        title={'Here is a popover'}
+                        body="here is the popover body"
+                        placement={PopoverPlacement.TopRight}
+                    >
+                        <CircleInfoIcon
+                            height={'13px'}
+                            width={'13px'}
+                            className="text-primary"
+                        />
                     </Popover>
                 </div>
 
-                <div className="mb-0 ml-0 h-[25px] break-words text-[22px] leading-[26px]">Add Value</div>
+                <div className="mb-0 ml-0 h-[25px] break-words text-[22px] leading-[26px]">
+                    Add Value
+                </div>
             </div>
         </div>
     ),
@@ -178,7 +241,12 @@ export const HeaderWithPartyInfo = () => {
     const headerTextSiblingsGroupOne = (
         <div className="flex gap-2 xs:mb-4 xs:mt-1 lg:mb-0 lg:ml-4 lg:mt-0 lg:self-center">
             <p className="font-primary text-sm font-bold">She/her</p>
-            <NavElement type={NavElementType.Button} size={NavElementSize.Small} tabIndex={0} className=" h-4">
+            <NavElement
+                type={NavElementType.Button}
+                size={NavElementSize.Small}
+                tabIndex={0}
+                className=" h-4"
+            >
                 <EditIcon height={16} />
             </NavElement>
         </div>
@@ -187,22 +255,36 @@ export const HeaderWithPartyInfo = () => {
     const headerTextSiblingsGroupTwo = (
         <div className="flex">
             <div>
-                <p className="field-label font-primary font-bold">Communication Method</p>
+                <p className="field-label font-primary font-bold">
+                    Communication Method
+                </p>
                 <p className="body-sm">(956)-251-3392</p>
-                <AssistiveText text="SMS preferred" variant={AssistiveTextVariant.Success} />
+                <AssistiveText
+                    text="SMS preferred"
+                    variant={AssistiveTextVariant.Success}
+                />
             </div>
 
             <div className="ml-8">
                 <span className="flex gap-2">
-                    <p className="field-label font-primary font-bold">Birth date</p>
+                    <p className="field-label font-primary font-bold">
+                        Birth date
+                    </p>
 
-                    <NavElement type={NavElementType.Button} size={NavElementSize.Small} tabIndex={0} className="flex self-center">
+                    <NavElement
+                        type={NavElementType.Button}
+                        size={NavElementSize.Small}
+                        tabIndex={0}
+                        className="flex self-center"
+                    >
                         <EditIcon height={16} />
                     </NavElement>
                 </span>
 
                 <p className="body-sm">{formatDate('1972-04-04')}</p>
-                <p className="body-sm">{calculateAge('1972-04-04', ' years old')}</p>
+                <p className="body-sm">
+                    {calculateAge('1972-04-04', ' years old')}
+                </p>
             </div>
         </div>
     );
@@ -241,5 +323,9 @@ export const HeaderWithPartyInfo = () => {
 };
 
 export const WithdrawalsPageHeader = () => {
-    return <WithdrawalsPageHeaderContainer policyNumber={mockPolicy.policyNumber} />;
+    return (
+        <WithdrawalsPageHeaderContainer
+            policyNumber={mockPolicy.policyNumber}
+        />
+    );
 };

@@ -3,7 +3,9 @@ import React from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 
 interface PageSizeProps {
     handleChange: (value: string) => void;
@@ -11,7 +13,11 @@ interface PageSizeProps {
     value: string;
 }
 
-export default function PageSize({ value, options, handleChange }: PageSizeProps) {
+export default function PageSize({
+    value,
+    options,
+    handleChange,
+}: PageSizeProps) {
     const { t } = useTranslation();
 
     return (
@@ -19,7 +25,13 @@ export default function PageSize({ value, options, handleChange }: PageSizeProps
             <Typography variant={TypographyVariant.BodySm} className="pb-1">
                 {t('caseManagementDashboard.pageSize')}:
             </Typography>
-            <SelectSimple options={options} onChange={handleChange} value={value} size={FieldSize.Small} className="w-max" />
+            <SelectSimple
+                options={options}
+                onChange={handleChange}
+                value={value}
+                size={FieldSize.Small}
+                className="w-max"
+            />
         </>
     );
 }

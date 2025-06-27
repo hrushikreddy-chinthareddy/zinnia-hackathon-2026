@@ -48,7 +48,9 @@ export const Multi: StoryObj<typeof Checkbox.Root> = {
                 await sleep(0);
                 const testChip = async (n: number) =>
                     await step(`chip ${n}`, async () => {
-                        const chip = await canvas.findByRole('checkbox', { name: `chip ${n}` });
+                        const chip = await canvas.findByRole('checkbox', {
+                            name: `chip ${n}`,
+                        });
 
                         await userEvent.tab();
                         await expect(chip).toHaveFocus();
@@ -65,16 +67,23 @@ export const Multi: StoryObj<typeof Checkbox.Root> = {
                 await testChip(5);
 
                 await userEvent.tab();
-                await expect(document.activeElement).not.toHaveAttribute('role', 'checkbox');
+                await expect(document.activeElement).not.toHaveAttribute(
+                    'role',
+                    'checkbox'
+                );
 
-                const checkedChips = await canvas.findAllByRole('checkbox', { checked: true });
+                const checkedChips = await canvas.findAllByRole('checkbox', {
+                    checked: true,
+                });
                 await expect(checkedChips).toHaveLength(5);
             });
             await step(`shift+tab interaction`, async () => {
                 await sleep(0);
                 const testChip = async (n: number) =>
                     await step(`chip ${n}`, async () => {
-                        const chip = await canvas.findByRole('checkbox', { name: `chip ${n}` });
+                        const chip = await canvas.findByRole('checkbox', {
+                            name: `chip ${n}`,
+                        });
 
                         await userEvent.tab({ shift: true });
                         await expect(chip).toBeChecked();
@@ -90,7 +99,9 @@ export const Multi: StoryObj<typeof Checkbox.Root> = {
                 await testChip(1);
 
                 // no chips should be checked
-                const uncheckedChips = await canvas.findAllByRole('checkbox', { checked: false });
+                const uncheckedChips = await canvas.findAllByRole('checkbox', {
+                    checked: false,
+                });
                 await expect(uncheckedChips).toHaveLength(5);
             });
         });
@@ -100,7 +111,12 @@ export const Multi: StoryObj<typeof Checkbox.Root> = {
 export const Single: StoryObj<typeof RadioGroup.Root> = {
     render: () => (
         <form className="default-focus-within">
-            <RadioGroup.Root className="flex gap-5" name="chips" defaultValue="default" aria-label="chips">
+            <RadioGroup.Root
+                className="flex gap-5"
+                name="chips"
+                defaultValue="default"
+                aria-label="chips"
+            >
                 <RadioGroup.Item className="chip" value="chip-1">
                     chip 1
                 </RadioGroup.Item>
@@ -126,7 +142,9 @@ export const Single: StoryObj<typeof RadioGroup.Root> = {
         // test chip
         const testChip = async (n: number, direction: 'left' | 'right') =>
             await step(`chip ${n}`, async () => {
-                const chip = await canvas.findByRole('radio', { name: `chip ${n}` });
+                const chip = await canvas.findByRole('radio', {
+                    name: `chip ${n}`,
+                });
                 // chip should be focused and checked
                 await expect(chip).toHaveFocus();
                 await expect(chip).not.toBeChecked();
@@ -141,11 +159,20 @@ export const Single: StoryObj<typeof RadioGroup.Root> = {
             await step('tab interaction', async () => {
                 await sleep(0);
                 await userEvent.tab();
-                await expect(document.activeElement).toHaveAttribute('role', 'radio');
+                await expect(document.activeElement).toHaveAttribute(
+                    'role',
+                    'radio'
+                );
                 await userEvent.tab();
-                await expect(document.activeElement).not.toHaveAttribute('role', 'radio');
+                await expect(document.activeElement).not.toHaveAttribute(
+                    'role',
+                    'radio'
+                );
                 await userEvent.tab({ shift: true });
-                await expect(document.activeElement).toHaveAttribute('role', 'radio');
+                await expect(document.activeElement).toHaveAttribute(
+                    'role',
+                    'radio'
+                );
             });
             await step(`right arrow interaction`, async () => {
                 await sleep(0);

@@ -21,32 +21,56 @@ export interface WithdrawalsValues {
     totalYearToDateWithdrawalTaken?: number;
 }
 
-export const mapWithdrawalsSubPage = ({ isEligible, policy }: MapWithdrawalsSubPage): WithdrawalsValues => {
-    const { accountValues, allocation, withdrawalValues, marketValueAdjustment } = policy;
+export const mapWithdrawalsSubPage = ({
+    isEligible,
+    policy,
+}: MapWithdrawalsSubPage): WithdrawalsValues => {
+    const {
+        accountValues,
+        allocation,
+        withdrawalValues,
+        marketValueAdjustment,
+    } = policy;
 
     let allowedAnnualWithdrawals = 0;
 
-    const eligibleAccountValue = Number(accountValues?.beginningAccountValue) > 0;
+    const eligibleAccountValue =
+        Number(accountValues?.beginningAccountValue) > 0;
     const eligibleSurrenderValue = Number(accountValues?.surrenderValue) > 0;
     const matchVestingDate = allocation?.matchSegment?.matchVestingDate;
-    const withdrawalsTaken = withdrawalValues?.yearToDateNumberOfWithdrawal ?? null;
+    const withdrawalsTaken =
+        withdrawalValues?.yearToDateNumberOfWithdrawal ?? null;
 
-    if (isEligible && eligibleSurrenderValue && eligibleAccountValue && matchVestingDate) {
-        allowedAnnualWithdrawals = dayjs(matchVestingDate).isBefore(dayjs()) ? 12 : 1;
+    if (
+        isEligible &&
+        eligibleSurrenderValue &&
+        eligibleAccountValue &&
+        matchVestingDate
+    ) {
+        allowedAnnualWithdrawals = dayjs(matchVestingDate).isBefore(dayjs())
+            ? 12
+            : 1;
     }
 
     return {
         allTimeWithdrawalAmount: withdrawalValues?.totalWithdrawalAmount,
         allTimeWithdrawalCount: withdrawalValues?.numberOfWithdrawal,
         amountEligibleForWithdrawal: withdrawalValues?.maximumWithdrawalAmount,
-        annualWithdrawalsRemaining: withdrawalsTaken != null ? Math.max(0, allowedAnnualWithdrawals - withdrawalsTaken) : 0,
+        annualWithdrawalsRemaining:
+            withdrawalsTaken != null
+                ? Math.max(0, allowedAnnualWithdrawals - withdrawalsTaken)
+                : 0,
         annualWithdrawalsTaken: withdrawalsTaken,
         netSurrenderValue: accountValues?.surrenderValue,
         freeWithdrawalAmount: withdrawalValues?.freeWithdrawalAmount,
         maximumWithdrawalAmount: withdrawalValues?.maximumWithdrawalAmount,
-        marketValueAdjustmentIndicator: marketValueAdjustment?.marketValueAdjustmentIndicator,
-        marketValueAdjustmentAmount: marketValueAdjustment?.marketValueAdjustmentAmount,
-        yearToDateFreeWithdrawalAmount: withdrawalValues?.yearToDateFreeWithdrawalAmount,
-        totalYearToDateWithdrawalTaken: withdrawalValues?.totalYearToDateWithdrawalTaken,
+        marketValueAdjustmentIndicator:
+            marketValueAdjustment?.marketValueAdjustmentIndicator,
+        marketValueAdjustmentAmount:
+            marketValueAdjustment?.marketValueAdjustmentAmount,
+        yearToDateFreeWithdrawalAmount:
+            withdrawalValues?.yearToDateFreeWithdrawalAmount,
+        totalYearToDateWithdrawalTaken:
+            withdrawalValues?.totalYearToDateWithdrawalTaken,
     };
 };

@@ -9,7 +9,8 @@ import { CssValue } from '@deps/utils/styles';
 import ResponsiveGrid, { ResponsiveGridProps } from './responsive-grid';
 
 describe('ResponsiveGrid', () => {
-    const renderComponent = () => render(<ResponsiveGrid {...props}>{children}</ResponsiveGrid>);
+    const renderComponent = () =>
+        render(<ResponsiveGrid {...props}>{children}</ResponsiveGrid>);
     const createCSSValue = (): CssValue => `${faker.number.int(64)}px`;
     const numberOfFields = faker.number.int(32);
     const children = generateFields(numberOfFields);
@@ -44,7 +45,9 @@ describe('ResponsiveGrid', () => {
                 props = {
                     [propName]: propValue,
                 };
-                rerender(<ResponsiveGrid {...props}>{children}</ResponsiveGrid>);
+                rerender(
+                    <ResponsiveGrid {...props}>{children}</ResponsiveGrid>
+                );
                 const updatedStyle = getComputedStyle(element);
                 expect(updatedStyle.getPropertyValue(propValue));
             });

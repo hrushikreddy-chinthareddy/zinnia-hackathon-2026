@@ -22,32 +22,49 @@ import {
     SignatureWithdrawal,
     WithdrawalType,
 } from '@deps/models/case/withdrawal/case';
-import { DEFAULT_DISBURSEMENT_UPDATE, DisbursementParts, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DisbursementParts,
+    DEFAULT_BANK_DETAILS,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
-import getFlicConfig, { WithdrawalSelectionValues } from './flic-withdrawal-form.helpers';
+import getFlicConfig, {
+    WithdrawalSelectionValues,
+} from './flic-withdrawal-form.helpers';
 
-jest.mock('@deps/components/otp-withdrawal-form/form-program/form-program.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-program/form-program.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormProgramValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-program/form-program.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-program/form-program.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormProgramValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
-jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormDisbursementValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormDisbursementValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
 describe.skip('FLIC withdrawal form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
     const flicConfig = getFlicConfig(t);
     describe('Config existence', () => {
         it('should return an object with the correct configuration options', () => {
@@ -99,8 +116,12 @@ describe.skip('FLIC withdrawal form config', () => {
 
         describe('payload generation', () => {
             it('should generate a correct payload for an eft selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
-                expect(eftOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const eftOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+                expect(
+                    eftOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -112,21 +133,29 @@ describe.skip('FLIC withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                             reEnterAccountNumber: '',
                             reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: bankingDetails?.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: bankingDetails?.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        bankingDetails?.doesCheckMeetSecurityRequirements,
                 });
             });
             it('should generate a correct payload for a wire selection', () => {
-                const wireOption = disbursementOptions.find(option => option.value === PaymentMethod.Wire);
-                expect(wireOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const wireOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.Wire
+                );
+                expect(
+                    wireOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Wire },
                     paymentMailType: { text: null },
@@ -138,29 +167,43 @@ describe.skip('FLIC withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                             reEnterAccountNumber: '',
                             reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: bankingDetails?.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: bankingDetails?.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        bankingDetails?.doesCheckMeetSecurityRequirements,
                 });
             });
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions.find(option => option.value === PaymentMailType.Check);
-                expect(checkOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const checkOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                expect(
+                    checkOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
                 });
             });
             it('should generate a correct payload for an expressCheck selection', () => {
-                const expressCheckOption = disbursementOptions.find(option => option.value === PaymentMailType.ExpressCheck);
-                expect(expressCheckOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const expressCheckOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMailType.ExpressCheck
+                );
+                expect(
+                    expressCheckOption?.generatePayloadFromSelection(
+                        bankingDetails
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: PaymentMailType.ExpressCheck },
@@ -224,14 +267,20 @@ describe.skip('FLIC withdrawal form config', () => {
                 programType: { text: ProgramType.WITHDRAWAL },
                 programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
                 partialAmount: { text: '1000', amountType: AmountType.Dollar },
-                partialNetAmount: { text: '900', amountType: AmountType.Dollar },
+                partialNetAmount: {
+                    text: '900',
+                    amountType: AmountType.Dollar,
+                },
                 partialGrossAmount: { text: '', amountType: AmountType.Dollar },
                 gmwbAmount: { text: '', amountType: AmountType.Percent },
             };
 
-            const selectedOption = flicConfig.identifySelectedFormProgramOption(formProgram);
+            const selectedOption =
+                flicConfig.identifySelectedFormProgramOption(formProgram);
 
-            expect(selectedOption.selectedOption).toBe(WithdrawalSelectionValues.GrossWithdrawal);
+            expect(selectedOption.selectedOption).toBe(
+                WithdrawalSelectionValues.GrossWithdrawal
+            );
             expect(selectedOption.amount).toBe('1000');
         });
 
@@ -241,19 +290,27 @@ describe.skip('FLIC withdrawal form config', () => {
                 withdrawType: { text: WithdrawalType.Gross },
                 programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
                 partialAmount: { text: '1000', amountType: AmountType.Dollar },
-                partialNetAmount: { text: '900', amountType: AmountType.Dollar },
+                partialNetAmount: {
+                    text: '900',
+                    amountType: AmountType.Dollar,
+                },
                 partialGrossAmount: { text: '', amountType: AmountType.Dollar },
                 gmwbAmount: { text: '', amountType: AmountType.Percent },
             };
 
-            const selectedOption = flicConfig.identifySelectedFormProgramOption(formProgram);
+            const selectedOption =
+                flicConfig.identifySelectedFormProgramOption(formProgram);
 
             const payload = flicConfig.partialWithdrawalOptions
-                .find(option => option.value === selectedOption.selectedOption)
+                .find(
+                    (option) => option.value === selectedOption.selectedOption
+                )
                 ?.generatePayloadFromSelection();
 
             expect(payload?.programType?.text).toBe(ProgramType.TotalFreeAmt);
-            expect(payload?.programSubType?.text).toBe(ProgramSubType.TotalFreeWithdrawal);
+            expect(payload?.programSubType?.text).toBe(
+                ProgramSubType.TotalFreeWithdrawal
+            );
         });
 
         it('should generate the payload for a net withdrawal option correctly', () => {
@@ -261,7 +318,10 @@ describe.skip('FLIC withdrawal form config', () => {
                 programType: { text: ProgramType.WITHDRAWAL },
                 withdrawType: { text: WithdrawalType.Net },
                 partialAmount: { text: '100', amountType: AmountType.Dollar },
-                partialNetAmount: { text: '100', amountType: AmountType.Dollar },
+                partialNetAmount: {
+                    text: '100',
+                    amountType: AmountType.Dollar,
+                },
                 partialGrossAmount: { text: '', amountType: AmountType.Dollar },
                 gmwbAmount: { text: '', amountType: AmountType.Percent },
                 programSubType: { text: '' },
@@ -272,7 +332,8 @@ describe.skip('FLIC withdrawal form config', () => {
                 amount: '100',
             };
 
-            const actualPayload = flicConfig.identifySelectedFormProgramOption(formProgram);
+            const actualPayload =
+                flicConfig.identifySelectedFormProgramOption(formProgram);
 
             expect(actualPayload).toEqual(expectedPayload);
         });
@@ -282,7 +343,10 @@ describe.skip('FLIC withdrawal form config', () => {
                 programType: { text: ProgramType.WITHDRAWAL },
                 withdrawType: { text: WithdrawalType.Gross },
                 partialAmount: { text: '200', amountType: AmountType.Dollar },
-                partialGrossAmount: { text: '200', amountType: AmountType.Dollar },
+                partialGrossAmount: {
+                    text: '200',
+                    amountType: AmountType.Dollar,
+                },
                 partialNetAmount: { text: '', amountType: AmountType.Dollar },
                 gmwbAmount: { text: '', amountType: AmountType.Percent },
                 programSubType: { text: '' },
@@ -293,14 +357,16 @@ describe.skip('FLIC withdrawal form config', () => {
                 amount: '200',
             };
 
-            const actualPayload = flicConfig.identifySelectedFormProgramOption(formProgram);
+            const actualPayload =
+                flicConfig.identifySelectedFormProgramOption(formProgram);
 
             expect(actualPayload).toEqual(expectedPayload);
         });
         it('should handle a null or undefined form program correctly', () => {
             const formProgram = null as unknown as FormProgram;
 
-            const selectedOption = flicConfig.identifySelectedFormProgramOption(formProgram);
+            const selectedOption =
+                flicConfig.identifySelectedFormProgramOption(formProgram);
 
             expect(selectedOption.selectedOption).toBeNull();
             expect(selectedOption.amount).toBe('');
@@ -311,36 +377,64 @@ describe.skip('FLIC withdrawal form config', () => {
         describe('payload generation', () => {
             const { partialWithdrawalOptions } = flicConfig;
             it('should correctly generate a payload for the Total Free Withdrawal selection', () => {
-                const totalFree = partialWithdrawalOptions.find(option => option.value === WithdrawalSelectionValues.TotalFreeWithdrawal);
-                const totalFreePayload = totalFree?.generatePayloadFromSelection(null);
+                const totalFree = partialWithdrawalOptions.find(
+                    (option) =>
+                        option.value ===
+                        WithdrawalSelectionValues.TotalFreeWithdrawal
+                );
+                const totalFreePayload =
+                    totalFree?.generatePayloadFromSelection(null);
                 expect(totalFreePayload).toEqual({
                     thisIsMocked: true,
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 });
             });
             it('should correctly generate a payload for the Net Withdrawal selection', () => {
-                const netWithdrawal = partialWithdrawalOptions.find(option => option.value === WithdrawalSelectionValues.NetWithdrawal);
-                const netWithdrawalPayload = netWithdrawal?.generatePayloadFromSelection('12345');
+                const netWithdrawal = partialWithdrawalOptions.find(
+                    (option) =>
+                        option.value === WithdrawalSelectionValues.NetWithdrawal
+                );
+                const netWithdrawalPayload =
+                    netWithdrawal?.generatePayloadFromSelection('12345');
                 expect(netWithdrawalPayload).toEqual({
                     thisIsMocked: true,
                     withdrawType: { text: WithdrawalType.Net },
                     programType: { text: ProgramType.NetWithdrawal },
-                    partialAmount: { text: '12345', amountType: AmountType.Dollar },
-                    partialNetAmount: { text: '12345', amountType: AmountType.Dollar },
+                    partialAmount: {
+                        text: '12345',
+                        amountType: AmountType.Dollar,
+                    },
+                    partialNetAmount: {
+                        text: '12345',
+                        amountType: AmountType.Dollar,
+                    },
                 });
             });
             it('should correctly generate a payload for the Gross Withdrawal selection', () => {
-                const grossWithdrawal = partialWithdrawalOptions.find(option => option.value === WithdrawalSelectionValues.GrossWithdrawal);
-                const grossPayload = grossWithdrawal?.generatePayloadFromSelection('23456');
+                const grossWithdrawal = partialWithdrawalOptions.find(
+                    (option) =>
+                        option.value ===
+                        WithdrawalSelectionValues.GrossWithdrawal
+                );
+                const grossPayload =
+                    grossWithdrawal?.generatePayloadFromSelection('23456');
                 console.log(grossPayload);
                 expect(grossPayload).toEqual({
                     thisIsMocked: true,
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.GrossWithdrawal },
-                    partialAmount: { text: '23456', amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: '23456', amountType: AmountType.Dollar },
+                    partialAmount: {
+                        text: '23456',
+                        amountType: AmountType.Dollar,
+                    },
+                    partialGrossAmount: {
+                        text: '23456',
+                        amountType: AmountType.Dollar,
+                    },
                 });
             });
         });
@@ -349,7 +443,11 @@ describe.skip('FLIC withdrawal form config', () => {
     describe('signaturesConfig', () => {
         const { signaturesConfig } = flicConfig;
         describe('Owner signature', () => {
-            const ownerConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Owner);
+            const ownerConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
                 expect(ownerConfig?.fields).toHaveLength(4);
@@ -358,7 +456,9 @@ describe.skip('FLIC withdrawal form config', () => {
 
         describe('Joint owner signature', () => {
             const jointOwnerConfig = signaturesConfig.find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.JointOwner
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.JointOwner
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
@@ -471,15 +571,25 @@ describe.skip('FLIC withdrawal form config', () => {
                     ],
                 };
 
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: jointOwner } as OtpWithdrawalFormState)).toBeTruthy();
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: owner } as OtpWithdrawalFormState)).toBeFalsy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: jointOwner,
+                    } as OtpWithdrawalFormState)
+                ).toBeTruthy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: owner,
+                    } as OtpWithdrawalFormState)
+                ).toBeFalsy();
             });
         });
 
         describe('Beneficiary signature', () => {
             it('should be in the config', () => {
                 const beneficiaryConfig = signaturesConfig.find(
-                    sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+                    (sigConfig) =>
+                        sigConfig.signatureType ===
+                        SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
                 expect(beneficiaryConfig).toBeTruthy();
                 expect(beneficiaryConfig?.fields).toHaveLength(4);
@@ -487,7 +597,11 @@ describe.skip('FLIC withdrawal form config', () => {
         });
 
         describe.skip('Spouse signature', () => {
-            const spouseConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Spouse);
+            const spouseConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Spouse
+            );
             it('should be in the config', () => {
                 expect(spouseConfig).toBeTruthy();
                 expect(spouseConfig?.fields).toHaveLength(3);
@@ -495,15 +609,21 @@ describe.skip('FLIC withdrawal form config', () => {
 
             it.skip('should have shouldDisplay logic', () => {
                 expect(
-                    spouseConfig?.shouldDisplay?.({ ownerStateOfResidence: statesAndTerritories.ARIZONA } as OtpWithdrawalFormState)
+                    spouseConfig?.shouldDisplay?.({
+                        ownerStateOfResidence: statesAndTerritories.ARIZONA,
+                    } as OtpWithdrawalFormState)
                 ).toBeTruthy();
                 expect(
-                    spouseConfig?.shouldDisplay?.({ ownerStateOfResidence: statesAndTerritories.GUAM } as OtpWithdrawalFormState)
+                    spouseConfig?.shouldDisplay?.({
+                        ownerStateOfResidence: statesAndTerritories.GUAM,
+                    } as OtpWithdrawalFormState)
                 ).toBeFalsy();
             });
 
             it('should have a bonusField (Spousal Consent', () => {
-                expect(spouseConfig?.bonusField).toEqual(SignatureBonusFields.SpousalConsent);
+                expect(spouseConfig?.bonusField).toEqual(
+                    SignatureBonusFields.SpousalConsent
+                );
             });
         });
     });

@@ -18,7 +18,10 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
                 }
             }
 
-            if (partyType === PartyType.ORGANIZATION || partyType === PartyType.TRUST) {
+            if (
+                partyType === PartyType.ORGANIZATION ||
+                partyType === PartyType.TRUST
+            ) {
                 if (!item?.party?.info?.lastName) {
                     firstNameErrors++;
                 }

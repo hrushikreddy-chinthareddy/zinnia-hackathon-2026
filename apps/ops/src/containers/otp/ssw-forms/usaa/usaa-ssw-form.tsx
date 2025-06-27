@@ -14,14 +14,19 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Carrier, FundWithdrawnMethod } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FundWithdrawnMethod,
+} from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getUsaaConfig from './usaa-ssw-form-helpers';
 
 export function UsaaSSWForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
 
     const {
         formValidation,
@@ -51,9 +56,13 @@ export function UsaaSSWForm() {
 
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.USAA}_SSW_DIGITAL_FORM`,
+            formExtName: `${
+                initialForm?.carrier || Carrier.USAA
+            }_SSW_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.USAA}_SSW_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.USAA
+                }_SSW_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -66,24 +75,53 @@ export function UsaaSSWForm() {
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <SswEditSelection />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
-            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <AmountDetails
+                isFormStateReadOnly={isFormStateReadOnly}
+                isOnlyWithdrawalTypeControls={true}
+            />
+            <SystematicWithdrawalProgram
+                isReadOnly={isFormStateReadOnly}
+                options={systematicWithdrawalOptions}
+            />
             <FormDistribution
                 isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}
                 defaultMethod={FundWithdrawnMethod.Prorata}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                title={
+                    t(
+                        'distributionInstruction.investmentSelectionForDistribution'
+                    ) as string
+                }
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

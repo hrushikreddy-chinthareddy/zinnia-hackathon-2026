@@ -2,27 +2,41 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { USStates } from '@deps/constants/geography/us-states';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { TaxWithholding, TaxWithholdingPlace, AmountType, WithholdingType } from '@deps/models/case/withdrawal/case';
+import {
+    TaxWithholding,
+    TaxWithholdingPlace,
+    AmountType,
+    WithholdingType,
+} from '@deps/models/case/withdrawal/case';
 
-import MartialStatusAllowancesWithholdings, { MaritalStatusAllowances } from './maritial-status-allowance-withholdings';
+import MartialStatusAllowancesWithholdings, {
+    MaritalStatusAllowances,
+} from './maritial-status-allowance-withholdings';
 import TaxWithholdingRow, { WithholdingView } from './tax-withholding-row';
 import TaxWithholdingSpecified from './tax-withholding-specified';
 
 export const toFormTaxWithholding = (
     withholding: WithholdingView | undefined,
-    maritalAllowances?: Pick<TaxWithholding, 'multipleAllowances' | 'exemption' | 'allowances' | 'filingStatus'>
+    maritalAllowances?: Pick<
+        TaxWithholding,
+        'multipleAllowances' | 'exemption' | 'allowances' | 'filingStatus'
+    >
 ): TaxWithholding[] | undefined => {
-
     const formTaxWithholdings = [];
     if (!withholding) {
         return undefined;
     }
 
-    const baseFormWithholding = { ...baseWithholding, place: { text: withholding.place } };
+    const baseFormWithholding = {
+        ...baseWithholding,
+        place: { text: withholding.place },
+    };
     if (withholding.dontWithhold) {
         const noWithholding = {
             type: {
@@ -33,7 +47,12 @@ export const toFormTaxWithholding = (
         formTaxWithholdings.push({ ...baseFormWithholding, ...noWithholding });
     }
 
-    if (withholding.specified && [withholding.dollarAmount, withholding.percentAmount].every(val => val === null)) {
+    if (
+        withholding.specified &&
+        [withholding.dollarAmount, withholding.percentAmount].every(
+            (val) => val === null
+        )
+    ) {
         const specifiedWithholding = {
             type: {
                 text: WithholdingType.SpecifiedTaxWithholding,
@@ -43,7 +62,10 @@ export const toFormTaxWithholding = (
                 amountType: null,
             },
         };
-        formTaxWithholdings.push({ ...baseFormWithholding, ...specifiedWithholding });
+        formTaxWithholdings.push({
+            ...baseFormWithholding,
+            ...specifiedWithholding,
+        });
     }
 
     if (withholding.dollarAmount) {
@@ -57,7 +79,10 @@ export const toFormTaxWithholding = (
             },
             ...maritalAllowances,
         };
-        formTaxWithholdings.push({ ...baseFormWithholding, ...dollarTaxWithholding });
+        formTaxWithholdings.push({
+            ...baseFormWithholding,
+            ...dollarTaxWithholding,
+        });
     }
 
     if (withholding.percentAmount) {
@@ -71,7 +96,10 @@ export const toFormTaxWithholding = (
             },
             ...maritalAllowances,
         };
-        formTaxWithholdings.push({ ...baseFormWithholding, ...percentageTaxWithholding });
+        formTaxWithholdings.push({
+            ...baseFormWithholding,
+            ...percentageTaxWithholding,
+        });
     }
 
     if (withholding.selectMinimum) {
@@ -85,7 +113,10 @@ export const toFormTaxWithholding = (
             },
             ...maritalAllowances,
         };
-        formTaxWithholdings.push({ ...baseFormWithholding, ...minTaxWithholding });
+        formTaxWithholdings.push({
+            ...baseFormWithholding,
+            ...minTaxWithholding,
+        });
     }
     return formTaxWithholdings;
 };
@@ -113,7 +144,9 @@ const baseWithholding = {
     },
 };
 
-export const toViewTaxWithholding = (withholdings: TaxWithholding[] | undefined): WithholdingView | undefined => {
+export const toViewTaxWithholding = (
+    withholdings: TaxWithholding[] | undefined
+): WithholdingView | undefined => {
     if (!Array.isArray(withholdings)) {
         return undefined;
     }
@@ -148,7 +181,9 @@ export const toViewTaxWithholding = (withholdings: TaxWithholding[] | undefined)
 };
 
 export type AdditionalWithHoldingConfig = { amountType: AmountType };
-export type AdditionalWithHoldingRecord = { [key in keyof typeof TaxWithholdingPlace]?: AdditionalWithHoldingConfig };
+export type AdditionalWithHoldingRecord = {
+    [key in keyof typeof TaxWithholdingPlace]?: AdditionalWithHoldingConfig;
+};
 
 interface TaxWithholdingsProps {
     ownerStateOfResidence?: string | null;
@@ -157,7 +192,13 @@ interface TaxWithholdingsProps {
     specifiedView?: boolean | false;
     additionalWithHoldingConfig?: AdditionalWithHoldingRecord;
     isFormStateReadOnly?: boolean;
-    meritalStatusAllowanceConfig?: { label: string; maritalStatusAllowancesOptions: { label: string; value: MaritalStatusAllowances }[] };
+    meritalStatusAllowanceConfig?: {
+        label: string;
+        maritalStatusAllowancesOptions: {
+            label: string;
+            value: MaritalStatusAllowances;
+        }[];
+    };
 }
 
 export default function TaxWithholdings({
@@ -169,21 +210,30 @@ export default function TaxWithholdings({
     isFormStateReadOnly,
     meritalStatusAllowanceConfig,
 }: TaxWithholdingsProps) {
-    const { formTaxWithholding, setFormTaxWithholding } = useContext(FormDataContext);
+    const { formTaxWithholding, setFormTaxWithholding } =
+        useContext(FormDataContext);
     const maritalAllowancesTax = formTaxWithholding.taxWithholding?.find(
-        tw => tw.place.text === TaxWithholdingPlace.State && tw?.multipleAllowances?.text === true
+        (tw) =>
+            tw.place.text === TaxWithholdingPlace.State &&
+            tw?.multipleAllowances?.text === true
     );
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.taxWithholdings' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.taxWithholdings',
+    });
     const isIowaResident = ownerStateOfResidence === USStates.IOWA;
     const IOWAChecked =
         isIowaResident &&
         formTaxWithholding.taxWithholding?.some(
-            tw => tw.place.text === TaxWithholdingPlace.State && tw.type.text === WithholdingType.NoTaxWithholding
+            (tw) =>
+                tw.place.text === TaxWithholdingPlace.State &&
+                tw.type.text === WithholdingType.NoTaxWithholding
         );
     const [federalWithholding, setFederalWithholding] = useState(
         toViewTaxWithholding(
             formTaxWithholding.taxWithholding?.filter(
-                tw => tw.place.text === TaxWithholdingPlace.Federal && tw.type.text !== WithholdingType.NoTaxWithholdingAllowed
+                (tw) =>
+                    tw.place.text === TaxWithholdingPlace.Federal &&
+                    tw.type.text !== WithholdingType.NoTaxWithholdingAllowed
             )
         )
     );
@@ -191,15 +241,23 @@ export default function TaxWithholdings({
         toViewTaxWithholding(
             !IOWAChecked
                 ? formTaxWithholding.taxWithholding?.filter(
-                    tw => tw.place.text === TaxWithholdingPlace.State && tw.type.text !== WithholdingType.NoTaxWithholdingAllowed
-                )
+                      (tw) =>
+                          tw.place.text === TaxWithholdingPlace.State &&
+                          tw.type.text !==
+                              WithholdingType.NoTaxWithholdingAllowed
+                  )
                 : undefined
         )
     );
 
-    const [noWithholdings, setNoWithholdings] = useState<boolean>(IOWAChecked || false);
+    const [noWithholdings, setNoWithholdings] = useState<boolean>(
+        IOWAChecked || false
+    );
     const [maritalAllowances, setMaritalAllowances] = useState<
-        Pick<TaxWithholding, 'multipleAllowances' | 'noOfallowances' | 'allowances'>
+        Pick<
+            TaxWithholding,
+            'multipleAllowances' | 'noOfallowances' | 'allowances'
+        >
     >({ ...maritalAllowancesTax });
 
     useEffect(() => {
@@ -215,7 +273,14 @@ export default function TaxWithholdings({
         };
 
         const fed = toFormTaxWithholding(federalWithholding);
-        const state = noWithholdings ? toFormTaxWithholding(IOWAWithholding) : toFormTaxWithholding(stateWithholding, { ...maritalAllowances, filingStatus: { text: maritalAllowancesTax?.filingStatus?.text ?? null } });
+        const state = noWithholdings
+            ? toFormTaxWithholding(IOWAWithholding)
+            : toFormTaxWithholding(stateWithholding, {
+                  ...maritalAllowances,
+                  filingStatus: {
+                      text: maritalAllowancesTax?.filingStatus?.text ?? null,
+                  },
+              });
 
         if (fed) {
             withholdings.push(...fed);
@@ -228,10 +293,17 @@ export default function TaxWithholdings({
         setFormTaxWithholding({
             taxWithholding: withholdings.length ? withholdings : undefined,
         });
-    }, [federalWithholding, stateWithholding, noWithholdings, maritalAllowances]);
+    }, [
+        federalWithholding,
+        stateWithholding,
+        noWithholdings,
+        maritalAllowances,
+    ]);
 
     return (
-        <CardContainer containerClassNames={`${className} border-b-2 border-gray-100`}>
+        <CardContainer
+            containerClassNames={`${className} border-b-2 border-gray-100`}
+        >
             <Typography variant={TypographyVariant.H3} className="mb-4">
                 {t('title')}
             </Typography>
@@ -241,7 +313,9 @@ export default function TaxWithholdings({
                 onDataChange={setFederalWithholding}
                 place={TaxWithholdingPlace.Federal}
                 withholding={federalWithholding}
-                additionalWithHoldingConfig={additionalWithHoldingConfig?.Federal}
+                additionalWithHoldingConfig={
+                    additionalWithHoldingConfig?.Federal
+                }
                 isFormStateReadOnly={isFormStateReadOnly}
             />
             {specifiedView && (
@@ -250,7 +324,9 @@ export default function TaxWithholdings({
                     onDataChange={setStateWithholding}
                     place={TaxWithholdingPlace.State}
                     withholding={stateWithholding}
-                    additionalWithHoldingConfig={additionalWithHoldingConfig?.State}
+                    additionalWithHoldingConfig={
+                        additionalWithHoldingConfig?.State
+                    }
                     isFormStateReadOnly={isFormStateReadOnly}
                 />
             )}
@@ -261,7 +337,9 @@ export default function TaxWithholdings({
                     onDataChange={setStateWithholding}
                     place={TaxWithholdingPlace.State}
                     withholding={stateWithholding}
-                    additionalWithHoldingConfig={additionalWithHoldingConfig?.State}
+                    additionalWithHoldingConfig={
+                        additionalWithHoldingConfig?.State
+                    }
                     isFormStateReadOnly={isFormStateReadOnly}
                 />
             )}
@@ -282,7 +360,9 @@ export default function TaxWithholdings({
                         maritalAllowances={maritalAllowances}
                         setMaritalAllowances={setMaritalAllowances}
                         isFormStateReadOnly={isFormStateReadOnly}
-                        meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
+                        meritalStatusAllowanceConfig={
+                            meritalStatusAllowanceConfig
+                        }
                     />
                 </div>
             ) : null}

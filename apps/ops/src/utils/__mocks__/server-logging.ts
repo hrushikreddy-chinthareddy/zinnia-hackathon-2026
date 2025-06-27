@@ -5,12 +5,17 @@ type UserInfo = {
     userName?: string;
 };
 export const getUserInfoForLogging = async (): Promise<UserInfo> => {
-    return { partyId: 'session.user.partyId', sessionId: 'session.user.sid', userId: 'session.user.sub', userName: 'session.user.name' };
+    return {
+        partyId: 'session.user.partyId',
+        sessionId: 'session.user.sid',
+        userId: 'session.user.sub',
+        userName: 'session.user.name',
+    };
 };
 
 export const logCompliance = (message: string, serializableValues?: any) => {
     console.log(serializableValues, message);
-}
+};
 
 export const logFatal = (message: string, serializableValues?: any) => {
     console.error(serializableValues, message);

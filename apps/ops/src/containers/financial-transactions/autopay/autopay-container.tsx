@@ -1,14 +1,27 @@
-import { ArrangementType, Policy, Reason, SystematicProgram, TransactionType, Policy as PolicyView } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    Policy,
+    Reason,
+    SystematicProgram,
+    TransactionType,
+    Policy as PolicyView,
+} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
+import PayeesStep, {
+    PayeesStepSetState,
+} from '@deps/components/workflows/payees-step/payees-step';
 import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
 import PaymentStepMoneyOut from '@deps/components/workflows/payment-step/payment-step-money-out';
 import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
-import PayorStep, { PayorStepSetState } from '@deps/components/workflows/payor-step/payor-step';
-import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import PayorStep, {
+    PayorStepSetState,
+} from '@deps/components/workflows/payor-step/payor-step';
+import StartStep, {
+    StartStepSetState,
+} from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
@@ -47,7 +60,9 @@ const AutopayContainer = ({
     systematicProgramReason,
     translationKeyPrefix,
 }: AutopayContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: translationKeyPrefix });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: translationKeyPrefix,
+    });
     const { autopay, setAutopay } = useAutopay();
     const { systematicPrograms } = policy;
 
@@ -59,10 +74,11 @@ const AutopayContainer = ({
     const confirmLabel = t('confirm.label');
 
     const { featureFlags } = useOptimizely();
-    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
+    const wireCheckPaymentsEnabled =
+        featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
 
     useEffect(() => {
-        setAutopay(prevState => ({
+        setAutopay((prevState) => ({
             ...prevState,
             arrangementType,
             parentPage,
@@ -70,16 +86,38 @@ const AutopayContainer = ({
             translationKeyPrefix,
             isSetUp,
         }));
-    }, [arrangementType, isSetUp, parentPage, setAutopay, systematicProgramReason, translationKeyPrefix]);
+    }, [
+        arrangementType,
+        isSetUp,
+        parentPage,
+        setAutopay,
+        systematicProgramReason,
+        translationKeyPrefix,
+    ]);
 
     const validateCall = async () => {
-        const { systematicProgram, arrangementId } = getSystematicInfo(systematicPrograms, systematicProgramReason, isSetUp);
+        const { systematicProgram, arrangementId } = getSystematicInfo(
+            systematicPrograms,
+            systematicProgramReason,
+            isSetUp
+        );
 
         const query =
             parentPage == ParentPage.Withdrawals
-                ? buildSystematicWithdrawalProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram)
-                : buildSystematicProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram);
-        const response = await validateSystematicProgramUpdate(policy.product?.planCode, policy.policyNumber || '', arrangementId, query);
+                ? buildSystematicWithdrawalProgramUpdateRequestBody(
+                      autopay,
+                      systematicProgram as SystematicProgram
+                  )
+                : buildSystematicProgramUpdateRequestBody(
+                      autopay,
+                      systematicProgram as SystematicProgram
+                  );
+        const response = await validateSystematicProgramUpdate(
+            policy.product?.planCode,
+            policy.policyNumber || '',
+            arrangementId,
+            query
+        );
 
         return response?.data;
     };
@@ -97,10 +135,14 @@ const AutopayContainer = ({
             }
             return TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION;
         }
-        return isSetUp ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+        return isSetUp
+            ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP
+            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [isSetUp, parentPage, arrangementType]);
 
-    autopay.arrangementType === ArrangementType.WITHDRAWAL ? 'Withdrawal' : 'RMD';
+    autopay.arrangementType === ArrangementType.WITHDRAWAL
+        ? 'Withdrawal'
+        : 'RMD';
 
     const steps: Step[] = [
         {
@@ -111,17 +153,29 @@ const AutopayContainer = ({
                     processType={Processes.SSW}
                     setState={setAutopay as StartStepSetState}
                     state={autopay}
-                    subtitle={!isSetUp && parentPage === ParentPage.Premiums ? (t('start.subtitleManage') as string) : undefined}
+                    subtitle={
+                        !isSetUp && parentPage === ParentPage.Premiums
+                            ? (t('start.subtitleManage') as string)
+                            : undefined
+                    }
                     title={
                         isSetUp
                             ? t('start.titleStart')
                             : `${t('start.titleManage')}${
                                   parentPage === ParentPage.Withdrawals
-                                      ? ` ${autopay.arrangementType === ArrangementType.WITHDRAWAL ? 'Withdrawal' : 'RMD'}`
+                                      ? ` ${
+                                            autopay.arrangementType ===
+                                            ArrangementType.WITHDRAWAL
+                                                ? 'Withdrawal'
+                                                : 'RMD'
+                                        }`
                                       : ''
                               }`
                     }
-                    trackEventProps={{ type: transactionType, step: TransactionStep.Start }}
+                    trackEventProps={{
+                        type: transactionType,
+                        step: TransactionStep.Start,
+                    }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -129,7 +183,12 @@ const AutopayContainer = ({
             text: startLabel,
         },
         {
-            component: parentPage === ParentPage.Withdrawals ? <WithdrawalAmount policy={policy} /> : <Amount policy={policy} />,
+            component:
+                parentPage === ParentPage.Withdrawals ? (
+                    <WithdrawalAmount policy={policy} />
+                ) : (
+                    <Amount policy={policy} />
+                ),
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,
@@ -142,7 +201,10 @@ const AutopayContainer = ({
                         policy={policy as PolicyView}
                         setState={setAutopay as PayeesStepSetState}
                         state={autopay as any}
-                        trackEventProps={{ type: transactionType, step: TransactionStep.Payees }}
+                        trackEventProps={{
+                            type: transactionType,
+                            step: TransactionStep.Payees,
+                        }}
                     />
                 ) : (
                     <PayorStep
@@ -150,7 +212,10 @@ const AutopayContainer = ({
                         policy={policy}
                         setState={setAutopay as PayorStepSetState}
                         state={autopay}
-                        trackEventProps={{ type: transactionType, step: TransactionStep.Payor }}
+                        trackEventProps={{
+                            type: transactionType,
+                            step: TransactionStep.Payor,
+                        }}
                     />
                 ),
             screenReaderLabel: payorLabel,
@@ -184,7 +249,10 @@ const AutopayContainer = ({
                         setState={setAutopay as unknown as PaymentStepSetState}
                         state={autopay}
                         validateTransaction={validateCall}
-                        trackEventProps={{ type: transactionType, step: TransactionStep.Payment }}
+                        trackEventProps={{
+                            type: transactionType,
+                            step: TransactionStep.Payment,
+                        }}
                     />
                 ),
             screenReaderLabel: paymentLabel,
@@ -192,7 +260,11 @@ const AutopayContainer = ({
             text: paymentLabel,
         },
         {
-            component: isSetUp ? <SetUpSummary policy={policy} /> : <ManageSummary policy={policy} />,
+            component: isSetUp ? (
+                <SetUpSummary policy={policy} />
+            ) : (
+                <ManageSummary policy={policy} />
+            ),
             screenReaderLabel: summaryLabel,
             index: 4,
             text: summaryLabel,

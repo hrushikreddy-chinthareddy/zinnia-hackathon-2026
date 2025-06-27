@@ -5,7 +5,9 @@ import { useMemo } from 'react';
 
 import TabGroupContainer from '@deps/components/address-change/tab-group-container';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import StartStep, {
+    StartStepSetState,
+} from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
 import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
@@ -26,8 +28,14 @@ interface AddressChangeContainerProps {
     planCode: string;
 }
 
-const AddressChangeContainer = ({ policy, document, planCode }: AddressChangeContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange' });
+const AddressChangeContainer = ({
+    policy,
+    document,
+    planCode,
+}: AddressChangeContainerProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'addressChange',
+    });
     const router = useRouter();
     const {
         query: { doc, clientId },
@@ -73,34 +81,67 @@ const AddressChangeContainer = ({ policy, document, planCode }: AddressChangeCon
             {
                 ariaLabel: t('address-change.step-navigations.signature'),
                 component: <SignatureStep policy={policy}></SignatureStep>,
-                screenReaderLabel: t('address-change.step-navigations.signature'),
+                screenReaderLabel: t(
+                    'address-change.step-navigations.signature'
+                ),
                 isVisible: () => !!doc && channel !== Channel.Phone,
                 text: t('tabs.signature'),
             },
             {
                 ariaLabel: t('tabs.summary'),
                 isVisible: () => true,
-                component: <SummaryStep policy={policy} isSignatureSummaryRequired={!!doc}></SummaryStep>,
+                component: (
+                    <SummaryStep
+                        policy={policy}
+                        isSignatureSummaryRequired={!!doc}
+                    ></SummaryStep>
+                ),
                 screenReaderLabel: t('tabs.summary'),
                 text: t('tabs.summary'),
             },
             {
                 ariaLabel: t('address-change.step-navigations.confirm'),
                 isVisible: () => true,
-                component: <ConfirmStep policy={policy} document={document} planCode={planCode} clientId={clientId as string} />,
+                component: (
+                    <ConfirmStep
+                        policy={policy}
+                        document={document}
+                        planCode={planCode}
+                        clientId={clientId as string}
+                    />
+                ),
                 screenReaderLabel: t('address-change.step-navigations.confirm'),
                 text: t('tabs.confirm'),
             },
         ],
-        [t, policy, setFormData, formData, submitSuccess, doc, document, planCode, clientId, channel]
+        [
+            t,
+            policy,
+            setFormData,
+            formData,
+            submitSuccess,
+            doc,
+            document,
+            planCode,
+            clientId,
+            channel,
+        ]
     );
 
     const filteredSteps: Step[] = useMemo(
-        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        () =>
+            steps
+                .filter((item: any) => item.isVisible?.())
+                .map((item: any, index: number) => ({ ...item, index })),
         [steps]
     );
 
-    return <TabGroupContainer steps={filteredSteps} policy={policy}></TabGroupContainer>;
+    return (
+        <TabGroupContainer
+            steps={filteredSteps}
+            policy={policy}
+        ></TabGroupContainer>
+    );
 };
 
 export default AddressChangeContainer;

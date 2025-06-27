@@ -8,19 +8,30 @@ import TaskContainer from '@deps/containers/task-container/task-container';
 import { applyDynamicOptions } from '@deps/containers/task-container/task-handlers/handle-task';
 import { TaskProvider } from '@deps/containers/task-container/task-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { UserPermission } from '@deps/models/user-profile';
-import { getCaseTaskById, getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
+import {
+    getCaseTaskById,
+    getTaskFormMetadata,
+} from '@deps/operations/tasks/task-operations';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { isProd } from '@deps/utils/environment.helpers';
 import { getFeatureFlagByKey } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
-import { logError, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logError,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helpers';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -67,7 +78,8 @@ export const getServerSideProps = withPageAuthAndLogging(
             const taskId = (query.taskId as string) || '';
             const taskTypeOverride = (query.taskTypeOverride as string) || '';
             const taskUserOverride = Boolean(query.taskUserOverride) || false;
-            const taskSchemaOverride = (query.taskSchemaOverride as string) || '';
+            const taskSchemaOverride =
+                (query.taskSchemaOverride as string) || '';
             const carrierOverride = (query.taskCarrierOverride as string) || '';
 
             let accessToken;
@@ -81,11 +93,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const hasPermissionToReadCaseManagement = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadCaseManagement,
-                loggingContext
-            );
+            const hasPermissionToReadCaseManagement =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadCaseManagement,
+                    loggingContext
+                );
             if (!hasPermissionToReadCaseManagement) {
                 return {
                     redirect: {
@@ -96,9 +109,16 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             try {
-                const mockedTaskType = taskTypeOverride && !isProd() && taskTypeOverride;
+                const mockedTaskType =
+                    taskTypeOverride && !isProd() && taskTypeOverride;
 
-                const task = await getCaseTaskById(taskId, accessToken, loggingContext, mockedTaskType as TaskType, carrierOverride);
+                const task = await getCaseTaskById(
+                    taskId,
+                    accessToken,
+                    loggingContext,
+                    mockedTaskType as TaskType,
+                    carrierOverride
+                );
 
                 if (!task) {
                     logError('Task::Error getting task by id', loggingContext);
@@ -115,7 +135,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 const flag = convertToCamelCase(taskType);
 
                 if (!taskType || !carrier || !caseId || !process) {
-                    logWarn('task/details not found', { ...loggingContext, taskType, carrier, caseId, process });
+                    logWarn('task/details not found', {
+                        ...loggingContext,
+                        taskType,
+                        carrier,
+                        caseId,
+                        process,
+                    });
                     return {
                         redirect: {
                             destination: '/403',
@@ -123,10 +149,26 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-                if (!(!isProd() && (taskUserOverride || taskTypeOverride || taskSchemaOverride))) {
-                    if (!(user.partyId && task.assigneePartyId && task.assigneePartyId === user.partyId)) {
+                if (
+                    !(
+                        !isProd() &&
+                        (taskUserOverride ||
+                            taskTypeOverride ||
+                            taskSchemaOverride)
+                    )
+                ) {
+                    if (
+                        !(
+                            user.partyId &&
+                            task.assigneePartyId &&
+                            task.assigneePartyId === user.partyId
+                        )
+                    ) {
                         if (task.status !== TaskStatus.Completed) {
-                            logWarn('task/:id::task is not assigned to user', { ...loggingContext, assignee: task.assignee });
+                            logWarn('task/:id::task is not assigned to user', {
+                                ...loggingContext,
+                                assignee: task.assignee,
+                            });
                             return {
                                 redirect: {
                                     destination: '/403',
@@ -144,7 +186,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                     );
 
                     if (!enabledTask) {
-                        logWarn('task/:id::feature flag not enabled', { ...loggingContext, carrier });
+                        logWarn('task/:id::feature flag not enabled', {
+                            ...loggingContext,
+                            carrier,
+                        });
                         return {
                             redirect: {
                                 destination: '/403',
@@ -154,19 +199,30 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                 }
 
-                let [isSaveAsDraftEnabled, isContinueButtonEnabled] = await Promise.all([
-                    getFeatureFlagByKey(FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT, carrier?.toLowerCase(), flag, user.sub, loggingContext),
-                    getFeatureFlagByKey(
-                        FEATURE_FLAG_VARIABLES.TASK_CONTINUE_BUTTON_ENABLE,
-                        carrier?.toLowerCase(),
-                        flag,
-                        user.sub,
-                        loggingContext
-                    ),
-                ]);
+                let [isSaveAsDraftEnabled, isContinueButtonEnabled] =
+                    await Promise.all([
+                        getFeatureFlagByKey(
+                            FEATURE_FLAG_VARIABLES.TASK_SAVE_AS_DRAFT,
+                            carrier?.toLowerCase(),
+                            flag,
+                            user.sub,
+                            loggingContext
+                        ),
+                        getFeatureFlagByKey(
+                            FEATURE_FLAG_VARIABLES.TASK_CONTINUE_BUTTON_ENABLE,
+                            carrier?.toLowerCase(),
+                            flag,
+                            user.sub,
+                            loggingContext
+                        ),
+                    ]);
 
-                isSaveAsDraftEnabled = task?.status !== TaskStatus.Completed && isSaveAsDraftEnabled;
-                isContinueButtonEnabled = task?.status === TaskStatus.Completed || isContinueButtonEnabled;
+                isSaveAsDraftEnabled =
+                    task?.status !== TaskStatus.Completed &&
+                    isSaveAsDraftEnabled;
+                isContinueButtonEnabled =
+                    task?.status === TaskStatus.Completed ||
+                    isContinueButtonEnabled;
 
                 const nigoFilters = {
                     categoryIds: ['Form', 'Signature', 'Account Information'],
@@ -175,15 +231,28 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
 
                 const mockedSchema = taskSchemaOverride === 'true' && !isProd();
-                const [translations, caseDetails, nigoExceptionResponse, taskMetadata] = await Promise.all([
+                const [
+                    translations,
+                    caseDetails,
+                    nigoExceptionResponse,
+                    taskMetadata,
+                ] = await Promise.all([
                     await serverSideTranslations(
                         locale,
                         [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
                         nextI18nextConfig,
                         ALL_LOCALES
                     ),
-                    await getCaseDetailsSSR(caseId, accessToken as string, loggingContext),
-                    await getNigoExceptions(nigoFilters, accessToken, loggingContext),
+                    await getCaseDetailsSSR(
+                        caseId,
+                        accessToken as string,
+                        loggingContext
+                    ),
+                    await getNigoExceptions(
+                        nigoFilters,
+                        accessToken,
+                        loggingContext
+                    ),
                     await getTaskFormMetadata(
                         carrier,
                         taskType as TaskType,
@@ -196,7 +265,9 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 const correlationId = caseDetails?.correlationId;
 
-                const currentTaskMetadata = taskMetadata?.schemaContent?.tabSchemas || ([] as FormMetadata[]);
+                const currentTaskMetadata =
+                    taskMetadata?.schemaContent?.tabSchemas ||
+                    ([] as FormMetadata[]);
 
                 if (!currentTaskMetadata.length) {
                     const fallbackMetadata: FormMetadata = {
@@ -207,17 +278,27 @@ export const getServerSideProps = withPageAuthAndLogging(
                     currentTaskMetadata.push(fallbackMetadata ?? {});
                 }
 
-                const { nigoExceptions, nigoSubExceptions } = nigoExceptionResponse;
+                const { nigoExceptions, nigoSubExceptions } =
+                    nigoExceptionResponse;
 
-                const taskInfoLink = context?.req?.headers?.referer ? new URL(context.req.headers.referer)?.pathname : '/home';
+                const taskInfoLink = context?.req?.headers?.referer
+                    ? new URL(context.req.headers.referer)?.pathname
+                    : '/home';
 
                 //transform schema options with api
-                await applyDynamicOptions(task, accessToken, currentTaskMetadata);
+                await applyDynamicOptions(
+                    task,
+                    accessToken,
+                    currentTaskMetadata
+                );
 
                 return {
                     props: {
                         ...translations,
-                        taskMetadata: await TaskMetadataHelper(task, currentTaskMetadata),
+                        taskMetadata: await TaskMetadataHelper(
+                            task,
+                            currentTaskMetadata
+                        ),
                         task,
                         correlationId,
                         taskInfoLink,
@@ -228,14 +309,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             } catch (error) {
-                logError('getServerSidePropsTask', { ...parseErrorInformation(error), ...loggingContext });
+                logError('getServerSidePropsTask', {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                });
                 return {
                     props: {},
                 };
             }
         },
     },
-    { file: 'pages/task/[taskId]/index', function: 'getServerSideProps', page: 'task/:taskId' }
+    {
+        file: 'pages/task/[taskId]/index',
+        function: 'getServerSideProps',
+        page: 'task/:taskId',
+    }
 );
 
 export default TaskPage;

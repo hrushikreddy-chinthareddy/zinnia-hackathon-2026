@@ -7,13 +7,21 @@ import { Dispatch, SetStateAction, useCallback } from 'react';
 const useQueryStore = () => {
     const router = useRouter();
 
-    const setParams: Dispatch<SetStateAction<ParsedUrlQueryInput>> = useCallback(
-        (params: SetStateAction<ParsedUrlQueryInput>) => {
-            const newParams = typeof params === 'function' ? params(router.query) : params;
-            router.replace({ pathname: router.pathname, query: newParams }, undefined, { shallow: true });
-        },
-        [router]
-    );
+    const setParams: Dispatch<SetStateAction<ParsedUrlQueryInput>> =
+        useCallback(
+            (params: SetStateAction<ParsedUrlQueryInput>) => {
+                const newParams =
+                    typeof params === 'function'
+                        ? params(router.query)
+                        : params;
+                router.replace(
+                    { pathname: router.pathname, query: newParams },
+                    undefined,
+                    { shallow: true }
+                );
+            },
+            [router]
+        );
 
     return [router.query, setParams] as [typeof router.query, typeof setParams];
 };

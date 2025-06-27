@@ -3,7 +3,12 @@ import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logInfo, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -30,22 +35,30 @@ export default withAuthAndLogging(
         };
 
         try {
-            const { data } = await serverApi.put<any, AxiosResponse>(url, formData, config, loggingContext);
+            const { data } = await serverApi.put<any, AxiosResponse>(
+                url,
+                formData,
+                config,
+                loggingContext
+            );
             logInfo('webnonfinancial::initialdeathclaim::success', {
                 ...loggingContext,
-                duration: performance.now() - now
+                duration: performance.now() - now,
             });
             return res.status(200).json(data);
         } catch (error) {
             logWarn('webnonfinancial::initialdeathclaim::error', {
                 ...parseErrorInformation(error),
                 ...loggingContext,
-                duration: performance.now() - now
+                duration: performance.now() - now,
             });
             return res.status(500).json(null);
         }
     },
-    { file: 'webnonfinancial/nonfinancial/v1/initialdeathclaim', function: 'routeHandler' }
+    {
+        file: 'webnonfinancial/nonfinancial/v1/initialdeathclaim',
+        function: 'routeHandler',
+    }
 );
 
 export const config = {

@@ -1,12 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { DEFAULT_DATE_FORMAT } from '@xd/utils/src/dates';
 import { Address, Country, State } from '@zinnia/api-types/types/sor';
 import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 import { Tag, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
 
 import ClickWrapper from '@deps/components/click-container/click-wrapper';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { CaseAdditionalData } from '@deps/models/case/case';
@@ -15,9 +19,8 @@ import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+
 import { FormattedAddress } from '../people-data-cards/address-card/address-card.helpers';
-import dayjs from 'dayjs';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/src/dates';
 
 type FundingSource = CaseAdditionalData;
 
@@ -41,7 +44,14 @@ type TransactionEntitySideSheetValues = {
     } | null;
 };
 
-const formatAddress = (address: { addressLines: string[]; city: string; state: string; zip: string; zipSuffix?: string; country: string }): Address => {
+const formatAddress = (address: {
+    addressLines: string[];
+    city: string;
+    state: string;
+    zip: string;
+    zipSuffix?: string;
+    country: string;
+}): Address => {
     const { addressLines, country, state, zip, zipSuffix, ...rest } = address;
     return {
         ...rest,
@@ -51,7 +61,7 @@ const formatAddress = (address: { addressLines: string[]; city: string; state: s
         country: country as Country,
         state: state as State,
         zipCode: zip,
-        zipCodeExtension: zipSuffix
+        zipCodeExtension: zipSuffix,
     };
 };
 
@@ -62,15 +72,28 @@ const SourceTypeTag = ({ sourceType }: { sourceType: string | undefined }) => {
     return <Tag text={sourceType} />;
 };
 
-const getSideSheetValues = (transactionEntity: TransactionModelResponse, t: TFunction): TransactionEntitySideSheetValues => {
+const getSideSheetValues = (
+    transactionEntity: TransactionModelResponse,
+    t: TFunction
+): TransactionEntitySideSheetValues => {
     const { entity } = transactionEntity;
-    const { exchangeReplace, institutionName, moneySource, receivedAmount } = entity?.payment || {};
+    const { exchangeReplace, institutionName, moneySource, receivedAmount } =
+        entity?.payment || {};
     const rateLockEndDate = exchangeReplace?.rateLockEndDate;
     const values: TransactionEntitySideSheetValues = {
-        companyName: exchangeReplace?.companyName || t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingSource'),
+        companyName:
+            exchangeReplace?.companyName ||
+            t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingSource'),
         sourceType: moneySource,
         expectedAmount: numberFormatify(exchangeReplace?.amountRequested),
-        premiumStatus: receivedAmount === null || receivedAmount === undefined ? t('caseOverview.sidenav.tabs.fundingSourceSideSheet.awaitingFunds') : t('caseOverview.sidenav.tabs.fundingSourceSideSheet.received'),
+        premiumStatus:
+            receivedAmount === null || receivedAmount === undefined
+                ? t(
+                      'caseOverview.sidenav.tabs.fundingSourceSideSheet.awaitingFunds'
+                  )
+                : t(
+                      'caseOverview.sidenav.tabs.fundingSourceSideSheet.received'
+                  ),
         receivedAmount: numberFormatify(receivedAmount),
         trackingNumber: exchangeReplace?.trackingNumber ?? DEFAULT_ERROR_STRING,
         fundingCompany: institutionName ?? null,
@@ -79,12 +102,20 @@ const getSideSheetValues = (transactionEntity: TransactionModelResponse, t: TFun
         paymentMethod: entity?.payment?.paymentMethod ?? null,
         grossAmount: numberFormatify(entity?.payment?.grossAmount) ?? null,
         netAmount: numberFormatify(entity?.payment?.netAmount) ?? null,
-        rateLockEndDate: rateLockEndDate ? dayjs(exchangeReplace?.rateLockEndDate).format(DEFAULT_DATE_FORMAT) : DEFAULT_ERROR_STRING,
-
+        rateLockEndDate: rateLockEndDate
+            ? dayjs(exchangeReplace?.rateLockEndDate).format(
+                  DEFAULT_DATE_FORMAT
+              )
+            : DEFAULT_ERROR_STRING,
     };
-    if (exchangeReplace?.address || exchangeReplace?.phone || exchangeReplace?.faxId) {
+    if (
+        exchangeReplace?.address ||
+        exchangeReplace?.phone ||
+        exchangeReplace?.faxId
+    ) {
         values.contactDetails = {
-            mailingAddress: formatAddress(exchangeReplace?.address || {}) ?? null,
+            mailingAddress:
+                formatAddress(exchangeReplace?.address || {}) ?? null,
             phoneNumber: exchangeReplace?.phone ?? null,
             faxNumber: exchangeReplace?.faxId ?? null,
         };
@@ -92,7 +123,11 @@ const getSideSheetValues = (transactionEntity: TransactionModelResponse, t: TFun
     return values;
 };
 
-const FundingSourceSideSheetContent = ({ transactionEntity }: { transactionEntity: TransactionModelResponse | null }) => {
+const FundingSourceSideSheetContent = ({
+    transactionEntity,
+}: {
+    transactionEntity: TransactionModelResponse | null;
+}) => {
     const { t } = useTranslation();
     if (!transactionEntity) {
         return null;
@@ -101,108 +136,248 @@ const FundingSourceSideSheetContent = ({ transactionEntity }: { transactionEntit
     const sideSheetValues = getSideSheetValues(transactionEntity, t);
     return (
         <div className="p-8">
-            <Typography variant={TypographyVariant.H3}>{t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingDetails')}</Typography>
+            <Typography variant={TypographyVariant.H3}>
+                {t(
+                    'caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingDetails'
+                )}
+            </Typography>
             <div className="flex flex-col w-full gap-2 my-4">
                 <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.sourceType')}
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={labelClassNames}
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.sourceType'
+                        )}
                     </Typography>
                     <SourceTypeTag sourceType={sideSheetValues.sourceType} />
                 </div>
                 <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.expectedAmount')}
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={labelClassNames}
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.expectedAmount'
+                        )}
                     </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.expectedAmount}</Typography>
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {sideSheetValues.expectedAmount}
+                    </Typography>
                 </div>
                 <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.receivedAmount')}
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={labelClassNames}
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.receivedAmount'
+                        )}
                     </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.receivedAmount}</Typography>
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {sideSheetValues.receivedAmount}
+                    </Typography>
                 </div>
                 <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.trackingNumber')}
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={labelClassNames}
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.trackingNumber'
+                        )}
                     </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.trackingNumber}</Typography>
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {sideSheetValues.trackingNumber}
+                    </Typography>
                 </div>
-                {sideSheetValues.fundingCompany !== null && <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingCompany')}
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.fundingCompany}</Typography>
-                </div>}
-                {sideSheetValues.fundingContract !== null && <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingContract')}
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.fundingContract}</Typography>
-                </div>}
-                <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.premiumStatus')}
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}> {sideSheetValues.premiumStatus}</Typography>
-                </div>
-                {sideSheetValues.paymentMethod !== null && <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.paymentMethod')}
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.paymentMethod}</Typography>
-                </div>}
-                {sideSheetValues.grossAmount !== null && <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.grossAmount')}
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.grossAmount}</Typography>
-                </div>}
-                {sideSheetValues.netAmount !== null && <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.netAmount')}
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.netAmount}</Typography>
-                </div>}
-                <div className="flex flex-row w-full gap-8">
-                    <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.rateLockEndDate')}
-                    </Typography>
-                    <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.rateLockEndDate}</Typography>
-                </div>
-
-            </div>
-            {sideSheetValues.contactDetails && (sideSheetValues.contactDetails?.mailingAddress || sideSheetValues.contactDetails?.phoneNumber || sideSheetValues.contactDetails?.faxNumber) && (
-                <>
-                    <Typography variant={TypographyVariant.H3}>
-                        {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.contactDetails')}
-                    </Typography>
-                    <div className="flex flex-col w-full gap-2 my-4">
-                        {sideSheetValues.contactDetails?.mailingAddress !== null && (<div className="flex flex-row w-full gap-8">
-                            <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                                {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.mailingAddress')}
-                            </Typography>
-                            <FormattedAddress address={sideSheetValues.contactDetails?.mailingAddress as Address} />
-                        </div>)}
-                        {sideSheetValues.contactDetails?.phoneNumber !== null && (<div className="flex flex-row w-full gap-8">
-                            <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                                {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.phoneNumber')}
-                            </Typography>
-                            <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.contactDetails?.phoneNumber}</Typography>
-                        </div>)}
-                        {sideSheetValues.contactDetails?.faxNumber !== null && (<div className="flex flex-row w-full gap-8">
-                            <Typography variant={TypographyVariant.BodySm} className={labelClassNames}>
-                                {t('caseOverview.sidenav.tabs.fundingSourceSideSheet.faxNumber')}
-                            </Typography>
-                            <Typography variant={TypographyVariant.BodySm}>{sideSheetValues.contactDetails?.faxNumber}</Typography>
-                        </div>)}
+                {sideSheetValues.fundingCompany !== null && (
+                    <div className="flex flex-row w-full gap-8">
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className={labelClassNames}
+                        >
+                            {t(
+                                'caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingCompany'
+                            )}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {sideSheetValues.fundingCompany}
+                        </Typography>
                     </div>
-                </>
-            )}
+                )}
+                {sideSheetValues.fundingContract !== null && (
+                    <div className="flex flex-row w-full gap-8">
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className={labelClassNames}
+                        >
+                            {t(
+                                'caseOverview.sidenav.tabs.fundingSourceSideSheet.fundingContract'
+                            )}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {sideSheetValues.fundingContract}
+                        </Typography>
+                    </div>
+                )}
+                <div className="flex flex-row w-full gap-8">
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={labelClassNames}
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.premiumStatus'
+                        )}
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {' '}
+                        {sideSheetValues.premiumStatus}
+                    </Typography>
+                </div>
+                {sideSheetValues.paymentMethod !== null && (
+                    <div className="flex flex-row w-full gap-8">
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className={labelClassNames}
+                        >
+                            {t(
+                                'caseOverview.sidenav.tabs.fundingSourceSideSheet.paymentMethod'
+                            )}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {sideSheetValues.paymentMethod}
+                        </Typography>
+                    </div>
+                )}
+                {sideSheetValues.grossAmount !== null && (
+                    <div className="flex flex-row w-full gap-8">
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className={labelClassNames}
+                        >
+                            {t(
+                                'caseOverview.sidenav.tabs.fundingSourceSideSheet.grossAmount'
+                            )}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {sideSheetValues.grossAmount}
+                        </Typography>
+                    </div>
+                )}
+                {sideSheetValues.netAmount !== null && (
+                    <div className="flex flex-row w-full gap-8">
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className={labelClassNames}
+                        >
+                            {t(
+                                'caseOverview.sidenav.tabs.fundingSourceSideSheet.netAmount'
+                            )}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {sideSheetValues.netAmount}
+                        </Typography>
+                    </div>
+                )}
+                <div className="flex flex-row w-full gap-8">
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={labelClassNames}
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.rateLockEndDate'
+                        )}
+                    </Typography>
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {sideSheetValues.rateLockEndDate}
+                    </Typography>
+                </div>
+            </div>
+            {sideSheetValues.contactDetails &&
+                (sideSheetValues.contactDetails?.mailingAddress ||
+                    sideSheetValues.contactDetails?.phoneNumber ||
+                    sideSheetValues.contactDetails?.faxNumber) && (
+                    <>
+                        <Typography variant={TypographyVariant.H3}>
+                            {t(
+                                'caseOverview.sidenav.tabs.fundingSourceSideSheet.contactDetails'
+                            )}
+                        </Typography>
+                        <div className="flex flex-col w-full gap-2 my-4">
+                            {sideSheetValues.contactDetails?.mailingAddress !==
+                                null && (
+                                <div className="flex flex-row w-full gap-8">
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className={labelClassNames}
+                                    >
+                                        {t(
+                                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.mailingAddress'
+                                        )}
+                                    </Typography>
+                                    <FormattedAddress
+                                        address={
+                                            sideSheetValues.contactDetails
+                                                ?.mailingAddress as Address
+                                        }
+                                    />
+                                </div>
+                            )}
+                            {sideSheetValues.contactDetails?.phoneNumber !==
+                                null && (
+                                <div className="flex flex-row w-full gap-8">
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className={labelClassNames}
+                                    >
+                                        {t(
+                                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.phoneNumber'
+                                        )}
+                                    </Typography>
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                    >
+                                        {
+                                            sideSheetValues.contactDetails
+                                                ?.phoneNumber
+                                        }
+                                    </Typography>
+                                </div>
+                            )}
+                            {sideSheetValues.contactDetails?.faxNumber !==
+                                null && (
+                                <div className="flex flex-row w-full gap-8">
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className={labelClassNames}
+                                    >
+                                        {t(
+                                            'caseOverview.sidenav.tabs.fundingSourceSideSheet.faxNumber'
+                                        )}
+                                    </Typography>
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                    >
+                                        {
+                                            sideSheetValues.contactDetails
+                                                ?.faxNumber
+                                        }
+                                    </Typography>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
         </div>
     );
 };
 
-const FundingSourceItem = ({ fundingSource, ...rest }: { fundingSource: FundingSource } & HTMLAttributes<HTMLLIElement>) => {
+const FundingSourceItem = ({
+    fundingSource,
+    ...rest
+}: { fundingSource: FundingSource } & HTMLAttributes<HTMLLIElement>) => {
     const { t } = useTranslation();
 
     const {
@@ -216,7 +391,9 @@ const FundingSourceItem = ({ fundingSource, ...rest }: { fundingSource: FundingS
 
     const { changeSideSheetContent, handleOpen } = useSideSheetContext();
 
-    const openSideSheet = (transactionEntity: TransactionModelResponse | null) => {
+    const openSideSheet = (
+        transactionEntity: TransactionModelResponse | null
+    ) => {
         if (!transactionEntity) {
             return;
         }
@@ -224,15 +401,22 @@ const FundingSourceItem = ({ fundingSource, ...rest }: { fundingSource: FundingS
         const sideSheetValues = getSideSheetValues(transactionEntity, t);
 
         changeSideSheetContent(
-            <Typography variant={TypographyVariant.H2}>{sideSheetValues.companyName}</Typography>,
-            <FundingSourceSideSheetContent transactionEntity={transactionEntity} />
+            <Typography variant={TypographyVariant.H2}>
+                {sideSheetValues.companyName}
+            </Typography>,
+            <FundingSourceSideSheetContent
+                transactionEntity={transactionEntity}
+            />
         );
         handleOpen(true);
     };
 
     if (isLoading) {
         return (
-            <li className="flex gap-md rounded bg-white border-2 border-[#ededed] p-4 mb-2" {...rest}>
+            <li
+                className="flex gap-md rounded bg-white border-2 border-[#ededed] p-4 mb-2"
+                {...rest}
+            >
                 <div className="mt-0.5">
                     <InProgressIcon
                         height={18}
@@ -243,11 +427,19 @@ const FundingSourceItem = ({ fundingSource, ...rest }: { fundingSource: FundingS
                     />
                 </div>
                 <div>
-                    <Typography variant={TypographyVariant.BodySmBold} className={'text-gray-600'}>
+                    <Typography
+                        variant={TypographyVariant.BodySmBold}
+                        className={'text-gray-600'}
+                    >
                         {t('caseOverview.sidenav.tabs.loadingFundingSource')}
                     </Typography>
-                    <Typography variant={TypographyVariant.BodySm} className="text-gray-600">
-                        {t('caseOverview.sidenav.tabs.loadingFundingSourceCopy')}
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className="text-gray-600"
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.loadingFundingSourceCopy'
+                        )}
                     </Typography>
                 </div>
             </li>
@@ -256,23 +448,43 @@ const FundingSourceItem = ({ fundingSource, ...rest }: { fundingSource: FundingS
 
     if (isError) {
         return (
-            <li className="flex flex-row gap-md rounded bg-white border-2 border-[#ededed] p-4 mb-2" {...rest}>
+            <li
+                className="flex flex-row gap-md rounded bg-white border-2 border-[#ededed] p-4 mb-2"
+                {...rest}
+            >
                 <div className="mt-0.5">
-                    <InProgressIcon height={18} width={18} role="presentation" aria-hidden={true} className="shrink-0 text-gray-600" />
+                    <InProgressIcon
+                        height={18}
+                        width={18}
+                        role="presentation"
+                        aria-hidden={true}
+                        className="shrink-0 text-gray-600"
+                    />
                 </div>
                 <div>
-                    <Typography variant={TypographyVariant.BodySmBold} className={'text-gray-600'}>
-                        {t('caseOverview.sidenav.tabs.errorGettingFundingSourceInfo')}
+                    <Typography
+                        variant={TypographyVariant.BodySmBold}
+                        className={'text-gray-600'}
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.errorGettingFundingSourceInfo'
+                        )}
                     </Typography>
-                    <Typography variant={TypographyVariant.BodySm} className="text-gray-600">
-                        {t('caseOverview.sidenav.tabs.errorGettingFundingSourceInfoCopy')}
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className="text-gray-600"
+                    >
+                        {t(
+                            'caseOverview.sidenav.tabs.errorGettingFundingSourceInfoCopy'
+                        )}
                     </Typography>
                 </div>
             </li>
         );
     }
     const fundingSourceLabel =
-        transactionEntity?.entity?.payment?.exchangeReplace?.companyName ?? t(`caseOverview.sidenav.tabs.fundingSource`);
+        transactionEntity?.entity?.payment?.exchangeReplace?.companyName ??
+        t(`caseOverview.sidenav.tabs.fundingSource`);
     return (
         <li className="flex gap-md rounded bg-white " {...rest}>
             <ClickWrapper
@@ -284,11 +496,20 @@ const FundingSourceItem = ({ fundingSource, ...rest }: { fundingSource: FundingS
                     <div className="flex flex-row justify-start items-center gap-2 w-full">
                         <CashIcon width={24} height={24} className="shrink-0" />
                         <div className="flex flex-row flex-wrap items-center gap-2 w-full">
-                            <Typography className="flex-shrink" variant={TypographyVariant.BodySmBold}>
+                            <Typography
+                                className="flex-shrink"
+                                variant={TypographyVariant.BodySmBold}
+                            >
                                 {fundingSourceLabel}
                             </Typography>
                             {transactionEntity?.entity?.payment?.moneySource ? (
-                                <Tag className="w-auto flex-shrink-0" text={transactionEntity?.entity?.payment?.moneySource} />
+                                <Tag
+                                    className="w-auto flex-shrink-0"
+                                    text={
+                                        transactionEntity?.entity?.payment
+                                            ?.moneySource
+                                    }
+                                />
                             ) : null}
                         </div>
                     </div>
@@ -315,22 +536,32 @@ const FundingSourceItem = ({ fundingSource, ...rest }: { fundingSource: FundingS
     );
 };
 
-export const FundingSources = ({ fundingSources, ...rest }: { fundingSources: FundingSource[] } & HTMLAttributes<HTMLDivElement>) => {
+export const FundingSources = ({
+    fundingSources,
+    ...rest
+}: { fundingSources: FundingSource[] } & HTMLAttributes<HTMLDivElement>) => {
     const { t } = useTranslation();
 
     // Remove empty funding sources
-    const fundingSourcesList = fundingSources.filter(fs => fs.value);
+    const fundingSourcesList = fundingSources.filter((fs) => fs.value);
 
     return (
         <div className="flex w-full flex-col" {...rest}>
             {fundingSourcesList.length ? (
                 <ul className="flex w-full flex-col">
-                    {fundingSourcesList.map(fundingSource => (
-                        <FundingSourceItem key={fundingSource.id} fundingSource={fundingSource} />
+                    {fundingSourcesList.map((fundingSource) => (
+                        <FundingSourceItem
+                            key={fundingSource.id}
+                            fundingSource={fundingSource}
+                        />
                     ))}
                 </ul>
             ) : (
-                <span>{t('caseOverview.sidenav.tabs.fundingSource.noFundingSource')}</span>
+                <span>
+                    {t(
+                        'caseOverview.sidenav.tabs.fundingSource.noFundingSource'
+                    )}
+                </span>
             )}
         </div>
     );

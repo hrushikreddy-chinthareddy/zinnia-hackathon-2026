@@ -18,8 +18,15 @@ const INITIAL_BENE_INFO = {
     isRestrictedBeneficiary: false,
 };
 
-export default function BeneficiaryInformation({ carrierId, setBeneInfo, updateInfo, isReadOnly }: BeneficiaryInformationProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.beneInformation' });
+export default function BeneficiaryInformation({
+    carrierId,
+    setBeneInfo,
+    updateInfo,
+    isReadOnly,
+}: BeneficiaryInformationProps) {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails.beneInformation',
+    });
 
     const options = {
         isRequired: false,
@@ -32,13 +39,22 @@ export default function BeneficiaryInformation({ carrierId, setBeneInfo, updateI
 
     const toggleSelection = (option: string, value: string) => {
         if (option === 'isPerStirpes') {
-            setBene((prevState: any) => ({ ...prevState, isPerStirpes: value === 'true' }));
+            setBene((prevState: any) => ({
+                ...prevState,
+                isPerStirpes: value === 'true',
+            }));
         }
         if (option === 'isIrrevocable') {
-            setBene((prevState: any) => ({ ...prevState, isIrrevocable: value === 'true' }));
+            setBene((prevState: any) => ({
+                ...prevState,
+                isIrrevocable: value === 'true',
+            }));
         }
         if (option === 'isRestrictedBeneficiary') {
-            setBene((prevState: any) => ({ ...prevState, isRestrictedBeneficiary: value === 'true' }));
+            setBene((prevState: any) => ({
+                ...prevState,
+                isRestrictedBeneficiary: value === 'true',
+            }));
         }
     };
 
@@ -52,9 +68,15 @@ export default function BeneficiaryInformation({ carrierId, setBeneInfo, updateI
                 <Radio
                     items={options.selectOptions}
                     label={t('perStirpes') as string}
-                    onChange={event => toggleSelection('isPerStirpes', event.target.value)}
+                    onChange={(event) =>
+                        toggleSelection('isPerStirpes', event.target.value)
+                    }
                     value={bene.isPerStirpes ? 'true' : 'false'}
-                    variant={isReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+                    variant={
+                        isReadOnly
+                            ? RadioVariant.Inactive
+                            : RadioVariant.Default
+                    }
                     disabled={isReadOnly}
                     name={'perStripes' + Math.random()}
                 />
@@ -64,9 +86,15 @@ export default function BeneficiaryInformation({ carrierId, setBeneInfo, updateI
                 <Radio
                     items={options.selectOptions}
                     label={t('irrevocable') as string}
-                    onChange={event => toggleSelection('isIrrevocable', event.target.value)}
+                    onChange={(event) =>
+                        toggleSelection('isIrrevocable', event.target.value)
+                    }
                     value={bene.isIrrevocable ? 'true' : 'false'}
-                    variant={isReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+                    variant={
+                        isReadOnly
+                            ? RadioVariant.Inactive
+                            : RadioVariant.Default
+                    }
                     disabled={isReadOnly}
                     name={'irrevocable' + Math.random()}
                 />
@@ -77,11 +105,22 @@ export default function BeneficiaryInformation({ carrierId, setBeneInfo, updateI
                     <Radio
                         items={options.selectOptions}
                         label={t('restrictedBeneficiaryDesignation') as string}
-                        onChange={event => toggleSelection('isRestrictedBeneficiary', event.target.value)}
+                        onChange={(event) =>
+                            toggleSelection(
+                                'isRestrictedBeneficiary',
+                                event.target.value
+                            )
+                        }
                         value={bene.isRestrictedBeneficiary ? 'true' : 'false'}
-                        variant={isReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+                        variant={
+                            isReadOnly
+                                ? RadioVariant.Inactive
+                                : RadioVariant.Default
+                        }
                         disabled={isReadOnly}
-                        name={'restrictedBeneficiaryDesignation' + Math.random()}
+                        name={
+                            'restrictedBeneficiaryDesignation' + Math.random()
+                        }
                     />
                 </div>
             )}

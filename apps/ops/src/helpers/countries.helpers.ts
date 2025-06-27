@@ -7,24 +7,28 @@ interface Country {
     Code: string;
 }
 
-export const simpleCountries: Country[] = Object.entries(Countries).map(([key, value]) => {
-    return {
-        Code: key,
-        Name: value.name,
-    };
-});
+export const simpleCountries: Country[] = Object.entries(Countries).map(
+    ([key, value]) => {
+        return {
+            Code: key,
+            Name: value.name,
+        };
+    }
+);
 
 export function getCountryCodes() {
-    return simpleCountries.map(c => c.Code);
+    return simpleCountries.map((c) => c.Code);
 }
 
 export function getCountryNames() {
-    return simpleCountries.map(c => c.Name);
+    return simpleCountries.map((c) => c.Name);
 }
 
 const getCountry = (item = '') =>
     simpleCountries.find(
-        country => country.Name.toUpperCase() === item?.toUpperCase() || country.Code.toUpperCase() === item?.toUpperCase()
+        (country) =>
+            country.Name.toUpperCase() === item?.toUpperCase() ||
+            country.Code.toUpperCase() === item?.toUpperCase()
     );
 
 // In case the country code is titlecased,

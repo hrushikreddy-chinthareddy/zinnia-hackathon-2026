@@ -1,10 +1,20 @@
 import '@testing-library/jest-dom';
 import { cleanup, screen, fireEvent, render } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { SignPresent } from '@deps/models/case/renewal/signature-validation';
-import { TaxWithholdingPlace, AmountType, WithholdingType, PartyRoles, CaseStatus, IrsFormType } from '@deps/models/case/withdrawal/case';
+import {
+    TaxWithholdingPlace,
+    AmountType,
+    WithholdingType,
+    PartyRoles,
+    CaseStatus,
+    IrsFormType,
+} from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import IrsWithholding from './irs-withholdings';
@@ -127,7 +137,9 @@ describe('IRS Withholding Component', () => {
             </FormDataContext.Provider>
         );
         // should render the owner type signature fields
-        const irsAmountElement = screen.getByLabelText('irsAmount') as HTMLInputElement;
+        const irsAmountElement = screen.getByLabelText(
+            'irsAmount'
+        ) as HTMLInputElement;
         expect(irsAmountElement.value).toBe('20 ');
 
         const ssnElement = screen.getByLabelText('ssn') as HTMLInputElement;
@@ -141,7 +153,10 @@ describe('IRS Withholding Component', () => {
                 irsApplicable: true,
                 irsSpecified: true,
                 irsFormType: IrsFormType.W4R,
-                formParty: { ...CaseDetails.data.formRequest.formParty.parties[0], taxId: '339333333' },
+                formParty: {
+                    ...CaseDetails.data.formRequest.formParty.parties[0],
+                    taxId: '339333333',
+                },
                 irsTaxWithholding: [
                     {
                         place: { text: TaxWithholdingPlace.Federal },
@@ -243,7 +258,9 @@ describe('IRS Withholding Component', () => {
             </FormDataContext.Provider>
         );
         // should render the owner type signature fields
-        const irsAmountElement = (await screen.getByLabelText('irsAmount')) as HTMLInputElement;
+        const irsAmountElement = (await screen.getByLabelText(
+            'irsAmount'
+        )) as HTMLInputElement;
         fireEvent.change(irsAmountElement, { target: { value: '30' } });
         expect(irsAmountElement.value).toBe('30 ');
 
@@ -251,15 +268,22 @@ describe('IRS Withholding Component', () => {
         fireEvent.change(ssnElement, { target: { value: '33933311' } });
         expect(ssnElement.value).toBe('33933311');
 
-        const ownerSignPresentElement = screen.getByTestId('Owner-signature-present');
-        fireEvent.change(ownerSignPresentElement, { target: { value: SignPresent.Yes } });
+        const ownerSignPresentElement = screen.getByTestId(
+            'Owner-signature-present'
+        );
+        fireEvent.change(ownerSignPresentElement, {
+            target: { value: SignPresent.Yes },
+        });
 
         expect(setMockData).toHaveBeenCalledWith([
             {
                 irsApplicable: true,
                 irsSpecified: true,
                 irsFormType: IrsFormType.W4R,
-                formParty: { ...CaseDetails.data.formRequest.formParty.parties[0], taxId: '33933311' },
+                formParty: {
+                    ...CaseDetails.data.formRequest.formParty.parties[0],
+                    taxId: '33933311',
+                },
                 irsTaxWithholding: [
                     {
                         place: { text: TaxWithholdingPlace.Federal },

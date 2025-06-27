@@ -1,4 +1,6 @@
-import TransactionCta, { TransactionCtaProps } from '@deps/components/transaction-cta/transaction-cta';
+import TransactionCta, {
+    TransactionCtaProps,
+} from '@deps/components/transaction-cta/transaction-cta';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

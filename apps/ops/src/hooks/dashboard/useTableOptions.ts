@@ -11,13 +11,21 @@ interface UseTableOptionsArgs<T> {
     dataToSort: T[];
 }
 
-export const useTableOptions = <T>({ sortByDefault, dataToSort, defaultSortOrder }: UseTableOptionsArgs<T>) => {
-    const [sortOrder, setSortOrder] = useState(defaultSortOrder ?? SortOrder.DESC);
+export const useTableOptions = <T>({
+    sortByDefault,
+    dataToSort,
+    defaultSortOrder,
+}: UseTableOptionsArgs<T>) => {
+    const [sortOrder, setSortOrder] = useState(
+        defaultSortOrder ?? SortOrder.DESC
+    );
     const [sortBy, setSortBy] = useState(sortByDefault as keyof T);
 
     const handleSort = (column: keyof T) => {
         if (sortBy === column) {
-            setSortOrder(sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC);
+            setSortOrder(
+                sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC
+            );
         } else {
             setSortBy(column);
             setSortOrder(SortOrder.ASC);
@@ -27,12 +35,22 @@ export const useTableOptions = <T>({ sortByDefault, dataToSort, defaultSortOrder
     const sortedData = useMemo(() => {
         return [...dataToSort].sort((a, b) => {
             //If we're sorting numbers...
-            if (typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number') {
-                return sortOrder === SortOrder.ASC ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy];
+            if (
+                typeof a[sortBy] === 'number' &&
+                typeof b[sortBy] === 'number'
+            ) {
+                return sortOrder === SortOrder.ASC
+                    ? a[sortBy] - b[sortBy]
+                    : b[sortBy] - a[sortBy];
             }
             // else sort alphabetically
-            else if (typeof a[sortBy] === 'string' && typeof b[sortBy] === 'string') {
-                return sortOrder === SortOrder.ASC ? a[sortBy].localeCompare(b[sortBy]) : b[sortBy].localeCompare(a[sortBy]);
+            else if (
+                typeof a[sortBy] === 'string' &&
+                typeof b[sortBy] === 'string'
+            ) {
+                return sortOrder === SortOrder.ASC
+                    ? a[sortBy].localeCompare(b[sortBy])
+                    : b[sortBy].localeCompare(a[sortBy]);
             } else {
                 //Default to comparing everything to strings if we none of the above works
                 return sortOrder === SortOrder.ASC

@@ -10,12 +10,22 @@ interface NigoDetailsProps {
     subExceptions: any;
     nmId: string;
     onSubExceptionChange: (nmId: string, selections: any) => void;
-    messages: {[key: string]: string} | null;
-};
+    messages: { [key: string]: string } | null;
+}
 
-export const NigoMessages = ({ subExceptions, index, nmId, onSubExceptionChange, messages}: NigoDetailsProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.nigoDetails' });
-    const [selections, setSelections] = useState<{ [key: string]: string }>(messages || {});
+export const NigoMessages = ({
+    subExceptions,
+    index,
+    nmId,
+    onSubExceptionChange,
+    messages,
+}: NigoDetailsProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'nigoEntry.nigoDetails',
+    });
+    const [selections, setSelections] = useState<{ [key: string]: string }>(
+        messages || {}
+    );
 
     const updateSelection = (value: string, displayText: string) => {
         const newSelections = { ...selections };
@@ -42,4 +52,4 @@ export const NigoMessages = ({ subExceptions, index, nmId, onSubExceptionChange,
             />
         </div>
     );
-}
+};

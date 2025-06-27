@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
@@ -40,7 +44,7 @@ export default function SignatureTextCore({
             label={label}
             message={errors[fieldName]}
             data-testid={`${signType}-${testId}`}
-            onChange={e => {
+            onChange={(e) => {
                 setSignText(e.target.value);
             }}
             size={FieldSize.Small}

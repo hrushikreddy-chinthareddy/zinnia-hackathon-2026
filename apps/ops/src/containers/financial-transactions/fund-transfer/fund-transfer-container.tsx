@@ -1,8 +1,10 @@
-import { Policy , TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import StartStep, {
+    StartStepSetState,
+} from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
 import Confirm from '@deps/containers/financial-transactions/fund-transfer/confirm/confirm';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -22,7 +24,9 @@ export type FundTransferProps = {
 };
 
 const FundTransferContainer = ({ policy }: FundTransferProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'fundTransfer' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'fundTransfer',
+    });
     const { fundTransfer, setFundTransfer } = useFundTransfer();
 
     const startLabel = t('start.label');
@@ -31,7 +35,11 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
     const confirmLabel = t('confirm.label');
 
     const validateCall = () =>
-        validateFundTransfer(policy.product?.planCode, policy.policyNumber, buildfundTransferRequestBody(fundTransfer));
+        validateFundTransfer(
+            policy.product?.planCode,
+            policy.policyNumber,
+            buildfundTransferRequestBody(fundTransfer)
+        );
 
     const steps: Step[] = [
         {
@@ -44,7 +52,10 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
                     state={fundTransfer}
                     title={t('start.title') as string}
                     subtitle={t('start.subtitle') as string}
-                    trackEventProps={{ type: TransactionType.FUND_TRANSFER, step: TransactionStep.Start }}
+                    trackEventProps={{
+                        type: TransactionType.FUND_TRANSFER,
+                        step: TransactionStep.Start,
+                    }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -65,7 +76,13 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
             text: transferLabel,
         },
         {
-            component: <Summary policy={policy} title={t('summary.title') as string} subtitle={t('summary.subtitle') as string} />,
+            component: (
+                <Summary
+                    policy={policy}
+                    title={t('summary.title') as string}
+                    subtitle={t('summary.subtitle') as string}
+                />
+            ),
             screenReaderLabel: summaryLabel,
             index: 2,
             text: summaryLabel,
@@ -78,7 +95,13 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
         },
     ];
 
-    return <WorkflowContainer policy={policy} steps={steps} stepWidth={FUND_TRANSFER_STEP_WIDTH} />;
+    return (
+        <WorkflowContainer
+            policy={policy}
+            steps={steps}
+            stepWidth={FUND_TRANSFER_STEP_WIDTH}
+        />
+    );
 };
 
 export default FundTransferContainer;

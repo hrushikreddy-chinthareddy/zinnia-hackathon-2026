@@ -25,13 +25,17 @@ const opsReviewHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
     transformResponse: (response, metadata) => {
         if (!response || response.length === 0) return;
 
-        const reasonList = Array.from(new Set(response.map(item => item)));
+        const reasonList = Array.from(new Set(response.map((item) => item)));
 
         if (metadata[0]?.formSchema?.definitions) {
-            metadata[0].formSchema.definitions.declineReasonEnum = { enum: reasonList.map(reason => JSON.stringify(reason)) };
+            metadata[0].formSchema.definitions.declineReasonEnum = {
+                enum: reasonList.map((reason) => JSON.stringify(reason)),
+            };
         }
 
-        metadata[0].uiSchema.declineReason['ui:options'] = { enumNames: reasonList.map(reason => reason.detailedReason) };
+        metadata[0].uiSchema.declineReason['ui:options'] = {
+            enumNames: reasonList.map((reason) => reason.detailedReason),
+        };
     },
 };
 

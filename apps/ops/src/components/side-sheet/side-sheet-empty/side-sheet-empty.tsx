@@ -6,6 +6,12 @@ export type SideSheetEmptyProps = {
     text: string;
 };
 
-export default function SideSheetEmpty({ icon, header, text }: SideSheetEmptyProps) {
-    return <CardInfo icon={icon} title={header} subtitle={text} className="mt-8" />;
+export default function SideSheetEmpty({
+    icon,
+    header,
+    text,
+}: SideSheetEmptyProps) {
+    return (
+        <CardInfo icon={icon} title={header} subtitle={text} className="mt-8" />
+    );
 }

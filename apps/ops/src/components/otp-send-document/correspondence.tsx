@@ -18,15 +18,19 @@ import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 
-import AssistiveText, { AssistiveTextVariant } from '../assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '../assistive-text/assistive-text';
 import { Loader } from '../page-loader';
 import { RadioItem } from '../radio/radio';
-import WorkflowCard from '../workflows/workflow-card/workflow-card';
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
+import WorkflowCard from '../workflows/workflow-card/workflow-card';
 
 const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
     if (!communicationOptions) return '';
-    const activeOptions = communicationOptions?.filter(option => option.disabled !== true);
+    const activeOptions = communicationOptions?.filter(
+        (option) => option.disabled !== true
+    );
     if (activeOptions?.length > 0) return activeOptions[0].value;
     return '';
 };
@@ -54,11 +58,16 @@ type CorrespondenceProps = {
     submitRequest: (val: CorrespondenceFormParts) => Promise<Confirm | null>;
 };
 
-const ContactCenterCorrespondence = ({ policy, communicationOptions, submitRequest }: CorrespondenceProps) => {
+const ContactCenterCorrespondence = ({
+    policy,
+    communicationOptions,
+    submitRequest,
+}: CorrespondenceProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const { setCurrentStepIndex, goToNext } = useWorkflow();
     const { state, dispatch } = useCorrespondence();
-    const defaultCommunicationType = getDefaultCommunicationType(communicationOptions);
+    const defaultCommunicationType =
+        getDefaultCommunicationType(communicationOptions);
 
     const correspondenceData = useMemo(
         () => ({
@@ -85,7 +94,9 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
         setError({});
         switch (correspondenceData.type) {
             case CommunicationTypes.Email: {
-                const emailError = validateEmailExist(correspondenceData?.recipients || []);
+                const emailError = validateEmailExist(
+                    correspondenceData?.recipients || []
+                );
                 if (emailError) {
                     browserLogWarn('contactCenterEmailValidation', {
                         contractNumber: policy?.policyNumber || '',
@@ -102,14 +113,20 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
             }
             case CommunicationTypes.Mail:
                 if (!state.correspondence?.mailDetails) {
-                    setError({ ...error, submit: t('errors.mailDetails') as string });
+                    setError({
+                        ...error,
+                        submit: t('errors.mailDetails') as string,
+                    });
                     return false;
                 }
 
                 break;
             default:
                 if (!state.correspondence.recipients.length) {
-                    setError({ ...error, submit: t('errors.recipient') as string });
+                    setError({
+                        ...error,
+                        submit: t('errors.recipient') as string,
+                    });
                     return false;
                 }
         }
@@ -130,11 +147,12 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                     ...state.correspondence,
                     recipients:
                         state.correspondence?.type === 'Email'
-                            ? state.correspondence?.recipients?.map(email => email?.toLowerCase().trim()) || []
+                            ? state.correspondence?.recipients?.map((email) =>
+                                  email?.toLowerCase().trim()
+                              ) || []
                             : state.correspondence?.recipients ?? [],
                 },
             };
-
 
             const response = await submitRequest(normalizedState);
 
@@ -168,7 +186,9 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 <SendDocumentNavigationButtons
                     handleContinue={handleContinue}
                     handleCancel={handleCancel}
-                    trackEventProps={{ type: ContactCenterTransactionType.CORRESPONDENCE }}
+                    trackEventProps={{
+                        type: ContactCenterTransactionType.CORRESPONDENCE,
+                    }}
                 />
             }
         >
@@ -182,7 +202,13 @@ const ContactCenterCorrespondence = ({ policy, communicationOptions, submitReque
                 setError={setError}
             />
             {loader && <Loader />}
-            {error?.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} className="mt-2" />}
+            {error?.submit && (
+                <AssistiveText
+                    text={error?.submit}
+                    variant={AssistiveTextVariant.Error}
+                    className="mt-2"
+                />
+            )}
         </WorkflowCard>
     );
 };

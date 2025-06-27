@@ -11,8 +11,14 @@ interface GetEmailTypes {
 }
 
 export const getEmailTypes = ({ t }: GetEmailTypes) => [
-    { label: t('labels.emailOptions.personal') as string, value: EmailType.PERSONAL },
-    { label: t('labels.emailOptions.business') as string, value: EmailType.BUSINESS },
+    {
+        label: t('labels.emailOptions.personal') as string,
+        value: EmailType.PERSONAL,
+    },
+    {
+        label: t('labels.emailOptions.business') as string,
+        value: EmailType.BUSINESS,
+    },
     { label: t('labels.emailOptions.other') as string, value: EmailType.OTHER },
 ];
 
@@ -24,11 +30,12 @@ export const INITIAL_EMAIL: Email = {
 export const getPersonalEmails = ({ emails }: SortEmailsByType): Email[] => {
     if (!emails) return [];
 
-    const validEmails = emails?.filter(email => !isEndDated(email.endDate)) ?? [];
+    const validEmails =
+        emails?.filter((email) => !isEndDated(email.endDate)) ?? [];
 
     const personalEmails: Email[] = [];
 
-    validEmails.forEach(validEmail => {
+    validEmails.forEach((validEmail) => {
         switch (validEmail.emailType) {
             case EmailType.PERSONAL:
                 personalEmails.push(validEmail);

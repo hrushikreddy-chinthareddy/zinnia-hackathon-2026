@@ -20,7 +20,9 @@ describe('PremiumCard', () => {
     it('renders the PremiumCard component correctly', () => {
         render(<PremiumCard {...mockProps} />);
 
-        expect(screen.getByTestId(PremiumCardTest.PREMIUMCARD)).toBeInTheDocument();
+        expect(
+            screen.getByTestId(PremiumCardTest.PREMIUMCARD)
+        ).toBeInTheDocument();
         expect(screen.getByTestId(PremiumCardTest.FOOTER)).toBeInTheDocument();
     });
 });

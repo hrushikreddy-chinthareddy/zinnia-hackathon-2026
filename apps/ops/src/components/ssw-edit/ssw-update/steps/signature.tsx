@@ -2,7 +2,9 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -41,7 +43,10 @@ const Signature = () => {
             }
         >
             <div className="mx-[-30px]">
-                <SignatureValidations isFormStateReadOnly={false} config={signaturesConfig} />
+                <SignatureValidations
+                    isFormStateReadOnly={false}
+                    config={signaturesConfig}
+                />
             </div>
         </WorkflowCard>
     );

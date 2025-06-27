@@ -46,22 +46,36 @@ export const Content = ({
     ...rest
 }: ContentProps) => {
     const { className, contentClassName, ...newRest } = rest;
-    const renderedText = highlights ? <Highlighter text={details} highlights={highlights} /> : details;
+    const renderedText = highlights ? (
+        <Highlighter text={details} highlights={highlights} />
+    ) : (
+        details
+    );
 
     const classes = clsx(
         'tracking-normal no-underline',
         {
-            'font-secondary text-base font-normal leading-[24px]': variant === ContentVariant.Body,
-            'font-secondary text-md font-normal leading-[22px]': variant === ContentVariant.BodySm,
-            'font-secondary text-base font-bold leading-[24px]': variant === ContentVariant.BodyBold,
-            'font-secondary text-md font-bold leading-[22px]': variant === ContentVariant.BodySmBold,
-            'font-secondary text-base font-normal leading-[28px]': variant === ContentVariant.BodyParagraph,
-            'font-primary text-xl font-medium leading-[24px]': variant === ContentVariant.Value,
-            'font-primary text-sm font-medium leading-[16px]': variant === ContentVariant.Caption,
-            'font-primary text-sm font-semibold leading-[16px]': variant === ContentVariant.CaptionSelected,
-            'font-primary text-base italic leading-[28px]': variant === ContentVariant.ArticleReferences,
+            'font-secondary text-base font-normal leading-[24px]':
+                variant === ContentVariant.Body,
+            'font-secondary text-md font-normal leading-[22px]':
+                variant === ContentVariant.BodySm,
+            'font-secondary text-base font-bold leading-[24px]':
+                variant === ContentVariant.BodyBold,
+            'font-secondary text-md font-bold leading-[22px]':
+                variant === ContentVariant.BodySmBold,
+            'font-secondary text-base font-normal leading-[28px]':
+                variant === ContentVariant.BodyParagraph,
+            'font-primary text-xl font-medium leading-[24px]':
+                variant === ContentVariant.Value,
+            'font-primary text-sm font-medium leading-[16px]':
+                variant === ContentVariant.Caption,
+            'font-primary text-sm font-semibold leading-[16px]':
+                variant === ContentVariant.CaptionSelected,
+            'font-primary text-base italic leading-[28px]':
+                variant === ContentVariant.ArticleReferences,
             'font-primary text-base': variant === ContentVariant.Footer,
-            'font-secondary text-sm leading-[18px]': variant === ContentVariant.FooterLegal,
+            'font-secondary text-sm leading-[18px]':
+                variant === ContentVariant.FooterLegal,
         },
         {
             'line-clamp-1 break-all': truncate,
@@ -79,7 +93,10 @@ export const Content = ({
     );
 
     const textContent = truncate ? (
-        <PopoverOnTruncate popoverClassName={popoverClassName} title={popoverBody ?? details}>
+        <PopoverOnTruncate
+            popoverClassName={popoverClassName}
+            title={popoverBody ?? details}
+        >
             {pii ? (
                 <PiiWrapper className={classes} {...newRest}>
                     {childContentForTruncate()}

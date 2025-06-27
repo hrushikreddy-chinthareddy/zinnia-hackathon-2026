@@ -5,7 +5,10 @@ import { TaskHandler, ReviewPayload } from '../types';
 
 // Define expected payload and response types
 
-const paymentReviewHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
+const paymentReviewHandler: TaskHandler<
+    ReviewPayload,
+    NigoExceptionResponse[]
+> = {
     api: NigoSearch,
 
     getPayload: () => ({
@@ -16,16 +19,19 @@ const paymentReviewHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> 
     transformResponse: (response, metadata) => {
         if (!response || response.length === 0) return;
 
-        const reasonList = Array.from(new Set(response.map(item => item)));
+        const reasonList = Array.from(new Set(response.map((item) => item)));
 
         if (metadata[0]?.formSchema?.definitions) {
-            metadata[0].formSchema.definitions.declineReason = { enum: reasonList.map(reason => JSON.stringify(reason)) };
+            metadata[0].formSchema.definitions.declineReason = {
+                enum: reasonList.map((reason) => JSON.stringify(reason)),
+            };
         }
 
-        metadata[0].uiSchema.declineReason['ui:options'].enumOptions = reasonList.map(reason => ({
-            label: reason.detailedReason,
-            value: JSON.stringify(reason),
-        }));
+        metadata[0].uiSchema.declineReason['ui:options'].enumOptions =
+            reasonList.map((reason) => ({
+                label: reason.detailedReason,
+                value: JSON.stringify(reason),
+            }));
     },
 };
 

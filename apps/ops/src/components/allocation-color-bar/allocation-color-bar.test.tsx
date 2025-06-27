@@ -22,7 +22,9 @@ describe('AllocationColorBar', () => {
 
     test('renders correctly with provided colors', () => {
         render(<AllocationColorBar colors={colors} />);
-        const allocationColorBar = screen.getByTestId(AllocationColorBarTest.AllocationColorBar);
+        const allocationColorBar = screen.getByTestId(
+            AllocationColorBarTest.AllocationColorBar
+        );
         const firstBar = allocationColorBar.firstChild;
         expect(firstBar).toHaveClass('bg-red-500');
 

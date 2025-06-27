@@ -6,13 +6,30 @@ import style from './text-widget.module.css';
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
 export const TextWidget = function (props: WidgetProps) {
-    const { id, value, disabled, required, rawErrors, onChange, uiSchema, label, placeholder, readonly } = props;
-    const { inline, prefix, inlinetext, dataType, hideError } = getUiOptions(uiSchema);
+    const {
+        id,
+        value,
+        disabled,
+        required,
+        rawErrors,
+        onChange,
+        uiSchema,
+        label,
+        placeholder,
+        readonly,
+    } = props;
+    const { inline, prefix, inlinetext, dataType, hideError } =
+        getUiOptions(uiSchema);
     if (inline) {
         return (
             <div className="grid grid-cols-2 text-md  max-w-screen-sm">
                 <div className="text-gray-500">{label}</div>
-                <div>{formatValueByDataType((dataType as string) || 'text', value)}</div>
+                <div>
+                    {formatValueByDataType(
+                        (dataType as string) || 'text',
+                        value
+                    )}
+                </div>
             </div>
         );
     }
@@ -23,7 +40,10 @@ export const TextWidget = function (props: WidgetProps) {
                 <div className="text-500">{label}</div>
                 <div>
                     {prefix ? prefix : ''}
-                    {formatValueByDataType((dataType as string) || 'text', value)}
+                    {formatValueByDataType(
+                        (dataType as string) || 'text',
+                        value
+                    )}
                 </div>
             </div>
         );
@@ -44,7 +64,9 @@ export const TextWidget = function (props: WidgetProps) {
                 disabled={disabled}
                 onChange={onChange}
                 hideError={hideError}
-                status={rawErrors && rawErrors?.length > 0 ? 'error' : undefined}
+                status={
+                    rawErrors && rawErrors?.length > 0 ? 'error' : undefined
+                }
             />
         </div>
     );

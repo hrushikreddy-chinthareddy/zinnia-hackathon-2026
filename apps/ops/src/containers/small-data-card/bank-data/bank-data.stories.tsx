@@ -51,7 +51,7 @@ export const BankData = () => {
     };
     return (
         <div className="flex gap-4">
-            {bankDetails.map(bankDetail => (
+            {bankDetails.map((bankDetail) => (
                 <BankDataCard
                     key={bankDetail.accountNumber}
                     bankDetails={bankDetail}

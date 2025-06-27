@@ -1,13 +1,24 @@
-import { PaymentForm, Policy, ArrangementType, BankAccount, Status, SystematicProgram } from '@zinnia/api-types/types/sor';
+import {
+    PaymentForm,
+    Policy,
+    ArrangementType,
+    BankAccount,
+    Status,
+    SystematicProgram,
+} from '@zinnia/api-types/types/sor';
 import { FieldData, FieldSize, Radio } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import AddressDataCard from '@deps/containers/small-data-card/address-data/address-data';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -17,7 +28,14 @@ import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/a
 import { PaymentMethodType, PaymentStepProps } from './types';
 import WorkflowCard from '../workflow-card/workflow-card';
 
-const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, validateTransaction }: PaymentStepProps) => {
+const PaymentStepMoneyOut = ({
+    parentPage,
+    policy,
+    setState,
+    state,
+    subtitle,
+    validateTransaction,
+}: PaymentStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
 
@@ -32,11 +50,17 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
     } = state;
     const [formError, setFormError] = useState(false);
 
-    const party = policy?.parties?.find(party => party.partyId === payeePartyId);
+    const party = policy?.parties?.find(
+        (party) => party.partyId === payeePartyId
+    );
     const paymentProgram = systematicPrograms?.find(
-        program => program.arrangementType === arrangementType && program.status === Status.ACTIVE
+        (program) =>
+            program.arrangementType === arrangementType &&
+            program.status === Status.ACTIVE
     ) as SystematicProgram;
-    const programBankId = paymentProgram?.party?.find(party => party.partyId === payeePartyId);
+    const programBankId = paymentProgram?.party?.find(
+        (party) => party.partyId === payeePartyId
+    );
 
     const bankDetails = useMemo(() => {
         const currentBankDetails = party?.bankDetails?.filter((bank: any) => {
@@ -75,7 +99,10 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
                 return;
             }
         } else {
-            if (!currentPaymentAccountNumber || currentPaymentAccountNumber === '') {
+            if (
+                !currentPaymentAccountNumber ||
+                currentPaymentAccountNumber === ''
+            ) {
                 setFormError(true);
                 return;
             }
@@ -89,7 +116,10 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
 
         const response = await validateTransaction();
 
-        setState(prevState => ({ ...prevState, validationResponse: response }));
+        setState((prevState) => ({
+            ...prevState,
+            validationResponse: response,
+        }));
 
         goToNext();
     };
@@ -97,9 +127,17 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
     const handleAddressSelection = useCallback(
         ({ paymentAddress, paymentAddressId }: PaymentMethodType) => {
             if (paymentAddressId === currentPaymentAddressId) {
-                setState(prevState => ({ ...prevState, paymentAddress: undefined, paymentAddressId: undefined }));
+                setState((prevState) => ({
+                    ...prevState,
+                    paymentAddress: undefined,
+                    paymentAddressId: undefined,
+                }));
             } else {
-                setState(prevState => ({ ...prevState, paymentAddress, paymentAddressId }));
+                setState((prevState) => ({
+                    ...prevState,
+                    paymentAddress,
+                    paymentAddressId,
+                }));
                 setFormError(false);
             }
         },
@@ -107,29 +145,40 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
     );
 
     const handleBankSelection = useCallback(
-        ({ paymentAccountNumber, paymentBranchName, paymentBankId }: PaymentMethodType) => {
+        ({
+            paymentAccountNumber,
+            paymentBranchName,
+            paymentBankId,
+        }: PaymentMethodType) => {
             if (paymentAccountNumber === currentPaymentAccountNumber) {
-                setState(prevState => ({
+                setState((prevState) => ({
                     ...prevState,
                     paymentAccountNumber: undefined,
                     paymentBranchName: undefined,
                     paymentBankId: undefined,
                 }));
             } else {
-                setState(prevState => ({ ...prevState, paymentAccountNumber, paymentBranchName, paymentBankId }));
+                setState((prevState) => ({
+                    ...prevState,
+                    paymentAccountNumber,
+                    paymentBranchName,
+                    paymentBankId,
+                }));
                 setFormError(false);
             }
         },
         [currentPaymentAccountNumber, setState, setFormError]
     );
 
-    const handleFboFfcChange = ({ target: { value: fboFfcValue } }: ChangeEvent<HTMLInputElement>) => {
-        setState(prevState => ({ ...prevState, fboFfc: fboFfcValue }));
+    const handleFboFfcChange = ({
+        target: { value: fboFfcValue },
+    }: ChangeEvent<HTMLInputElement>) => {
+        setState((prevState) => ({ ...prevState, fboFfc: fboFfcValue }));
     };
 
     const handlePaymentMethodChange = (newPaymentMethod: PaymentForm) => {
         setFormError(false);
-        setState(prevState => ({
+        setState((prevState) => ({
             ...prevState,
             paymentForm: newPaymentMethod,
             paymentAddress: undefined,
@@ -144,13 +193,17 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
     useEffect(() => {
         if (paymentProgram && paymentProgram?.parties?.[0]) {
             const party = paymentProgram.parties[0];
-            const selectedBank = bankDetails ? bankDetails?.find(b => b.bankId === party.bankId) || bankDetails[0] : {};
+            const selectedBank = bankDetails
+                ? bankDetails?.find((b) => b.bankId === party.bankId) ||
+                  bankDetails[0]
+                : {};
             const selectedAddress =
                 party.paymentForm === PaymentForm.CHECK && addresses
-                    ? addresses?.find(a => a.addressId === party.addressId) || addresses[0]
+                    ? addresses?.find((a) => a.addressId === party.addressId) ||
+                      addresses[0]
                     : {};
 
-            setState(prevState => ({
+            setState((prevState) => ({
                 ...prevState,
                 paymentAccountNumber: selectedBank?.accountNumber,
                 paymentBankId: selectedBank?.bankId,
@@ -162,8 +215,11 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
             }));
         } else if (paymentProgram && paymentProgram?.party?.[0]) {
             const party = paymentProgram.party[0];
-            const selectedBank = bankDetails ? bankDetails?.find(b => b.bankId === party.bankId) || bankDetails[0] : {};
-            setState(prevState => ({
+            const selectedBank = bankDetails
+                ? bankDetails?.find((b) => b.bankId === party.bankId) ||
+                  bankDetails[0]
+                : {};
+            setState((prevState) => ({
                 ...prevState,
                 paymentAccountNumber: selectedBank?.accountNumber,
                 paymentBankId: selectedBank?.bankId,
@@ -208,18 +264,34 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
     return (
         <WorkflowCard
             title={t('workflows.paymentStep.heading')}
-            footerContent={<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} stopLoading={stopLoading} />}
+            footerContent={
+                <TransactionCta
+                    mainCta={mainCta}
+                    secondaryCta={secondaryCta}
+                    stopLoading={stopLoading}
+                />
+            }
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
-                    <Typography variant={TypographyVariant.LabelLg}>{subtitle}</Typography>
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {subtitle}
+                    </Typography>
 
                     <div className="flex flex-col gap-4">
-                        <Typography variant={TypographyVariant.LabelLg}>{t('workflows.paymentStep.moneyOutLabel')}</Typography>
+                        <Typography variant={TypographyVariant.LabelLg}>
+                            {t('workflows.paymentStep.moneyOutLabel')}
+                        </Typography>
                         <Radio
                             id="payment-method-radio"
-                            groupLabel={t('workflows.paymentStep.paymentMethod.label') as string}
-                            onValueChange={val => handlePaymentMethodChange(val as PaymentForm)}
+                            groupLabel={
+                                t(
+                                    'workflows.paymentStep.paymentMethod.label'
+                                ) as string
+                            }
+                            onValueChange={(val) =>
+                                handlePaymentMethodChange(val as PaymentForm)
+                            }
                             options={paymentMethodOptions}
                             value={paymentForm}
                         />
@@ -228,27 +300,38 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
                                 <Label
                                     label={
                                         paymentForm === PaymentForm.CHECK
-                                            ? t('workflows.paymentStep.addressDetailsLabel')
-                                            : t('workflows.paymentStep.fieldLabel')
+                                            ? t(
+                                                  'workflows.paymentStep.addressDetailsLabel'
+                                              )
+                                            : t(
+                                                  'workflows.paymentStep.fieldLabel'
+                                              )
                                     }
                                     variant={LabelVariant.FieldLabel}
                                 />
                                 {paymentForm === PaymentForm.CHECK ? (
                                     <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3">
-                                        {addresses?.map(address => (
+                                        {addresses?.map((address) => (
                                             <AddressDataCard
                                                 key={address.addressId}
                                                 address={address}
-                                                accessibilityClickText={t('ariaLabel.select')}
-                                                selectedId={currentPaymentAddressId}
+                                                accessibilityClickText={t(
+                                                    'ariaLabel.select'
+                                                )}
+                                                selectedId={
+                                                    currentPaymentAddressId
+                                                }
                                                 onCardClick={() => {
                                                     handleAddressSelection({
                                                         paymentAddress: address,
-                                                        paymentAddressId: address.addressId,
+                                                        paymentAddressId:
+                                                            address.addressId,
                                                     });
                                                 }}
                                                 // TODO MG: translate
-                                                addressStatus={address.addressType}
+                                                addressStatus={
+                                                    address.addressType
+                                                }
                                             />
                                         ))}
                                         <div
@@ -256,24 +339,37 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
                                             className="flex cursor-not-allowed items-center justify-center gap-1 rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-8 text-gray-300"
                                         >
                                             <AddIcon height={24} width={24} />
-                                            <p className="font-primary text-base font-semibold">{t('workflows.paymentStep.addAddress')}</p>
+                                            <p className="font-primary text-base font-semibold">
+                                                {t(
+                                                    'workflows.paymentStep.addAddress'
+                                                )}
+                                            </p>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3">
-                                        {bankDetails?.map(details => (
+                                        {bankDetails?.map((details) => (
                                             <BankDataCard
-                                                bankDetails={details as BankAccount}
+                                                bankDetails={
+                                                    details as BankAccount
+                                                }
                                                 onCardClick={() => {
                                                     handleBankSelection({
-                                                        paymentAccountNumber: details.accountNumber,
-                                                        paymentBankId: details.bankId,
-                                                        paymentBranchName: details.branchName,
+                                                        paymentAccountNumber:
+                                                            details.accountNumber,
+                                                        paymentBankId:
+                                                            details.bankId,
+                                                        paymentBranchName:
+                                                            details.branchName,
                                                     });
                                                 }}
                                                 key={details.accountNumber}
-                                                selectedId={currentPaymentAccountNumber}
-                                                accessibilityClickText={t('ariaLabel.select')}
+                                                selectedId={
+                                                    currentPaymentAccountNumber
+                                                }
+                                                accessibilityClickText={t(
+                                                    'ariaLabel.select'
+                                                )}
                                             />
                                         ))}
                                         <div
@@ -281,7 +377,11 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
                                             className="flex cursor-not-allowed items-center justify-center gap-1 rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-8 text-gray-300"
                                         >
                                             <AddIcon height={24} width={24} />
-                                            <p className="font-primary text-base font-semibold">{t('workflows.paymentStep.addBank')}</p>
+                                            <p className="font-primary text-base font-semibold">
+                                                {t(
+                                                    'workflows.paymentStep.addBank'
+                                                )}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
@@ -289,10 +389,18 @@ const PaymentStepMoneyOut = ({ parentPage, policy, setState, state, subtitle, va
                                     <FieldData
                                         label={
                                             <Label
-                                                variant={LabelVariant.FieldLabel}
-                                                label={t('workflows.paymentStep.paymentMethod.fboFfc.label')}
-                                                tooltipTitle={t('workflows.paymentStep.paymentMethod.fboFfc.tooltipTitle')}
-                                                tooltipBody={t('workflows.paymentStep.paymentMethod.fboFfc.tooltipBody')}
+                                                variant={
+                                                    LabelVariant.FieldLabel
+                                                }
+                                                label={t(
+                                                    'workflows.paymentStep.paymentMethod.fboFfc.label'
+                                                )}
+                                                tooltipTitle={t(
+                                                    'workflows.paymentStep.paymentMethod.fboFfc.tooltipTitle'
+                                                )}
+                                                tooltipBody={t(
+                                                    'workflows.paymentStep.paymentMethod.fboFfc.tooltipBody'
+                                                )}
                                                 sentenceCase={false}
                                                 className="mb-1"
                                             />

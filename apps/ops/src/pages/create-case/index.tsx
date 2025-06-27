@@ -1,12 +1,19 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { Icon, IconType, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import {
+    Icon,
+    IconType,
+    TabContent,
+    TabGroup,
+    TabList,
+    TabTrigger,
+} from '@zinnia/bloom/components';
 import { getCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
+import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import router from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import xss from 'xss';
 
@@ -14,18 +21,27 @@ import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import { CaseListContainer } from '@deps/components/case-list/components/case-list-container';
 import CreateCaseForm from '@deps/components/create-case-form/create-case-form';
 import { SearchKeys } from '@deps/components/create-case-form/create-case-form.helpers';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import { Loading } from '@deps/components/loading';
 import NotificationMessage from '@deps/components/notification-message/notification-message';
 import { PageHead } from '@deps/components/page-title';
 import SelectSimple from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskManagementQueueContainer from '@deps/containers/task-management-queue/task-management-queue-container';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -37,12 +53,22 @@ import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { getCarriersListQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { ReactComponent as ProgressIcon } from '@deps/styles/elements/icons/illustrations/check-progress.svg';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface CaseCreatePageProps extends SegmentTrackedPageProps {
@@ -58,10 +84,15 @@ const OTP_FORM_CLIENT_COOKIE = 'otp-form-client-cookie';
 const OTP_FORM_TYPE_COOKIE = 'otp-form-type-cookie';
 const REG60_SUCCESS = 'reg60-massmutual-success';
 
-const shouldShowCaseTaskList = (featureFlagDecisions: FeatureFlags, caseType: CaseType) => {
+const shouldShowCaseTaskList = (
+    featureFlagDecisions: FeatureFlags,
+    caseType: CaseType
+) => {
     return (
-        (featureFlagDecisions?.[FEATURE_FLAGS.REG_60] && caseType == CaseType.Reg60) ||
-        (featureFlagDecisions?.[FEATURE_FLAGS.SSW_SBGC] && caseType == CaseType.SSW) ||
+        (featureFlagDecisions?.[FEATURE_FLAGS.REG_60] &&
+            caseType == CaseType.Reg60) ||
+        (featureFlagDecisions?.[FEATURE_FLAGS.SSW_SBGC] &&
+            caseType == CaseType.SSW) ||
         caseType == CaseType.Withdrawal ||
         caseType == CaseType.Rmd ||
         caseType == CaseType.Oft
@@ -77,11 +108,16 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [showLoader, setShowLoader] = useState(false);
     const { query } = router;
-    const [activeTab, setActiveTab] = useState(() => query.tab === TabOptions.myTasks ? TabOptions.myTasks : TabOptions.search);
+    const [activeTab, setActiveTab] = useState(() =>
+        query.tab === TabOptions.myTasks
+            ? TabOptions.myTasks
+            : TabOptions.search
+    );
 
     useSegmentPageTracker(user, SegmentPageName.CreateCaseLanding);
 
-    const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
+    const handleTabChange = (value: string) =>
+        setActiveTab(value as TabOptions);
 
     //TODO: This needs to be refactored to not fire on route change.
     // The logic to show/hide a loader should be more purposeful and tied to a button click or something.
@@ -103,14 +139,20 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     const [caseId, setCaseId] = useState<string>('');
     const [document, setDocument] = useState<DocumentData | null>(null);
     const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState<string | undefined>(undefined);
-    const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+    const [successMessage, setSuccessMessage] = useState<string | undefined>(
+        undefined
+    );
+    const shouldShowNewExperience =
+        featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
     const shouldShowReg60Case = featureFlagDecisions?.[FEATURE_FLAGS.REG_60];
-    const [searchByOption, setSearchByOption] = useState(SearchKeys.DocumentNumber);
+    const [searchByOption, setSearchByOption] = useState(
+        SearchKeys.DocumentNumber
+    );
 
     const { data: permittedClientIds } = useQuery({
         queryKey: ['permittedClientIds', partyId],
-        queryFn: () => getCarriersListQuery(UserPermission.AllowReadOtpRenewals, partyId),
+        queryFn: () =>
+            getCarriersListQuery(UserPermission.AllowReadOtpRenewals, partyId),
         enabled: !!partyId,
         initialData: [],
         staleTime: FIFTEEN_MINUTES_IN_MS,
@@ -119,9 +161,15 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
 
     const initialClientId = useMemo(() => {
         const cookieClientId = getCookie(OTP_FORM_CLIENT_COOKIE);
-        if (cookieClientId && permittedClientIds.includes(cookieClientId as string)) {
+        if (
+            cookieClientId &&
+            permittedClientIds.includes(cookieClientId as string)
+        ) {
             return cookieClientId as string;
-        } else if (permittedClientIds.length === 1 || (!permittedClientIds.includes('') && permittedClientIds.length > 1)) {
+        } else if (
+            permittedClientIds.length === 1 ||
+            (!permittedClientIds.includes('') && permittedClientIds.length > 1)
+        ) {
             return permittedClientIds[0];
         } else {
             return '';
@@ -186,22 +234,36 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     }, []);
 
     async function createCase(): Promise<void> {
-        setCookie(OTP_FORM_CLIENT_COOKIE, clientId, { maxAge: 1000 * 60 * 60 * 12 }); // 12hrs
-        setCookie(OTP_FORM_TYPE_COOKIE, caseType, { maxAge: 1000 * 60 * 60 * 12 });
+        setCookie(OTP_FORM_CLIENT_COOKIE, clientId, {
+            maxAge: 1000 * 60 * 60 * 12,
+        }); // 12hrs
+        setCookie(OTP_FORM_TYPE_COOKIE, caseType, {
+            maxAge: 1000 * 60 * 60 * 12,
+        });
         setErrorMessage('');
 
         const docType = docTypes[caseType];
         setShowLoader(true);
 
-        if (docType === docTypes[CaseType.AddressChange] || docType === docTypes[CaseType.ReReg]) {
+        if (
+            docType === docTypes[CaseType.AddressChange] ||
+            docType === docTypes[CaseType.ReReg]
+        ) {
             await handleSearch();
             return;
         }
 
         // get onBase case document
-        const documentResult = await fetchDocument(documentNumber, docType, clientId);
+        const documentResult = await fetchDocument(
+            documentNumber,
+            docType,
+            clientId
+        );
         if (!documentResult.success) {
-            console.error('createDocument:: No documentNumber from getDocument', { documentNumber, docType, clientId });
+            console.error(
+                'createDocument:: No documentNumber from getDocument',
+                { documentNumber, docType, clientId }
+            );
             setErrorMessage(
                 t(
                     permittedClientIds.length < 2
@@ -263,15 +325,26 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
     async function handleSearch(): Promise<void> {
         if (!documentNumber && !policyNumber) {
             setShowLoader(false);
-            setErrorMessage(t('caseRenewal.caseCreate.documentOrPolicyNumberIsRequired') as string);
+            setErrorMessage(
+                t(
+                    'caseRenewal.caseCreate.documentOrPolicyNumberIsRequired'
+                ) as string
+            );
             return;
         }
 
         if (documentNumber) {
             const docType = docTypes[caseType];
-            const documentResult = await fetchDocument(documentNumber, docType, clientId);
+            const documentResult = await fetchDocument(
+                documentNumber,
+                docType,
+                clientId
+            );
             if (!documentResult.success) {
-                console.error('handleSearch:: No documentNumber from getDocument', { documentNumber, docType, clientId });
+                console.error(
+                    'handleSearch:: No documentNumber from getDocument',
+                    { documentNumber, docType, clientId }
+                );
                 setErrorMessage(
                     t(
                         permittedClientIds.length < 2
@@ -284,30 +357,51 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
             }
             const document = documentResult.value;
             if (caseType === CaseType.AddressChange) {
-                router.push(`/address-change?policyNumber=${document.contract}&clientId=${clientId}&doc=${documentNumber}`);
+                router.push(
+                    `/address-change?policyNumber=${document.contract}&clientId=${clientId}&doc=${documentNumber}`
+                );
             }
             if (caseType === CaseType.ReReg) {
-                router.push(`/re-reg?policyNumber=${document.contract}&clientId=${clientId}&doc=${documentNumber}`);
+                router.push(
+                    `/re-reg?policyNumber=${document.contract}&clientId=${clientId}&doc=${documentNumber}`
+                );
             }
         } else if (policyNumber) {
             if (caseType === CaseType.AddressChange) {
-                router.push(`/address-change?policyNumber=${policyNumber}&clientId=${clientId}`);
+                router.push(
+                    `/address-change?policyNumber=${policyNumber}&clientId=${clientId}`
+                );
             }
             if (caseType === CaseType.ReReg) {
-                router.push(`/re-reg?policyNumber=${policyNumber}&clientId=${clientId}`);
+                router.push(
+                    `/re-reg?policyNumber=${policyNumber}&clientId=${clientId}`
+                );
             }
         }
     }
 
     const renderTabContent = (
         <>
-            <TabContent className="flex w-full flex-col" value={TabOptions.myTasks}>
-                <TaskManagementQueueContainer featureFlagDecisions={featureFlagDecisions} showClaimTask={true} additionalData={{ user }} />
+            <TabContent
+                className="flex w-full flex-col"
+                value={TabOptions.myTasks}
+            >
+                <TaskManagementQueueContainer
+                    featureFlagDecisions={featureFlagDecisions}
+                    showClaimTask={true}
+                    additionalData={{ user }}
+                />
             </TabContent>
-            <TabContent className="flex w-full flex-col" value={TabOptions.search}>
+            <TabContent
+                className="flex w-full flex-col"
+                value={TabOptions.search}
+            >
                 <div className="my-5">
                     {successMessage && successMessage.length > 0 && (
-                        <NotificationMessage message={successMessage} onClose={() => setSuccessMessage('')} />
+                        <NotificationMessage
+                            message={successMessage}
+                            onClose={() => setSuccessMessage('')}
+                        />
                     )}
                 </div>
                 <CreateCaseForm
@@ -326,7 +420,8 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                     searchByOption={searchByOption}
                     setSearchByOption={setSearchByOption}
                 />
-                {shouldShowCaseTaskList(featureFlagDecisions, caseType) || shouldShowNewExperience ? (
+                {shouldShowCaseTaskList(featureFlagDecisions, caseType) ||
+                shouldShowNewExperience ? (
                     <CaseListContainer
                         t={t}
                         policyNumber={policyNumber}
@@ -354,31 +449,79 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                 {!shouldShowNewExperience ? (
                     <div className="mb-4 w-[500px] self-center rounded bg-white shadow-sm">
                         <div className="flex flex-col border-b p-4">
-                            <Typography variant={TypographyVariant.H1} className="self-center font-primary text-xl font-light">
+                            <Typography
+                                variant={TypographyVariant.H1}
+                                className="self-center font-primary text-xl font-light"
+                            >
                                 {t('caseRenewal.caseCreate.createCase')}
                             </Typography>
                         </div>
                         <div className="flex flex-col p-4">
                             <div>
-                                {successMessage && successMessage.length > 0 && (
-                                    <div className="mb-4">
-                                        <p className="text-center text-semantic-success">{successMessage}</p>
-                                    </div>
-                                )}
+                                {successMessage &&
+                                    successMessage.length > 0 && (
+                                        <div className="mb-4">
+                                            <p className="text-center text-semantic-success">
+                                                {successMessage}
+                                            </p>
+                                        </div>
+                                    )}
                                 <SelectSimple
-                                    label={t('caseRenewal.caseCreate.caseType') as string}
-                                    onChange={value => setCaseType(value as CaseType)}
+                                    label={
+                                        t(
+                                            'caseRenewal.caseCreate.caseType'
+                                        ) as string
+                                    }
+                                    onChange={(value) =>
+                                        setCaseType(value as CaseType)
+                                    }
                                     options={[
                                         ...(shouldShowReg60Case
-                                            ? [{ label: t('caseRenewal.caseCreate.reg60'), value: CaseType.Reg60 }]
+                                            ? [
+                                                  {
+                                                      label: t(
+                                                          'caseRenewal.caseCreate.reg60'
+                                                      ),
+                                                      value: CaseType.Reg60,
+                                                  },
+                                              ]
                                             : []),
-                                        { label: t('caseRenewal.caseCreate.oft'), value: CaseType.Oft },
-                                        { label: t('caseRenewal.caseCreate.renewal'), value: CaseType.Renewal },
-                                        { label: t('caseRenewal.caseCreate.rmd'), value: CaseType.Rmd },
-                                        { label: t('caseRenewal.caseCreate.withdrawal'), value: CaseType.Withdrawal },
-                                        { label: t('caseRenewal.caseCreate.ssw'), value: CaseType.SSW },
+                                        {
+                                            label: t(
+                                                'caseRenewal.caseCreate.oft'
+                                            ),
+                                            value: CaseType.Oft,
+                                        },
+                                        {
+                                            label: t(
+                                                'caseRenewal.caseCreate.renewal'
+                                            ),
+                                            value: CaseType.Renewal,
+                                        },
+                                        {
+                                            label: t(
+                                                'caseRenewal.caseCreate.rmd'
+                                            ),
+                                            value: CaseType.Rmd,
+                                        },
+                                        {
+                                            label: t(
+                                                'caseRenewal.caseCreate.withdrawal'
+                                            ),
+                                            value: CaseType.Withdrawal,
+                                        },
+                                        {
+                                            label: t(
+                                                'caseRenewal.caseCreate.ssw'
+                                            ),
+                                            value: CaseType.SSW,
+                                        },
                                     ]}
-                                    placeholder={t('caseRenewal.caseCreate.caseTypePlaceholder') as string}
+                                    placeholder={
+                                        t(
+                                            'caseRenewal.caseCreate.caseTypePlaceholder'
+                                        ) as string
+                                    }
                                     size={FieldSize.Small}
                                     value={caseType}
                                 />
@@ -387,21 +530,51 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                                 <SelectSimple
                                     disabled={permittedClientIds.length < 2}
                                     onChange={setClientId}
-                                    label={t('caseRenewal.caseCreate.client') as string}
-                                    options={permittedClientIds.map(cId => {
-                                        return { label: `${getCarrierNameByClientId(cId) || cId}`, value: cId.toLowerCase() };
+                                    label={
+                                        t(
+                                            'caseRenewal.caseCreate.client'
+                                        ) as string
+                                    }
+                                    options={permittedClientIds.map((cId) => {
+                                        return {
+                                            label: `${
+                                                getCarrierNameByClientId(cId) ||
+                                                cId
+                                            }`,
+                                            value: cId.toLowerCase(),
+                                        };
                                     })}
-                                    placeholder={t('caseRenewal.caseCreate.selectAClient') as string}
+                                    placeholder={
+                                        t(
+                                            'caseRenewal.caseCreate.selectAClient'
+                                        ) as string
+                                    }
                                     size={FieldSize.Small}
                                     value={clientId}
-                                    variant={permittedClientIds.length < 2 ? FieldVariant.Inactive : FieldVariant.Default}
+                                    variant={
+                                        permittedClientIds.length < 2
+                                            ? FieldVariant.Inactive
+                                            : FieldVariant.Default
+                                    }
                                 />
                             </div>
                             <div className="mt-4">
                                 <Field
-                                    label={t('caseRenewal.caseCreate.documentId') as string}
-                                    onChange={event => setDocumentNumber(xss(event.target.value))}
-                                    placeholder={t('caseRenewal.caseCreate.documentIdPlaceholder') as string}
+                                    label={
+                                        t(
+                                            'caseRenewal.caseCreate.documentId'
+                                        ) as string
+                                    }
+                                    onChange={(event) =>
+                                        setDocumentNumber(
+                                            xss(event.target.value)
+                                        )
+                                    }
+                                    placeholder={
+                                        t(
+                                            'caseRenewal.caseCreate.documentIdPlaceholder'
+                                        ) as string
+                                    }
                                     size={FieldSize.Small}
                                     type={FieldType.BaseActive}
                                     value={documentNumber}
@@ -409,12 +582,18 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                             </div>
                             {errorMessage && (
                                 <div className="mt-4 flex flex-col">
-                                    <p className="self-center text-semantic-error">{errorMessage}</p>
+                                    <p className="self-center text-semantic-error">
+                                        {errorMessage}
+                                    </p>
                                 </div>
                             )}
                             <div className="mt-4 self-center">
                                 <Button
-                                    aria-label={t('caseRenewal.caseCreate.createAriaLabel') as string}
+                                    aria-label={
+                                        t(
+                                            'caseRenewal.caseCreate.createAriaLabel'
+                                        ) as string
+                                    }
                                     onClick={createCase}
                                     size={ButtonSize.Small}
                                     type={ButtonType.Primary}
@@ -426,16 +605,40 @@ const CaseCreate = ({ featureFlagDecisions, user }: CaseCreatePageProps) => {
                     </div>
                 ) : (
                     <>
-                        <h1 className="typography-desktop-headline-1-d">{t('caseRenewal.caseCreate.h1')}</h1>
-                        <TabGroup defaultValue={activeTab} value={activeTab} activationMode="manual" onValueChange={handleTabChange}>
+                        <h1 className="typography-desktop-headline-1-d">
+                            {t('caseRenewal.caseCreate.h1')}
+                        </h1>
+                        <TabGroup
+                            defaultValue={activeTab}
+                            value={activeTab}
+                            activationMode="manual"
+                            onValueChange={handleTabChange}
+                        >
                             <TabList className="!mb-0 w-full pt-4">
                                 <TabTrigger value={TabOptions.myTasks}>
-                                    <ProgressIcon width={24} height={24} className="hidden lg:block" />{' '}
-                                    {toTitleCase(t('caseRenewal.caseCreate.tabs.myTask') ?? '')}
+                                    <ProgressIcon
+                                        width={24}
+                                        height={24}
+                                        className="hidden lg:block"
+                                    />{' '}
+                                    {toTitleCase(
+                                        t(
+                                            'caseRenewal.caseCreate.tabs.myTask'
+                                        ) ?? ''
+                                    )}
                                 </TabTrigger>
                                 <TabTrigger value={TabOptions.search}>
-                                    <Icon width={24} height={24} className="hidden lg:block" type={IconType.DOCUMENT_TEXT} />{' '}
-                                    {toTitleCase(t('caseRenewal.caseCreate.tabs.search') ?? '')}
+                                    <Icon
+                                        width={24}
+                                        height={24}
+                                        className="hidden lg:block"
+                                        type={IconType.DOCUMENT_TEXT}
+                                    />{' '}
+                                    {toTitleCase(
+                                        t(
+                                            'caseRenewal.caseCreate.tabs.search'
+                                        ) ?? ''
+                                    )}
                                 </TabTrigger>
                             </TabList>
 
@@ -462,11 +665,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
                 return serverSidePropsLogout();
             }
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -476,7 +680,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const featureFlagDecisions = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
+            const featureFlagDecisions =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
 
             const translations = await serverSideTranslations(
                 locale,
@@ -484,10 +692,16 @@ export const getServerSideProps = withPageAuthAndLogging(
                 nextI18nextConfig,
                 ALL_LOCALES
             );
-            return { props: { featureFlagDecisions, locale, ...translations, user } };
+            return {
+                props: { featureFlagDecisions, locale, ...translations, user },
+            };
         },
     },
-    { file: 'create-case/index', function: 'getServerSideProps', page: 'create-case/index' }
+    {
+        file: 'create-case/index',
+        function: 'getServerSideProps',
+        page: 'create-case/index',
+    }
 );
 
 export default CaseCreate;

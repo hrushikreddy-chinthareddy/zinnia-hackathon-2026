@@ -4,7 +4,9 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useAddressChange } from '@deps/containers/address-change-container/address-change-provider';
@@ -22,26 +24,57 @@ interface ConfirmProps {
     clientId: string;
 }
 
-export const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange.confirm' });
+export const ConfirmStep = ({
+    policy,
+    document,
+    planCode,
+    clientId,
+}: ConfirmProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'addressChange.confirm',
+    });
     const router = useRouter();
-    const { signatureData, roleIdentifier, applyToRoles, formErrors, formData, phone, address, setSubmitSuccess } = useAddressChange();
+    const {
+        signatureData,
+        roleIdentifier,
+        applyToRoles,
+        formErrors,
+        formData,
+        phone,
+        address,
+        setSubmitSuccess,
+    } = useAddressChange();
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [ownerName, setOwnerName] = useState('');
-    const validationSucceeded = useMemo(() => Object.keys(formErrors).length === 0, [formErrors]);
+    const validationSucceeded = useMemo(
+        () => Object.keys(formErrors).length === 0,
+        [formErrors]
+    );
 
     const submit = useCallback(async () => {
         let documentResult;
 
-        if (!document && formData.businessKey && formData.caseId !== '' && clientId) {
-            documentResult = await fetchDocument(formData.businessKey, DocumentType.AddressChange, clientId.toUpperCase());
+        if (
+            !document &&
+            formData.businessKey &&
+            formData.caseId !== '' &&
+            clientId
+        ) {
+            documentResult = await fetchDocument(
+                formData.businessKey,
+                DocumentType.AddressChange,
+                clientId.toUpperCase()
+            );
             if (!documentResult.success) {
-                console.error('ConfirmStep:: No documentNumber from getDocument', {
-                    documentNumber: formData.businessKey,
-                    documentType: DocumentType.AddressChange,
-                    clientId,
-                });
+                console.error(
+                    'ConfirmStep:: No documentNumber from getDocument',
+                    {
+                        documentNumber: formData.businessKey,
+                        documentType: DocumentType.AddressChange,
+                        clientId,
+                    }
+                );
                 setSubmitFailed(true);
             }
         }
@@ -55,7 +88,9 @@ export const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmPro
             policy,
             phone,
             roleIdentifier,
-            selectedDocument: documentResult?.success ? documentResult.value : null,
+            selectedDocument: documentResult?.success
+                ? documentResult.value
+                : null,
         });
 
         const response = await addTransaction(requestBody);
@@ -66,15 +101,30 @@ export const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmPro
         } else {
             setSubmitSuccess(true);
         }
-        const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
-        const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
+        const policyOwnerId = policy?.partyRoles?.find(
+            (pr) => pr.partyRole === PartyRole.OWNER
+        )?.partyId;
+        const policyOwner = policy?.parties?.find(
+            (party) => party.partyId === policyOwnerId
+        );
 
         if (policyOwner) {
             const fullName = getFirstLastName(policyOwner);
             setOwnerName(fullName);
         }
         setIsLoading(false);
-    }, [document, formData, clientId, applyToRoles, signatureData, planCode, policy, phone, address, roleIdentifier]);
+    }, [
+        document,
+        formData,
+        clientId,
+        applyToRoles,
+        signatureData,
+        planCode,
+        policy,
+        phone,
+        address,
+        roleIdentifier,
+    ]);
 
     useEffect(() => {
         submit();
@@ -104,14 +154,24 @@ export const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmPro
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             {validationSucceeded && ownerName !== '' ? (
                 <CardInfo
-                    icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                    icon={
+                        <CircleCheckIcon
+                            className="text-semantic-success"
+                            height={50}
+                            width={50}
+                        />
+                    }
                     cta={{
                         action: () => {
                             router.push('/create-case');
                         },
                         text: t('close'),
                     }}
-                    subtitle={<span>{t('successMessage', { customerName: ownerName })}</span>}
+                    subtitle={
+                        <span>
+                            {t('successMessage', { customerName: ownerName })}
+                        </span>
+                    }
                     title={t('title')}
                 />
             ) : null}

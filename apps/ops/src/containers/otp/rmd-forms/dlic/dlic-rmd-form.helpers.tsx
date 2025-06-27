@@ -47,14 +47,19 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
             const errors = {} as FormValidationErrors;
 
             const ownerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
             // No choice made for signature
-            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                ownerSignature?.isSigned !== false &&
+                !ownerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
 
             return errors;
@@ -80,7 +85,9 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.IsDirectDepositValid,
-                    fieldLabel: t('distributionMethod.isDirectDepositFormValid'),
+                    fieldLabel: t(
+                        'distributionMethod.isDirectDepositFormValid'
+                    ),
                     classNames: 'col-start-1',
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
@@ -108,7 +115,10 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -121,11 +131,16 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.AccountHolder,
@@ -148,16 +163,22 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
 
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    isDirectDepositValid: selectedBank?.isDirectDepositValid?.text ?? true,
+                    isDirectDepositValid:
+                        selectedBank?.isDirectDepositValid?.text ?? true,
                     accountHolder: selectedBank?.nameOnBankAccount ?? '',
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    isDirectDeposit: selectedBank?.isDirectDeposit?.text ?? true,
-                    maskedAccountNumber: selectedBank?.maskedAccountNumber ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    isDirectDeposit:
+                        selectedBank?.isDirectDeposit?.text ?? true,
+                    maskedAccountNumber:
+                        selectedBank?.maskedAccountNumber ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -189,7 +210,9 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                               bankFurtherCreditAccount,
                               bankFurtherCreditName,
                               isDirectDeposit: { text: true },
-                              isDirectDepositValid: { text: isDirectDepositValid },
+                              isDirectDepositValid: {
+                                  text: isDirectDepositValid,
+                              },
                               reEnterAccountNumber,
                               reEnterBankRoutingNumber,
                           },
@@ -232,23 +255,38 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     component: DisbursementFields.BankAddress,
                 },
             ],
-            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+            getDefaultPayload: ({
+                paymentMethod,
+                paymentMailType,
+                isDifferentPayeeOrAddress,
+                payee,
+            }: FormDisbursement) => {
+                if (
+                    paymentMethod.text === PaymentMailType.Check &&
+                    paymentMailType.text === null
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        selectIfPayeeIsDifferent:
+                            isDifferentPayeeOrAddress.text ?? '',
                         address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
                         payeeName: payee?.name?.text ?? '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                selectIfPayeeIsDifferent,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
-                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    isDifferentPayeeOrAddress: {
+                        text: selectIfPayeeIsDifferent || false,
+                    },
                     payee: {
                         name: { text: payeeName || null },
                         addresses: [address || DEFAULT_ADDRESS],
@@ -342,8 +380,14 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Prorata,
+        },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const irsSignatureConfig = [
@@ -409,7 +453,9 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
     ];

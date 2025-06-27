@@ -1,13 +1,21 @@
 import { useTranslation } from 'next-i18next';
 import React, { useCallback, useEffect } from 'react';
 
-import FieldData, { FieldDataVariant } from '@deps/components/fields/field-data/field-data';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import FieldData, {
+    FieldDataVariant,
+} from '@deps/components/fields/field-data/field-data';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import PageHeader from '@deps/components/page-header/page-header';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
+import {
+    isNullEmptyOrUndefined,
+    toSentenceCase,
+} from '@deps/helpers/string.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkEligibilityFundTransfer } from '@deps/queries/api/fund-transfer';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -31,15 +39,20 @@ const FundsFirstGlanceCard = ({ policy }: BasePolicyComponentArgs) => {
 
     const { featureFlags } = useOptimizely();
 
-    const [fundTransferEligibility, setFundTransferEligibility] = React.useState(false);
+    const [fundTransferEligibility, setFundTransferEligibility] =
+        React.useState(false);
 
     const accountValue = policy.accountValue;
     const headerValues: HeaderValueProps = {
         account: {
             amount: numberFormatify(accountValue),
             label: t('headerValues.account.label'),
-            tooltipTitle: toSentenceCase(t('headerValues.account.tooltipTitle') as string),
-            tooltipBody: toSentenceCase(t('headerValues.account.tooltipBody') as string),
+            tooltipTitle: toSentenceCase(
+                t('headerValues.account.tooltipTitle') as string
+            ),
+            tooltipBody: toSentenceCase(
+                t('headerValues.account.tooltipBody') as string
+            ),
         },
     };
 
@@ -63,7 +76,10 @@ const FundsFirstGlanceCard = ({ policy }: BasePolicyComponentArgs) => {
     const policyNumber = policy?.policyNumber;
 
     const checkFundTransferEligibility = useCallback(async () => {
-        const fundTransferStatus = await checkEligibilityFundTransfer(planCode, policyNumber);
+        const fundTransferStatus = await checkEligibilityFundTransfer(
+            planCode,
+            policyNumber
+        );
         if (fundTransferStatus?.status === TransactionResponseStatus.Success) {
             setFundTransferEligibility(true);
         }
@@ -80,13 +96,21 @@ const FundsFirstGlanceCard = ({ policy }: BasePolicyComponentArgs) => {
                 belowHeaderTextChildren={
                     <>
                         <div className="mt-4 flex flex-row gap-8">
-                            {Object.entries(headerValues).map(([key, { amount, ...props }]) => (
-                                <FieldData key={key} variant={FieldDataVariant.Large} {...props}>
-                                    {amount}
-                                </FieldData>
-                            ))}
+                            {Object.entries(headerValues).map(
+                                ([key, { amount, ...props }]) => (
+                                    <FieldData
+                                        key={key}
+                                        variant={FieldDataVariant.Large}
+                                        {...props}
+                                    >
+                                        {amount}
+                                    </FieldData>
+                                )
+                            )}
                         </div>
-                        {featureFlags[FEATURE_FLAGS.FUNDS_TRANSFER_TRANSACTION] && (
+                        {featureFlags[
+                            FEATURE_FLAGS.FUNDS_TRANSFER_TRANSACTION
+                        ] && (
                             <div className="mt-4 flex w-full flex-row items-center gap-8 bg-gray-50 px-8 py-4 align-middle">
                                 <NavElement
                                     disabled={fundTransferEligibility === false}

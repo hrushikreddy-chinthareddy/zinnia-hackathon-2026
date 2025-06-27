@@ -14,11 +14,17 @@ import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { useDashboardStore } from '@deps/store/store';
 
 export const ActiveApplications: FC = () => {
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
     const carriers = Object.keys(selectedCarriers);
     const brokers = Object.keys(selectedBrokerDealers);
     const baseFilter: CaseCountInputFilter = {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        caseStatus: [
+            Statuses.InProgress,
+            Statuses.Exception,
+            Statuses.NotStarted,
+        ],
         createdDateStart: oneYearAgoISO,
     };
     if (selectedCarriers && carriers.length) {
@@ -34,9 +40,15 @@ export const ActiveApplications: FC = () => {
             <div className={styles.container}>
                 <CardContainer
                     classNames="relative !pt-0"
-                    containerClassNames={clsx(sharedStyles.dashboardCard, sharedStyles.dashboardCardFirst)}
+                    containerClassNames={clsx(
+                        sharedStyles.dashboardCard,
+                        sharedStyles.dashboardCardFirst
+                    )}
                 >
-                    <SankeyChart key={JSON.stringify(baseFilter)} baseDashboardQueryFilter={baseFilter} />
+                    <SankeyChart
+                        key={JSON.stringify(baseFilter)}
+                        baseDashboardQueryFilter={baseFilter}
+                    />
                 </CardContainer>
             </div>
 

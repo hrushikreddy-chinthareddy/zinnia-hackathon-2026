@@ -11,7 +11,7 @@ export default {
     title: 'Components/Field',
     component: FieldDateSelectRange,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="max-w-[575px]">
                 <Story />
             </div>
@@ -27,7 +27,9 @@ export const DateRangeSelect = () => {
         const newStartValue = e.target.value;
         setStartValue(newStartValue);
 
-        const isAfter = dayjs(newStartValue, NUMERIC_DATE_FORMAT).isAfter(dayjs(endValue, NUMERIC_DATE_FORMAT));
+        const isAfter = dayjs(newStartValue, NUMERIC_DATE_FORMAT).isAfter(
+            dayjs(endValue, NUMERIC_DATE_FORMAT)
+        );
         if (isAfter) {
             setEndValue('');
         }
@@ -36,7 +38,9 @@ export const DateRangeSelect = () => {
     const endOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newEndValue = e.target.value;
 
-        const isBefore = dayjs(newEndValue, NUMERIC_DATE_FORMAT).isBefore(dayjs(startValue, NUMERIC_DATE_FORMAT));
+        const isBefore = dayjs(newEndValue, NUMERIC_DATE_FORMAT).isBefore(
+            dayjs(startValue, NUMERIC_DATE_FORMAT)
+        );
         if (isBefore) {
             setStartValue(newEndValue);
             setEndValue('');

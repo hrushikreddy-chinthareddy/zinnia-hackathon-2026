@@ -4,10 +4,15 @@ import { useState, useEffect, useContext } from 'react';
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
 import { Loader } from '@deps/components/page-loader';
 import SelectSimple from '@deps/components/select/select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useSpecialProgram } from '@deps/hooks/useSpecialProgram';
-import { RMDProgramType, Terminateprogram } from '@deps/models/case/withdrawal/case';
+import {
+    RMDProgramType,
+    Terminateprogram,
+} from '@deps/models/case/withdrawal/case';
 
 import { Program } from './program-item';
 
@@ -24,8 +29,14 @@ interface ExistingProgramsProps {
     onDataChange?: (value: Terminateprogram[]) => void;
 }
 
-export default function ExistingPrograms({ disableAllPrograms = false, terminated, onDataChange }: ExistingProgramsProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.rmdMethod' });
+export default function ExistingPrograms({
+    disableAllPrograms = false,
+    terminated,
+    onDataChange,
+}: ExistingProgramsProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.rmdMethod',
+    });
     const { initialForm } = useContext(FormDataContext);
 
     const [sswprograms, setsswprograms] = useState<Program[]>([]);
@@ -48,8 +59,12 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
         const sswPrograms: Program[] = [];
         const rmdPrograms: Program[] = [];
 
-        activePrograms?.forEach(program => {
-            if ([ProgramType.SSW, ProgramType.SSWNet].includes(program.typeOfAlloc)) {
+        activePrograms?.forEach((program) => {
+            if (
+                [ProgramType.SSW, ProgramType.SSWNet].includes(
+                    program.typeOfAlloc
+                )
+            ) {
                 sswPrograms.push({
                     programType: 'SSW',
                     startDate: program.startDate,
@@ -80,18 +95,39 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
         setrmdPrograms(rmdPrograms);
     }, [activePrograms]);
 
-    const addtoTerminatedprograms = (status: RMDProgramType, program: Program) => {
+    const addtoTerminatedprograms = (
+        status: RMDProgramType,
+        program: Program
+    ) => {
         program.programType === 'RMD' &&
             setrmdPrograms(
-                rmdPrograms.map(item => ({ ...item, status: item.allocationId === program.allocationId ? status : item.status }))
+                rmdPrograms.map((item) => ({
+                    ...item,
+                    status:
+                        item.allocationId === program.allocationId
+                            ? status
+                            : item.status,
+                }))
             );
         program.programType === 'SSW' &&
             setsswprograms(
-                sswprograms.map(item => ({ ...item, status: item.allocationId === program.allocationId ? status : item.status }))
+                sswprograms.map((item) => ({
+                    ...item,
+                    status:
+                        item.allocationId === program.allocationId
+                            ? status
+                            : item.status,
+                }))
             );
 
         if (terminated && onDataChange) {
-            status === RMDProgramType.Active && onDataChange(terminated.filter(item => item.allocationId.text !== program.allocationId));
+            status === RMDProgramType.Active &&
+                onDataChange(
+                    terminated.filter(
+                        (item) =>
+                            item.allocationId.text !== program.allocationId
+                    )
+                );
         }
 
         if (status === RMDProgramType.Terminate) {
@@ -109,22 +145,40 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
         rmdPrograms.length || sswprograms.length ? (
             <div className="border-b-2 border-gray-100 p-2">
                 {sswprograms.length > 0 && (
-                    <Typography variant={TypographyVariant.BodyBold} className="my-2">
+                    <Typography
+                        variant={TypographyVariant.BodyBold}
+                        className="my-2"
+                    >
                         {t('transactions.sswPrograms')}
                     </Typography>
                 )}
                 {sswprograms.map((item, i) => {
                     return (
-                        <div className="my-2 grid grid-cols-auto-2 gap-2" key={i}>
-                            <Program program={item} isFormStateReadOnly={disableAllPrograms} />
+                        <div
+                            className="my-2 grid grid-cols-auto-2 gap-2"
+                            key={i}
+                        >
+                            <Program
+                                program={item}
+                                isFormStateReadOnly={disableAllPrograms}
+                            />
 
                             <SelectSimple
                                 label={t('action') as string}
                                 options={rmdProgramStatus}
-                                onChange={val => addtoTerminatedprograms(val as RMDProgramType, item)}
+                                onChange={(val) =>
+                                    addtoTerminatedprograms(
+                                        val as RMDProgramType,
+                                        item
+                                    )
+                                }
                                 size={FieldSize.Small}
                                 value={item.status}
-                                variant={disableAllPrograms ? FieldVariant.Inactive : FieldVariant.Default}
+                                variant={
+                                    disableAllPrograms
+                                        ? FieldVariant.Inactive
+                                        : FieldVariant.Default
+                                }
                                 disabled={disableAllPrograms}
                             />
                         </div>
@@ -132,21 +186,39 @@ export default function ExistingPrograms({ disableAllPrograms = false, terminate
                 })}
 
                 {rmdPrograms.length > 0 && (
-                    <Typography variant={TypographyVariant.BodyBold} className="my-2">
+                    <Typography
+                        variant={TypographyVariant.BodyBold}
+                        className="my-2"
+                    >
                         {t('transactions.rmdPrograms')}
                     </Typography>
                 )}
                 {rmdPrograms.map((item, i) => {
                     return (
-                        <div className="my-2 grid grid-cols-auto-2 gap-2" key={i}>
-                            <Program program={item} isFormStateReadOnly={disableAllPrograms} />
+                        <div
+                            className="my-2 grid grid-cols-auto-2 gap-2"
+                            key={i}
+                        >
+                            <Program
+                                program={item}
+                                isFormStateReadOnly={disableAllPrograms}
+                            />
                             <SelectSimple
                                 label={t('action') as string}
                                 options={rmdProgramStatus}
-                                onChange={val => addtoTerminatedprograms(val as RMDProgramType, item)}
+                                onChange={(val) =>
+                                    addtoTerminatedprograms(
+                                        val as RMDProgramType,
+                                        item
+                                    )
+                                }
                                 size={FieldSize.Small}
                                 value={item.status}
-                                variant={disableAllPrograms ? FieldVariant.Inactive : FieldVariant.Default}
+                                variant={
+                                    disableAllPrograms
+                                        ? FieldVariant.Inactive
+                                        : FieldVariant.Default
+                                }
                                 disabled={disableAllPrograms}
                             />
                         </div>

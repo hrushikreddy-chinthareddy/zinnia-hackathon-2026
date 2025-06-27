@@ -1,13 +1,23 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
-import { getFormattedDateTime, getSlug, toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    getFormattedDateTime,
+    getSlug,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
 import { Task } from './task-listing.types';
 
-export const buildTaskLink = (taskId: string, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
+export const buildTaskLink = (
+    taskId: string,
+    caseId: string,
+    caseType: string,
+    documentNumber: string,
+    clientId: string
+) => {
     const caseSlug = getSlug(caseType);
     const link = `/create-case/${caseSlug}/${caseId}?taskId=${taskId}&doc=${documentNumber}&clientId=${clientId}`;
     return link;
@@ -18,25 +28,45 @@ export const buildCaseLink = (caseId: string) => {
     return link;
 };
 
-export const getStatusDuration = (t: TFunction, date: string, taskStatus: string) => {
-    const { unit: updatedUnit, count: updatedCount } = getTimeAgoUnitValue(date) || {};
+export const getStatusDuration = (
+    t: TFunction,
+    date: string,
+    taskStatus: string
+) => {
+    const { unit: updatedUnit, count: updatedCount } =
+        getTimeAgoUnitValue(date) || {};
 
     let statusDuration = '';
 
     if (taskStatus === 'IN_PROGRESS' || taskStatus === 'INPROGRESS') {
-        statusDuration = t('tasksListing.taskSubmittedAgo', { updatedCount, updatedUnit });
+        statusDuration = t('tasksListing.taskSubmittedAgo', {
+            updatedCount,
+            updatedUnit,
+        });
     } else if (taskStatus === 'COMPLETED') {
-        statusDuration = t('tasksListing.taskCompletedAgo', { updatedCount, updatedUnit });
+        statusDuration = t('tasksListing.taskCompletedAgo', {
+            updatedCount,
+            updatedUnit,
+        });
     } else if (taskStatus === 'PENDING' || taskStatus === 'NEW') {
-        statusDuration = t('tasksListing.taskCreatedAgo', { updatedCount, updatedUnit });
+        statusDuration = t('tasksListing.taskCreatedAgo', {
+            updatedCount,
+            updatedUnit,
+        });
     }
 
     return statusDuration;
 };
 
-export const getStatusDateTime = (t: TFunction, date: string, taskStatus: string) => {
+export const getStatusDateTime = (
+    t: TFunction,
+    date: string,
+    taskStatus: string
+) => {
     let statusDuration = '';
-    const updatedDateTime = date ? getFormattedDateTime(new Date(date) || '') : '-';
+    const updatedDateTime = date
+        ? getFormattedDateTime(new Date(date) || '')
+        : '-';
 
     if (taskStatus === 'IN_PROGRESS' || taskStatus === 'INPROGRESS') {
         statusDuration = t('tasksListing.taskSubmittedOn', { updatedDateTime });
@@ -64,20 +94,39 @@ const getTaskStatusText = (t: TFunction, status: string) => {
             return toTitleCase(status);
     }
 };
-export const toFormattedTask = (t: TFunction, task: Task, caseId: string, caseType: string, documentNumber: string, clientId: string) => {
+export const toFormattedTask = (
+    t: TFunction,
+    task: Task,
+    caseId: string,
+    caseType: string,
+    documentNumber: string,
+    clientId: string
+) => {
     return {
         status: task.status,
         taskId: task.id,
-        taskInfoLink: buildTaskLink(task.id, caseId, caseType, documentNumber, clientId),
+        taskInfoLink: buildTaskLink(
+            task.id,
+            caseId,
+            caseType,
+            documentNumber,
+            clientId
+        ),
         taskStatus: getTaskStatusText(t, task.status),
         taskName: task.taskName || '-',
-        statusDuration: task?.updatedDate ? getStatusDuration(t, task.updatedDate, task.status) : '-',
-        taskDate: task?.updatedDate ? getStatusDateTime(t, task.updatedDate, task.status) : '-',
+        statusDuration: task?.updatedDate
+            ? getStatusDuration(t, task.updatedDate, task.status)
+            : '-',
+        taskDate: task?.updatedDate
+            ? getStatusDateTime(t, task.updatedDate, task.status)
+            : '-',
         userId: task.userId || '-',
     };
 };
 
-export const getTimeAgoUnitValue = (date: string): { unit: string; count: number } | null => {
+export const getTimeAgoUnitValue = (
+    date: string
+): { unit: string; count: number } | null => {
     const today = new Date();
     const lastUpdatedDate = new Date(date);
 

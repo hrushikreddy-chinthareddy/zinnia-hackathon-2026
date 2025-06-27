@@ -1,4 +1,10 @@
-import { PartyRole, Policy, TaxRateToUse, TaxWithholdingInstructions, TaxWithholdingType } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    Policy,
+    TaxRateToUse,
+    TaxWithholdingInstructions,
+    TaxWithholdingType,
+} from '@zinnia/api-types/types/sor';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -19,7 +25,10 @@ interface TaxWithholdingViewModel {
     withholdNone?: boolean;
 }
 
-export const getFormErrors = (federalTaxWithholdings: TaxWithholdingViewModel, stateTaxWithholdings: TaxWithholdingViewModel) => {
+export const getFormErrors = (
+    federalTaxWithholdings: TaxWithholdingViewModel,
+    stateTaxWithholdings: TaxWithholdingViewModel
+) => {
     let errors: Errors = {};
 
     if (
@@ -34,12 +43,18 @@ export const getFormErrors = (federalTaxWithholdings: TaxWithholdingViewModel, s
     if (
         federalTaxWithholdings.percentAmount &&
         federalTaxWithholdings.dollarAmount &&
-        !(federalTaxWithholdings.withholdMinimum || federalTaxWithholdings.withholdNone)
+        !(
+            federalTaxWithholdings.withholdMinimum ||
+            federalTaxWithholdings.withholdNone
+        )
     ) {
         errors = { ...errors, federalBothInputs: true };
     }
 
-    if (federalTaxWithholdings.withholdMinimum && federalTaxWithholdings.withholdNone) {
+    if (
+        federalTaxWithholdings.withholdMinimum &&
+        federalTaxWithholdings.withholdNone
+    ) {
         errors = { ...errors, federalBothCheckboxes: true };
     }
 
@@ -55,12 +70,18 @@ export const getFormErrors = (federalTaxWithholdings: TaxWithholdingViewModel, s
     if (
         stateTaxWithholdings.percentAmount &&
         stateTaxWithholdings.dollarAmount &&
-        !(stateTaxWithholdings.withholdMinimum || stateTaxWithholdings.withholdNone)
+        !(
+            stateTaxWithholdings.withholdMinimum ||
+            stateTaxWithholdings.withholdNone
+        )
     ) {
         errors = { ...errors, stateBothInputs: true };
     }
 
-    if (stateTaxWithholdings.withholdMinimum && stateTaxWithholdings.withholdNone) {
+    if (
+        stateTaxWithholdings.withholdMinimum &&
+        stateTaxWithholdings.withholdNone
+    ) {
         errors = { ...errors, stateBothCheckboxes: true };
     }
 
@@ -89,11 +110,13 @@ export const mapTaxWithholdingInstructionsFromViewModel = (
         exemptions: 0,
         // We do not want to set these values if one of the checkboxes is selected
         dollar:
-            taxRateToUse === TaxRateToUse.USEVALUESENTERED && !isNullEmptyOrUndefined(viewModel.dollarAmount)
+            taxRateToUse === TaxRateToUse.USEVALUESENTERED &&
+            !isNullEmptyOrUndefined(viewModel.dollarAmount)
                 ? Number(viewModel.dollarAmount)
                 : 0,
         percentage:
-            taxRateToUse === TaxRateToUse.USEVALUESENTERED && !isNullEmptyOrUndefined(viewModel.percentAmount)
+            taxRateToUse === TaxRateToUse.USEVALUESENTERED &&
+            !isNullEmptyOrUndefined(viewModel.percentAmount)
                 ? Number(viewModel.percentAmount)
                 : 0,
         taxRateToUse,
@@ -101,25 +124,39 @@ export const mapTaxWithholdingInstructionsFromViewModel = (
     };
 };
 
-export const mapTaxWithholdingInstructionsToViewModel = (taxWithholdings?: TaxWithholdingInstructions): TaxWithholdingViewModel => {
+export const mapTaxWithholdingInstructionsToViewModel = (
+    taxWithholdings?: TaxWithholdingInstructions
+): TaxWithholdingViewModel => {
     if (!taxWithholdings) {
         return {};
     }
 
     return {
-        dollarAmount: taxWithholdings.dollar ? String(taxWithholdings.dollar) : '',
-        percentAmount: taxWithholdings.percentage ? String(taxWithholdings.percentage) : '',
-        withholdMinimum: taxWithholdings.taxRateToUse === TaxRateToUse.USEDEFAULTTABLE,
-        withholdNone: taxWithholdings.taxRateToUse === TaxRateToUse.NOWITHHOLDINGELECTED,
+        dollarAmount: taxWithholdings.dollar
+            ? String(taxWithholdings.dollar)
+            : '',
+        percentAmount: taxWithholdings.percentage
+            ? String(taxWithholdings.percentage)
+            : '',
+        withholdMinimum:
+            taxWithholdings.taxRateToUse === TaxRateToUse.USEDEFAULTTABLE,
+        withholdNone:
+            taxWithholdings.taxRateToUse === TaxRateToUse.NOWITHHOLDINGELECTED,
     };
 };
 
 export const getOwnersTaxJurisdictionState = (policy: Policy): string => {
-    const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
-    const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
+    const policyOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.OWNER
+    )?.partyId;
+    const policyOwner = policy?.parties?.find(
+        (party) => party.partyId === policyOwnerId
+    );
     const ownerTaxJurisdiction = policyOwner?.taxWithholdings?.find(
-        tw => tw.taxWithholdingType === TaxWithholdingType.STATE
+        (tw) => tw.taxWithholdingType === TaxWithholdingType.STATE
     )?.taxJurisdiction;
 
-    return ownerTaxJurisdiction?.split('_')?.length === 2 ? ownerTaxJurisdiction?.split('_')[1] : DEFAULT_ERROR_STRING;
+    return ownerTaxJurisdiction?.split('_')?.length === 2
+        ? ownerTaxJurisdiction?.split('_')[1]
+        : DEFAULT_ERROR_STRING;
 };

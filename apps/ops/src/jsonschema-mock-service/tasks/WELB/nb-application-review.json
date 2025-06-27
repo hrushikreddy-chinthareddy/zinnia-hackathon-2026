@@ -90,7 +90,10 @@
                         "issueResolved": {
                             "type": "boolean",
                             "enum": [true, false],
-                            "enumNames": ["Yes, I can proceed to the next step.", "No, there are one or more issues to be logged."],
+                            "enumNames": [
+                                "Yes, I can proceed to the next step.",
+                                "No, there are one or more issues to be logged."
+                            ],
                             "title": "Can you proceed ?"
                         },
                         "uploadDocuments": {

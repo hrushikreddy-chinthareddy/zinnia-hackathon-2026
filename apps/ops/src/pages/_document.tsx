@@ -1,5 +1,12 @@
 import { CarrierName } from '@zinnia/bloom/components';
-import NextDocument, { DocumentContext, DocumentProps, Head, Html, Main, NextScript } from 'next/document';
+import NextDocument, {
+    DocumentContext,
+    DocumentProps,
+    Head,
+    Html,
+    Main,
+    NextScript,
+} from 'next/document';
 import { parseCookies } from 'nookies';
 
 import { getInitialData } from '@deps/helpers/query-data.helpers';
@@ -17,7 +24,10 @@ const Document = ({ company, theme }: DocumentContextProps) => {
     return (
         <Html lang={currentLocale} data-theme={theme}>
             <Head>
-                <link rel="stylesheet" href={`/styles/themes/${company?.toLowerCase()}/theme.css`} />
+                <link
+                    rel="stylesheet"
+                    href={`/styles/themes/${company?.toLowerCase()}/theme.css`}
+                />
             </Head>
             <body>
                 <Main />
@@ -38,7 +48,8 @@ Document.getInitialProps = async (ctx: DocumentContext) => {
     const { company } = await getInitialData(ctx);
     const cookies = parseCookies(ctx);
     const role = cookies.role as string | undefined;
-    const theme: CarrierName = role === 'farmers' ? CarrierName.FARMERS : CarrierName.ZINNIA;
+    const theme: CarrierName =
+        role === 'farmers' ? CarrierName.FARMERS : CarrierName.ZINNIA;
 
     return {
         ...initialProps,

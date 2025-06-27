@@ -1,8 +1,18 @@
-import { Email, IdentificationType, PartyRole } from '@zinnia/api-types/types/sor';
+import {
+    Email,
+    IdentificationType,
+    PartyRole,
+} from '@zinnia/api-types/types/sor';
 
-import { EnterpriseAddress, getAddresses } from './address-details/address-details.helpers';
+import {
+    EnterpriseAddress,
+    getAddresses,
+} from './address-details/address-details.helpers';
 import { getPersonalEmails } from './email-details/email-details.helpers';
-import { EnterprisePhone, getPhones } from './phone-details/phone-details.helpers';
+import {
+    EnterprisePhone,
+    getPhones,
+} from './phone-details/phone-details.helpers';
 
 export const getInitialBene = (
     partyRole: PartyRole,
@@ -14,7 +24,8 @@ export const getInitialBene = (
     action?: string,
     partyRoleId?: any
 ) => {
-    const { emails, phones, addresses, beneficiaryPercentage } = selectedParty ?? {};
+    const { emails, phones, addresses, beneficiaryPercentage } =
+        selectedParty ?? {};
     const currentEmails: Email[] = getPersonalEmails({ emails });
     const currentPhones: EnterprisePhone[] = getPhones({ phones });
     const currentAddresses: EnterpriseAddress[] = getAddresses({ addresses });
@@ -36,7 +47,9 @@ export const getInitialBene = (
         prefix: selectedParty?.prefix,
         suffix: selectedParty?.suffix,
         gender: selectedParty?.gender,
-        ssn: selectedParty?.identifications?.find((ids: any) => ids.identificationType === IdentificationType.SSN)?.identificationValue,
+        ssn: selectedParty?.identifications?.find(
+            (ids: any) => ids.identificationType === IdentificationType.SSN
+        )?.identificationValue,
         trustName: selectedParty?.lastName,
         companyName: selectedParty?.lastName,
         dateOfBirth: selectedParty?.dateOfBirth,

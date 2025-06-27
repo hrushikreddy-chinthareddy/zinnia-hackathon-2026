@@ -11,7 +11,11 @@ interface NoTasksFoundProps {
     handleCreateNewTask: () => void;
 }
 
-const NoTasksFound = ({ className, labels, handleCreateNewTask }: NoTasksFoundProps) => {
+const NoTasksFound = ({
+    className,
+    labels,
+    handleCreateNewTask,
+}: NoTasksFoundProps) => {
     return (
         <div className="w-full">
             <CardInfo
@@ -19,10 +23,19 @@ const NoTasksFound = ({ className, labels, handleCreateNewTask }: NoTasksFoundPr
                     'm-auto flex h-[300px] w-full max-w-full items-center justify-center border-2 border-dashed border-semantic-error bg-white shadow-sm',
                     className
                 )}
-                cta={{ action: handleCreateNewTask, text: labels.createNewTask }}
+                cta={{
+                    action: handleCreateNewTask,
+                    text: labels.createNewTask,
+                }}
                 title={labels.noTasksFoundTitle}
                 subtitle={labels.noTasksMessage}
-                icon={<SparklesIcon height={75} width={75} className="text-primary" />} 
+                icon={
+                    <SparklesIcon
+                        height={75}
+                        width={75}
+                        className="text-primary"
+                    />
+                }
             />
         </div>
     );

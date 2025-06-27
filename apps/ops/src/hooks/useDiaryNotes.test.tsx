@@ -26,9 +26,13 @@ describe('useDiaryNotes', () => {
 
         (getPolicyNotesInfo as jest.Mock).mockResolvedValueOnce(mockData);
 
-        const { result } = renderHook(() => useDiaryNotes(policyNumber, clientCode, offset, limit));
+        const { result } = renderHook(() =>
+            useDiaryNotes(policyNumber, clientCode, offset, limit)
+        );
 
-        await waitFor(() => expect(result.current.diaryNotes).toEqual(mockData.Items));
+        await waitFor(() =>
+            expect(result.current.diaryNotes).toEqual(mockData.Items)
+        );
 
         expect(result.current.totalLogs).toBe(mockData.Count);
     });
@@ -41,12 +45,16 @@ describe('useDiaryNotes', () => {
 
         jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        const { result } = renderHook(() => useDiaryNotes(policyNumber, clientCode, offset, limit));
+        const { result } = renderHook(() =>
+            useDiaryNotes(policyNumber, clientCode, offset, limit)
+        );
 
         expect(result.current.isLoading).toBe(false);
         expect(result.current.diaryNotes).toEqual([]);
         expect(result.current.totalLogs).toBe(0);
 
-        expect(console.error).toHaveBeenCalledWith('No policy number or client code provided');
+        expect(console.error).toHaveBeenCalledWith(
+            'No policy number or client code provided'
+        );
     });
 });

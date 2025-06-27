@@ -8,7 +8,11 @@ import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
 import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-import { BeneficiaryType, PeopleCardContainerProps, PeopleCardData } from './people-card-container.types';
+import {
+    BeneficiaryType,
+    PeopleCardContainerProps,
+    PeopleCardData,
+} from './people-card-container.types';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
 
 interface MapDataToPeopleProps {
@@ -20,8 +24,12 @@ interface MapDataToPeopleProps {
 }
 
 const tagsToBeneficiaryType = (tags: TagKey[]) => {
-    const isPrimary = tags.filter(tag => tag.text?.toLocaleLowerCase().indexOf('primary') !== -1)?.length;
-    const isContigent = tags.filter(tag => tag.text?.toLocaleLowerCase().indexOf('contigent') !== -1)?.length;
+    const isPrimary = tags.filter(
+        (tag) => tag.text?.toLocaleLowerCase().indexOf('primary') !== -1
+    )?.length;
+    const isContigent = tags.filter(
+        (tag) => tag.text?.toLocaleLowerCase().indexOf('contigent') !== -1
+    )?.length;
 
     if (isPrimary) {
         return BeneficiaryType.PRIMARY;
@@ -34,10 +42,31 @@ const tagsToBeneficiaryType = (tags: TagKey[]) => {
     return BeneficiaryType.NONE;
 };
 
-const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }: MapDataToPeopleProps) => {
-    const { partyType, firstName, lastName, fullName, tags, beneficiaryPercentage, partyId } = party;
-    const { selectedTagList, accessibilityText, accessibilityClickText, planCode, policyNumber, isBeneficiarySelected, router } =
-        peopleCard;
+const mapDataToPeopleCard = ({
+    chipEntered,
+    index,
+    party,
+    peopleCard,
+    isRereg,
+}: MapDataToPeopleProps) => {
+    const {
+        partyType,
+        firstName,
+        lastName,
+        fullName,
+        tags,
+        beneficiaryPercentage,
+        partyId,
+    } = party;
+    const {
+        selectedTagList,
+        accessibilityText,
+        accessibilityClickText,
+        planCode,
+        policyNumber,
+        isBeneficiarySelected,
+        router,
+    } = peopleCard;
 
     let name = '';
     switch (partyType) {
@@ -45,7 +74,11 @@ const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }:
             if (!firstName && !!fullName) {
                 name = toTitleCase(safeString(fullName));
             } else {
-                name = toTitleCase(`${firstName ?? DEFAULT_ERROR_STRING} ${lastName ?? DEFAULT_ERROR_STRING}`);
+                name = toTitleCase(
+                    `${firstName ?? DEFAULT_ERROR_STRING} ${
+                        lastName ?? DEFAULT_ERROR_STRING
+                    }`
+                );
             }
             break;
         case PartyType.ORGANIZATION:
@@ -64,22 +97,43 @@ const mapDataToPeopleCard = ({ chipEntered, index, party, peopleCard, isRereg }:
             name={name}
             selectedTags={selectedTagList}
             beneficiaryType={tagsToBeneficiaryType(tags)}
-            allocation={isBeneficiarySelected ? beneficiaryPercentage?.toString() : ''}
+            allocation={
+                isBeneficiarySelected ? beneficiaryPercentage?.toString() : ''
+            }
             accessibilityText={accessibilityText}
             accessibilityClickText={accessibilityClickText}
-            onClick={() => !isRereg && goTo(`/policies/${planCode}/${policyNumber}/people/${partyId}`, router)}
+            onClick={() =>
+                !isRereg &&
+                goTo(
+                    `/policies/${planCode}/${policyNumber}/people/${partyId}`,
+                    router
+                )
+            }
             shouldFocus={index === 0 && chipEntered}
             partyStatus={party.partyStatus}
         />
     );
 };
 
-const PeopleCardContainer = ({ filteredData, peopleCardData, classNames, isRereg }: PeopleCardContainerProps) => {
+const PeopleCardContainer = ({
+    filteredData,
+    peopleCardData,
+    classNames,
+    isRereg,
+}: PeopleCardContainerProps) => {
     const { chipEntered } = useContext(ChipEnterContext);
     return (
-        <div className={`grid h-fit w-full grid-cols-1 gap-2 md:grid-cols-2 ${classNames}`}>
+        <div
+            className={`grid h-fit w-full grid-cols-1 gap-2 md:grid-cols-2 ${classNames}`}
+        >
             {filteredData.map((nameTag, index) =>
-                mapDataToPeopleCard({ chipEntered, index, party: nameTag, peopleCard: peopleCardData, isRereg })
+                mapDataToPeopleCard({
+                    chipEntered,
+                    index,
+                    party: nameTag,
+                    peopleCard: peopleCardData,
+                    isRereg,
+                })
             )}
         </div>
     );

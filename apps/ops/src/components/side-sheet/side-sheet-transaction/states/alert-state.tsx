@@ -9,13 +9,21 @@ interface AlertStateProps {
 }
 
 const AlertState = ({ ctaAction }: AlertStateProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'transactions.states.alert' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'transactions.states.alert',
+    });
 
     return (
         <CardInfo
             className="mt-8"
             cta={{ action: ctaAction, text: t('cta') }}
-            icon={<CircleExclamationIcon className="text-semantic-error" height={50} width={50} />}
+            icon={
+                <CircleExclamationIcon
+                    className="text-semantic-error"
+                    height={50}
+                    width={50}
+                />
+            }
             subtitle={t('emailSubtitle')}
             title={t('emailTitle')}
         />

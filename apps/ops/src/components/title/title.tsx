@@ -12,7 +12,11 @@ export interface TitleProps extends PropsWithChildren {
     variant?: TitleVariant;
 }
 
-const Title = ({ children, className, variant = TitleVariant.SubTitle }: TitleProps) => {
+const Title = ({
+    children,
+    className,
+    variant = TitleVariant.SubTitle,
+}: TitleProps) => {
     const classes = clsx(variant, className);
 
     return <span className={classes}>{children}</span>;

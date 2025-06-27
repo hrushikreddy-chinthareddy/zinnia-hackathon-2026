@@ -1,13 +1,18 @@
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useState } from 'react';
 
-import { ActiveWithdrawalCase, SpecialProgram } from '@deps/models/case/withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    SpecialProgram,
+} from '@deps/models/case/withdrawal/case';
 import { getSpecialPrograms } from '@deps/queries/api/policies';
 
 export const useSpecialProgram = (initialForm: ActiveWithdrawalCase) => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const [activePrograms, setActivePrograms] = useState<SpecialProgram[] | null>([]);
+    const [activePrograms, setActivePrograms] = useState<
+        SpecialProgram[] | null
+    >([]);
 
     const ProgramType = {
         PremiumDefault: 0,
@@ -20,18 +25,30 @@ export const useSpecialProgram = (initialForm: ActiveWithdrawalCase) => {
         try {
             setIsLoading(true);
             setActivePrograms([]);
-            const spcialProgramdetails = await getSpecialPrograms(initialForm.data.contractNum, initialForm.carrier);
+            const spcialProgramdetails = await getSpecialPrograms(
+                initialForm.data.contractNum,
+                initialForm.carrier
+            );
             const activeProg =
                 spcialProgramdetails?.allocationDetails?.filter(
-                    program =>
-                        [ProgramType.PremiumDefault, ProgramType.RMD, ProgramType.SSW, ProgramType.SSWNet].includes(program.typeOfAlloc) &&
-                        (program.termDate === '' || dayjs().isBefore(program.termDate))
+                    (program) =>
+                        [
+                            ProgramType.PremiumDefault,
+                            ProgramType.RMD,
+                            ProgramType.SSW,
+                            ProgramType.SSWNet,
+                        ].includes(program.typeOfAlloc) &&
+                        (program.termDate === '' ||
+                            dayjs().isBefore(program.termDate))
                 ) || null;
             setActivePrograms(activeProg as SpecialProgram[]);
             setIsLoading(false);
         } catch (e) {
             setIsLoading(false);
-            console.error('GetRMDSpecialPrograms::Error retrieving special program list', e);
+            console.error(
+                'GetRMDSpecialPrograms::Error retrieving special program list',
+                e
+            );
         }
     }, [initialForm]);
 

@@ -3,7 +3,9 @@ import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback } from 'react';
 
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -17,10 +19,13 @@ interface BeneDetailsStepProps {
 }
 
 const BeneDetailsStep = ({ policy }: BeneDetailsStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails',
+    });
     const { carrierId } = policy;
     const { goToNext } = useWorkflow();
-    const { peopleSelection, beneData, formErrors, setFormErrors } = useBeneChange();
+    const { peopleSelection, beneData, formErrors, setFormErrors } =
+        useBeneChange();
 
     const handleStepContinue = useCallback(() => {
         const formErrors = validateBeneData(beneData, t);
@@ -49,10 +54,18 @@ const BeneDetailsStep = ({ policy }: BeneDetailsStepProps) => {
                 policy={policy}
             />
             {formErrors.firstNamesRequired ? (
-                <AssistiveText text={formErrors.firstNamesRequired} variant={AssistiveTextVariant.Error} className="mt-2" />
+                <AssistiveText
+                    text={formErrors.firstNamesRequired}
+                    variant={AssistiveTextVariant.Error}
+                    className="mt-2"
+                />
             ) : null}
             {formErrors.addressesRequired ? (
-                <AssistiveText text={formErrors.addressesRequired} variant={AssistiveTextVariant.Error} className="mt-2" />
+                <AssistiveText
+                    text={formErrors.addressesRequired}
+                    variant={AssistiveTextVariant.Error}
+                    className="mt-2"
+                />
             ) : null}
         </WorkflowCard>
     );

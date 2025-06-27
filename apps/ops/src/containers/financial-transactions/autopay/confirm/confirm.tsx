@@ -1,15 +1,24 @@
-import { ArrangementType, Policy , SystematicProgram } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    Policy,
+    SystematicProgram,
+} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { Statuses } from '@deps/models/case/case';
-import { TransactionResponseStatus, submitSystematicProgramUpdate } from '@deps/queries/api/bpm';
+import {
+    TransactionResponseStatus,
+    submitSystematicProgramUpdate,
+} from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 import {
@@ -36,7 +45,9 @@ const Confirm = ({ policy }: ConfirmProps) => {
         isSetUp,
     } = autopay;
 
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `${translationKeyPrefix}.confirm` });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: `${translationKeyPrefix}.confirm`,
+    });
     const { t: defaultT } = useTranslation();
 
     const [submitFailed, setSubmitFailed] = useState(false);
@@ -46,24 +57,45 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const { policyNumber, product, systematicPrograms } = policy;
     const [newCaseId, setNewCaseId] = useState<string | undefined>(caseId);
 
-    const validationSucceeded = useMemo(() => validationResponse?.status === TransactionResponseStatus.Success, [validationResponse]);
+    const validationSucceeded = useMemo(
+        () => validationResponse?.status === TransactionResponseStatus.Success,
+        [validationResponse]
+    );
 
     let type = '';
 
     if (parentPage === ParentPage.Withdrawals) {
-        type = arrangementType == ArrangementType.WITHDRAWAL ? 'systematic withdrawal' : 'systematic rmd';
+        type =
+            arrangementType == ArrangementType.WITHDRAWAL
+                ? 'systematic withdrawal'
+                : 'systematic rmd';
     }
 
     const submit = async () => {
         setIsLoading(true);
 
-        const { systematicProgram, arrangementId } = getSystematicInfo(systematicPrograms, autopay.systematicProgramReason, isSetUp);
+        const { systematicProgram, arrangementId } = getSystematicInfo(
+            systematicPrograms,
+            autopay.systematicProgramReason,
+            isSetUp
+        );
 
         const query =
             parentPage === 'withdrawals'
-                ? buildSystematicWithdrawalProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram)
-                : buildSystematicProgramUpdateRequestBody(autopay, systematicProgram as SystematicProgram);
-        const response = await submitSystematicProgramUpdate(product?.planCode, policyNumber, arrangementId, query);
+                ? buildSystematicWithdrawalProgramUpdateRequestBody(
+                      autopay,
+                      systematicProgram as SystematicProgram
+                  )
+                : buildSystematicProgramUpdateRequestBody(
+                      autopay,
+                      systematicProgram as SystematicProgram
+                  );
+        const response = await submitSystematicProgramUpdate(
+            product?.planCode,
+            policyNumber,
+            arrangementId,
+            query
+        );
 
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);

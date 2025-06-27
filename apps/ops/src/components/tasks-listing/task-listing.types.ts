@@ -46,7 +46,6 @@ export interface TasksListingProps {
     config: any;
 }
 
-
 export interface TasksTableProps {
     t: TFunction;
     tasks: TaskTableRow[] | undefined;

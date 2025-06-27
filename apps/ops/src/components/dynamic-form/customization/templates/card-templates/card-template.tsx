@@ -7,26 +7,52 @@ import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/gene
 import React from 'react';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { formatSSN, formatDate, formatRelationshipEnum, formatPercentage, formatPhone, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { formatDirtyAddress, replacePlaceholders } from '@deps/helpers/value-placement.helpers';
+import {
+    formatSSN,
+    formatDate,
+    formatRelationshipEnum,
+    formatPercentage,
+    formatPhone,
+    isNullEmptyOrUndefined,
+} from '@deps/helpers/string.helpers';
+import {
+    formatDirtyAddress,
+    replacePlaceholders,
+} from '@deps/helpers/value-placement.helpers';
 import { useDocumentDownload } from '@deps/hooks/useDocumentDownload';
-import { CardTypes, DataFormattingTypes, TaskFieldTypes } from '@deps/models/case/task';
+import {
+    CardTypes,
+    DataFormattingTypes,
+    TaskFieldTypes,
+} from '@deps/models/case/task';
 
 import style from './card-template.module.css';
 
-const getUiOptionsByField = (properties: Record<string, any>, fieldType: TaskFieldTypes) => {
+const getUiOptionsByField = (
+    properties: Record<string, any>,
+    fieldType: TaskFieldTypes
+) => {
     return properties
         ? Object.entries(properties)
-              .filter(([key, prop]: [string, any]) => !prop.__additional_property && (properties[key] as any)['ui:field'] === fieldType)
+              .filter(
+                  ([key, prop]: [string, any]) =>
+                      !prop.__additional_property &&
+                      (properties[key] as any)['ui:field'] === fieldType
+              )
               .map(([key, prop]: [string, any]) => ({ key, ...prop }))
         : [];
 };
@@ -36,13 +62,20 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
     const schemaProperties = schema?.properties;
     const { cardType, icon, sectionTitle } = getUiOptions(uiSchema);
 
-    const formFields = schemaProperties ? getUiOptionsByField(schemaProperties, TaskFieldTypes.Form) : [];
+    const formFields = schemaProperties
+        ? getUiOptionsByField(schemaProperties, TaskFieldTypes.Form)
+        : [];
 
-    const additionalInfoFields = schemaProperties ? getUiOptionsByField(schemaProperties, TaskFieldTypes.AdditionalInfo) : [];
+    const additionalInfoFields = schemaProperties
+        ? getUiOptionsByField(schemaProperties, TaskFieldTypes.AdditionalInfo)
+        : [];
     return (
         <>
             {schema.title && (
-                <Typography variant={TypographyVariant.BodySmBold} className="mb-5">
+                <Typography
+                    variant={TypographyVariant.BodySmBold}
+                    className="mb-5"
+                >
                     {schema.title}
                 </Typography>
             )}
@@ -59,22 +92,36 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
                 {additionalInfoFields.length > 0 && (
                     <div className="flex flex-row">
                         {additionalInfoFields
-                            .filter(element => {
+                            .filter((element) => {
                                 return !element.hidden;
                             })
-                            .map(element => {
-                                const fieldContent = properties.find(item => item.name === element.key)?.content;
-                                const elementUiOptions = getUiOptions(fieldContent?.props?.uiSchema);
+                            .map((element) => {
+                                const fieldContent = properties.find(
+                                    (item) => item.name === element.key
+                                )?.content;
+                                const elementUiOptions = getUiOptions(
+                                    fieldContent?.props?.uiSchema
+                                );
 
                                 return (
                                     <div key={element.key}>
                                         <div
-                                            className={clsx(style.additionalInfo, style[elementUiOptions?.type as string], 'flex flex-row')}
+                                            className={clsx(
+                                                style.additionalInfo,
+                                                style[
+                                                    elementUiOptions?.type as string
+                                                ],
+                                                'flex flex-row'
+                                            )}
                                         >
                                             {elementUiOptions?.icon && (
                                                 <div className="mt-1">
                                                     <Icon
-                                                        type={IconType[elementUiOptions?.icon as string as keyof typeof IconType]}
+                                                        type={
+                                                            IconType[
+                                                                elementUiOptions?.icon as string as keyof typeof IconType
+                                                            ]
+                                                        }
                                                         height={20}
                                                         width={20}
                                                         className={style.icon}
@@ -82,7 +129,13 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
                                                 </div>
                                             )}
 
-                                            {properties.find(item => item.name === element.key)?.content}
+                                            {
+                                                properties.find(
+                                                    (item) =>
+                                                        item.name ===
+                                                        element.key
+                                                )?.content
+                                            }
                                         </div>
                                     </div>
                                 );
@@ -93,13 +146,20 @@ export function CardTemplate(props: ObjectFieldTemplateProps) {
             {formFields?.length > 0 && (
                 <div className={`py-2`}>
                     {formFields
-                        .filter(element => {
+                        .filter((element) => {
                             return !element.hidden;
                         })
-                        .map(element => {
+                        .map((element) => {
                             return (
-                                <div key={element.key} className={'property-wrapper flex flex-col'}>
-                                    {properties.find(item => item.name === element.key)?.content}
+                                <div
+                                    key={element.key}
+                                    className={'property-wrapper flex flex-col'}
+                                >
+                                    {
+                                        properties.find(
+                                            (item) => item.name === element.key
+                                        )?.content
+                                    }
                                 </div>
                             );
                         })}
@@ -133,14 +193,25 @@ const extractField = (
         .map(([key]) => key);
 
     // Extract separator & placeholder once
-    const separator = field.length > 0 && typeof field[0]?.['ui:separator'] === 'string' ? field[0]['ui:separator'] : ' ';
-    const placeholder = field.length > 0 && typeof field[0]?.['ui:placeholder'] === 'string' ? field[0]['ui:placeholder'] + ' ' : '';
+    const separator =
+        field.length > 0 && typeof field[0]?.['ui:separator'] === 'string'
+            ? field[0]['ui:separator']
+            : ' ';
+    const placeholder =
+        field.length > 0 && typeof field[0]?.['ui:placeholder'] === 'string'
+            ? field[0]['ui:placeholder'] + ' '
+            : '';
 
     const value = keys
         .reduce((result, key) => {
             const fieldSchema = properties[key] || {};
-            const defaultValue = replacePlaceholders(fieldSchema, data)?.default || '';
-            const fieldValue = data?.[key] !== undefined && data?.[key] !== fieldSchema?.default ? data[key] : defaultValue;
+            const defaultValue =
+                replacePlaceholders(fieldSchema, data)?.default || '';
+            const fieldValue =
+                data?.[key] !== undefined &&
+                data?.[key] !== fieldSchema?.default
+                    ? data[key]
+                    : defaultValue;
             if (fieldValue) {
                 result += (result ? separator : '') + fieldValue;
             }
@@ -149,7 +220,11 @@ const extractField = (
         ?.trim();
 
     if (value === '') {
-        return { field, keys, value: properties.title || properties.subTitle || '' };
+        return {
+            field,
+            keys,
+            value: properties.title || properties.subTitle || '',
+        };
     }
 
     return { field, keys, value: value ? placeholder + value : '' };
@@ -164,10 +239,17 @@ export const formatValueByDataType = (dataType: string, value: any) => {
         case DataFormattingTypes.DirtyAddress: {
             if (!value) return null;
             try {
-                const addressValue = typeof value === 'string' && value.startsWith('{') ? JSON.parse(value) : value;
+                const addressValue =
+                    typeof value === 'string' && value.startsWith('{')
+                        ? JSON.parse(value)
+                        : value;
                 const addr = formatDirtyAddress(addressValue);
-                const className = Object.hasOwn(addressValue, 'addressLines') ? 'pl-1 inline-grid' : ''
-                return <FormattedAddress address={addr} className={className}/>
+                const className = Object.hasOwn(addressValue, 'addressLines')
+                    ? 'pl-1 inline-grid'
+                    : '';
+                return (
+                    <FormattedAddress address={addr} className={className} />
+                );
             } catch (error) {
                 console.error('Error parsing address value:', error);
                 return null;
@@ -176,7 +258,10 @@ export const formatValueByDataType = (dataType: string, value: any) => {
         case DataFormattingTypes.Date:
             return formatDate(value);
         case DataFormattingTypes.Phone: {
-            const phoneValue = typeof value === 'string' && value.startsWith('{') ? JSON.parse(value) : value;
+            const phoneValue =
+                typeof value === 'string' && value.startsWith('{')
+                    ? JSON.parse(value)
+                    : value;
             const phone = formatPhone(phoneValue);
             return !isNullEmptyOrUndefined(phone) ? phone : '-';
         }
@@ -192,14 +277,25 @@ export const formatValueByDataType = (dataType: string, value: any) => {
     }
 };
 
-export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, className, formData }: SingleCardProps) => {
+export const SingleCard = ({
+    cardType,
+    icon,
+    data,
+    properties,
+    sectionTitle,
+    className,
+    formData,
+}: SingleCardProps) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
     const title = extractField(properties, data, 'title');
     const subtitle = extractField(properties, data, 'subTitle');
 
     if (
-        (!title?.value && !subtitle?.value && cardType !== CardTypes.Document && !data?.documentId) ||
+        (!title?.value &&
+            !subtitle?.value &&
+            cardType !== CardTypes.Document &&
+            !data?.documentId) ||
         (cardType === CardTypes.Document && !data?.documentId)
     ) {
         return;
@@ -210,40 +306,79 @@ export const SingleCard = ({ cardType, icon, data, properties, sectionTitle, cla
               .filter(
                   ([key, prop]: [string, any]) =>
                       !prop.__additional_property &&
-                      ![TaskFieldTypes.AdditionalInfo, TaskFieldTypes.hidden].includes((properties[key] as any)['ui:field'])
+                      ![
+                          TaskFieldTypes.AdditionalInfo,
+                          TaskFieldTypes.hidden,
+                      ].includes((properties[key] as any)['ui:field'])
               )
               .map(([key, prop]: [string, any]) => ({ key, ...prop }))
         : [];
     const handleCardClick = () => {
-        const content = <DetailsCard details={data} sectionTitle={sectionTitle} properties={displayProperties} />;
+        const content = (
+            <DetailsCard
+                details={data}
+                sectionTitle={sectionTitle}
+                properties={displayProperties}
+            />
+        );
         sideSheet.changeSideSheetContent(title.value || '', content);
         sideSheet.handleOpen(true);
     };
 
     return (
         <>
-            <div className={`flex w-[455px] rounded border border-gray-100 p-[12px] ${className}`}>
+            <div
+                className={`flex w-[455px] rounded border border-gray-100 p-[12px] ${className}`}
+            >
                 <div className="px-2">
-                    <Icon width={25} height={25} type={IconType[icon as string as keyof typeof IconType] || IconType.CIRCLE_USER} />{' '}
+                    <Icon
+                        width={25}
+                        height={25}
+                        type={
+                            IconType[icon as string as keyof typeof IconType] ||
+                            IconType.CIRCLE_USER
+                        }
+                    />{' '}
                 </div>
                 <div className="grow">
                     <div className="text-sm font-bold break-all">
-                        {title?.field?.[0] && <PiiWrapper>{formatValueByDataType(title.field[0].dataType, title.value)}</PiiWrapper>}
+                        {title?.field?.[0] && (
+                            <PiiWrapper>
+                                {formatValueByDataType(
+                                    title.field[0].dataType,
+                                    title.value
+                                )}
+                            </PiiWrapper>
+                        )}
                     </div>
                     <div className="flex items-center text-sm font-normal text-gray-300">
                         <PiiWrapper>
-                            {subtitle?.field?.[0] && subtitle?.field[0]?.title ? subtitle?.field[0].title + ': ' : ''}{' '}
-                            {subtitle?.field?.[0] && formatValueByDataType(subtitle?.field?.[0]?.dataType, subtitle?.value || '--')}
+                            {subtitle?.field?.[0] && subtitle?.field[0]?.title
+                                ? subtitle?.field[0].title + ': '
+                                : ''}{' '}
+                            {subtitle?.field?.[0] &&
+                                formatValueByDataType(
+                                    subtitle?.field?.[0]?.dataType,
+                                    subtitle?.value || '--'
+                                )}
                         </PiiWrapper>
                     </div>
                 </div>
                 {cardType === CardTypes.Detailed && (
                     <div onClick={handleCardClick}>
-                        <Icon width={25} height={25} type={IconType.CHEVRON_RIGHT} />
+                        <Icon
+                            width={25}
+                            height={25}
+                            type={IconType.CHEVRON_RIGHT}
+                        />
                     </div>
                 )}
                 {cardType === CardTypes.Document && (
-                    <DocumentActions document={replacePlaceholders(data, formData) || data} properties={displayProperties} t={t} />
+                    <DocumentActions
+                        document={replacePlaceholders(data, formData) || data}
+                        properties={displayProperties}
+                        t={t}
+                    />
                 )}
             </div>
         </>
@@ -259,13 +394,19 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
                 </Typography>
                 {properties?.map((schema: any) => {
                     return (
-                        <Typography variant={TypographyVariant.BodySm} key={schema.key} className="p-1">
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            key={schema.key}
+                            className="p-1"
+                        >
                             {schema?.title}:{' '}
                             {formatValueByDataType(
                                 schema?.dataType,
-                                details[schema.key] && details[schema.key] !== schema.default
+                                details[schema.key] &&
+                                    details[schema.key] !== schema.default
                                     ? details[schema.key]
-                                    : replacePlaceholders(schema, details)?.default ?? '--'
+                                    : replacePlaceholders(schema, details)
+                                          ?.default ?? '--'
                             )}
                         </Typography>
                     );
@@ -276,11 +417,14 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
 };
 
 const DocumentActions = ({ document, t }: any) => {
-    const docId = document.documentId || ((document as DocumentWithSource).documentID as string);
+    const docId =
+        document.documentId ||
+        ((document as DocumentWithSource).documentID as string);
 
     const [loading, download] = useDocumentDownload(
         docId,
-        (document as DocumentWithSource).documentSource || (document as MetadataSearchResponse).documentClassification,
+        (document as DocumentWithSource).documentSource ||
+            (document as MetadataSearchResponse).documentClassification,
         document.carrier,
         document.displayName || docId,
         document.fileType
@@ -299,7 +443,9 @@ const DocumentActions = ({ document, t }: any) => {
                     activeDocType={DocumentTypeView.Case}
                     carrier={document?.carrier || ''}
                     displayName={document?.displayName || ''}
-                    documentId={document?.documentId ?? (document?.documentID as string)}
+                    documentId={
+                        document?.documentId ?? (document?.documentID as string)
+                    }
                 >
                     {t('general.view')}
                 </DocumentPreviewer>
@@ -308,7 +454,9 @@ const DocumentActions = ({ document, t }: any) => {
                 <NavElement
                     onClick={handleClick}
                     size={NavElementSize.Small}
-                    title={`${t('general.download')} ${document?.displayName || ''}`}
+                    title={`${t('general.download')} ${
+                        document?.displayName || ''
+                    }`}
                     type={NavElementType.Button}
                 >
                     {loading ? (

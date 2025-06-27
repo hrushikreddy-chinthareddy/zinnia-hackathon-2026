@@ -6,15 +6,25 @@ import { useEffect, useState } from 'react';
 
 import PageLoader from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
-import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { downloadTaxFormById } from '@deps/queries/api/tax-forms';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
-import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface FormViewerProps extends SegmentTrackedPageProps {
@@ -27,7 +37,15 @@ interface FormViewerProps extends SegmentTrackedPageProps {
 }
 
 // NOTE!  This FormViewer is now shared between Policy Management and Contact Center.  If substantial changes are made to this page, they should be made to both places
-const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear, planCode }: FormViewerProps) => {
+const FormViewer = ({
+    formId,
+    user,
+    contractNumber,
+    carrierCode,
+    fChar,
+    taxYear,
+    planCode,
+}: FormViewerProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
     const [pdf, setPdf] = useState<string | null>(null);
     const [pdfError, setPdfError] = useState<boolean>(false);
@@ -38,7 +56,17 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear,
     useEffect(() => {
         const getForms = async () => {
             // short circuit if there are no required params
-            if (![carrierCode, contractNumber, fChar, taxYear, formId, featureFlagVariables].every(Boolean)) return;
+            if (
+                ![
+                    carrierCode,
+                    contractNumber,
+                    fChar,
+                    taxYear,
+                    formId,
+                    featureFlagVariables,
+                ].every(Boolean)
+            )
+                return;
 
             try {
                 const useV3 = isFeatureFlagVariableActive(
@@ -50,7 +78,13 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear,
 
                 const response = await downloadTaxFormById(
                     formId,
-                    { contractNumber, clientCode: carrierCode, fChar, taxYear, planCode },
+                    {
+                        contractNumber,
+                        clientCode: carrierCode,
+                        fChar,
+                        taxYear,
+                        planCode,
+                    },
                     useV3
                 );
 
@@ -65,7 +99,15 @@ const FormViewer = ({ formId, user, contractNumber, carrierCode, fChar, taxYear,
             }
         };
         getForms();
-    }, [carrierCode, contractNumber, fChar, formId, taxYear, featureFlagVariables, planCode]);
+    }, [
+        carrierCode,
+        contractNumber,
+        fChar,
+        formId,
+        taxYear,
+        featureFlagVariables,
+        planCode,
+    ]);
 
     if (!pdf) return <PageLoader />;
     if (pdfError) return <p>{t('pdfError' as string)}</p>;
@@ -115,7 +157,13 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             try {
-                const { contractNumber, carrierCode, fChar, taxYear, planCode } = getCookies({ req, res });
+                const {
+                    contractNumber,
+                    carrierCode,
+                    fChar,
+                    taxYear,
+                    planCode,
+                } = getCookies({ req, res });
 
                 deleteCookie('contractNumber');
                 deleteCookie('carrierCode');

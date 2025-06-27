@@ -3,7 +3,12 @@ import { AxiosResponse, HttpStatusCode } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -31,17 +36,23 @@ export default withAuthAndLogging(
                 },
                 loggingContext
             );
-            logTrace('unAssignedTask::success::Successfully retrieved unassigned tasks', {
-                ...loggingContext,
-                duration: performance.now() - now,
-            });
+            logTrace(
+                'unAssignedTask::success::Successfully retrieved unassigned tasks',
+                {
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                }
+            );
             return res.status(HttpStatusCode.Ok).json(data);
         } catch (error) {
-            logWarn('assignedTask::error::something went wrong while retrieving assigned tasks', {
-                ...parseErrorInformation(error),
-                ...loggingContext,
-                duration: performance.now() - now,
-            });
+            logWarn(
+                'assignedTask::error::something went wrong while retrieving assigned tasks',
+                {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                }
+            );
             res.status(HttpStatusCode.InternalServerError).json(null);
         }
     },

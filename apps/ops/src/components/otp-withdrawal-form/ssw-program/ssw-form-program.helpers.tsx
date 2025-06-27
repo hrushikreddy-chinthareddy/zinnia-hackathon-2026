@@ -1,10 +1,17 @@
 import { TFunction } from 'next-i18next';
 
-import { AmountType, PartyRoles, ProgramType } from '@deps/models/case/withdrawal/case';
+import {
+    AmountType,
+    PartyRoles,
+    ProgramType,
+} from '@deps/models/case/withdrawal/case';
 
 import { EditableFormProgramFields } from '../form-program/form-program.helpers';
 
-export type SSWFormProgramFields = Omit<EditableFormProgramFields, 'withdrawType'>;
+export type SSWFormProgramFields = Omit<
+    EditableFormProgramFields,
+    'withdrawType'
+>;
 export const getDefaultSSWFormProgramValues = (): SSWFormProgramFields => {
     return {
         programAmount: { text: null, amountType: AmountType.Dollar },

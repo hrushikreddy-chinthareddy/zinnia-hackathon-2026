@@ -14,7 +14,7 @@ jest.mock('next/router', () => ({
 
 describe('#TasksListing', () => {
     const mockProps = {
-        t: jest.fn(id => id),
+        t: jest.fn((id) => id),
         isHeaderHidden: true,
         isTaskCreationSupported: false,
         tasks: [],
@@ -23,15 +23,19 @@ describe('#TasksListing', () => {
             createNewTask: 'Create New Task',
             noTaskFound: 'No tasks found',
             actionCellParams: {
-                isReadOnly: (status: string) => CaseStatus.Submit || status === TaskStatus.Completed,
-                isEditable: (status: string) =>  (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress),
+                isReadOnly: (status: string) =>
+                    CaseStatus.Submit || status === TaskStatus.Completed,
+                isEditable: (status: string) =>
+                    status === CaseStatus.Pending ||
+                    status === TaskStatus.New ||
+                    status === TaskStatus.InProgress,
                 actionLabels: {
                     edit: 'Edit',
                     readOnlyView: 'Read-only view',
                     duplicateTaskContent: 'Edit',
                 },
                 actionMenu: 'Actions',
-            }
+            },
         },
         caseId: '1',
         caseType: 'Type',
@@ -46,15 +50,17 @@ describe('#TasksListing', () => {
     it('should display tasks when available', () => {
         const mockTask = [
             {
-                "id": "TA000000012645",
-                "status": "COMPLETED",
-                "taskName": "Withdrawal form input",
-                "userId": "B, Lee",
-                "createdDate": "2024-09-24T07:29:33Z",
-                "updatedDate": "2024-09-27T07:55:34Z"
-            }
-        ]
-        const { queryByText } = render(<TasksListing {...mockProps} tasks={mockTask} />);
+                id: 'TA000000012645',
+                status: 'COMPLETED',
+                taskName: 'Withdrawal form input',
+                userId: 'B, Lee',
+                createdDate: '2024-09-24T07:29:33Z',
+                updatedDate: '2024-09-27T07:55:34Z',
+            },
+        ];
+        const { queryByText } = render(
+            <TasksListing {...mockProps} tasks={mockTask} />
+        );
         expect(queryByText('TA000000012645')).toBeInTheDocument();
     });
 });

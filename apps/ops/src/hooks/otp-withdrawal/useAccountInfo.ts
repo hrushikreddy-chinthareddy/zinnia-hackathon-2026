@@ -11,7 +11,10 @@ type UserAccountInfo = {
     planCode: string | '';
 };
 
-export const useAccountInfo = (contract: string, clientId: string): UserAccountInfo => {
+export const useAccountInfo = (
+    contract: string,
+    clientId: string
+): UserAccountInfo => {
     const [qualType, setQualType] = useState<QualTypes | ''>('');
     const [issueState, setIssueState] = useState<string | ''>('');
     const [issueDate, setIssueDate] = useState<string | ''>('');
@@ -21,14 +24,22 @@ export const useAccountInfo = (contract: string, clientId: string): UserAccountI
     useEffect(() => {
         const getFundsList = async () => {
             try {
-                const acctInfoResponse = await getPolicyAccountInfo(contract, clientId);
-                setQualType((acctInfoResponse?.QualTypeDesc as QualTypes) || '');
+                const acctInfoResponse = await getPolicyAccountInfo(
+                    contract,
+                    clientId
+                );
+                setQualType(
+                    (acctInfoResponse?.QualTypeDesc as QualTypes) || ''
+                );
                 setIssueState(acctInfoResponse?.IssueState || '');
                 setIssueDate(acctInfoResponse?.IssueDate || '');
                 setContractStatus(acctInfoResponse?.ContractStatus || '');
                 setPlanCode(acctInfoResponse?.PlanCode || '');
             } catch (e) {
-                console.error('QualificationType::Error retrieving account info', e);
+                console.error(
+                    'QualificationType::Error retrieving account info',
+                    e
+                );
             }
         };
 

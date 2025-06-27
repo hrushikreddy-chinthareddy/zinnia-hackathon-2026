@@ -10,7 +10,10 @@ interface AccountValueProps {
 }
 
 const AccountValue = ({ accountValue }: AccountValueProps) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
     return (
         <div>
@@ -20,7 +23,10 @@ const AccountValue = ({ accountValue }: AccountValueProps) => {
                 tooltipTitle={t('colDefs:policySummary.accountValue')}
                 tooltipBody={t('colDefs:policySummary.accountValueTooltip')}
             />
-            <Content details={numberFormatify(accountValue)} variant={ContentVariant.BodySm} />
+            <Content
+                details={numberFormatify(accountValue)}
+                variant={ContentVariant.BodySm}
+            />
         </div>
     );
 };

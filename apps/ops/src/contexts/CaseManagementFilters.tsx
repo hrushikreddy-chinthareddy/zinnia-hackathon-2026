@@ -65,7 +65,6 @@ export interface CaseTableData {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
-export const CaseManagementFiltersContext = createContext<[CaseSearchFilters, (filters: CaseSearchFilters) => void]>([
-    initialFilters,
-    noop,
-]);
+export const CaseManagementFiltersContext = createContext<
+    [CaseSearchFilters, (filters: CaseSearchFilters) => void]
+>([initialFilters, noop]);

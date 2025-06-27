@@ -2,13 +2,19 @@ import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 
-import { getConfigFlic, getConfigMass, getConfigSbgc } from './owner-info.helpers';
+import {
+    getConfigFlic,
+    getConfigMass,
+    getConfigSbgc,
+} from './owner-info.helpers';
 import OwnerInformation from './owner-information';
 import { useBeneChange } from '../../../bene-change-provider';
 
@@ -17,7 +23,9 @@ interface OwnersInfoStepProps {
 }
 
 const OwnersInfoStep = ({ policy }: OwnersInfoStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.ownerInfo' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.ownerInfo',
+    });
     let formConfigs;
     const { goToNext } = useWorkflow();
     const { formErrors, setFormErrors } = useBeneChange();
@@ -50,7 +58,11 @@ const OwnersInfoStep = ({ policy }: OwnersInfoStepProps) => {
                 />
             }
         >
-            <OwnerInformation isFormStateReadOnly={false} configs={formPartyConfigs as any} policy={policy} />
+            <OwnerInformation
+                isFormStateReadOnly={false}
+                configs={formPartyConfigs as any}
+                policy={policy}
+            />
         </WorkflowCard>
     );
 };

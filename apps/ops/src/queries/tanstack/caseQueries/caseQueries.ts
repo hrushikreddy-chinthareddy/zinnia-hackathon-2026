@@ -6,15 +6,23 @@ import { getCaseCallLogs } from '@deps/queries/api/contracts';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
-import { CaseSearchErrorResponse, CaseSearchResponse } from '@deps/types/search';
+import {
+    CaseSearchErrorResponse,
+    CaseSearchResponse,
+} from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
-export const getCaseNotesQuery = async (caseId: string | undefined, includeInternal = false) => {
+export const getCaseNotesQuery = async (
+    caseId: string | undefined,
+    includeInternal = false
+) => {
     if (!caseId) {
         throw 'No caseId provided';
     }
 
-    const response = await client.get(`${baseAppUrl}/api/case/v1/cases/${caseId}/note?includeInternal=${includeInternal}`);
+    const response = await client.get(
+        `${baseAppUrl}/api/case/v1/cases/${caseId}/note?includeInternal=${includeInternal}`
+    );
     if (!response || !response.data) {
         throw 'No data in response';
     }
@@ -24,7 +32,10 @@ export const getCaseNotesQuery = async (caseId: string | undefined, includeInter
     };
 };
 
-export const getCasesQuery = async (policyNumber?: string, featureFlags?: FeatureFlags) => {
+export const getCasesQuery = async (
+    policyNumber?: string,
+    featureFlags?: FeatureFlags
+) => {
     if (!policyNumber) {
         throw 'No policy number provided';
     }
@@ -50,7 +61,11 @@ export const getCallLogsQuery = async (policyNumber?: string, limit = 10) => {
         throw 'No policy number provided';
     }
 
-    const results = await getCaseCallLogs({ contract: policyNumber, offset: 0, limit });
+    const results = await getCaseCallLogs({
+        contract: policyNumber,
+        offset: 0,
+        limit,
+    });
 
     return {
         data: results?.data?.items || [],
@@ -72,12 +87,18 @@ export const getCaseDetailsQuery = async (caseId: string) => {
     return response;
 };
 
-export const getCaseSearchQuery = async (caseSearchQuery?: CaseSearchQuery, featureFlags?: FeatureFlags) => {
+export const getCaseSearchQuery = async (
+    caseSearchQuery?: CaseSearchQuery,
+    featureFlags?: FeatureFlags
+) => {
     if (!caseSearchQuery) {
         throw 'No caseSearchQuery provided';
     }
 
-    const response = await getCases(caseSearchQuery, featureFlags as FeatureFlags);
+    const response = await getCases(
+        caseSearchQuery,
+        featureFlags as FeatureFlags
+    );
 
     if (!response) {
         throw 'No data in response';
@@ -94,7 +115,10 @@ export const postCaseStatsQuery = async (caseStatsQuery?: CaseStatsQuery) => {
     if (!caseStatsQuery) {
         throw 'No caseStatsQuery provided';
     }
-    const result = await client.post<CaseStatsQuery, AxiosResponse>(`${baseAppUrl}/api/case/v1/cases/stats`, caseStatsQuery);
+    const result = await client.post<CaseStatsQuery, AxiosResponse>(
+        `${baseAppUrl}/api/case/v1/cases/stats`,
+        caseStatsQuery
+    );
     if (!result?.data?.stats) {
         throw 'No data in response';
     } else {

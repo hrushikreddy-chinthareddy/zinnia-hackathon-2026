@@ -2,7 +2,9 @@ import { PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 
 export enum ContactTypes {
@@ -10,8 +12,14 @@ export enum ContactTypes {
     Phone = 'phone',
 }
 
-const PartyTypes = ({ partyIdentification, onPartyChange, isReadOnly }: any) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.identification' });
+const PartyTypes = ({
+    partyIdentification,
+    onPartyChange,
+    isReadOnly,
+}: any) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails.identification',
+    });
 
     const partyTypes = [
         {
@@ -34,12 +42,16 @@ const PartyTypes = ({ partyIdentification, onPartyChange, isReadOnly }: any) => 
             <div className="my-2 flex">
                 <Radio
                     items={partyTypes}
-                    onChange={event => {
+                    onChange={(event) => {
                         onPartyChange(event.target.value as any);
                     }}
                     value={partyIdentification}
                     disabled={isReadOnly}
-                    variant={isReadOnly ? RadioVariant.Inactive : RadioVariant.Default}
+                    variant={
+                        isReadOnly
+                            ? RadioVariant.Inactive
+                            : RadioVariant.Default
+                    }
                 />
             </div>
         </div>

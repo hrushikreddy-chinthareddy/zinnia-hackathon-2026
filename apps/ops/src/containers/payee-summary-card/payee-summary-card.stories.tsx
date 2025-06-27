@@ -1,5 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { DisbursementPaymentForm, DisbursementType } from '@zinnia/api-types/types/sor';
+import {
+    DisbursementPaymentForm,
+    DisbursementType,
+} from '@zinnia/api-types/types/sor';
 
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 
@@ -42,8 +45,19 @@ export default {
         },
     },
     argTypes: {
-        paymentType: { control: 'inline-radio', options: [DisbursementPaymentForm.CHECK, DisbursementPaymentForm.ACH] },
-        disbursementType: { control: 'inline-radio', options: [DisbursementType.GROSS, DisbursementType.NET].map(toSentenceCase) },
+        paymentType: {
+            control: 'inline-radio',
+            options: [
+                DisbursementPaymentForm.CHECK,
+                DisbursementPaymentForm.ACH,
+            ],
+        },
+        disbursementType: {
+            control: 'inline-radio',
+            options: [DisbursementType.GROSS, DisbursementType.NET].map(
+                toSentenceCase
+            ),
+        },
     },
 } as Meta<typeof PayeeSummaryCard>;
 

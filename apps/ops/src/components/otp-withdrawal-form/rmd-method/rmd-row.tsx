@@ -3,11 +3,23 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import xss from 'xss';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect, { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import FieldDateSelect, {
+    DATE_PICKER_FORMAT,
+} from '@deps/components/fields/field-date-select/field-date-select';
 import SelectSimple from '@deps/components/select/select';
-import { AmountType, Frequency, RMDProgram } from '@deps/models/case/withdrawal/case';
+import {
+    AmountType,
+    Frequency,
+    RMDProgram,
+} from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 interface RMDOptionsProps {
@@ -16,16 +28,26 @@ interface RMDOptionsProps {
     isFormStateReadOnly: boolean;
 }
 
-export default function RMDOptions({ rmdData, onDataChange, isFormStateReadOnly }: RMDOptionsProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.rmdMethod' });
+export default function RMDOptions({
+    rmdData,
+    onDataChange,
+    isFormStateReadOnly,
+}: RMDOptionsProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.rmdMethod',
+    });
     const today = dayjs().format(DATE_PICKER_FORMAT);
 
     const formStartDate = rmdData?.startDate?.text
-        ? dayjs(rmdData?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
+        ? dayjs(rmdData?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(
+              DATE_PICKER_FORMAT
+          )
         : '';
 
     const [startDate, setStartDate] = useState(formStartDate || today);
-    const [frequency, setFrequency] = useState(rmdData?.frequency?.text || Frequency.Annually);
+    const [frequency, setFrequency] = useState(
+        rmdData?.frequency?.text || Frequency.Annually
+    );
     const [duration, setDuration] = useState(rmdData?.duration?.text || '0'); // CMW-13796 default set to 0 instead of 1
     const [amount, setAmount] = useState('');
     const [showAmount, setShowAmount] = useState<boolean>(false);
@@ -38,7 +60,13 @@ export default function RMDOptions({ rmdData, onDataChange, isFormStateReadOnly 
 
     useEffect(() => {
         onDataChange({
-            startDate: startDate ? { text: dayjs(startDate, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT) } : { text: '' },
+            startDate: startDate
+                ? {
+                      text: dayjs(startDate, DATE_PICKER_FORMAT).format(
+                          ZAHARA_API_DATE_FORMAT
+                      ),
+                  }
+                : { text: '' },
             frequency: { text: frequency },
             duration: { text: duration },
             amount: { text: amount || null, amountType: AmountType.Dollar },
@@ -47,7 +75,7 @@ export default function RMDOptions({ rmdData, onDataChange, isFormStateReadOnly 
 
     const frequencyOptions = [
         {
-            label:t('frequencyOptions.none'),
+            label: t('frequencyOptions.none'),
             value: Frequency.None,
         },
         {
@@ -76,16 +104,20 @@ export default function RMDOptions({ rmdData, onDataChange, isFormStateReadOnly 
                         label={t('startDate') as string}
                         id="startDate"
                         isFutureDateDisabled={false}
-                        onChange={e => {
+                        onChange={(e) => {
                             setStartDate(e.target.value);
                         }}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={startDate}
                         disabled={isFormStateReadOnly}
-                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                     />
-                    {!showAmount && !isFormStateReadOnly&& (
+                    {!showAmount && !isFormStateReadOnly && (
                         <AssistiveText
                             text={t('enterAmountManually') as string}
                             iconOverride={` `}
@@ -119,13 +151,17 @@ export default function RMDOptions({ rmdData, onDataChange, isFormStateReadOnly 
 
                 <Field
                     label={t(`duration`) as string}
-                    onChange={e => {
+                    onChange={(e) => {
                         setDuration(xss(e?.target?.value));
                     }}
                     value={duration}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
-                    variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                    variant={
+                        isFormStateReadOnly
+                            ? FieldVariant.Inactive
+                            : FieldVariant.Default
+                    }
                     data-testid={`duration`}
                     formatOptions={{
                         format: '',
@@ -136,14 +172,18 @@ export default function RMDOptions({ rmdData, onDataChange, isFormStateReadOnly 
                 {showAmount && (
                     <Field
                         label={t(`amount`) as string}
-                        onChange={e => {
+                        onChange={(e) => {
                             setAmount(xss(e?.target?.value));
                         }}
                         value={amount}
                         size={FieldSize.Small}
                         leading={<div>$</div>}
                         type={FieldType.BaseActive}
-                        variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                        variant={
+                            isFormStateReadOnly
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                         data-testid={`amount`}
                         formatOptions={{
                             format: '',

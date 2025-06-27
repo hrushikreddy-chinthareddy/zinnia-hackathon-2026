@@ -3,8 +3,13 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useRef } from 'react';
 
-import { CaseDocumentOption, PROCESS_WITHOUT_CASE_DOCUMENT } from '@deps/components/case-document-select/case-document-select';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import {
+    CaseDocumentOption,
+    PROCESS_WITHOUT_CASE_DOCUMENT,
+} from '@deps/components/case-document-select/case-document-select';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 
 export interface CardCaseDocumentProps {
     caseDocumentOption: CaseDocumentOption;
@@ -12,7 +17,11 @@ export interface CardCaseDocumentProps {
     onChange: (value: string) => void;
 }
 
-const CardCaseDocument = ({ caseDocumentOption, isSelected, onChange }: CardCaseDocumentProps) => {
+const CardCaseDocument = ({
+    caseDocumentOption,
+    isSelected,
+    onChange,
+}: CardCaseDocumentProps) => {
     const { t } = useTranslation();
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -24,7 +33,8 @@ const CardCaseDocument = ({ caseDocumentOption, isSelected, onChange }: CardCase
     // this removes focus state on mouse click, but allows it on arrow key navigation
     const handleClick = (e: React.MouseEvent<HTMLLabelElement, MouseEvent>) => {
         const isNotArrowKeyEvent = e.clientX !== 0 && e.clientY !== 0;
-        if (e.type === 'click' && isNotArrowKeyEvent && inputRef.current) inputRef.current.blur();
+        if (e.type === 'click' && isNotArrowKeyEvent && inputRef.current)
+            inputRef.current.blur();
     };
 
     return (
@@ -36,7 +46,7 @@ const CardCaseDocument = ({ caseDocumentOption, isSelected, onChange }: CardCase
                 }
             )}
             data-testid={documentNumber}
-            onClick={e => handleClick(e)}
+            onClick={(e) => handleClick(e)}
         >
             <input
                 id={value}
@@ -44,7 +54,7 @@ const CardCaseDocument = ({ caseDocumentOption, isSelected, onChange }: CardCase
                 className="sr-only"
                 name="case-documents"
                 type="radio"
-                onChange={e => {
+                onChange={(e) => {
                     onChange(e.target.value);
                 }}
                 value={value}
@@ -54,13 +64,18 @@ const CardCaseDocument = ({ caseDocumentOption, isSelected, onChange }: CardCase
             {tag && <Tag text={tag} />}
             <Typography variant={TypographyVariant.BodySmBold}>
                 {isCaseDocument && t('workflows.start.caseId')}
-                <span className={clsx({ 'font-normal': isCaseDocument })}>{caseId}</span>
+                <span className={clsx({ 'font-normal': isCaseDocument })}>
+                    {caseId}
+                </span>
             </Typography>
-            {documentNumber && 
-            <Typography variant={TypographyVariant.BodySmBold}>
-                {isCaseDocument && t('workflows.start.documentNumber')}
-                <span className={clsx({ 'font-normal': isCaseDocument })}>{documentNumber}</span>
-            </Typography>}
+            {documentNumber && (
+                <Typography variant={TypographyVariant.BodySmBold}>
+                    {isCaseDocument && t('workflows.start.documentNumber')}
+                    <span className={clsx({ 'font-normal': isCaseDocument })}>
+                        {documentNumber}
+                    </span>
+                </Typography>
+            )}
         </label>
     );
 };

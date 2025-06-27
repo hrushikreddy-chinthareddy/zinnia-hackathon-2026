@@ -16,13 +16,17 @@ describe('TransactionCta', () => {
     const secondaryCta = { text: 'Secondary Button', href: '/secondary' };
 
     test('renders main CTA button', () => {
-        render(<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} />);
+        render(
+            <TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} />
+        );
 
         expect(screen.getByText('Main Button')).toBeInTheDocument();
     });
 
     test('calls main CTA onClick handler when clicked', () => {
-        render(<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} />);
+        render(
+            <TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} />
+        );
 
         fireEvent.click(screen.getByText('Main Button'));
 
@@ -30,7 +34,9 @@ describe('TransactionCta', () => {
     });
 
     test('renders secondary CTA button if provided', () => {
-        render(<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} />);
+        render(
+            <TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} />
+        );
 
         expect(screen.getByText('Secondary Button')).toBeInTheDocument();
     });
@@ -42,7 +48,9 @@ describe('TransactionCta', () => {
     });
 
     test('shows assistive text after clicking main CTA button', () => {
-        render(<TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} />);
+        render(
+            <TransactionCta mainCta={mainCta} secondaryCta={secondaryCta} />
+        );
 
         fireEvent.click(screen.getByText('Main Button'));
 

@@ -15,6 +15,9 @@ describe('#CellLink', () => {
 
         const linkElement = screen.getByText(mockParams.data.taskId);
         expect(linkElement).toBeInTheDocument();
-        expect(linkElement).toHaveAttribute('href', mockParams.data.taskInfoLink);
+        expect(linkElement).toHaveAttribute(
+            'href',
+            mockParams.data.taskInfoLink
+        );
     });
 });

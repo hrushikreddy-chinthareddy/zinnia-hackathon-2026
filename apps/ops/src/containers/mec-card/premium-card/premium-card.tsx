@@ -5,14 +5,20 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import DotContainer from '@deps/components/dot-container/dot-container';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import ProgressBar from '@deps/components/progress-bar/progress-bar';
-import InactivePremiumCard, { InactivePremiumCardProps } from '@deps/containers/inactive-premium-card/inactive-premium-card';
+import InactivePremiumCard, {
+    InactivePremiumCardProps,
+} from '@deps/containers/inactive-premium-card/inactive-premium-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { convertKebabedDateString, parseAndFormatDate } from '@deps/helpers/string.helpers';
+import {
+    convertKebabedDateString,
+    parseAndFormatDate,
+} from '@deps/helpers/string.helpers';
 import { PremiumCardTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as RewardsIcon } from '@deps/styles/elements/icons/navigation/rewards-portal.svg';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
-export interface InactivePremiumCardTextsProps extends InactivePremiumCardProps {
+export interface InactivePremiumCardTextsProps
+    extends InactivePremiumCardProps {
     startText?: string;
     endText?: string;
 }
@@ -42,9 +48,20 @@ const PremiumCard = ({
 }: PremiumCardProps) => {
     const formattedRemainingAmt = numberFormatify(total - compareValue);
 
-    const dotPopover = <Label variant={LabelVariant.LabelSm} label={cardLabel} tooltipTitle={cardLabelTooltip} />;
+    const dotPopover = (
+        <Label
+            variant={LabelVariant.LabelSm}
+            label={cardLabel}
+            tooltipTitle={cardLabelTooltip}
+        />
+    );
 
-    const dotRight = <Label variant={LabelVariant.LabelMdAlt} label={formattedRemainingAmt} />;
+    const dotRight = (
+        <Label
+            variant={LabelVariant.LabelMdAlt}
+            label={formattedRemainingAmt}
+        />
+    );
 
     const ref = useRef<HTMLDivElement>(null);
 
@@ -56,16 +73,32 @@ const PremiumCard = ({
         if (new Date() > new Date(endDate)) {
             const textValue = (
                 <>
-                    <Content variant={ContentVariant.BodySm} details={inactiveCardInfo.startText || ''} contentClassName="inline" />
                     <Content
-                        variant={ContentVariant.BodySmBold}
-                        details={parseAndFormatDate(NUMERIC_DATE_FORMAT, 'MMM. DD, YYYY', endDate) as string}
+                        variant={ContentVariant.BodySm}
+                        details={inactiveCardInfo.startText || ''}
                         contentClassName="inline"
                     />
-                    <Content variant={ContentVariant.BodySm} details={inactiveCardInfo.endText || ''} contentClassName="inline" />
+                    <Content
+                        variant={ContentVariant.BodySmBold}
+                        details={
+                            parseAndFormatDate(
+                                NUMERIC_DATE_FORMAT,
+                                'MMM. DD, YYYY',
+                                endDate
+                            ) as string
+                        }
+                        contentClassName="inline"
+                    />
+                    <Content
+                        variant={ContentVariant.BodySm}
+                        details={inactiveCardInfo.endText || ''}
+                        contentClassName="inline"
+                    />
                 </>
             );
-            return <InactivePremiumCard {...inactiveCardInfo} text={textValue} />;
+            return (
+                <InactivePremiumCard {...inactiveCardInfo} text={textValue} />
+            );
         }
     }
 
@@ -76,9 +109,19 @@ const PremiumCard = ({
             <div className="p-4">
                 <div className="mb-6 flex">
                     <RewardsIcon width={24} height={24} />
-                    <Label variant={LabelVariant.LabelLg} sentenceCase={false} className="ml-2" label={title} />
+                    <Label
+                        variant={LabelVariant.LabelLg}
+                        sentenceCase={false}
+                        className="ml-2"
+                        label={title}
+                    />
                 </div>
-                <ProgressBar compareValue={compareValue} total={total} label={progressBarLabel} labelPopover={progressBarLabelPopover} />
+                <ProgressBar
+                    compareValue={compareValue}
+                    total={total}
+                    label={progressBarLabel}
+                    labelPopover={progressBarLabelPopover}
+                />
             </div>
             <div
                 className="flex flex-col items-center justify-between bg-gray-50 p-4 sm:flex-row"

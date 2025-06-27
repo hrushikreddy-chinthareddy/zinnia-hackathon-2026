@@ -5,7 +5,10 @@ import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useRef } from 'react';
 
-import { DashboardTabNav, DashboardTabs } from '@deps/components/dashboard/dashboard-nav-links';
+import {
+    DashboardTabNav,
+    DashboardTabs,
+} from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
@@ -19,12 +22,22 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useIntersectionObserver } from '@deps/hooks/useIntersectionObserver';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
-import { DashboardResponseData, fetchAgentsSSR } from '@deps/queries/api/dashboard';
+import {
+    DashboardResponseData,
+    fetchAgentsSSR,
+} from '@deps/queries/api/dashboard';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { FgaRelation } from '@deps/types/fga';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
-import { logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
+import {
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './Dashboard.module.css';
@@ -37,7 +50,11 @@ interface DashboardPageProps extends SegmentTrackedPageProps {
     brokerDealersSSR: DashboardResponseData[];
 }
 
-const DashboardPage = ({ authorizedCarriers, brokerDealersSSR, user }: DashboardPageProps) => {
+const DashboardPage = ({
+    authorizedCarriers,
+    brokerDealersSSR,
+    user,
+}: DashboardPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
 
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
@@ -128,12 +145,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
 
-            const brokerDealersSSR = await fetchAgentsSSR(accessToken || '', loggingContext);
+            const brokerDealersSSR = await fetchAgentsSSR(
+                accessToken || '',
+                loggingContext
+            );
             const filteredBrokerDealers = brokerDealersSSR.filter(
-                brokerDealer => brokerDealer.name !== 'NOT_APPLICABLE' && brokerDealer.name !== ''
+                (brokerDealer) =>
+                    brokerDealer.name !== 'NOT_APPLICABLE' &&
+                    brokerDealer.name !== ''
             );
 
-            const authorizedCarriers = await listCarriersPage(context, UserPermission.AllowReadCaseManagement, loggingContext);
+            const authorizedCarriers = await listCarriersPage(
+                context,
+                UserPermission.AllowReadCaseManagement,
+                loggingContext
+            );
 
             return {
                 props: {
@@ -146,5 +172,9 @@ export const getServerSideProps = withPageAuthAndLogging(
             };
         },
     },
-    { file: 'dashboard/index', function: 'getServerSideProps', page: 'dashboard' }
+    {
+        file: 'dashboard/index',
+        function: 'getServerSideProps',
+        page: 'dashboard',
+    }
 );

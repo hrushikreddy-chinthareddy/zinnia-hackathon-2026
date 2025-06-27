@@ -3,7 +3,9 @@ import { TFunction, useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import SelectSimple from '@deps/components/select/select';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SswUpdateOption } from '@deps/models/case/enums';
@@ -48,27 +50,37 @@ const SswEditSelection = ({ carrier }: { carrier?: string }) => {
         switch (sswRequest) {
             case SswUpdateOption.BANK_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/bank-update?taskId=${initialForm?.taskId}`);
+                router.push(
+                    `/ssw-edit/bank-update?taskId=${initialForm?.taskId}`
+                );
                 break;
             }
             case SswUpdateOption.SSW_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=SSW`);
+                router.push(
+                    `/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=SSW`
+                );
                 break;
             }
             case SswUpdateOption.RMD_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=RMD`);
+                router.push(
+                    `/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=RMD`
+                );
                 break;
             }
             case SswUpdateOption.EFT_DRAW_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=EFT`);
+                router.push(
+                    `/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=EFT`
+                );
                 break;
             }
             case SswUpdateOption.WITHHOLDING_UPDATE: {
                 setLoading(true);
-                router.push(`/ssw-edit/withholding-update?taskId=${initialForm?.taskId}`);
+                router.push(
+                    `/ssw-edit/withholding-update?taskId=${initialForm?.taskId}`
+                );
                 break;
             }
         }
@@ -86,7 +98,12 @@ const SswEditSelection = ({ carrier }: { carrier?: string }) => {
             <SelectSimple
                 className="max-w-lg my-3"
                 label={t('sswRequest') as string}
-                options={sswUpdateOptions(t, carrier) as { label: string; value: SswUpdateOption }[]}
+                options={
+                    sswUpdateOptions(t, carrier) as {
+                        label: string;
+                        value: SswUpdateOption;
+                    }[]
+                }
                 onChange={(val: string) => {
                     setSswRequest(val as SswUpdateOption);
                     setLoading(true);

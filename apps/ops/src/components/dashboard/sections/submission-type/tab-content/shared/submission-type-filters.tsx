@@ -26,9 +26,16 @@ export const SubmissionTypeFilters = () => {
     } = useContext(SubmissionTypeContext);
 
     const submissionVsOptions = [
-        { label: 'Carrier', value: GroupByOptions.Carrier, disabled: filter.carrier?.length === 1 },
+        {
+            label: 'Carrier',
+            value: GroupByOptions.Carrier,
+            disabled: filter.carrier?.length === 1,
+        },
         { label: 'Product', value: GroupByOptions.ProductName },
-        { label: 'Distribution partner', value: GroupByOptions.BrokerDealerName },
+        {
+            label: 'Distribution partner',
+            value: GroupByOptions.BrokerDealerName,
+        },
     ];
 
     return (
@@ -40,12 +47,18 @@ export const SubmissionTypeFilters = () => {
                     options={submissionVsOptions}
                     value={submissionVs}
                     size={FieldSize.XS}
-                    onChange={val => setSubmissionVs(val as CaseCountGroupByEnum)}
+                    onChange={(val) =>
+                        setSubmissionVs(val as CaseCountGroupByEnum)
+                    }
                 />
 
                 <CaseTypeFilter
                     onValueChange={setSelectedProcess}
-                    caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
+                    caseStatus={[
+                        Statuses.InProgress,
+                        Statuses.Exception,
+                        Statuses.NotStarted,
+                    ]}
                     defaultProcess={Processes.NewBusiness}
                     value={selectedProcess}
                 />
@@ -53,7 +66,11 @@ export const SubmissionTypeFilters = () => {
             <div className="w-1/2">
                 <TimeFilter
                     defaultValue={timeframeRadio}
-                    onRadioChange={val => handleTimeframeRadioChange(val as TimeframeFilterOptions)}
+                    onRadioChange={(val) =>
+                        handleTimeframeRadioChange(
+                            val as TimeframeFilterOptions
+                        )
+                    }
                     controlledTimeValue={timeframeRadio}
                     timerange={timerange}
                     handleTimerangeChange={handleRangeChange}

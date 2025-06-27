@@ -1,4 +1,13 @@
-import { Address, AddressBase, PartyRole, Phone, PhoneType, Policy, Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    Address,
+    AddressBase,
+    PartyRole,
+    Phone,
+    PhoneType,
+    Policy,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { RadioItem } from '@deps/components/radio/radio';
@@ -12,34 +21,66 @@ import {
     custodialQualTypes,
     PhoneFieldsToMatchForRoleGroup,
 } from './roles-contract-constants';
-import { mapAddressToAddressCardData, mapPhoneToAddressCardData } from './roles-contract-mappers';
-import { AssociateAddressTableRow, PartyAddressCard } from './roles-contract-types';
-import { ApplyToRolesState, ContractUpdateOptions } from '../../../types/address-change-types';
+import {
+    mapAddressToAddressCardData,
+    mapPhoneToAddressCardData,
+} from './roles-contract-mappers';
+import {
+    AssociateAddressTableRow,
+    PartyAddressCard,
+} from './roles-contract-types';
+import {
+    ApplyToRolesState,
+    ContractUpdateOptions,
+} from '../../../types/address-change-types';
 import { getRoleToLabelKeyMap } from '../../../utils/address-change-helpers';
 
-const isAddressAndPhoneMatch = (address: Address | undefined, homePhone: Phone | undefined, policyParty: Party) => {
-    const partyAddress = mapAddressToAddressCardData(policyParty?.addresses?.[0]);
-    const partyHomePhone = mapPhoneToAddressCardData(policyParty.phones?.find(phone => phone.phoneType === PhoneType.HOME));
+const isAddressAndPhoneMatch = (
+    address: Address | undefined,
+    homePhone: Phone | undefined,
+    policyParty: Party
+) => {
+    const partyAddress = mapAddressToAddressCardData(
+        policyParty?.addresses?.[0]
+    );
+    const partyHomePhone = mapPhoneToAddressCardData(
+        policyParty.phones?.find((phone) => phone.phoneType === PhoneType.HOME)
+    );
     const noPhoneExists = !partyHomePhone && !homePhone;
     const noAddressExists = !partyAddress && !address;
     return (
-        (noAddressExists || hasSameProperties(address, mapAddressToAddressCardData(partyAddress), AddressFieldsToMatchForRoleGroup)) &&
-        (noPhoneExists || hasSameProperties(homePhone, mapPhoneToAddressCardData(partyHomePhone), PhoneFieldsToMatchForRoleGroup))
+        (noAddressExists ||
+            hasSameProperties(
+                address,
+                mapAddressToAddressCardData(partyAddress),
+                AddressFieldsToMatchForRoleGroup
+            )) &&
+        (noPhoneExists ||
+            hasSameProperties(
+                homePhone,
+                mapPhoneToAddressCardData(partyHomePhone),
+                PhoneFieldsToMatchForRoleGroup
+            ))
     );
 };
 
 const isExistingEmail = (email: string, policyParty: Party) => {
     return (
         typeof policyParty?.emails?.[0]?.emailAddress === 'string' &&
-        email.toLowerCase().trim() === policyParty.emails[0].emailAddress.toLowerCase().trim()
+        email.toLowerCase().trim() ===
+            policyParty.emails[0].emailAddress.toLowerCase().trim()
     );
 };
 
-export const isRowAlreadySelected = (row: AssociateAddressTableRow, applyToRolesData: ApplyToRolesState) => {
+export const isRowAlreadySelected = (
+    row: AssociateAddressTableRow,
+    applyToRolesData: ApplyToRolesState
+) => {
     return (
         row.partyRole === applyToRolesData.partyRole &&
         row.policyNumber === applyToRolesData.policyNumber &&
-        row.partyRoleId.toString() === applyToRolesData.partyRoleId.toString() &&
+        row.partyRoleId.toString() ===
+            applyToRolesData.partyRoleId.toString() &&
         row.partyId === applyToRolesData.partyId
     );
 };
@@ -55,18 +96,24 @@ export const groupPartiesByAddress = (
     const extractedParties = parties ?? [];
     const extractedPartyRoles = roles ?? [];
 
-    extractedPartyRoles?.map(partyItem => {
+    extractedPartyRoles?.map((partyItem) => {
         const partyRole = partyItem.partyRole || '';
         const chipText = t(getRoleToLabelKeyMap(partyRole ?? ''));
         const convertedPartyRole: TagKey = {
             text: chipText,
         };
 
-        const policyParty = extractedParties.find(pp => pp.partyId === partyItem.partyId);
+        const policyParty = extractedParties.find(
+            (pp) => pp.partyId === partyItem.partyId
+        );
 
         if (!policyParty) return;
 
-        if (partyRole == PartyRole.OWNER && qualificationType && custodialQualTypes.includes(qualificationType)) {
+        if (
+            partyRole == PartyRole.OWNER &&
+            qualificationType &&
+            custodialQualTypes.includes(qualificationType)
+        ) {
             return;
         }
 
@@ -87,13 +134,19 @@ export const groupPartiesByAddress = (
             }
         } else {
             if (getDefaultAddress) {
-                // todo: VS: remove eslint check after spec update
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                const defaultAddress = policyParty.addresses?.find(address => address?.preferredAddress === true);
+                const defaultAddress = policyParty.addresses?.find(
+                    // todo: VS: remove eslint check after spec update
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    (address) => address?.preferredAddress === true
+                );
                 const partyCard = {
                     address: mapAddressToAddressCardData(defaultAddress),
-                    homePhone: mapPhoneToAddressCardData(policyParty.phones?.find(phone => phone.phoneType === PhoneType.HOME)),
+                    homePhone: mapPhoneToAddressCardData(
+                        policyParty.phones?.find(
+                            (phone) => phone.phoneType === PhoneType.HOME
+                        )
+                    ),
                     partyRoles: [partyRole],
                     tags: [convertedPartyRole],
                     roleIdentifiers: [
@@ -106,10 +159,17 @@ export const groupPartiesByAddress = (
                 };
                 partyCards.push(partyCard);
             } else {
-                policyParty?.addresses?.map(address => {
+                policyParty?.addresses?.map((address) => {
                     const partyCard = {
-                        address: { ...mapAddressToAddressCardData(address), addressType: address.addressType },
-                        homePhone: mapPhoneToAddressCardData(policyParty.phones?.find(phone => phone.phoneType === PhoneType.HOME)),
+                        address: {
+                            ...mapAddressToAddressCardData(address),
+                            addressType: address.addressType,
+                        },
+                        homePhone: mapPhoneToAddressCardData(
+                            policyParty.phones?.find(
+                                (phone) => phone.phoneType === PhoneType.HOME
+                            )
+                        ),
                         partyRoles: [partyRole],
                         tags: [convertedPartyRole],
                         firstName: policyParty.firstName,
@@ -140,7 +200,7 @@ export const partyCardsEmail = (
     const extractedParties = parties ?? [];
     const extractedPartyRoles = roles ?? [];
 
-    extractedPartyRoles?.map(partyItem => {
+    extractedPartyRoles?.map((partyItem) => {
         const partyRole = partyItem.partyRole || '';
         const chipText = t(getRoleToLabelKeyMap(partyRole ?? ''));
 
@@ -148,15 +208,23 @@ export const partyCardsEmail = (
             text: chipText,
         };
 
-        const policyParty = extractedParties.find(pp => pp.partyId === partyItem.partyId);
+        const policyParty = extractedParties.find(
+            (pp) => pp.partyId === partyItem.partyId
+        );
 
         if (!policyParty) return;
 
-        if (partyRole == PartyRole.OWNER && qualificationType && custodialQualTypes.includes(qualificationType)) {
+        if (
+            partyRole == PartyRole.OWNER &&
+            qualificationType &&
+            custodialQualTypes.includes(qualificationType)
+        ) {
             return;
         }
 
-        const existingEmailCard = partyCards.find((item: PartyAddressCard) => isExistingEmail(item?.email ?? '', policyParty));
+        const existingEmailCard = partyCards.find((item: PartyAddressCard) =>
+            isExistingEmail(item?.email ?? '', policyParty)
+        );
 
         if (existingEmailCard) {
             const roleIndex = existingEmailCard.partyRoles.indexOf(partyRole);
@@ -193,27 +261,45 @@ export const partyCardsEmail = (
     return partyCards;
 };
 
-export const getRolesRadioConfig = (roles: PolicyPartyRoles[], t: TFunction): RadioItem[] => {
+export const getRolesRadioConfig = (
+    roles: PolicyPartyRoles[],
+    t: TFunction
+): RadioItem[] => {
     return (
-        roles?.map(item => ({
+        roles?.map((item) => ({
             label: t(getRoleToLabelKeyMap(item?.partyRole ?? '')),
             value: item?.partyRoleId?.toString() ?? '',
         })) ?? []
     );
 };
 
-export const getContractSelectionRadioConfig = (policy: Policy, t: TFunction) => ({
+export const getContractSelectionRadioConfig = (
+    policy: Policy,
+    t: TFunction
+) => ({
     isRequired: false,
     selectOptions: [
-        { label: `${t('rolesAndContracts.thisContractOnly')} ${policy?.policyNumber}`, value: ContractUpdateOptions.currentContract },
-        { label: t('rolesAndContracts.selectContractIndividual'), value: ContractUpdateOptions.otherContract },
+        {
+            label: `${t('rolesAndContracts.thisContractOnly')} ${
+                policy?.policyNumber
+            }`,
+            value: ContractUpdateOptions.currentContract,
+        },
+        {
+            label: t('rolesAndContracts.selectContractIndividual'),
+            value: ContractUpdateOptions.otherContract,
+        },
     ],
 });
 
 export const getAddressLines = (address: AddressBase) => {
-    const addressLines = [address?.addressLine1, address?.addressLine2, address?.addressLine3]
+    const addressLines = [
+        address?.addressLine1,
+        address?.addressLine2,
+        address?.addressLine3,
+    ]
         .filter(Boolean)
-        .map(line => toTitleCase(line))
+        .map((line) => toTitleCase(line))
         .join(', ');
     return addressLines;
 };
@@ -224,9 +310,12 @@ export const getAssociatedTableData = (
     t: TFunction
 ): AssociateAddressTableRow[] => {
     return policyResponse
-        .map(policy => {
-            const extractedPartyRoles = policy?.partyRoles?.filter(role => AllowedRoleTypes.includes(role?.partyRole ?? '')) || [];
-            return extractedPartyRoles.map(role => {
+        .map((policy) => {
+            const extractedPartyRoles =
+                policy?.partyRoles?.filter((role) =>
+                    AllowedRoleTypes.includes(role?.partyRole ?? '')
+                ) || [];
+            return extractedPartyRoles.map((role) => {
                 const id = `${policy?.policyNumber}-${role?.partyRoleId}-${role?.partyId}`;
                 const party = policy?.parties?.[0];
                 const address = party?.addresses?.[0];
@@ -236,19 +325,23 @@ export const getAssociatedTableData = (
                     policyNumber: policy?.policyNumber ?? '',
                     partyRoleId: role?.partyRoleId?.toString() ?? '',
                     partyRole: role?.partyRole ?? '',
-                    partyRoleLabel: t(getRoleToLabelKeyMap(role?.partyRole ?? '')),
+                    partyRoleLabel: t(
+                        getRoleToLabelKeyMap(role?.partyRole ?? '')
+                    ),
                     partyId: role?.partyId ?? '',
                     address: getAddressLines(address ?? {}),
                     city: address?.city ?? '',
                     state: address?.state ?? '',
                     zip: address?.zipCode ?? '',
                 };
-                const existingRecord = applyToRolesState.some(item => isRowAlreadySelected(tableRow, item));
+                const existingRecord = applyToRolesState.some((item) =>
+                    isRowAlreadySelected(tableRow, item)
+                );
                 return {
                     ...tableRow,
                     check: existingRecord ? true : false,
                 };
             });
         })
-        .flatMap(item => item);
+        .flatMap((item) => item);
 };

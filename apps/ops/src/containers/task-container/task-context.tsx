@@ -19,8 +19,12 @@ export type TaskState = {
     setIsReadyForDataEntry: React.Dispatch<React.SetStateAction<boolean>>;
     setExceptions: React.Dispatch<React.SetStateAction<string[]>>;
     setMessages: React.Dispatch<React.SetStateAction<string[]>>;
-    setTransactionType: React.Dispatch<React.SetStateAction<CallCenterElement<string, SimpleOption>>>;
-    setTransactionSubType: React.Dispatch<React.SetStateAction<CallCenterElement<string, SimpleOption>>>;
+    setTransactionType: React.Dispatch<
+        React.SetStateAction<CallCenterElement<string, SimpleOption>>
+    >;
+    setTransactionSubType: React.Dispatch<
+        React.SetStateAction<CallCenterElement<string, SimpleOption>>
+    >;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
 };

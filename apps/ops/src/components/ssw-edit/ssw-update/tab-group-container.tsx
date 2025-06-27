@@ -5,12 +5,20 @@ import { useMemo, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import {
+    WorkflowProvider,
+    useWorkflow,
+} from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { DocumentData } from '@deps/models/case/document';
@@ -27,7 +35,11 @@ type TabGroupContainerProps = {
     document: DocumentData;
     programType: SswUpdateType;
     programs: Program[];
-    onSswUpdate: (item: Program, operationType: SswUpdateType, formSign: FormSignature) => void;
+    onSswUpdate: (
+        item: Program,
+        operationType: SswUpdateType,
+        formSign: FormSignature
+    ) => void;
     setSelectedProgram: React.Dispatch<Program>;
     isFormSubmitted: boolean;
     isLoading: boolean;
@@ -48,15 +60,30 @@ const TabGroupContent = ({
     const { t } = useTranslation();
     const [isSswUpdateView, setSswUpdateView] = useState(false);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
-    const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
-    const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
+    const globalValuesData = useMemo(
+        () => policyDataToGlobalValues(new PolicyDetails(policy), t),
+        [policy, t]
+    );
+    const {
+        marketingName,
+        planCode,
+        policyNumber,
+        productType,
+        status,
+        tooltip,
+        variant,
+    } = globalValuesData;
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
         if (currentStepIndex === steps.length - 1) return;
         setCurrentStepIndex(step.index);
     };
-    const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
-    const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
+    const policyOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.OWNER
+    )?.partyId;
+    const policyOwner = policy?.parties?.find(
+        (party) => party.partyId === policyOwnerId
+    );
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] grow flex-col self-center">
             <div className="flex mt-4">
@@ -72,7 +99,13 @@ const TabGroupContent = ({
                     variant={variant}
                 />
             </div>
-            {isSswUpdateView && <ProgressBarSteps currentStepIndex={Number(currentStepIndex)} onClick={handleClick} steps={steps} />}
+            {isSswUpdateView && (
+                <ProgressBarSteps
+                    currentStepIndex={Number(currentStepIndex)}
+                    onClick={handleClick}
+                    steps={steps}
+                />
+            )}
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
                 {isLoading ? (
                     <div className="flex justify-center items-center py-20 my-auto">
@@ -85,13 +118,17 @@ const TabGroupContent = ({
                                 type={NavElementType.Link}
                                 className="flex items-center my-4 mx-2 relative"
                                 size={NavElementSize.Small}
-                                startIcon={<ChevronLeftIcon width={16} height={16} />}
+                                startIcon={
+                                    <ChevronLeftIcon width={16} height={16} />
+                                }
                                 onClick={() => {
                                     setIsLoading(true);
                                     router.back();
                                 }}
                             >
-                                <div className="font-bold text-md hover:underline">{t('sswUpdate.back')}</div>
+                                <div className="font-bold text-md hover:underline">
+                                    {t('sswUpdate.back')}
+                                </div>
                             </NavElement>
                         )}
                         {isSswUpdateView
@@ -109,7 +146,13 @@ const TabGroupContent = ({
                         {!isLoading && isFormSubmitted && (
                             <div className="flex justify-center items-center py-20 my-auto">
                                 <CardInfo
-                                    icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                                    icon={
+                                        <CircleCheckIcon
+                                            className="text-semantic-success"
+                                            height={50}
+                                            width={50}
+                                        />
+                                    }
                                     cta={{
                                         action: () => {
                                             router.push('/create-case');

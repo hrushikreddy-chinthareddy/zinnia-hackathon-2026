@@ -8,7 +8,7 @@ export default {
     title: 'Components/Table-v2',
     component: Table,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen bg-background p-10">
                 <Story />
             </div>
@@ -23,8 +23,18 @@ export default {
 
 const sampleCols = [
     { field: 'check', headerName: '', type: ColumnType.Boolean, width: '10%' },
-    { field: 'name', headerName: 'Name', sortable: true, type: ColumnType.Text },
-    { field: 'age', headerName: 'Age', editable: true, type: ColumnType.Number },
+    {
+        field: 'name',
+        headerName: 'Name',
+        sortable: true,
+        type: ColumnType.Text,
+    },
+    {
+        field: 'age',
+        headerName: 'Age',
+        editable: true,
+        type: ColumnType.Number,
+    },
     { field: 'percentage', headerName: 'Percentage', type: ColumnType.Number },
     { field: 'marks', headerName: 'Marks', type: ColumnType.Number },
 ];
@@ -60,12 +70,24 @@ const sampleData = [
     { check: true, id: 28, name: 'David Williams', age: 39, percentage: '90' },
     { check: true, id: 29, name: 'Daniel Taylor', age: 38, percentage: '90' },
     { check: true, id: 30, name: 'Olivia Martinez', age: 30, percentage: '90' },
-    { check: true, id: 31, name: 'Matthew Anderson', age: 25, percentage: '90' },
+    {
+        check: true,
+        id: 31,
+        name: 'Matthew Anderson',
+        age: 25,
+        percentage: '90',
+    },
     { check: true, id: 32, name: 'David Williams', age: 42, percentage: '90' },
     { check: true, id: 33, name: 'Olivia Martinez', age: 34, percentage: '90' },
     { check: true, id: 34, name: 'Olivia Martinez', age: 53, percentage: '90' },
     { check: true, id: 35, name: 'Emily Brown', age: 35, percentage: '90' },
-    { check: true, id: 36, name: 'Matthew Anderson', age: 31, percentage: '90' },
+    {
+        check: true,
+        id: 36,
+        name: 'Matthew Anderson',
+        age: 31,
+        percentage: '90',
+    },
     { check: true, id: 37, name: 'Daniel Taylor', age: 51, percentage: '90' },
     { check: true, id: 38, name: 'Michael Johnson', age: 32, percentage: '90' },
     { check: true, id: 39, name: 'Jane Smith', age: 41, percentage: '90' },
@@ -73,7 +95,13 @@ const sampleData = [
     { check: true, id: 41, name: 'Daniel Taylor', age: 36, percentage: '90' },
     { check: true, id: 42, name: 'Jane Smith', age: 45, percentage: '90' },
     { check: true, id: 43, name: 'Michael Johnson', age: 42, percentage: '90' },
-    { check: true, id: 44, name: 'Matthew Anderson', age: 55, percentage: '90' },
+    {
+        check: true,
+        id: 44,
+        name: 'Matthew Anderson',
+        age: 55,
+        percentage: '90',
+    },
     { check: true, id: 45, name: 'Olivia Martinez', age: 52, percentage: '90' },
     { check: true, id: 46, name: 'John Doe', age: 35, percentage: '90' },
     { check: true, id: 47, name: 'Sophia Garcia', age: 47, percentage: '90' },

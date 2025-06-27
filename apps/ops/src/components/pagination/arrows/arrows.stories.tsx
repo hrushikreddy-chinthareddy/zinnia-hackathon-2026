@@ -8,7 +8,7 @@ export default {
     component: ArrowLeft,
     subcomponents: { ArrowRight },
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen w-screen p-10">
                 <Story />
             </div>

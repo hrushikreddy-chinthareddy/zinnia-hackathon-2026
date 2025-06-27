@@ -5,12 +5,21 @@ import { useState } from 'react';
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
-import QuickActionsMenu, { QuickActionsMenuProps } from '@deps/components/quick-actions-menu/quick-actions-menu';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
+import QuickActionsMenu, {
+    QuickActionsMenuProps,
+} from '@deps/components/quick-actions-menu/quick-actions-menu';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { PolicyClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import {
+    PolicyClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 
 export interface QuickLinksProps extends QuickActionsMenuProps {
     links: {
@@ -46,27 +55,46 @@ const trackClick = (
     });
 };
 
-const QuickLinks = ({ links, policy, sessionId, userPartyId, className }: QuickLinksProps) => {
+const QuickLinks = ({
+    links,
+    policy,
+    sessionId,
+    userPartyId,
+    className,
+}: QuickLinksProps) => {
     const [isLife] = useState(policy.isLife);
     const [isAnnuity] = useState(policy.isAnnuity);
     const safeLinks = Array.isArray(links) ? links : [];
     return (
-        <div className={clsx('flex flex-wrap gap-x-8 gap-y-4', className)} data-testid="quick-links">
+        <div
+            className={clsx('flex flex-wrap gap-x-8 gap-y-4', className)}
+            data-testid="quick-links"
+        >
             {safeLinks.map(({ name, href, subLinks, hideLabel }) => {
                 if (subLinks) {
                     return (
                         <MenuContextual
                             key={name + href}
                             trigger={
-                                <Typography className="block" variant={TypographyVariant.NavLinks}>
+                                <Typography
+                                    className="block"
+                                    variant={TypographyVariant.NavLinks}
+                                >
                                     {name}
-                                    <Icon type={IconType.CHEVRON} height={16} width={16} className="ml-1" />
+                                    <Icon
+                                        type={IconType.CHEVRON}
+                                        height={16}
+                                        width={16}
+                                        className="ml-1"
+                                    />
                                 </Typography>
                             }
                         >
-
-                            <MenuContextualLabel label={name} hideLabel={hideLabel}>
-                                {subLinks.map(subLink => {
+                            <MenuContextualLabel
+                                label={name}
+                                hideLabel={hideLabel}
+                            >
+                                {subLinks.map((subLink) => {
                                     return (
                                         <MenuContextualItem
                                             content={subLink.name}
@@ -96,7 +124,14 @@ const QuickLinks = ({ links, policy, sessionId, userPartyId, className }: QuickL
                             href={href}
                             key={name + href}
                             onClick={() =>
-                                trackClick(SegmentTrackedEventName.PolicyClicked, name, href, policy.policyNumber, sessionId, userPartyId)
+                                trackClick(
+                                    SegmentTrackedEventName.PolicyClicked,
+                                    name,
+                                    href,
+                                    policy.policyNumber,
+                                    sessionId,
+                                    userPartyId
+                                )
                             }
                             type={NavElementType.Link}
                         >

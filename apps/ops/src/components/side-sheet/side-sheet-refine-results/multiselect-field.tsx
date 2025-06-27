@@ -11,9 +11,15 @@ interface MultiselectFieldProps {
     value: Set<string>;
     handleChange: (value: string) => void;
 }
-export default function MultiselectField({ isLoading, label, options, value, handleChange }: MultiselectFieldProps) {
+export default function MultiselectField({
+    isLoading,
+    label,
+    options,
+    value,
+    handleChange,
+}: MultiselectFieldProps) {
     const displayValues = {} as { [key: string]: string };
-    Array.from(value).forEach(val => (displayValues[val] = toTitleCase(val)));
+    Array.from(value).forEach((val) => (displayValues[val] = toTitleCase(val)));
 
     return (
         <>

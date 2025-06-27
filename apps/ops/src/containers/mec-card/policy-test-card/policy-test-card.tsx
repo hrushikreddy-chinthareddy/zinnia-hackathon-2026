@@ -5,10 +5,17 @@ import { CSSProperties, useRef } from 'react';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
-import FieldData, { FieldDataProps } from '@deps/components/fields/field-data/field-data';
-import Label, { LabelVariant, TooltipProps } from '@deps/components/label/label';
+import FieldData, {
+    FieldDataProps,
+} from '@deps/components/fields/field-data/field-data';
+import Label, {
+    LabelVariant,
+    TooltipProps,
+} from '@deps/components/label/label';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { filterTruthyProps } from '@deps/helpers/data-transform.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PremiumCardTest } from '@deps/jest/constants/test-id-constants';
@@ -54,17 +61,29 @@ export interface PolicyTestCardProps extends ValueTableProps {
 }
 
 const Title = ({
-    badgeProps: { label = '', tooltipBody = '', variant = BadgeVariant.Success },
+    badgeProps: {
+        label = '',
+        tooltipBody = '',
+        variant = BadgeVariant.Success,
+    },
     showIcon,
     title,
     ...tooltipProps
 }: TitleProps) => (
     <div className="title flex flex-row gap-4">
         {showIcon && <RewardsIcon width={24} height={24} />}
-        <Label variant={LabelVariant.LabelLg} sentenceCase={false} label={title} {...tooltipProps} />
+        <Label
+            variant={LabelVariant.LabelLg}
+            sentenceCase={false}
+            label={title}
+            {...tooltipProps}
+        />
         {!!label.length && (
             <div className="flex">
-                <Tooltip placement={PopoverPlacement.TopRight} body={tooltipBody}>
+                <Tooltip
+                    placement={PopoverPlacement.TopRight}
+                    body={tooltipBody}
+                >
                     <Badge label={label} variant={variant} rounded />
                 </Tooltip>
             </div>
@@ -97,11 +116,19 @@ const ValueTable = ({
                 {Number(total) > Number(compareValue) && (
                     <hr className="h-4 w-4 flex-none self-center rounded border-none bg-[--color-progress-total]" />
                 )}
-                <Label variant={LabelVariant.FieldLabel} sentenceCase={false} {...amountProps} />
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    sentenceCase={false}
+                    {...amountProps}
+                />
             </div>
             <div className="flex grow items-baseline gap-2">
                 <hr className="grow border-0 border-b-2 border-dotted border-gray-300" />
-                <Typography variant={TypographyVariant.Value}>{numberFormatify(Math.abs(Number(total) - Number(compareValue)))}</Typography>
+                <Typography variant={TypographyVariant.Value}>
+                    {numberFormatify(
+                        Math.abs(Number(total) - Number(compareValue))
+                    )}
+                </Typography>
             </div>
         </div>
         <div className="flex grow flex-row flex-wrap items-baseline gap-2 align-baseline">
@@ -111,20 +138,26 @@ const ValueTable = ({
             </div>
             <div className="flex grow items-baseline gap-2">
                 <hr className="grow border-0 border-b-2 border-dotted border-gray-300" />
-                <Typography variant={TypographyVariant.BodySm}>{numberFormatify(compareValue)}</Typography>
+                <Typography variant={TypographyVariant.BodySm}>
+                    {numberFormatify(compareValue)}
+                </Typography>
             </div>
         </div>
         <div className="flex flex-row flex-wrap items-baseline gap-2 align-baseline">
             <Label variant={LabelVariant.FieldLabel} {...totalProps} />
             <div className="flex grow items-baseline gap-2">
                 <hr className="grow border-0 border-b-2 border-dotted border-gray-300" />
-                <Typography variant={TypographyVariant.BodySm}>{numberFormatify(total)}</Typography>
+                <Typography variant={TypographyVariant.BodySm}>
+                    {numberFormatify(total)}
+                </Typography>
             </div>
         </div>
     </div>
 );
 
-const FieldDataValues = ({ fieldDataValues }: Pick<PolicyTestCardProps, 'fieldDataValues'>) => (
+const FieldDataValues = ({
+    fieldDataValues,
+}: Pick<PolicyTestCardProps, 'fieldDataValues'>) => (
     <>
         {fieldDataValues && (
             <div className="my-4 self-stretch lg:my-0">
@@ -134,7 +167,11 @@ const FieldDataValues = ({ fieldDataValues }: Pick<PolicyTestCardProps, 'fieldDa
         <div className="field-data-values flex basis-1/4 flex-col gap-4 lg:ml-8">
             {fieldDataValues &&
                 fieldDataValues.map(({ value, label, ...props }) => (
-                    <FieldData key={label} label={label} {...filterTruthyProps(props)}>
+                    <FieldData
+                        key={label}
+                        label={label}
+                        {...filterTruthyProps(props)}
+                    >
                         {value}
                     </FieldData>
                 ))}
@@ -164,9 +201,14 @@ const PolicyTestCard = ({
     const ref = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
-    const classes = clsx('progress-bar flex max-w-5xl flex-col gap-6 rounded border-2 border-gray-100 p-4 md:p-6 lg:p-8', classNames);
+    const classes = clsx(
+        'progress-bar flex max-w-5xl flex-col gap-6 rounded border-2 border-gray-100 p-4 md:p-6 lg:p-8',
+        classNames
+    );
 
-    const progressValue = Math.round((Number(compareValue) / Number(total)) * 100);
+    const progressValue = Math.round(
+        (Number(compareValue) / Number(total)) * 100
+    );
     return (
         <article
             className={classes}
@@ -181,21 +223,30 @@ const PolicyTestCard = ({
         >
             <Title title={title} showIcon={showIcon} badgeProps={badgeProps} />
             <Progress.Root
-                className={clsx('h-3 w-full overflow-hidden rounded-full bg-[--color-progress-total]', progressRootClasses)}
+                className={clsx(
+                    'h-3 w-full overflow-hidden rounded-full bg-[--color-progress-total]',
+                    progressRootClasses
+                )}
                 max={total}
                 value={Math.min(Number(total), Number(compareValue))}
                 aria-label={`${t(`ariaLabel.progressIndicator`)} ${title}`}
             >
                 <Progress.Indicator
                     className={clsx(
-                        Number(compareValue) > 0 ? 'min-w-[10px] border-[--color-progress-border]' : 'border-[--color-progress-total]',
+                        Number(compareValue) > 0
+                            ? 'min-w-[10px] border-[--color-progress-border]'
+                            : 'border-[--color-progress-total]',
                         'h-full border-r-2  bg-[--color-progress-indicator]',
                         progressIndicatorClasses
                     )}
                     style={{ width: `${progressValue}%` }}
                 />
             </Progress.Root>
-            <div className="labels flex flex-col items-start lg:flex-row lg:items-center" data-testid={PremiumCardTest.FOOTER} ref={ref}>
+            <div
+                className="labels flex flex-col items-start lg:flex-row lg:items-center"
+                data-testid={PremiumCardTest.FOOTER}
+                ref={ref}
+            >
                 <ValueTable
                     compareValue={compareValue}
                     amountProps={amountProps}

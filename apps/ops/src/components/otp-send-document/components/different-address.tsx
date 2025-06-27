@@ -4,7 +4,11 @@ import { useState } from 'react';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import AddressEntry from '@deps/components/otp-withdrawal-form/address-entry';
 import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import VerifyAddress from '@deps/containers/address-change-container/components/contact-details/address-validator';
@@ -21,7 +25,14 @@ type DifferentAddressProps = {
     isCancel?: boolean;
 };
 
-const DifferentAddress = ({ carrierId, handleClose, showName = true, isContainerClass = true, isSideSheet = false, isCancel = true }: DifferentAddressProps) => {
+const DifferentAddress = ({
+    carrierId,
+    handleClose,
+    showName = true,
+    isContainerClass = true,
+    isSideSheet = false,
+    isCancel = true,
+}: DifferentAddressProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
     const [firstName, setFirstName] = useState('');
@@ -29,8 +40,12 @@ const DifferentAddress = ({ carrierId, handleClose, showName = true, isContainer
     const [enteredAddress, setEnteredAddress] = useState<any>();
     const [isValidAddress, setIsValidAddress] = useState<boolean | null>(null);
     const [selectedId, setSelectedId] = useState<string | undefined>('');
-    const [addresses, setAddressesData] = useState<any | null>({ entered: {}, validated: {} });
-    const [addressValidator, setAddressValidator] = useState<FormValidationErrors>();
+    const [addresses, setAddressesData] = useState<any | null>({
+        entered: {},
+        validated: {},
+    });
+    const [addressValidator, setAddressValidator] =
+        useState<FormValidationErrors>();
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
 
     function formatAndSetEnteredAddress(address: any): void {
@@ -61,8 +76,13 @@ const DifferentAddress = ({ carrierId, handleClose, showName = true, isContainer
 
     function handleContinue() {
         if (validateAddress()) {
-            const mergeAddress = [{ ...addresses['entered'] }, { ...addresses['validated'] }];
-            const newAddress = mergeAddress.find(a => a.addressId === selectedId);
+            const mergeAddress = [
+                { ...addresses['entered'] },
+                { ...addresses['validated'] },
+            ];
+            const newAddress = mergeAddress.find(
+                (a) => a.addressId === selectedId
+            );
             handleClose({ ...newAddress, firstName, lastName });
         }
     }
@@ -73,27 +93,46 @@ const DifferentAddress = ({ carrierId, handleClose, showName = true, isContainer
     }
 
     return (
-        <CardContainer classNames={'w-full'} containerClassNames={isContainerClass ? 'w-full content-divider' : 'w-full'}>
-            {showName && <div className="grid w-full grid-cols-2 gap-4">
-                <Field
-                    label={t(`correspondence.mailDetails.firstName`) as string}
-                    onChange={e => setFirstName(e.target.value)}
-                    size={FieldSize.Small}
-                    type={FieldType.BaseActive}
-                    value={firstName}
-                    message={formErrors?.firstName}
-                    variant={selectVarientByConfig({ value: firstName, isFormStateReadOnly: false, error: formErrors?.name })}
-                />
-                <Field
-                    label={t(`correspondence.mailDetails.lastName`) as string}
-                    onChange={e => setLastName(e.target.value)}
-                    size={FieldSize.Small}
-                    type={FieldType.BaseActive}
-                    value={lastName}
-                    message={formErrors?.lastName}
-                    variant={selectVarientByConfig({ value: lastName, isFormStateReadOnly: false, error: formErrors?.name })}
-                />
-            </div>}
+        <CardContainer
+            classNames={'w-full'}
+            containerClassNames={
+                isContainerClass ? 'w-full content-divider' : 'w-full'
+            }
+        >
+            {showName && (
+                <div className="grid w-full grid-cols-2 gap-4">
+                    <Field
+                        label={
+                            t(`correspondence.mailDetails.firstName`) as string
+                        }
+                        onChange={(e) => setFirstName(e.target.value)}
+                        size={FieldSize.Small}
+                        type={FieldType.BaseActive}
+                        value={firstName}
+                        message={formErrors?.firstName}
+                        variant={selectVarientByConfig({
+                            value: firstName,
+                            isFormStateReadOnly: false,
+                            error: formErrors?.name,
+                        })}
+                    />
+                    <Field
+                        label={
+                            t(`correspondence.mailDetails.lastName`) as string
+                        }
+                        onChange={(e) => setLastName(e.target.value)}
+                        size={FieldSize.Small}
+                        type={FieldType.BaseActive}
+                        value={lastName}
+                        message={formErrors?.lastName}
+                        variant={selectVarientByConfig({
+                            value: lastName,
+                            isFormStateReadOnly: false,
+                            error: formErrors?.name,
+                        })}
+                    />
+                </div>
+            )}
 
             <div className="col-span-4 py-4">
                 <AddressEntry
@@ -118,21 +157,34 @@ const DifferentAddress = ({ carrierId, handleClose, showName = true, isContainer
                     isSideSheet={isSideSheet}
                 />
             </div>
-            {formErrors?.address && <AssistiveText text={formErrors?.address} variant={AssistiveTextVariant.Error} className="my-4" />}
+            {formErrors?.address && (
+                <AssistiveText
+                    text={formErrors?.address}
+                    variant={AssistiveTextVariant.Error}
+                    className="my-4"
+                />
+            )}
 
             <div className="mt-4 flex ">
-                <Button className="mr-4" onClick={handleContinue} size={ButtonSize.Small} type={ButtonType.Primary}>
+                <Button
+                    className="mr-4"
+                    onClick={handleContinue}
+                    size={ButtonSize.Small}
+                    type={ButtonType.Primary}
+                >
                     {t('formActions.continue')}
                 </Button>
-                {isCancel && <NavElement
-                    aria-label={t('cancel') as string}
-                    onClick={handleCancelClick}
-                    size={NavElementSize.Small}
-                    type={NavElementType.Button}
-                    variant={NavElementVariant.Default}
-                >
-                    {t('formActions.cancel')}
-                </NavElement>}
+                {isCancel && (
+                    <NavElement
+                        aria-label={t('cancel') as string}
+                        onClick={handleCancelClick}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Button}
+                        variant={NavElementVariant.Default}
+                    >
+                        {t('formActions.cancel')}
+                    </NavElement>
+                )}
             </div>
         </CardContainer>
     );

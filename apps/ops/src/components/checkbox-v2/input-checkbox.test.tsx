@@ -4,7 +4,9 @@ import InputCheckBox from './input-checkbox';
 
 describe('InputCheckBox', () => {
     it('should render correctly with default props', () => {
-        const { container } = render(<InputCheckBox checked={false} onChange={() => {}} />);
+        const { container } = render(
+            <InputCheckBox checked={false} onChange={() => {}} />
+        );
         const checkbox = container.querySelector('input[type="checkbox"]');
         expect(checkbox).toBeInTheDocument();
         expect(checkbox).not.toBeChecked();
@@ -13,7 +15,13 @@ describe('InputCheckBox', () => {
 
     it('should not change state when clicked if disabled', () => {
         const handleChange = jest.fn();
-        const { container } = render(<InputCheckBox checked={false} isDisabled={true} onChange={handleChange} />);
+        const { container } = render(
+            <InputCheckBox
+                checked={false}
+                isDisabled={true}
+                onChange={handleChange}
+            />
+        );
         const checkbox = container.querySelector('input[type="checkbox"]');
         fireEvent.click(checkbox as any);
         expect(handleChange).not.toHaveBeenCalled();

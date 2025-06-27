@@ -22,7 +22,11 @@ const Button = () => {
             <p className="font-primary text-md font-semibold hover:underline hover:decoration-2 hover:underline-offset-[5px]">
                 Quick actions
             </p>
-            <ChevronDown className="simple-transition text-secondary group-data-[state=open]:rotate-180" height={16} width={16} />
+            <ChevronDown
+                className="simple-transition text-secondary group-data-[state=open]:rotate-180"
+                height={16}
+                width={16}
+            />
         </div>
     );
 };
@@ -31,12 +35,28 @@ export const MenuContextualStory = () => {
     return (
         <MenuContextual trigger={<Button />}>
             <MenuContextualLabel label="Section 1">
-                <MenuContextualItem content="Input selection 1" href="/" icon={<TrashIcon height={20} width={20} />} />
-                <MenuContextualItem content="Input selection 2" href="/" icon={<TrashIcon height={20} width={20} />} />
+                <MenuContextualItem
+                    content="Input selection 1"
+                    href="/"
+                    icon={<TrashIcon height={20} width={20} />}
+                />
+                <MenuContextualItem
+                    content="Input selection 2"
+                    href="/"
+                    icon={<TrashIcon height={20} width={20} />}
+                />
             </MenuContextualLabel>
             <MenuContextualLabel label="Section 2">
-                <MenuContextualItem content="Input selection 3" href="/" icon={<TrashIcon height={20} width={20} />} />
-                <MenuContextualItem content="Input selection 4" href="/" icon={<TrashIcon height={20} width={20} />} />
+                <MenuContextualItem
+                    content="Input selection 3"
+                    href="/"
+                    icon={<TrashIcon height={20} width={20} />}
+                />
+                <MenuContextualItem
+                    content="Input selection 4"
+                    href="/"
+                    icon={<TrashIcon height={20} width={20} />}
+                />
             </MenuContextualLabel>
         </MenuContextual>
     );

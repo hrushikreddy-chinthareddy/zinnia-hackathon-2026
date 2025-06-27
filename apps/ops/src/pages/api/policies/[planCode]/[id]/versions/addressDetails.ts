@@ -3,7 +3,12 @@ import { AxiosResponse } from 'axios';
 
 import { policyApiBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -32,12 +37,22 @@ export default withAuthAndLogging(
                 config,
                 loggingContext
             );
-            logTrace('addressdetails::success', { ...loggingContext, duration: performance.now() - now });
+            logTrace('addressdetails::success', {
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
             res.json(data);
         } catch (error) {
-            logWarn('addressdetails::error', { ...parseErrorInformation(error), ...loggingContext, duration: performance.now() - now });
+            logWarn('addressdetails::error', {
+                ...parseErrorInformation(error),
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
             res.status(500).json(null);
         }
     },
-    { file: 'policy/v1/policies/:planCode/:id/addressdetails', function: 'routeHandler' }
+    {
+        file: 'policy/v1/policies/:planCode/:id/addressdetails',
+        function: 'routeHandler',
+    }
 );

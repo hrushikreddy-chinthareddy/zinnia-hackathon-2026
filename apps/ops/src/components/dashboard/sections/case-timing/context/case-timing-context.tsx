@@ -7,7 +7,11 @@ import {
 import { createContext, FC, PropsWithChildren, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
-import { TimeframeFilterOptions, startDates, formatProcessFilter } from '@deps/components/dashboard/utils';
+import {
+    TimeframeFilterOptions,
+    startDates,
+    formatProcessFilter,
+} from '@deps/components/dashboard/utils';
 import { Processes } from '@deps/models/case/case';
 import { getCaseDashboardTimingQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
@@ -45,18 +49,25 @@ const defaultState = {
     handleRangeChange: () => {},
 };
 
-export const CaseTimingContext = createContext<CaseTimingContextTypes>(defaultState);
+export const CaseTimingContext =
+    createContext<CaseTimingContextTypes>(defaultState);
 
 export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+    const [timeframeRadio, setTimeframeRadio] = useState<
+        TimeframeFilterOptions | undefined
+    >(TimeframeFilterOptions.Trailing12Months);
 
     const [timerange, setTimerange] = useState({
         from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
         to: '',
     });
 
-    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
+    const [selectedProcess, setSelectedProcess] = useState<
+        Processes | ExtendedProcesses
+    >(Processes.NewBusiness);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
 
     const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
         setTimeframeRadio(value);
@@ -85,9 +96,13 @@ export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
         error: caseTimingDataError,
     } = useQuery({
         queryKey: ['caseTimingChart', filter],
-        queryFn: () => getCaseDashboardTimingQuery(filter, [CompletedCaseTimeGroupByEnum.PROCESS_SUB_TYPE]),
-        select: data => data?.sort((a, b) => a.secondMedian - b.secondMedian) || data,
-        placeholderData: previousData => previousData,
+        queryFn: () =>
+            getCaseDashboardTimingQuery(filter, [
+                CompletedCaseTimeGroupByEnum.PROCESS_SUB_TYPE,
+            ]),
+        select: (data) =>
+            data?.sort((a, b) => a.secondMedian - b.secondMedian) || data,
+        placeholderData: (previousData) => previousData,
         enabled: Object.keys(filter).length > 0,
     });
 

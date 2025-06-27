@@ -16,12 +16,17 @@ import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.h
 import { NewLoanRequestQuery } from '@deps/queries/api/bpm';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-export const buildNewLoanRequestBody = (newLoan: NewLoan, wireCheckPaymentsEnabled: boolean): NewLoanRequestQuery => {
+export const buildNewLoanRequestBody = (
+    newLoan: NewLoan,
+    wireCheckPaymentsEnabled: boolean
+): NewLoanRequestQuery => {
     if (wireCheckPaymentsEnabled) {
         return {
             caseId: newLoan.caseId || '',
             correlationId: uuidV4(),
-            effectiveDate: dayjs(newLoan.effectiveDate, 'MMDDYYYY').format(ZAHARA_API_DATE_FORMAT),
+            effectiveDate: dayjs(newLoan.effectiveDate, 'MMDDYYYY').format(
+                ZAHARA_API_DATE_FORMAT
+            ),
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             parties: [
@@ -60,7 +65,9 @@ export const buildNewLoanRequestBody = (newLoan: NewLoan, wireCheckPaymentsEnabl
             ],
             transactionAmounts: {
                 amountType: AmountType.AMOUNT,
-                disbursementPaymentForm: getDisbursementPaymentForm(newLoan.paymentForm) as DisbursementPaymentForm,
+                disbursementPaymentForm: getDisbursementPaymentForm(
+                    newLoan.paymentForm
+                ) as DisbursementPaymentForm,
                 disbursementType: newLoan.disbursementType,
                 loanInterestType: AdhocTransactionAmount.loanInterestType.FIXED,
                 loanType: LoanType.NONPREFERREDSTANDARDLOAN,
@@ -72,7 +79,9 @@ export const buildNewLoanRequestBody = (newLoan: NewLoan, wireCheckPaymentsEnabl
     return {
         caseId: newLoan.caseId || '',
         correlationId: uuidV4(),
-        effectiveDate: dayjs(newLoan.effectiveDate, 'MMDDYYYY').format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs(newLoan.effectiveDate, 'MMDDYYYY').format(
+            ZAHARA_API_DATE_FORMAT
+        ),
         payeeOrBeneficiary: [
             {
                 allocationPercentage: 100,

@@ -3,7 +3,9 @@ import { countries } from 'countries-list';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { TimeZoneAbbreviations } from '@deps/data/time-zones';
 import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helpers';
@@ -48,7 +50,9 @@ const CountryCodeLabel = ({ countryCode }: CountryCodeLabelProps) => {
 };
 
 export const PhoneDetails = ({ phone }: PhoneDetailsProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.phone' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.sideSheet.phone',
+    });
     const { t: defaultT } = useTranslation();
 
     const { bestTime, phoneType, timezone } = phone;
@@ -58,24 +62,45 @@ export const PhoneDetails = ({ phone }: PhoneDetailsProps) => {
     return (
         <div className="flex flex-col gap-6">
             <div>
-                <Label label={t('fieldLabels.type')} variant={LabelVariant.FieldLabel} />
-                <Typography variant={TypographyVariant.BodySm}>{phoneTypeTranslation}</Typography>
+                <Label
+                    label={t('fieldLabels.type')}
+                    variant={LabelVariant.FieldLabel}
+                />
+                <Typography variant={TypographyVariant.BodySm}>
+                    {phoneTypeTranslation}
+                </Typography>
             </div>
             <div>
-                <Label label={t('fieldLabels.number')} variant={LabelVariant.FieldLabel} />
-                <Typography variant={TypographyVariant.BodySm}>{formatPhoneNumberWithExtension(phone)}</Typography>
+                <Label
+                    label={t('fieldLabels.number')}
+                    variant={LabelVariant.FieldLabel}
+                />
+                <Typography variant={TypographyVariant.BodySm}>
+                    {formatPhoneNumberWithExtension(phone)}
+                </Typography>
             </div>
             {bestTime && (
                 <div>
-                    <Label label={t('fieldLabels.preferredTime')} variant={LabelVariant.FieldLabel} />
-                    <Typography variant={TypographyVariant.BodySm}>{bestTime}</Typography>
+                    <Label
+                        label={t('fieldLabels.preferredTime')}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {bestTime}
+                    </Typography>
                 </div>
             )}
             {timezone && (
                 <div>
-                    <Label label={t('fieldLabels.timeZone')} variant={LabelVariant.FieldLabel} />
+                    <Label
+                        label={t('fieldLabels.timeZone')}
+                        variant={LabelVariant.FieldLabel}
+                    />
                     <Typography variant={TypographyVariant.BodySm}>
-                        {defaultT(`people.card.phone.timeZoneOptions.${timezone}`, { abbreviation: timezone })}
+                        {defaultT(
+                            `people.card.phone.timeZoneOptions.${timezone}`,
+                            { abbreviation: timezone }
+                        )}
                     </Typography>
                 </div>
             )}
@@ -98,7 +123,7 @@ export const frequentCountryOptions = [
     },
 ];
 
-export const countryOptions = Object.keys(countries).map(key => {
+export const countryOptions = Object.keys(countries).map((key) => {
     return {
         label: <CountryCodeLabel countryCode={key as keyof typeof countries} />,
         value: key,
@@ -125,9 +150,18 @@ export const getBestTimeOptions = ({ t }: GetBestTimeOptions) => [
 ];
 
 export const getPhoneTypeOptions = ({ t }: GetPhoneTypeOptions) => [
-    { label: t('people.card.phone.phoneOptions.mobilePhone'), value: PhoneType.MOBILE },
-    { label: t('people.card.phone.phoneOptions.homePhone'), value: PhoneType.HOME },
-    { label: t('people.card.phone.phoneOptions.businessPhone'), value: PhoneType.BUSINESS },
+    {
+        label: t('people.card.phone.phoneOptions.mobilePhone'),
+        value: PhoneType.MOBILE,
+    },
+    {
+        label: t('people.card.phone.phoneOptions.homePhone'),
+        value: PhoneType.HOME,
+    },
+    {
+        label: t('people.card.phone.phoneOptions.businessPhone'),
+        value: PhoneType.BUSINESS,
+    },
     { label: t('people.card.phone.phoneOptions.fax'), value: PhoneType.FAX },
 ];
 
@@ -138,32 +172,55 @@ export const getTimeZoneOptions = ({ t }: GetTimeZoneOptions) => [
         value: ' ',
     },
     {
-        label: t(`people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.akt}`, { abbreviation: TimeZoneAbbreviations.akt }),
+        label: t(
+            `people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.akt}`,
+            { abbreviation: TimeZoneAbbreviations.akt }
+        ),
         value: TimeZoneAbbreviations.akt,
     },
     {
-        label: t(`people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.ct}`, { abbreviation: TimeZoneAbbreviations.ct }),
+        label: t(
+            `people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.ct}`,
+            { abbreviation: TimeZoneAbbreviations.ct }
+        ),
         value: TimeZoneAbbreviations.ct,
     },
     {
-        label: t(`people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.et}`, { abbreviation: TimeZoneAbbreviations.et }),
+        label: t(
+            `people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.et}`,
+            { abbreviation: TimeZoneAbbreviations.et }
+        ),
         value: TimeZoneAbbreviations.et,
     },
     {
-        label: t(`people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.ht}`, { abbreviation: TimeZoneAbbreviations.ht }),
+        label: t(
+            `people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.ht}`,
+            { abbreviation: TimeZoneAbbreviations.ht }
+        ),
         value: TimeZoneAbbreviations.ht,
     },
     {
-        label: t(`people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.mt}`, { abbreviation: TimeZoneAbbreviations.mt }),
+        label: t(
+            `people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.mt}`,
+            { abbreviation: TimeZoneAbbreviations.mt }
+        ),
         value: TimeZoneAbbreviations.mt,
     },
     {
-        label: t(`people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.pt}`, { abbreviation: TimeZoneAbbreviations.pt }),
+        label: t(
+            `people.sideSheet.phone.timeZoneOptions.${TimeZoneAbbreviations.pt}`,
+            { abbreviation: TimeZoneAbbreviations.pt }
+        ),
         value: TimeZoneAbbreviations.pt,
     },
 ];
 
-export const getFormErrors = ({ caseId, isDelete, phone, t }: GetFormErrors) => {
+export const getFormErrors = ({
+    caseId,
+    isDelete,
+    phone,
+    t,
+}: GetFormErrors) => {
     let errors: Errors = {};
 
     const { areaCode, dialNumber, phoneType = PhoneType.HOME } = phone;
@@ -171,7 +228,10 @@ export const getFormErrors = ({ caseId, isDelete, phone, t }: GetFormErrors) => 
     const phoneRegex = /^\d{10}$/;
 
     if (caseId == null) {
-        errors = { ...errors, caseId: `${t('people.sideSheet.phone.errors.missingCaseDocument')}` };
+        errors = {
+            ...errors,
+            caseId: `${t('people.sideSheet.phone.errors.missingCaseDocument')}`,
+        };
     }
 
     if (isDelete) {

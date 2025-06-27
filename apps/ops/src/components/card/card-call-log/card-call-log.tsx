@@ -2,7 +2,9 @@ import { Tag } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { useTimestampText } from '@deps/hooks/useStatusInfo';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
@@ -40,7 +42,9 @@ export default function CallLogCard({
     const displayName = (
         <Typography variant={TypographyVariant.LabelLg} className="mb-2">
             {callerRole ? `${callerName}, ` : callerName}
-            {callerRole && <span className="font-normal italic">{callerRole}</span>}
+            {callerRole && (
+                <span className="font-normal italic">{callerRole}</span>
+            )}
         </Typography>
     );
 
@@ -49,11 +53,19 @@ export default function CallLogCard({
     const missingSummaryText = t('sideSheet.noCallLogSummary');
 
     return (
-        <div className={clsx('w-full border-b-2 border-gray-100 p-8 pr-6', className)}>
+        <div
+            className={clsx(
+                'w-full border-b-2 border-gray-100 p-8 pr-6',
+                className
+            )}
+        >
             <div className="header flex flex-row items-center justify-between">
                 <div className="flex flex-col">
                     {createdAt && (
-                        <Typography variant={TypographyVariant.Caption} className="mb-1">
+                        <Typography
+                            variant={TypographyVariant.Caption}
+                            className="mb-1"
+                        >
                             {timestampText}
                         </Typography>
                     )}
@@ -75,7 +87,12 @@ export default function CallLogCard({
                 </span>
             )}
             {summary ? (
-                <Typography variant={TypographyVariant.Body} className={clsx({ 'line-clamp-5 break-normal': !isSecondaryPage })}>
+                <Typography
+                    variant={TypographyVariant.Body}
+                    className={clsx({
+                        'line-clamp-5 break-normal': !isSecondaryPage,
+                    })}
+                >
                     {summary}
                 </Typography>
             ) : (

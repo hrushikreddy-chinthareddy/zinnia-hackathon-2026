@@ -6,7 +6,7 @@ export class Features {
 
     constructor(features: PolicyFeature[] = []) {
         this.policyFeatures = features;
-        features.forEach(feature => {
+        features.forEach((feature) => {
             if (!feature.featureType) {
                 return;
             }
@@ -25,7 +25,9 @@ export class Features {
         return this.featuresByType[featureType.toUpperCase()] ?? [];
     }
 
-    public getFirstFeatureByType(featureType: FeatureType): PolicyFeature | undefined {
+    public getFirstFeatureByType(
+        featureType: FeatureType
+    ): PolicyFeature | undefined {
         if (!featureType) {
             return undefined;
         }

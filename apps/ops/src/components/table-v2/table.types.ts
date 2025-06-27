@@ -1,8 +1,8 @@
 export enum ColumnType {
-   Text = 'text',
-   Number = 'number',
-   Boolean = 'boolean',
-   Input = 'input'
+    Text = 'text',
+    Number = 'number',
+    Boolean = 'boolean',
+    Input = 'input',
 }
 export type TableColumn = {
     field: string;
@@ -11,9 +11,9 @@ export type TableColumn = {
     sortable?: boolean;
     type?: ColumnType;
     width?: string;
-    cellRenderer?: (params: any) => JSX.Element
+    cellRenderer?: (params: any) => JSX.Element;
     cellRendererParams?: any;
-}
+};
 
 export type TypedRow<T> = T & { [key: string]: any };
 

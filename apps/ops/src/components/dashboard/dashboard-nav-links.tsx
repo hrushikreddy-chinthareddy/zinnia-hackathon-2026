@@ -1,10 +1,17 @@
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { Icon, IconType, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import {
+    Icon,
+    IconType,
+    TabGroup,
+    TabList,
+    TabTrigger,
+} from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { CSSProperties, FC, PropsWithChildren, useState } from 'react';
+
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 export enum DashboardTabs {
     ACTIVE_APPLICATIONS = 'active-applications',
@@ -26,11 +33,18 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
     };
 
     if (!tabParam) {
-        router.replace(`/dashboard?tab=${DEFAULT_TAB}`, undefined, { shallow: true });
+        router.replace(`/dashboard?tab=${DEFAULT_TAB}`, undefined, {
+            shallow: true,
+        });
     }
 
     return (
-        <TabGroup defaultValue={tabVal} value={tabVal} activationMode="manual" onValueChange={handleTabChange}>
+        <TabGroup
+            defaultValue={tabVal}
+            value={tabVal}
+            activationMode="manual"
+            onValueChange={handleTabChange}
+        >
             <TabList
                 style={
                     {
@@ -40,15 +54,32 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
                 className="!mb-0 w-full !border-b-0 bg-white "
             >
                 <TabTrigger value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                    <Icon type={IconType.DOCUMENT_TEXT} width={24} height={24} className="hidden lg:block" /> {toTitleCase('open cases')}
+                    <Icon
+                        type={IconType.DOCUMENT_TEXT}
+                        width={24}
+                        height={24}
+                        className="hidden lg:block"
+                    />{' '}
+                    {toTitleCase('open cases')}
                 </TabTrigger>
                 <TabTrigger value={DashboardTabs.CLOSED_TRANSACTIONS}>
-                    <Icon type={IconType.SHIELD_CHECKMARK} width={24} height={24} className="hidden lg:block" />{' '}
+                    <Icon
+                        type={IconType.SHIELD_CHECKMARK}
+                        width={24}
+                        height={24}
+                        className="hidden lg:block"
+                    />{' '}
                     {toTitleCase('closed cases')}
                 </TabTrigger>
                 {featureFlags[FEATURE_FLAGS.DASHBOARD_NIGO_TAB] && (
                     <TabTrigger value={DashboardTabs.NIGO_ANALYSIS}>
-                        <Icon type={IconType.HEX_EXCLAMATION} width={24} height={24} className="hidden lg:block" /> Issues
+                        <Icon
+                            type={IconType.HEX_EXCLAMATION}
+                            width={24}
+                            height={24}
+                            className="hidden lg:block"
+                        />{' '}
+                        Issues
                     </TabTrigger>
                 )}
             </TabList>

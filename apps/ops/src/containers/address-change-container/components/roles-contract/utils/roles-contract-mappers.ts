@@ -6,7 +6,9 @@ import { AssociateAddressTableRow } from './roles-contract-types';
 
 // import { AssociateAddressTableRow } from "./roles-contract-helper";
 
-export const mapRoleItemToRoleState = (option: AssociateAddressTableRow): ApplyToRolesState => {
+export const mapRoleItemToRoleState = (
+    option: AssociateAddressTableRow
+): ApplyToRolesState => {
     return {
         policyNumber: option?.policyNumber ?? '',
         partyRoleId: option?.partyRoleId?.toString() ?? '',

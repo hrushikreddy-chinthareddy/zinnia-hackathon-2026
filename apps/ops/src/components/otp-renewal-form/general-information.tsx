@@ -10,12 +10,18 @@ import FieldLabel from '../fields/field-label';
 import Typography, { TypographyVariant } from '../typography/typography';
 
 interface GeneralInformationProps {
-    isFormStateReadOnly: boolean,
+    isFormStateReadOnly: boolean;
 }
 
-export default function GeneralInformation({ isFormStateReadOnly }: GeneralInformationProps) {
-    const { document, channel, setChannel } = useContext(RenewalFormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
+export default function GeneralInformation({
+    isFormStateReadOnly,
+}: GeneralInformationProps) {
+    const { document, channel, setChannel } = useContext(
+        RenewalFormDataContext
+    );
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseRenewal.request',
+    });
 
     return (
         <>
@@ -24,8 +30,13 @@ export default function GeneralInformation({ isFormStateReadOnly }: GeneralInfor
             </Typography>
             <div className="mb-4 flex">
                 <div className="mr-8">
-                    <FieldLabel classNames="font-secondary text-md !mb-0" label={t('contractId') as string} />
-                    <p className="mb-2 font-secondary text-md">{document?.contract}</p>
+                    <FieldLabel
+                        classNames="font-secondary text-md !mb-0"
+                        label={t('contractId') as string}
+                    />
+                    <p className="mb-2 font-secondary text-md">
+                        {document?.contract}
+                    </p>
                 </div>
                 <SelectSimple
                     className="w-full max-w-[200px]"
@@ -34,7 +45,7 @@ export default function GeneralInformation({ isFormStateReadOnly }: GeneralInfor
                         { label: t('phone'), value: Channel.Phone },
                     ]}
                     label={t('channel') as string}
-                    onChange={val => {
+                    onChange={(val) => {
                         setChannel(val as Channel);
                     }}
                     size={FieldSize.Small}

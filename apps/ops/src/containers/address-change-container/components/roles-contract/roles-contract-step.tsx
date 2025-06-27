@@ -4,7 +4,9 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo } from 'react';
 
 import AssistiveText from '@deps/components/assistive-text/assistive-text';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -13,7 +15,10 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { RoleAddressCard } from './components/role-address-cards';
 import { AllowedRoleTypes } from './utils/roles-contract-constants';
 import { groupPartiesByAddress } from './utils/roles-contract-helpers';
-import { PartyAddressCard, RoleContractValidationKeys } from './utils/roles-contract-types';
+import {
+    PartyAddressCard,
+    RoleContractValidationKeys,
+} from './utils/roles-contract-types';
 import { useAddressChange } from '../../address-change-provider';
 
 interface IRolesAndContractProps {
@@ -21,26 +26,50 @@ interface IRolesAndContractProps {
 }
 
 export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'addressChange' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'addressChange',
+    });
     const { goToNext } = useWorkflow();
-    const { applyToRoles, setApplyToRoles, formErrors, setRoleIdentifier, setFormErrors, selectedIds, setSelectedIds, submitSuccess } =
-        useAddressChange();
+    const {
+        applyToRoles,
+        setApplyToRoles,
+        formErrors,
+        setRoleIdentifier,
+        setFormErrors,
+        selectedIds,
+        setSelectedIds,
+        submitSuccess,
+    } = useAddressChange();
 
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
     const extractedPartyRoles = useMemo(
-        () => policy?.partyRoles?.filter(role => AllowedRoleTypes.includes(role?.partyRole ?? '')) || [],
+        () =>
+            policy?.partyRoles?.filter((role) =>
+                AllowedRoleTypes.includes(role?.partyRole ?? '')
+            ) || [],
         [policy]
     );
-    const qualificationType = useMemo(() => policy?.qualificationType ?? '', [policy]);
+    const qualificationType = useMemo(
+        () => policy?.qualificationType ?? '',
+        [policy]
+    );
 
     const partyCardsData: PartyAddressCard[] = useMemo(
-        () => groupPartiesByAddress(extractedPartyRoles, extractedParties, qualificationType, t),
+        () =>
+            groupPartiesByAddress(
+                extractedPartyRoles,
+                extractedParties,
+                qualificationType,
+                t
+            ),
         [extractedPartyRoles, extractedParties, qualificationType, t]
     );
 
     const handleClick = (id: number): void => {
         if (selectedIds.includes(id)) {
-            setSelectedIds((prevState: number[]) => prevState.filter((item: number) => item !== id));
+            setSelectedIds((prevState: number[]) =>
+                prevState.filter((item: number) => item !== id)
+            );
         } else {
             setSelectedIds((prevState: number[]) => [...prevState, id]);
         }
@@ -49,7 +78,9 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
     const handleStepContinue = useCallback(() => {
         const errors = {} as FormValidationErrors;
         if (applyToRoles.length === 0) {
-            errors['noSelection'] = t('rolesAndContracts.formErrors.formValidation.noAddressCardSelection');
+            errors['noSelection'] = t(
+                'rolesAndContracts.formErrors.formValidation.noAddressCardSelection'
+            );
             setFormErrors(errors);
         } else {
             setFormErrors({});
@@ -83,8 +114,8 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
     useEffect(() => {
         if (selectedIds.length > 0) {
             const applicableRoles: any[] = [];
-            selectedIds.map(selectedId => {
-                partyCardsData[selectedId].roleIdentifiers.map(role => {
+            selectedIds.map((selectedId) => {
+                partyCardsData[selectedId].roleIdentifiers.map((role) => {
                     applicableRoles.push({
                         policyNumber: policy?.policyNumber,
                         partyId: role.partyId,
@@ -95,7 +126,9 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
             });
             setApplyToRoles([...applicableRoles]);
 
-            const selectedRoleIdentifier = applicableRoles.filter(applyToRole => applyToRole.partyRole === PartyRole.OWNER);
+            const selectedRoleIdentifier = applicableRoles.filter(
+                (applyToRole) => applyToRole.partyRole === PartyRole.OWNER
+            );
             if (selectedRoleIdentifier.length > 0) {
                 setRoleIdentifier({
                     partyRoleId: selectedRoleIdentifier[0]?.partyRoleId,
@@ -113,7 +146,13 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
             setApplyToRoles([]);
             setRoleIdentifier({});
         }
-    }, [partyCardsData, policy?.policyNumber, selectedIds, setApplyToRoles, setRoleIdentifier]);
+    }, [
+        partyCardsData,
+        policy?.policyNumber,
+        selectedIds,
+        setApplyToRoles,
+        setRoleIdentifier,
+    ]);
 
     return (
         <WorkflowCard
@@ -139,14 +178,22 @@ export const RolesAndContractStep = ({ policy }: IRolesAndContractProps) => {
                 {/*<AssociatedAddressTable extractedPartyRoles={extractedPartyRoles} policy={policy}></AssociatedAddressTable>*/}
                 {formErrors[RoleContractValidationKeys.RolesContractPresent] ? (
                     <AssistiveText
-                        text={formErrors[RoleContractValidationKeys.RolesContractPresent]}
+                        text={
+                            formErrors[
+                                RoleContractValidationKeys.RolesContractPresent
+                            ]
+                        }
                         variant={AssistiveTextVariant.Error}
                         className="mt-2"
                     />
                 ) : null}
 
                 {formErrors.noSelection ? (
-                    <AssistiveText text={formErrors.noSelection} variant={AssistiveTextVariant.Error} className="mt-2" />
+                    <AssistiveText
+                        text={formErrors.noSelection}
+                        variant={AssistiveTextVariant.Error}
+                        className="mt-2"
+                    />
                 ) : null}
             </div>
         </WorkflowCard>

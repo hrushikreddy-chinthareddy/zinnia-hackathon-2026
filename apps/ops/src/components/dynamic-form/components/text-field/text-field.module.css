@@ -3,7 +3,8 @@
     align-self: stretch;
     background: var(--color-fields-surface-field-default-fill, #fff);
     border-radius: var(--measure-dimension-radius-md, 8px);
-    border: var(--measure-dimension-stroke-sm, 2px) solid var(--color-fields-border-field-default-border, #ccc) !important;
+    border: var(--measure-dimension-stroke-sm, 2px) solid
+        var(--color-fields-border-field-default-border, #ccc) !important;
     color: var(--color-base-text-text-primary, #212121);
     display: flex;
     gap: var(--measure-dimension-gap-lg, 16px);

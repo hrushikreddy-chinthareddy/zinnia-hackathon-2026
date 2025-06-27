@@ -20,7 +20,9 @@ export interface FormEsignatureData {
 }
 
 export const getESignatureData = (formParty: FormParty) => {
-    const hasJointOwner = !!formParty?.parties?.find(item => item.partyRoleType === PartyRoles.JOINT_OWNER);
+    const hasJointOwner = !!formParty?.parties?.find(
+        (item) => item.partyRoleType === PartyRoles.JOINT_OWNER
+    );
     return {
         eSignatures: [
             {
@@ -52,7 +54,10 @@ export const getESignatureData = (formParty: FormParty) => {
     };
 };
 
-export const getDefaultESignatureData = (esignData: FormEsignatureData, formParty: FormParty) => {
+export const getDefaultESignatureData = (
+    esignData: FormEsignatureData,
+    formParty: FormParty
+) => {
     if (esignData?.eSignatures?.length > 0) {
         return esignData;
     }

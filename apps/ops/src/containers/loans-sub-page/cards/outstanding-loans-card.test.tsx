@@ -31,7 +31,13 @@ jest.mock('next-i18next', () => ({
 
 describe('OutstandingLoansCard', () => {
     it('renders the active card with an active loan', () => {
-        render(<OutstandingLoansCard currency={currency} lastLoanInterestDueDate="2023-03-01" loanSegments={loanSegments} />);
+        render(
+            <OutstandingLoansCard
+                currency={currency}
+                lastLoanInterestDueDate="2023-03-01"
+                loanSegments={loanSegments}
+            />
+        );
 
         expect(screen.getByText('headline')).toBeInTheDocument();
 
@@ -44,7 +50,9 @@ describe('OutstandingLoansCard', () => {
         expect(screen.getByText('Interestrate')).toBeInTheDocument();
         expect(screen.getByText('5%')).toBeInTheDocument();
 
-        expect(screen.getByText('additionalLoanInformation')).toBeInTheDocument();
+        expect(
+            screen.getByText('additionalLoanInformation')
+        ).toBeInTheDocument();
 
         expect(screen.queryByText('loanNumber 1')).not.toBeInTheDocument();
     });
@@ -66,7 +74,12 @@ describe('OutstandingLoansCard', () => {
             },
         ] as LoanSegment[];
 
-        render(<OutstandingLoansCard currency={currency} loanSegments={emptyLoanSegments} />);
+        render(
+            <OutstandingLoansCard
+                currency={currency}
+                loanSegments={emptyLoanSegments}
+            />
+        );
 
         expect(screen.getByText('headline')).toBeInTheDocument();
 
@@ -84,7 +97,12 @@ describe('OutstandingLoansCard', () => {
             },
         ] as LoanSegment[];
 
-        render(<OutstandingLoansCard currency={currency} loanSegments={noBalanceLoanSegment} />);
+        render(
+            <OutstandingLoansCard
+                currency={currency}
+                loanSegments={noBalanceLoanSegment}
+            />
+        );
 
         expect(screen.getByText('headline')).toBeInTheDocument();
 
@@ -103,7 +121,13 @@ describe('OutstandingLoansCard', () => {
             },
         ] as LoanSegment[];
 
-        render(<OutstandingLoansCard currency={currency} lastLoanInterestDueDate="2023-03-01" loanSegments={multipleLoanSegments} />);
+        render(
+            <OutstandingLoansCard
+                currency={currency}
+                lastLoanInterestDueDate="2023-03-01"
+                loanSegments={multipleLoanSegments}
+            />
+        );
 
         expect(screen.getByText('headline')).toBeInTheDocument();
 
@@ -112,7 +136,13 @@ describe('OutstandingLoansCard', () => {
     });
 
     it('displays tooltips for loan interest rate', async () => {
-        render(<OutstandingLoansCard currency={currency} loanSegments={loanSegments} lastLoanInterestDueDate="2023-03-01" />);
+        render(
+            <OutstandingLoansCard
+                currency={currency}
+                loanSegments={loanSegments}
+                lastLoanInterestDueDate="2023-03-01"
+            />
+        );
 
         const tooltip = screen.getByTestId(PopoverTest.Popover);
 

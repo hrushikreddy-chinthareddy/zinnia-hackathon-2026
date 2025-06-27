@@ -48,7 +48,9 @@ export const ComparisonColumnChart: FC<ComparisonColumnChartProps> = ({
                 type: 'category',
                 categories,
                 title: {
-                    text: !xAxisTitle ? undefined : `<div class="typography-labels-label-md">${xAxisTitle}</div>`,
+                    text: !xAxisTitle
+                        ? undefined
+                        : `<div class="typography-labels-label-md">${xAxisTitle}</div>`,
                     useHtml: !xAxisTitle ? false : true,
                 },
                 labels: {
@@ -93,7 +95,17 @@ export const ComparisonColumnChart: FC<ComparisonColumnChartProps> = ({
                 },
             ],
         }),
-        [height, width, title, colors, categories, xAxisTitle, yAxisTitle, legendFormatter, series]
+        [
+            height,
+            width,
+            title,
+            colors,
+            categories,
+            xAxisTitle,
+            yAxisTitle,
+            legendFormatter,
+            series,
+        ]
     );
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} />;
 };

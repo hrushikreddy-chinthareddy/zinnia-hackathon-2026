@@ -1,4 +1,4 @@
-import { SignatureWithdrawal } from "@deps/models/case/withdrawal/case";
+import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 
 export type SignatureState = {
     isIrrevocableBene: boolean;

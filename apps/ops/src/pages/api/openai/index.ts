@@ -1,16 +1,28 @@
 import { OpenAiResponse } from '@deps/types/openai';
 import { openai } from '@deps/utils/openai';
-import { logError, logTrace, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logError,
+    logTrace,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<OpenAiResponse>, loggingContext) => {
+    async (
+        req: NextApiRequest,
+        res: NextApiResponse<OpenAiResponse>,
+        loggingContext
+    ) => {
         const now = performance.now();
         logTrace('openai::start', loggingContext);
 
         try {
-            const content = typeof req.body.content === 'string' ? req.body.content : JSON.stringify(req.body.content);
+            const content =
+                typeof req.body.content === 'string'
+                    ? req.body.content
+                    : JSON.stringify(req.body.content);
             const prompt = req.body.prompt || '';
             const completion = await openai.chat.completions.create({
                 model: 'gpt-4o-mini',
@@ -26,11 +38,15 @@ export default withAuthAndLogging(
                     },
                     {
                         role: 'user',
-                        content: 'Given the data provided, please provide a couple sentence summary. Be concise. Be specific.',
+                        content:
+                            'Given the data provided, please provide a couple sentence summary. Be concise. Be specific.',
                     },
                 ],
             });
-            logTrace('openai::complete', { ...loggingContext, duration: performance.now() - now });
+            logTrace('openai::complete', {
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
 
             res.json({
                 summary: completion.choices[0].message?.content,

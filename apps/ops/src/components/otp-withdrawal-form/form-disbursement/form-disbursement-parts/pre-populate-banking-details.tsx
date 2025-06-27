@@ -11,4 +11,6 @@ export const defaultSelectedBankContext = {
     setBankSelected: noop,
 };
 
-export const SelectedBankContext = createContext<SelectedBankState>(defaultSelectedBankContext as SelectedBankState);
+export const SelectedBankContext = createContext<SelectedBankState>(
+    defaultSelectedBankContext as SelectedBankState
+);

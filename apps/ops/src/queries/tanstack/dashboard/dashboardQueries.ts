@@ -13,17 +13,24 @@ import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
 
 import { getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
 
-export const getCaseDashboardStatsQuery = async (baseFilter: CaseCountInputFilter, groupBy: CaseCountGroupByEnum[]) => {
+export const getCaseDashboardStatsQuery = async (
+    baseFilter: CaseCountInputFilter,
+    groupBy: CaseCountGroupByEnum[]
+) => {
     const statsResponse = await getCaseDashboardStats({
         filter: baseFilter,
         groupBy,
     });
-    if (!statsResponse || 'detail' in statsResponse || !('data' in statsResponse)) {
+    if (
+        !statsResponse ||
+        'detail' in statsResponse ||
+        !('data' in statsResponse)
+    ) {
         throw statsResponse;
     }
 
     statsResponse.data = statsResponse.data
-        .map(item => {
+        .map((item) => {
             if (item.name === '') {
                 const friendlyName = friendlyGroupByName[groupBy[0]];
                 item.name = `No ${friendlyName.toLowerCase()} name`;
@@ -35,16 +42,23 @@ export const getCaseDashboardStatsQuery = async (baseFilter: CaseCountInputFilte
     return statsResponse;
 };
 
-export const getCaseDashboardTimingQuery = async (baseFilter: CompletedCaseTimeInputFilter, groupBy: CompletedCaseTimeGroupByEnum[]) => {
+export const getCaseDashboardTimingQuery = async (
+    baseFilter: CompletedCaseTimeInputFilter,
+    groupBy: CompletedCaseTimeGroupByEnum[]
+) => {
     const statsResponse = await getCaseTimingData({
         filter: baseFilter,
         groupBy,
     });
-    if (!statsResponse || 'detail' in statsResponse || !('data' in statsResponse)) {
+    if (
+        !statsResponse ||
+        'detail' in statsResponse ||
+        !('data' in statsResponse)
+    ) {
         throw statsResponse;
     }
 
-    statsResponse.data = statsResponse.data.map(item => {
+    statsResponse.data = statsResponse.data.map((item) => {
         if (item.name === '') {
             const friendlyName = friendlyGroupByName[groupBy[0]];
             item.name = `No ${friendlyName.toLowerCase()} name`;
@@ -55,16 +69,23 @@ export const getCaseDashboardTimingQuery = async (baseFilter: CompletedCaseTimeI
     return statsResponse.data;
 };
 
-export const getExceptionCountQuery = async (baseFilter: CaseCountInputFilter, groupBy: ExceptionCountGroupByEnum[]) => {
+export const getExceptionCountQuery = async (
+    baseFilter: CaseCountInputFilter,
+    groupBy: ExceptionCountGroupByEnum[]
+) => {
     const exceptionResponse = await getDashboardExceptionStats({
         filter: baseFilter,
         groupBy,
     });
-    if (!exceptionResponse || 'detail' in exceptionResponse || !('data' in exceptionResponse)) {
+    if (
+        !exceptionResponse ||
+        'detail' in exceptionResponse ||
+        !('data' in exceptionResponse)
+    ) {
         throw exceptionResponse;
     }
 
-    exceptionResponse.data = exceptionResponse.data.map(item => {
+    exceptionResponse.data = exceptionResponse.data.map((item) => {
         if (item.name === '') {
             const friendlyName = friendlyGroupByName[groupBy[0]];
             item.name = `No ${friendlyName.toLowerCase()} name`;
@@ -72,7 +93,9 @@ export const getExceptionCountQuery = async (baseFilter: CaseCountInputFilter, g
         return item;
     });
 
-    exceptionResponse.data = [...exceptionResponse.data].sort((a, b) => b.count - a.count);
+    exceptionResponse.data = [...exceptionResponse.data].sort(
+        (a, b) => b.count - a.count
+    );
 
     return exceptionResponse;
 };
@@ -89,7 +112,11 @@ export const getStatsFromSelectionQuery = async (
     l3SelectValue: CaseCountGroupByEnum
 ) => {
     const filter = Object.assign({}, baseFilter, {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        caseStatus: [
+            Statuses.InProgress,
+            Statuses.Exception,
+            Statuses.NotStarted,
+        ],
     });
 
     const query: CaseCountInput = {
@@ -98,7 +125,11 @@ export const getStatsFromSelectionQuery = async (
     };
 
     const statsResponse = await getCaseDashboardStats(query);
-    if (!statsResponse || 'detail' in statsResponse || !('data' in statsResponse)) {
+    if (
+        !statsResponse ||
+        'detail' in statsResponse ||
+        !('data' in statsResponse)
+    ) {
         throw statsResponse;
     }
     return statsResponse;

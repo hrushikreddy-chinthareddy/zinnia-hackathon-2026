@@ -20,7 +20,10 @@ import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
-import { ESignatureValidationTypeWithdrawal, SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import {
+    ESignatureValidationTypeWithdrawal,
+    SignatureValidationTypeWithdrawal,
+} from '@deps/models/case/renewal/signature-validation';
 import {
     FormParts,
     FormValidationErrors,
@@ -50,50 +53,75 @@ import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdraw
 
 export default function useFlicSSWConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement, formESignatureData }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({
+            formSignature,
+            formDisbursement,
+            formESignatureData,
+        }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
             const ownerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
             const ownerEsignature = formESignatureData?.eSignatures?.find(
-                (sigInfo: ESignature) => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo: ESignature) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
-            if ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+            if (
+                [PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                )
+            ) {
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                    formDisbursement?.bank[0].accountNumber !==
+                        formDisbursement?.bank[0].reEnterAccountNumber
                 ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterAccountNumber] = t(
+                        'formValidation.accountNumberDoesNotMatch'
+                    );
                 }
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                    formDisbursement?.bank[0].routingNumber !==
+                        formDisbursement?.bank[0].reEnterBankRoutingNumber
                 ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                        'formValidation.routingNumberDoesNotMatch'
+                    );
                 }
             }
 
             // No choice made for signature
-            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                ownerSignature?.isSigned !== false &&
+                !ownerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
 
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)
+                [PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                )
             ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
             }
 
             if (ownerEsignature?.isSigned === null) {
-                errors[`${ESignatureValidationTypeWithdrawal.Owner}-signPresent`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+                errors[
+                    `${ESignatureValidationTypeWithdrawal.Owner}-signPresent`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
             return errors;
         },
@@ -107,12 +135,20 @@ export default function useFlicSSWConfig(t: TFunction) {
         formDistribution,
         formDisbursement,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
+        const errors = formValidation({
+            formParty,
+            formSignature,
+            formDisbursement,
+        });
         const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds.filter(fund => !!fund.amount.text);
+        const funds = formDistribution?.funds.filter(
+            (fund) => !!fund.amount.text
+        );
 
         if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
-            errors['specifyFundsRequired'] = t('sswProgram.warnings.specifyFundsRequired');
+            errors['specifyFundsRequired'] = t(
+                'sswProgram.warnings.specifyFundsRequired'
+            );
         }
         return errors;
     };
@@ -217,7 +253,10 @@ export default function useFlicSSWConfig(t: TFunction) {
             text: subType,
         },
         programFrequency: {
-            frequency: val.frequency.text === Frequency.None ? { text: '' as Frequency } : val.frequency,
+            frequency:
+                val.frequency.text === Frequency.None
+                    ? { text: '' as Frequency }
+                    : val.frequency,
             beginDate: val.startDate,
             fixedPeriodYear: [
                 SSWType.FixPeriod,
@@ -230,40 +269,56 @@ export default function useFlicSSWConfig(t: TFunction) {
                 : { text: val.duration.text },
             duration: val.duration,
         },
-        ...(subType === SSWType.FixDollar && { programAmount: { text: val.amount?.text, amountType: AmountType.Dollar } }),
-        ...(subType === SSWType.PercentOfAmountValue && { partialPercent: { text: val.percent?.text, amountType: AmountType.Percent } }),
+        ...(subType === SSWType.FixDollar && {
+            programAmount: {
+                text: val.amount?.text,
+                amountType: AmountType.Dollar,
+            },
+        }),
+        ...(subType === SSWType.PercentOfAmountValue && {
+            partialPercent: {
+                text: val.percent?.text,
+                amountType: AmountType.Percent,
+            },
+        }),
     });
 
     const systematicWithdrawalOptions = [
         {
             label: t('sswProgram.sswOptions.fixedDollar'),
             value: SSWType.FixDollar,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.FixDollar),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.FixDollar),
         },
         {
             label: t('sswProgram.sswOptions.annualFreeWithdrawal'),
             value: SSWType.AnnualFree,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.AnnualFree),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.AnnualFree),
         },
         {
             label: t('sswProgram.sswOptions.percentageOfAccountValue'),
             value: SSWType.PercentOfAmountValue,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.PercentOfAmountValue),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.PercentOfAmountValue),
         },
         {
             label: t('sswProgram.sswOptions.interestEarningDividendsGains'),
             value: SSWType.InterestEarningDividendsGains,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.InterestEarningDividendsGains),
         },
         {
             label: t('sswProgram.sswOptions.singleLifetimeIncomeOption'),
             value: SSWType.SingleLifetimeIncomeOption,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
         },
         {
             label: t('sswProgram.sswOptions.jointLifetimeIncomeOption'),
             value: SSWType.JointLifetimeIncomeOption,
-            generateSSWPayloadFromSelection: (val: SSWProgram) => generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
         },
     ];
 
@@ -273,7 +328,10 @@ export default function useFlicSSWConfig(t: TFunction) {
             value: FundWithdrawnMethod.Prorata,
             disabled: sswType === SSWType.PercentOfAmountValue,
         },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const irsSignatureConfig = [
@@ -319,7 +377,10 @@ export default function useFlicSSWConfig(t: TFunction) {
         return false;
     };
 
-    const disbursementOptions = (frequency: Frequency, qualType: string): PaymentMethodOption[] => [
+    const disbursementOptions = (
+        frequency: Frequency,
+        qualType: string
+    ): PaymentMethodOption[] => [
         {
             label: t('distributionMethod.eft'),
             value: FormDisbursementSelections.EFT,
@@ -338,7 +399,9 @@ export default function useFlicSSWConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -364,7 +427,10 @@ export default function useFlicSSWConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -377,11 +443,16 @@ export default function useFlicSSWConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -397,25 +468,36 @@ export default function useFlicSSWConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -448,7 +530,8 @@ export default function useFlicSSWConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -456,7 +539,10 @@ export default function useFlicSSWConfig(t: TFunction) {
             label: t('distributionMethod.sendCheck'),
             value: FormDisbursementSelections.Check,
             fields: null,
-            disabled: frequency === Frequency.Monthly && !checkQualType(qualType) ? true : false,
+            disabled:
+                frequency === Frequency.Monthly && !checkQualType(qualType)
+                    ? true
+                    : false,
             getDefaultPayload() {
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
@@ -471,7 +557,10 @@ export default function useFlicSSWConfig(t: TFunction) {
         {
             label: t('distributionMethod.brokerageAccount'),
             value: FormDisbursementSelections.Brokerage,
-            disabled: frequency === Frequency.Monthly && !checkQualType(qualType) ? true : false,
+            disabled:
+                frequency === Frequency.Monthly && !checkQualType(qualType)
+                    ? true
+                    : false,
             fields: [
                 {
                     fieldName: BankingFields.AccountNumber,
@@ -502,7 +591,12 @@ export default function useFlicSSWConfig(t: TFunction) {
                     address: brokerage?.address ?? DEFAULT_ADDRESS,
                 };
             },
-            generatePayloadFromSelection: ({ address, accountNumber, acordAttached, companyName }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                address,
+                accountNumber,
+                acordAttached,
+                companyName,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMethod.Brokerage },
@@ -563,7 +657,9 @@ export default function useFlicSSWConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -583,14 +679,34 @@ export default function useFlicSSWConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
+                return (
+                    !!ownerStateOfResidence &&
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
+                );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
-    const cslnCheckStates = ['AZ', 'CA', 'CO', 'LA', 'MT', 'NV', 'ND', 'NM', 'OH', 'RI', 'TX', 'WA'];
+    const cslnCheckStates = [
+        'AZ',
+        'CA',
+        'CO',
+        'LA',
+        'MT',
+        'NV',
+        'ND',
+        'NM',
+        'OH',
+        'RI',
+        'TX',
+        'WA',
+    ];
 
     const eSignatureFieldConfig = {
         type: true,

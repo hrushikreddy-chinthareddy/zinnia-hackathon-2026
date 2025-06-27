@@ -17,9 +17,20 @@ export interface CardInfoProps extends JestProps {
     title: string;
 }
 
-const CardInfo = ({ className, cta, icon, secondaryCta, subtitle, title, 'data-testid': testId }: CardInfoProps) => {
+const CardInfo = ({
+    className,
+    cta,
+    icon,
+    secondaryCta,
+    subtitle,
+    title,
+    'data-testid': testId,
+}: CardInfoProps) => {
     return (
-        <article className={`${styles.cardInfo} ${className}`} data-testid={testId}>
+        <article
+            className={`${styles.cardInfo} ${className}`}
+            data-testid={testId}
+        >
             {icon}
             <h3 className="typography-desktop-headline-3-d">{title}</h3>
             <p>{subtitle}</p>

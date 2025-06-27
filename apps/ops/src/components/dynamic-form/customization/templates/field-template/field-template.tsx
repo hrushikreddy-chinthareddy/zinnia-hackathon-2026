@@ -1,5 +1,10 @@
 import { FieldTemplateProps, getUiOptions } from '@rjsf/utils';
-import { Divider, Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import {
+    Divider,
+    Label,
+    Tooltip,
+    TooltipPlacement,
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
@@ -7,7 +12,19 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import styles from './field-template.module.css';
 
 export function FieldTemplate(props: FieldTemplateProps) {
-    const { id, label, required, description, errors, children, readonly, classNames, uiSchema, hideError = false, schema } = props;
+    const {
+        id,
+        label,
+        required,
+        description,
+        errors,
+        children,
+        readonly,
+        classNames,
+        uiSchema,
+        hideError = false,
+        schema,
+    } = props;
     let { formData } = props;
     const uiOptions = getUiOptions(uiSchema);
     const helpText = uiOptions.help;
@@ -22,7 +39,14 @@ export function FieldTemplate(props: FieldTemplateProps) {
 
     const helpInformation = helpText && (
         <Tooltip
-            trigger={<CircleInfoIcon onClick={e => e.preventDefault()} height={'16px'} width={'16px'} className="text-primary" />}
+            trigger={
+                <CircleInfoIcon
+                    onClick={(e) => e.preventDefault()}
+                    height={'16px'}
+                    width={'16px'}
+                    className="text-primary"
+                />
+            }
             placement={TooltipPlacement.TopRight}
         >
             {helpText}
@@ -64,13 +88,26 @@ export function FieldTemplate(props: FieldTemplateProps) {
                     <div className={styles.children}>
                         {displayLabel && (
                             <div className="mb-2 ">
-                                <Label labelFor={id} interactiveElements={[helpInformation]}>
-                                    <span className={clsx('text-md font-medium', style as string)}>{fieldLabel}</span>
+                                <Label
+                                    labelFor={id}
+                                    interactiveElements={[helpInformation]}
+                                >
+                                    <span
+                                        className={clsx(
+                                            'text-md font-medium',
+                                            style as string
+                                        )}
+                                    >
+                                        {fieldLabel}
+                                    </span>
                                 </Label>
                             </div>
                         )}
 
-                        {readonly && typeof formData === 'string' && !(schema.enum || uiOptions.format === 'numeric') && !isLink
+                        {readonly &&
+                        typeof formData === 'string' &&
+                        !(schema.enum || uiOptions.format === 'numeric') &&
+                        !isLink
                             ? formData
                             : children}
                         {!hideError && errors}

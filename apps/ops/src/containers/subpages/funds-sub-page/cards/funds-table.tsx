@@ -1,4 +1,14 @@
-import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell, Icon, IconType, Loader } from '@zinnia/bloom/components';
+import {
+    Table,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+    TableBody,
+    TableCell,
+    Icon,
+    IconType,
+    Loader,
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { CSSProperties } from 'react';
@@ -8,7 +18,10 @@ import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { TranslationFiles } from '@deps/config/translations';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined, toSentenceCase } from '@deps/helpers/string.helpers';
+import {
+    isNullEmptyOrUndefined,
+    toSentenceCase,
+} from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import styles from './funds-table.module.css';
@@ -29,13 +42,20 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
         return (
             <div className={styles.noFundsContainer}>
                 <Icon type={IconType.CIRCLE_INFO} height={16} width={16} />
-                <Content details={t('noFunds') as string} variant={ContentVariant.CaptionSelected} />
+                <Content
+                    details={t('noFunds') as string}
+                    variant={ContentVariant.CaptionSelected}
+                />
             </div>
         );
     }
 
-    const hasSomeAllocation = funds?.some(fund => fund.allocation !== DEFAULT_ERROR_STRING);
-    const hasSomeSweepDate = funds?.some(fund => fund.nextSweepDate !== DEFAULT_ERROR_STRING);
+    const hasSomeAllocation = funds?.some(
+        (fund) => fund.allocation !== DEFAULT_ERROR_STRING
+    );
+    const hasSomeSweepDate = funds?.some(
+        (fund) => fund.nextSweepDate !== DEFAULT_ERROR_STRING
+    );
     const hasGuaranteePeriod = policy.isAnnuity;
 
     const renderGuaranteePeriod = (fund: FundViewModel) => {
@@ -47,13 +67,18 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
         // Per Amanda Boyer, the guarnatee period is *almost* always in years
         // There's a backlog item to provide interestGuaranteePeriodMode to provide support for 2 obscure funds that are in quarters
         // This will be fine per Maureen until we revisit at that point.
-        const guaranteePeriodContent = isNullEmptyOrUndefined(fund.interestGuaranteedPeriod)
+        const guaranteePeriodContent = isNullEmptyOrUndefined(
+            fund.interestGuaranteedPeriod
+        )
             ? DEFAULT_ERROR_STRING
             : t('years', { count: fund.interestGuaranteedPeriod });
 
         return (
             <TableCell className={styles.typeCell}>
-                <Content details={guaranteePeriodContent} variant={ContentVariant.BodySm} />
+                <Content
+                    details={guaranteePeriodContent}
+                    variant={ContentVariant.BodySm}
+                />
             </TableCell>
         );
     };
@@ -63,46 +88,81 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
             <TableHeader>
                 <TableRow>
                     <TableHeaderCell className={styles.nameCell}>
-                        <Content details={t('fundName') as string} variant={ContentVariant.BodySmBold} />
+                        <Content
+                            details={t('fundName') as string}
+                            variant={ContentVariant.BodySmBold}
+                        />
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.typeCell}>
-                        <Content details={t('type') as string} variant={ContentVariant.BodySmBold} />
+                        <Content
+                            details={t('type') as string}
+                            variant={ContentVariant.BodySmBold}
+                        />
                     </TableHeaderCell>
                     {hasGuaranteePeriod && (
                         <TableHeaderCell className={styles.guaranteePeriodCell}>
-                            <Content details={t('guaranteePeriod') as string} variant={ContentVariant.BodySmBold} />
+                            <Content
+                                details={t('guaranteePeriod') as string}
+                                variant={ContentVariant.BodySmBold}
+                            />
                         </TableHeaderCell>
                     )}
                     <TableHeaderCell className={styles.interestRateCell}>
                         <div className={styles.tableHeaderContainer}>
-                            <Content details={t('interestRate') as string} variant={ContentVariant.BodySmBold} />
+                            <Content
+                                details={t('interestRate') as string}
+                                variant={ContentVariant.BodySmBold}
+                            />
                             <Popover
-                                title={toSentenceCase(t('interestRate') as string)}
+                                title={toSentenceCase(
+                                    t('interestRate') as string
+                                )}
                                 body={t('interestRateTooltip') as string}
                                 placement={PopoverPlacement.TopRight}
                             >
-                                <Icon type={IconType.CIRCLE_INFO} color="var(--color-primary-color-primary)" height={16} width={16} />
+                                <Icon
+                                    type={IconType.CIRCLE_INFO}
+                                    color="var(--color-primary-color-primary)"
+                                    height={16}
+                                    width={16}
+                                />
                             </Popover>
                         </div>
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.valueCell}>
-                        <Content details={t('fundValue') as string} variant={ContentVariant.BodySmBold} />
+                        <Content
+                            details={t('fundValue') as string}
+                            variant={ContentVariant.BodySmBold}
+                        />
                     </TableHeaderCell>
                     {hasSomeAllocation && (
                         <TableHeaderCell>
-                            <Content details={t('allocation') as string} variant={ContentVariant.BodySmBold} />
+                            <Content
+                                details={t('allocation') as string}
+                                variant={ContentVariant.BodySmBold}
+                            />
                         </TableHeaderCell>
                     )}
                     {hasSomeSweepDate && (
                         <TableHeaderCell>
                             <div className={styles.tableHeaderContainer}>
-                                <Content details={t('nextSweepDate') as string} variant={ContentVariant.BodySmBold} />
+                                <Content
+                                    details={t('nextSweepDate') as string}
+                                    variant={ContentVariant.BodySmBold}
+                                />
                                 <Popover
-                                    title={toSentenceCase(t('nextSweepDate') as string)}
+                                    title={toSentenceCase(
+                                        t('nextSweepDate') as string
+                                    )}
                                     body={t('nextSweepDateTooltip') as string}
                                     placement={PopoverPlacement.TopRight}
                                 >
-                                    <Icon type={IconType.CIRCLE_INFO} color="var(--color-primary-color-primary)" height={16} width={16} />
+                                    <Icon
+                                        type={IconType.CIRCLE_INFO}
+                                        color="var(--color-primary-color-primary)"
+                                        height={16}
+                                        width={16}
+                                    />
                                 </Popover>
                             </div>
                         </TableHeaderCell>
@@ -119,7 +179,14 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                     <TableRow>
                         <TableCell colSpan={5}>
                             <div className={styles.loaderContainer}>
-                                <span className={styles.loaderIconContainer} style={{ '--loader-size': '33px' } as CSSProperties}>
+                                <span
+                                    className={styles.loaderIconContainer}
+                                    style={
+                                        {
+                                            '--loader-size': '33px',
+                                        } as CSSProperties
+                                    }
+                                >
                                     <Loader />
                                 </span>
                             </div>
@@ -132,32 +199,58 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                         return (
                             <TableRow key={`fund-${fund.fundId}-${index}`}>
                                 <TableCell className={styles.nameCell}>
-                                    <Content details={fund.fundName} variant={ContentVariant.BodySm} />
+                                    <Content
+                                        details={fund.fundName}
+                                        variant={ContentVariant.BodySm}
+                                    />
                                 </TableCell>
                                 <TableCell className={styles.typeCell}>
-                                    <Content details={toSentenceCase(fund.type)} variant={ContentVariant.BodySm} />
+                                    <Content
+                                        details={toSentenceCase(fund.type)}
+                                        variant={ContentVariant.BodySm}
+                                    />
                                 </TableCell>
-                                {hasGuaranteePeriod && renderGuaranteePeriod(fund)}
+                                {hasGuaranteePeriod &&
+                                    renderGuaranteePeriod(fund)}
                                 <TableCell className={styles.interestRateCell}>
-                                    <Content details={fund.interestRate} variant={ContentVariant.BodySm} />
+                                    <Content
+                                        details={fund.interestRate}
+                                        variant={ContentVariant.BodySm}
+                                    />
                                 </TableCell>
                                 <TableCell className={styles.valueCell}>
-                                    <Content details={fund.fundValue} variant={ContentVariant.BodySm} />
+                                    <Content
+                                        details={fund.fundValue}
+                                        variant={ContentVariant.BodySm}
+                                    />
                                 </TableCell>
                                 {hasSomeAllocation && (
                                     <TableCell>
-                                        <div className={styles.allocationContainer}>
+                                        <div
+                                            className={
+                                                styles.allocationContainer
+                                            }
+                                        >
                                             <div
-                                                className={clsx(styles.allocationSquare, getBeneficiaryColor(index))}
+                                                className={clsx(
+                                                    styles.allocationSquare,
+                                                    getBeneficiaryColor(index)
+                                                )}
                                                 role="presentation"
                                             ></div>
-                                            <Content details={fund.allocation} variant={ContentVariant.BodySm} />
+                                            <Content
+                                                details={fund.allocation}
+                                                variant={ContentVariant.BodySm}
+                                            />
                                         </div>
                                     </TableCell>
                                 )}
                                 {hasSomeSweepDate && (
                                     <TableCell>
-                                        <Content details={fund.nextSweepDate} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={fund.nextSweepDate}
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
                                 )}
                                 {!hasSomeAllocation && !hasSomeSweepDate && (

@@ -16,7 +16,13 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import { Carrier, Frequency, FundWithdrawnMethod, PaymentMethod, QualTypes } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    Frequency,
+    FundWithdrawnMethod,
+    PaymentMethod,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getFlicConfig from './flic-ssw-form-helpers';
@@ -27,8 +33,12 @@ type SswFormProps = {
 };
 
 export function FlicSSWForm({ qualType }: SswFormProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
-    const [sswProgramFrequency, setSswProgramFrequency] = useState('' as Frequency);
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
+    const [sswProgramFrequency, setSswProgramFrequency] = useState(
+        '' as Frequency
+    );
 
     const {
         formValidation,
@@ -64,9 +74,13 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
 
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.FLIC}_SSW_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.FLIC
+            }_SSW_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.FLIC}_SSW_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.FLIC
+                }_SSW_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -81,10 +95,13 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
     }, [formParty]);
 
     const handleSswProgramFrequency = (frequency: Frequency) => {
-        setFormDisbursement(ogFormDisbusement => ({
+        setFormDisbursement((ogFormDisbusement) => ({
             ...ogFormDisbusement,
             paymentMethod: {
-                text: frequency === Frequency.Monthly ? PaymentMethod.EFT : ogFormDisbusement?.paymentMethod?.text,
+                text:
+                    frequency === Frequency.Monthly
+                        ? PaymentMethod.EFT
+                        : ogFormDisbusement?.paymentMethod?.text,
             },
         }));
         setSswProgramFrequency(frequency);
@@ -94,8 +111,14 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <SswEditSelection />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <AmountDetails
+                isFormStateReadOnly={isFormStateReadOnly}
+                isOnlyWithdrawalTypeControls={true}
+            />
             <SystematicWithdrawalProgram
                 isReadOnly={isFormStateReadOnly}
                 options={systematicWithdrawalOptions}
@@ -106,26 +129,52 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
                 isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}
                 defaultMethod={FundWithdrawnMethod.Prorata}
-                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions(formProgram?.programSubType?.text || '')}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                fundWithdrawnMethodOptions={fundWithdrawnMethodOptions(
+                    formProgram?.programSubType?.text || ''
+                )}
+                title={
+                    t(
+                        'distributionInstruction.investmentSelectionForDistribution'
+                    ) as string
+                }
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions(sswProgramFrequency, qualType)}
-                defaultValue={sswProgramFrequency === Frequency.Monthly ? PaymentMethod.EFT : ('' as PaymentMethod)}
+                defaultValue={
+                    sswProgramFrequency === Frequency.Monthly
+                        ? PaymentMethod.EFT
+                        : ('' as PaymentMethod)
+                }
                 key={sswProgramFrequency}
             />
             {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

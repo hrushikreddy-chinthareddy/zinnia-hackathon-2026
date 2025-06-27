@@ -1,7 +1,7 @@
 .bds-chip-x {
     align-items: center;
-    background: #FFF;
-    border: 2px solid #CCC;
+    background: #fff;
+    border: 2px solid #ccc;
     border-radius: 1000px;
     display: flex;
     gap: 8px;
@@ -11,16 +11,16 @@
 
 .bds-chip-x-button {
     border-radius: 1000px;
-    color: #00628B;
+    color: #00628b;
     outline: 2px solid transparent;
 
     &:hover {
-        color: #003B54;
+        color: #003b54;
     }
 
     /* Taken from tailwinds default-focus */
     &:focus-visible {
-        outline-color: #37A2D8;
+        outline-color: #37a2d8;
         outline-offset: 6px;
         outline-style: solid;
         outline-width: 2px;

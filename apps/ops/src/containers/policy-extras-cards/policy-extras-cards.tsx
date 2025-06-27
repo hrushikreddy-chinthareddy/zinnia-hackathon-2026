@@ -8,7 +8,10 @@ import { useIsMounted } from '@deps/hooks/useIsMounted';
 import { getRiderBenefitData } from '@deps/queries/api/product-rate';
 import { RiderBenefit } from '@deps/types/product-rate';
 
-import { mapPolicyFeaturesToExtrasCards, mapPolicyRidersToExtrasCards } from './policy-extras-cards-helpers';
+import {
+    mapPolicyFeaturesToExtrasCards,
+    mapPolicyRidersToExtrasCards,
+} from './policy-extras-cards-helpers';
 
 type PolicyExtrasCardsProps = {
     policyDetails?: PolicyDetails;
@@ -20,20 +23,33 @@ export enum ExtrasCardType {
     Rider = 'Rider',
 }
 
-export default function PolicyExtrasCards({ policyDetails, filterValues }: PolicyExtrasCardsProps) {
+export default function PolicyExtrasCards({
+    policyDetails,
+    filterValues,
+}: PolicyExtrasCardsProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.extras',
     });
 
-    const [riderBenefitData, setRiderBenefitData] = useState<RiderBenefit[]>([]);
-    const [featuresCards, setFeaturesCards] = useState(
-        mapPolicyFeaturesToExtrasCards(policyDetails?.features.policyFeatures || [], t, policyDetails?.currency)
+    const [riderBenefitData, setRiderBenefitData] = useState<RiderBenefit[]>(
+        []
     );
-    const [ridersCards, setRidersCards] = useState(mapPolicyRidersToExtrasCards(policyDetails, t));
+    const [featuresCards, setFeaturesCards] = useState(
+        mapPolicyFeaturesToExtrasCards(
+            policyDetails?.features.policyFeatures || [],
+            t,
+            policyDetails?.currency
+        )
+    );
+    const [ridersCards, setRidersCards] = useState(
+        mapPolicyRidersToExtrasCards(policyDetails, t)
+    );
     const isMounted = useIsMounted();
 
     useEffect(() => {
-        setRidersCards(mapPolicyRidersToExtrasCards(policyDetails, t, riderBenefitData));
+        setRidersCards(
+            mapPolicyRidersToExtrasCards(policyDetails, t, riderBenefitData)
+        );
     }, [policyDetails, riderBenefitData, t]);
 
     useEffect(() => {
@@ -41,15 +57,29 @@ export default function PolicyExtrasCards({ policyDetails, filterValues }: Polic
         const getRiderBenefitDataOnPolicy = async () => {
             try {
                 policyDetails?.riders?.map(async (rider: Rider) => {
-                    const riderBenefit = await getRiderBenefitData(policyDetails, rider);
+                    const riderBenefit = await getRiderBenefitData(
+                        policyDetails,
+                        rider
+                    );
 
-                    setRiderBenefitData(prevData => [...prevData, riderBenefit ?? {}]);
+                    setRiderBenefitData((prevData) => [
+                        ...prevData,
+                        riderBenefit ?? {},
+                    ]);
                 });
                 setFeaturesCards(
-                    mapPolicyFeaturesToExtrasCards(policyDetails?.features.policyFeatures, t, policyDetails?.currency, isAnnuity)
+                    mapPolicyFeaturesToExtrasCards(
+                        policyDetails?.features.policyFeatures,
+                        t,
+                        policyDetails?.currency,
+                        isAnnuity
+                    )
                 );
             } catch (error) {
-                console.error('An error occurred setting rider/benefit data', error);
+                console.error(
+                    'An error occurred setting rider/benefit data',
+                    error
+                );
             }
         };
 
@@ -57,8 +87,15 @@ export default function PolicyExtrasCards({ policyDetails, filterValues }: Polic
     }, [isMounted, policyDetails, t]);
 
     const filteredCards = [...(featuresCards ?? []), ...(ridersCards ?? [])]
-        .filter(card => (filterValues ? card[filterValues.key] === filterValues?.value : true))
-        .sort((a, b) => (a.cardProps?.headerText?.toUpperCase() < b.cardProps?.headerText?.toUpperCase() ? -1 : 1));
+        .filter((card) =>
+            filterValues ? card[filterValues.key] === filterValues?.value : true
+        )
+        .sort((a, b) =>
+            a.cardProps?.headerText?.toUpperCase() <
+            b.cardProps?.headerText?.toUpperCase()
+                ? -1
+                : 1
+        );
 
     return (
         <>

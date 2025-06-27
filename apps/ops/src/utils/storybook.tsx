@@ -46,7 +46,7 @@ export const numberOfFieldsArgTypes = {
     },
 };
 
-export const storybookContainerDecorator: Decorator = Story => (
+export const storybookContainerDecorator: Decorator = (Story) => (
     <div className="flex justify-center bg-gray-100 p-8">
         <div className="bg-white p-1">
             <Story />
@@ -59,4 +59,5 @@ export const storybookContainerDecorator: Decorator = Story => (
  * @param ms - milliseconds to sleep
  * @returns a promise that resolves after `ms` milliseconds
  */
-export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const sleep = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));

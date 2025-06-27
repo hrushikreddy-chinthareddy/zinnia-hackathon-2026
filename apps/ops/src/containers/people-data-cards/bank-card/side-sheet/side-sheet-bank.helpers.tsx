@@ -1,9 +1,18 @@
-import { AccountType, BankAccount, BankAccountBase } from '@zinnia/api-types/types/sor';
+import {
+    AccountType,
+    BankAccount,
+    BankAccountBase,
+} from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
-import { isAccountNumberValid, isRoutingNumberValid } from '@deps/helpers/bank-validation.helpers';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
+import {
+    isAccountNumberValid,
+    isRoutingNumberValid,
+} from '@deps/helpers/bank-validation.helpers';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
 
@@ -29,15 +38,24 @@ interface GetFormErrors {
 }
 
 export const getAccountTypeOptions = ({ t }: GetAccountTypeOptions) => [
-    { label: t('people.card.bank.accountOptions.checking') as string, value: AccountType.CHECKING },
-    { label: t('people.card.bank.accountOptions.savings') as string, value: AccountType.SAVINGS },
+    {
+        label: t('people.card.bank.accountOptions.checking') as string,
+        value: AccountType.CHECKING,
+    },
+    {
+        label: t('people.card.bank.accountOptions.savings') as string,
+        value: AccountType.SAVINGS,
+    },
 ];
 
 export const getFormErrors = ({ bankAccount, caseId, t }: GetFormErrors) => {
     let errors: Errors = {};
 
     if (caseId == null) {
-        errors = { ...errors, caseId: t('errors.missingCaseDocument') as string };
+        errors = {
+            ...errors,
+            caseId: t('errors.missingCaseDocument') as string,
+        };
     }
 
     if (!bankAccount.accountNumber) {
@@ -46,7 +64,10 @@ export const getFormErrors = ({ bankAccount, caseId, t }: GetFormErrors) => {
             accountNumber: t('errors.accountNumber') as string,
         };
     } else if (!isAccountNumberValid(bankAccount.accountNumber)) {
-        errors = { ...errors, accountNumber: t('errors.accountIsInvalid') as string };
+        errors = {
+            ...errors,
+            accountNumber: t('errors.accountIsInvalid') as string,
+        };
     }
 
     if (!bankAccount.branchName) {
@@ -54,9 +75,15 @@ export const getFormErrors = ({ bankAccount, caseId, t }: GetFormErrors) => {
     }
 
     if (!bankAccount.routingNumber) {
-        errors = { ...errors, routingNumber: t('errors.routingNumber') as string };
+        errors = {
+            ...errors,
+            routingNumber: t('errors.routingNumber') as string,
+        };
     } else if (!isRoutingNumberValid(bankAccount.routingNumber)) {
-        errors = { ...errors, routingNumber: t('errors.routingIsInvalid') as string };
+        errors = {
+            ...errors,
+            routingNumber: t('errors.routingIsInvalid') as string,
+        };
     }
 
     return errors;
@@ -68,21 +95,44 @@ export const BankDetails = ({ bankAccount }: BankDetails) => {
     return (
         <div className="flex flex-col gap-6">
             <div className="flex flex-col">
-                <Label label={t('people.card.bankOptions.accountType')} variant={LabelVariant.FieldLabel} />
-                <Typography variant={TypographyVariant.BodySm}>{getBankAccountType(bankAccount.accountType, t)}</Typography>
-            </div>
-            <div className="flex flex-col">
-                <Label label={t('people.card.bankOptions.routingNumber')} variant={LabelVariant.FieldLabel} />
-                <Typography variant={TypographyVariant.BodySm}>{bankAccount.routingNumber}</Typography>
-            </div>
-            <div className="flex flex-col">
-                <Label label={t('people.card.bankOptions.bankName')} variant={LabelVariant.FieldLabel} />
-                <Typography variant={TypographyVariant.BodySm}>{bankAccount.branchName}</Typography>
-            </div>
-            <div className="flex flex-col">
-                <Label label={t('people.card.bankOptions.accountNumber')} variant={LabelVariant.FieldLabel} />
+                <Label
+                    label={t('people.card.bankOptions.accountType')}
+                    variant={LabelVariant.FieldLabel}
+                />
                 <Typography variant={TypographyVariant.BodySm}>
-                    {t('people.card.bankOptions.endingIn', { accountNumber: formatAccountNumber(bankAccount.accountNumber, true) })}
+                    {getBankAccountType(bankAccount.accountType, t)}
+                </Typography>
+            </div>
+            <div className="flex flex-col">
+                <Label
+                    label={t('people.card.bankOptions.routingNumber')}
+                    variant={LabelVariant.FieldLabel}
+                />
+                <Typography variant={TypographyVariant.BodySm}>
+                    {bankAccount.routingNumber}
+                </Typography>
+            </div>
+            <div className="flex flex-col">
+                <Label
+                    label={t('people.card.bankOptions.bankName')}
+                    variant={LabelVariant.FieldLabel}
+                />
+                <Typography variant={TypographyVariant.BodySm}>
+                    {bankAccount.branchName}
+                </Typography>
+            </div>
+            <div className="flex flex-col">
+                <Label
+                    label={t('people.card.bankOptions.accountNumber')}
+                    variant={LabelVariant.FieldLabel}
+                />
+                <Typography variant={TypographyVariant.BodySm}>
+                    {t('people.card.bankOptions.endingIn', {
+                        accountNumber: formatAccountNumber(
+                            bankAccount.accountNumber,
+                            true
+                        ),
+                    })}
                 </Typography>
             </div>
         </div>

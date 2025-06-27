@@ -11,12 +11,17 @@ import { Legend } from '@deps/components/dashboard/legend/legend';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
 import { SubmissionMethodTooltip } from '@deps/components/dashboard/sections/submission-type/submission-type';
 import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
-import { transformData, generateSeries } from '@deps/components/dashboard/sections/submission-type/utils';
+import {
+    transformData,
+    generateSeries,
+} from '@deps/components/dashboard/sections/submission-type/utils';
 import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-block';
 import { generateCarouselDataLengths } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader from '@deps/components/page-loader/page-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
@@ -38,7 +43,7 @@ export const SubmissionTypeChart: FC = () => {
 
     const chunkedResponse = chunkArray(graphStats?.data || [], 5);
 
-    const statsWithChartData = chunkedResponse.map(chunk => {
+    const statsWithChartData = chunkedResponse.map((chunk) => {
         const transformedData = transformData(chunk);
         const series = generateSeries(transformedData);
         const applicationTypeCategories = Object.keys(transformedData);
@@ -47,41 +52,53 @@ export const SubmissionTypeChart: FC = () => {
             transformedData,
             series,
             applicationTypeCategories,
-            chartConfig: Highcharts.merge(caseChartHelpers.getBaseBarChartConfiguration(), {
-                legend: {
-                    enabled: false,
-                },
-                chart: {
-                    height: 300,
-                },
-                xAxis: {
-                    categories: applicationTypeCategories,
-                    labels: {
-                        useHTML: false,
+            chartConfig: Highcharts.merge(
+                caseChartHelpers.getBaseBarChartConfiguration(),
+                {
+                    legend: {
+                        enabled: false,
                     },
-                },
-                yAxis: {
-                    allowDecimals: false,
-                },
+                    chart: {
+                        height: 300,
+                    },
+                    xAxis: {
+                        categories: applicationTypeCategories,
+                        labels: {
+                            useHTML: false,
+                        },
+                    },
+                    yAxis: {
+                        allowDecimals: false,
+                    },
 
-                series,
-            }),
+                    series,
+                }
+            ),
         };
     });
 
     const pieChartData = getPieChartData(pieChartStats);
-    const pieChartDataColors = pieChartData.map(pieChart => {
+    const pieChartDataColors = pieChartData.map((pieChart) => {
         return {
             ...pieChart,
-            color: pieChart.name === 'Digital' ? '#00628B' : pieChart.name === 'Electronic (E-App)' ? '#85BCD3' : '#021936',
+            color:
+                pieChart.name === 'Digital'
+                    ? '#00628B'
+                    : pieChart.name === 'Electronic (E-App)'
+                    ? '#85BCD3'
+                    : '#021936',
             type: 'pie',
         };
     });
-    const pieChartSeriesData: Highcharts.SeriesOptionsType[] = [{ data: pieChartDataColors, name: 'cases', type: 'pie' }];
+    const pieChartSeriesData: Highcharts.SeriesOptionsType[] = [
+        { data: pieChartDataColors, name: 'cases', type: 'pie' },
+    ];
 
-    const chunkedResponseLengths = chunkedResponse.map(chunk => chunk.length);
+    const chunkedResponseLengths = chunkedResponse.map((chunk) => chunk.length);
 
-    const eachChunkPortionOfTotal = generateCarouselDataLengths(chunkedResponseLengths);
+    const eachChunkPortionOfTotal = generateCarouselDataLengths(
+        chunkedResponseLengths
+    );
 
     const legendItems = [
         {
@@ -94,7 +111,9 @@ export const SubmissionTypeChart: FC = () => {
         },
     ];
 
-    const totalCaseCount = graphStats?.data?.map(stat => stat.count).reduce((a, b) => a + b, 0);
+    const totalCaseCount = graphStats?.data
+        ?.map((stat) => stat.count)
+        .reduce((a, b) => a + b, 0);
 
     //TODO: When we re-write the pie charts, probably move this into its own component.
     const pieChartLegendConfig: Highcharts.LegendOptions = {
@@ -116,10 +135,14 @@ export const SubmissionTypeChart: FC = () => {
     const totalCases =
         pieChartStatsFetching || graphStatsFetching ? (
             <div className="blur">
-                <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+                <p className={'typography-titles-subtitle'}>
+                    {totalCaseCount?.toLocaleString() || '0'} total cases
+                </p>
             </div>
         ) : (
-            <p className={'typography-titles-subtitle'}>{totalCaseCount?.toLocaleString() || '0'} total cases</p>
+            <p className={'typography-titles-subtitle'}>
+                {totalCaseCount?.toLocaleString() || '0'} total cases
+            </p>
         );
 
     return (
@@ -131,7 +154,9 @@ export const SubmissionTypeChart: FC = () => {
                 description="The distribution of incoming case requests by submission method, comparing Electronic (E-App) and Paper submissions."
             />
 
-            <BlurOverlayLoader loading={pieChartStatsFetching || graphStatsFetching}>
+            <BlurOverlayLoader
+                loading={pieChartStatsFetching || graphStatsFetching}
+            >
                 <div className="flex bg-[--color-base-surface-surface-primary] mt-6">
                     <CaseStatBlock
                         dashboardStatsResponse={pieChartStats}
@@ -157,33 +182,54 @@ export const SubmissionTypeChart: FC = () => {
                             </div>
                         ) : graphStatsError || pieChartStatsError ? (
                             <div className="grid place-content-center h-full w-full min-h-[400px]">
-                                <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
-                                    <ChartBarsIcon height={'24px'} width={'24px'} />
-                                    {'Something went wrong fetching the application types, please try again by refreshing the page'}
+                                <Typography
+                                    variant={TypographyVariant.BodyBold}
+                                    className="mt-4 flex flex-row gap-2"
+                                >
+                                    <ChartBarsIcon
+                                        height={'24px'}
+                                        width={'24px'}
+                                    />
+                                    {
+                                        'Something went wrong fetching the application types, please try again by refreshing the page'
+                                    }
                                 </Typography>
                             </div>
-                        ) : pieChartStats?.data?.length === 0 || graphStats?.data?.length === 0 ? (
+                        ) : pieChartStats?.data?.length === 0 ||
+                          graphStats?.data?.length === 0 ? (
                             <div className="grid place-content-center h-full w-full min-h-[400px]">
-                                <Typography variant={TypographyVariant.BodyBold} className="mt-4 flex flex-row gap-2">
-                                    <ChartBarsIcon height={'24px'} width={'24px'} />
+                                <Typography
+                                    variant={TypographyVariant.BodyBold}
+                                    className="mt-4 flex flex-row gap-2"
+                                >
+                                    <ChartBarsIcon
+                                        height={'24px'}
+                                        width={'24px'}
+                                    />
                                     {'There is no data for this selection'}
                                 </Typography>
                             </div>
                         ) : (
                             <Carousel
                                 slideStyle="my-8 pt-6"
-                                slides={statsWithChartData.map((stat, index) => {
-                                    return (
-                                        <HighchartsReact
-                                            key={`submission-type-slide-${index}`}
-                                            highcharts={Highcharts}
-                                            options={stat.chartConfig}
-                                        />
-                                    );
-                                })}
+                                slides={statsWithChartData.map(
+                                    (stat, index) => {
+                                        return (
+                                            <HighchartsReact
+                                                key={`submission-type-slide-${index}`}
+                                                highcharts={Highcharts}
+                                                options={stat.chartConfig}
+                                            />
+                                        );
+                                    }
+                                )}
                                 slideItemsCount={eachChunkPortionOfTotal}
                                 bottomContent={
-                                    <Legend title="Case Submissions" items={legendItems} containerClass={styles.legendContainer} />
+                                    <Legend
+                                        title="Case Submissions"
+                                        items={legendItems}
+                                        containerClass={styles.legendContainer}
+                                    />
                                 }
                             />
                         )}

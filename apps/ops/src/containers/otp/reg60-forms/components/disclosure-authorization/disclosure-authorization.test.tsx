@@ -40,7 +40,9 @@ describe('#DisclosureAuthorization', () => {
 
         const signatureDate = screen.getByTestId('signature-date-test-id');
         expect(signatureDate).toBeInTheDocument();
-        const expectedAccValue = screen.getByTestId('expected-acct-value-test-id');
+        const expectedAccValue = screen.getByTestId(
+            'expected-acct-value-test-id'
+        );
         expect(expectedAccValue).toBeInTheDocument();
         const buttons = screen.getAllByRole('combobox');
         expect(buttons.length).toBe(2);
@@ -71,7 +73,9 @@ describe('#DisclosureAuthorization', () => {
 
         const signatureDate = screen.getByTestId('signature-date-test-id');
         expect(signatureDate).toBeInTheDocument();
-        const expectedAccValue = screen.getByTestId('expected-acct-value-test-id');
+        const expectedAccValue = screen.getByTestId(
+            'expected-acct-value-test-id'
+        );
         expect(expectedAccValue).toBeInTheDocument();
         const buttons = screen.getAllByRole('combobox');
         expect(buttons.length).toBe(2);

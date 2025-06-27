@@ -25,7 +25,9 @@ import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signa
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 
 export function NassauSSWForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         formParty,
         parties,
@@ -55,11 +57,15 @@ export function NassauSSWForm() {
     } = useNassauConfig(t);
 
     useEffect(() => {
-        setFormData(fs => ({
+        setFormData((fs) => ({
             ...fs,
-            formExtName: `${initialForm?.carrier || Carrier.NASU}_SSW_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.NASU
+            }_SSW_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.NASU}_SSW_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.NASU
+                }_SSW_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -70,36 +76,69 @@ export function NassauSSWForm() {
         setFormValidator(() => formValidation);
     }, [setFormValidator, formValidation]);
 
-    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(parties as LifeCadParty[]);
+    const ownerStateOfResidence =
+        formParty?.parties?.[0]?.addresses?.[0]?.state;
+    const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(
+        parties as LifeCadParty[]
+    );
     const shouldStateW4pRender = isAllowedState(contractIssueState ?? '');
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <SswEditSelection />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <AmountDetails isFormStateReadOnly={isFormStateReadOnly} isOnlyWithdrawalTypeControls={true} />
-            <SystematicWithdrawalProgram isReadOnly={isFormStateReadOnly} options={systematicWithdrawalOptions} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <AmountDetails
+                isFormStateReadOnly={isFormStateReadOnly}
+                isOnlyWithdrawalTypeControls={true}
+            />
+            <SystematicWithdrawalProgram
+                isReadOnly={isFormStateReadOnly}
+                options={systematicWithdrawalOptions}
+            />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                title={
+                    t(
+                        'distributionInstruction.investmentSelectionForDistribution'
+                    ) as string
+                }
             />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            <TaxOL4753Attachment isFormStateReadOnly={isFormStateReadOnly} shouldShowDOBInOl4573={shouldShowDOBInOl4573} />
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
+            <TaxOL4753Attachment
+                isFormStateReadOnly={isFormStateReadOnly}
+                shouldShowDOBInOl4573={shouldShowDOBInOl4573}
+            />
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
                 defaultValue={defaultValues.disbursementOption}
             />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <W4pTaxForm isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <W4pTaxForm
+                isFormStateReadOnly={isFormStateReadOnly}
+                w4pSignaturesConfig={w4pSignaturesConfig}
+            />
             {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
@@ -107,7 +146,9 @@ export function NassauSSWForm() {
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

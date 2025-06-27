@@ -63,17 +63,29 @@ describe('SideSheetBank helpers', () => {
 
             render(<BankDetails bankAccount={bankAccount} />);
 
-            expect(screen.getByText('People.card.bankoptions.accounttype')).toBeInTheDocument();
-            expect(screen.getByText('bankAccountType.checking')).toBeInTheDocument();
+            expect(
+                screen.getByText('People.card.bankoptions.accounttype')
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText('bankAccountType.checking')
+            ).toBeInTheDocument();
 
-            expect(screen.getByText('People.card.bankoptions.routingnumber')).toBeInTheDocument();
+            expect(
+                screen.getByText('People.card.bankoptions.routingnumber')
+            ).toBeInTheDocument();
             expect(screen.getByText('123456789')).toBeInTheDocument();
 
-            expect(screen.getByText('People.card.bankoptions.bankname')).toBeInTheDocument();
+            expect(
+                screen.getByText('People.card.bankoptions.bankname')
+            ).toBeInTheDocument();
             expect(screen.getByText('Bank of Example')).toBeInTheDocument();
 
-            expect(screen.getByText('People.card.bankoptions.accountnumber')).toBeInTheDocument();
-            expect(screen.getByText('people.card.bankOptions.endingIn 7890')).toBeInTheDocument();
+            expect(
+                screen.getByText('People.card.bankoptions.accountnumber')
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText('people.card.bankOptions.endingIn 7890')
+            ).toBeInTheDocument();
         });
     });
 });

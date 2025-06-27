@@ -12,12 +12,17 @@ import SurrenderValue from '../display-fields/surrender-value';
 import UpcomingPremiumDisplayField from '../display-fields/upcoming-premium';
 
 const EverlyIul = ({ policy }: BasePolicyComponentArgs) => {
-    const freeLookFeature = policy.features.getFirstFeatureByType(FeatureType.FREELOOK);
+    const freeLookFeature = policy.features.getFirstFeatureByType(
+        FeatureType.FREELOOK
+    );
 
     return (
         <>
             <UpcomingPremiumDisplayField policy={policy} />
-            <FixedCostPeriod fixedCostPeriod={policy.fixedCostPeriod} fixedCostPeriodLeft={policy.fixedCostPeriodLeft} />
+            <FixedCostPeriod
+                fixedCostPeriod={policy.fixedCostPeriod}
+                fixedCostPeriodLeft={policy.fixedCostPeriodLeft}
+            />
             <BaseDeathBenefit baseDeathBenefit={policy.baseDeathBenefit} />
             <IssueDate issueDate={policy.issueDate} />
             <AccountValue accountValue={policy.accountValue} />

@@ -6,12 +6,20 @@ export default withAuthAndLogging(
     async (req, res, loggingContext) => {
         try {
             const { limit = '10', offset = '0' } = req.query;
-            const url = new URL('/distributors/v1/producers/search', apiServerBaseUrl);
+            const url = new URL(
+                '/distributors/v1/producers/search',
+                apiServerBaseUrl
+            );
 
             url.searchParams.append('limit', limit.toString());
             url.searchParams.append('offset', offset.toString());
 
-            return await requestHandler(url.toString(), req, res, loggingContext);
+            return await requestHandler(
+                url.toString(),
+                req,
+                res,
+                loggingContext
+            );
         } catch (error) {
             res.status(500).json({ message: 'Could not search for producers' });
         }

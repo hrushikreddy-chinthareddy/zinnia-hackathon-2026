@@ -3,7 +3,10 @@ import { useMemo } from 'react';
 
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import {
+    WorkflowProvider,
+    useWorkflow,
+} from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
@@ -16,9 +19,20 @@ type TabGroupContainerProps = {
 const TabGroupContent = ({ steps, policy }: TabGroupContainerProps) => {
     const { t } = useTranslation();
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
-    const globalValuesData = useMemo(() => policyDataToGlobalValues(policy, t), [policy, t]);
+    const globalValuesData = useMemo(
+        () => policyDataToGlobalValues(policy, t),
+        [policy, t]
+    );
 
-    const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
+    const {
+        marketingName,
+        planCode,
+        policyNumber,
+        productType,
+        status,
+        tooltip,
+        variant,
+    } = globalValuesData;
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
 
@@ -38,7 +52,11 @@ const TabGroupContent = ({ steps, policy }: TabGroupContainerProps) => {
                 tooltip={tooltip}
                 variant={variant}
             />
-            <ProgressBarSteps currentStepIndex={Number(currentStepIndex)} onClick={handleClick} steps={steps} />
+            <ProgressBarSteps
+                currentStepIndex={Number(currentStepIndex)}
+                onClick={handleClick}
+                steps={steps}
+            />
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
                 {steps[currentStepIndex].component}
             </div>

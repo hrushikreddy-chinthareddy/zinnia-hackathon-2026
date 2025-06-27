@@ -15,7 +15,10 @@ interface NigoExceptionResponse {
     nmId: string;
 }
 
-const backgroundReviewHandler: TaskHandler<BackgroundReviewPayload, NigoExceptionResponse[]> = {
+const backgroundReviewHandler: TaskHandler<
+    BackgroundReviewPayload,
+    NigoExceptionResponse[]
+> = {
     api: NigoSearch,
 
     getPayload: () => ({
@@ -28,16 +31,21 @@ const backgroundReviewHandler: TaskHandler<BackgroundReviewPayload, NigoExceptio
 
         const reason = 'Background Check';
 
-        const reasonList = Array.from(new Set(response.filter(item => item.reason === reason)));
+        const reasonList = Array.from(
+            new Set(response.filter((item) => item.reason === reason))
+        );
 
         if (metadata[0]?.formSchema?.definitions) {
-            metadata[0].formSchema.definitions.declineReason = { enum: reasonList.map(reason => JSON.stringify(reason)) };
+            metadata[0].formSchema.definitions.declineReason = {
+                enum: reasonList.map((reason) => JSON.stringify(reason)),
+            };
         }
 
-        metadata[0].uiSchema.declineReason['ui:options'].enumOptions = reasonList.map(reason => ({
-            label: reason.detailedReason,
-            value: JSON.stringify(reason),
-        }));
+        metadata[0].uiSchema.declineReason['ui:options'].enumOptions =
+            reasonList.map((reason) => ({
+                label: reason.detailedReason,
+                value: JSON.stringify(reason),
+            }));
     },
 };
 

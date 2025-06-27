@@ -11,13 +11,24 @@ type SendDocumentProps = {
 };
 
 const SendDocument = ({ documents, selectedFormId }: SendDocumentProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument.formSelection' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'sendDocument.formSelection',
+    });
 
     return (
         <div className="documents-grid">
-            <Label label={t('documentsTitle')} variant={LabelVariant.FieldLabel} />
-            {documents.map(document => {
-                return <DocumentDetail isSelected={selectedFormId === document.formId} document={document} key={document.formId} />;
+            <Label
+                label={t('documentsTitle')}
+                variant={LabelVariant.FieldLabel}
+            />
+            {documents.map((document) => {
+                return (
+                    <DocumentDetail
+                        isSelected={selectedFormId === document.formId}
+                        document={document}
+                        key={document.formId}
+                    />
+                );
             })}
         </div>
     );

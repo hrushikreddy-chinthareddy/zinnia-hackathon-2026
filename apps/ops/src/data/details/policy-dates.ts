@@ -4,7 +4,8 @@ import { DataDefinition } from '@deps/types/data';
 
 export type PolicyDatesDto = PolicyDates;
 
-export const toPolicyDatesDto = ({ policyDates }: Policy): PolicyDatesDto => policyDates as PolicyDates;
+export const toPolicyDatesDto = ({ policyDates }: Policy): PolicyDatesDto =>
+    policyDates as PolicyDates;
 
 export const PolicyDatesInfo = (): DataDefinition<PolicyDatesDto>[] => [
     {

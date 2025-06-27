@@ -19,7 +19,12 @@ const BadgeWithTooltip = ({
     return (
         <div className={className}>
             <Tooltip body={tooltip} placement={tooltipPlacement}>
-                <Badge icon={icon} label={label} rounded={rounded} variant={variant} />
+                <Badge
+                    icon={icon}
+                    label={label}
+                    rounded={rounded}
+                    variant={variant}
+                />
             </Tooltip>
         </div>
     );

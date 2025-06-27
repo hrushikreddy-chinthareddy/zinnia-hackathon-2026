@@ -2,16 +2,23 @@ import { Address, PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import CardPeople from '@deps/components/card/card-people/card-people';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import Tooltip from '@deps/components/tooltip/tooltip';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import {
+    buildFullNameFromParty,
+    isNullEmptyOrUndefined,
+} from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
@@ -33,7 +40,13 @@ interface PayorStepProps extends TransactionClickProps {
     state: PayorType;
 }
 
-const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: PayorStepProps) => {
+const PayorStep = ({
+    parentPage,
+    policy,
+    setState,
+    state,
+    trackEventProps,
+}: PayorStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
 
@@ -43,16 +56,27 @@ const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: Pay
     const { payorPartyId: currentPayorPartyId } = state;
 
     const eligiblePayors = useMemo(() => {
-        const ownerPayorRoles = partyRoles?.filter(role => role.partyRole === PartyRole.OWNER || role.partyRole === PartyRole.PAYOR);
+        const ownerPayorRoles = partyRoles?.filter(
+            (role) =>
+                role.partyRole === PartyRole.OWNER ||
+                role.partyRole === PartyRole.PAYOR
+        );
 
-        const eligibleRoles = ownerPayorRoles?.filter((value, index, self) => index === self.findIndex(t => t.partyId === value.partyId));
-        return eligibleRoles?.map(eligibleRole => {
-            const party = parties?.find(party => eligibleRole.partyId === party.partyId);
+        const eligibleRoles = ownerPayorRoles?.filter(
+            (value, index, self) =>
+                index === self.findIndex((t) => t.partyId === value.partyId)
+        );
+        return eligibleRoles?.map((eligibleRole) => {
+            const party = parties?.find(
+                (party) => eligibleRole.partyId === party.partyId
+            );
 
             if (!party) return;
 
-            const roles = partyRoles?.filter(role => role.partyId === party.partyId);
-            const tags = roles?.map(role => {
+            const roles = partyRoles?.filter(
+                (role) => role.partyId === party.partyId
+            );
+            const tags = roles?.map((role) => {
                 return { text: convertToChipText(role.partyRole, t) };
             });
 
@@ -61,9 +85,11 @@ const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: Pay
     }, [parties, partyRoles, t]);
 
     useEffect(() => {
-        setState(prevState => ({
+        setState((prevState) => ({
             ...prevState,
-            payorAddress: eligiblePayors?.[0]?.addresses?.filter(address => !isEndDated(address.endDate))[0],
+            payorAddress: eligiblePayors?.[0]?.addresses?.filter(
+                (address) => !isEndDated(address.endDate)
+            )[0],
             payorFullName: buildFullNameFromParty(eligiblePayors?.[0]),
             payorPartyId: eligiblePayors?.[0]?.partyId ?? '',
         }));
@@ -75,16 +101,20 @@ const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: Pay
         } else goToNext();
     };
 
-    const handleSelection = ({ payorAddress, payorPartyId, payorFullName }: PayorType) => {
+    const handleSelection = ({
+        payorAddress,
+        payorPartyId,
+        payorFullName,
+    }: PayorType) => {
         if (payorPartyId === currentPayorPartyId) {
-            setState(prevState => ({
+            setState((prevState) => ({
                 ...prevState,
                 payorAddress: undefined,
                 payorFullName: '',
                 payorPartyId: '',
             }));
         } else {
-            setState(prevState => ({
+            setState((prevState) => ({
                 ...prevState,
                 payorAddress,
                 payorFullName,
@@ -109,11 +139,17 @@ const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: Pay
         >
             <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-4">
-                    <Label label={t('workflows.payorStep.subLabel')} sentenceCase={false} variant={LabelVariant.LabelLg} />
+                    <Label
+                        label={t('workflows.payorStep.subLabel')}
+                        sentenceCase={false}
+                        variant={LabelVariant.LabelLg}
+                    />
                     <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3">
-                        {eligiblePayors?.map(eligiblePayor => {
-                            const payorFullName = buildFullNameFromParty(eligiblePayor);
-                            const selected = eligiblePayor?.partyId === currentPayorPartyId;
+                        {eligiblePayors?.map((eligiblePayor) => {
+                            const payorFullName =
+                                buildFullNameFromParty(eligiblePayor);
+                            const selected =
+                                eligiblePayor?.partyId === currentPayorPartyId;
 
                             return (
                                 <Tooltip
@@ -129,13 +165,23 @@ const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: Pay
                                         name={payorFullName}
                                         onClick={() => {
                                             handleSelection({
-                                                payorAddress: eligiblePayor?.addresses?.filter(address => !isEndDated(address.endDate))[0],
-                                                payorPartyId: eligiblePayor?.partyId ?? '',
+                                                payorAddress:
+                                                    eligiblePayor?.addresses?.filter(
+                                                        (address) =>
+                                                            !isEndDated(
+                                                                address.endDate
+                                                            )
+                                                    )[0],
+                                                payorPartyId:
+                                                    eligiblePayor?.partyId ??
+                                                    '',
                                                 payorFullName,
                                             });
                                         }}
                                         tags={eligiblePayor?.tags}
-                                        testId={`payor-card-${payorFullName.replace(/\s/g, '').toLowerCase()}`}
+                                        testId={`payor-card-${payorFullName
+                                            .replace(/\s/g, '')
+                                            .toLowerCase()}`}
                                     />
                                 </Tooltip>
                             );
@@ -144,7 +190,9 @@ const PayorStep = ({ parentPage, policy, setState, state, trackEventProps }: Pay
                         <div className="flex cursor-not-allowed flex-col items-center justify-center gap-4 rounded border-2 border-gray-200 bg-gray-100 px-4 py-8">
                             <div className="flex items-center gap-1 text-gray-300">
                                 <AddIcon height={24} width={24} />
-                                <p className="font-primary text-base font-semibold">{t('workflows.payorStep.add')}</p>
+                                <p className="font-primary text-base font-semibold">
+                                    {t('workflows.payorStep.add')}
+                                </p>
                             </div>
                         </div>
                     </div>

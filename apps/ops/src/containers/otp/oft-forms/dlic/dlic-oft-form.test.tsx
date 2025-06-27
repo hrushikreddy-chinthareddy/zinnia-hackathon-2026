@@ -3,7 +3,11 @@ import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
 import { SignatureBonusFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
-import { FormDataContext, OtpWithdrawalFormState, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    OtpWithdrawalFormState,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { statesAndTerritories } from '@deps/helpers/states.helpers';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
@@ -43,7 +47,8 @@ jest.mock('next/navigation', () => {
 
 jest.mock('@deps/utils/server-logging');
 
-const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+const t: TFunction = (key: string | string[]) =>
+    key as unknown as TFunctionDetailedResult<string>;
 
 const oftDlicConfig = getOftDlicConfig(t);
 
@@ -221,7 +226,11 @@ describe('formValidation', () => {
     describe('signaturesConfig', () => {
         const { signaturesConfig } = oftDlicConfig;
         describe('Owner signature', () => {
-            const ownerConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Owner);
+            const ownerConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
                 expect(ownerConfig?.fields).toHaveLength(5);
@@ -230,7 +239,9 @@ describe('formValidation', () => {
 
         describe('Joint Owner signature', () => {
             const jointOwnerConfig = signaturesConfig.find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.JointOwner
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.JointOwner
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
@@ -343,15 +354,25 @@ describe('formValidation', () => {
                     ],
                 };
 
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: jointOwner } as OtpWithdrawalFormState)).toBeTruthy();
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: owner } as OtpWithdrawalFormState)).toBeFalsy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: jointOwner,
+                    } as OtpWithdrawalFormState)
+                ).toBeTruthy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: owner,
+                    } as OtpWithdrawalFormState)
+                ).toBeFalsy();
             });
         });
 
         describe('Beneficiary signature', () => {
             it('should be in the config', () => {
                 const beneficiaryConfig = signaturesConfig.find(
-                    sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+                    (sigConfig) =>
+                        sigConfig.signatureType ===
+                        SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
                 expect(beneficiaryConfig).toBeTruthy();
                 expect(beneficiaryConfig?.fields).toHaveLength(5);
@@ -359,7 +380,11 @@ describe('formValidation', () => {
         });
 
         describe.skip('Spouse signature', () => {
-            const spouseConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Spouse);
+            const spouseConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Spouse
+            );
             it('should be in the config', () => {
                 expect(spouseConfig).toBeTruthy();
                 expect(spouseConfig?.fields).toHaveLength(4);
@@ -367,15 +392,21 @@ describe('formValidation', () => {
 
             it('should have shouldDisplay logic', () => {
                 expect(
-                    spouseConfig?.shouldDisplay?.({ ownerStateOfResidence: statesAndTerritories.ARIZONA } as OtpWithdrawalFormState)
+                    spouseConfig?.shouldDisplay?.({
+                        ownerStateOfResidence: statesAndTerritories.ARIZONA,
+                    } as OtpWithdrawalFormState)
                 ).toBeTruthy();
                 expect(
-                    spouseConfig?.shouldDisplay?.({ ownerStateOfResidence: statesAndTerritories.GUAM } as OtpWithdrawalFormState)
+                    spouseConfig?.shouldDisplay?.({
+                        ownerStateOfResidence: statesAndTerritories.GUAM,
+                    } as OtpWithdrawalFormState)
                 ).toBeFalsy();
             });
 
             it('should have a bonusField (Spousal Consent', () => {
-                expect(spouseConfig?.bonusField).toEqual(SignatureBonusFields.SpousalConsent);
+                expect(spouseConfig?.bonusField).toEqual(
+                    SignatureBonusFields.SpousalConsent
+                );
             });
         });
     });

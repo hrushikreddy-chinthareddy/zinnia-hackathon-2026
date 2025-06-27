@@ -4,7 +4,10 @@ import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text'
 import CardContainer from '@deps/containers/card-container/card-container';
 
 import ESignatureFields from './e-signature-fields';
-import { FormEsignatureData, SelectionStateYesNo } from './e-signature-validation.helpers';
+import {
+    FormEsignatureData,
+    SelectionStateYesNo,
+} from './e-signature-validation.helpers';
 
 interface ESignatureValidationProps {
     formESignatureData: FormEsignatureData;
@@ -27,7 +30,9 @@ const ESignatureValidation: React.FC<ESignatureValidationProps> = ({
     formErrors,
     isFormStateReadOnly,
 }) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.eSignatureValidation' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.eSignatureValidation',
+    });
 
     const selectYesNoOptions = [
         { label: t('selectOption'), value: SelectionStateYesNo.Unselected },
@@ -35,32 +40,46 @@ const ESignatureValidation: React.FC<ESignatureValidationProps> = ({
         { label: t('no'), value: SelectionStateYesNo.No },
     ];
 
-    const updateFormESignatureField = (index: number, field: string, value: string | object | boolean) => {
-        setFormESignatureData((prev: ESignatureValidationProps['formESignatureData']) => {
-            const updatedSignatures = [...prev.eSignatures];
-            updatedSignatures[index] = {
-                ...updatedSignatures[index],
-                [field]: value,
-            };
-            return {
-                ...prev,
-                eSignatures: updatedSignatures,
-            };
-        });
+    const updateFormESignatureField = (
+        index: number,
+        field: string,
+        value: string | object | boolean
+    ) => {
+        setFormESignatureData(
+            (prev: ESignatureValidationProps['formESignatureData']) => {
+                const updatedSignatures = [...prev.eSignatures];
+                updatedSignatures[index] = {
+                    ...updatedSignatures[index],
+                    [field]: value,
+                };
+                return {
+                    ...prev,
+                    eSignatures: updatedSignatures,
+                };
+            }
+        );
     };
 
     return (
         <>
-            <CardContainer containerClassNames="border-b-2 border-gray-100" classNames="w-full">
+            <CardContainer
+                containerClassNames="border-b-2 border-gray-100"
+                classNames="w-full"
+            >
                 <div className="flex-1 mt-5">
                     <CheckboxText
                         label={t('title')}
                         checked={formESignatureData.isFormESignaturePresent}
                         onChange={() =>
-                            setFormESignatureData((prev: ESignatureValidationProps['formESignatureData']) => ({
-                                ...prev,
-                                isFormESignaturePresent: !prev.isFormESignaturePresent,
-                            }))
+                            setFormESignatureData(
+                                (
+                                    prev: ESignatureValidationProps['formESignatureData']
+                                ) => ({
+                                    ...prev,
+                                    isFormESignaturePresent:
+                                        !prev.isFormESignaturePresent,
+                                })
+                            )
                         }
                         isDisabled={isFormStateReadOnly}
                     />

@@ -19,7 +19,10 @@ interface AnnuitizationPageHeaderProps {
     policyDetails: PolicyDetails;
 }
 
-export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ policy, policyDetails }) => {
+export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({
+    policy,
+    policyDetails,
+}) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'annuitization',
     });
@@ -27,7 +30,9 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ poli
     const { features, policyStatus } = policyDetails;
     const { deathBenefit } = policy;
     const isPayoutStage = policyStatus === PolicyStatus.PAYOUT;
-    const annuitizationFeature = features.getFirstFeatureByType(FeatureType.ANNUITIZATION);
+    const annuitizationFeature = features.getFirstFeatureByType(
+        FeatureType.ANNUITIZATION
+    );
     const headerRowFlexClassNames = clsx('flex-col', 'xs:gap-4 lg:gap-0');
     const groupOneFlexClassNames = 'flex gap-4';
     const generateBadgeText = useCallback(
@@ -69,7 +74,13 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ poli
                             tooltipBody={t('headerDetails.payoutOptionTooltip')}
                             variant={LabelVariant.FieldLabel}
                         />
-                        <Content details={deathBenefit?.deathBenefitOption || DEFAULT_ERROR_STRING} variant={ContentVariant.Value} />
+                        <Content
+                            details={
+                                deathBenefit?.deathBenefitOption ||
+                                DEFAULT_ERROR_STRING
+                            }
+                            variant={ContentVariant.Value}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col gap-8 md:flex-row">
@@ -80,10 +91,18 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ poli
                             tooltipBody={t('headerDetails.fixedPayoutAmount')}
                             variant={LabelVariant.FieldLabel}
                         />
-                        <Content details={numberFormatify(annuitizationFeature?.paymentAmount as number) || DEFAULT_ERROR_STRING} />
+                        <Content
+                            details={
+                                numberFormatify(
+                                    annuitizationFeature?.paymentAmount as number
+                                ) || DEFAULT_ERROR_STRING
+                            }
+                        />
                         <Content
                             className="text-gray-600"
-                            details={`${t('headerDetails.fixedExclusionAmount')}: ${numberFormatify(
+                            details={`${t(
+                                'headerDetails.fixedExclusionAmount'
+                            )}: ${numberFormatify(
                                 annuitizationFeature?.exclusionAmount as number
                             )}`}
                             variant={ContentVariant.Caption}
@@ -92,14 +111,26 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ poli
                     <div className="w-[224px] xl:w-fit">
                         <Label
                             label={t('headerDetails.totalAnnuityPayments')}
-                            tooltipTitle={t('headerDetails.totalAnnuityPayments')}
-                            tooltipBody={t('headerDetails.totalAnnuityPayments')}
+                            tooltipTitle={t(
+                                'headerDetails.totalAnnuityPayments'
+                            )}
+                            tooltipBody={t(
+                                'headerDetails.totalAnnuityPayments'
+                            )}
                             variant={LabelVariant.FieldLabel}
                         />
-                        <Content details={numberFormatify(annuitizationFeature?.totalPaymentAmount as number) || DEFAULT_ERROR_STRING} />
+                        <Content
+                            details={
+                                numberFormatify(
+                                    annuitizationFeature?.totalPaymentAmount as number
+                                ) || DEFAULT_ERROR_STRING
+                            }
+                        />
                         <Content
                             className="text-gray-600"
-                            details={`${t('headerDetails.ytdAnnuityPayments')}: ${numberFormatify(
+                            details={`${t(
+                                'headerDetails.ytdAnnuityPayments'
+                            )}: ${numberFormatify(
                                 annuitizationFeature?.yearToDatePaymentAmount as number
                             )}`}
                             variant={ContentVariant.Caption}
@@ -121,7 +152,11 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({ poli
                     label={generateBadgeText(policyStatus)}
                     tooltip={generateBadgeTooltip(policyStatus)}
                     tooltipPlacement={PopoverPlacement.BottomRight}
-                    variant={isPayoutStage ? BadgeVariant.Positive : BadgeVariant.Negative}
+                    variant={
+                        isPayoutStage
+                            ? BadgeVariant.Positive
+                            : BadgeVariant.Negative
+                    }
                 />
             }
         />

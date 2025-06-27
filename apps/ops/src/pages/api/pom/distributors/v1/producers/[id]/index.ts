@@ -5,9 +5,17 @@ import { withAuthAndLogging } from '@deps/utils/server-logging';
 export default withAuthAndLogging(
     async (req, res, loggingContext) => {
         try {
-            const url = new URL(`/distributors/v1/producers/${req.query.id}`, apiServerBaseUrl);
+            const url = new URL(
+                `/distributors/v1/producers/${req.query.id}`,
+                apiServerBaseUrl
+            );
 
-            return await requestHandler(url.toString(), req, res, loggingContext);
+            return await requestHandler(
+                url.toString(),
+                req,
+                res,
+                loggingContext
+            );
         } catch (error) {
             res.status(500).json({ message: 'Could not find producer' });
         }

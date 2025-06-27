@@ -14,8 +14,16 @@ export interface PaginationControlsProps extends PaginationParams {
     goToPage: (pageNumber: number) => void;
 }
 
-const PaginationControls: React.FC<PaginationControlsProps> = ({ limit, offset, total, goToPage }) => {
-    const currentPage = useMemo(() => Math.floor(offset / limit) + 1, [limit, offset]);
+const PaginationControls: React.FC<PaginationControlsProps> = ({
+    limit,
+    offset,
+    total,
+    goToPage,
+}) => {
+    const currentPage = useMemo(
+        () => Math.floor(offset / limit) + 1,
+        [limit, offset]
+    );
     const totalPages = useMemo(() => Math.ceil(total / limit), [limit, total]);
 
     const goToPreviousPage = useCallback(() => {
@@ -30,7 +38,10 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({ limit, offset, 
         }
     }, [currentPage, goToPage, totalPages]);
 
-    const renderPageNumbers = useMemo(() => generatePageNumbers(currentPage, totalPages, goToPage), [currentPage, goToPage, totalPages]);
+    const renderPageNumbers = useMemo(
+        () => generatePageNumbers(currentPage, totalPages, goToPage),
+        [currentPage, goToPage, totalPages]
+    );
 
     if (totalPages === 0) {
         return null;
@@ -38,10 +49,20 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({ limit, offset, 
 
     return (
         <div className={`${styles.paginationRow}`}>
-            <ArrowLeft onClick={goToPreviousPage} disabled={currentPage === 1} />
-            <div className="hidden items-center justify-center md:flex gap-2">{renderPageNumbers.md}</div>
-            <div className="flex items-center justify-center md:hidden gap-2">{renderPageNumbers.sm}</div>
-            <ArrowRight onClick={goToNextPage} disabled={currentPage === totalPages} />
+            <ArrowLeft
+                onClick={goToPreviousPage}
+                disabled={currentPage === 1}
+            />
+            <div className="hidden items-center justify-center md:flex gap-2">
+                {renderPageNumbers.md}
+            </div>
+            <div className="flex items-center justify-center md:hidden gap-2">
+                {renderPageNumbers.sm}
+            </div>
+            <ArrowRight
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+            />
         </div>
     );
 };

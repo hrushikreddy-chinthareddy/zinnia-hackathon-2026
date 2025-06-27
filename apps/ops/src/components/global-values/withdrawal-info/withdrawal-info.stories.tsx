@@ -6,7 +6,7 @@ export default {
     title: 'Components/GlobalValues/WithdrawalInfo',
     component: WithdrawalInfoComponent,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen bg-white">
                 <Story />
             </div>

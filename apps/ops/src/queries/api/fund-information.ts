@@ -14,9 +14,15 @@ import { client } from '../api-utils/client';
 
 const baseUrl = baseAppUrl + '/api/funds/v1';
 
-export const getFundInformationByFundId = async (carrierId?: string, fundId?: string): Promise<FundInformationByFundIdResponse> => {
+export const getFundInformationByFundId = async (
+    carrierId?: string,
+    fundId?: string
+): Promise<FundInformationByFundIdResponse> => {
     if (!carrierId || !fundId) {
-        browserLogError('getFundInformationByFundId::missing carrierId or fundId', { carrierId, fundId });
+        browserLogError(
+            'getFundInformationByFundId::missing carrierId or fundId',
+            { carrierId, fundId }
+        );
 
         return {
             data: {},
@@ -26,7 +32,10 @@ export const getFundInformationByFundId = async (carrierId?: string, fundId?: st
     }
 
     try {
-        const response = await client.get<FundInformationByFundId, AxiosResponse>(`${baseUrl}/carriers/${carrierId}/funds/${fundId}`);
+        const response = await client.get<
+            FundInformationByFundId,
+            AxiosResponse
+        >(`${baseUrl}/carriers/${carrierId}/funds/${fundId}`);
 
         return {
             data: response?.data,
@@ -34,11 +43,14 @@ export const getFundInformationByFundId = async (carrierId?: string, fundId?: st
             status: response?.status,
         };
     } catch (error: any) {
-        browserLogError('getFundInformationByFundId::An error occurred while getting fund information by fundId', {
-            carrierId,
-            fundId,
-            error: error,
-        });
+        browserLogError(
+            'getFundInformationByFundId::An error occurred while getting fund information by fundId',
+            {
+                carrierId,
+                fundId,
+                error: error,
+            }
+        );
 
         return {
             data: {},
@@ -48,9 +60,15 @@ export const getFundInformationByFundId = async (carrierId?: string, fundId?: st
     }
 };
 
-export const getFundInformationByPlanCode = async (carrierId?: string, planCode?: string): Promise<FundInformationByPlanCodeResponse> => {
+export const getFundInformationByPlanCode = async (
+    carrierId?: string,
+    planCode?: string
+): Promise<FundInformationByPlanCodeResponse> => {
     if (!carrierId || !planCode) {
-        browserLogError('getFundInformationByPlanCode::missing carrierId or planCode', { carrierId, planCode });
+        browserLogError(
+            'getFundInformationByPlanCode::missing carrierId or planCode',
+            { carrierId, planCode }
+        );
 
         return {
             data: {},
@@ -60,9 +78,10 @@ export const getFundInformationByPlanCode = async (carrierId?: string, planCode?
     }
 
     try {
-        const response = await client.get<FundInformationByPlanCode, AxiosResponse>(
-            `${baseUrl}/carriers/${carrierId}/products/${planCode}`
-        );
+        const response = await client.get<
+            FundInformationByPlanCode,
+            AxiosResponse
+        >(`${baseUrl}/carriers/${carrierId}/products/${planCode}`);
 
         return {
             data: response?.data,
@@ -70,7 +89,10 @@ export const getFundInformationByPlanCode = async (carrierId?: string, planCode?
             status: response?.status,
         };
     } catch (error: any) {
-        browserLogError('getFundInformationByPlanCode::An error occurred while getting product funds', { carrierId, planCode, error });
+        browserLogError(
+            'getFundInformationByPlanCode::An error occurred while getting product funds',
+            { carrierId, planCode, error }
+        );
 
         return {
             data: {},

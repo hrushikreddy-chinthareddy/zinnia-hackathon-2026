@@ -5,8 +5,14 @@ import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import { selectVarientByConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
-import { EXTENSION_FORMAT, PHONE_NUMBER_FORMAT } from '../../utils/reg60-constants';
-import { UserInformationConfig, UserInfo } from '../user-information/user-information.type';
+import {
+    EXTENSION_FORMAT,
+    PHONE_NUMBER_FORMAT,
+} from '../../utils/reg60-constants';
+import {
+    UserInformationConfig,
+    UserInfo,
+} from '../user-information/user-information.type';
 
 type UserPhoneNumberProps = {
     phoneDetails: UserInfo;
@@ -16,7 +22,13 @@ type UserPhoneNumberProps = {
     isFormStateReadOnly: boolean;
 };
 
-const UserPhoneNumber = ({ phoneDetails, onPhoneDetailsChange, formConfig, formErrors, isFormStateReadOnly }: UserPhoneNumberProps) => {
+const UserPhoneNumber = ({
+    phoneDetails,
+    onPhoneDetailsChange,
+    formConfig,
+    formErrors,
+    isFormStateReadOnly,
+}: UserPhoneNumberProps) => {
     const personalInfo = phoneDetails.personalInformation;
 
     const handlePhoneOptionChange = (value: { [key: string]: boolean }) => {
@@ -35,11 +47,16 @@ const UserPhoneNumber = ({ phoneDetails, onPhoneDetailsChange, formConfig, formE
         <div className="flex gap-4">
             {formConfig.userFields.fields.userPhoneNumber && (
                 <Field
-                    label={formConfig.userFields.fields.userPhoneNumber?.fieldLabel}
-                    onChange={e =>
+                    label={
+                        formConfig.userFields.fields.userPhoneNumber?.fieldLabel
+                    }
+                    onChange={(e) =>
                         onPhoneDetailsChange({
                             ...phoneDetails,
-                            personalInformation: { ...personalInfo, phoneNumber: xss(e.target.value) },
+                            personalInformation: {
+                                ...personalInfo,
+                                phoneNumber: xss(e.target.value),
+                            },
                         })
                     }
                     size={FieldSize.Small}
@@ -58,10 +75,13 @@ const UserPhoneNumber = ({ phoneDetails, onPhoneDetailsChange, formConfig, formE
             {formConfig.userFields.fields.extension && (
                 <Field
                     label={formConfig.userFields.fields.extension?.fieldLabel}
-                    onChange={e =>
+                    onChange={(e) =>
                         onPhoneDetailsChange({
                             ...phoneDetails,
-                            personalInformation: { ...personalInfo, phoneExtension: xss(e.target.value) },
+                            personalInformation: {
+                                ...personalInfo,
+                                phoneExtension: xss(e.target.value),
+                            },
                         })
                     }
                     size={FieldSize.Small}
@@ -78,29 +98,53 @@ const UserPhoneNumber = ({ phoneDetails, onPhoneDetailsChange, formConfig, formE
             )}
 
             {formConfig.userFields.fields.phoneType && (
-                <div className="flex items-end gap-4 p-2" data-testid="owner-phone-type">
+                <div
+                    className="flex items-end gap-4 p-2"
+                    data-testid="owner-phone-type"
+                >
                     {formConfig.userFields.fields.phoneType.home && (
                         <CheckboxText
                             isDisabled={isFormStateReadOnly}
-                            label={formConfig.userFields.fields.phoneType?.home?.fieldLabel}
+                            label={
+                                formConfig.userFields.fields.phoneType?.home
+                                    ?.fieldLabel
+                            }
                             checked={personalInfo?.phoneType?.home}
-                            onClick={() => handlePhoneOptionChange({ home: !personalInfo?.phoneType?.home })}
+                            onClick={() =>
+                                handlePhoneOptionChange({
+                                    home: !personalInfo?.phoneType?.home,
+                                })
+                            }
                         />
                     )}
                     {formConfig.userFields.fields.phoneType.work && (
                         <CheckboxText
                             isDisabled={isFormStateReadOnly}
-                            label={formConfig.userFields.fields.phoneType?.work?.fieldLabel}
+                            label={
+                                formConfig.userFields.fields.phoneType?.work
+                                    ?.fieldLabel
+                            }
                             checked={personalInfo?.phoneType?.work}
-                            onClick={() => handlePhoneOptionChange({ work: !personalInfo?.phoneType?.work })}
+                            onClick={() =>
+                                handlePhoneOptionChange({
+                                    work: !personalInfo?.phoneType?.work,
+                                })
+                            }
                         />
                     )}
                     {formConfig.userFields.fields.phoneType.mobile && (
                         <CheckboxText
                             isDisabled={isFormStateReadOnly}
-                            label={formConfig.userFields.fields.phoneType?.mobile?.fieldLabel}
+                            label={
+                                formConfig.userFields.fields.phoneType?.mobile
+                                    ?.fieldLabel
+                            }
                             checked={personalInfo?.phoneType?.mobile}
-                            onClick={() => handlePhoneOptionChange({ mobile: !personalInfo?.phoneType?.mobile })}
+                            onClick={() =>
+                                handlePhoneOptionChange({
+                                    mobile: !personalInfo?.phoneType?.mobile,
+                                })
+                            }
                         />
                     )}
                 </div>

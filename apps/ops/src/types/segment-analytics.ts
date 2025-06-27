@@ -64,7 +64,11 @@ export type SearchSubmittedEvent = BaseSegmentEventProperties & {
 
 export type DropdownClickedEvent = BaseSegmentEventProperties & {
     dropdownName: string;
-} & ({ searchText: string } | { selectedItemName: string } | { searchText: string; selectedItemName: string });
+} & (
+        | { searchText: string }
+        | { selectedItemName: string }
+        | { searchText: string; selectedItemName: string }
+    );
 
 export type PolicyClickedEvent = BaseSegmentEventProperties & {
     contractNumber?: string;
@@ -104,7 +108,10 @@ export enum ExtendedTransactionType {
 // TODO MG: this is the same as TransactionTrackEventProps
 type BaseTransactionClickedEvent = BaseSegmentEventProperties & {
     step?: TransactionStep;
-    type?: TransactionType | ContactCenterTransactionType | ExtendedTransactionType;
+    type?:
+        | TransactionType
+        | ContactCenterTransactionType
+        | ExtendedTransactionType;
 };
 
 export type TransactionContinueClickedEvent = BaseTransactionClickedEvent & {

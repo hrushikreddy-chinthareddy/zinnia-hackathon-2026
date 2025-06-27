@@ -1,17 +1,28 @@
-import { Table, TableBody, TableCell, TableRow } from '@zinnia/bloom/components';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+} from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import AdditionalStepStatus from '@deps/components/case-overview-box/content/additional-step-status';
-import {TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
-import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
+import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import { CaseAdditionalData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { formatAddressToContainer } from '@deps/containers/small-data-card/address-data/address-data';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { AdditionalDataStepIds, CommunicationTypes, correspondenceTypes } from '@deps/models/case/additional-data-instance';
+import {
+    AdditionalDataStepIds,
+    CommunicationTypes,
+    correspondenceTypes,
+} from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
 
 import { TransactionsAdditionalDataStepIds } from './transactions-step-additional-data.types';
+import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 
 type DeliveryCardProps = {
     additionalData: CaseAdditionalData;
@@ -28,27 +39,44 @@ type StepAdditionalDataProps = {
 
 export const hasAdditionalDataSideSheet = (step: TransformedStep): boolean => {
     if (!Object.keys(step.additionalData).length) return false;
-    return Object.values(AdditionalDataStepIds).includes(step.id as AdditionalDataStepIds);
+    return Object.values(AdditionalDataStepIds).includes(
+        step.id as AdditionalDataStepIds
+    );
 };
 
-export const hasTransactionalAdditionalDataSideSheet = (step: TransformedStep): boolean => {
+export const hasTransactionalAdditionalDataSideSheet = (
+    step: TransformedStep
+): boolean => {
     if (!Object.keys(step.stepAdditionalData).length) return false;
-    return Object.values(TransactionsAdditionalDataStepIds).includes(step.id as TransactionsAdditionalDataStepIds);
+    return Object.values(TransactionsAdditionalDataStepIds).includes(
+        step.id as TransactionsAdditionalDataStepIds
+    );
 };
 
-const getDataByDeliveryMethod = (data: CaseAdditionalData, deliveryMethod: CommunicationTypes, t: TFunction) => {
+const getDataByDeliveryMethod = (
+    data: CaseAdditionalData,
+    deliveryMethod: CommunicationTypes,
+    t: TFunction
+) => {
     switch (deliveryMethod) {
         case CommunicationTypes.Fax:
-            return t('caseOverview.communicationSentTemplate.fax', { fax: data[deliveryMethod] });
+            return t('caseOverview.communicationSentTemplate.fax', {
+                fax: data[deliveryMethod],
+            });
         case CommunicationTypes.Email:
-            return t('caseOverview.communicationSentTemplate.email', { email: data[deliveryMethod] });
+            return t('caseOverview.communicationSentTemplate.email', {
+                email: data[deliveryMethod],
+            });
         case CommunicationTypes.Mail:
             return formatAddressToContainer(data, true);
         default:
             return '';
     }
 };
-const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFunction) => [
+const correspondenceStepConfig = (
+    deliveryMethod: CommunicationTypes,
+    t: TFunction
+) => [
     {
         label: t('caseOverview.correspondenceStepDetails.deliveryMethod'),
         key: correspondenceTypes[deliveryMethod].key,
@@ -65,9 +93,12 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
         shouldDisplay: (): boolean => {
             return true;
         },
-        getAdditionalDetails: (additionalData: CaseAdditionalData, filterKeyBy: string) => {
+        getAdditionalDetails: (
+            additionalData: CaseAdditionalData,
+            filterKeyBy: string
+        ) => {
             const date = additionalData[filterKeyBy].value;
-            return formatTimestamp(date , 'standard');
+            return formatTimestamp(date, 'standard');
         },
     },
     {
@@ -75,26 +106,46 @@ const correspondenceStepConfig = (deliveryMethod: CommunicationTypes, t: TFuncti
         key: correspondenceTypes[deliveryMethod].key,
         shouldDisplay: (deliveryMethod?: CommunicationTypes): boolean => {
             if (!deliveryMethod) return false;
-            return correspondenceTypes[deliveryMethod].value === CommunicationTypes.Mail;
+            return (
+                correspondenceTypes[deliveryMethod].value ===
+                CommunicationTypes.Mail
+            );
         },
-        getAdditionalDetails: (additionalData: CaseAdditionalData, filterKeyBy: string) => {
+        getAdditionalDetails: (
+            additionalData: CaseAdditionalData,
+            filterKeyBy: string
+        ) => {
             const data = Object.keys(additionalData)
-                .filter(key => key.includes(filterKeyBy))
-                .reduce((acc, key) => ({ ...acc, [key.replace(filterKeyBy, '') || deliveryMethod]: additionalData[key].value }), {});
+                .filter((key) => key.includes(filterKeyBy))
+                .reduce(
+                    (acc, key) => ({
+                        ...acc,
+                        [key.replace(filterKeyBy, '') || deliveryMethod]:
+                            additionalData[key].value,
+                    }),
+                    {}
+                );
             return getDataByDeliveryMethod(data, deliveryMethod, t);
         },
     },
 ];
 
-const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardProps) => {
+const DeliveryCard = ({
+    additionalData,
+    deliveryMethod,
+    title,
+}: DeliveryCardProps) => {
     const { t } = useTranslation();
 
-    const formattedData: { [key in string]?: string } = Object.keys(additionalData)
-        .filter(key => key.includes(correspondenceTypes[deliveryMethod].key))
+    const formattedData: { [key in string]?: string } = Object.keys(
+        additionalData
+    )
+        .filter((key) => key.includes(correspondenceTypes[deliveryMethod].key))
         .reduce(
             (acc, key) => ({
                 ...acc,
-                [key.replace(correspondenceTypes[deliveryMethod].key, '') || deliveryMethod]: additionalData[key].value,
+                [key.replace(correspondenceTypes[deliveryMethod].key, '') ||
+                deliveryMethod]: additionalData[key].value,
             }),
             {}
         );
@@ -104,28 +155,41 @@ const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardPro
             case CommunicationTypes.Fax:
                 return formattedData[deliveryMethod];
             case CommunicationTypes.Mail:
-                return `${formattedData['firstName'] || ''} ${formattedData['lastName'] || ''}`;
+                return `${formattedData['firstName'] || ''} ${
+                    formattedData['lastName'] || ''
+                }`;
         }
     };
     return (
         <>
             <div className="flex flex-row my-4">
                 <Typography variant={TypographyVariant.H3}>
-                    {title ?? t('caseOverview.correspondenceStepDetails.requestedRecipients')}
+                    {title ??
+                        t(
+                            'caseOverview.correspondenceStepDetails.requestedRecipients'
+                        )}
                 </Typography>
             </div>
             <Table className="my-4">
                 <TableBody>
                     <TableRow>
-                        <TableCell colSpan={2}>{getTitle(deliveryMethod)}</TableCell>
+                        <TableCell colSpan={2}>
+                            {getTitle(deliveryMethod)}
+                        </TableCell>
                     </TableRow>
                     {correspondenceStepConfig(deliveryMethod, t).map(
                         (step, index) =>
                             step?.shouldDisplay(deliveryMethod) && (
                                 <TableRow key={index}>
-                                    <TableCell className="bg-gray-50 text-md text-gray-500 !border-b-0">{step?.label}</TableCell>
+                                    <TableCell className="bg-gray-50 text-md text-gray-500 !border-b-0">
+                                        {step?.label}
+                                    </TableCell>
                                     <TableCell className="bg-gray-50 text-md text-gray-700 !border-b-0">
-                                        {step?.getAdditionalDetails && step?.getAdditionalDetails(additionalData, step.key)}
+                                        {step?.getAdditionalDetails &&
+                                            step?.getAdditionalDetails(
+                                                additionalData,
+                                                step.key
+                                            )}
                                     </TableCell>
                                 </TableRow>
                             )
@@ -136,17 +200,28 @@ const DeliveryCard = ({ additionalData, deliveryMethod, title }: DeliveryCardPro
     );
 };
 
-const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAdditionalDataProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseOverview.correspondenceStepDetails' });
-    const deliveryMethod = additionalData['deliveryMethod']?.value as CommunicationTypes;
+const StepAdditionalData = ({
+    additionalData,
+    stepKey,
+    status,
+    date,
+}: StepAdditionalDataProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseOverview.correspondenceStepDetails',
+    });
+    const deliveryMethod = additionalData['deliveryMethod']
+        ?.value as CommunicationTypes;
 
     const renderAdditionalData = (id: AdditionalDataStepIds) => {
-        const updatedAt = formatTimestamp(date , 'standard');
+        const updatedAt = formatTimestamp(date, 'standard');
         switch (id) {
             case AdditionalDataStepIds.correspondenceRequest:
                 return (
                     <>
-                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
+                        <AdditionalStepStatus
+                            updatedAt={updatedAt}
+                            status={status as Statuses}
+                        />
                         <DeliveryCard
                             additionalData={additionalData}
                             deliveryMethod={deliveryMethod}
@@ -157,14 +232,24 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
             case AdditionalDataStepIds.sedRequest:
                 return (
                     <>
-                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
+                        <AdditionalStepStatus
+                            updatedAt={updatedAt}
+                            status={status as Statuses}
+                        />
                     </>
                 );
             case AdditionalDataStepIds.completeRequest:
                 return (
                     <>
-                        <AdditionalStepStatus updatedAt={updatedAt} status={status as Statuses} />
-                        <DeliveryCard additionalData={additionalData} deliveryMethod={deliveryMethod} title={t('recipients') as string} />
+                        <AdditionalStepStatus
+                            updatedAt={updatedAt}
+                            status={status as Statuses}
+                        />
+                        <DeliveryCard
+                            additionalData={additionalData}
+                            deliveryMethod={deliveryMethod}
+                            title={t('recipients') as string}
+                        />
                     </>
                 );
             default:
@@ -173,7 +258,9 @@ const StepAdditionalData = ({ additionalData, stepKey, status, date }: StepAddit
     };
     return (
         <>
-            <Typography variant={TypographyVariant.H3}>{t('additionalData')}</Typography>
+            <Typography variant={TypographyVariant.H3}>
+                {t('additionalData')}
+            </Typography>
             {renderAdditionalData(stepKey)}
         </>
     );

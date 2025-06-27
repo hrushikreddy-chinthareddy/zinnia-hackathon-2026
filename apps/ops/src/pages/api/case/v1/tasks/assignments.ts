@@ -5,12 +5,21 @@ import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { HttpMethod } from '@deps/queries/api-utils/serverClientUtils';
-import { logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<ClaimNextTask | null>, logCtx) => {
+    async (
+        req: NextApiRequest,
+        res: NextApiResponse<ClaimNextTask | null>,
+        logCtx
+    ) => {
         const now = performance.now();
         const baseUrl = `${apiServerBaseUrl}/case/v1/tasks/assignments`;
         const accessToken = (await getAccessToken(req, res)).accessToken;
@@ -31,11 +40,22 @@ export default withAuthAndLogging(
         try {
             let response;
             if (method === HttpMethod.POST) {
-                response = await serverApi.post<any, AxiosResponse>(baseUrl, formData, config, loggingContext);
-                logTrace('TaskAssignments::success', { ...loggingContext, duration: performance.now() - now });
+                response = await serverApi.post<any, AxiosResponse>(
+                    baseUrl,
+                    formData,
+                    config,
+                    loggingContext
+                );
+                logTrace('TaskAssignments::success', {
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                });
             } else {
                 response = await serverApi.get(baseUrl, config, loggingContext);
-                logTrace('AssignedTasks::success', { ...loggingContext, duration: performance.now() - now });
+                logTrace('AssignedTasks::success', {
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                });
             }
             return res.status(HttpStatusCode.Ok).json(response.data);
         } catch (error) {

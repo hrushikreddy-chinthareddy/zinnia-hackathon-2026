@@ -2,14 +2,33 @@ import { AxiosResponse } from 'axios';
 
 import { ActiveReg60Case } from '@deps/containers/otp/reg60-forms/reg60.types';
 import { ProcessType } from '@deps/models/case/enums';
-import { CreateTaskBody, CreateTaskResponse, FormMetadata, TaskType, TaskV1Payload } from '@deps/models/case/task';
-import { AssignedTask, ManagementTask, TaskStatus, UnassignedTask } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, DigitalFormWithdrawal } from '@deps/models/case/withdrawal/case';
+import {
+    CreateTaskBody,
+    CreateTaskResponse,
+    FormMetadata,
+    TaskType,
+    TaskV1Payload,
+} from '@deps/models/case/task';
+import {
+    AssignedTask,
+    ManagementTask,
+    TaskStatus,
+    UnassignedTask,
+} from '@deps/models/case/task-instance';
+import {
+    ActiveWithdrawalCase,
+    DigitalFormWithdrawal,
+} from '@deps/models/case/withdrawal/case';
 import { baseAppUrl, se2ApiServerUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { logError, LoggingContext, logInfo, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    logInfo,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
 const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;
@@ -22,7 +41,11 @@ export const getCaseTasksSSR = async (
     queryParams: { [key: string]: string } = {},
     logCtx: LoggingContext
 ): Promise<ActiveWithdrawalCase[]> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/v1/task', function: 'getCaseTasksSSR' };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/v1/task',
+        function: 'getCaseTasksSSR',
+    };
     try {
         const url = new URL(`${ssrCasesUrl}/${caseId}/tasks`);
         url.search = new URLSearchParams(queryParams).toString();
@@ -63,7 +86,11 @@ export const postCaseTasksSSR = async (
     accessToken: string,
     logCtx: LoggingContext
 ): Promise<ActiveWithdrawalCase | null> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/v1/task', function: 'postCaseTasksSSR' };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/v1/task',
+        function: 'postCaseTasksSSR',
+    };
     try {
         const url = `${ssrCasesUrl}/${caseId}/tasks`;
         logInfo('postCaseTasksSSR', {
@@ -90,28 +117,43 @@ export const postCaseTasksSSR = async (
 
         return data as ActiveWithdrawalCase;
     } catch (error: any) {
-        logError('postCaseTasksSSR', { ...parseErrorInformation(error), ...loggingContext, caseId });
+        logError('postCaseTasksSSR', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+            caseId,
+        });
         return null;
     }
 };
 
-export const getCaseTaskInstances = async (query: any): Promise<ManagementTask[] | null> => {
+export const getCaseTaskInstances = async (
+    query: any
+): Promise<ManagementTask[] | null> => {
     try {
-        const { data } = await client.post<any, AxiosResponse>(`${baseTasksUrl}/search`, query);
+        const { data } = await client.post<any, AxiosResponse>(
+            `${baseTasksUrl}/search`,
+            query
+        );
 
         return data.data;
     } catch (error: any) {
-        console.error('getCaseTaskInstances::An error occurred while getting case Task Instances', error);
+        console.error(
+            'getCaseTaskInstances::An error occurred while getting case Task Instances',
+            error
+        );
         return error.response;
     }
 };
 
-export const createTask = async (caseId: string, query: CreateTaskBody<TaskStatus, TaskV1Payload>): Promise<CreateTaskResponse> => {
+export const createTask = async (
+    caseId: string,
+    query: CreateTaskBody<TaskStatus, TaskV1Payload>
+): Promise<CreateTaskResponse> => {
     try {
-        const { data } = await client.post<CreateTaskBody<TaskStatus, TaskV1Payload>, AxiosResponse>(
-            `${baseCasesUrl}/${caseId}/tasks`,
-            query
-        );
+        const { data } = await client.post<
+            CreateTaskBody<TaskStatus, TaskV1Payload>,
+            AxiosResponse
+        >(`${baseCasesUrl}/${caseId}/tasks`, query);
 
         return data;
     } catch (error: any) {
@@ -126,10 +168,10 @@ export const putCaseTask = async (
     body: DigitalFormWithdrawal | ActiveReg60Case
 ): Promise<ActiveWithdrawalCase | ActiveReg60Case | null> => {
     try {
-        const { data } = await client.put<DigitalFormWithdrawal | ActiveReg60Case, AxiosResponse<ActiveWithdrawalCase | ActiveReg60Case>>(
-            `${baseCasesUrl}/${caseId}/tasks/${taskId}`,
-            body
-        );
+        const { data } = await client.put<
+            DigitalFormWithdrawal | ActiveReg60Case,
+            AxiosResponse<ActiveWithdrawalCase | ActiveReg60Case>
+        >(`${baseCasesUrl}/${caseId}/tasks/${taskId}`, body);
         browserLogInfo('Saving a case task SSR', {
             file: 'queries/api/v1/task',
             function: 'putCaseTask',
@@ -156,7 +198,10 @@ export const getCaseTasks = async (query: any): Promise<any | null> => {
             function: 'getCaseTasks',
             url: `${baseAppUrl}/cases/${query.caseId}/tasks`,
         });
-        const { data } = await client.get<any, AxiosResponse>(`${baseCasesUrl}/${query.caseId}/tasks`, query);
+        const { data } = await client.get<any, AxiosResponse>(
+            `${baseCasesUrl}/${query.caseId}/tasks`,
+            query
+        );
         return data?.data;
     } catch (error: any) {
         browserLogError('getCaseTasks', { error });
@@ -170,10 +215,18 @@ export const getCaseTasksByIdSSR = async (
     accessToken: string,
     logCtx: LoggingContext
 ): Promise<ActiveWithdrawalCase | null> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/v1/task', function: 'getCaseTasksByIdSSR', inputs: { caseId, taskId } };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/v1/task',
+        function: 'getCaseTasksByIdSSR',
+        inputs: { caseId, taskId },
+    };
     try {
         const url = new URL(`${ssrCasesUrl}/${caseId}/tasks/${taskId}`);
-        logInfo('getCaseTasksByIdSSR', { ...loggingContext, url: url.toString() });
+        logInfo('getCaseTasksByIdSSR', {
+            ...loggingContext,
+            url: url.toString(),
+        });
 
         const { data } = await serverApi.get<ActiveWithdrawalCase>(
             url.href,
@@ -201,14 +254,19 @@ export const getCaseTasksByIdSSR = async (
 
 export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     try {
-        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/assignments`);
+        const { data } = await client.get(
+            `${baseAppUrl}/api/case/v1/tasks/assignments`
+        );
         return data ?? [];
     } catch (error) {
-        browserLogError('getAssignedTasks::Failed to retrieve unassigned tasks', {
-            ...parseErrorInformation(error),
-            file: 'queries/v1/tasks',
-            function: 'getAssignedTasks',
-        });
+        browserLogError(
+            'getAssignedTasks::Failed to retrieve unassigned tasks',
+            {
+                ...parseErrorInformation(error),
+                file: 'queries/v1/tasks',
+                function: 'getAssignedTasks',
+            }
+        );
         return [];
     }
 };
@@ -255,7 +313,10 @@ export const getTaskFormMetadataSSR = async (
         return null;
     }
 };
-export const unassignTask = async (taskId: string, entryDuration?: number): Promise<any> => {
+export const unassignTask = async (
+    taskId: string,
+    entryDuration?: number
+): Promise<any> => {
     try {
         const logTime = entryDuration ? performance.now() - entryDuration : 0;
         const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
@@ -304,7 +365,9 @@ export const claimTask = async (taskId: string): Promise<any> => {
 
 export const getUnassignedTasks = async (): Promise<UnassignedTask[] | []> => {
     try {
-        const { data } = await client.get(`${baseAppUrl}/api/case/v1/tasks/unassignments`);
+        const { data } = await client.get(
+            `${baseAppUrl}/api/case/v1/tasks/unassignments`
+        );
         return data ?? [];
     } catch (error) {
         browserLogError('getUnassignedTasks::', {

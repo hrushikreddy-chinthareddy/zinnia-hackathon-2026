@@ -26,7 +26,9 @@ import SelectFormType from './rmd-form-type';
 import getSbgcRmdConfig from './sbgc-rmd-form.helpers';
 
 export default function SbgcRmdWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -54,7 +56,9 @@ export default function SbgcRmdWithdrawalForm() {
         formErrors,
     } = useContext(FormDataContext);
 
-    const [rmdFormType, setRmdFormType] = useState((formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD);
+    const [rmdFormType, setRmdFormType] = useState(
+        (formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD
+    );
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -71,31 +75,54 @@ export default function SbgcRmdWithdrawalForm() {
             },
         });
 
-        setFormProgram(prev => ({
+        setFormProgram((prev) => ({
             ...prev,
             program: {
-                text: rmdFormType === RmdFormType.QCD ? Processes.QCD : Processes.RequiredMinimumDistribution,
+                text:
+                    rmdFormType === RmdFormType.QCD
+                        ? Processes.QCD
+                        : Processes.RequiredMinimumDistribution,
             },
             programType: {
-                text: rmdFormType === RmdFormType.QCD ? RmdFormType.QCD : RmdFormType.RMD,
+                text:
+                    rmdFormType === RmdFormType.QCD
+                        ? RmdFormType.QCD
+                        : RmdFormType.RMD,
             },
             qcd: prev.qcd ? [...prev.qcd] : [],
         }));
     }, [initialForm, rmdFormType]);
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
-    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
+    const hasTpaAuthorization =
+        formTpaAuthorization &&
+        !Object.values(formTpaAuthorization).every((val) => val === null);
+    const ownerStateOfResidence =
+        formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 
     const rmdComponents = isRmdForm && (
         <>
-            <JointLifeExpectancy isFormStateReadOnly={isFormStateReadOnly} configs={jointLifeExpectancyConfigs} />
+            <JointLifeExpectancy
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={jointLifeExpectancyConfigs}
+            />
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
         </>
     );
 
@@ -103,29 +130,62 @@ export default function SbgcRmdWithdrawalForm() {
         <>
             <RMDMethod
                 isFormStateReadOnly={isFormStateReadOnly}
-                rmdTypeOptions={[{ label: t('rmdMethod.rmdTypes.calculate'), value: RMDType.CalculateRMD }]}
+                rmdTypeOptions={[
+                    {
+                        label: t('rmdMethod.rmdTypes.calculate'),
+                        value: RMDType.CalculateRMD,
+                    },
+                ]}
                 isQCD={true}
             />
-            <DistributionMethodQcd formProgram={formProgram} setFormProgram={setFormProgram} isFormStateReadOnly={isFormStateReadOnly} />
+            <DistributionMethodQcd
+                formProgram={formProgram}
+                setFormProgram={setFormProgram}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
         </>
     );
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <SelectFormType formType={rmdFormType} onFormTypeChange={setRmdFormType} isFormStateReadOnly={isFormStateReadOnly} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <SelectFormType
+                formType={rmdFormType}
+                onFormTypeChange={setRmdFormType}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.distributionInstruction') as string}
+                title={
+                    t(
+                        'distributionInstruction.distributionInstruction'
+                    ) as string
+                }
             />
             {isRmdForm ? rmdComponents : qcdComponents}
-            {ownerIsVirginiaResident && <FinancialProfessionalSignature isFormStateReadOnly={isFormStateReadOnly} />}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            {ownerIsVirginiaResident && (
+                <FinancialProfessionalSignature
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

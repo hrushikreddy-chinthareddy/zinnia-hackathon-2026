@@ -10,6 +10,9 @@ export const generatePhone = (): Phone => {
         countryCode: '1',
         areaCode: faker.number.int({ min: 100, max: 999 }).toString(),
         dialNumber: faker.phone.number().toString(),
-        extension: phoneType === PhoneType.BUSINESS ? faker.number.int({ min: 1000, max: 9999 }).toString() : '',
+        extension:
+            phoneType === PhoneType.BUSINESS
+                ? faker.number.int({ min: 1000, max: 9999 }).toString()
+                : '',
     };
 };

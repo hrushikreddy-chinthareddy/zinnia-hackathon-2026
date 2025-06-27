@@ -1,16 +1,29 @@
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 
-import AllocationColorBar, { AllocationColor } from '@deps/components/allocation-color-bar/allocation-color-bar';
+import AllocationColorBar, {
+    AllocationColor,
+} from '@deps/components/allocation-color-bar/allocation-color-bar';
 import { LabelVariant, labelMapping } from '@deps/components/label/label';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, { isStillInactive } from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
+import TempNavInactive, {
+    isStillInactive,
+} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as SettingsIcon } from '@deps/styles/elements/icons/actions/settings.svg';
 
 import PeopleCardContainer from './people-card-container';
-import { getBeneficiaryColor, getContigentColor } from './people-card-container.helpers';
-import { BeneficiaryType, PeopleCardContainerProps } from './people-card-container.types';
+import {
+    getBeneficiaryColor,
+    getContigentColor,
+} from './people-card-container.helpers';
+import {
+    BeneficiaryType,
+    PeopleCardContainerProps,
+} from './people-card-container.types';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
 
 interface BeneficiaryCardContainerProps extends PeopleCardContainerProps {
@@ -21,10 +34,16 @@ interface BeneficiaryCardContainerProps extends PeopleCardContainerProps {
     isRereg?: boolean;
 }
 
-const peopleDataToColors = (filteredData: NameTag[], type: BeneficiaryType): AllocationColor[] => {
+const peopleDataToColors = (
+    filteredData: NameTag[],
+    type: BeneficiaryType
+): AllocationColor[] => {
     return filteredData.map((nt, index) => ({
         allocationPercentage: nt.beneficiaryPercentage?.toString() || '0',
-        className: type === BeneficiaryType.PRIMARY ? getBeneficiaryColor(index) : getContigentColor(index),
+        className:
+            type === BeneficiaryType.PRIMARY
+                ? getBeneficiaryColor(index)
+                : getContigentColor(index),
     }));
 };
 
@@ -41,9 +60,14 @@ const BeneficiaryCardContainer = ({
     isRereg = false,
 }: BeneficiaryCardContainerProps) => {
     const { t } = useTranslation();
-    const colors: AllocationColor[] = showAllocationBar ? peopleDataToColors(filteredData, type) : [];
+    const colors: AllocationColor[] = showAllocationBar
+        ? peopleDataToColors(filteredData, type)
+        : [];
 
-    const classes = clsx('mb-[9px]', labelMapping[LabelVariant.FieldLabel].styles);
+    const classes = clsx(
+        'mb-[9px]',
+        labelMapping[LabelVariant.FieldLabel].styles
+    );
 
     return (
         <div className={classNames}>
@@ -52,7 +76,12 @@ const BeneficiaryCardContainer = ({
                 {isStillInactive.beneficiaryCardContainer ? (
                     // https://zinnia.atlassian.net/browse/DEPU-1936
                     !isRereg && (
-                        <TempNavInactive tooltipBody={isStillInactive.beneficiaryCardContainer} navElementClassName="mb-2">
+                        <TempNavInactive
+                            tooltipBody={
+                                isStillInactive.beneficiaryCardContainer
+                            }
+                            navElementClassName="mb-2"
+                        >
                             {t('beneficiary-card.modifyAllocations')}
                         </TempNavInactive>
                     )
@@ -69,7 +98,12 @@ const BeneficiaryCardContainer = ({
                 )}
             </div>
             {showAllocationBar && <AllocationColorBar colors={colors} />}
-            <PeopleCardContainer classNames="mt-6" filteredData={filteredData} peopleCardData={peopleCardData} isRereg={true} />
+            <PeopleCardContainer
+                classNames="mt-6"
+                filteredData={filteredData}
+                peopleCardData={peopleCardData}
+                isRereg={true}
+            />
         </div>
     );
 };

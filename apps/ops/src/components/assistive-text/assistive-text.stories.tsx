@@ -1,13 +1,16 @@
 import { Meta } from '@storybook/react';
 
-import AssistiveText, { AssistiveTextProps, AssistiveTextVariant } from './assistive-text';
+import AssistiveText, {
+    AssistiveTextProps,
+    AssistiveTextVariant,
+} from './assistive-text';
 import '@deps/styles/styles.css';
 
 export default {
     title: 'Components/AssistiveText',
     component: AssistiveText,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>

@@ -3,9 +3,15 @@ import { clsx } from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useRef } from 'react';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { useSendDocument } from '@deps/contexts/SendDocumentContext';
-import { FormDetails, SendDocumentAction } from '@deps/models/case/send-document';
+import {
+    FormDetails,
+    SendDocumentAction,
+} from '@deps/models/case/send-document';
 
 type DocumentDetailsProps = {
     document: FormDetails;
@@ -21,7 +27,8 @@ const DocumentDetail = ({ document, isSelected }: DocumentDetailsProps) => {
     // this removes focus state on mouse click, but allows it on arrow key navigation
     const handleClick = (e: React.MouseEvent<HTMLLabelElement, MouseEvent>) => {
         const isNotArrowKeyEvent = e.clientX !== 0 && e.clientY !== 0;
-        if (e.type === 'click' && isNotArrowKeyEvent && inputRef.current) inputRef.current.blur();
+        if (e.type === 'click' && isNotArrowKeyEvent && inputRef.current)
+            inputRef.current.blur();
     };
 
     return (
@@ -32,7 +39,7 @@ const DocumentDetail = ({ document, isSelected }: DocumentDetailsProps) => {
                     'border-primary': isSelected,
                 }
             )}
-            onClick={e => handleClick(e)}
+            onClick={(e) => handleClick(e)}
         >
             <input
                 id={formNumber}
@@ -50,7 +57,9 @@ const DocumentDetail = ({ document, isSelected }: DocumentDetailsProps) => {
                 ref={inputRef}
             />
             <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />{' '}
-            <div className="grow text-sm font-semibold text-secondary-dark">{formShortName}</div>
+            <div className="grow text-sm font-semibold text-secondary-dark">
+                {formShortName}
+            </div>
             <NavElement
                 className={''}
                 href={`/contact-center/document/${formId}`}

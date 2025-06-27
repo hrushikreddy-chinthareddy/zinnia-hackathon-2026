@@ -24,7 +24,10 @@ export type DocumentClassification = SearchRequestBody.documentClassification;
 
 // Per Amit Agarwal, this should work
 export type SearchRequest = SearchRequestBody & {
-    periods?: { periodYear: string; periodQuarters: ('Q1' | 'Q2' | 'Q3' | 'Q4')[] }[];
+    periods?: {
+        periodYear: string;
+        periodQuarters: ('Q1' | 'Q2' | 'Q3' | 'Q4')[];
+    }[];
 };
 // The v3 request is the same as the v2 request
 export interface TaxDocumentApiRequestInputs {

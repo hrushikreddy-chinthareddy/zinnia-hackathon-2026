@@ -55,7 +55,8 @@ const AppHead = () => {
         const rumId = user && user.sub ? user.sub : null;
         const rumEmail = user?.email ? user?.email : null;
         const emailDomainRegex = /(?<=@)[^.]+(?=\.)/;
-        const emailDomain = rumId && user?.email ? user?.email.match(emailDomainRegex) : null;
+        const emailDomain =
+            rumId && user?.email ? user?.email.match(emailDomainRegex) : null;
 
         if (process.env.NODE_ENV === NODE_ENV_PRODUCTION && rumId) {
             datadogRum.setUser({
@@ -69,9 +70,15 @@ const AppHead = () => {
     return (
         <Head>
             <title>{DEFAULT_PAGE_TITLE}</title>
-            <meta name="description" content="Creating a modern experience today" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />(
-            {!isProd() && <meta name="robots" content="noindex, nofollow" />})
+            <meta
+                name="description"
+                content="Creating a modern experience today"
+            />
+            <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1"
+            />
+            ({!isProd() && <meta name="robots" content="noindex, nofollow" />})
             <link rel="icon" href="/favicon.ico" />
             <link rel="alternate" hrefLang="x-default" href="/" />
             <link rel="alternate" hrefLang="en" href="/en/" />
@@ -114,7 +121,10 @@ const App = (props: AppProps) => {
                 <UserProvider>
                     <AppHead />
                     <AppBody {...props} />
-                    {process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV === NODE_ENV_PRODUCTION && <GoogleAnalytics gaId="G-1NY7KTG7T3" />}
+                    {process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV ===
+                        NODE_ENV_PRODUCTION && (
+                        <GoogleAnalytics gaId="G-1NY7KTG7T3" />
+                    )}
                 </UserProvider>
                 <SegmentAnalyticsScript />
             </section>

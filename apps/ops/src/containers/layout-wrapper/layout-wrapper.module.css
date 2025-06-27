@@ -4,7 +4,8 @@
     box-shadow: var(--shadow-elevation-elevation-light-sm);
     border-radius: var(--measure-dimension-radius-md);
     max-width: 1440px;
-    margin: var(--measure-dimension-z-space-2) var(--measure-dimension-z-space-2) var(--measure-dimension-z-space-2) 0;
+    margin: var(--measure-dimension-z-space-2)
+        var(--measure-dimension-z-space-2) var(--measure-dimension-z-space-2) 0;
     min-height: 100vh;
     padding: var(--measure-dimension-z-space-12);
     width: calc(100% - var(--nav-expanded-width));

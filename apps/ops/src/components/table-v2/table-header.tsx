@@ -12,10 +12,21 @@ type TableHeaderProps = {
     sortOrderColumn: SortOrderColumn;
 };
 
-const TableHeader = ({ columns, handleSort, sortOrderColumn, allRowsSelected, setAllRowsSelected }: TableHeaderProps) => {
+const TableHeader = ({
+    columns,
+    handleSort,
+    sortOrderColumn,
+    allRowsSelected,
+    setAllRowsSelected,
+}: TableHeaderProps) => {
     const getColumnHeader = (column: TableColumn): string | JSX.Element => {
         if (column.type === ColumnType.Boolean) {
-            return <InputCheckBox checked={allRowsSelected} onChange={() => setAllRowsSelected(!allRowsSelected)} />;
+            return (
+                <InputCheckBox
+                    checked={allRowsSelected}
+                    onChange={() => setAllRowsSelected(!allRowsSelected)}
+                />
+            );
         }
         return column.headerName ?? '';
     };
@@ -23,12 +34,20 @@ const TableHeader = ({ columns, handleSort, sortOrderColumn, allRowsSelected, se
     return (
         <thead>
             <tr className="body-sm h-10 bg-gray-50 font-medium text-gray-900">
-                {columns.map(column => {
+                {columns.map((column) => {
                     const icon =
                         sortOrderColumn.order === 'asc' ? (
-                            <UpIcon className="text-secondary" height={16} width={16} />
+                            <UpIcon
+                                className="text-secondary"
+                                height={16}
+                                width={16}
+                            />
                         ) : (
-                            <DownIcon className="text-secondary" height={16} width={16} />
+                            <DownIcon
+                                className="text-secondary"
+                                height={16}
+                                width={16}
+                            />
                         );
                     return (
                         <th
@@ -36,13 +55,18 @@ const TableHeader = ({ columns, handleSort, sortOrderColumn, allRowsSelected, se
                             className={`cursor-pointer px-6 py-2  hover:bg-gray-100`}
                             style={{ width: column?.width }}
                             onClick={() => {
-                                if (column.type !== ColumnType.Boolean && column?.sortable) {
+                                if (
+                                    column.type !== ColumnType.Boolean &&
+                                    column?.sortable
+                                ) {
                                     handleSort(column.field);
                                 }
                             }}
                         >
                             <div className="flex items-center">
-                                {getColumnHeader(column)} {column.field === sortOrderColumn.column && icon}
+                                {getColumnHeader(column)}{' '}
+                                {column.field === sortOrderColumn.column &&
+                                    icon}
                             </div>
                         </th>
                     );

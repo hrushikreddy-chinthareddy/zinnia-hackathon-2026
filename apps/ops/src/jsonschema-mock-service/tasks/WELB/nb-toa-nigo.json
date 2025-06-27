@@ -218,7 +218,12 @@
                                                 "properties": {
                                                     "address": {
                                                         "type": "object",
-                                                        "required": ["addressLine1", "city", "state", "zip"],
+                                                        "required": [
+                                                            "addressLine1",
+                                                            "city",
+                                                            "state",
+                                                            "zip"
+                                                        ],
                                                         "properties": {
                                                             "addressLine1": {
                                                                 "type": "string",
@@ -226,7 +231,10 @@
                                                                 "minLength": 1
                                                             },
                                                             "addressLine2": {
-                                                                "type": ["string", "null"],
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ],
                                                                 "title": "Address 2"
                                                             },
                                                             "city": {
@@ -265,7 +273,9 @@
                                                 "required": ["deliveryMethod"]
                                             },
                                             "then": {
-                                                "required": ["deliveryFaxNumber"]
+                                                "required": [
+                                                    "deliveryFaxNumber"
+                                                ]
                                             }
                                         }
                                     ]
@@ -428,7 +438,11 @@
                             "inline": true,
                             "prefix": ""
                         },
-                        "ui:dataPath": ["details", "exchangeReplace", "paymentRecordId"]
+                        "ui:dataPath": [
+                            "details",
+                            "exchangeReplace",
+                            "paymentRecordId"
+                        ]
                     },
                     "onwerDetails": {
                         "ui:options": {
@@ -485,16 +499,28 @@
                     },
                     "surrenderCompanyName": {
                         "ui:widget": "text",
-                        "ui:dataPath": ["details", "exchangeReplace", "surrenderCompanyName"]
+                        "ui:dataPath": [
+                            "details",
+                            "exchangeReplace",
+                            "surrenderCompanyName"
+                        ]
                     },
                     "surrenderContractNumber": {
                         "ui:widget": "text",
-                        "ui:dataPath": ["details", "exchangeReplace", "surrenderContractNumber"]
+                        "ui:dataPath": [
+                            "details",
+                            "exchangeReplace",
+                            "surrenderContractNumber"
+                        ]
                     },
                     "deliveryMethod": {
                         "ui:widget": "radio",
                         "ui:hideError": true,
-                        "ui:dataPath": ["details", "exchangeReplace", "deliveryMethod"]
+                        "ui:dataPath": [
+                            "details",
+                            "exchangeReplace",
+                            "deliveryMethod"
+                        ]
                     },
                     "address": {
                         "ui:options": {
@@ -550,7 +576,11 @@
                             "label": true,
                             "width": 100
                         },
-                        "ui:dataPath": ["details", "exchangeReplace", "deliveryFaxNumber"],
+                        "ui:dataPath": [
+                            "details",
+                            "exchangeReplace",
+                            "deliveryFaxNumber"
+                        ],
                         "ui:hideError": true
                     },
                     "documentList": {
@@ -605,7 +635,11 @@
                             "widget": "CheckboxWidget",
                             "label": true
                         },
-                        "ui:dataPath": ["details", "exchangeReplace", "communicationSent"]
+                        "ui:dataPath": [
+                            "details",
+                            "exchangeReplace",
+                            "communicationSent"
+                        ]
                     }
                 }
             }

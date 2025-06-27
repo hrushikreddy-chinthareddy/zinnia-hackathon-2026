@@ -2,13 +2,25 @@ import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
-import { countryOptions, frequentCountryOptions } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
+import {
+    countryOptions,
+    frequentCountryOptions,
+} from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 
-import { EnterprisePhone, formatPhoneNumber, getPhoneTypeOptions, INITIAL_PHONE } from './phone-details.helpers';
+import {
+    EnterprisePhone,
+    formatPhoneNumber,
+    getPhoneTypeOptions,
+    INITIAL_PHONE,
+} from './phone-details.helpers';
 
 export interface PhoneDetailsProps {
     setCurrentPhones: Dispatch<SetStateAction<EnterprisePhone[]>>;
@@ -17,14 +29,23 @@ export interface PhoneDetailsProps {
     isReadOnly?: boolean;
 }
 
-export default function PhoneDetails({ index, updatePhone, setCurrentPhones, isReadOnly }: PhoneDetailsProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.beneDetails.phone' });
-    const [phone, setPhone] = useState<EnterprisePhone>(updatePhone ?? INITIAL_PHONE);
+export default function PhoneDetails({
+    index,
+    updatePhone,
+    setCurrentPhones,
+    isReadOnly,
+}: PhoneDetailsProps) {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails.phone',
+    });
+    const [phone, setPhone] = useState<EnterprisePhone>(
+        updatePhone ?? INITIAL_PHONE
+    );
     const [country, setCountry] = useState('US' as keyof typeof countries);
     const phoneTypeOptions = getPhoneTypeOptions({ t });
 
     useEffect(() => {
-        setCurrentPhones(prevState => {
+        setCurrentPhones((prevState) => {
             prevState.splice(index, 1, { ...prevState[index], ...phone });
             return prevState;
         });
@@ -36,13 +57,20 @@ export default function PhoneDetails({ index, updatePhone, setCurrentPhones, isR
                 <SelectSimple
                     aria-label={t('labels.phoneType') as string}
                     label={t('labels.phoneType') as string}
-                    onChange={value => {
-                        setPhone((prevState: any) => ({ ...prevState, phoneType: value }));
+                    onChange={(value) => {
+                        setPhone((prevState: any) => ({
+                            ...prevState,
+                            phoneType: value,
+                        }));
                     }}
                     options={phoneTypeOptions}
                     size={FieldSize.Small}
                     value={phone?.phoneType}
-                    variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                    variant={
+                        isReadOnly
+                            ? FieldVariant.Inactive
+                            : FieldVariant.Default
+                    }
                     disabled={isReadOnly}
                 />
             </div>
@@ -55,23 +83,32 @@ export default function PhoneDetails({ index, updatePhone, setCurrentPhones, isR
                     frequentOptions={frequentCountryOptions}
                     label={t('labels.number') as string}
                     leading={countries[country].emoji}
-                    onChange={event => {
-                        setPhone(prevState => ({
+                    onChange={(event) => {
+                        setPhone((prevState) => ({
                             ...prevState,
                             areaCode: event.target.value.substring(0, 3),
                             dialNumber: event.target.value.substring(3, 10),
                         }));
                     }}
-                    onDropdownChange={value => {
+                    onDropdownChange={(value) => {
                         setCountry(value as keyof typeof countries);
-                        setPhone(prevState => ({ ...prevState, countryCode: countries[value as keyof typeof countries].phone }));
+                        setPhone((prevState) => ({
+                            ...prevState,
+                            countryCode:
+                                countries[value as keyof typeof countries]
+                                    .phone,
+                        }));
                     }}
                     options={countryOptions}
                     prefix={`+${countries[country].phone}`}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={formatPhoneNumber(phone)}
-                    variant={isReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                    variant={
+                        isReadOnly
+                            ? FieldVariant.Inactive
+                            : FieldVariant.Default
+                    }
                     disabled={isReadOnly}
                 />
             </div>

@@ -10,7 +10,10 @@ import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 const GaMouseflowTrackingScript = () => {
     const { bulkCheckComplete, isAdvisorsExcel } = usePermissionsContext();
     const { user } = useUser();
-    const isInternalUser = useMemo(() => isInternalZinniaUser(user as UserProfile), [user]);
+    const isInternalUser = useMemo(
+        () => isInternalZinniaUser(user as UserProfile),
+        [user]
+    );
 
     if (!bulkCheckComplete) {
         return;
@@ -18,7 +21,10 @@ const GaMouseflowTrackingScript = () => {
 
     // TODO MG: why is this throwing an error? saying its not in turbo
     // it would be ideal to have an env variable for the siteId rather than the ENV
-    const mouseflowSiteId = process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV === NODE_ENV_PRODUCTION ? 'c75f7bc2-4a0f-4b04-aa9e-d235631ac76c' : '100abfc3-26a9-4338-a053-c6d3561938f3';
+    const mouseflowSiteId =
+        process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV === NODE_ENV_PRODUCTION
+            ? 'c75f7bc2-4a0f-4b04-aa9e-d235631ac76c'
+            : '100abfc3-26a9-4338-a053-c6d3561938f3';
     const mouseflowUrl = `//cdn.mouseflow.com/projects/${mouseflowSiteId}.js`;
 
     return (

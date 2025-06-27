@@ -1,7 +1,9 @@
 import { Meta } from '@storybook/react';
 import { GridApi } from 'ag-grid-community';
 
-import PaginationControlsComponent, { PaginationControlsProps } from './pagination';
+import PaginationControlsComponent, {
+    PaginationControlsProps,
+} from './pagination';
 import '@deps/styles/styles.css';
 
 class MockGridApi extends GridApi {
@@ -45,7 +47,7 @@ export default {
     title: 'Components/Pagination/PaginationControls',
     component: PaginationControlsComponent,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen w-2/3 p-10">
                 <Story />
             </div>
@@ -60,7 +62,9 @@ export default {
     },
 } as Meta<typeof PaginationControlsComponent>;
 
-const PaginationControlsTemplate: React.VFC<PaginationControlsProps> = args => <PaginationControlsComponent {...args} />;
+const PaginationControlsTemplate: React.VFC<PaginationControlsProps> = (
+    args
+) => <PaginationControlsComponent {...args} />;
 
 export const PaginationControls = {
     ...PaginationControlsTemplate,

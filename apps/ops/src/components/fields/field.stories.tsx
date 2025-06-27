@@ -12,7 +12,7 @@ export default {
     title: 'Components/Field',
     component: Field,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="p-10">
                 <Story />
             </div>
@@ -28,9 +28,15 @@ export const Base = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <MailIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Label"
                     size={FieldSize.Default}
                     variant={FieldVariant.Default}
@@ -38,9 +44,15 @@ export const Base = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Required"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <MailIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Label"
                     size={FieldSize.Default}
                     type={FieldType.Base}
@@ -48,9 +60,11 @@ export const Base = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Inactive"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <MailIcon width={20} height={20} className="my-auto" />
+                    }
                     label="Label"
                     size={FieldSize.Default}
                     variant={FieldVariant.Inactive}
@@ -58,9 +72,15 @@ export const Base = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Success"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <MailIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Label"
                     size={FieldSize.Default}
                     variant={FieldVariant.Success}
@@ -68,9 +88,15 @@ export const Base = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Error"
-                    endIcon={<AlertExclamationIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <AlertExclamationIcon
+                            width={20}
+                            height={20}
+                            className="my-auto"
+                        />
+                    }
                     label="Label"
                     message="Assistive message"
                     size={FieldSize.Default}
@@ -81,9 +107,15 @@ export const Base = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Default"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <MailIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Label"
                     size={FieldSize.Small}
                     variant={FieldVariant.Default}
@@ -91,9 +123,15 @@ export const Base = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Required"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <MailIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Label"
                     size={FieldSize.Default}
                     type={FieldType.Base}
@@ -102,9 +140,11 @@ export const Base = () => {
 
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Inactive"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <MailIcon width={20} height={20} className="my-auto" />
+                    }
                     label="Label"
                     size={FieldSize.Small}
                     variant={FieldVariant.Inactive}
@@ -112,9 +152,15 @@ export const Base = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Success"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <MailIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Label"
                     size={FieldSize.Small}
                     variant={FieldVariant.Success}
@@ -122,9 +168,15 @@ export const Base = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Error"
-                    endIcon={<AlertExclamationIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <AlertExclamationIcon
+                            width={20}
+                            height={20}
+                            className="my-auto"
+                        />
+                    }
                     label="Label"
                     message="Assistive message"
                     size={FieldSize.Small}
@@ -144,9 +196,11 @@ export const BaseActive = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <MailIcon width={20} height={20} className="my-auto" />
+                    }
                     label="Label"
                     size={FieldSize.Default}
                     variant={FieldVariant.Default}
@@ -154,9 +208,11 @@ export const BaseActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Inactive"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <MailIcon width={20} height={20} className="my-auto" />
+                    }
                     label="Label"
                     size={FieldSize.Default}
                     variant={FieldVariant.Inactive}
@@ -164,9 +220,11 @@ export const BaseActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Success"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <MailIcon width={20} height={20} className="my-auto" />
+                    }
                     label="Label"
                     size={FieldSize.Default}
                     variant={FieldVariant.Success}
@@ -174,9 +232,15 @@ export const BaseActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Error"
-                    endIcon={<AlertExclamationIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <AlertExclamationIcon
+                            width={20}
+                            height={20}
+                            className="my-auto"
+                        />
+                    }
                     label="Label"
                     message="Assistive message"
                     size={FieldSize.Default}
@@ -187,9 +251,11 @@ export const BaseActive = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <MailIcon width={20} height={20} className="my-auto" />
+                    }
                     label="Label"
                     size={FieldSize.Small}
                     variant={FieldVariant.Default}
@@ -197,9 +263,11 @@ export const BaseActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Inactive"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <MailIcon width={20} height={20} className="my-auto" />
+                    }
                     label="Label"
                     size={FieldSize.Small}
                     variant={FieldVariant.Inactive}
@@ -207,9 +275,11 @@ export const BaseActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Success"
-                    endIcon={<MailIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <MailIcon width={20} height={20} className="my-auto" />
+                    }
                     label="Label"
                     size={FieldSize.Small}
                     variant={FieldVariant.Success}
@@ -217,9 +287,15 @@ export const BaseActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Error"
-                    endIcon={<AlertExclamationIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <AlertExclamationIcon
+                            width={20}
+                            height={20}
+                            className="my-auto"
+                        />
+                    }
                     label="Label"
                     message="Assistive message"
                     size={FieldSize.Small}
@@ -239,7 +315,7 @@ export const Data = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -249,7 +325,7 @@ export const Data = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Inactive"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -259,7 +335,7 @@ export const Data = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Success"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -269,7 +345,7 @@ export const Data = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Error"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -282,7 +358,7 @@ export const Data = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Default"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -292,7 +368,7 @@ export const Data = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Inactive"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -302,7 +378,7 @@ export const Data = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Success"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -312,7 +388,7 @@ export const Data = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Error"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -334,7 +410,7 @@ export const DataActive = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -344,7 +420,7 @@ export const DataActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Inactive"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -354,7 +430,7 @@ export const DataActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Success"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -364,7 +440,7 @@ export const DataActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Default and Error"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -377,7 +453,7 @@ export const DataActive = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -387,7 +463,7 @@ export const DataActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Inactive"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -397,7 +473,7 @@ export const DataActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Success"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -407,7 +483,7 @@ export const DataActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     placeholder="Small and Error"
                     label="Label"
                     labelTooltip="Label Tooltip"
@@ -430,10 +506,16 @@ export const Masked = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <PhoneIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Default"
                     size={FieldSize.Default}
                     variant={FieldVariant.Default}
@@ -441,34 +523,48 @@ export const Masked = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Default and Inactive"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <PhoneIcon width={20} height={20} className="my-auto" />
+                    }
                     size={FieldSize.Default}
                     variant={FieldVariant.Inactive}
                     type={FieldType.Base}
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Default and Success"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <PhoneIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     size={FieldSize.Default}
                     variant={FieldVariant.Success}
                     type={FieldType.Base}
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Default and Error"
                     message="Assistive message"
-                    endIcon={<AlertExclamationIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <AlertExclamationIcon
+                            width={20}
+                            height={20}
+                            className="my-auto"
+                        />
+                    }
                     size={FieldSize.Default}
                     variant={FieldVariant.Error}
                     type={FieldType.Base}
@@ -477,10 +573,16 @@ export const Masked = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <PhoneIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Small"
                     size={FieldSize.Small}
                     variant={FieldVariant.Default}
@@ -488,34 +590,48 @@ export const Masked = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Small and Inactive"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <PhoneIcon width={20} height={20} className="my-auto" />
+                    }
                     size={FieldSize.Small}
                     variant={FieldVariant.Inactive}
                     type={FieldType.Base}
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Small and Success"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <PhoneIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     size={FieldSize.Small}
                     variant={FieldVariant.Success}
                     type={FieldType.Base}
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Small and Error"
                     message="Assistive message"
-                    endIcon={<AlertExclamationIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <AlertExclamationIcon
+                            width={20}
+                            height={20}
+                            className="my-auto"
+                        />
+                    }
                     size={FieldSize.Small}
                     variant={FieldVariant.Error}
                     type={FieldType.Base}
@@ -534,10 +650,16 @@ export const MaskedActive = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <PhoneIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Default"
                     size={FieldSize.Default}
                     variant={FieldVariant.Default}
@@ -545,34 +667,48 @@ export const MaskedActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Default and Inactive"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <PhoneIcon width={20} height={20} className="my-auto" />
+                    }
                     size={FieldSize.Default}
                     variant={FieldVariant.Inactive}
                     type={FieldType.BaseActive}
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Default and Success"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <PhoneIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     size={FieldSize.Default}
                     variant={FieldVariant.Success}
                     type={FieldType.BaseActive}
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Default and Error"
                     message="Assistive message"
-                    endIcon={<AlertExclamationIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <AlertExclamationIcon
+                            width={20}
+                            height={20}
+                            className="my-auto"
+                        />
+                    }
                     size={FieldSize.Default}
                     variant={FieldVariant.Error}
                     type={FieldType.BaseActive}
@@ -581,10 +717,16 @@ export const MaskedActive = () => {
             <div className="flex flex-row gap-5">
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <PhoneIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     label="Small"
                     size={FieldSize.Small}
                     variant={FieldVariant.Default}
@@ -592,34 +734,48 @@ export const MaskedActive = () => {
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Small and Inactive"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <PhoneIcon width={20} height={20} className="my-auto" />
+                    }
                     size={FieldSize.Small}
                     variant={FieldVariant.Inactive}
                     type={FieldType.BaseActive}
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Small and Success"
-                    endIcon={<PhoneIcon width={20} height={20} className="my-auto text-gray-900" />}
+                    endIcon={
+                        <PhoneIcon
+                            width={20}
+                            height={20}
+                            className="my-auto text-gray-900"
+                        />
+                    }
                     size={FieldSize.Small}
                     variant={FieldVariant.Success}
                     type={FieldType.BaseActive}
                 />
                 <Field
                     value={value}
-                    onChange={event => setValue(event.target.value)}
+                    onChange={(event) => setValue(event.target.value)}
                     formatOptions={{ format }}
                     placeholder="(999) 999-9999"
                     label="Small and Error"
                     message="Assistive message"
-                    endIcon={<AlertExclamationIcon width={20} height={20} className="my-auto" />}
+                    endIcon={
+                        <AlertExclamationIcon
+                            width={20}
+                            height={20}
+                            className="my-auto"
+                        />
+                    }
                     size={FieldSize.Small}
                     variant={FieldVariant.Error}
                     type={FieldType.BaseActive}

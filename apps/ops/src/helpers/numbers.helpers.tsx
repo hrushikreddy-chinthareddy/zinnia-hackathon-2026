@@ -13,7 +13,9 @@ const defaultOptions: Intl.NumberFormatOptions = {
     maximumFractionDigits: 2,
 };
 
-export const AccessibleFormattedAmount = ({ amount }: AccessibleFormattedAmountProps) => {
+export const AccessibleFormattedAmount = ({
+    amount,
+}: AccessibleFormattedAmountProps) => {
     if (amount == null) return null;
 
     if (amount < 0) {
@@ -51,7 +53,11 @@ export function divideEvenly(total: number, n: number): number[] {
     return result;
 }
 
-export const numberFormatify = (value?: number | string | null, options = defaultOptions, roundToMillion = false): string => {
+export const numberFormatify = (
+    value?: number | string | null,
+    options = defaultOptions,
+    roundToMillion = false
+): string => {
     if (isNullEmptyOrUndefined(value)) {
         return DEFAULT_ERROR_STRING;
     }
@@ -81,7 +87,10 @@ export const numberFormatify = (value?: number | string | null, options = defaul
     return new Intl.NumberFormat('en-US', options).format(numberValue);
 };
 
-export const percentFormatify = (value?: number | string | null, options?: { isInteger?: boolean }): string => {
+export const percentFormatify = (
+    value?: number | string | null,
+    options?: { isInteger?: boolean }
+): string => {
     if (isNullEmptyOrUndefined(value)) {
         return DEFAULT_ERROR_STRING;
     }
@@ -100,10 +109,16 @@ export const percentFormatify = (value?: number | string | null, options?: { isI
         numberValue = numberValue / 100;
     }
 
-    return new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 2 }).format(numberValue);
+    return new Intl.NumberFormat('en-US', {
+        style: 'percent',
+        maximumFractionDigits: 2,
+    }).format(numberValue);
 };
 
-export const wholePercentFormatify = (value?: number | string | null, options?: { isInteger?: boolean }): string => {
+export const wholePercentFormatify = (
+    value?: number | string | null,
+    options?: { isInteger?: boolean }
+): string => {
     if (isNullEmptyOrUndefined(value)) {
         return DEFAULT_ERROR_STRING;
     }
@@ -122,7 +137,10 @@ export const wholePercentFormatify = (value?: number | string | null, options?: 
         numberValue = numberValue / 100;
     }
 
-    return new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 0 }).format(numberValue);
+    return new Intl.NumberFormat('en-US', {
+        style: 'percent',
+        maximumFractionDigits: 0,
+    }).format(numberValue);
 };
 
 export const forcePositiveNumber = (value?: number | string | null): string => {
@@ -149,7 +167,9 @@ export const forcePositiveNumber = (value?: number | string | null): string => {
     return positiveValue.toString();
 };
 
-export const negativeNumberFormatify = (value?: number | string | null): string => {
+export const negativeNumberFormatify = (
+    value?: number | string | null
+): string => {
     // if passed in null or undefined, return $0.00 insteand of DEFAULT_ERROR_STRING
     if (isNullEmptyOrUndefined(value)) {
         return '$0.00';
@@ -185,11 +205,17 @@ export const determineRange = (start: number, end: number) => {
     return range;
 };
 
-export const formatNumberLabel = (label: string, val: number | null): string => {
+export const formatNumberLabel = (
+    label: string,
+    val: number | null
+): string => {
     return val && val > 1 ? `${label}s` : label;
 };
 
-export const wholeNumberFormatify = (value?: number | string | null, roundToMillion = false): string => {
+export const wholeNumberFormatify = (
+    value?: number | string | null,
+    roundToMillion = false
+): string => {
     if (isNullEmptyOrUndefined(value)) {
         return DEFAULT_ERROR_STRING;
     }

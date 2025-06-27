@@ -5,7 +5,10 @@ import React, { useEffect } from 'react';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import { ErrorMessagePart } from '@deps/components/error/Error';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import PaginationControls from '@deps/components/pagination/pagination';
 import { TranslationFiles } from '@deps/config/translations';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
@@ -20,8 +23,16 @@ type relatedTabProps = {
     setError: React.Dispatch<React.SetStateAction<ErrorMessagePart[] | null>>;
 };
 
-function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relatedTabProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'sideSheet.caseDetailsContent' });
+function RelatedTab({
+    caseTableData,
+    offset,
+    limit,
+    setOffset,
+    setError,
+}: relatedTabProps) {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'sideSheet.caseDetailsContent',
+    });
 
     const goToPage = (pageNumber: number) => {
         setOffset((pageNumber - 1) * limit);
@@ -34,8 +45,10 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
 
     return (
         <div className="flex-1 flex flex-col w-full !mb-0 px-4 pt-4 md:px-6 lg:px-8 gap-4">
-            {caseTableData?.cases?.map(caseData => {
-                const formattedApplicationDate = dayjs(caseData.updatedAt).format(DEFAULT_EXTENDED_DATE_FORMAT);
+            {caseTableData?.cases?.map((caseData) => {
+                const formattedApplicationDate = dayjs(
+                    caseData.updatedAt
+                ).format(DEFAULT_EXTENDED_DATE_FORMAT);
                 const url = `/cases/${caseData.id}`;
                 return (
                     <div
@@ -43,13 +56,19 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
                         className="border-2 border-gray-200  min-w-full rounded-sm grid grid-cols-2 p-4 gap-3 hover:border-black"
                     >
                         <div className="col-span-2 ">
-                            <div className="font-secondary text-[18px] font-bold text-gray-800">{caseData.process}</div>
+                            <div className="font-secondary text-[18px] font-bold text-gray-800">
+                                {caseData.process}
+                            </div>
                             <div className="font-secondary text-md text-gray-600">
-                                {t('relatedTab.lastUpdated')}: {formattedApplicationDate}
+                                {t('relatedTab.lastUpdated')}:{' '}
+                                {formattedApplicationDate}
                             </div>
                         </div>
                         <div className="col-span-1">
-                            <div className="font-secondary text-md font-bold text-gray-800"> {t('relatedTab.caseId')}</div>
+                            <div className="font-secondary text-md font-bold text-gray-800">
+                                {' '}
+                                {t('relatedTab.caseId')}
+                            </div>
                             <NavElement
                                 className={'whitespace-normal break-words'}
                                 href={url}
@@ -64,15 +83,28 @@ function RelatedTab({ caseTableData, offset, limit, setOffset, setError }: relat
                         </div>
                         <div className="col-span-1 flex justify-end items-end pb-2">
                             <div>
-                                {<ChipStatus status={caseData.caseStatus} data-testid="chip-status" classNames="whitespace-nowrap" />}
+                                {
+                                    <ChipStatus
+                                        status={caseData.caseStatus}
+                                        data-testid="chip-status"
+                                        classNames="whitespace-nowrap"
+                                    />
+                                }
                             </div>
                         </div>
                     </div>
                 );
             })}
-            {caseTableData?.cases.length === 0 && <EmptyCard text={t('relatedTab.noCasesAvailable')} />}
+            {caseTableData?.cases.length === 0 && (
+                <EmptyCard text={t('relatedTab.noCasesAvailable')} />
+            )}
             {caseTableData?.cases.length > 0 && (
-                <PaginationControls total={caseTableData.total} limit={limit} offset={offset} goToPage={goToPage} />
+                <PaginationControls
+                    total={caseTableData.total}
+                    limit={limit}
+                    offset={offset}
+                    goToPage={goToPage}
+                />
             )}
         </div>
     );

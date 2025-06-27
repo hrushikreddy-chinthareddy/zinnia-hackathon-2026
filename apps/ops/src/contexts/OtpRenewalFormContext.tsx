@@ -4,7 +4,11 @@ import { Statuses } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
-import { TargetFundAllocation, OwnerInformation, renewalsFormParts } from '@deps/models/case/task';
+import {
+    TargetFundAllocation,
+    OwnerInformation,
+    renewalsFormParts,
+} from '@deps/models/case/task';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -22,16 +26,22 @@ export interface OtpRenewalFormState {
     setContractValue: React.Dispatch<React.SetStateAction<number | string>>;
     currentFormState: string;
     isFormStateReadOnly: boolean;
-    planCode: string
+    planCode: string;
     featureFlags: FeatureFlags;
     setCurrentFormState: React.Dispatch<React.SetStateAction<string>>;
     formValidator: (val?: renewalsFormParts) => FormValidationErrors;
-    setOwnerInformation: React.Dispatch<React.SetStateAction<OwnerInformation[]>>;
+    setOwnerInformation: React.Dispatch<
+        React.SetStateAction<OwnerInformation[]>
+    >;
     setChannel: React.Dispatch<React.SetStateAction<Channel>>;
-    setSubsequentTargetFunds: React.Dispatch<React.SetStateAction<TargetFundAllocation[] | null>>;
+    setSubsequentTargetFunds: React.Dispatch<
+        React.SetStateAction<TargetFundAllocation[] | null>
+    >;
     setTransOption: React.Dispatch<React.SetStateAction<string | null>>;
     setRenewalRequestSignDate: React.Dispatch<React.SetStateAction<string>>;
-    setFormValidator: React.Dispatch<React.SetStateAction<(val?: renewalsFormParts) => FormValidationErrors>>;
+    setFormValidator: React.Dispatch<
+        React.SetStateAction<(val?: renewalsFormParts) => FormValidationErrors>
+    >;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
 }
 
@@ -67,4 +77,6 @@ export const defaultFormDataContext = {
     setFormErrors: noop,
 };
 
-export const RenewalFormDataContext = createContext<OtpRenewalFormState>(defaultFormDataContext as OtpRenewalFormState);
+export const RenewalFormDataContext = createContext<OtpRenewalFormState>(
+    defaultFormDataContext as OtpRenewalFormState
+);

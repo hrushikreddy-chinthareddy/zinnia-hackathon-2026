@@ -2,7 +2,9 @@ import { useTranslation } from 'next-i18next';
 import React, { useCallback, useState } from 'react';
 
 import DiaryNoteCard from '@deps/components/card/diary-note-card/diary-note-card';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import PaginationControls from '@deps/components/pagination/pagination';
 import SideSheetEmpty from '@deps/components/side-sheet/side-sheet-empty/side-sheet-empty';
 import { TranslationFiles } from '@deps/config/translations';
@@ -54,7 +56,14 @@ export function DiaryNotesContent({ notesData }: DiaryNotesContentProps) {
     if (Array.isArray(diaryNotes) && diaryNotes?.length === 0)
         return (
             <SideSheetEmpty
-                icon={<AnnotationIcon width={50} height={50} className="text-gray-300" data-testid="diary-notes-empty-icon" />}
+                icon={
+                    <AnnotationIcon
+                        width={50}
+                        height={50}
+                        className="text-gray-300"
+                        data-testid="diary-notes-empty-icon"
+                    />
+                }
                 header={t('sideSheet.diaryNotesEmptyTitle')}
                 text={t('sideSheet.diaryNotesEmptyText')}
             />
@@ -64,19 +73,34 @@ export function DiaryNotesContent({ notesData }: DiaryNotesContentProps) {
         <div className="flex h-full flex-col">
             <div className="overflow-y-scroll">
                 {Array.isArray(diaryNotes) &&
-                    diaryNotes?.map(({ Alert, NoteCategoryDesc, NoteDate, NoteText }: PolicyNotesInfoItem, index) => (
-                        <DiaryNoteCard
-                            key={`diary-note-${index}`}
-                            alert={Alert}
-                            category={NoteCategoryDesc}
-                            noteDate={NoteDate}
-                            noteText={NoteText}
-                        />
-                    ))}
+                    diaryNotes?.map(
+                        (
+                            {
+                                Alert,
+                                NoteCategoryDesc,
+                                NoteDate,
+                                NoteText,
+                            }: PolicyNotesInfoItem,
+                            index
+                        ) => (
+                            <DiaryNoteCard
+                                key={`diary-note-${index}`}
+                                alert={Alert}
+                                category={NoteCategoryDesc}
+                                noteDate={NoteDate}
+                                noteText={NoteText}
+                            />
+                        )
+                    )}
             </div>
             <div className="grow" />
             <div className="mx-auto my-6">
-                <PaginationControls total={totalLogs as number} limit={limit} offset={offset} goToPage={goToPage} />
+                <PaginationControls
+                    total={totalLogs as number}
+                    limit={limit}
+                    offset={offset}
+                    goToPage={goToPage}
+                />
             </div>
         </div>
     );

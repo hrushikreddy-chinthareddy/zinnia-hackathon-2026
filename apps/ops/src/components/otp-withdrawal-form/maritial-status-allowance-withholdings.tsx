@@ -4,7 +4,12 @@ import React, { useEffect, useState } from 'react';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { TaxWithholding } from '@deps/models/case/withdrawal/case';
 
-import Field, { FieldFormat, FieldSize, FieldType, FieldVariant } from '../fields/field';
+import Field, {
+    FieldFormat,
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '../fields/field';
 
 export enum MaritalStatusAllowances {
     Single = 'Single',
@@ -17,17 +22,33 @@ export interface Allowance<T> {
 }
 
 const defaultMaritalStatusAllowancesItems = [
-    { label: 'maritalStatusAllowanceItems.single', value: MaritalStatusAllowances.Single },
-    { label: 'maritalStatusAllowanceItems.married', value: MaritalStatusAllowances.Married },
-    { label: 'maritalStatusAllowanceItems.headOfHousehold', value: MaritalStatusAllowances.HeadOfHousehold },
+    {
+        label: 'maritalStatusAllowanceItems.single',
+        value: MaritalStatusAllowances.Single,
+    },
+    {
+        label: 'maritalStatusAllowanceItems.married',
+        value: MaritalStatusAllowances.Married,
+    },
+    {
+        label: 'maritalStatusAllowanceItems.headOfHousehold',
+        value: MaritalStatusAllowances.HeadOfHousehold,
+    },
 ];
 
-function toggleAllowances<T>(val: T, setAllowances: React.Dispatch<React.SetStateAction<Allowance<T>[]>>) {
+function toggleAllowances<T>(
+    val: T,
+    setAllowances: React.Dispatch<React.SetStateAction<Allowance<T>[]>>
+) {
     return (shouldHaveAllowance: boolean) => {
-        setAllowances(allowances => {
-            const hasAllowance = allowances.find(checkedAllowance => checkedAllowance.text === val);
+        setAllowances((allowances) => {
+            const hasAllowance = allowances.find(
+                (checkedAllowance) => checkedAllowance.text === val
+            );
             if (hasAllowance && !shouldHaveAllowance) {
-                return allowances.filter(checkedAllowance => checkedAllowance.text !== val);
+                return allowances.filter(
+                    (checkedAllowance) => checkedAllowance.text !== val
+                );
             }
 
             if (!hasAllowance && shouldHaveAllowance) {
@@ -43,28 +64,62 @@ function toggleAllowances<T>(val: T, setAllowances: React.Dispatch<React.SetStat
 }
 
 interface MartialStatusAllowancesWithholdingsProps {
-    maritalAllowances: Pick<TaxWithholding, 'multipleAllowances' | 'exemption' | 'allowances'>;
-    setMaritalAllowances: (val: Pick<TaxWithholding, 'multipleAllowances' | 'exemption' | 'allowances'>) => void;
+    maritalAllowances: Pick<
+        TaxWithholding,
+        'multipleAllowances' | 'exemption' | 'allowances'
+    >;
+    setMaritalAllowances: (
+        val: Pick<
+            TaxWithholding,
+            'multipleAllowances' | 'exemption' | 'allowances'
+        >
+    ) => void;
     isFormStateReadOnly?: boolean;
-    meritalStatusAllowanceConfig?: { label: string; maritalStatusAllowancesOptions: { label: string; value: MaritalStatusAllowances }[] };
+    meritalStatusAllowanceConfig?: {
+        label: string;
+        maritalStatusAllowancesOptions: {
+            label: string;
+            value: MaritalStatusAllowances;
+        }[];
+    };
 }
 
-export default function MartialStatusAllowancesWithholdings(props: MartialStatusAllowancesWithholdingsProps) {
-    const { maritalAllowances, isFormStateReadOnly, setMaritalAllowances, meritalStatusAllowanceConfig } = props;
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.taxWithholdings' });
+export default function MartialStatusAllowancesWithholdings(
+    props: MartialStatusAllowancesWithholdingsProps
+) {
+    const {
+        maritalAllowances,
+        isFormStateReadOnly,
+        setMaritalAllowances,
+        meritalStatusAllowanceConfig,
+    } = props;
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.taxWithholdings',
+    });
 
     function isChecked<T>(val: T, allowances: Allowance<T>[]): boolean {
-        return !!allowances?.find(allowance => allowance.text === val);
+        return !!allowances?.find((allowance) => allowance.text === val);
     }
 
     const maritalStatusAllowancesItems =
-        (meritalStatusAllowanceConfig && meritalStatusAllowanceConfig?.maritalStatusAllowancesOptions) ??
+        (meritalStatusAllowanceConfig &&
+            meritalStatusAllowanceConfig?.maritalStatusAllowancesOptions) ??
         defaultMaritalStatusAllowancesItems;
 
-    const [isMultipleAllowances, setMultipleAllowances] = useState<boolean>(maritalAllowances?.multipleAllowances?.text || false);
-    const [maritalStatus, setMaritalStatus] = useState(maritalAllowances?.allowances ?? []);
-    const [noOfAllowance, setNoOfAllowance] = useState(maritalAllowances?.exemption?.text || '0');
-    const numberFormat = { type: 'number' as FieldFormat, decimalPlaces: 0, format: '' };
+    const [isMultipleAllowances, setMultipleAllowances] = useState<boolean>(
+        maritalAllowances?.multipleAllowances?.text || false
+    );
+    const [maritalStatus, setMaritalStatus] = useState(
+        maritalAllowances?.allowances ?? []
+    );
+    const [noOfAllowance, setNoOfAllowance] = useState(
+        maritalAllowances?.exemption?.text || '0'
+    );
+    const numberFormat = {
+        type: 'number' as FieldFormat,
+        decimalPlaces: 0,
+        format: '',
+    };
 
     useEffect(() => {
         const allowances = {
@@ -80,9 +135,14 @@ export default function MartialStatusAllowancesWithholdings(props: MartialStatus
             <div className="my-4 flex flex-wrap gap-8 max-md:flex-col">
                 <div className="flex-1" key="marital-status-allowances">
                     <CheckboxText
-                        label={t(meritalStatusAllowanceConfig?.label ?? `maritalStatusAllowances`)}
+                        label={t(
+                            meritalStatusAllowanceConfig?.label ??
+                                `maritalStatusAllowances`
+                        )}
                         checked={isMultipleAllowances}
-                        onChange={() => setMultipleAllowances(!isMultipleAllowances)}
+                        onChange={() =>
+                            setMultipleAllowances(!isMultipleAllowances)
+                        }
                         data-testid="marital-status-allowances-test-id"
                         isDisabled={isFormStateReadOnly}
                     />
@@ -92,19 +152,27 @@ export default function MartialStatusAllowancesWithholdings(props: MartialStatus
             {isMultipleAllowances && (
                 <>
                     <div className="my-4 grid grid-cols-1 gap-4">
-                        {maritalStatusAllowancesItems.map(({ label, value }) => {
-                            return (
-                                <div key={`marital-status-${value}`}>
-                                    <CheckboxText
-                                        checked={isChecked(value, maritalStatus)}
-                                        data-testid={`marital-status-test-id-${value}`}
-                                        label={t(label)}
-                                        onChange={toggleAllowances(value, setMaritalStatus)}
-                                        isDisabled={isFormStateReadOnly}
-                                    />
-                                </div>
-                            );
-                        })}
+                        {maritalStatusAllowancesItems.map(
+                            ({ label, value }) => {
+                                return (
+                                    <div key={`marital-status-${value}`}>
+                                        <CheckboxText
+                                            checked={isChecked(
+                                                value,
+                                                maritalStatus
+                                            )}
+                                            data-testid={`marital-status-test-id-${value}`}
+                                            label={t(label)}
+                                            onChange={toggleAllowances(
+                                                value,
+                                                setMaritalStatus
+                                            )}
+                                            isDisabled={isFormStateReadOnly}
+                                        />
+                                    </div>
+                                );
+                            }
+                        )}
                     </div>
                     <div className="grid grid-cols-3 gap-4">
                         <Field
@@ -113,8 +181,12 @@ export default function MartialStatusAllowancesWithholdings(props: MartialStatus
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={noOfAllowance}
-                            onChange={e => setNoOfAllowance(e?.target?.value)}
-                            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                            onChange={(e) => setNoOfAllowance(e?.target?.value)}
+                            variant={
+                                isFormStateReadOnly
+                                    ? FieldVariant.Inactive
+                                    : FieldVariant.Default
+                            }
                             data-testid="no-of-allowances-test-id"
                             disabled={isFormStateReadOnly}
                         />

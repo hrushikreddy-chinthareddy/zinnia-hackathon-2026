@@ -16,22 +16,32 @@ import {
     ProgramType,
     SignatureWithdrawal,
 } from '@deps/models/case/withdrawal/case';
-import { DisbursementParts, DEFAULT_DISBURSEMENT_UPDATE, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    DisbursementParts,
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DEFAULT_BANK_DETAILS,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 import getSBGCConfig from './sbgc-withdrawal-form.helpers';
 
-jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormDisbursementValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormDisbursementValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
 describe('SBGC withdrawal form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
     const sbgcConfig = getSBGCConfig(t);
     describe('Config existence', () => {
         it('should return an object with the correct configuration options', () => {
@@ -81,8 +91,14 @@ describe('SBGC withdrawal form config', () => {
         };
         describe('payload generation', () => {
             it('should generate a correct payload for an eft selection', () => {
-                const eftOption = disbursementOptions(ProgramType.Partial).find(option => option.value === PaymentMethod.EFT);
-                expect(eftOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
+                const eftOption = disbursementOptions(ProgramType.Partial).find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+                expect(
+                    eftOption?.generatePayloadFromSelection(
+                        disbursementMockData
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -94,19 +110,28 @@ describe('SBGC withdrawal form config', () => {
                                 text: disbursementMockData.accountType,
                             },
                             bankName: disbursementMockData.bankName,
-                            nameOnBankAccount: disbursementMockData.accountHolder ?? '',
-                            routingNumber: disbursementMockData.bankRoutingNumber,
+                            nameOnBankAccount:
+                                disbursementMockData.accountHolder ?? '',
+                            routingNumber:
+                                disbursementMockData.bankRoutingNumber,
                             reEnterAccountNumber: '',
                             reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: disbursementMockData.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: disbursementMockData.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        disbursementMockData.doesCheckMeetSecurityRequirements,
                 });
             });
             it('should generate a correct payload for a wire selection', () => {
-                const wireOption = disbursementOptions(ProgramType.Full).find(option => option.value === PaymentMethod.Wire);
-                expect(wireOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
+                const wireOption = disbursementOptions(ProgramType.Full).find(
+                    (option) => option.value === PaymentMethod.Wire
+                );
+                expect(
+                    wireOption?.generatePayloadFromSelection(
+                        disbursementMockData
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Wire },
                     paymentMailType: { text: null },
@@ -118,35 +143,51 @@ describe('SBGC withdrawal form config', () => {
                                 text: disbursementMockData.accountType,
                             },
                             bankName: disbursementMockData.bankName,
-                            nameOnBankAccount: disbursementMockData.accountHolder ?? '',
-                            routingNumber: disbursementMockData.bankRoutingNumber,
+                            nameOnBankAccount:
+                                disbursementMockData.accountHolder ?? '',
+                            routingNumber:
+                                disbursementMockData.bankRoutingNumber,
                             reEnterAccountNumber: '',
                             reEnterBankRoutingNumber: '',
                         },
                     ],
                     voidCheck: disbursementMockData.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: disbursementMockData.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        disbursementMockData.doesCheckMeetSecurityRequirements,
                 });
             });
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions(ProgramType.Full).find(option => option.value === PaymentMailType.Check);
-                expect(checkOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
+                const checkOption = disbursementOptions(ProgramType.Full).find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                expect(
+                    checkOption?.generatePayloadFromSelection(
+                        disbursementMockData
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
                 });
             });
             it('should generate a correct payload for a brokerage selection', () => {
-                const brokerageOption = disbursementOptions(ProgramType.Full).find(option => option.value === PaymentMethod.Brokerage);
+                const brokerageOption = disbursementOptions(
+                    ProgramType.Full
+                ).find((option) => option.value === PaymentMethod.Brokerage);
 
-                expect(brokerageOption?.generatePayloadFromSelection(disbursementMockData)).toEqual({
+                expect(
+                    brokerageOption?.generatePayloadFromSelection(
+                        disbursementMockData
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Brokerage },
                     paymentToBrokerageAccount: true,
                     brokerage: {
                         companyName: disbursementMockData.companyName || '',
                         accountNumber: bank?.accountNumber || '',
-                        acordAttached: disbursementMockData.acordAttached || null,
+                        acordAttached:
+                            disbursementMockData.acordAttached || null,
                         address: disbursementMockData.address,
                     },
                 });
@@ -203,7 +244,11 @@ describe('SBGC withdrawal form config', () => {
     describe('signaturesConfig', () => {
         const { signaturesConfig } = sbgcConfig;
         describe('Owner signature', () => {
-            const ownerConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Owner);
+            const ownerConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
                 expect(ownerConfig?.fields).toHaveLength(4);
@@ -212,7 +257,9 @@ describe('SBGC withdrawal form config', () => {
 
         describe('Joint owner signature', () => {
             const jointOwnerConfig = signaturesConfig.find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.JointOwner
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.JointOwner
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
@@ -325,15 +372,25 @@ describe('SBGC withdrawal form config', () => {
                     ],
                 };
 
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: jointOwner } as OtpWithdrawalFormState)).toBeTruthy();
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: owner } as OtpWithdrawalFormState)).toBeFalsy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: jointOwner,
+                    } as OtpWithdrawalFormState)
+                ).toBeTruthy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: owner,
+                    } as OtpWithdrawalFormState)
+                ).toBeFalsy();
             });
         });
 
         describe('Beneficiary signature', () => {
             it('should be in the config', () => {
                 const beneficiaryConfig = signaturesConfig.find(
-                    sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+                    (sigConfig) =>
+                        sigConfig.signatureType ===
+                        SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
                 expect(beneficiaryConfig).toBeTruthy();
                 expect(beneficiaryConfig?.fields).toHaveLength(4);

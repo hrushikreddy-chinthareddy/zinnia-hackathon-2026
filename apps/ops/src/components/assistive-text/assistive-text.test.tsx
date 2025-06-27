@@ -4,12 +4,19 @@ import AssistiveText, { AssistiveTextVariant } from './assistive-text';
 
 describe('AssistiveText', () => {
     it('renders a default variant', () => {
-        const { getByText, getByTestId } = render(<AssistiveText text="No Variant" data-testid={'assistiveTextComponent'} />);
+        const { getByText, getByTestId } = render(
+            <AssistiveText
+                text="No Variant"
+                data-testid={'assistiveTextComponent'}
+            />
+        );
         const assistiveTextComponent = getByTestId('assistiveTextComponent');
         const icon = getByTestId('check-icon');
         const text = getByText('No Variant');
 
-        expect(assistiveTextComponent).toHaveClass('caption-selected flex w-full flex-row items-start gap-1');
+        expect(assistiveTextComponent).toHaveClass(
+            'caption-selected flex w-full flex-row items-start gap-1'
+        );
         expect(icon).toBeInTheDocument();
         expect(icon).toHaveAttribute('width', '16');
         expect(icon).toHaveAttribute('height', '16');
@@ -18,7 +25,11 @@ describe('AssistiveText', () => {
 
     it('renders a brand Variant', () => {
         const { getByText, getByTestId } = render(
-            <AssistiveText text="Brand Text" variant={AssistiveTextVariant.Brand} data-testid={'assistiveTextComponent'} />
+            <AssistiveText
+                text="Brand Text"
+                variant={AssistiveTextVariant.Brand}
+                data-testid={'assistiveTextComponent'}
+            />
         );
         const assistiveTextComponent = getByTestId('assistiveTextComponent');
         const icon = getByTestId('check-icon');
@@ -33,7 +44,11 @@ describe('AssistiveText', () => {
 
     it('renders default variant with default check icon', () => {
         const { getByText, getByTestId } = render(
-            <AssistiveText text="Default Text" variant={AssistiveTextVariant.Default} data-testid={'assistiveTextComponent'} />
+            <AssistiveText
+                text="Default Text"
+                variant={AssistiveTextVariant.Default}
+                data-testid={'assistiveTextComponent'}
+            />
         );
         const assistiveTextComponent = getByTestId('assistiveTextComponent');
         const icon = getByTestId('check-icon');
@@ -48,7 +63,11 @@ describe('AssistiveText', () => {
 
     it('renders warning variant with default circle info icon', () => {
         const { getByTestId } = render(
-            <AssistiveText text="Warning Text" variant={AssistiveTextVariant.Warning} data-testid={'assistiveTextComponent'} />
+            <AssistiveText
+                text="Warning Text"
+                variant={AssistiveTextVariant.Warning}
+                data-testid={'assistiveTextComponent'}
+            />
         );
         const assistiveTextComponent = getByTestId('assistiveTextComponent');
         const icon = getByTestId('circle-info-icon');
@@ -61,7 +80,11 @@ describe('AssistiveText', () => {
 
     it('renders info variant with alert exclamation icon', () => {
         const { getByTestId } = render(
-            <AssistiveText text="Info Text" variant={AssistiveTextVariant.Info} data-testid={'assistiveTextComponent'} />
+            <AssistiveText
+                text="Info Text"
+                variant={AssistiveTextVariant.Info}
+                data-testid={'assistiveTextComponent'}
+            />
         );
         const assistiveTextComponent = getByTestId('assistiveTextComponent');
         const icon = getByTestId('alert-exclamation-icon');
@@ -74,7 +97,11 @@ describe('AssistiveText', () => {
 
     it('renders error variant with hex exclamation icon', () => {
         const { getByTestId } = render(
-            <AssistiveText text="Error Text" variant={AssistiveTextVariant.Error} data-testid={'assistiveTextComponent'} />
+            <AssistiveText
+                text="Error Text"
+                variant={AssistiveTextVariant.Error}
+                data-testid={'assistiveTextComponent'}
+            />
         );
         const assistiveTextComponent = getByTestId('assistiveTextComponent');
         const icon = getByTestId('hex-exclamation-icon');

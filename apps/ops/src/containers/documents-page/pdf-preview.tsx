@@ -44,14 +44,19 @@ export default function PdfPreview({ documentBinary }: PdfPreviewProps) {
         <div className="mt-8 print:hidden">
             <Document
                 file={'data:application/pdf;base64,' + documentBinary}
-                onContextMenu={e => e.preventDefault()}
+                onContextMenu={(e) => e.preventDefault()}
                 onLoadSuccess={onDocumentLoadSuccess}
                 className="flex flex-col justify-items-center"
             >
-                {Array.from({ length: numPages }, (_, i) => i + 1).map(pageNum =>
-                    pageNum <= maxPageLoaded ? (
-                        <MemoizedPage key={`document-page-${pageNum}`} pageNum={pageNum} loadNextPage={setMaxPageLoaded} />
-                    ) : null
+                {Array.from({ length: numPages }, (_, i) => i + 1).map(
+                    (pageNum) =>
+                        pageNum <= maxPageLoaded ? (
+                            <MemoizedPage
+                                key={`document-page-${pageNum}`}
+                                pageNum={pageNum}
+                                loadNextPage={setMaxPageLoaded}
+                            />
+                        ) : null
                 )}
             </Document>
         </div>

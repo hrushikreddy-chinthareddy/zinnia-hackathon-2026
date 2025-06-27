@@ -2,7 +2,11 @@ import { Skeleton } from '@radix-ui/themes';
 
 import { QuickViewRoot } from './policy-summary-card';
 
-export const LabelContentSkeleton = ({ contentLines = 1 }: { contentLines?: number }) => (
+export const LabelContentSkeleton = ({
+    contentLines = 1,
+}: {
+    contentLines?: number;
+}) => (
     <div className="flex flex-col gap-1">
         <Skeleton width="80px" height="16px" />
         {Array.from({ length: contentLines }).map((_, index) => (

@@ -1,7 +1,9 @@
 import { TFunction } from 'next-i18next';
 import { useContext } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 
 export type FormErrorsProps = {
@@ -14,10 +16,20 @@ export const FormErrors = ({ t, taskApiError }: FormErrorsProps) => {
 
     return (
         <>
-            {taskApiError && <AssistiveText variant={AssistiveTextVariant.Error} text={taskApiError} className="mt-2" />}
+            {taskApiError && (
+                <AssistiveText
+                    variant={AssistiveTextVariant.Error}
+                    text={taskApiError}
+                    className="mt-2"
+                />
+            )}
             {Object.keys(formErrors)?.length > 0 ? (
                 <div className="flex flex-col">
-                    <AssistiveText text={t('formValidation.formValidationError')} variant={AssistiveTextVariant.Error} className="mt-2" />
+                    <AssistiveText
+                        text={t('formValidation.formValidationError')}
+                        variant={AssistiveTextVariant.Error}
+                        className="mt-2"
+                    />
                 </div>
             ) : null}
         </>

@@ -1,4 +1,9 @@
-import { Policy, EmailType, AddressType, PhoneType } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    EmailType,
+    AddressType,
+    PhoneType,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'i18next';
 import { v4 as uuid4 } from 'uuid';
@@ -9,7 +14,14 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { ClaimActionTypes, ClaimCommunicationTypes, DeceasedParty, NotificationMethod, NotifierParty, RoleType } from './death-claim.types';
+import {
+    ClaimActionTypes,
+    ClaimCommunicationTypes,
+    DeceasedParty,
+    NotificationMethod,
+    NotifierParty,
+    RoleType,
+} from './death-claim.types';
 
 export const DEFAULT_ADDRESS = {
     action: ClaimActionTypes.NONE,
@@ -42,12 +54,18 @@ export const getCommunicationTypes = (t: TFunction) => {
     ];
 };
 
-export const validateOtherNotifier = (notifier: any, roleType: RoleType, t: TFunction) => {
+export const validateOtherNotifier = (
+    notifier: any,
+    roleType: RoleType,
+    t: TFunction
+) => {
     const errors: FormValidationErrors = {};
     const { firstName, lastName, relationshipToInsured } = notifier;
 
     if (!firstName) {
-        errors['firstName'] = t('formErrors.formValidation.firstNameIsRequired');
+        errors['firstName'] = t(
+            'formErrors.formValidation.firstNameIsRequired'
+        );
     } else {
         errors['firstName'] = '';
     }
@@ -59,7 +77,9 @@ export const validateOtherNotifier = (notifier: any, roleType: RoleType, t: TFun
     }
 
     if (roleType === RoleType.Other && !relationshipToInsured) {
-        errors['relationship'] = t('formErrors.formValidation.relationshipToInsuredIsRequired');
+        errors['relationship'] = t(
+            'formErrors.formValidation.relationshipToInsuredIsRequired'
+        );
     } else {
         errors['relationship'] = '';
     }
@@ -70,7 +90,9 @@ const formatBene = (value: any) => {
     return {
         ...value,
         dateOfDeath: !isNullEmptyOrUndefined(value?.dateOfDeath)
-            ? dayjs(value?.dateOfDeath, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT)
+            ? dayjs(value?.dateOfDeath, DATE_PICKER_FORMAT).format(
+                  ZAHARA_API_DATE_FORMAT
+              )
             : null,
     };
 };
@@ -101,7 +123,7 @@ export const buildClaimPaylod = (
     selOwners: DeceasedParty[],
     selBeneficiaries: NotificationMethod[],
     onbaseCaseId: string,
-    onbaseDocumentNumber: string,
+    onbaseDocumentNumber: string
 ) => {
     const { policyNumber, policyStatus, product, carrierId } = policy;
     const ownersRec = selOwners.map((item: any) => formatBene(item));
@@ -112,7 +134,9 @@ export const buildClaimPaylod = (
         onbaseCaseId: onbaseCaseId,
         onbaseDocumentNumber: onbaseDocumentNumber,
         caseId: null,
-        documentDate: document ? dayjs(document?.documentDate).format(ZAHARA_API_DATE_FORMAT) : null,
+        documentDate: document
+            ? dayjs(document?.documentDate).format(ZAHARA_API_DATE_FORMAT)
+            : null,
         carrierId: carrierId,
         planCode: product?.planCode,
         policyNumber: policyNumber,

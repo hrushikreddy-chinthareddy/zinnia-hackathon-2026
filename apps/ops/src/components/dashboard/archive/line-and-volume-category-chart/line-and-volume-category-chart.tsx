@@ -4,7 +4,9 @@ import HighchartsReact from 'highcharts-react-official';
 import { useRef } from 'react';
 
 import { TransactionTrendsTimeframe } from '@deps/components/dashboard/sections/transaction-trends/utils';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import {
     CHART_HEIGHT,
     getBottomChartConfig,
@@ -41,15 +43,19 @@ export const LineAndVolumeCategoryChart = ({
         .slice(0, 5);
 
     const chartOptions = {
-        monthlyCategories: chartData.monthlyCategories.map((value: number) => value.toString()),
+        monthlyCategories: chartData.monthlyCategories.map((value: number) =>
+            value.toString()
+        ),
         weeklyCategories: chartData.weeklyCategories,
         monthlySeries: [] as Highcharts.SeriesColumnOptions[],
         weeklySeries: [] as Highcharts.SeriesLineOptions[],
     };
 
     for (const carrier of sortedMonthlyArray) {
-        const monthlySeries = chartData.monthlyByLevel1Grouping[carrier.name].series as Highcharts.SeriesColumnOptions;
-        const weeklySeries = chartData.weeklyByLevel1Grouping[carrier.name].series as Highcharts.SeriesLineOptions;
+        const monthlySeries = chartData.monthlyByLevel1Grouping[carrier.name]
+            .series as Highcharts.SeriesColumnOptions;
+        const weeklySeries = chartData.weeklyByLevel1Grouping[carrier.name]
+            .series as Highcharts.SeriesLineOptions;
         chartOptions.monthlySeries.push(monthlySeries);
         chartOptions.weeklySeries.push(weeklySeries);
     }
@@ -67,25 +73,45 @@ export const LineAndVolumeCategoryChart = ({
         timeframe
     );
 
-    const showData = chartData.monthlyCategories.some((value: number) => value > 0);
+    const showData = chartData.monthlyCategories.some(
+        (value: number) => value > 0
+    );
 
     return (
         <div
             style={{ height: CHART_HEIGHT }}
             className={clsx(
                 'flex flex-col gap-2 items-stretch justify-center text-center h-full w-full',
-                !showData && 'rounded bg-gray-50 border-1 border-dashed border-gray-400'
+                !showData &&
+                    'rounded bg-gray-50 border-1 border-dashed border-gray-400'
             )}
         >
             {showData ? (
                 <>
-                    <HighchartsReact ref={topChartRef} highcharts={Highcharts} options={topChartConfig} />
-                    {showVolumeColumns && <HighchartsReact ref={bottomChartRef} highcharts={Highcharts} options={bottomChartConfig} />}
+                    <HighchartsReact
+                        ref={topChartRef}
+                        highcharts={Highcharts}
+                        options={topChartConfig}
+                    />
+                    {showVolumeColumns && (
+                        <HighchartsReact
+                            ref={bottomChartRef}
+                            highcharts={Highcharts}
+                            options={bottomChartConfig}
+                        />
+                    )}
                 </>
             ) : (
                 <>
-                    <ChartBarsIcon title="Chart unavailable" className="mx-auto" height={'24px'} width={'24px'} />
-                    <Typography variant={TypographyVariant.BodyBold}>Chart unavailable</Typography>
+                    <ChartBarsIcon
+                        title="Chart unavailable"
+                        className="mx-auto"
+                        height={'24px'}
+                        width={'24px'}
+                    />
+                    <Typography variant={TypographyVariant.BodyBold}>
+                        Chart unavailable
+                    </Typography>
                 </>
             )}
         </div>

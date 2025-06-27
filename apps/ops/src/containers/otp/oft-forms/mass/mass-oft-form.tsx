@@ -17,7 +17,9 @@ import { Carrier, ProgramType } from '@deps/models/case/withdrawal/case';
 import getMassOftConfig from './mass-oft-form.helpers';
 
 export default function MassOftWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -54,9 +56,13 @@ export default function MassOftWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.MASS}_OFT_DIGITAL_FORM`,
+            formExtName: `${
+                initialForm?.carrier || Carrier.MASS
+            }_OFT_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.MASS}_OFT_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.MASS
+                }_OFT_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -72,10 +78,15 @@ export default function MassOftWithdrawalForm() {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties configs={formPartyConfigs} isFormStateReadOnly={isFormStateReadOnly} />
+            <FormParties
+                configs={formPartyConfigs}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             <FormProgramPartialWithdrawal
                 options={surrenderingInstructionsOptions}
-                title={t('amountDetails.surrenderingInstructions.title') as string}
+                title={
+                    t('amountDetails.surrenderingInstructions.title') as string
+                }
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -83,11 +94,18 @@ export default function MassOftWithdrawalForm() {
             {formProgram?.programType?.text === ProgramType.Withdrawal && (
                 <FormDistribution
                     fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                    title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                    title={
+                        t(
+                            'distributionInstruction.investmentSelectionForDistribution'
+                        ) as string
+                    }
                     isFormStateReadOnly={isFormStateReadOnly}
                 />
             )}
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -97,12 +115,16 @@ export default function MassOftWithdrawalForm() {
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
-                title={t('distributionMethod.cedingCompanyDistribution') as string}
+                title={
+                    t('distributionMethod.cedingCompanyDistribution') as string
+                }
                 defaultValue={defaultValues.disbursementOption}
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

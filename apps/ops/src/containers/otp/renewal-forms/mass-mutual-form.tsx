@@ -14,7 +14,9 @@ import { Channel } from '@deps/models/case/renewal/case-renewal';
 import getMassMutualConfig from './mass-mutual-form.helpers';
 
 export default function MassRenewalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseRenewal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseRenewal.request',
+    });
     const {
         channel,
         setFormValidator,
@@ -24,15 +26,26 @@ export default function MassRenewalForm() {
         setRenewalRequestSignDate,
         planCode,
     } = useContext(RenewalFormDataContext);
-    const { formPartyConfigs, signatureConfigs, formValidation, periodRadioItems, transList } = getMassMutualConfig(t);
+    const {
+        formPartyConfigs,
+        signatureConfigs,
+        formValidation,
+        periodRadioItems,
+        transList,
+    } = getMassMutualConfig(t);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
     }, []);
 
     useEffect(() => {
-        const owner = ownerInformation?.find(owner => owner.type === 'Primary');
-        const renewalDate = channel === Channel.Form ? owner?.signature?.signDate || 'NA' : renewalRequestSignDate;
+        const owner = ownerInformation?.find(
+            (owner) => owner.type === 'Primary'
+        );
+        const renewalDate =
+            channel === Channel.Form
+                ? owner?.signature?.signDate || 'NA'
+                : renewalRequestSignDate;
 
         setRenewalRequestSignDate(renewalDate);
     }, [channel, ownerInformation, renewalRequestSignDate]);
@@ -42,16 +55,33 @@ export default function MassRenewalForm() {
             {!isFormStateReadOnly && <DiaryNotesWarning />}
             <br />
             <GeneralInformation isFormStateReadOnly={isFormStateReadOnly} />
-            <OwnerInformation isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <OwnerInformation
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <hr className="my-4 h-0.5 border-none bg-gray-100 px-4" />
             {planCode === '723' ? (
-                <RenewalPeriodMultiSection isFormStateReadOnly={isFormStateReadOnly} options={transList} planCode={planCode} />
+                <RenewalPeriodMultiSection
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={transList}
+                    planCode={planCode}
+                />
             ) : (
-                <RenewalPeriodSingleSection isFormStateReadOnly={isFormStateReadOnly} options={periodRadioItems} />
+                <RenewalPeriodSingleSection
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={periodRadioItems}
+                />
             )}
             <hr className="my-4 h-0.5 border-none bg-gray-100 px-4" />
-            {channel === Channel.Phone && <CallReceiveDate isFormStateReadOnly={isFormStateReadOnly} />}
-            {channel === Channel.Form && <SignatureValidations configs={signatureConfigs} isFormStateReadOnly={isFormStateReadOnly} />}
+            {channel === Channel.Phone && (
+                <CallReceiveDate isFormStateReadOnly={isFormStateReadOnly} />
+            )}
+            {channel === Channel.Form && (
+                <SignatureValidations
+                    configs={signatureConfigs}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

@@ -41,29 +41,40 @@ export default function FieldSelect({
         if (!frequentOptions) return '';
 
         if (index === 0) return 'rounded-t-lg';
-        if (index === frequentOptions.length - 1 && options.length > 0) return 'border-b-gray-100';
-        if (index === frequentOptions.length - 1 && options.length === 0) return 'rounded-b-lg';
+        if (index === frequentOptions.length - 1 && options.length > 0)
+            return 'border-b-gray-100';
+        if (index === frequentOptions.length - 1 && options.length === 0)
+            return 'rounded-b-lg';
 
         return '';
     }
 
     function getOptionsClasses(index: number) {
-        if (index === 0 && frequentOptions && frequentOptions.length > 0) return 'border-t-gray-100';
-        if ((index === 0 && !frequentOptions) || (index === 0 && frequentOptions && frequentOptions.length === 0)) return 'rounded-t-lg';
+        if (index === 0 && frequentOptions && frequentOptions.length > 0)
+            return 'border-t-gray-100';
+        if (
+            (index === 0 && !frequentOptions) ||
+            (index === 0 && frequentOptions && frequentOptions.length === 0)
+        )
+            return 'rounded-t-lg';
         if (index === options.length - 1) return 'rounded-b-lg';
 
         return '';
     }
 
-    const classes = clsx('hide-scrollbar absolute z-10 w-full overflow-y-scroll rounded-lg bg-white shadow-elevation-light-16', {
-        'top-[50px]': rest.size === FieldSize.Small && !rest.label,
-        'top-[72px]': rest.size === FieldSize.Small && rest.label,
-        'top-[66px]': rest.size === FieldSize.Default && !rest.label,
-        'top-[88px]': rest.size === FieldSize.Default && rest.label,
-    });
+    const classes = clsx(
+        'hide-scrollbar absolute z-10 w-full overflow-y-scroll rounded-lg bg-white shadow-elevation-light-16',
+        {
+            'top-[50px]': rest.size === FieldSize.Small && !rest.label,
+            'top-[72px]': rest.size === FieldSize.Small && rest.label,
+            'top-[66px]': rest.size === FieldSize.Default && !rest.label,
+            'top-[88px]': rest.size === FieldSize.Default && rest.label,
+        }
+    );
 
     const handleClose = () => setOpen(false);
-    const handleClick = () => (outsideClick ? setOutsideClick(false) : setOpen(!open));
+    const handleClick = () =>
+        outsideClick ? setOutsideClick(false) : setOpen(!open);
     const handleClickOutside = () => setOutsideClick(true);
 
     const [outsideClick, setOutsideClick] = useState(false);
@@ -75,15 +86,29 @@ export default function FieldSelect({
             <Field
                 leading={
                     leading ? (
-                        <div className="flex h-full flex-row items-center gap-1" onClick={handleClick} onKeyDown={e => handleKeyDown(e)}>
+                        <div
+                            className="flex h-full flex-row items-center gap-1"
+                            onClick={handleClick}
+                            onKeyDown={(e) => handleKeyDown(e)}
+                        >
                             {leading}
-                            <ChevronDownIcon width={8} height={8} className={`simple-transition text-secondary ${open ? 'flip180' : ''}`} />
+                            <ChevronDownIcon
+                                width={8}
+                                height={8}
+                                className={`simple-transition text-secondary ${
+                                    open ? 'flip180' : ''
+                                }`}
+                            />
                         </div>
                     ) : undefined
                 }
                 trailing={
                     trailing ? (
-                        <div onClick={handleClick} onKeyDown={e => handleKeyDown(e)} className="h-full">
+                        <div
+                            onClick={handleClick}
+                            onKeyDown={(e) => handleKeyDown(e)}
+                            className="h-full"
+                        >
                             {trailing}
                         </div>
                     ) : undefined

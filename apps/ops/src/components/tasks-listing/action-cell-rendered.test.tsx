@@ -13,15 +13,20 @@ describe('#ActionCellRenderer', () => {
                 status: TaskStatus.Completed,
             },
             actionParams: {
-                isReadOnly: (status: string) => (status === CaseStatus.Submit || status === TaskStatus.Completed),
-                isEditable: (status: string) =>  (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress),
+                isReadOnly: (status: string) =>
+                    status === CaseStatus.Submit ||
+                    status === TaskStatus.Completed,
+                isEditable: (status: string) =>
+                    status === CaseStatus.Pending ||
+                    status === TaskStatus.New ||
+                    status === TaskStatus.InProgress,
                 actionLabels: {
                     edit: 'Edit',
                     readOnlyView: 'Read-only view',
                     duplicateTaskContent: 'Edit',
                 },
                 actionMenu: 'Actions',
-            }
+            },
         };
 
         render(<ActionCellRenderer {...(params as any)} />);
@@ -34,18 +39,23 @@ describe('#ActionCellRenderer', () => {
     it('should render the edit action when task Status us new', async () => {
         const params = {
             data: {
-                status: TaskStatus.New ,
+                status: TaskStatus.New,
             },
             actionParams: {
-                isReadOnly: (status: string) => (status === CaseStatus.Submit || status === TaskStatus.Completed),
-                isEditable: (status: string) =>  (status === CaseStatus.Pending || status === TaskStatus.New ||  status === TaskStatus.InProgress),
+                isReadOnly: (status: string) =>
+                    status === CaseStatus.Submit ||
+                    status === TaskStatus.Completed,
+                isEditable: (status: string) =>
+                    status === CaseStatus.Pending ||
+                    status === TaskStatus.New ||
+                    status === TaskStatus.InProgress,
                 actionLabels: {
                     edit: 'Edit',
                     readOnlyView: 'Read-only view',
                     duplicateTaskContent: 'Edit',
                 },
                 actionMenu: 'Actions',
-            }
+            },
         };
 
         render(<ActionCellRenderer {...(params as any)} />);

@@ -15,7 +15,12 @@ const mockCurrency = 'USD';
 
 describe('LoanRulesCard', () => {
     it('should render the card with correct labels and values', () => {
-        render(<LoanRulesCard currency={mockCurrency} loanValues={mockLoanValues} />);
+        render(
+            <LoanRulesCard
+                currency={mockCurrency}
+                loanValues={mockLoanValues}
+            />
+        );
 
         expect(screen.getByText('headline')).toBeInTheDocument();
 
@@ -36,7 +41,12 @@ describe('LoanRulesCard', () => {
             maxLoanAmount: undefined,
         };
 
-        render(<LoanRulesCard currency={mockCurrency} loanValues={emptyLoanValues} />);
+        render(
+            <LoanRulesCard
+                currency={mockCurrency}
+                loanValues={emptyLoanValues}
+            />
+        );
 
         expect(screen.getByText('Minloanamt')).toBeInTheDocument();
         expect(screen.getByText('$0.00')).toBeInTheDocument();
@@ -47,13 +57,20 @@ describe('LoanRulesCard', () => {
     });
 
     it('should display tooltip', async () => {
-        render(<LoanRulesCard currency={mockCurrency} loanValues={mockLoanValues} />);
+        render(
+            <LoanRulesCard
+                currency={mockCurrency}
+                loanValues={mockLoanValues}
+            />
+        );
 
         const tooltipIcon = screen.getByTestId(PopoverTest.Popover);
         expect(tooltipIcon).toBeInTheDocument();
 
         fireEvent.click(tooltipIcon);
 
-        expect(await screen.findByTestId(PopoverTest.Content)).toBeInTheDocument();
+        expect(
+            await screen.findByTestId(PopoverTest.Content)
+        ).toBeInTheDocument();
     });
 });

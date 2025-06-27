@@ -20,16 +20,26 @@ type ContactCenterAddressProps = {
     setAddress: (val: any) => void;
     party: any;
 };
-const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'deathClaims.notificationMethod' });
-    const [partyCardsData, setPartyCardsData] = useState<PartyAddressCard[]>([]);
+const ContactAddress = ({
+    policy,
+    setAddress,
+    party,
+}: ContactCenterAddressProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'deathClaims.notificationMethod',
+    });
+    const [partyCardsData, setPartyCardsData] = useState<PartyAddressCard[]>(
+        []
+    );
     const [prevAddress, setPrevAddress] = useState<Address>({});
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
     const [selectedNewAddress, setSelectedNewAddress] = useState(false);
     const sideSheet = useSideSheetContext();
 
     useEffect(() => {
-        const currentParty = policy?.parties?.find(item => item.partyId === party?.partyId);
+        const currentParty = policy?.parties?.find(
+            (item) => item.partyId === party?.partyId
+        );
         const data = [
             {
                 firstName: party?.firstName ?? '',
@@ -82,11 +92,25 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
             sideSheet.handleOpen(false);
             return;
         }
-        const { firstName, lastName, addressType, addressId, country, zipCodeExtension, ...address } = val;
+        const {
+            firstName,
+            lastName,
+            addressType,
+            addressId,
+            country,
+            zipCodeExtension,
+            ...address
+        } = val;
         partyCardsData.push({
             firstName,
             lastName,
-            address: { ...address, addressType, addressId, country, zipCodeExtension },
+            address: {
+                ...address,
+                addressType,
+                addressId,
+                country,
+                zipCodeExtension,
+            },
             partyRoles: [],
             roleIdentifiers: [],
             tags: [],
@@ -102,12 +126,26 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
             sideSheet.handleOpen(false);
             return;
         }
-        const { firstName, lastName, addressType, addressId, country, zipCodeExtension, ...address } = val;
+        const {
+            firstName,
+            lastName,
+            addressType,
+            addressId,
+            country,
+            zipCodeExtension,
+            ...address
+        } = val;
         const newData = [
             {
                 firstName,
                 lastName,
-                address: { ...address, addressType, addressId, country, zipCodeExtension },
+                address: {
+                    ...address,
+                    addressType,
+                    addressId,
+                    country,
+                    zipCodeExtension,
+                },
                 partyRoles: [party?.roleType],
                 roleIdentifiers: [],
                 tags: [],
@@ -120,14 +158,32 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
     };
 
     function addDifferentAddress(): void {
-        const content = <DifferentAddress carrierId={policy?.carrierId ?? ''} handleClose={handleSelectedAddress} showName={false} />;
-        sideSheet.changeSideSheetContent(t('mailDetails.sendToDifferentAddress'), content);
+        const content = (
+            <DifferentAddress
+                carrierId={policy?.carrierId ?? ''}
+                handleClose={handleSelectedAddress}
+                showName={false}
+            />
+        );
+        sideSheet.changeSideSheetContent(
+            t('mailDetails.sendToDifferentAddress'),
+            content
+        );
         sideSheet.handleOpen(true);
     }
 
     function editAddress(value: any) {
-        const content = <EditAddress carrierId={policy?.carrierId ?? ''} handleClose={handleEditAddress} partyCardData={value} />;
-        sideSheet.changeSideSheetContent(t('mailDetails.updateAddress'), content);
+        const content = (
+            <EditAddress
+                carrierId={policy?.carrierId ?? ''}
+                handleClose={handleEditAddress}
+                partyCardData={value}
+            />
+        );
+        sideSheet.changeSideSheetContent(
+            t('mailDetails.updateAddress'),
+            content
+        );
         sideSheet.handleOpen(true);
     }
 
@@ -136,12 +192,16 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
             {partyCardsData.map((partyCard, index) => {
                 return (
                     !isEmptyObject(partyCard.address) && (
-                        <div className="card-container" key={`select-address-section${index}`}>
+                        <div
+                            className="card-container"
+                            key={`select-address-section${index}`}
+                        >
                             <ClickContainer
                                 classes={clsx(
                                     'flex w-min py-4',
                                     {
-                                        'border-primary hover:border-primary ': selectedAddress === index,
+                                        'border-primary hover:border-primary ':
+                                            selectedAddress === index,
                                     },
                                     'min-h-[120px] min-w-[300px]'
                                 )}
@@ -150,10 +210,16 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
                                 key={`select-address-${index}`}
                                 isSelected={selectedAddress === index}
                             >
-                                <FormattedAddress address={partyCard?.address || {}} />
+                                <FormattedAddress
+                                    address={partyCard?.address || {}}
+                                />
                             </ClickContainer>
                             <div className="my-1 ml-[-11px] p-3">
-                                <Link text={t('edit')} href="#" onClick={() => editAddress(partyCard)} />
+                                <Link
+                                    text={t('edit')}
+                                    href="#"
+                                    onClick={() => editAddress(partyCard)}
+                                />
                             </div>
                         </div>
                     )
@@ -164,7 +230,8 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
                     classes={clsx(
                         'flex w-min items-center justify-center py-4',
                         {
-                            'border-primary hover:border-primary ': selectedAddress === partyCardsData?.length,
+                            'border-primary hover:border-primary ':
+                                selectedAddress === partyCardsData?.length,
                         },
                         'min-h-[120px] min-w-[300px]'
                     )}
@@ -173,7 +240,10 @@ const ContactAddress = ({ policy, setAddress, party }: ContactCenterAddressProps
                     key={`different-address`}
                     isSelected={selectedAddress === partyCardsData?.length}
                 >
-                    <div key={partyCardsData?.length} className="text-secondary">
+                    <div
+                        key={partyCardsData?.length}
+                        className="text-secondary"
+                    >
                         + {t('mailDetails.sendToDifferentAddress')}
                     </div>
                 </ClickContainer>

@@ -2,9 +2,18 @@ import { Email } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import Toggle, { ToggleSize, ToggleVariant } from '@deps/components/toggle/toggle';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import Toggle, {
+    ToggleSize,
+    ToggleVariant,
+} from '@deps/components/toggle/toggle';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
@@ -12,7 +21,10 @@ import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
 import { Emails, sortEmailsByType } from './email-card.helpers';
@@ -24,21 +36,38 @@ interface OpenSideSheet {
     header: SideSheetPeopleHeaderProps;
 }
 
-const EmailCard = ({ editable = false, infoOnly, party, planCode, policyNumber }: PersonCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.card.email' });
+const EmailCard = ({
+    editable = false,
+    infoOnly,
+    party,
+    planCode,
+    policyNumber,
+}: PersonCardProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.card.email',
+    });
 
     const sideSheet = useSideSheetContext();
 
     const [showAdditional, setShowAdditional] = useState(false);
 
     const { emails } = party ?? {};
-    const [currentEmails, setCurrentEmails] = useState<Email[]>(sortEmailsByType({ emails }));
+    const [currentEmails, setCurrentEmails] = useState<Email[]>(
+        sortEmailsByType({ emails })
+    );
 
     const showAdditionalToggle = currentEmails.length > 4;
 
-    const openSideSheet = ({ email, header: { action, transaction, typeTranslation } }: OpenSideSheet) => {
+    const openSideSheet = ({
+        email,
+        header: { action, transaction, typeTranslation },
+    }: OpenSideSheet) => {
         sideSheet.changeSideSheetContent(
-            <SideSheetPeopleHeader action={action} transaction={transaction} typeTranslation={typeTranslation} />,
+            <SideSheetPeopleHeader
+                action={action}
+                transaction={transaction}
+                typeTranslation={typeTranslation}
+            />,
             <SideSheetEmail
                 isOnlyEmail={currentEmails.length === 1}
                 onCancel={() => sideSheet.handleOpen(false)}
@@ -54,7 +83,12 @@ const EmailCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
 
     const EmailsBody = (
         <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
-            <Emails editable={editable} emails={currentEmails} onEditClick={openSideSheet} showAdditional={showAdditional} />
+            <Emails
+                editable={editable}
+                emails={currentEmails}
+                onEditClick={openSideSheet}
+                showAdditional={showAdditional}
+            />
         </div>
     );
 
@@ -73,8 +107,11 @@ const EmailCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
                                 openSideSheet({
                                     header: {
                                         action: NonFinancialTransactionActions.Add,
-                                        transaction: NonFinancialTransactions.Email,
-                                        typeTranslation: t('general.new') as string,
+                                        transaction:
+                                            NonFinancialTransactions.Email,
+                                        typeTranslation: t(
+                                            'general.new'
+                                        ) as string,
                                     },
                                 })
                             }
@@ -91,7 +128,9 @@ const EmailCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
                 {showAdditionalToggle && (
                     <div className="mb-5 flex flex-row items-center">
                         <Toggle
-                            ariaLabel={t('emailOptions.showAdditional') as string}
+                            ariaLabel={
+                                t('emailOptions.showAdditional') as string
+                            }
                             handleToggle={setShowAdditional}
                             size={ToggleSize.Default}
                             text={t('emailOptions.showAdditional') as string}
@@ -101,7 +140,11 @@ const EmailCard = ({ editable = false, infoOnly, party, planCode, policyNumber }
                     </div>
                 )}
             </div>
-            {currentEmails.length ? EmailsBody : <EmptyCard text={t('general.empty') as string} />}
+            {currentEmails.length ? (
+                EmailsBody
+            ) : (
+                <EmptyCard text={t('general.empty') as string} />
+            )}
         </CardContainer>
     );
 };

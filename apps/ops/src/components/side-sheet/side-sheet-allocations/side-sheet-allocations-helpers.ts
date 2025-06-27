@@ -1,4 +1,8 @@
-import { PartyRole, Policy, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    Policy,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 
@@ -19,32 +23,46 @@ export interface BennyPercent {
     [key: string]: number;
 }
 
-export const beneficiaryRoles = [PartyRole.PRIMARYBENEFICIARY, PartyRole.CONTINGENTBENEFICIARY] as Partial<PartyRole[]>;
+export const beneficiaryRoles = [
+    PartyRole.PRIMARYBENEFICIARY,
+    PartyRole.CONTINGENTBENEFICIARY,
+] as Partial<PartyRole[]>;
 
 export const buildBeneficiaryAllocation = (
     benefitPercentages: { [key: string]: AllocationPercentage[] },
     roles: (PartyRole | undefined)[]
 ): AllocationPercentage[] => {
     const percentages = [] as AllocationPercentage[];
-    roles.forEach(role => {
+    roles.forEach((role) => {
         percentages.push(...benefitPercentages[role as string]);
     });
     return percentages;
 };
 
 export const calculateTotalPercent = (bp: BennyPercent): number => {
-    return (Object.values(bp) as number[]).reduce((acc, val): number => acc + val, 0);
+    return (Object.values(bp) as number[]).reduce(
+        (acc, val): number => acc + val,
+        0
+    );
 };
 
-export const convertBenefitPercentagesToAllocationPercentages = (bp: BennyPercent): AllocationPercentage[] => {
-    return Object.keys(bp).map(partyId => {
+export const convertBenefitPercentagesToAllocationPercentages = (
+    bp: BennyPercent
+): AllocationPercentage[] => {
+    return Object.keys(bp).map((partyId) => {
         return { partyPolicyId: partyId, allocationPercentage: bp[partyId] };
     });
 };
 
-export const determinePartyBeneficiaryRole = (partyRoles: PolicyPartyRoles[] = [], partyID: PartyId): PartyRole | undefined => {
-    const focusedParty = partyRoles.find(party => {
-        return party.partyId === partyID && beneficiaryRoles.includes(party.partyRole);
+export const determinePartyBeneficiaryRole = (
+    partyRoles: PolicyPartyRoles[] = [],
+    partyID: PartyId
+): PartyRole | undefined => {
+    const focusedParty = partyRoles.find((party) => {
+        return (
+            party.partyId === partyID &&
+            beneficiaryRoles.includes(party.partyRole)
+        );
     });
 
     return focusedParty?.partyRole;
@@ -55,11 +73,13 @@ export const getBeneficiariesByRole = (
     { parties = [], partyRoles = [] }: Policy,
     roleToAllocate: PartyRole | undefined
 ): Beneficiary[] | undefined => {
-    const partyIds = partyRoles.filter(party => party.partyRole === roleToAllocate).map(party => party.partyId);
+    const partyIds = partyRoles
+        .filter((party) => party.partyRole === roleToAllocate)
+        .map((party) => party.partyId);
 
     return parties
-        .filter(party => partyIds.includes(party.partyId))
-        .map(party => {
+        .filter((party) => partyIds.includes(party.partyId))
+        .map((party) => {
             return {
                 firstLastName: getFirstLastName(party),
                 partyId: party.partyId,
@@ -68,7 +88,10 @@ export const getBeneficiariesByRole = (
         })
         .sort((a, b) => {
             if (a.beneficiaryPercentage !== b.beneficiaryPercentage) {
-                return Number(b.beneficiaryPercentage) - Number(a.beneficiaryPercentage);
+                return (
+                    Number(b.beneficiaryPercentage) -
+                    Number(a.beneficiaryPercentage)
+                );
             }
             return a.firstLastName.localeCompare(b.firstLastName);
         });
@@ -105,7 +128,10 @@ export const getBeneficiariesByFocusedParty = (
     focusedParty: Beneficiary | undefined;
     otherParties: Beneficiary[];
 } =>
-    beneficiaries.reduce<{ focusedParty: Beneficiary | undefined; otherParties: Beneficiary[] }>(
+    beneficiaries.reduce<{
+        focusedParty: Beneficiary | undefined;
+        otherParties: Beneficiary[];
+    }>(
         (acc, beneficiary) => {
             if (beneficiary.partyId === focusedPartyId) {
                 acc.focusedParty = beneficiary;

@@ -2,7 +2,9 @@ import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
@@ -11,9 +13,15 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { Statuses } from '@deps/models/case/case';
-import { submitNewLoan, TransactionResponseStatus } from '@deps/queries/api/bpm';
+import {
+    submitNewLoan,
+    TransactionResponseStatus,
+} from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { TransactionContinueClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import {
+    TransactionContinueClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { buildNewLoanRequestBody } from '../new-loan.helpers';
@@ -23,33 +31,50 @@ interface ConfirmProps {
 }
 
 const Confirm = ({ policy }: ConfirmProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'newLoan.confirm' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'newLoan.confirm',
+    });
     const { t: defaultT } = useTranslation();
     const { featureFlags } = useOptimizely();
     const { sessionId, partyId } = usePermissionsContext();
 
-    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.NEW_LOAN_WIRE_CHECK_PAYMENTS];
+    const wireCheckPaymentsEnabled =
+        featureFlags[FEATURE_FLAGS.NEW_LOAN_WIRE_CHECK_PAYMENTS];
 
     const { newLoan } = useNewLoan();
     const [submitFailed, setSubmitFailed] = useState(false);
     const [submitNigo, setSubmitNigo] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [newCaseId, setNewCaseId] = useState<string | undefined>(newLoan.caseId);
+    const [newCaseId, setNewCaseId] = useState<string | undefined>(
+        newLoan.caseId
+    );
     const validationSucceeded = useMemo(
-        () => newLoan.validationResponse?.status === TransactionResponseStatus.Success,
+        () =>
+            newLoan.validationResponse?.status ===
+            TransactionResponseStatus.Success,
         [newLoan.validationResponse]
     );
 
     const submit = useCallback(async () => {
-        const requestBody = buildNewLoanRequestBody(newLoan, wireCheckPaymentsEnabled);
-        const response = await submitNewLoan(policy.product?.planCode, policy.policyNumber, requestBody);
+        const requestBody = buildNewLoanRequestBody(
+            newLoan,
+            wireCheckPaymentsEnabled
+        );
+        const response = await submitNewLoan(
+            policy.product?.planCode,
+            policy.policyNumber,
+            requestBody
+        );
 
-        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
-            session_id: sessionId,
-            userId: partyId,
-            type: TransactionType.NEW_LOAN,
-            correlationId: requestBody.correlationId,
-        });
+        segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
+            SegmentTrackedEventName.TransactionContinueClicked,
+            {
+                session_id: sessionId,
+                userId: partyId,
+                type: TransactionType.NEW_LOAN,
+                correlationId: requestBody.correlationId,
+            }
+        );
 
         if (response.status !== StatusCode.Accepted) {
             setSubmitFailed(true);
@@ -61,7 +86,14 @@ const Confirm = ({ policy }: ConfirmProps) => {
         }
 
         setIsLoading(false);
-    }, [newLoan, wireCheckPaymentsEnabled, policy.product?.planCode, policy.policyNumber, sessionId, partyId]);
+    }, [
+        newLoan,
+        wireCheckPaymentsEnabled,
+        policy.product?.planCode,
+        policy.policyNumber,
+        sessionId,
+        partyId,
+    ]);
 
     useEffect(() => {
         submit();

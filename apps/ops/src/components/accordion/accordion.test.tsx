@@ -21,7 +21,9 @@ describe('Accordion', () => {
         const title = 'Accordion Title';
         const children = <div>Accordion Content</div>;
 
-        const { getByText, queryByText } = render(<Accordion title={title}>{children}</Accordion>);
+        const { getByText, queryByText } = render(
+            <Accordion title={title}>{children}</Accordion>
+        );
 
         expect(getByText(title)).toBeInTheDocument();
         expect(queryByText('Accordion Content')).toBeNull();

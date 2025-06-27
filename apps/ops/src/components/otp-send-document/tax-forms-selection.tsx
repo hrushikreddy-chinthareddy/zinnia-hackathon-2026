@@ -1,14 +1,24 @@
 import 'react-pdf/dist/Page/TextLayer.css';
 import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import { Policy } from '@zinnia/api-types/types/sor';
-import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Loader,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 
 import Select from '@deps/components/select/select';
-import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { TaxForm, TaxFormSelectionDetails } from '@deps/models/case/send-tax-forms';
+import {
+    TaxForm,
+    TaxFormSelectionDetails,
+} from '@deps/models/case/send-tax-forms';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
@@ -24,9 +34,13 @@ export type StatementSelectionProps = {
     policy: Policy;
     taxYearOptions?: MultiselectOption[];
     taxFormSelectionDetails: TaxFormSelectionDetails;
-    setTaxFormSelectionDetails: (value: SetStateAction<TaxFormSelectionDetails>) => void;
+    setTaxFormSelectionDetails: (
+        value: SetStateAction<TaxFormSelectionDetails>
+    ) => void;
     selectedYears: { [key: string]: string };
-    setSelectedYears: (value: SetStateAction<{ [key: string]: string }>) => void;
+    setSelectedYears: (
+        value: SetStateAction<{ [key: string]: string }>
+    ) => void;
 };
 
 const TaxFormsSelection = ({
@@ -46,19 +60,24 @@ const TaxFormsSelection = ({
 
     const handleContinue = async () => {
         if (!taxFormSelectionDetails?.selectedTaxForms?.length) {
-            return setError({ submit: t('sendTaxForms.errors.taxForms') as string });
+            return setError({
+                submit: t('sendTaxForms.errors.taxForms') as string,
+            });
         }
         goToNext();
     };
 
     useEffect(() => {
-        Object.keys(selectedYears).forEach(year => {
+        Object.keys(selectedYears).forEach((year) => {
             const newAbortController = new AbortController();
             getTaxForms(year, newAbortController);
         });
     }, []);
 
-    const getTaxForms = async (selected: string, newAbortController: AbortController) => {
+    const getTaxForms = async (
+        selected: string,
+        newAbortController: AbortController
+    ) => {
         try {
             setError({});
             setLoader(true);
@@ -76,15 +95,27 @@ const TaxFormsSelection = ({
                 OptimizelyVariableKey.Clients,
                 policy?.carrierId?.toLocaleLowerCase() || ''
             );
-            const response = await searchTaxForms(requestData, useV3, newAbortController.signal);
+            const response = await searchTaxForms(
+                requestData,
+                useV3,
+                newAbortController.signal
+            );
             if (!response?.data?.items?.length) {
-                setError({ submit: t('sendTaxForms.errors.noTaxForms', { year: selected }) as string });
+                setError({
+                    submit: t('sendTaxForms.errors.noTaxForms', {
+                        year: selected,
+                    }) as string,
+                });
             }
 
-            setTaxFormSelectionDetails(prev => {
+            setTaxFormSelectionDetails((prev) => {
                 const existingTaxForms = prev?.taxForms || [];
                 const newTaxForms = (response?.data?.items || []).filter(
-                    form => !existingTaxForms.find(existingForm => existingForm.taxYear === form.taxYear)
+                    (form) =>
+                        !existingTaxForms.find(
+                            (existingForm) =>
+                                existingForm.taxYear === form.taxYear
+                        )
                 );
                 return {
                     ...prev,
@@ -106,12 +137,14 @@ const TaxFormsSelection = ({
             delete newSelections[selectedValue];
 
             if (Array.isArray(currentTaxForms)) {
-                currentTaxForms = currentTaxForms.filter(form => form.taxYear !== selectedValue);
+                currentTaxForms = currentTaxForms.filter(
+                    (form) => form.taxYear !== selectedValue
+                );
             } else {
                 currentTaxForms = [];
             }
             delete newSelections[selectedValue];
-            setTaxFormSelectionDetails(prev => ({
+            setTaxFormSelectionDetails((prev) => ({
                 ...prev,
                 taxForms: currentTaxForms,
                 selectedYears: newSelections,
@@ -137,8 +170,10 @@ const TaxFormsSelection = ({
         });
     };
 
-    const setSelectedTaxForms = (selectedTaxForms: TaxForm[] | TaxformResponse[]) => {
-        setTaxFormSelectionDetails(prev => ({
+    const setSelectedTaxForms = (
+        selectedTaxForms: TaxForm[] | TaxformResponse[]
+    ) => {
+        setTaxFormSelectionDetails((prev) => ({
             ...prev,
             selectedTaxForms: selectedTaxForms,
         }));
@@ -151,7 +186,9 @@ const TaxFormsSelection = ({
                 <SendDocumentNavigationButtons
                     handleContinue={handleContinue}
                     handleCancel={handleCancel}
-                    trackEventProps={{ type: ContactCenterTransactionType.TAX_FORM }}
+                    trackEventProps={{
+                        type: ContactCenterTransactionType.TAX_FORM,
+                    }}
                 />
             }
         >
@@ -169,11 +206,14 @@ const TaxFormsSelection = ({
                     <Loader />
                 ) : (
                     <>
-                        {(taxFormSelectionDetails?.taxForms?.length > 0 || !Object.keys(error).length) && (
+                        {(taxFormSelectionDetails?.taxForms?.length > 0 ||
+                            !Object.keys(error).length) && (
                             <TaxFormsListing
                                 taxForms={taxFormSelectionDetails?.taxForms}
                                 carrierCode={policy?.carrierId || ''}
-                                selectedTaxForms={taxFormSelectionDetails.selectedTaxForms}
+                                selectedTaxForms={
+                                    taxFormSelectionDetails.selectedTaxForms
+                                }
                                 setSelectedTaxForms={setSelectedTaxForms}
                                 planCode={policy?.product?.planCode}
                                 policyNumber={policy?.policyNumber || ''}
@@ -185,7 +225,12 @@ const TaxFormsSelection = ({
 
             {error && (
                 <div className="flex flex-col mt-2">
-                    {error.submit && <AssistiveText text={error?.submit} variant={AssistiveTextVariant.Error} />}
+                    {error.submit && (
+                        <AssistiveText
+                            text={error?.submit}
+                            variant={AssistiveTextVariant.Error}
+                        />
+                    )}
                 </div>
             )}
         </WorkflowCard>

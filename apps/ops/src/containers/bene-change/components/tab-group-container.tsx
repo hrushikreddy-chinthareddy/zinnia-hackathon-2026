@@ -3,14 +3,22 @@ import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { DiaryNotesContent } from '@deps/components/side-sheet/diary-notes/diary-notes-content';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { WorkflowProvider, useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import {
+    WorkflowProvider,
+    useWorkflow,
+} from '@deps/contexts/WorkflowContainerContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useDiaryNotes } from '@deps/hooks/useDiaryNotes';
@@ -34,24 +42,53 @@ const TabGroupContent = ({
 }: TabGroupContainerProps) => {
     const { t } = useTranslation();
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
-    const globalValuesData = useMemo(() => policyDataToGlobalValues(new PolicyDetails(policy), t), [policy, t]);
-    const { marketingName, planCode, policyNumber, productType, status, tooltip, variant } = globalValuesData;
+    const globalValuesData = useMemo(
+        () => policyDataToGlobalValues(new PolicyDetails(policy), t),
+        [policy, t]
+    );
+    const {
+        marketingName,
+        planCode,
+        policyNumber,
+        productType,
+        status,
+        tooltip,
+        variant,
+    } = globalValuesData;
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
 
         setCurrentStepIndex(step.index);
     };
 
-    const policyOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.OWNER)?.partyId;
-    const policyOwner = policy?.parties?.find(party => party.partyId === policyOwnerId);
-    const jointOwnerId = policy?.partyRoles?.find(pr => pr.partyRole === PartyRole.JOINTOWNER)?.partyId;
-    const jointOwner = policy?.parties?.find(party => party.partyId === jointOwnerId);
+    const policyOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.OWNER
+    )?.partyId;
+    const policyOwner = policy?.parties?.find(
+        (party) => party.partyId === policyOwnerId
+    );
+    const jointOwnerId = policy?.partyRoles?.find(
+        (pr) => pr.partyRole === PartyRole.JOINTOWNER
+    )?.partyId;
+    const jointOwner = policy?.parties?.find(
+        (party) => party.partyId === jointOwnerId
+    );
 
     const sideSheet = useSideSheetContext();
-    const { diaryNotes } = useDiaryNotes(policy.policyNumber as string, policy.carrierId as string, 0, 10);
+    const { diaryNotes } = useDiaryNotes(
+        policy.policyNumber as string,
+        policy.carrierId as string,
+        0,
+        10
+    );
     const openSideSheet = () => {
-        const content = <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />;
-        sideSheet.changeSideSheetContent(t('site.navLinks.diaryNotes.text'), content);
+        const content = (
+            <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />
+        );
+        sideSheet.changeSideSheetContent(
+            t('site.navLinks.diaryNotes.text'),
+            content
+        );
         sideSheet.handleOpen(true);
     };
 
@@ -59,7 +96,10 @@ const TabGroupContent = ({
         <>
             {showDiaryNotes && (
                 <div className="my-2 flex flex-row items-center justify-end space-x-3">
-                    <Typography variant={TypographyVariant.FieldLabel} className="hidden md:block">
+                    <Typography
+                        variant={TypographyVariant.FieldLabel}
+                        className="hidden md:block"
+                    >
                         {t('site.navLinks.relatedActivity.text')}
                     </Typography>
                     <NavElement
@@ -68,7 +108,10 @@ const TabGroupContent = ({
                         className="flex items-center"
                         startIcon={<AnnotationIcon width={16} height={16} />}
                         onClick={() => openSideSheet()}
-                        onKeyDown={(e: { key: string; preventDefault: () => void }) => {
+                        onKeyDown={(e: {
+                            key: string;
+                            preventDefault: () => void;
+                        }) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault();
                                 openSideSheet();
@@ -97,7 +140,11 @@ const TabGroupContent = ({
                     />
                 )}
 
-                <ProgressBarSteps currentStepIndex={Number(currentStepIndex)} onClick={handleClick} steps={steps} />
+                <ProgressBarSteps
+                    currentStepIndex={Number(currentStepIndex)}
+                    onClick={handleClick}
+                    steps={steps}
+                />
                 <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
                     {steps[currentStepIndex].component}
                 </div>
@@ -106,7 +153,12 @@ const TabGroupContent = ({
     );
 };
 
-const TabGroupContainer = ({ steps, policy, hideGlobalValueBar, showDiaryNotes }: TabGroupContainerProps) => {
+const TabGroupContainer = ({
+    steps,
+    policy,
+    hideGlobalValueBar,
+    showDiaryNotes,
+}: TabGroupContainerProps) => {
     return (
         <DiaryNotesProvider caseDetails={policy as any}>
             <WorkflowProvider>

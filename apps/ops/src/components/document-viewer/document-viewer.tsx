@@ -5,14 +5,23 @@ import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
 
 import PageLoader from '@deps/components/page-loader/page-loader';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import HtmlPreview from '@deps/containers/documents-page/html-preview';
 import ImagePreview from '@deps/containers/documents-page/image-preview';
 import PdfPreview from '@deps/containers/documents-page/pdf-preview';
 import TxtPreview from '@deps/containers/documents-page/txt-preview';
-import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { supportedExtensions, supportedHtmlExtensions, supportedImgExtensions } from '@deps/models/case/document';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
+import {
+    supportedExtensions,
+    supportedHtmlExtensions,
+    supportedImgExtensions,
+} from '@deps/models/case/document';
 import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
 import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
@@ -49,27 +58,44 @@ const DocumentViewer = (props: DocumentViewerProps) => {
                 let docClass;
                 switch (documentType) {
                     case DocumentTypeView.Correspondence:
-                        docClass = SearchRequest.documentClassification.OUTBOUND;
+                        docClass =
+                            SearchRequest.documentClassification.OUTBOUND;
                         break;
                     case DocumentTypeView.Policy:
                     default:
                         docClass = SearchRequest.documentClassification.INBOUND;
                         break;
                 }
-                download = await getDocumentPreviewV3(id, docClass, carrierCode || '');
+                download = await getDocumentPreviewV3(
+                    id,
+                    docClass,
+                    carrierCode || ''
+                );
             } else {
-                download = await getDocumentPreviewV2(id, documentType || ('' as DocumentTypeView), carrierCode || '');
+                download = await getDocumentPreviewV2(
+                    id,
+                    documentType || ('' as DocumentTypeView),
+                    carrierCode || ''
+                );
             }
 
             setFileExtension(download?.fileExtension?.toLowerCase() || null);
             setDocumentBinary(download?.binaryData || null);
 
             if (!download?.fileExtension) {
-                console.error(`Error getting ${documentType} document ${id} for ${carrierCode}`);
+                console.error(
+                    `Error getting ${documentType} document ${id} for ${carrierCode}`
+                );
             }
 
-            if (!supportedExtensions.includes(download?.fileExtension?.toLowerCase() || '')) {
-                console.error(`Unsupported file extension ${download?.fileExtension} for ${carrierCode} ${documentType} document ${id}`);
+            if (
+                !supportedExtensions.includes(
+                    download?.fileExtension?.toLowerCase() || ''
+                )
+            ) {
+                console.error(
+                    `Unsupported file extension ${download?.fileExtension} for ${carrierCode} ${documentType} document ${id}`
+                );
             }
 
             setIsLoading(false);
@@ -97,20 +123,37 @@ const DocumentViewer = (props: DocumentViewerProps) => {
     if (!documentBinary) {
         return (
             <div className="ml-8 mt-8">
-                <Typography variant={TypographyVariant.H3}>{t('sideSheet.documentNotFound')}</Typography>{' '}
+                <Typography variant={TypographyVariant.H3}>
+                    {t('sideSheet.documentNotFound')}
+                </Typography>{' '}
             </div>
         );
     }
 
-    if (supportedHtmlExtensions.includes(fileExtension || '') && documentBinary) {
+    if (
+        supportedHtmlExtensions.includes(fileExtension || '') &&
+        documentBinary
+    ) {
         return <HtmlPreview documentBinary={documentBinary} />;
     }
 
-    if (fileExtension && documentBinary && supportedImgExtensions.includes(fileExtension)) {
-        return <ImagePreview documentBinary={documentBinary} fileExtension={fileExtension} />;
+    if (
+        fileExtension &&
+        documentBinary &&
+        supportedImgExtensions.includes(fileExtension)
+    ) {
+        return (
+            <ImagePreview
+                documentBinary={documentBinary}
+                fileExtension={fileExtension}
+            />
+        );
     }
 
-    if (['pdf', 'application/pdf'].includes(fileExtension || '') && documentBinary) {
+    if (
+        ['pdf', 'application/pdf'].includes(fileExtension || '') &&
+        documentBinary
+    ) {
         return <PdfPreview documentBinary={documentBinary} />;
     }
 
@@ -120,7 +163,11 @@ const DocumentViewer = (props: DocumentViewerProps) => {
 
     return (
         <div className="ml-8 mt-8">
-            <Typography variant={TypographyVariant.H3}>{t('sideSheet.documentUnsupported', { extension: fileExtension })}</Typography>{' '}
+            <Typography variant={TypographyVariant.H3}>
+                {t('sideSheet.documentUnsupported', {
+                    extension: fileExtension,
+                })}
+            </Typography>{' '}
         </div>
     );
 };

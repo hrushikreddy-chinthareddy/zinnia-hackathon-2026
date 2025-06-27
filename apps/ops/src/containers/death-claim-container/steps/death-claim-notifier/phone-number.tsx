@@ -2,9 +2,16 @@ import { Phone } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
 
-import { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
-import { countryOptions, frequentCountryOptions } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
+import {
+    countryOptions,
+    frequentCountryOptions,
+} from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 
 interface PhoneNumberProps {
@@ -15,8 +22,16 @@ interface PhoneNumberProps {
     formErrors: any;
 }
 
-const PhoneNumber = ({ country, phone, setCountry, setPhone, formErrors }: PhoneNumberProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'deathClaims.deathClaimNotification' });
+const PhoneNumber = ({
+    country,
+    phone,
+    setCountry,
+    setPhone,
+    formErrors,
+}: PhoneNumberProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'deathClaims.deathClaimNotification',
+    });
 
     return (
         <FieldSelect
@@ -27,18 +42,19 @@ const PhoneNumber = ({ country, phone, setCountry, setPhone, formErrors }: Phone
             frequentOptions={frequentCountryOptions}
             label={t('labels.phoneNumber') as string}
             leading={countries[country].emoji}
-            onChange={event => {
+            onChange={(event) => {
                 setPhone((prevState: any) => ({
                     ...prevState,
                     areaCode: event.target.value.substring(0, 3),
                     dialNumber: event.target.value.substring(3, 10),
                 }));
             }}
-            onDropdownChange={value => {
+            onDropdownChange={(value) => {
                 setCountry(value as keyof typeof countries);
                 setPhone((prevState: any) => ({
                     ...prevState,
-                    countryCode: countries[value as keyof typeof countries].phone,
+                    countryCode:
+                        countries[value as keyof typeof countries].phone,
                 }));
             }}
             options={countryOptions}
@@ -46,7 +62,11 @@ const PhoneNumber = ({ country, phone, setCountry, setPhone, formErrors }: Phone
             size={FieldSize.Small}
             type={FieldType.BaseActive}
             value={formatPhoneNumberRaw(phone)}
-            variant={formErrors?.phoneNumber ? FieldVariant.Error : FieldVariant.Default}
+            variant={
+                formErrors?.phoneNumber
+                    ? FieldVariant.Error
+                    : FieldVariant.Default
+            }
             message={formErrors?.phoneNumber}
         />
     );

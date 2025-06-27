@@ -27,11 +27,18 @@ interface Props {
 export const getPieChartData = (dashboardStatsResponse?: CaseCountOutput) => {
     const chartData: { name: string; y: number; totalCount: number }[] = [];
 
-    if (!dashboardStatsResponse || !dashboardStatsResponse.data || dashboardStatsResponse.data.length === 0) {
+    if (
+        !dashboardStatsResponse ||
+        !dashboardStatsResponse.data ||
+        dashboardStatsResponse.data.length === 0
+    ) {
         return chartData;
     }
-    const totalCount = dashboardStatsResponse.data.reduce((prevValue, statElement) => prevValue + statElement.count, 0);
-    dashboardStatsResponse.data.forEach(statElement => {
+    const totalCount = dashboardStatsResponse.data.reduce(
+        (prevValue, statElement) => prevValue + statElement.count,
+        0
+    );
+    dashboardStatsResponse.data.forEach((statElement) => {
         chartData.push({
             name: statElement.name,
             y: statElement.count / totalCount,
@@ -56,7 +63,8 @@ const DistributionPieChartSmallAPIBased = ({
 
     const getBaseConfig = useCallback(
         (showInLegend: boolean) => {
-            const config: Highcharts.Options = caseChartHelpers.getBaseSmallPieConfiguration();
+            const config: Highcharts.Options =
+                caseChartHelpers.getBaseSmallPieConfiguration();
 
             if (config.chart && height) {
                 config.chart.height = height;
@@ -77,12 +85,17 @@ const DistributionPieChartSmallAPIBased = ({
     );
 
     const getChartConfig = useCallback(
-        (chartData: { name: string; y: number }[], baseConfig: Highcharts.Options) => {
+        (
+            chartData: { name: string; y: number }[],
+            baseConfig: Highcharts.Options
+        ) => {
             const config = Highcharts.merge(baseConfig, {
                 series: [
                     {
                         name: seriesLabel,
-                        data: sort ? chartData.sort((a, b) => b.y - a.y) : chartData,
+                        data: sort
+                            ? chartData.sort((a, b) => b.y - a.y)
+                            : chartData,
                     },
                 ],
             });
@@ -97,7 +110,13 @@ const DistributionPieChartSmallAPIBased = ({
         const baseConfig = getBaseConfig(showInLegend);
         const config = getChartConfig(chartData, baseConfig);
         setChartConfig({ ...config, ...chartConfigOverrides });
-    }, [dashboardStatsResponse, getChartConfig, showInLegend, getBaseConfig, chartConfigOverrides]);
+    }, [
+        dashboardStatsResponse,
+        getChartConfig,
+        showInLegend,
+        getBaseConfig,
+        chartConfigOverrides,
+    ]);
 
     return (
         <div className={className}>

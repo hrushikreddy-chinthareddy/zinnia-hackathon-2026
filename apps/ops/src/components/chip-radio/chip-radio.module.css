@@ -7,7 +7,8 @@
     color: var(--color-base-text-text-primary);
     display: flex;
     gap: var(--measure-dimension-gap-md);
-    padding: var(--measure-dimension-padding-xs) var(--measure-dimension-padding-2xl);
+    padding: var(--measure-dimension-padding-xs)
+        var(--measure-dimension-padding-2xl);
     white-space: nowrap;
     width: fit-content;
     height: 32px;

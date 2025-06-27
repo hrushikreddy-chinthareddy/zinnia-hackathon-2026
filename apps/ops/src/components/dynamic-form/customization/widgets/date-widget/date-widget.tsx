@@ -1,4 +1,11 @@
-import { pad, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, getUiOptions } from '@rjsf/utils';
+import {
+    pad,
+    FormContextType,
+    RJSFSchema,
+    StrictRJSFSchema,
+    WidgetProps,
+    getUiOptions,
+} from '@rjsf/utils';
 import { FieldStatus } from '@zinnia/bloom/components';
 
 import { FieldDate } from '@deps/components/field/date/FieldDate';
@@ -15,10 +22,13 @@ const formatDate = (date?: Date) => {
     return `${yyyy}-${MM}-${dd}`;
 };
 
-export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    props: WidgetProps<T, S, F>
-) {
-    const { id, value, onChange, disabled, uiSchema, readonly, rawErrors } = props;
+export default function DateWidget<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+    const { id, value, onChange, disabled, uiSchema, readonly, rawErrors } =
+        props;
     const { futureDateEnabled, inline, title } = getUiOptions(uiSchema);
 
     const disableAfterDate = futureDateEnabled ? undefined : new Date();
@@ -41,17 +51,22 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
 
     return (disabled as boolean) ? (
         <div>{value}</div>
+    ) : readonly ? (
+        <>{value}</>
     ) : (
-        readonly ? <>{value}</> :
-            <div className="max-w-sm flex w-full flex-col">
-                <FieldDate
-                    name={id}
-                    id={id}
-                    onDateSelect={_onSelectDate}
-                    defaultDate={value}
-                    disableAfterDate={disableAfterDate}
-                    fieldStatus={rawErrors && rawErrors?.length > 0 ? FieldStatus.ERROR : FieldStatus.DEFAULT}
-                />
-            </div>
+        <div className="max-w-sm flex w-full flex-col">
+            <FieldDate
+                name={id}
+                id={id}
+                onDateSelect={_onSelectDate}
+                defaultDate={value}
+                disableAfterDate={disableAfterDate}
+                fieldStatus={
+                    rawErrors && rawErrors?.length > 0
+                        ? FieldStatus.ERROR
+                        : FieldStatus.DEFAULT
+                }
+            />
+        </div>
     );
 }

@@ -51,7 +51,9 @@ export interface DisclosureAuthorizationConfig {
 export interface DisclosureAuthorizationFormProps {
     configs: DisclosureAuthorizationConfig;
     formDisclosureAuthorization: DisclosureAuthorizationInformation;
-    setFormDisclosureAuthorization: React.Dispatch<React.SetStateAction<DisclosureAuthorizationInformation>>;
+    setFormDisclosureAuthorization: React.Dispatch<
+        React.SetStateAction<DisclosureAuthorizationInformation>
+    >;
     formErrors: FormValidationErrors;
     isFormStateReadOnly?: boolean;
     planCode: string;

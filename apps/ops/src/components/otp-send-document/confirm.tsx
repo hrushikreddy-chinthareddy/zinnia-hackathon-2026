@@ -36,37 +36,74 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                           }
                         : undefined
                 }
-                icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                icon={
+                    <CircleCheckIcon
+                        className="text-semantic-success"
+                        height={50}
+                        width={50}
+                    />
+                }
                 subtitle={
                     <>
                         {t('confirm.subtitle.0')}
-                        <span className="font-bold"> {formNames?.map(formName => (formName ? formName : '')).join(', ')} </span>
-                        {[CommunicationTypes.Email, CommunicationTypes.Fax].includes(communicationType as CommunicationTypes) &&
+                        <span className="font-bold">
+                            {' '}
+                            {formNames
+                                ?.map((formName) => (formName ? formName : ''))
+                                .join(', ')}{' '}
+                        </span>
+                        {[
+                            CommunicationTypes.Email,
+                            CommunicationTypes.Fax,
+                        ].includes(communicationType as CommunicationTypes) &&
                             recipients?.length > 0 && (
                                 <PiiWrapper>
-                                    <span>{t(`confirm.channel.${communicationType.toLowerCase()}`)}</span>
+                                    <span>
+                                        {t(
+                                            `confirm.channel.${communicationType.toLowerCase()}`
+                                        )}
+                                    </span>
                                     <span className="font-bold">
                                         {' '}
-                                        {recipients?.map(recipient => (recipient ? recipient : '')).join(', ')}
+                                        {recipients
+                                            ?.map((recipient) =>
+                                                recipient ? recipient : ''
+                                            )
+                                            .join(', ')}
                                     </span>
                                 </PiiWrapper>
                             )}
-                        {communicationType === CommunicationTypes.Email && ccList?.length > 0 && (
-                            <PiiWrapper>
-                                <span className="font-bold"> {ccList?.map(cc => (cc ? cc : '')).join(', ')}</span>
-                            </PiiWrapper>
-                        )}
-                        {communicationType === CommunicationTypes.Mail && address && (
-                            <>
+                        {communicationType === CommunicationTypes.Email &&
+                            ccList?.length > 0 && (
                                 <PiiWrapper>
-                                    <span>{t(`confirm.channel.${communicationType.toLowerCase()}`)}</span>{' '}
                                     <span className="font-bold">
-                                        {address?.addressLine1} {address?.addressLine2} {address?.addressLine3} {address?.city}{' '}
-                                        {address?.zipCode?.substring(0, 5)}-{address?.zipCode?.substring(5, 9)}
+                                        {' '}
+                                        {ccList
+                                            ?.map((cc) => (cc ? cc : ''))
+                                            .join(', ')}
                                     </span>
                                 </PiiWrapper>
-                            </>
-                        )}
+                            )}
+                        {communicationType === CommunicationTypes.Mail &&
+                            address && (
+                                <>
+                                    <PiiWrapper>
+                                        <span>
+                                            {t(
+                                                `confirm.channel.${communicationType.toLowerCase()}`
+                                            )}
+                                        </span>{' '}
+                                        <span className="font-bold">
+                                            {address?.addressLine1}{' '}
+                                            {address?.addressLine2}{' '}
+                                            {address?.addressLine3}{' '}
+                                            {address?.city}{' '}
+                                            {address?.zipCode?.substring(0, 5)}-
+                                            {address?.zipCode?.substring(5, 9)}
+                                        </span>
+                                    </PiiWrapper>
+                                </>
+                            )}
                     </>
                 }
                 title={t('confirm.title')}

@@ -3,15 +3,24 @@ import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import CardPeople from '@deps/components/card/card-people/card-people';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import Tooltip from '@deps/components/tooltip/tooltip';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { buildFullNameFromParty, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import {
+    buildFullNameFromParty,
+    isNullEmptyOrUndefined,
+} from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
 
@@ -33,7 +42,13 @@ interface PayeesStepProps extends TransactionClickProps {
     state: PayeesType;
 }
 
-const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: PayeesStepProps) => {
+const PayeesStep = ({
+    parentPage,
+    policy,
+    setState,
+    state,
+    trackEventProps,
+}: PayeesStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
 
@@ -43,15 +58,26 @@ const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: Pa
     const { payeePartyId: currentPayeePartyId } = state;
 
     const eligiblePayees = useMemo(() => {
-        const ownerPayeeRoles = partyRoles?.filter(role => role.partyRole === PartyRole.OWNER || role.partyRole === PartyRole.PAYEE);
-        const eligibleRoles = ownerPayeeRoles?.filter((value, index, self) => index === self.findIndex(t => t.partyId === value.partyId));
-        return eligibleRoles?.map(eligibleRole => {
-            const party = parties?.find(party => eligibleRole.partyId === party.partyId);
+        const ownerPayeeRoles = partyRoles?.filter(
+            (role) =>
+                role.partyRole === PartyRole.OWNER ||
+                role.partyRole === PartyRole.PAYEE
+        );
+        const eligibleRoles = ownerPayeeRoles?.filter(
+            (value, index, self) =>
+                index === self.findIndex((t) => t.partyId === value.partyId)
+        );
+        return eligibleRoles?.map((eligibleRole) => {
+            const party = parties?.find(
+                (party) => eligibleRole.partyId === party.partyId
+            );
 
             if (!party) return;
 
-            const roles = partyRoles?.filter(role => role.partyId === party.partyId);
-            const tags = roles?.map(role => {
+            const roles = partyRoles?.filter(
+                (role) => role.partyId === party.partyId
+            );
+            const tags = roles?.map((role) => {
                 return { text: convertToChipText(role.partyRole, t) };
             });
 
@@ -64,14 +90,20 @@ const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: Pa
             return;
         }
 
-        const selectedPayee = eligiblePayees?.find(payee => payee?.partyId === currentPayeePartyId) || eligiblePayees?.[0];
+        const selectedPayee =
+            eligiblePayees?.find(
+                (payee) => payee?.partyId === currentPayeePartyId
+            ) || eligiblePayees?.[0];
 
-        setState(prevState => ({
+        setState((prevState) => ({
             ...prevState,
             payeeFullName: buildFullNameFromParty(selectedPayee),
             payeePartyId: selectedPayee?.partyId ?? '',
-            payeeFilingStatus: selectedPayee?.taxWithholdings?.[0]?.filingStatus || FilingStatus.DEFAULT,
-            payeeTaxJurisdiction: selectedPayee?.taxWithholdings?.[0]?.taxJurisdiction || '',
+            payeeFilingStatus:
+                selectedPayee?.taxWithholdings?.[0]?.filingStatus ||
+                FilingStatus.DEFAULT,
+            payeeTaxJurisdiction:
+                selectedPayee?.taxWithholdings?.[0]?.taxJurisdiction || '',
         }));
     }, [currentPayeePartyId, eligiblePayees, setState]);
 
@@ -81,9 +113,14 @@ const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: Pa
         } else goToNext();
     };
 
-    const handleSelection = ({ payeePartyId, payeeFullName, payeeFilingStatus, payeeTaxJurisdiction }: PayeesType) => {
+    const handleSelection = ({
+        payeePartyId,
+        payeeFullName,
+        payeeFilingStatus,
+        payeeTaxJurisdiction,
+    }: PayeesType) => {
         if (payeePartyId === currentPayeePartyId) {
-            setState(prevState => ({
+            setState((prevState) => ({
                 ...prevState,
                 payeeFullName: '',
                 payeePartyId: '',
@@ -91,7 +128,7 @@ const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: Pa
                 payeeTaxJurisdiction: '',
             }));
         } else {
-            setState(prevState => ({
+            setState((prevState) => ({
                 ...prevState,
                 payeeFullName,
                 payeePartyId,
@@ -116,14 +153,21 @@ const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: Pa
             }
         >
             <div className="flex flex-col">
-                <Typography className="mb-4" variant={TypographyVariant.LabelLg}>
+                <Typography
+                    className="mb-4"
+                    variant={TypographyVariant.LabelLg}
+                >
                     {t('workflows.payeesStep.subTitle')}
                 </Typography>
-                <Typography variant={TypographyVariant.Label}>{t('workflows.payeesStep.fieldLabel')}</Typography>
+                <Typography variant={TypographyVariant.Label}>
+                    {t('workflows.payeesStep.fieldLabel')}
+                </Typography>
                 <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3">
-                    {eligiblePayees?.map(eligiblePayee => {
-                        const payeeFullName = buildFullNameFromParty(eligiblePayee);
-                        const selected = eligiblePayee?.partyId === currentPayeePartyId;
+                    {eligiblePayees?.map((eligiblePayee) => {
+                        const payeeFullName =
+                            buildFullNameFromParty(eligiblePayee);
+                        const selected =
+                            eligiblePayee?.partyId === currentPayeePartyId;
                         return (
                             <Tooltip
                                 body={t('workflows.payeesStep.popover')}
@@ -138,10 +182,18 @@ const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: Pa
                                     name={payeeFullName}
                                     onClick={() => {
                                         handleSelection({
-                                            payeePartyId: eligiblePayee?.partyId ?? '',
+                                            payeePartyId:
+                                                eligiblePayee?.partyId ?? '',
                                             payeeFullName,
-                                            payeeFilingStatus: eligiblePayee?.taxWithholdings?.[0]?.filingStatus || FilingStatus.DEFAULT,
-                                            payeeTaxJurisdiction: eligiblePayee?.taxWithholdings?.[0]?.taxJurisdiction || '',
+                                            payeeFilingStatus:
+                                                eligiblePayee
+                                                    ?.taxWithholdings?.[0]
+                                                    ?.filingStatus ||
+                                                FilingStatus.DEFAULT,
+                                            payeeTaxJurisdiction:
+                                                eligiblePayee
+                                                    ?.taxWithholdings?.[0]
+                                                    ?.taxJurisdiction || '',
                                         });
                                     }}
                                     tags={eligiblePayee?.tags}
@@ -153,12 +205,18 @@ const PayeesStep = ({ parentPage, policy, setState, state, trackEventProps }: Pa
                     <div className="flex cursor-not-allowed flex-col items-center justify-center gap-4 rounded border-2 border-gray-200 bg-gray-100 px-4 py-8">
                         <div className="flex items-center gap-1 text-gray-300">
                             <AddIcon height={24} width={24} />
-                            <p className="font-primary text-base font-semibold">{t('workflows.payeesStep.add')}</p>
+                            <p className="font-primary text-base font-semibold">
+                                {t('workflows.payeesStep.add')}
+                            </p>
                         </div>
                     </div>
                 </div>
                 {formError && (
-                    <AssistiveText className="mt-2" text={t('workflows.payeesStep.error')} variant={AssistiveTextVariant.Error} />
+                    <AssistiveText
+                        className="mt-2"
+                        text={t('workflows.payeesStep.error')}
+                        variant={AssistiveTextVariant.Error}
+                    />
                 )}
             </div>
         </WorkflowCard>

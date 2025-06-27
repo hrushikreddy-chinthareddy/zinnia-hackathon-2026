@@ -22,9 +22,11 @@ export const getYearOptions = (policyIssueDate: string | undefined) => {
 
     const year = dayjs().year();
     const years = determineRange(year, issueDate.year());
-    const options = [{ label: DEFAULT_ERROR_STRING, value: DEFAULT_ERROR_STRING }];
+    const options = [
+        { label: DEFAULT_ERROR_STRING, value: DEFAULT_ERROR_STRING },
+    ];
 
-    years.map(year => {
+    years.map((year) => {
         const yearStr = year.toString();
 
         options.push({ label: yearStr, value: yearStr });
@@ -33,18 +35,26 @@ export const getYearOptions = (policyIssueDate: string | undefined) => {
     return options;
 };
 
-export const hasFilter = (filter?: 'all' | EventFilters | YearFilters | TransactionStatus | null) => {
+export const hasFilter = (
+    filter?: 'all' | EventFilters | YearFilters | TransactionStatus | null
+) => {
     return !isNullEmptyOrUndefined(filter) && filter !== 'all';
 };
 
 export const getFilter = (eventFilter?: EventFilters) => {
-    const [filterName, subfilterName] = hasFilter(eventFilter) ? Object.entries(eventFilter as EventFilters)[0] : [];
+    const [filterName, subfilterName] = hasFilter(eventFilter)
+        ? Object.entries(eventFilter as EventFilters)[0]
+        : [];
 
     return { filterName, subfilterName };
 };
 
-export const setFilter = (setHistoryFilters: SetHistoryFilters, filter: EventFilterKeys, subfilter: AllFilters) => {
-    setHistoryFilters(prevState => ({
+export const setFilter = (
+    setHistoryFilters: SetHistoryFilters,
+    filter: EventFilterKeys,
+    subfilter: AllFilters
+) => {
+    setHistoryFilters((prevState) => ({
         ...prevState,
         eventFilter: {
             [filter]: subfilter,
@@ -52,15 +62,21 @@ export const setFilter = (setHistoryFilters: SetHistoryFilters, filter: EventFil
     }));
 };
 
-export const setStatusFilter = (setHistoryFilters: SetHistoryFilters, status: TransactionStatus) => {
-    setHistoryFilters(prevState => ({
+export const setStatusFilter = (
+    setHistoryFilters: SetHistoryFilters,
+    status: TransactionStatus
+) => {
+    setHistoryFilters((prevState) => ({
         ...prevState,
         statusFilter: status,
     }));
 };
 
-export const setYearFilter = (setHistoryFilters: SetHistoryFilters, year: YearFilters) => {
-    setHistoryFilters(prevState => ({
+export const setYearFilter = (
+    setHistoryFilters: SetHistoryFilters,
+    year: YearFilters
+) => {
+    setHistoryFilters((prevState) => ({
         ...prevState,
         yearFilter: year,
     }));
@@ -71,14 +87,14 @@ export const removeAllFilters = (setHistoryFilters: SetHistoryFilters) => {
 };
 
 export const removeEventFilter = (setHistoryFilters: SetHistoryFilters) => {
-    setHistoryFilters(prevState => {
+    setHistoryFilters((prevState) => {
         const { eventFilter, ...updatedState } = prevState;
         return updatedState;
     });
 };
 
 export const removeYearFilter = (setHistoryFilters: SetHistoryFilters) => {
-    setHistoryFilters(prevState => {
+    setHistoryFilters((prevState) => {
         const { yearFilter, ...updatedState } = prevState;
         return updatedState;
     });

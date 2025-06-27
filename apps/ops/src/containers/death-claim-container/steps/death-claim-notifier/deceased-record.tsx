@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -8,7 +7,10 @@ import FieldDateSelect from '@deps/components/fields/field-date-select/field-dat
 import Radio from '@deps/components/radio/radio';
 import { TranslationFiles } from '@deps/config/translations';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
-import { stringifyTrueFalseNull, toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    stringifyTrueFalseNull,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 
 import { DeceasedParty } from '../../death-claim.types';
 
@@ -17,12 +19,19 @@ interface DeceasedRecordProps {
     handleDeceased: (data: DeceasedParty, index: number) => void;
     index: number;
     isDisabled: boolean;
-};
+}
 
-export const  DeceasedRecord = ({owner, handleDeceased, index, isDisabled}: DeceasedRecordProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims.deceasedDetails' });
+export const DeceasedRecord = ({
+    owner,
+    handleDeceased,
+    index,
+    isDisabled,
+}: DeceasedRecordProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'deathClaims.deceasedDetails',
+    });
     const { t: gen } = useTranslation();
-    const [currentDeceased, setCurrentDeceased] = useState(owner || {})
+    const [currentDeceased, setCurrentDeceased] = useState(owner || {});
 
     const sectionOptions = [
         {
@@ -39,44 +48,45 @@ export const  DeceasedRecord = ({owner, handleDeceased, index, isDisabled}: Dece
         handleDeceased(currentDeceased, index);
     }, [currentDeceased, handleDeceased, index]);
 
-
     useEffect(() => {
-        if(isDisabled) {
+        if (isDisabled) {
             onPartySelection(false);
         }
     }, [isDisabled]);
 
-    const onPartySelection = ( isDeceased: boolean) => {
+    const onPartySelection = (isDeceased: boolean) => {
         if (isDeceased) {
-            setCurrentDeceased(prevState => ({
+            setCurrentDeceased((prevState) => ({
                 ...prevState,
-                isDeceased: isDeceased
+                isDeceased: isDeceased,
             }));
         } else {
-            setCurrentDeceased(prevState => ({
+            setCurrentDeceased((prevState) => ({
                 ...prevState,
                 isDeceased: isDeceased,
                 dateOfDeath: null,
-                isDiedInForeignCountry: null
+                isDiedInForeignCountry: null,
             }));
         }
     };
 
     const onOptionSelection = (value: string) => {
-        setCurrentDeceased(prevState => ({
+        setCurrentDeceased((prevState) => ({
             ...prevState,
-            isDiedInForeignCountry: value === 'true'
+            isDiedInForeignCountry: value === 'true',
         }));
     };
 
-    const onDateOfDeathChange = ( date: string) => {
-        setCurrentDeceased(prevState => ({
+    const onDateOfDeathChange = (date: string) => {
+        setCurrentDeceased((prevState) => ({
             ...prevState,
-            dateOfDeath: date
+            dateOfDeath: date,
         }));
     };
 
-    const labelTxt = toTitleCase([owner.party.firstName, owner.party.lastName].filter(Boolean).join(' '));
+    const labelTxt = toTitleCase(
+        [owner.party.firstName, owner.party.lastName].filter(Boolean).join(' ')
+    );
     const roleTxt = convertToChipText(owner.party?.partyRole, gen) ?? '';
 
     return (
@@ -85,37 +95,59 @@ export const  DeceasedRecord = ({owner, handleDeceased, index, isDisabled}: Dece
                 <CheckboxText
                     checked={currentDeceased.isDeceased}
                     label={labelTxt + ' (' + roleTxt + ')'}
-                    onChange={e => onPartySelection(!currentDeceased?.isDeceased)}
+                    onChange={(e) =>
+                        onPartySelection(!currentDeceased?.isDeceased)
+                    }
                     id={`is-deceased-${owner?.party.partyId}`}
                     isDisabled={isDisabled}
                 />
             </div>
-            {currentDeceased.isDeceased &&
+            {currentDeceased.isDeceased && (
                 <>
                     <div className="my-3">
                         <FieldDateSelect
                             isFutureDateDisabled={true}
                             className="max-w-xs"
                             label={t(`labels.dateOfDeath`) as string}
-                            onChange={e => onDateOfDeathChange(e.target.value)}
+                            onChange={(e) =>
+                                onDateOfDeathChange(e.target.value)
+                            }
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={currentDeceased?.dateOfDeath ?? ''}
-                            name={`date-of-death-${owner?.party.partyId}-` + Math.random()}
+                            name={
+                                `date-of-death-${owner?.party.partyId}-` +
+                                Math.random()
+                            }
                         />
                     </div>
                     <div className="my-3">
                         <Radio
                             items={sectionOptions}
-                            label={t('labels.insuredDiedInForeignCountry') as string}
-                            aria-label={t('labels.insuredDiedInForeignCountry') as string}
-                            onChange={event => onOptionSelection(event.target.value)}
-                            value={stringifyTrueFalseNull(currentDeceased?.isDiedInForeignCountry)}
-                            name={`insured-died-in-foreign-country-${owner?.party.partyId}-` + Math.random()}
+                            label={
+                                t(
+                                    'labels.insuredDiedInForeignCountry'
+                                ) as string
+                            }
+                            aria-label={
+                                t(
+                                    'labels.insuredDiedInForeignCountry'
+                                ) as string
+                            }
+                            onChange={(event) =>
+                                onOptionSelection(event.target.value)
+                            }
+                            value={stringifyTrueFalseNull(
+                                currentDeceased?.isDiedInForeignCountry
+                            )}
+                            name={
+                                `insured-died-in-foreign-country-${owner?.party.partyId}-` +
+                                Math.random()
+                            }
                         />
                     </div>
                 </>
-            }
+            )}
         </div>
     );
 };

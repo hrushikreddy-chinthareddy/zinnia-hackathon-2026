@@ -76,7 +76,9 @@ export const spousalSignatureStateCodes = [
 ];
 
 export default function getGdmnConfig(t: TFunction) {
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
         const amount = formProgram?.partialAmount?.text || '';
 
@@ -100,14 +102,18 @@ export default function getGdmnConfig(t: TFunction) {
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
         {
-            label: t('amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'),
+            label: t(
+                'amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'
+            ),
             value: ProgramType.TotalFreeAmt,
             generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -121,7 +127,10 @@ export default function getGdmnConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Net },
                     programType: { text: ProgramType.NetWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                    partialNetAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -135,7 +144,10 @@ export default function getGdmnConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.GrossWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -153,8 +165,14 @@ export default function getGdmnConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Prorata,
+        },
+        {
+            label: t('distributionInstruction.specifyFunds'),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [
@@ -202,7 +220,9 @@ export default function getGdmnConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -225,7 +245,8 @@ export default function getGdmnConfig(t: TFunction) {
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         },
         {
             key: `sig-val-spouse`,
@@ -244,8 +265,15 @@ export default function getGdmnConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
+                return (
+                    !!ownerStateOfResidence &&
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
+                );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
@@ -262,32 +290,47 @@ export default function getGdmnConfig(t: TFunction) {
         },
     ];
 
-    const formValidation = ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
-        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
             ) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
             }
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
             ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
             }
         }
         const ownerSignature = formSignature?.signatures?.find(
-            sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
         );
 
         // No choice made for signature
         if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                'formValidation.signaturePresentOptionMustBeSelected'
-            );
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+            ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
         return errors;
@@ -398,12 +441,33 @@ export default function getGdmnConfig(t: TFunction) {
     ];
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.age595'), value: RestrictionOption.Age595 },
-        { label: t('distributionReason.reasonOptions.severance'), value: RestrictionOption.Severance, subElement: <ReasonDate /> },
-        { label: t('distributionReason.reasonOptions.disabled'), value: RestrictionOption.Disabled },
-        { label: t('distributionReason.reasonOptions.financialHardship'), value: RestrictionOption.Hardship },
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.age595'),
+            value: RestrictionOption.Age595,
+        },
+        {
+            label: t('distributionReason.reasonOptions.severance'),
+            value: RestrictionOption.Severance,
+            subElement: <ReasonDate />,
+        },
+        {
+            label: t('distributionReason.reasonOptions.disabled'),
+            value: RestrictionOption.Disabled,
+        },
+        {
+            label: t('distributionReason.reasonOptions.financialHardship'),
+            value: RestrictionOption.Hardship,
+        },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
 
     const disbursementOptions: PaymentMethodOption[] = [
@@ -424,7 +488,9 @@ export default function getGdmnConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -450,7 +516,10 @@ export default function getGdmnConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -463,11 +532,16 @@ export default function getGdmnConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -482,18 +556,25 @@ export default function getGdmnConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
                     accountHolder: selectedBank?.nameOnBankAccount ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
                 };
@@ -528,7 +609,8 @@ export default function getGdmnConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -543,7 +625,9 @@ export default function getGdmnConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -567,7 +651,10 @@ export default function getGdmnConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -579,11 +666,16 @@ export default function getGdmnConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -597,18 +689,25 @@ export default function getGdmnConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
                     accountHolder: selectedBank?.nameOnBankAccount ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
                 };
@@ -643,7 +742,8 @@ export default function getGdmnConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -670,23 +770,38 @@ export default function getGdmnConfig(t: TFunction) {
                     component: DisbursementFields.BankAddress,
                 },
             ],
-            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+            getDefaultPayload: ({
+                paymentMethod,
+                paymentMailType,
+                isDifferentPayeeOrAddress,
+                payee,
+            }: FormDisbursement) => {
+                if (
+                    paymentMethod.text === PaymentMailType.Check &&
+                    paymentMailType.text === null
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        selectIfPayeeIsDifferent:
+                            isDifferentPayeeOrAddress.text ?? '',
                         address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
                         payeeName: payee?.name?.text ?? '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                selectIfPayeeIsDifferent,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
-                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    isDifferentPayeeOrAddress: {
+                        text: selectIfPayeeIsDifferent || false,
+                    },
                     payee: {
                         name: { text: payeeName || null },
                         addresses: [address || DEFAULT_ADDRESS],
@@ -718,23 +833,38 @@ export default function getGdmnConfig(t: TFunction) {
                     component: DisbursementFields.BankAddress,
                 },
             ],
-            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+            getDefaultPayload: ({
+                paymentMethod,
+                paymentMailType,
+                isDifferentPayeeOrAddress,
+                payee,
+            }: FormDisbursement) => {
+                if (
+                    paymentMethod.text === PaymentMailType.Check &&
+                    paymentMailType.text === null
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        selectIfPayeeIsDifferent:
+                            isDifferentPayeeOrAddress.text ?? '',
                         address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
                         payeeName: payee?.name?.text ?? '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                selectIfPayeeIsDifferent,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: PaymentMailType.ExpressCheck },
-                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    isDifferentPayeeOrAddress: {
+                        text: selectIfPayeeIsDifferent || false,
+                    },
                     payee: {
                         name: { text: payeeName || null },
                         addresses: [address || DEFAULT_ADDRESS],
@@ -746,17 +876,28 @@ export default function getGdmnConfig(t: TFunction) {
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
         {
-            label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t(
+                'amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+            ),
             value: ProcessRequestType.NoLongerSubject,
         },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
     const fullWithdrawalOptions = [
         {
-            label: t('amountDetails.fullWithdrawal.withdrawTheEntireContractValue'),
+            label: t(
+                'amountDetails.fullWithdrawal.withdrawTheEntireContractValue'
+            ),
             value: AccountCloseReason.Surrender,
         },
     ];

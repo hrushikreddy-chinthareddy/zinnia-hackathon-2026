@@ -6,7 +6,10 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { FeaturesCardsTest } from '@deps/jest/constants/test-id-constants';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { mockT } from '@deps/setupTests';
-import { DEFAULT_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    DEFAULT_DATE_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 
 import PolicyExtrasCards from './policy-extras-cards';
 
@@ -97,7 +100,13 @@ describe('Policy Features Cards', () => {
         ogFeatures = mockPolicy.policyFeatures;
         ogRiders = mockPolicy.riders;
         mockPolicy.riders = [];
-        mockPolicy.policyFeatures = [availableFeature, activeFeature, terminatedFeature, invalidFeature1, invalidFeature2];
+        mockPolicy.policyFeatures = [
+            availableFeature,
+            activeFeature,
+            terminatedFeature,
+            invalidFeature1,
+            invalidFeature2,
+        ];
         mockPolicyDetails = new PolicyDetails(mockPolicy);
     });
 
@@ -112,16 +121,24 @@ describe('Policy Features Cards', () => {
         mockPolicy;
         const { getByTestId } = render(
             <div data-testid="features-cards">
-                <PolicyExtrasCards policyDetails={mockPolicyDetails} filterValues={null} />
+                <PolicyExtrasCards
+                    policyDetails={mockPolicyDetails}
+                    filterValues={null}
+                />
             </div>
         );
-        expect(getByTestId('features-cards').getElementsByTagName('article').length).toBe(3);
+        expect(
+            getByTestId('features-cards').getElementsByTagName('article').length
+        ).toBe(3);
     });
 
     it('should provide the correct label of "Feature"', () => {
         const { getAllByText } = render(
             <div data-testid="features-cards">
-                <PolicyExtrasCards policyDetails={mockPolicyDetails} filterValues={null} />
+                <PolicyExtrasCards
+                    policyDetails={mockPolicyDetails}
+                    filterValues={null}
+                />
             </div>
         );
         expect(getAllByText('Features.feature').length).toBe(3); // sentence-cased translation key for "Feature" is "Feature"
@@ -130,7 +147,10 @@ describe('Policy Features Cards', () => {
     it('should provide the featureType for the header field', () => {
         const { getAllByText } = render(
             <div data-testid="features-cards">
-                <PolicyExtrasCards policyDetails={mockPolicyDetails} filterValues={null} />
+                <PolicyExtrasCards
+                    policyDetails={mockPolicyDetails}
+                    filterValues={null}
+                />
             </div>
         );
         expect(getAllByText('Features.lapseprotection').length).toBe(3); // Sentence-cased translation key for "Lapse protection is Lapseprotection, currently the only supported header"
@@ -139,17 +159,28 @@ describe('Policy Features Cards', () => {
     it('should map the subheader based on the subheader description table', () => {
         const { getAllByText } = render(
             <div data-testid="features-cards">
-                <PolicyExtrasCards policyDetails={mockPolicyDetails} filterValues={null} />
+                <PolicyExtrasCards
+                    policyDetails={mockPolicyDetails}
+                    filterValues={null}
+                />
             </div>
         );
-        expect(getAllByText('Features.nyearsprotectionguarantee').length).toBe(3); // translation key for only supported feature
-        expect(mockT.mock.calls).toContainEqual(['features.nYearsProtectionGuarantee', { n: 12345 }]);
+        expect(getAllByText('Features.nyearsprotectionguarantee').length).toBe(
+            3
+        ); // translation key for only supported feature
+        expect(mockT.mock.calls).toContainEqual([
+            'features.nYearsProtectionGuarantee',
+            { n: 12345 },
+        ]);
     });
 
     it('should correctly handle the status badge logic', () => {
         const { getAllByTestId } = render(
             <div data-testid="features-cards">
-                <PolicyExtrasCards policyDetails={mockPolicyDetails} filterValues={null} />
+                <PolicyExtrasCards
+                    policyDetails={mockPolicyDetails}
+                    filterValues={null}
+                />
             </div>
         );
         // badge logic:
@@ -165,21 +196,36 @@ describe('Policy Features Cards', () => {
     it('should correctly map paymentAmount, totalPaymentAmount, startDate, endDate to  cost, cumulative payment, effective date, and expiration date respectively', () => {
         const { getByTestId } = render(
             <div data-testid="features-cards">
-                <PolicyExtrasCards policyDetails={mockPolicyDetails} filterValues={null} />
+                <PolicyExtrasCards
+                    policyDetails={mockPolicyDetails}
+                    filterValues={null}
+                />
             </div>
         );
         const cost = getByTestId(`${FeaturesCardsTest.Cost}-123`);
-        const cumulativePayment = getByTestId(`${FeaturesCardsTest.CumulativePayment}-123`);
-        const effectiveDate = getByTestId(`${FeaturesCardsTest.EffectiveDate}-123`);
-        const expirationDate = getByTestId(`${FeaturesCardsTest.ExpirationDate}-123`);
+        const cumulativePayment = getByTestId(
+            `${FeaturesCardsTest.CumulativePayment}-123`
+        );
+        const effectiveDate = getByTestId(
+            `${FeaturesCardsTest.EffectiveDate}-123`
+        );
+        const expirationDate = getByTestId(
+            `${FeaturesCardsTest.ExpirationDate}-123`
+        );
 
         expect(cost).toHaveTextContent('Features.cost');
         expect(cost).toHaveTextContent('$100.23');
-        expect(cumulativePayment).toHaveTextContent('Features.cumulativepayment');
+        expect(cumulativePayment).toHaveTextContent(
+            'Features.cumulativepayment'
+        );
         expect(cumulativePayment).toHaveTextContent('$1,000.34');
         expect(effectiveDate).toHaveTextContent('Features.effectivedate');
-        expect(effectiveDate).toHaveTextContent(dayjs().subtract(11, 'year').format(DEFAULT_DATE_FORMAT));
+        expect(effectiveDate).toHaveTextContent(
+            dayjs().subtract(11, 'year').format(DEFAULT_DATE_FORMAT)
+        );
         expect(expirationDate).toHaveTextContent('Features.expirationdate');
-        expect(expirationDate).toHaveTextContent(dayjs().add(11, 'year').format(DEFAULT_DATE_FORMAT));
+        expect(expirationDate).toHaveTextContent(
+            dayjs().add(11, 'year').format(DEFAULT_DATE_FORMAT)
+        );
     });
 });

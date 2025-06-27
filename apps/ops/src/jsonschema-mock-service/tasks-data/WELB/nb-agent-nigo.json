@@ -1,123 +1,123 @@
 {
-  "id": "TA000000018676",
-  "caseId": "CA0000392914",
-  "source": "BPM.AgentCheck",
-  "templateId": "006b92ec-a0ef-49d0-94ac-47c0456b79fb",
-  "process": "New Business",
-  "carrier": "WELB",
-  "taskType": "NB_AGENT_NIGO",
-  "taskName": "Agent Nigo",
-  "status": "INPROGRESS",
-  "data": {
-      "details": {
-          "agentDetails": {
-              "agentExternalId": "AMS010009",
-              "firstName": "AGENT",
-              "lastName": "TEST"
-          }
-      },
-      "issuesList": [
-          {
-              "id": "1501bd77-3cc9-43d2-ae38-e3f44d78df6d",
-              "externalId": "1501bd77-3cc9-43d2-ae38-e3f44d78df6d",
-              "nmid": "EM.061",
-              "type": "NIGO",
-              "category": "AGENT",
-              "reason": "AGENT STATE TRAINING STATUS",
-              "detailedReason": "STATE TRAINING NOT COMPLETED",
-              "processingInstruction": "Reason: Agent's Best Interest and Supplemental Best Interest Training were incomplete for the state where the product was sold at time of sale. Resolution: Review the identified state training issue and confirm if we can resolve it. ",
-              "processingReason": "Agent's Best Interest and Supplemental Best Interest Training were incomplete for the state where the product was sold at time of sale.",
-              "processingResolution": "Review the identified state training issue and confirm if we can resolve it. "
-          },
-          {
-              "id": "a24a65a0-d96d-44a8-b3bb-d9cb66d8f162",
-              "externalId": "a24a65a0-d96d-44a8-b3bb-d9cb66d8f162",
-              "nmid": "EM.056",
-              "type": "NIGO",
-              "category": "AGENT",
-              "reason": "AGENT AML STATUS",
-              "detailedReason": "MISSING",
-              "processingInstruction": "Reason: Agent lacks anti-money laundering training. Resolution: Review the identified issues and attempt to resolve them.",
-              "processingReason": "Agent lacks anti-money laundering training.",
-              "processingResolution": "Review the identified issues and attempt to resolve them."
-          },
-          {
-              "id": "db0a1d79-fdf5-4d7e-91ab-574fd1094d19",
-              "externalId": "db0a1d79-fdf5-4d7e-91ab-574fd1094d19",
-              "nmid": "EM.036",
-              "type": "NIGO",
-              "category": "AGENT",
-              "reason": "AGENT PRODUCT TRAINING STATUS",
-              "detailedReason": "PRODUCT TRAINING NOT COMPLETED",
-              "processingInstruction": "Reason: Agent lacks required product training. Resolution: Review the agent product training issue and confirm if we can resolve it.",
-              "processingReason": "Agent lacks required product training.",
-              "processingResolution": "Review the agent product training issue and confirm if we can resolve it."
-          },
-          {
-              "id": "e88fbd98-938a-43ea-9ad4-3c872ca65b17",
-              "externalId": "e88fbd98-938a-43ea-9ad4-3c872ca65b17",
-              "nmid": "EM.038",
-              "type": "NIGO",
-              "category": "AGENT",
-              "reason": "AGENT STATE TRAINING STATUS",
-              "detailedReason": "STATE TRAINING NOT COMPLETED",
-              "processingInstruction": "Reason: Agent's NAIC Suitability Training was incomplete for the state where the product was sold at time of sale. Resolution: Review the identified state training issue and confirm if we can resolve it.",
-              "processingReason": "Agent's NAIC Suitability Training was incomplete for the state where the product was sold at time of sale.",
-              "processingResolution": "Review the identified state training issue and confirm if we can resolve it."
-          }
-      ],
-      "nigos": [
-          "EX000000008148",
-          "EX000000008149",
-          "EX000000008146",
-          "EX000000008147"
-      ]
-  },
-  "mappedExceptions": [
-      "EX000000008148",
-      "EX000000008149",
-      "EX000000008146",
-      "EX000000008147"
-  ],
-  "mappedDocuments": [],
-  "queue": "new_business",
-  "escalated": false,
-  "assigneeFirstName": "Vijayalaxmi",
-  "assigneeLastName": "Sambhane",
-  "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
-  "assigneePartyId": "fa49a69c3939412d87b315cb39459497",
-  "assignedAt": "2025-02-14T09:51:39Z",
-  "createdBy": "SYSTEM",
-  "createdByPartyId": "SYSTEM",
-  "createdAt": "2025-02-13T14:26:48Z",
-  "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
-  "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
-  "updatedAt": "2025-02-21T13:29:17Z",
-  "identifiers": [
-      {
-          "identifier": "policyNumber",
-          "value": "ADA2501486"
-      },
-      {
-          "identifier": "zlCaseId",
-          "value": "CA0000392914"
-      },
-      {
-          "identifier": "businessKey",
-          "value": "408911"
-      },
-      {
-          "identifier": "documentID",
-          "value": "67ae00d7a2bf5f38309e7ad8"
-      },
-      {
-          "identifier": "applicationId",
-          "value": "WELLANI041120242025021305"
-      },
-      {
-          "identifier": "contractNumber",
-          "value": "ADA2501486"
-      }
-  ],
-  "externalId": "ce7291dd-7e08-434f-b1d2-bb6c0b2086af"
+    "id": "TA000000018676",
+    "caseId": "CA0000392914",
+    "source": "BPM.AgentCheck",
+    "templateId": "006b92ec-a0ef-49d0-94ac-47c0456b79fb",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_AGENT_NIGO",
+    "taskName": "Agent Nigo",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "agentDetails": {
+                "agentExternalId": "AMS010009",
+                "firstName": "AGENT",
+                "lastName": "TEST"
+            }
+        },
+        "issuesList": [
+            {
+                "id": "1501bd77-3cc9-43d2-ae38-e3f44d78df6d",
+                "externalId": "1501bd77-3cc9-43d2-ae38-e3f44d78df6d",
+                "nmid": "EM.061",
+                "type": "NIGO",
+                "category": "AGENT",
+                "reason": "AGENT STATE TRAINING STATUS",
+                "detailedReason": "STATE TRAINING NOT COMPLETED",
+                "processingInstruction": "Reason: Agent's Best Interest and Supplemental Best Interest Training were incomplete for the state where the product was sold at time of sale. Resolution: Review the identified state training issue and confirm if we can resolve it. ",
+                "processingReason": "Agent's Best Interest and Supplemental Best Interest Training were incomplete for the state where the product was sold at time of sale.",
+                "processingResolution": "Review the identified state training issue and confirm if we can resolve it. "
+            },
+            {
+                "id": "a24a65a0-d96d-44a8-b3bb-d9cb66d8f162",
+                "externalId": "a24a65a0-d96d-44a8-b3bb-d9cb66d8f162",
+                "nmid": "EM.056",
+                "type": "NIGO",
+                "category": "AGENT",
+                "reason": "AGENT AML STATUS",
+                "detailedReason": "MISSING",
+                "processingInstruction": "Reason: Agent lacks anti-money laundering training. Resolution: Review the identified issues and attempt to resolve them.",
+                "processingReason": "Agent lacks anti-money laundering training.",
+                "processingResolution": "Review the identified issues and attempt to resolve them."
+            },
+            {
+                "id": "db0a1d79-fdf5-4d7e-91ab-574fd1094d19",
+                "externalId": "db0a1d79-fdf5-4d7e-91ab-574fd1094d19",
+                "nmid": "EM.036",
+                "type": "NIGO",
+                "category": "AGENT",
+                "reason": "AGENT PRODUCT TRAINING STATUS",
+                "detailedReason": "PRODUCT TRAINING NOT COMPLETED",
+                "processingInstruction": "Reason: Agent lacks required product training. Resolution: Review the agent product training issue and confirm if we can resolve it.",
+                "processingReason": "Agent lacks required product training.",
+                "processingResolution": "Review the agent product training issue and confirm if we can resolve it."
+            },
+            {
+                "id": "e88fbd98-938a-43ea-9ad4-3c872ca65b17",
+                "externalId": "e88fbd98-938a-43ea-9ad4-3c872ca65b17",
+                "nmid": "EM.038",
+                "type": "NIGO",
+                "category": "AGENT",
+                "reason": "AGENT STATE TRAINING STATUS",
+                "detailedReason": "STATE TRAINING NOT COMPLETED",
+                "processingInstruction": "Reason: Agent's NAIC Suitability Training was incomplete for the state where the product was sold at time of sale. Resolution: Review the identified state training issue and confirm if we can resolve it.",
+                "processingReason": "Agent's NAIC Suitability Training was incomplete for the state where the product was sold at time of sale.",
+                "processingResolution": "Review the identified state training issue and confirm if we can resolve it."
+            }
+        ],
+        "nigos": [
+            "EX000000008148",
+            "EX000000008149",
+            "EX000000008146",
+            "EX000000008147"
+        ]
+    },
+    "mappedExceptions": [
+        "EX000000008148",
+        "EX000000008149",
+        "EX000000008146",
+        "EX000000008147"
+    ],
+    "mappedDocuments": [],
+    "queue": "new_business",
+    "escalated": false,
+    "assigneeFirstName": "Vijayalaxmi",
+    "assigneeLastName": "Sambhane",
+    "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+    "assigneePartyId": "fa49a69c3939412d87b315cb39459497",
+    "assignedAt": "2025-02-14T09:51:39Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-02-13T14:26:48Z",
+    "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
+    "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
+    "updatedAt": "2025-02-21T13:29:17Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501486"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000392914"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "408911"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67ae00d7a2bf5f38309e7ad8"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI041120242025021305"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501486"
+        }
+    ],
+    "externalId": "ce7291dd-7e08-434f-b1d2-bb6c0b2086af"
 }

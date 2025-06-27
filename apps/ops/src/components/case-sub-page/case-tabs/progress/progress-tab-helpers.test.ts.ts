@@ -2,7 +2,10 @@ import { TFunction } from 'next-i18next';
 
 import { mockCaseDetails } from '@deps/services/mocks/case-details';
 
-import { TransformedCase, completionPercentageString} from './progress-tab-helpers';
+import {
+    TransformedCase,
+    completionPercentageString,
+} from './progress-tab-helpers';
 import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 const mockT = (key: string, values?: Record<string, string>) => {
     if (values) {
@@ -31,7 +34,10 @@ describe('case-tabs-helpers', () => {
 
             stages.forEach((stage, index) => {
                 expect(stage).toHaveProperty('completedSteps');
-                expect(stage).toHaveProperty('id', mockCaseDetails.stages[index].id);
+                expect(stage).toHaveProperty(
+                    'id',
+                    mockCaseDetails.stages[index].id
+                );
                 expect(stage).toHaveProperty('name');
                 expect(stage).toHaveProperty('nigoSteps');
                 expect(stage).toHaveProperty('status');
@@ -47,7 +53,9 @@ describe('case-tabs-helpers', () => {
             const result = completionPercentageString(3, 7, t);
             const expectedPercentage = ((3 / 7) * 100).toFixed(0);
 
-            expect(result).toBe(`caseOverview.tabs.percentComplete ${expectedPercentage}%`);
+            expect(result).toBe(
+                `caseOverview.tabs.percentComplete ${expectedPercentage}%`
+            );
         });
     });
 
@@ -60,7 +68,9 @@ describe('case-tabs-helpers', () => {
 
             // stop-gap until the todo is completed.  Make sure the timestamp starts with the right date and ends in ':09[am|pm] [TZ3]'
             expect(result).toMatch('5/13/2024 at');
-            expect(result).toMatch(new RegExp(':\\d{2}[a-z]{2} [A-Z]{3}[+-]\\d{1,2}:\\d{2}'));
+            expect(result).toMatch(
+                new RegExp(':\\d{2}[a-z]{2} [A-Z]{3}[+-]\\d{1,2}:\\d{2}')
+            );
         });
     });
 });

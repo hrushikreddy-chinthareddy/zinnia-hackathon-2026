@@ -14,8 +14,15 @@ type DocumentItemProps = {
     activeDocType: DocumentTypeView;
 };
 
-const DocumentItem = ({ document, policy, documentNumber, activeDocType }: DocumentItemProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.documentPanel' });
+const DocumentItem = ({
+    document,
+    policy,
+    documentNumber,
+    activeDocType,
+}: DocumentItemProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'nigoEntry.documentPanel',
+    });
 
     return (
         <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
@@ -23,15 +30,21 @@ const DocumentItem = ({ document, policy, documentNumber, activeDocType }: Docum
                 <Icon width={25} height={25} type={IconType.DOCUMENT_TEXT} />{' '}
             </div>
             <div>
-                <div className="text-sm font-bold ">{document?.displayName}</div>
-                <div className="flex items-center text-sm font-normal text-gray-300">{t('documentId') + ': ' + documentNumber}</div>
+                <div className="text-sm font-bold ">
+                    {document?.displayName}
+                </div>
+                <div className="flex items-center text-sm font-normal text-gray-300">
+                    {t('documentId') + ': ' + documentNumber}
+                </div>
             </div>
             <div className="flex items-center">
                 <DocumentPreviewer
                     className="flex gap-1"
                     activeDocType={activeDocType}
                     carrier={policy?.carrierId || ''}
-                    documentId={document?.documentId || document?.documentID || ''}
+                    documentId={
+                        document?.documentId || document?.documentID || ''
+                    }
                     displayName={document?.displayName || ''}
                 >
                     <>{t('view')}</>

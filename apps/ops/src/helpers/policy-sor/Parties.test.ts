@@ -1,4 +1,8 @@
-import { Party, PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    Party,
+    PartyRole,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -79,7 +83,9 @@ describe('Parties', () => {
 
         it('should not blow up if no policy is passed in', () => {
             const noPolicy = new Parties(undefined);
-            expect(noPolicy.getPartiesWithRole(PartyRole.OWNER)).toHaveLength(0);
+            expect(noPolicy.getPartiesWithRole(PartyRole.OWNER)).toHaveLength(
+                0
+            );
             expect(noPolicy.getPartyById('Party_PI_1')).toBeUndefined();
             expect(noPolicy.owner).toBeUndefined();
             expect(noPolicy.allOwners).toHaveLength(0);
@@ -114,7 +120,9 @@ describe('Parties', () => {
             expect(party.preferredAddress).toEqual('mockPreferredAddress');
             expect(party.preferredBank).toEqual('mockPreferredBank');
             expect(party.preferredEmail).toEqual('mockPreferredEmail');
-            expect(party.bestAvailableAddress).toEqual('mockBestAvailableAddress');
+            expect(party.bestAvailableAddress).toEqual(
+                'mockBestAvailableAddress'
+            );
             expect(party.bestAvailableEmail).toEqual('mockBestAvailableEmail');
             expect(party.bestAvailablePhone).toEqual('mockBestAvailablePhone');
         });

@@ -8,8 +8,12 @@ export interface AdditionalStepStatusProps {
     updatedAt: string;
 }
 
-const AdditionalStepStatus: React.FC<AdditionalStepStatusProps> = ({ status, updatedAt }) => {
-    const { statusIcon, iconClassNames, reasonClassNames, reasonText } = useStatusInfo(status, updatedAt, '', '');
+const AdditionalStepStatus: React.FC<AdditionalStepStatusProps> = ({
+    status,
+    updatedAt,
+}) => {
+    const { statusIcon, iconClassNames, reasonClassNames, reasonText } =
+        useStatusInfo(status, updatedAt, '', '');
 
     return (
         <div>
@@ -17,7 +21,9 @@ const AdditionalStepStatus: React.FC<AdditionalStepStatusProps> = ({ status, upd
                 <div className={`${iconClassNames} `}>{statusIcon}</div>
                 <div className={`ml-4 ${reasonClassNames}`}>{reasonText}</div>
             </div>
-            <span className={`text-label-md-alt font-secondary text-gray-400`}>{updatedAt}</span>
+            <span className={`text-label-md-alt font-secondary text-gray-400`}>
+                {updatedAt}
+            </span>
         </div>
     );
 };

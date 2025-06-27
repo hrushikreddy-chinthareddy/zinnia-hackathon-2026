@@ -6,18 +6,30 @@ import { useTranslation } from 'next-i18next';
 import ExceptionRow from '@deps/components/card/case-search-card/exception-row/exception-row';
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getPolicyOwners } from '@deps/helpers/parties';
-import { formatDateDescriptionList, formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    formatDateDescriptionList,
+    formatSSN,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
-import { ExceptionInstance, ExceptionStatuses } from '@deps/models/case/exception-instance';
+import {
+    ExceptionInstance,
+    ExceptionStatuses,
+} from '@deps/models/case/exception-instance';
 import { PartyInstance } from '@deps/models/case/party-instance';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import { CaseClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import {
+    CaseClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 import { getCarrierLogoByClientId } from '@deps/utils/carriers';
 
 import CaseDetailField from './case-detail-field';
@@ -70,44 +82,85 @@ export default function CaseSearchCard({
 
     const imageSrc = getCarrierLogoByClientId(carrier);
 
-    const viewCaseText = t('caseManagementDashboard.case.viewCase', { caseNumber: String(policyNumber).split('').join(' ') });
+    const viewCaseText = t('caseManagementDashboard.case.viewCase', {
+        caseNumber: String(policyNumber).split('').join(' '),
+    });
 
     const policyOwners = parties ? getPolicyOwners(parties) : [];
-    const entities = policyOwners.slice(1).map(owner => ({ name: toTitleCase(owner.fullName), ssn: formatSSN(owner.ssn) }));
+    const entities = policyOwners.slice(1).map((owner) => ({
+        name: toTitleCase(owner.fullName),
+        ssn: formatSSN(owner.ssn),
+    }));
 
-    const ownerName = policyOwners.length ? (policyOwners?.[0]?.firstName || '') + ' ' + (policyOwners?.[0]?.lastName || '') : null;
+    const ownerName = policyOwners.length
+        ? (policyOwners?.[0]?.firstName || '') +
+          ' ' +
+          (policyOwners?.[0]?.lastName || '')
+        : null;
     const ssn = policyOwners.length ? policyOwners[0].ssn : null;
     const ownerComponentProps = {
         label: t('caseManagementDashboard.case.owner'),
         text: toTitleCase(ownerName?.trim()),
-        highlights: [searchValues?.ownerFirstName, searchValues?.ownerLastName].filter(Boolean) as string[],
+        highlights: [
+            searchValues?.ownerFirstName,
+            searchValues?.ownerLastName,
+        ].filter(Boolean) as string[],
         entities,
         truncate: true,
     };
 
     const ownerComponent =
-        policyOwners.length > 1 ? <OwnerWithOthers {...ownerComponentProps} /> : <CaseDetailField pii={true} {...ownerComponentProps} />;
+        policyOwners.length > 1 ? (
+            <OwnerWithOthers {...ownerComponentProps} />
+        ) : (
+            <CaseDetailField pii={true} {...ownerComponentProps} />
+        );
 
-    const openExceptions = exceptions?.filter(exception => exception.status !== ExceptionStatuses.Resolved);
-    const isExceptionRow = caseStatus === Statuses.Exception && !!openExceptions?.length;
+    const openExceptions = exceptions?.filter(
+        (exception) => exception.status !== ExceptionStatuses.Resolved
+    );
+    const isExceptionRow =
+        caseStatus === Statuses.Exception && !!openExceptions?.length;
 
     const loadCaseDetails = (href: string) => {
-        segmentAnalyticsTrackEvent<CaseClickedEvent>(SegmentTrackedEventName.CaseClicked, {
-            caseId: id,
-            session_id: sessionId,
-            userId: partyId,
-        });
+        segmentAnalyticsTrackEvent<CaseClickedEvent>(
+            SegmentTrackedEventName.CaseClicked,
+            {
+                caseId: id,
+                session_id: sessionId,
+                userId: partyId,
+            }
+        );
 
         router.push(href);
     };
 
     return (
-        <div className={isCustomStyle ? 'case-search-card' : ' '} data-testid="case-search-card">
-            <div className={isCustomStyle ? 'case-search-card-grid' : 'flex gap-10 '} data-testid={`case-search-card-inner-${index}`}>
+        <div
+            className={isCustomStyle ? 'case-search-card' : ' '}
+            data-testid="case-search-card"
+        >
+            <div
+                className={
+                    isCustomStyle ? 'case-search-card-grid' : 'flex gap-10 '
+                }
+                data-testid={`case-search-card-inner-${index}`}
+            >
                 {showLogo && (
-                    <Tooltip placement={PopoverPlacement.TopRight} body={carrier} isTabbable={false}>
+                    <Tooltip
+                        placement={PopoverPlacement.TopRight}
+                        body={carrier}
+                        isTabbable={false}
+                    >
                         <div className="flex h-12 w-12 items-center justify-center rounded border-2 border-gray-100">
-                            <Image src={imageSrc} alt={`${carrier} icon`} width={48} height={48} role="presentation" aria-hidden="true" />
+                            <Image
+                                src={imageSrc}
+                                alt={`${carrier} icon`}
+                                width={48}
+                                height={48}
+                                role="presentation"
+                                aria-hidden="true"
+                            />
                         </div>
                     </Tooltip>
                 )}
@@ -116,11 +169,17 @@ export default function CaseSearchCard({
                 </div>
                 {showCarrier && (
                     <div>
-                        <Typography variant={TypographyVariant.LabelLg} className="block">
+                        <Typography
+                            variant={TypographyVariant.LabelLg}
+                            className="block"
+                        >
                             {process}
                         </Typography>
                         {!!processSubType && (
-                            <Typography variant={TypographyVariant.Caption} className="block">
+                            <Typography
+                                variant={TypographyVariant.Caption}
+                                className="block"
+                            >
                                 {toTitleCase(processSubType)}
                             </Typography>
                         )}
@@ -128,15 +187,29 @@ export default function CaseSearchCard({
                 )}
 
                 {documentNumber && (
-                    <CaseDetailField label={t('caseManagementDashboard.case.documentNumber')} pii={true} text={documentNumber} />
+                    <CaseDetailField
+                        label={t('caseManagementDashboard.case.documentNumber')}
+                        pii={true}
+                        text={documentNumber}
+                    />
                 )}
 
-                {showCaseId && <CaseDetailField label={t('caseManagementDashboard.case.caseId')} pii={true} text={id} />}
+                {showCaseId && (
+                    <CaseDetailField
+                        label={t('caseManagementDashboard.case.caseId')}
+                        pii={true}
+                        text={id}
+                    />
+                )}
                 <CaseDetailField
                     label={t('caseManagementDashboard.case.policyNumber')}
                     pii={true}
                     text={policyNumber}
-                    highlights={searchValues?.policyNumber ? [searchValues?.policyNumber] : null}
+                    highlights={
+                        searchValues?.policyNumber
+                            ? [searchValues?.policyNumber]
+                            : null
+                    }
                 />
                 <CaseDetailField
                     label={t('caseManagementDashboard.case.createdAt')}
@@ -153,7 +226,9 @@ export default function CaseSearchCard({
                         pii={true}
                         sentenceCase={false}
                         text={formatSSN(ssn || undefined)}
-                        highlights={searchValues?.ssn ? [searchValues?.ssn] : null}
+                        highlights={
+                            searchValues?.ssn ? [searchValues?.ssn] : null
+                        }
                     />
                 )}
                 {showLogo && (
@@ -161,7 +236,11 @@ export default function CaseSearchCard({
                         className="default-focus rounded text-secondary hover:text-secondary-dark focus:text-secondary-dark"
                         aria-label={viewCaseText}
                         href={`/cases/${id}/${CaseDetailsTabValues.progress}`}
-                        onClick={() => loadCaseDetails(`/cases/${id}/${CaseDetailsTabValues.progress}`)}
+                        onClick={() =>
+                            loadCaseDetails(
+                                `/cases/${id}/${CaseDetailsTabValues.progress}`
+                            )
+                        }
                     >
                         <ChevronRightIcon height={24} width={24} />
                     </Link>

@@ -3,7 +3,11 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { TransactionStatus } from '@deps/models/case/withdrawal/case';
 import * as Policies from '@deps/queries/api/policies';
 
-import { TransactionType, TypeDesc, useTransactionsHistory } from './transaction-history';
+import {
+    TransactionType,
+    TypeDesc,
+    useTransactionsHistory,
+} from './transaction-history';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({
@@ -15,7 +19,9 @@ jest.mock('next-i18next', () => ({
 }));
 jest.mock('@deps/utils/server-logging');
 jest.mock('@deps/queries/api/policies');
-const mockedTransactionsHistory = jest.mocked(Policies.getPolicyTransactionHistory);
+const mockedTransactionsHistory = jest.mocked(
+    Policies.getPolicyTransactionHistory
+);
 describe('Transaction history component', () => {
     it('should handle null data response without throwing errors', async () => {
         mockedTransactionsHistory.mockResolvedValue(Promise.resolve(null));

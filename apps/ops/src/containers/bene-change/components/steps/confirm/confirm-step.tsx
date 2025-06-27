@@ -4,8 +4,13 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import NavElement, {
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
@@ -23,27 +28,56 @@ interface ConfirmStepProps {
     clientId: string;
 }
 
-const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.confirm' });
+const ConfirmStep = ({
+    policy,
+    document,
+    planCode,
+    clientId,
+}: ConfirmStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.confirm',
+    });
     const router = useRouter();
-    const { formData, formErrors, signatureData, beneData, ownerInfo, peopleSelection } = useBeneChange();
+    const {
+        formData,
+        formErrors,
+        signatureData,
+        beneData,
+        ownerInfo,
+        peopleSelection,
+    } = useBeneChange();
 
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const validationSucceeded = useMemo(() => Object.keys(formErrors).length === 0, [formErrors]);
+    const validationSucceeded = useMemo(
+        () => Object.keys(formErrors).length === 0,
+        [formErrors]
+    );
 
     const submit = useCallback(async () => {
         let documentResult;
 
-        if (!document && formData.businessKey && formData.caseId !== '' && clientId) {
-            documentResult = await fetchDocument(formData.businessKey, DocumentType.ReReg, clientId.toUpperCase());
+        if (
+            !document &&
+            formData.businessKey &&
+            formData.caseId !== '' &&
+            clientId
+        ) {
+            documentResult = await fetchDocument(
+                formData.businessKey,
+                DocumentType.ReReg,
+                clientId.toUpperCase()
+            );
 
             if (!documentResult.success) {
-                console.error('ConfirmStep:: No documentNumber from getDocument', {
-                    documentNumber: formData.businessKey,
-                    documentType: DocumentType.ReReg,
-                    clientId,
-                });
+                console.error(
+                    'ConfirmStep:: No documentNumber from getDocument',
+                    {
+                        documentNumber: formData.businessKey,
+                        documentType: DocumentType.ReReg,
+                        clientId,
+                    }
+                );
                 setSubmitFailed(true);
             }
         }
@@ -55,7 +89,9 @@ const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmStepProps)
             signatureData,
             document,
             policy,
-            selectedDocument: documentResult?.success ? documentResult.value : null,
+            selectedDocument: documentResult?.success
+                ? documentResult.value
+                : null,
             parties,
         });
 
@@ -95,7 +131,13 @@ const ConfirmStep = ({ policy, document, planCode, clientId }: ConfirmStepProps)
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             {validationSucceeded ? (
                 <CardInfo
-                    icon={<CircleCheckIcon className="text-semantic-success" height={50} width={50} />}
+                    icon={
+                        <CircleCheckIcon
+                            className="text-semantic-success"
+                            height={50}
+                            width={50}
+                        />
+                    }
                     cta={{
                         action: () => {
                             router.push(router.asPath);

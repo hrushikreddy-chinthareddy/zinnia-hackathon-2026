@@ -21,12 +21,15 @@ interface DeathClaimContainerProps {
 }
 
 const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'deathClaims' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'deathClaims',
+    });
     const { notifiers, isDocumentSelected } = useDeathClaim();
 
     const communicationTypes = useMemo(() => getCommunicationTypes(t), [t]);
     const [communicationOptions] = useState<RadioItem[]>(communicationTypes);
-    const [showNotificationMethod, setShowNotificationMethod] = useState<boolean>(true);
+    const [showNotificationMethod, setShowNotificationMethod] =
+        useState<boolean>(true);
 
     useEffect(() => {
         if (notifiers?.notifierRole === RoleType.Other) {
@@ -42,14 +45,23 @@ const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
         } else {
             setShowNotificationMethod(true);
         }
-    }, [notifiers.isPrimaryBeneInfoOnFile, notifiers.notifierRole, notifiers?.party.partyRole]);
+    }, [
+        notifiers.isPrimaryBeneInfoOnFile,
+        notifiers.notifierRole,
+        notifiers?.party.partyRole,
+    ]);
 
     const steps = useMemo(
         () => [
             {
                 ariaLabel: t('tabs.deathClaimNotification'),
                 isVisible: () => true,
-                component: <DeathClaimNotificationStep policy={policy} showNotification={showNotificationMethod} />,
+                component: (
+                    <DeathClaimNotificationStep
+                        policy={policy}
+                        showNotification={showNotificationMethod}
+                    />
+                ),
                 screenReaderLabel: t('tabs.deathClaimNotification'),
                 index: 0,
                 text: t('tabs.deathClaimNotification'),
@@ -57,7 +69,12 @@ const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
             {
                 ariaLabel: t('tabs.notificationMethod'),
                 isVisible: () => showNotificationMethod,
-                component: <NotificationMethodStep communicationOptions={communicationOptions} policy={policy} />,
+                component: (
+                    <NotificationMethodStep
+                        communicationOptions={communicationOptions}
+                        policy={policy}
+                    />
+                ),
                 screenReaderLabel: t('tabs.notificationMethod'),
                 index: 1,
                 text: t('tabs.notificationMethod'),
@@ -75,14 +92,27 @@ const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
     );
 
     const filteredSteps: Step[] = useMemo(
-        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        () =>
+            steps
+                .filter((item: any) => item.isVisible?.())
+                .map((item: any, index: number) => ({ ...item, index })),
         [steps]
     );
 
     if (!isDocumentSelected) {
-        return <DocumentSelectionModal policyNumber={policy.policyNumber as string} lob={policy.carrierId as string} />
+        return (
+            <DocumentSelectionModal
+                policyNumber={policy.policyNumber as string}
+                lob={policy.carrierId as string}
+            />
+        );
     } else {
-        return <TabGroupContainer steps={filteredSteps} policy={new PolicyDetails(policy)}></TabGroupContainer>
+        return (
+            <TabGroupContainer
+                steps={filteredSteps}
+                policy={new PolicyDetails(policy)}
+            ></TabGroupContainer>
+        );
     }
 };
 

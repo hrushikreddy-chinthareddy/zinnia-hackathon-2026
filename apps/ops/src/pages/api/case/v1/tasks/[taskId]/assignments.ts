@@ -5,14 +5,24 @@ import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { HttpMethod } from '@deps/queries/api-utils/serverClientUtils';
-import { APIErrorInformation, logTrace, logWarn, parseErrorInformation, withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    APIErrorInformation,
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+    withAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type error = APIErrorInformation;
 
 export default withAuthAndLogging(
-    async (req: NextApiRequest, res: NextApiResponse<ClaimNextTask | null | error>, logCtx) => {
+    async (
+        req: NextApiRequest,
+        res: NextApiResponse<ClaimNextTask | null | error>,
+        logCtx
+    ) => {
         const now = performance.now();
         const method = req.method;
         const { taskId } = req.query;
@@ -33,9 +43,18 @@ export default withAuthAndLogging(
         try {
             let response;
             if (method === HttpMethod.PUT) {
-                response = await serverApi.put(baseUrl, {}, config, loggingContext);
+                response = await serverApi.put(
+                    baseUrl,
+                    {},
+                    config,
+                    loggingContext
+                );
             } else if (method === HttpMethod.DELETE) {
-                response = await serverApi.delete(baseUrl, config, loggingContext);
+                response = await serverApi.delete(
+                    baseUrl,
+                    config,
+                    loggingContext
+                );
             } else {
                 const error: APIErrorInformation = {
                     requestData: {
@@ -43,7 +62,9 @@ export default withAuthAndLogging(
                     },
                 };
 
-                return res.status(HttpStatusCode.MethodNotAllowed).json(error?.requestData);
+                return res
+                    .status(HttpStatusCode.MethodNotAllowed)
+                    .json(error?.requestData);
             }
 
             logTrace(`serverApiClient::${method}::success`, {
@@ -58,7 +79,9 @@ export default withAuthAndLogging(
                 ...loggingContext,
                 duration: performance.now() - now,
             });
-            return res.status(HttpStatusCode.InternalServerError).json(parseErrorInformation(error)?.requestData);
+            return res
+                .status(HttpStatusCode.InternalServerError)
+                .json(parseErrorInformation(error)?.requestData);
         }
     },
     { file: 'case/v1/tasks/[taskId]/assignments', function: 'routeHandler' }

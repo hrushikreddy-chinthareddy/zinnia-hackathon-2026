@@ -11,7 +11,12 @@ import {
 } from '@deps/models/case/document';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
-import { LoggingContext, logInfo, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    LoggingContext,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -20,7 +25,11 @@ import { serverApi } from '../api-utils/serverApiClient';
 const ssrBaseUrl = `${apiServerBaseUrl}/document/v2/documents`;
 export const documentBaseUrl = `${baseAppUrl}/api/document/v2/documents`;
 
-export const getDocumentV2 = async (documentNumber: string, docType: string, clientCode: string): Promise<DocumentData | null> => {
+export const getDocumentV2 = async (
+    documentNumber: string,
+    docType: string,
+    clientCode: string
+): Promise<DocumentData | null> => {
     try {
         const url = `${documentBaseUrl}/${documentNumber}?docType=${docType}&clientCode=${clientCode.toUpperCase()}`;
         const { data } = await client.get<DocumentData, AxiosResponse>(url);
@@ -33,7 +42,10 @@ export const getDocumentV2 = async (documentNumber: string, docType: string, cli
     }
 };
 
-export const uploadDocumentV2 = async (metadata: EDSDocumentRequestBody, document: any): Promise<EDSDocumentResponse | null> => {
+export const uploadDocumentV2 = async (
+    metadata: EDSDocumentRequestBody,
+    document: any
+): Promise<EDSDocumentResponse | null> => {
     try {
         const url = `${baseAppUrl}/api/documents/upload`;
 
@@ -120,7 +132,12 @@ export type DocumentApiRequestInputs = {
 export const getCorrespondenceDocsV2 = async (
     id: string,
     clientCode: string,
-    optionalParams: { documentStartDate?: string; documentEndDate?: string; documentType?: string; periods?: string } = {}
+    optionalParams: {
+        documentStartDate?: string;
+        documentEndDate?: string;
+        documentType?: string;
+        periods?: string;
+    } = {}
 ): Promise<PolicyDocumentApiRequest | DocumentErrorResponse> => {
     try {
         let queryParams = `?source=Correspondence&contractNumber=${id}&clientCode=${clientCode?.toUpperCase()}`;
@@ -138,17 +155,25 @@ export const getCorrespondenceDocsV2 = async (
             queryParams += `&periods=${optionalParams.periods}`;
         }
 
-        const cachedResult = pullFromCache('getCorrespondenceDocs', queryParams);
+        const cachedResult = pullFromCache(
+            'getCorrespondenceDocs',
+            queryParams
+        );
 
         if (cachedResult) return cachedResult;
 
-        const data = await client.get<any, AxiosResponse>(`${documentBaseUrl}${queryParams}`);
+        const data = await client.get<any, AxiosResponse>(
+            `${documentBaseUrl}${queryParams}`
+        );
 
         writeToCache('getCorrespondenceDocs', queryParams, data);
 
         return data;
     } catch (error: any) {
-        console.error('An error occurred while getting correspondence document results', error);
+        console.error(
+            'An error occurred while getting correspondence document results',
+            error
+        );
         return error;
     }
 };
@@ -167,11 +192,16 @@ export const getPolicyTypeDocsV2 = async (
         const cachedResult = pullFromCache('getPolicyTypeDocs', queryParams);
         if (cachedResult) return cachedResult;
 
-        const data = await client.get<any, AxiosResponse>(`${documentBaseUrl}${queryParams}`);
+        const data = await client.get<any, AxiosResponse>(
+            `${documentBaseUrl}${queryParams}`
+        );
         writeToCache('getPolicyTypeDocs', queryParams, data);
         return data;
     } catch (error: any) {
-        console.error('getPolicyTypeDocs::An error occurred while getting policy document results', error);
+        console.error(
+            'getPolicyTypeDocs::An error occurred while getting policy document results',
+            error
+        );
         return error.response;
     }
 };

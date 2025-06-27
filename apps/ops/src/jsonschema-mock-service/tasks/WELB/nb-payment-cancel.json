@@ -63,7 +63,10 @@
                                                 "if": {
                                                     "properties": {
                                                         "paymentRecordStatus": {
-                                                            "enum": ["PAYMENT_LINKED", "PAYMENT_APPLIED"]
+                                                            "enum": [
+                                                                "PAYMENT_LINKED",
+                                                                "PAYMENT_APPLIED"
+                                                            ]
                                                         }
                                                     }
                                                 },

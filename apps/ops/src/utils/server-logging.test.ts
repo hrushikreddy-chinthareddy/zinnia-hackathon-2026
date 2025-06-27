@@ -1,4 +1,8 @@
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
+import {
+    GetServerSidePropsContext,
+    NextApiRequest,
+    NextApiResponse,
+} from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
 import pino, { complianceLogger } from './pino-server';
@@ -30,9 +34,17 @@ jest.mock('@deps/utils/pino-server', () => {
     };
 });
 jest.mock('@auth0/nextjs-auth0', () => ({
-    getSession: jest.fn(() => ({ user: { sid: 'sid', sub: 'sub', name: 'name', email: 'email', partyId: 'partyId' } })),
-    withApiAuthRequired: jest.fn(handler => handler),
-    withPageAuthRequired: jest.fn(options => options),
+    getSession: jest.fn(() => ({
+        user: {
+            sid: 'sid',
+            sub: 'sub',
+            name: 'name',
+            email: 'email',
+            partyId: 'partyId',
+        },
+    })),
+    withApiAuthRequired: jest.fn((handler) => handler),
+    withPageAuthRequired: jest.fn((options) => options),
 }));
 jest.mock('uuid', () => ({ v4: jest.fn(() => 'uuid') }));
 
@@ -56,7 +68,10 @@ describe('server-logging', () => {
     describe('logError', () => {
         it('should use the appropriate pino method to log', () => {
             logError('error', mockLoggingContext);
-            expect(pino.error).toHaveBeenCalledWith(mockLoggingContext, 'error');
+            expect(pino.error).toHaveBeenCalledWith(
+                mockLoggingContext,
+                'error'
+            );
         });
     });
     describe('logWarn', () => {
@@ -74,20 +89,29 @@ describe('server-logging', () => {
     describe('logTrace', () => {
         it('should use the appropriate pino method to log', () => {
             logTrace('trace', mockLoggingContext);
-            expect(pino.trace).toHaveBeenCalledWith(mockLoggingContext, 'trace');
+            expect(pino.trace).toHaveBeenCalledWith(
+                mockLoggingContext,
+                'trace'
+            );
         });
     });
     describe('logCompliance', () => {
         it('should use the appropriate pino method to log and attach isCompliance: true', () => {
             logCompliance('trace', mockLoggingContext);
             expect(complianceLogger.compliance).toHaveBeenCalled();
-            expect((complianceLogger.compliance as jest.Mock).mock.calls[0][0].isCompliance).toBe(true);
+            expect(
+                (complianceLogger.compliance as jest.Mock).mock.calls[0][0]
+                    .isCompliance
+            ).toBe(true);
         });
     });
     describe('logErrorWithoutContext', () => {
         it('should use the appropriate pino method to log', () => {
             logErrorWithoutContext('error', mockLoggingContext);
-            expect(pino.error).toHaveBeenCalledWith(mockLoggingContext, 'error');
+            expect(pino.error).toHaveBeenCalledWith(
+                mockLoggingContext,
+                'error'
+            );
         });
     });
 
@@ -136,7 +160,10 @@ describe('server-logging', () => {
                 file: 'testFile',
                 function: 'testFunction',
             };
-            const mockReq = { ...nextApiReq, body: { correlationId: 'newUuid' } } as NextApiRequest;
+            const mockReq = {
+                ...nextApiReq,
+                body: { correlationId: 'newUuid' },
+            } as NextApiRequest;
             await withAuthAndLogging(handler, context)(mockReq, nextApiRes);
             expect(handler.mock.calls[0][2].correlationId).toEqual('newUuid');
         });
@@ -149,7 +176,9 @@ describe('server-logging', () => {
                 correlationId: 'newNewUuid',
             };
             await withAuthAndLogging(handler, context)(nextApiReq, nextApiRes);
-            expect(handler.mock.calls[0][2].correlationId).toEqual('newNewUuid');
+            expect(handler.mock.calls[0][2].correlationId).toEqual(
+                'newNewUuid'
+            );
         });
     });
 
@@ -173,7 +202,11 @@ describe('server-logging', () => {
             const options = {
                 getServerSideProps: handler,
             };
-            const wpaalOptions = await withPageAuthAndLogging(options, { file: 'testFile', function: 'testFunction', page: 'testPage' });
+            const wpaalOptions = await withPageAuthAndLogging(options, {
+                file: 'testFile',
+                function: 'testFunction',
+                page: 'testPage',
+            });
 
             // @ts-expect-error: Property 'getServerSideProps' does not exist on type 'PageRoute<{ [key: string]: any; }, ParsedUrlQuery>'
             await wpaalOptions.getServerSideProps(context);

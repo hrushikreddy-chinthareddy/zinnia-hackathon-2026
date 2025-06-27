@@ -4,7 +4,8 @@ import { DataDefinition } from '@deps/types/data';
 
 export type PolicyCoverageDto = PolicyCoverage;
 
-export const toCoverageDto = (policy: Policy): PolicyCoverageDto => policy.coverage as PolicyCoverage;
+export const toCoverageDto = (policy: Policy): PolicyCoverageDto =>
+    policy.coverage as PolicyCoverage;
 
 export const PolicyCoverageInfo = (): DataDefinition<PolicyCoverageDto>[] => [
     {

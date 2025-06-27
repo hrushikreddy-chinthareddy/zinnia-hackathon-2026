@@ -1,11 +1,21 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AddressType, Country, State, PartyRole, Policy, PartyType } from '@zinnia/api-types/types/sor';
+import {
+    AddressType,
+    Country,
+    State,
+    PartyRole,
+    Policy,
+    PartyType,
+} from '@zinnia/api-types/types/sor';
 
 import { useSendDocument } from '@deps/contexts/SendDocumentContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { CommunicationTypes, SendDocumentAction } from '@deps/models/case/send-document';
+import {
+    CommunicationTypes,
+    SendDocumentAction,
+} from '@deps/models/case/send-document';
 
 import Correspondence from './correspondence';
 
@@ -119,7 +129,12 @@ describe.skip('Correspondence component', () => {
             goToNext: mockGoToNext,
         });
 
-        render(<Correspondence policy={mockPolicy} submitRequest={handleSubmitRequest} />);
+        render(
+            <Correspondence
+                policy={mockPolicy}
+                submitRequest={handleSubmitRequest}
+            />
+        );
 
         expect(screen.getByText('tabs.correspondence')).toBeInTheDocument();
         expect(screen.getByText('correspondence.fax')).toBeInTheDocument();
@@ -135,7 +150,9 @@ describe.skip('Correspondence component', () => {
                 },
                 correspondence: {
                     type: CommunicationTypes.Email,
-                    recipient: mockPolicy?.parties?.[0]?.emails?.[0]?.emailAddress || '',
+                    recipient:
+                        mockPolicy?.parties?.[0]?.emails?.[0]?.emailAddress ||
+                        '',
                 },
             },
             dispatch: mockDispatch,
@@ -146,9 +163,16 @@ describe.skip('Correspondence component', () => {
             goToNext: mockGoToNext,
         });
 
-        render(<Correspondence policy={mockPolicy} submitRequest={handleSubmitRequest} />);
+        render(
+            <Correspondence
+                policy={mockPolicy}
+                submitRequest={handleSubmitRequest}
+            />
+        );
 
-        const emailRadio = screen.getAllByLabelText('correspondence.email')[0] as HTMLInputElement;
+        const emailRadio = screen.getAllByLabelText(
+            'correspondence.email'
+        )[0] as HTMLInputElement;
         expect(emailRadio).toBeInTheDocument();
         fireEvent.keyDown(emailRadio, { key: 'Enter', keyCode: 13 });
         await waitFor(() => {
@@ -160,7 +184,9 @@ describe.skip('Correspondence component', () => {
                 type: SendDocumentAction.Correspondence,
                 payload: {
                     type: CommunicationTypes.Email,
-                    recipient: mockPolicy?.parties?.[0]?.emails?.[0]?.emailAddress || '',
+                    recipient:
+                        mockPolicy?.parties?.[0]?.emails?.[0]?.emailAddress ||
+                        '',
                 },
             });
         });
@@ -183,7 +209,12 @@ describe.skip('Correspondence component', () => {
             goToNext: mockGoToNext,
         });
 
-        render(<Correspondence policy={mockPolicy} submitRequest={handleSubmitRequest} />);
+        render(
+            <Correspondence
+                policy={mockPolicy}
+                submitRequest={handleSubmitRequest}
+            />
+        );
 
         const faxRadio = screen.getByLabelText('correspondence.fax');
         expect(faxRadio).toBeInTheDocument();
@@ -216,7 +247,9 @@ describe.skip('Correspondence component', () => {
                 },
                 correspondence: {
                     type: CommunicationTypes.Email,
-                    recipient: mockPolicy?.parties?.[0]?.emails?.[0]?.emailAddress || '',
+                    recipient:
+                        mockPolicy?.parties?.[0]?.emails?.[0]?.emailAddress ||
+                        '',
                 },
             },
             dispatch: mockDispatch,
@@ -227,12 +260,19 @@ describe.skip('Correspondence component', () => {
             goToNext: mockGoToNext,
         });
 
-        render(<Correspondence policy={mockPolicy} submitRequest={handleSubmitRequest} />);
+        render(
+            <Correspondence
+                policy={mockPolicy}
+                submitRequest={handleSubmitRequest}
+            />
+        );
 
         //click on continue
         await userEvent.click(screen.getByText('continue'));
 
-        expect(screen.getByText('No correlationId provided')).toBeInTheDocument();
+        expect(
+            screen.getByText('No correlationId provided')
+        ).toBeInTheDocument();
     });
 
     it('should select email type default', async () => {
@@ -252,7 +292,12 @@ describe.skip('Correspondence component', () => {
             goToNext: mockGoToNext,
         });
 
-        render(<Correspondence policy={mockPolicy} submitRequest={handleSubmitRequest} />);
+        render(
+            <Correspondence
+                policy={mockPolicy}
+                submitRequest={handleSubmitRequest}
+            />
+        );
 
         expect(screen.getByTestId('correspondence.email')).toBeInTheDocument();
     });
@@ -278,11 +323,18 @@ describe.skip('Correspondence component', () => {
             goToNext: mockGoToNext,
         });
 
-        render(<Correspondence policy={mockPolicy} submitRequest={handleSubmitRequest} />);
+        render(
+            <Correspondence
+                policy={mockPolicy}
+                submitRequest={handleSubmitRequest}
+            />
+        );
 
         //click on continue
 
-        const mailOption = screen.getByTestId('correspondence.mail ') as HTMLInputElement;
+        const mailOption = screen.getByTestId(
+            'correspondence.mail '
+        ) as HTMLInputElement;
         fireEvent.click(mailOption);
 
         // check radio email selected

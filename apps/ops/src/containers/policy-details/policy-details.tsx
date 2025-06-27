@@ -4,8 +4,14 @@ import PolicyDetailsHeaderCard from '@deps/containers/page-header/policy-details
 import { AnnuityApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card.tsx';
 import { PolicyApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/policy-application-details-card';
 import ProductDetailsCard from '@deps/containers/policy-details/cards/product-details-card';
-import { AnnuityTimelineCard, LifeTimelineCard } from '@deps/containers/policy-details/cards/timeline-card';
-import { AnnuitantCard, InsuredCard } from '@deps/containers/shared-cards/covered-parties/covered-parties-card';
+import {
+    AnnuityTimelineCard,
+    LifeTimelineCard,
+} from '@deps/containers/policy-details/cards/timeline-card';
+import {
+    AnnuitantCard,
+    InsuredCard,
+} from '@deps/containers/shared-cards/covered-parties/covered-parties-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 
 const AnnuityPolicyDetailsContainer = () => {

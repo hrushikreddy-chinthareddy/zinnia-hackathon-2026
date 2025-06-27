@@ -19,21 +19,34 @@ type TaskPageProps = {
     carrierId: string;
 };
 
-export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps) => {
+export const TaskWorkflowContent = ({
+    steps,
+    caseId,
+    carrierId,
+}: TaskPageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const { task } = useContext(TaskDataContext);
     const sideSheet = useSideSheetContext();
 
     const handleProgressBarClick = (step: Step) => {
-        if (step.isDisabled || step.isCompleted || currentStepIndex === step.index) return;
+        if (
+            step.isDisabled ||
+            step.isCompleted ||
+            currentStepIndex === step.index
+        )
+            return;
         setCurrentStepIndex(step.index);
     };
 
     const openSideSheet = () => {
         const content = <GlobalTaskSideSheet taskId={task.id} type={'task'} />;
         sideSheet.changeSideSheetContent(
-            `${task.taskName ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}` : t('sideSheet.task.taskHeading')}`,
+            `${
+                task.taskName
+                    ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}`
+                    : t('sideSheet.task.taskHeading')
+            }`,
             content
         );
         sideSheet.handleOpen(true);
@@ -44,7 +57,10 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
     };
 
     const filteredSteps: Step[] = useMemo(
-        () => steps.filter((item: any) => item.isVisible?.()).map((item: any, index: number) => ({ ...item, index })),
+        () =>
+            steps
+                .filter((item: any) => item.isVisible?.())
+                .map((item: any, index: number) => ({ ...item, index })),
         [steps]
     );
 
@@ -61,8 +77,15 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] flex-col self-center">
             <div className="flex">
-                <GlobalValuesNbBar carrierId={carrierId} showLink={false} caseId={caseId} />
-                <div className="my-2 ml-auto cursor:pointer" onClick={showDocumentPanel}>
+                <GlobalValuesNbBar
+                    carrierId={carrierId}
+                    showLink={false}
+                    caseId={caseId}
+                />
+                <div
+                    className="my-2 ml-auto cursor:pointer"
+                    onClick={showDocumentPanel}
+                >
                     <div className="flex  font-semibold text-secondary whitespace-nowrap cursor-pointer">
                         <ClipboardListIcon height={20} width={20} />
                         <div>{t('nigoEntry.documentPanel.taskTitle')}</div>
@@ -77,7 +100,9 @@ export const TaskWorkflowContent = ({ steps, caseId, carrierId }: TaskPageProps)
             />
             <div
                 className={`flex w-full grow flex-col rounded ${
-                    isClaimCase(task.taskType as TaskType) ? '' : 'bg-white shadow-elevation-light-04'
+                    isClaimCase(task.taskType as TaskType)
+                        ? ''
+                        : 'bg-white shadow-elevation-light-04'
                 }  `}
             >
                 {filteredSteps[currentStepIndex]?.component}

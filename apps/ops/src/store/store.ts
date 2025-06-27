@@ -11,11 +11,20 @@ interface DashboardStoreTypes {
 }
 
 export const useDashboardStore = create(
-    devtools<DashboardStoreTypes>(set => ({
+    devtools<DashboardStoreTypes>((set) => ({
         selectedCarriers: {},
         selectedBrokerDealers: {},
-        updateSelectedCarriers: (val: CarrierListItem) => set({ selectedCarriers: val }, undefined, 'dashboard/updateSelectedCarrier'),
+        updateSelectedCarriers: (val: CarrierListItem) =>
+            set(
+                { selectedCarriers: val },
+                undefined,
+                'dashboard/updateSelectedCarrier'
+            ),
         updateSelectedBrokerDealers: (val: CarrierListItem) =>
-            set({ selectedBrokerDealers: val }, undefined, 'dashboard/updateSelectedBroker'),
+            set(
+                { selectedBrokerDealers: val },
+                undefined,
+                'dashboard/updateSelectedBroker'
+            ),
     }))
 );

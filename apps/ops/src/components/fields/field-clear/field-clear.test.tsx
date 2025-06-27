@@ -25,7 +25,9 @@ describe('CallLogCard', () => {
             current: document.createElement('input'),
         };
 
-        const { getByLabelText } = render(<FieldClear {...testProps} value="test value" inputRef={mockRef} />);
+        const { getByLabelText } = render(
+            <FieldClear {...testProps} value="test value" inputRef={mockRef} />
+        );
 
         expect(getByLabelText('ariaLabel.clearInput')).toBeInTheDocument();
     });

@@ -1,5 +1,12 @@
 import { faker } from '@faker-js/faker';
-import { DistributionType, Party, PartyRole, Policy, PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
+import {
+    DistributionType,
+    Party,
+    PartyRole,
+    Policy,
+    PolicyStatus,
+    ProductType,
+} from '@zinnia/api-types/types/sor';
 
 export default function generatePolicy(): Policy {
     return {
@@ -9,7 +16,9 @@ export default function generatePolicy(): Policy {
         tpaID: faker.string.uuid(),
         lineOfBusiness: faker.commerce.department(),
         planName: faker.commerce.productName(),
-        productType: faker.helpers.arrayElement(Object.keys(ProductType)) as ProductType,
+        productType: faker.helpers.arrayElement(
+            Object.keys(ProductType)
+        ) as ProductType,
         marketingName: faker.commerce.product(),
         shortName: faker.commerce.productAdjective(),
         distribution: faker.helpers.arrayElement(Object.keys(DistributionType)),
@@ -23,7 +32,9 @@ export default function generatePolicy(): Policy {
         policyYear: faker.number.int({ min: 1, max: 10 }),
         monthOfYear: faker.number.int({ min: 1, max: 12 }),
         policyNumber: faker.finance.accountNumber(),
-        Status: faker.helpers.arrayElement(Object.keys(PolicyStatus)) as PolicyStatus,
+        Status: faker.helpers.arrayElement(
+            Object.keys(PolicyStatus)
+        ) as PolicyStatus,
         issueType: faker.word.adjective(),
         residenceState: faker.location.state(),
         issueState: faker.location.state(),
@@ -33,12 +44,18 @@ export default function generatePolicy(): Policy {
         issueDate: faker.date.past().toISOString().split('T')[0],
         contestabilityStartDate: faker.date.past().toISOString().split('T')[0],
         contestabilityEndDate: faker.date.past().toISOString().split('T')[0],
-        policyDeliveryReceiptDate: faker.date.past().toISOString().split('T')[0],
+        policyDeliveryReceiptDate: faker.date
+            .past()
+            .toISOString()
+            .split('T')[0],
         nextAnniversaryDate: faker.date.future().toISOString().split('T')[0],
         maturityDate: faker.date.future().toISOString().split('T')[0],
         terminationDate: faker.date.future().toISOString().split('T')[0],
         dateOfDeath: faker.date.future().toISOString().split('T')[0],
-        initialPaymentExpiryDate: faker.date.future().toISOString().split('T')[0],
+        initialPaymentExpiryDate: faker.date
+            .future()
+            .toISOString()
+            .split('T')[0],
         nextMonthivesaryDate: faker.date.future().toISOString().split('T')[0],
         costBasis: faker.number.int(),
         costBasisDate: faker.date.past().toISOString().split('T')[0],

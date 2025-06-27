@@ -8,7 +8,7 @@ export default {
     title: 'Components/GlobalValues/PolicyOwner',
     component: PolicyOwnerComponent,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen bg-white">
                 <Story />
             </div>
@@ -18,4 +18,6 @@ export default {
 
 const owner = generateParty('123456');
 
-export const PolicyOwner = () => <PolicyOwnerComponent owner={owner} policyNumber="AU22029654" />;
+export const PolicyOwner = () => (
+    <PolicyOwnerComponent owner={owner} policyNumber="AU22029654" />
+);

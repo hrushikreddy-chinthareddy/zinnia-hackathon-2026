@@ -1,4 +1,8 @@
-import { Policy, Transaction, Transaction_Payor } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    Transaction,
+    Transaction_Payor,
+} from '@zinnia/api-types/types/sor';
 
 import { PayeeOrBeneficiary } from '@deps/models/policy-sor-touchups/Transaction';
 

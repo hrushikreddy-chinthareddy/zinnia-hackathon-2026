@@ -8,11 +8,13 @@ type FaxNumberProps = {
     setFax: (val: string) => void;
 };
 const FaxNumber = ({ fax, setFax }: FaxNumberProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument.correspondence' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'sendDocument.correspondence',
+    });
     return (
         <Field
             label={t('fax') as string}
-            onChange={e => {
+            onChange={(e) => {
                 setFax(xss(e?.target?.value));
             }}
             value={fax as string}

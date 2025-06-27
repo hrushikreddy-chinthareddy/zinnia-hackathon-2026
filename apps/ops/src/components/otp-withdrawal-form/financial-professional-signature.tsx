@@ -5,10 +5,16 @@ import xss from 'xss';
 
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { SignPresent, SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import {
+    SignPresent,
+    SignatureValidationTypeWithdrawal,
+} from '@deps/models/case/renewal/signature-validation';
 import { convertIsSignedFromValue } from '@deps/models/case/utils';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
-import { NUMERIC_DATE_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    NUMERIC_DATE_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 
 import ButtonGroup from '../button-group/button-group';
 import Field, { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -23,7 +29,9 @@ enum Consulted {
     Unselected = '',
 }
 
-const convertConsultedFromValue = (value: boolean | null | undefined): Consulted => {
+const convertConsultedFromValue = (
+    value: boolean | null | undefined
+): Consulted => {
     if (value === true) {
         return Consulted.Yes;
     }
@@ -38,15 +46,31 @@ interface FinancialProfessionalSignatureProps {
     isFormStateReadOnly: boolean;
 }
 
-export default function FinancialProfessionalSignature({ isFormStateReadOnly }: FinancialProfessionalSignatureProps) {
-    const { formFullSurrenderAck, setFormFullSurrenderAck } = useContext(FormDataContext);
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.financialProfessionalSignature' });
+export default function FinancialProfessionalSignature({
+    isFormStateReadOnly,
+}: FinancialProfessionalSignatureProps) {
+    const { formFullSurrenderAck, setFormFullSurrenderAck } =
+        useContext(FormDataContext);
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.financialProfessionalSignature',
+    });
     const initialSignature = formFullSurrenderAck.signature?.[0] || null;
-    const [consulted, setConsulted] = useState<Consulted>(convertConsultedFromValue(formFullSurrenderAck?.isFinancialProfessionAck?.text));
+    const [consulted, setConsulted] = useState<Consulted>(
+        convertConsultedFromValue(
+            formFullSurrenderAck?.isFinancialProfessionAck?.text
+        )
+    );
     const [name, setName] = useState<string>(initialSignature?.signName || '');
-    const [signPresent, setSignPresent] = useState<SignPresent>(convertIsSignedFromValue(initialSignature?.isSigned));
+    const [signPresent, setSignPresent] = useState<SignPresent>(
+        convertIsSignedFromValue(initialSignature?.isSigned)
+    );
     const [date, setDate] = useState<string>(
-        initialSignature?.signDate?.text ? dayjs(initialSignature?.signDate?.text, ZAHARA_API_DATE_FORMAT).format(NUMERIC_DATE_FORMAT) : ''
+        initialSignature?.signDate?.text
+            ? dayjs(
+                  initialSignature?.signDate?.text,
+                  ZAHARA_API_DATE_FORMAT
+              ).format(NUMERIC_DATE_FORMAT)
+            : ''
     );
     const signPresentOptions = [
         { label: t('selectOption'), value: SignPresent.Unselected },
@@ -64,7 +88,11 @@ export default function FinancialProfessionalSignature({ isFormStateReadOnly }: 
         signature.push({
             isSigned: signPresent === SignPresent.Yes,
             signDate: {
-                text: date && dayjs(date, NUMERIC_DATE_FORMAT).format(ZAHARA_API_DATE_FORMAT), //changed date format
+                text:
+                    date &&
+                    dayjs(date, NUMERIC_DATE_FORMAT).format(
+                        ZAHARA_API_DATE_FORMAT
+                    ), //changed date format
             },
             signExtension: null,
             signName: name?.length ? name : null,
@@ -106,7 +134,7 @@ export default function FinancialProfessionalSignature({ isFormStateReadOnly }: 
                     <div className="flex-1">
                         <ButtonGroup
                             activeValue={consulted}
-                            toggle={value => {
+                            toggle={(value) => {
                                 if (!value) {
                                     value = consulted;
                                 }
@@ -135,11 +163,15 @@ export default function FinancialProfessionalSignature({ isFormStateReadOnly }: 
                     <div className="flex-1">
                         <Field
                             label={t('name') as string}
-                            onChange={e => setName(xss(e.target.value))}
+                            onChange={(e) => setName(xss(e.target.value))}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={name}
-                            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                            variant={
+                                isFormStateReadOnly
+                                    ? FieldVariant.Inactive
+                                    : FieldVariant.Default
+                            }
                         />
                     </div>
                     <div className="flex-1">
@@ -159,14 +191,18 @@ export default function FinancialProfessionalSignature({ isFormStateReadOnly }: 
                         <FieldDateSelect
                             isFutureDateDisabled={false}
                             label={t('date') as string}
-                            onChange={e => {
+                            onChange={(e) => {
                                 setDate(e.target.value);
                             }}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={date}
                             disabled={isFormStateReadOnly}
-                            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+                            variant={
+                                isFormStateReadOnly
+                                    ? FieldVariant.Inactive
+                                    : FieldVariant.Default
+                            }
                         />
                     </div>
                 </div>

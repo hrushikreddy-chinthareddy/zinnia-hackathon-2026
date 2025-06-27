@@ -5,13 +5,21 @@ import { client } from '@deps/queries/api-utils/client';
 import { CaseInsightsQuery } from '@deps/queries/cases';
 import { OpenAiResponse } from '@deps/types/openai';
 
-export const getCaseInsights = async (query: CaseInsightsQuery): Promise<string> => {
+export const getCaseInsights = async (
+    query: CaseInsightsQuery
+): Promise<string> => {
     try {
-        const { data } = await client.post<CaseInsightsQuery, AxiosResponse<OpenAiResponse>>(`${baseAppUrl}/api/openai`, query);
+        const { data } = await client.post<
+            CaseInsightsQuery,
+            AxiosResponse<OpenAiResponse>
+        >(`${baseAppUrl}/api/openai`, query);
 
         return data?.summary ?? '';
     } catch (error) {
-        console.error('getCaseInsights::An error occurred while getting case insights results', error);
+        console.error(
+            'getCaseInsights::An error occurred while getting case insights results',
+            error
+        );
         return '';
     }
 };

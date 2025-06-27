@@ -16,7 +16,9 @@ type FormTypeProps = {
     isFormStateReadOnly: boolean;
 };
 function FormType({ formSubtypeOptions, isFormStateReadOnly }: FormTypeProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const { formSubtype, setFormSubtype } = useContext(FormDataContext);
 
     const handleFormSubtypeChange = (val: FormSubtype) => {
@@ -25,12 +27,17 @@ function FormType({ formSubtypeOptions, isFormStateReadOnly }: FormTypeProps) {
         }
     };
     return (
-        <CardContainer classNames={'w-full !mt-0'} containerClassNames="border-b-2 border-gray-100 mt-0 w-full">
+        <CardContainer
+            classNames={'w-full !mt-0'}
+            containerClassNames="border-b-2 border-gray-100 mt-0 w-full"
+        >
             <SelectSimple
                 className="max-w-lg"
                 label={t('formSubtype.formType') as string}
                 options={formSubtypeOptions}
-                onChange={(val: string) => handleFormSubtypeChange(val as FormSubtype)}
+                onChange={(val: string) =>
+                    handleFormSubtypeChange(val as FormSubtype)
+                }
                 size={FieldSize.Small}
                 value={formSubtype}
                 name="form-type"

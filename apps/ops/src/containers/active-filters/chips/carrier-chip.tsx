@@ -8,23 +8,29 @@ const CarrierChip = ({
     carriers,
     handleRemoveFilter,
     t,
-    authorizedCarriers
+    authorizedCarriers,
 }: {
     carrierCode: string;
     carriers: { [key: string]: string };
     handleRemoveFilter: (arg: { carriers: object; products: object }) => void;
     t: TFunction;
-    authorizedCarriers: string[]
+    authorizedCarriers: string[];
 }) => {
-    const carrierName = getCarrierNamesByClientIds(carrierCode.toUpperCase(), authorizedCarriers) || carrierCode.toUpperCase();
+    const carrierName =
+        getCarrierNamesByClientIds(
+            carrierCode.toUpperCase(),
+            authorizedCarriers
+        ) || carrierCode.toUpperCase();
 
     return (
         <ChipX
-            ariaLabel={t('ariaLabel.clearFilter', { filter: carrierName }) as string}
+            ariaLabel={
+                t('ariaLabel.clearFilter', { filter: carrierName }) as string
+            }
             label={carrierName}
             onDelete={() => {
                 delete carriers[carrierCode];
-                handleRemoveFilter({ carriers, products: new Set() })
+                handleRemoveFilter({ carriers, products: new Set() });
             }}
         />
     );

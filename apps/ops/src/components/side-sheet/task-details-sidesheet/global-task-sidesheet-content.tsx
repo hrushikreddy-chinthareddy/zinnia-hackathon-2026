@@ -1,14 +1,25 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useQuery } from '@tanstack/react-query';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { Button, Icon, IconType, Loader, TabContent, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import {
+    Button,
+    Icon,
+    IconType,
+    Loader,
+    TabContent,
+    TabGroup,
+    TabList,
+    TabTrigger,
+} from '@zinnia/bloom/components';
 import { HttpStatusCode } from 'axios';
 import dayjs from 'dayjs';
 import router from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
@@ -17,18 +28,30 @@ import Dropdown from '@deps/components/dropdown/Dropdown';
 import CustomLoader from '@deps/components/loader/customLoader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
-import { OptimizelyVariableKey, useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime } from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { EarlyTaskType, TaskSource } from '@deps/models/case/task';
-import { ManagementTask, TaskStatus, TaskLabel, DocumentData, TaskSideSheetProps, TaskComment } from '@deps/models/case/task-instance';
+import {
+    ManagementTask,
+    TaskStatus,
+    TaskLabel,
+    DocumentData,
+    TaskSideSheetProps,
+    TaskComment,
+} from '@deps/models/case/task-instance';
 import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { claimTask } from '@deps/queries/api/v1/task';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
@@ -48,7 +71,11 @@ import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import { isAPIErrorInformation, isClaimNextTask, RequestData } from './type-guards';
+import {
+    isAPIErrorInformation,
+    isClaimNextTask,
+    RequestData,
+} from './type-guards';
 import { formatTimestamp } from '../../../../../../packages/utils/src/dates';
 
 export enum TabOptions {
@@ -69,7 +96,13 @@ const EmptyState = ({ content }: { content: string }) => {
             <AssistiveText
                 text={content}
                 variant={AssistiveTextVariant.Default}
-                iconOverride={<Icon width={16} height={16} type={IconType.DOCUMENT_TEXT} />}
+                iconOverride={
+                    <Icon
+                        width={16}
+                        height={16}
+                        type={IconType.DOCUMENT_TEXT}
+                    />
+                }
             />
         </div>
     );
@@ -77,7 +110,10 @@ const EmptyState = ({ content }: { content: string }) => {
 
 const DocumentItem = ({ document, taskCarrier, t }: DocumentItemProps) => {
     return (
-        <div className="my-3 flex w-[436px] rounded border border-gray-100 p-[12px] gap-2" key={document.documentId}>
+        <div
+            className="my-3 flex w-[436px] rounded border border-gray-100 p-[12px] gap-2"
+            key={document.documentId}
+        >
             <div>
                 <Icon width={20} height={20} type={IconType.DOCUMENT_TEXT} />
             </div>
@@ -86,10 +122,21 @@ const DocumentItem = ({ document, taskCarrier, t }: DocumentItemProps) => {
                     <PiiWrapper>{document.displayName ?? ''}</PiiWrapper>
                 </div>
                 <div className="flex items-center text-sm font-normal text-gray-300 break-all">
-                    <PiiWrapper>{t('nigoEntry.documentPanel.documentId') + ': ' + document.documentId}</PiiWrapper>
+                    <PiiWrapper>
+                        {t('nigoEntry.documentPanel.documentId') +
+                            ': ' +
+                            document.documentId}
+                    </PiiWrapper>
                 </div>
             </div>
-            <div className="ml-auto">{createAction(document as V3DocumentWithSource, taskCarrier.toUpperCase(), t, 'View')}</div>
+            <div className="ml-auto">
+                {createAction(
+                    document as V3DocumentWithSource,
+                    taskCarrier.toUpperCase(),
+                    t,
+                    'View'
+                )}
+            </div>
         </div>
     );
 };
@@ -128,7 +175,12 @@ const DocumentsListComponent = ({
             ) : (
                 documentsList.map((document: DocumentData) =>
                     document.documentId ? (
-                        <DocumentItem t={t} document={document} taskCarrier={task.carrier} key={document.documentId} />
+                        <DocumentItem
+                            t={t}
+                            document={document}
+                            taskCarrier={task.carrier}
+                            key={document.documentId}
+                        />
                     ) : null
                 )
             )}
@@ -136,19 +188,28 @@ const DocumentsListComponent = ({
     );
 };
 
-export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescription, taskName, onTaskClaimSuccess }: TaskSideSheetProps) {
+export default function GlobalTaskSideSheet({
+    taskId,
+    type = 'case',
+    taskDescription,
+    taskName,
+    onTaskClaimSuccess,
+}: TaskSideSheetProps) {
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
     const [claimTaskLoader, setClaimTaskLoader] = useState(false);
-    const [showAdditionalDocuments, setShowAdditionalDocuments] = useState(false);
+    const [showAdditionalDocuments, setShowAdditionalDocuments] =
+        useState(false);
     const [startLoader, setStartLoader] = useState(false);
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
-    const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] = useState('');
+    const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
+        useState('');
     const { featureFlagVariables } = useOptimizely();
-    const handleTabChange = (value: string) => setActiveTab(value as TabOptions);
+    const handleTabChange = (value: string) =>
+        setActiveTab(value as TabOptions);
     const [timer] = useState(performance.now());
     const limit = 25;
     const offset = 0;
@@ -170,14 +231,33 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
         return {
             parentCarrierCode: task.carrier,
-            documentClassification: SearchRequest.documentClassification.INBOUND,
+            documentClassification:
+                SearchRequest.documentClassification.INBOUND,
             zinniaLiveCaseId: task.caseId,
         };
     }, [task]);
 
-    const { data: { data: additionalDocuments = [], status: additionalDocumentsStatusCode } = {}, isLoading: additionalLoader } = useQuery({
-        queryKey: ['documentSideSheetSearch', caseDocumentSearchBody, limit, offset, useV3],
-        queryFn: () => getDocumentSearchResultsQuery(caseDocumentSearchBody, limit, offset, useV3),
+    const {
+        data: {
+            data: additionalDocuments = [],
+            status: additionalDocumentsStatusCode,
+        } = {},
+        isLoading: additionalLoader,
+    } = useQuery({
+        queryKey: [
+            'documentSideSheetSearch',
+            caseDocumentSearchBody,
+            limit,
+            offset,
+            useV3,
+        ],
+        queryFn: () =>
+            getDocumentSearchResultsQuery(
+                caseDocumentSearchBody,
+                limit,
+                offset,
+                useV3
+            ),
     });
 
     const transformDocument = (documents: DocumentData[]) => {
@@ -206,7 +286,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             try {
                 response = await claimTask(task.id);
 
-                if (isClaimNextTask(response) && response?.id == task.id && user?.email) {
+                if (
+                    isClaimNextTask(response) &&
+                    response?.id == task.id &&
+                    user?.email
+                ) {
                     setTask({
                         ...task,
                         assignee: user.email,
@@ -226,23 +310,38 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     );
                     setErrorClaimingTask(false);
                     setClaimingTaskErrorMessage('');
-                    browserLogInfo('task-queue:handleClaimTask::Successfully claimed task', { taskId: taskId });
+                    browserLogInfo(
+                        'task-queue:handleClaimTask::Successfully claimed task',
+                        { taskId: taskId }
+                    );
                 } else {
-                    browserLogInfo('task-queue:handleClaimTask::An error occurred while claiming the task', {
-                        taskId: taskId,
-                        status: isAPIErrorInformation(response) ? response?.statusCode : HttpStatusCode.InternalServerError,
-                    });
+                    browserLogInfo(
+                        'task-queue:handleClaimTask::An error occurred while claiming the task',
+                        {
+                            taskId: taskId,
+                            status: isAPIErrorInformation(response)
+                                ? response?.statusCode
+                                : HttpStatusCode.InternalServerError,
+                        }
+                    );
                     setErrorClaimingTask(true);
-                    setClaimingTaskErrorMessage(isAPIErrorInformation(response) ? response?.message : '');
+                    setClaimingTaskErrorMessage(
+                        isAPIErrorInformation(response) ? response?.message : ''
+                    );
                 }
             } catch (e) {
-                browserLogError('task-queue:handleClaimTask::Error claiming task', {
-                    ...parseErrorInformation(e),
-                    taskId: task.id,
-                    caseId: task.caseId,
-                });
+                browserLogError(
+                    'task-queue:handleClaimTask::Error claiming task',
+                    {
+                        ...parseErrorInformation(e),
+                        taskId: task.id,
+                        caseId: task.caseId,
+                    }
+                );
                 setErrorClaimingTask(true);
-                setClaimingTaskErrorMessage(isAPIErrorInformation(response) ? response?.message : '');
+                setClaimingTaskErrorMessage(
+                    isAPIErrorInformation(response) ? response?.message : ''
+                );
                 return;
             } finally {
                 setClaimTaskLoader(false);
@@ -251,21 +350,31 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     };
 
     const handleStart = async (taskId: string, taskStatus: TaskStatus) => {
-        const openNigoEntry = Object.values(EarlyTaskType).includes(task?.taskType as EarlyTaskType);
-        const url = openNigoEntry ? `/nigo-entry?taskId=${taskId}` : `/task/${taskId}`;
+        const openNigoEntry = Object.values(EarlyTaskType).includes(
+            task?.taskType as EarlyTaskType
+        );
+        const url = openNigoEntry
+            ? `/nigo-entry?taskId=${taskId}`
+            : `/task/${taskId}`;
 
         try {
             setStartLoader(true);
-            if (taskStatus === TaskStatus.InProgress || taskStatus === TaskStatus.Completed) {
+            if (
+                taskStatus === TaskStatus.InProgress ||
+                taskStatus === TaskStatus.Completed
+            ) {
                 await router.push(url);
             } else {
                 // Fetch the task instance
                 const taskData = await getTaskInstance({ taskId });
                 if (!taskData) {
-                    browserLogError('handleStartTask::Task data could not be retrieved.', {
-                        taskId,
-                        fileName: 'global-task-sidesheet-content',
-                    });
+                    browserLogError(
+                        'handleStartTask::Task data could not be retrieved.',
+                        {
+                            taskId,
+                            fileName: 'global-task-sidesheet-content',
+                        }
+                    );
                     return;
                 }
                 const body = {
@@ -273,7 +382,12 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     status: TaskStatus.InProgress,
                     source: TaskSource.ZinniaTaskManagement,
                 };
-                const response = await updateTask(taskData.caseId, taskData.id, body, timer);
+                const response = await updateTask(
+                    taskData.caseId,
+                    taskData.id,
+                    body,
+                    timer
+                );
                 if (response) {
                     await router.push(url);
                     removeFromCache('getTaskInstance', { taskId: taskId });
@@ -313,14 +427,24 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     const formattedUpdated = formatDateTime(task.updatedAt);
     const formattedPending = formatDateTime(task.scheduledDate);
 
-    const isUserAssociatedWithTask = user?.partyId !== '' && user?.partyId === task?.assigneePartyId;
+    const isUserAssociatedWithTask =
+        user?.partyId !== '' && user?.partyId === task?.assigneePartyId;
 
     const documentsList = transformDocument(task.mappedDocuments || []);
 
-    const allowedTaskStatusForStartBtnDisplay = [TaskStatus.New, TaskStatus.InProgress, TaskStatus.Pending];
+    const allowedTaskStatusForStartBtnDisplay = [
+        TaskStatus.New,
+        TaskStatus.InProgress,
+        TaskStatus.Pending,
+    ];
 
-    const showStartButton = allowedTaskStatusForStartBtnDisplay.includes(task.status);
-    const statusReason = task.status === TaskStatus.Pending ? task.scheduledReason : task.cancellationReason;
+    const showStartButton = allowedTaskStatusForStartBtnDisplay.includes(
+        task.status
+    );
+    const statusReason =
+        task.status === TaskStatus.Pending
+            ? task.scheduledReason
+            : task.cancellationReason;
 
     const details = task.taskDetails;
 
@@ -364,7 +488,11 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             <span>No assignee</span>
             {task.status === TaskStatus.New &&
                 (!claimTaskLoader ? (
-                    <button tabIndex={0} className="text-blue-600 hover:text-blue-700 hover:underline" onClick={handleClaimTask}>
+                    <button
+                        tabIndex={0}
+                        className="text-blue-600 hover:text-blue-700 hover:underline"
+                        onClick={handleClaimTask}
+                    >
                         {t('sideSheet.task.claimTask')}
                     </button>
                 ) : (
@@ -383,7 +511,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                 taskName={taskName}
             />
         );
-        sideSheet.changeSideSheetContent(t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'), content);
+        sideSheet.changeSideSheetContent(
+            t('taskManagementQueue.updateTaskStatusDrawer.updateTaskStatus'),
+            content
+        );
         sideSheet.handleOpen(true);
     };
     const statuses = [
@@ -397,19 +528,28 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
     ];
 
     const renderTaskStatus = (status: TaskStatus) => {
-        const validTaskStatuses = [TaskStatus.Pending, TaskStatus.Canceled, TaskStatus.Completed, TaskStatus.Closed];
+        const validTaskStatuses = [
+            TaskStatus.Pending,
+            TaskStatus.Canceled,
+            TaskStatus.Completed,
+            TaskStatus.Closed,
+        ];
 
         if (!validTaskStatuses.includes(status)) {
             return null;
         }
 
         let label = '';
-        let timestamp = formattedUpdated ? formatTimestamp(formattedUpdated, 'standard') : 'N/A';
+        let timestamp = formattedUpdated
+            ? formatTimestamp(formattedUpdated, 'standard')
+            : 'N/A';
 
         switch (status) {
             case TaskStatus.Pending:
                 label = t('sideSheet.task.pendinglabel');
-                timestamp = formattedPending ? formatTimestamp(formattedPending, 'standard') : 'N/A';
+                timestamp = formattedPending
+                    ? formatTimestamp(formattedPending, 'standard')
+                    : 'N/A';
                 break;
             case TaskStatus.Canceled:
                 label = t('sideSheet.task.canceledLabel');
@@ -426,18 +566,28 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
         return (
             <>
-                <div className="col-span-1 text-[--color-base-text-text-secondary]">{label}</div>
-                <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                    {label}
+                </div>
+                <Typography
+                    variant={TypographyVariant.BodySm}
+                    className="col-span-2"
+                >
                     {timestamp}
                 </Typography>
             </>
         );
     };
-    const documentNumber = getCaseIdentifierValue(task?.identifiers as Array<IdentifierInstance>, CaseIdentifier.DocumentNumber);
+    const documentNumber = getCaseIdentifierValue(
+        task?.identifiers as Array<IdentifierInstance>,
+        CaseIdentifier.DocumentNumber
+    );
 
     const renderDetails = (
         <div className="flex flex-col w-full">
-            <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.details')}</label>
+            <label className="font-primary text-lg mt-8">
+                {t('sideSheet.task.tabs.details')}
+            </label>
             <div className="grid grid-cols-3 gap-2 text-md align-center">
                 <div className="col-span-1 mt-4 align-self text-[--color-base-text-text-secondary]">
                     {t('sideSheet.task.status.label')}{' '}
@@ -446,7 +596,9 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     {task?.status === TaskStatus.InProgress &&
                     task?.queue &&
                     task?.assigneePartyId === user?.partyId &&
-                    !Object.values(EarlyTaskType).includes(task?.taskType as EarlyTaskType) ? (
+                    !Object.values(EarlyTaskType).includes(
+                        task?.taskType as EarlyTaskType
+                    ) ? (
                         <Dropdown
                             triggerIcon={
                                 <div className="pb-1">
@@ -457,7 +609,10 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                             options={statuses}
                         />
                     ) : (
-                        <Typography variant={TypographyVariant.BodySm} className="py-2 pr-6 inline-block ">
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className="py-2 pr-6 inline-block "
+                        >
                             <Badge
                                 icon={badgeIcon}
                                 variant={badgeVariant}
@@ -469,11 +624,19 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
                     )}
                 </div>
 
-                {((task.status === TaskStatus.Pending && task.scheduledReason) ||
-                    (task.status === TaskStatus.Canceled && task.cancellationReason)) && (
+                {((task.status === TaskStatus.Pending &&
+                    task.scheduledReason) ||
+                    (task.status === TaskStatus.Canceled &&
+                        task.cancellationReason)) && (
                     <>
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.reasonLabel')} </div>
-                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                            {' '}
+                            {t('sideSheet.task.reasonLabel')}{' '}
+                        </div>
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className="col-span-2"
+                        >
                             <Content
                                 truncate
                                 details={statusReason}
@@ -490,30 +653,61 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
                 {!isProd() && documentNumber && (
                     <>
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.documentNumber')} </div>
-                        <Typography variant={TypographyVariant.BodySm} className="col-span-2">{`${documentNumber}`}</Typography>
+                        <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                            {' '}
+                            {t('sideSheet.task.documentNumber')}{' '}
+                        </div>
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className="col-span-2"
+                        >{`${documentNumber}`}</Typography>
                     </>
                 )}
 
-                <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.assigneeLabel')} </div>
+                <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                    {' '}
+                    {t('sideSheet.task.assigneeLabel')}{' '}
+                </div>
                 <div className="col-span-2">
                     <Typography variant={TypographyVariant.BodySm}>
-                        {task.assignee ? task.assignee : task.prefferedAssignee ? task.prefferedAssignee : NoAssigneeComp}
+                        {task.assignee
+                            ? task.assignee
+                            : task.prefferedAssignee
+                            ? task.prefferedAssignee
+                            : NoAssigneeComp}
                     </Typography>
-                    {errorClaimingTask ? <AssistiveText variant={AssistiveTextVariant.Error} text={claimingTaskErrorMessage} /> : null}
+                    {errorClaimingTask ? (
+                        <AssistiveText
+                            variant={AssistiveTextVariant.Error}
+                            text={claimingTaskErrorMessage}
+                        />
+                    ) : null}
                 </div>
 
-                <div className="col-span-1 text-[--color-base-text-text-secondary]"> {t('sideSheet.task.newCreatedLabel')} </div>
-                <Typography variant={TypographyVariant.BodySm} className="col-span-2">
-                    {formattedCreated ? formatTimestamp(formattedCreated, 'standard') : 'N/A'}
+                <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                    {' '}
+                    {t('sideSheet.task.newCreatedLabel')}{' '}
+                </div>
+                <Typography
+                    variant={TypographyVariant.BodySm}
+                    className="col-span-2"
+                >
+                    {formattedCreated
+                        ? formatTimestamp(formattedCreated, 'standard')
+                        : 'N/A'}
                 </Typography>
 
                 {task.taskName && type == 'case' && (
                     <>
                         {details && (
                             <>
-                                <div className="col-span-1 text-[--color-base-text-text-secondary]">{t('sideSheet.task.detailsLabel')}</div>
-                                <Typography variant={TypographyVariant.BodySm} className="col-span-2">
+                                <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                                    {t('sideSheet.task.detailsLabel')}
+                                </div>
+                                <Typography
+                                    variant={TypographyVariant.BodySm}
+                                    className="col-span-2"
+                                >
                                     {details}
                                 </Typography>
                             </>
@@ -531,34 +725,50 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             {type == 'case' && showStartButton && (
                 <div
                     className={
-                        !isUserAssociatedWithTask ? 'flex flex-row items-center gap-1 pt-2' : 'flex flex-row items-center gap-1 pt-8'
+                        !isUserAssociatedWithTask
+                            ? 'flex flex-row items-center gap-1 pt-2'
+                            : 'flex flex-row items-center gap-1 pt-8'
                     }
                 >
                     <Button
                         mode="primary"
-                        disabled={task.status === TaskStatus.Completed ? false : !isUserAssociatedWithTask || startLoader}
+                        disabled={
+                            task.status === TaskStatus.Completed
+                                ? false
+                                : !isUserAssociatedWithTask || startLoader
+                        }
                         onClick={() => handleStart(task.id, task.status)}
                         data-testid="start-task-btm"
                         aria-label={t('ariaLabel.startTask') as string}
                         type="submit"
                         size={startLoader ? 'large' : 'small'}
                     >
-                        {!startLoader ? t('sideSheet.task.startTask') : <CustomLoader />}
+                        {!startLoader ? (
+                            t('sideSheet.task.startTask')
+                        ) : (
+                            <CustomLoader />
+                        )}
                     </Button>
                 </div>
             )}
         </div>
     );
 
-    const additionalCaseDocuments = transformDocument(additionalDocuments || []);
+    const additionalCaseDocuments = transformDocument(
+        additionalDocuments || []
+    );
 
     const renderDocuments = (
         <div className="flex flex-col w-full">
-            <label className="font-primary text-lg mt-8">{t('sideSheet.task.tabs.documents')}</label>
+            <label className="font-primary text-lg mt-8">
+                {t('sideSheet.task.tabs.documents')}
+            </label>
             <div className="border-box w-full  mt-2">
                 <DocumentsListComponent
                     additionalLoader={additionalLoader}
-                    errorDocuments={additionalDocumentsStatusCode !== StatusCode.Okay}
+                    errorDocuments={
+                        additionalDocumentsStatusCode !== StatusCode.Okay
+                    }
                     documentsList={documentsList}
                     task={task}
                     t={t}
@@ -567,17 +777,27 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
             <div className="border-box w-full">
                 <div className="flex items-baseline gap-1 mb-4">
                     <ChevronDownIcon
-                        className={showAdditionalDocuments ? 'rotate-0 cursor-pointer' : 'rotate-270 cursor-pointer'}
+                        className={
+                            showAdditionalDocuments
+                                ? 'rotate-0 cursor-pointer'
+                                : 'rotate-270 cursor-pointer'
+                        }
                         width={18}
                         height={18}
-                        onClick={() => setShowAdditionalDocuments(!showAdditionalDocuments)}
+                        onClick={() =>
+                            setShowAdditionalDocuments(!showAdditionalDocuments)
+                        }
                     />
-                    <label className="font-primary text-lg mt-10">{t('sideSheet.task.additionalDocuments')}</label>
+                    <label className="font-primary text-lg mt-10">
+                        {t('sideSheet.task.additionalDocuments')}
+                    </label>
                 </div>
                 {showAdditionalDocuments ? (
                     <DocumentsListComponent
                         additionalLoader={additionalLoader}
-                        errorDocuments={additionalDocumentsStatusCode !== StatusCode.Okay}
+                        errorDocuments={
+                            additionalDocumentsStatusCode !== StatusCode.Okay
+                        }
                         documentsList={additionalCaseDocuments}
                         task={task}
                         t={t}
@@ -588,32 +808,56 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
         </div>
     );
 
-    const noCommentsAvailable = !task.data || !task.data?.notes || task.data?.notes?.length === 0;
-    const descendingByDateComments = task.data?.notes?.sort((a: TaskComment, b: TaskComment) => {
-        return dayjs(a.submissionDate).isBefore(b.submissionDate) ? 1 : -1;
-    });
+    const noCommentsAvailable =
+        !task.data || !task.data?.notes || task.data?.notes?.length === 0;
+    const descendingByDateComments = task.data?.notes?.sort(
+        (a: TaskComment, b: TaskComment) => {
+            return dayjs(a.submissionDate).isBefore(b.submissionDate) ? 1 : -1;
+        }
+    );
 
     const renderComments = (
         <>
             {task.data?.notes && (
                 <div className="w-full">
-                    {descendingByDateComments.map((note: TaskComment, index: number) => {
-                        const summary = [note.commentSubCategory, note.commentDetail, note.description, note.comment, note.note, note.title]
-                            .filter(Boolean)
-                            .join('. ');
+                    {descendingByDateComments.map(
+                        (note: TaskComment, index: number) => {
+                            const summary = [
+                                note.commentSubCategory,
+                                note.commentDetail,
+                                note.description,
+                                note.comment,
+                                note.note,
+                                note.title,
+                            ]
+                                .filter(Boolean)
+                                .join('. ');
 
-                        return (
-                            <CallLogCard
-                                key={index}
-                                summary={summary || `${t('sideSheet.suitability.comments.noSummaryAvailable')} Note id: ${note.noteId}`}
-                                tag={note.commentCategory ?? undefined}
-                                isSecondaryPage
-                                className="px-0 py-4"
-                                createdAt={note.submissionDate || note.createdAt || note.date || undefined}
-                                callerName={note.user || note.createBy || undefined}
-                            />
-                        );
-                    })}
+                            return (
+                                <CallLogCard
+                                    key={index}
+                                    summary={
+                                        summary ||
+                                        `${t(
+                                            'sideSheet.suitability.comments.noSummaryAvailable'
+                                        )} Note id: ${note.noteId}`
+                                    }
+                                    tag={note.commentCategory ?? undefined}
+                                    isSecondaryPage
+                                    className="px-0 py-4"
+                                    createdAt={
+                                        note.submissionDate ||
+                                        note.createdAt ||
+                                        note.date ||
+                                        undefined
+                                    }
+                                    callerName={
+                                        note.user || note.createBy || undefined
+                                    }
+                                />
+                            );
+                        }
+                    )}
                 </div>
             )}
         </>
@@ -621,14 +865,23 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
     const renderTabContent = (
         <>
-            <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Details}>
+            <TabContent
+                className="flex px-10  w-full flex-col items-center"
+                value={TabOptions.Details}
+            >
                 {renderDetails}
             </TabContent>
-            <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Documents}>
+            <TabContent
+                className="flex px-10  w-full flex-col items-center"
+                value={TabOptions.Documents}
+            >
                 {renderDocuments}
             </TabContent>
             {!noCommentsAvailable && (
-                <TabContent className="flex px-10  w-full flex-col items-center" value={TabOptions.Comments}>
+                <TabContent
+                    className="flex px-10  w-full flex-col items-center"
+                    value={TabOptions.Comments}
+                >
                     {renderComments}
                 </TabContent>
             )}
@@ -637,11 +890,24 @@ export default function GlobalTaskSideSheet({ taskId, type = 'case', taskDescrip
 
     return (
         <div>
-            <TabGroup defaultValue={activeTab} value={activeTab} activationMode="manual" onValueChange={handleTabChange}>
+            <TabGroup
+                defaultValue={activeTab}
+                value={activeTab}
+                activationMode="manual"
+                onValueChange={handleTabChange}
+            >
                 <TabList className="!mb-0 w-full px-4 pt-4 md:px-6 lg:px-8">
-                    <TabTrigger value={TabOptions.Details}>{t('sideSheet.task.tabs.details') ?? ''}</TabTrigger>
-                    <TabTrigger value={TabOptions.Documents}>{t('sideSheet.task.tabs.documents') ?? ''}</TabTrigger>
-                    {!noCommentsAvailable && <TabTrigger value={TabOptions.Comments}>{t('sideSheet.task.tabs.comments') ?? ''}</TabTrigger>}
+                    <TabTrigger value={TabOptions.Details}>
+                        {t('sideSheet.task.tabs.details') ?? ''}
+                    </TabTrigger>
+                    <TabTrigger value={TabOptions.Documents}>
+                        {t('sideSheet.task.tabs.documents') ?? ''}
+                    </TabTrigger>
+                    {!noCommentsAvailable && (
+                        <TabTrigger value={TabOptions.Comments}>
+                            {t('sideSheet.task.tabs.comments') ?? ''}
+                        </TabTrigger>
+                    )}
                 </TabList>
                 {loading ? (
                     <div className="flex justify-center items-center h-screen">

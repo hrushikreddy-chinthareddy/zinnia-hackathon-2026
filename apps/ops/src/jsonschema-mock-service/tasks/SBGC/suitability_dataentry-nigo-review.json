@@ -139,7 +139,15 @@
                     "required": ["issueResolved"]
                 },
                 "uiSchema": {
-                    "ui:order": ["rules", "details", "issueResolved", "declineReason", "reason", "uploadDocuments", "attachments"],
+                    "ui:order": [
+                        "rules",
+                        "details",
+                        "issueResolved",
+                        "declineReason",
+                        "reason",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
                     "ui:submitButtonOptions": {
                         "norender": true
                     },

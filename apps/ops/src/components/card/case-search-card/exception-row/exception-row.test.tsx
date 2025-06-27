@@ -16,8 +16,12 @@ const generateExceptionsArray = (count: number, daysAgo: number) =>
         detailedReason: "Address doesn't match what is on file.",
         additionalData: {},
         eventRef: [],
-        updatedAt: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString(),
-        createdAt: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date(
+            Date.now() - daysAgo * 24 * 60 * 60 * 1000
+        ).toISOString(),
+        createdAt: new Date(
+            Date.now() - daysAgo * 24 * 60 * 60 * 1000
+        ).toISOString(),
     }));
 
 describe('ExceptionRow Component', () => {

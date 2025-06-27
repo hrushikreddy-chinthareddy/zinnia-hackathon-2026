@@ -7,14 +7,20 @@ import { MoneyType } from '@deps/models/case/withdrawal/case';
 
 interface MoneyTypeProps {
     moneyTypeOptions: { label: string; value: MoneyType }[];
-    isFormStateReadOnly?: boolean,
+    isFormStateReadOnly?: boolean;
 }
-const MoneyTypeComponent = ({ moneyTypeOptions, isFormStateReadOnly }: MoneyTypeProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.distributionInstruction' });
-    const { formDistribution, setFormDistribution } = useContext(FormDataContext);
-    
+const MoneyTypeComponent = ({
+    moneyTypeOptions,
+    isFormStateReadOnly,
+}: MoneyTypeProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.distributionInstruction',
+    });
+    const { formDistribution, setFormDistribution } =
+        useContext(FormDataContext);
+
     const setMoneyType = (val: string) => {
-        setFormDistribution(ogfd => {
+        setFormDistribution((ogfd) => {
             return { ...ogfd, moneyType: { text: val as MoneyType } };
         });
     };
@@ -24,7 +30,7 @@ const MoneyTypeComponent = ({ moneyTypeOptions, isFormStateReadOnly }: MoneyType
             <ButtonGrp
                 activeValue={formDistribution?.moneyType?.text || ''}
                 groupLabel={t(`moneyType`)}
-                toggle={val => {
+                toggle={(val) => {
                     setMoneyType(val as MoneyType);
                 }}
                 labels={moneyTypeOptions}

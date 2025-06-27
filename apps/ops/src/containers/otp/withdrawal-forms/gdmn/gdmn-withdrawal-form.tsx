@@ -25,7 +25,9 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 import getGdmnConfig, { FormSubtype } from './gdmn-withdrawal-form.helpers';
 
 export default function GdmnWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         identifySelectedFormProgramOption,
         irsSignatureConfig,
@@ -67,9 +69,13 @@ export default function GdmnWithdrawalForm() {
     useEffect(() => {
         setFormData({
             ...formData,
-            formExtName: `${initialForm?.carrier || Carrier.GDMN}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.GDMN
+            }_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.GDMN}_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.GDMN
+                }_WD_REDEMPTION_${formSubtype?.toUpperCase()}_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -83,14 +89,25 @@ export default function GdmnWithdrawalForm() {
         }
     }, [formParty]);
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
+    const hasTpaAuthorization =
+        formTpaAuthorization &&
+        !Object.values(formTpaAuthorization).every((val) => val === null);
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormType isFormStateReadOnly={isFormStateReadOnly} formSubtypeOptions={formSubtypeOptions} />
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />
+            <FormType
+                isFormStateReadOnly={isFormStateReadOnly}
+                formSubtypeOptions={formSubtypeOptions}
+            />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <DistributionReason
+                reasonOptions={reasonOptions}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             {formSubtype === FormSubtype.FullWithdrawal ? (
                 <FormProgramFullWithdrawal
                     selectOneOptions={selectOneOptions}
@@ -108,20 +125,51 @@ export default function GdmnWithdrawalForm() {
                     <FormDistribution
                         isFormStateReadOnly={isFormStateReadOnly}
                         fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                        title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                        title={
+                            t(
+                                'distributionInstruction.investmentSelectionForDistribution'
+                            ) as string
+                        }
                     />
                 </>
             )}
-            <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} ownerStateOfResidence={ownerStateOfResidence} />
-            {formSubtype === FormSubtype.FullWithdrawal ? <LoanAcknowledgement isFormStateReadOnly={isFormStateReadOnly} /> : null}
-            <IrsWithholding isFormStateReadOnly={isFormStateReadOnly} signatureFields={irsSignatureConfig} />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
+            {formSubtype === FormSubtype.FullWithdrawal ? (
+                <LoanAcknowledgement
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            ) : null}
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

@@ -19,16 +19,28 @@ describe('side-sheet-allocations helper', () => {
                     { partyPolicyId: 'firstParty', allocationPercentage: 40 },
                     { partyPolicyId: 'secondParty', allocationPercentage: 60 },
                 ],
-                [PartyRole.CONTINGENTBENEFICIARY]: [{ partyPolicyId: 'thirdParty', allocationPercentage: 100 }],
+                [PartyRole.CONTINGENTBENEFICIARY]: [
+                    { partyPolicyId: 'thirdParty', allocationPercentage: 100 },
+                ],
             };
 
-            expect(buildBeneficiaryAllocation(benefitPercentages, [PartyRole.CONTINGENTBENEFICIARY])).toEqual(
-                benefitPercentages.CONTINGENTBENEFICIARY
+            expect(
+                buildBeneficiaryAllocation(benefitPercentages, [
+                    PartyRole.CONTINGENTBENEFICIARY,
+                ])
+            ).toEqual(benefitPercentages.CONTINGENTBENEFICIARY);
+            expect(
+                buildBeneficiaryAllocation(benefitPercentages, [
+                    PartyRole.PRIMARYBENEFICIARY,
+                    PartyRole.CONTINGENTBENEFICIARY,
+                ])
+            ).toEqual([
+                ...benefitPercentages[PartyRole.PRIMARYBENEFICIARY],
+                ...benefitPercentages[PartyRole.CONTINGENTBENEFICIARY],
+            ]);
+            expect(buildBeneficiaryAllocation(benefitPercentages, [])).toEqual(
+                []
             );
-            expect(buildBeneficiaryAllocation(benefitPercentages, [PartyRole.PRIMARYBENEFICIARY, PartyRole.CONTINGENTBENEFICIARY])).toEqual(
-                [...benefitPercentages[PartyRole.PRIMARYBENEFICIARY], ...benefitPercentages[PartyRole.CONTINGENTBENEFICIARY]]
-            );
-            expect(buildBeneficiaryAllocation(benefitPercentages, [])).toEqual([]);
         });
     });
     describe('calculateTotalPercent', () => {
@@ -50,7 +62,11 @@ describe('side-sheet-allocations helper', () => {
                 { partyPolicyId: 'firstPartyId', allocationPercentage: 75 },
                 { partyPolicyId: 'secondPartyId', allocationPercentage: 25 },
             ];
-            expect(convertBenefitPercentagesToAllocationPercentages(primaryAllocations)).toEqual(expectedOutput);
+            expect(
+                convertBenefitPercentagesToAllocationPercentages(
+                    primaryAllocations
+                )
+            ).toEqual(expectedOutput);
         });
     });
     describe('determinePartyBeneficiaryRole', () => {
@@ -59,12 +75,22 @@ describe('side-sheet-allocations helper', () => {
                 { partyId: 'firstPartyId', partyRole: PartyRole.AGENT },
                 { partyId: 'firstPartyId', partyRole: PartyRole.OWNER },
                 { partyId: 'firstPartyId', partyRole: PartyRole.INSURED },
-                { partyId: 'firstPartyId', partyRole: PartyRole.PRIMARYBENEFICIARY },
-                { partyId: 'secondPartyId', partyRole: PartyRole.CONTINGENTBENEFICIARY },
+                {
+                    partyId: 'firstPartyId',
+                    partyRole: PartyRole.PRIMARYBENEFICIARY,
+                },
+                {
+                    partyId: 'secondPartyId',
+                    partyRole: PartyRole.CONTINGENTBENEFICIARY,
+                },
             ];
 
-            expect(determinePartyBeneficiaryRole(partyRoles, 'firstPartyId')).toEqual(PartyRole.PRIMARYBENEFICIARY);
-            expect(determinePartyBeneficiaryRole(partyRoles, 'secondPartyId')).toEqual(PartyRole.CONTINGENTBENEFICIARY);
+            expect(
+                determinePartyBeneficiaryRole(partyRoles, 'firstPartyId')
+            ).toEqual(PartyRole.PRIMARYBENEFICIARY);
+            expect(
+                determinePartyBeneficiaryRole(partyRoles, 'secondPartyId')
+            ).toEqual(PartyRole.CONTINGENTBENEFICIARY);
         });
 
         it('Should return undefined if there is no beneficiary role associated with the party', () => {
@@ -72,9 +98,14 @@ describe('side-sheet-allocations helper', () => {
                 { partyId: 'firstPartyId', partyRole: PartyRole.AGENT },
                 { partyId: 'firstPartyId', partyRole: PartyRole.OWNER },
                 { partyId: 'firstPartyId', partyRole: PartyRole.INSURED },
-                { partyId: 'secondPartyId', partyRole: PartyRole.CONTINGENTBENEFICIARY },
+                {
+                    partyId: 'secondPartyId',
+                    partyRole: PartyRole.CONTINGENTBENEFICIARY,
+                },
             ];
-            expect(determinePartyBeneficiaryRole(partyRoles, 'firstPartyId')).toBeUndefined();
+            expect(
+                determinePartyBeneficiaryRole(partyRoles, 'firstPartyId')
+            ).toBeUndefined();
         });
     });
     describe('getBeneficiariesByRole', () => {
@@ -83,51 +114,150 @@ describe('side-sheet-allocations helper', () => {
                 { partyId: 'firstPartyId', partyRole: PartyRole.AGENT },
                 { partyId: 'firstPartyId', partyRole: PartyRole.OWNER },
                 { partyId: 'firstPartyId', partyRole: PartyRole.INSURED },
-                { partyId: 'firstPartyId', partyRole: PartyRole.PRIMARYBENEFICIARY },
-                { partyId: 'secondPartyId', partyRole: PartyRole.CONTINGENTBENEFICIARY },
-                { partyId: 'thirdPartyId', partyRole: PartyRole.PRIMARYBENEFICIARY },
-                { partyId: 'fourthPartyId', partyRole: PartyRole.CONTINGENTBENEFICIARY },
-                { partyId: 'fifthPartyId', partyRole: PartyRole.PRIMARYBENEFICIARY },
+                {
+                    partyId: 'firstPartyId',
+                    partyRole: PartyRole.PRIMARYBENEFICIARY,
+                },
+                {
+                    partyId: 'secondPartyId',
+                    partyRole: PartyRole.CONTINGENTBENEFICIARY,
+                },
+                {
+                    partyId: 'thirdPartyId',
+                    partyRole: PartyRole.PRIMARYBENEFICIARY,
+                },
+                {
+                    partyId: 'fourthPartyId',
+                    partyRole: PartyRole.CONTINGENTBENEFICIARY,
+                },
+                {
+                    partyId: 'fifthPartyId',
+                    partyRole: PartyRole.PRIMARYBENEFICIARY,
+                },
                 { partyId: 'fifthPartyId', partyRole: PartyRole.PAYEE },
-                { partyId: 'sixthPartyId', partyRole: PartyRole.CONTINGENTBENEFICIARY },
-                { partyId: 'seventhPartyId', partyRole: PartyRole.PRIMARYBENEFICIARY },
+                {
+                    partyId: 'sixthPartyId',
+                    partyRole: PartyRole.CONTINGENTBENEFICIARY,
+                },
+                {
+                    partyId: 'seventhPartyId',
+                    partyRole: PartyRole.PRIMARYBENEFICIARY,
+                },
             ];
             const parties = [
-                { partyId: 'firstPartyId', firstName: 'first', lastName: 'Party', beneficiaryPercentage: 1 },
-                { partyId: 'secondPartyId', firstName: 'second', lastName: 'Party', beneficiaryPercentage: 100 },
-                { partyId: 'thirdPartyId', firstName: 'third', lastName: 'Party', beneficiaryPercentage: 20 },
-                { partyId: 'fourthPartyId', firstName: 'fourth', lastName: 'Party', beneficiaryPercentage: 0 },
-                { partyId: 'fifthPartyId', firstName: 'fifth', lastName: 'Party', beneficiaryPercentage: 20 },
-                { partyId: 'sixthPartyId', firstName: 'sixth', lastName: 'Party', beneficiaryPercentage: 0 },
-                { partyId: 'seventhPartyId', firstName: 'seventh', lastName: 'Party', beneficiaryPercentage: 59 },
+                {
+                    partyId: 'firstPartyId',
+                    firstName: 'first',
+                    lastName: 'Party',
+                    beneficiaryPercentage: 1,
+                },
+                {
+                    partyId: 'secondPartyId',
+                    firstName: 'second',
+                    lastName: 'Party',
+                    beneficiaryPercentage: 100,
+                },
+                {
+                    partyId: 'thirdPartyId',
+                    firstName: 'third',
+                    lastName: 'Party',
+                    beneficiaryPercentage: 20,
+                },
+                {
+                    partyId: 'fourthPartyId',
+                    firstName: 'fourth',
+                    lastName: 'Party',
+                    beneficiaryPercentage: 0,
+                },
+                {
+                    partyId: 'fifthPartyId',
+                    firstName: 'fifth',
+                    lastName: 'Party',
+                    beneficiaryPercentage: 20,
+                },
+                {
+                    partyId: 'sixthPartyId',
+                    firstName: 'sixth',
+                    lastName: 'Party',
+                    beneficiaryPercentage: 0,
+                },
+                {
+                    partyId: 'seventhPartyId',
+                    firstName: 'seventh',
+                    lastName: 'Party',
+                    beneficiaryPercentage: 59,
+                },
             ];
 
             const expectedOutput = [
-                { firstLastName: 'Seventh Party', beneficiaryPercentage: 59, partyId: 'seventhPartyId' },
-                { firstLastName: 'Fifth Party', beneficiaryPercentage: 20, partyId: 'fifthPartyId' },
-                { firstLastName: 'Third Party', beneficiaryPercentage: 20, partyId: 'thirdPartyId' },
-                { firstLastName: 'First Party', beneficiaryPercentage: 1, partyId: 'firstPartyId' },
+                {
+                    firstLastName: 'Seventh Party',
+                    beneficiaryPercentage: 59,
+                    partyId: 'seventhPartyId',
+                },
+                {
+                    firstLastName: 'Fifth Party',
+                    beneficiaryPercentage: 20,
+                    partyId: 'fifthPartyId',
+                },
+                {
+                    firstLastName: 'Third Party',
+                    beneficiaryPercentage: 20,
+                    partyId: 'thirdPartyId',
+                },
+                {
+                    firstLastName: 'First Party',
+                    beneficiaryPercentage: 1,
+                    partyId: 'firstPartyId',
+                },
             ];
 
-            expect(getBeneficiariesByRole({ parties, partyRoles } as Policy, PartyRole.PRIMARYBENEFICIARY)).toEqual(expectedOutput);
+            expect(
+                getBeneficiariesByRole(
+                    { parties, partyRoles } as Policy,
+                    PartyRole.PRIMARYBENEFICIARY
+                )
+            ).toEqual(expectedOutput);
         });
     });
     describe('getBeneficiariesByFocusedParty', () => {
         const beneficiaries: Beneficiary[] = [
-            { firstLastName: 'Seventh Party', beneficiaryPercentage: 59, partyId: 'seventhPartyId' },
-            { firstLastName: 'Fifth Party', beneficiaryPercentage: 20, partyId: 'fifthPartyId' },
-            { firstLastName: 'Third Party', beneficiaryPercentage: 20, partyId: 'thirdPartyId' },
-            { firstLastName: 'First Party', beneficiaryPercentage: 1, partyId: 'firstPartyId' },
+            {
+                firstLastName: 'Seventh Party',
+                beneficiaryPercentage: 59,
+                partyId: 'seventhPartyId',
+            },
+            {
+                firstLastName: 'Fifth Party',
+                beneficiaryPercentage: 20,
+                partyId: 'fifthPartyId',
+            },
+            {
+                firstLastName: 'Third Party',
+                beneficiaryPercentage: 20,
+                partyId: 'thirdPartyId',
+            },
+            {
+                firstLastName: 'First Party',
+                beneficiaryPercentage: 1,
+                partyId: 'firstPartyId',
+            },
         ];
-        const { partyId: focusedPartyID } = faker.helpers.arrayElement(beneficiaries);
-        const { focusedParty, otherParties } = getBeneficiariesByFocusedParty(beneficiaries, focusedPartyID);
+        const { partyId: focusedPartyID } =
+            faker.helpers.arrayElement(beneficiaries);
+        const { focusedParty, otherParties } = getBeneficiariesByFocusedParty(
+            beneficiaries,
+            focusedPartyID
+        );
 
         it('should correctly identify focused party by ID', () => {
             expect(focusedPartyID).toEqual(focusedParty?.partyId);
         });
 
         it('should correctly identify non-focused parties', () => {
-            const filteredPartiers = beneficiaries.filter(({ partyId }) => partyId !== focusedPartyID);
+            const filteredPartiers = beneficiaries.filter(
+                ({ partyId }) => partyId !== focusedPartyID
+            );
             expect(otherParties).toEqual(filteredPartiers);
         });
     });

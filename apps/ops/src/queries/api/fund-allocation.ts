@@ -1,10 +1,10 @@
-import { TransactionResponse } from "@zinnia/api-types/types/bpm";
-import { AxiosResponse } from "axios";
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
+import { AxiosResponse } from 'axios';
 
-import { browserLogError } from "@deps/utils/browser-logging";
+import { browserLogError } from '@deps/utils/browser-logging';
 
-import { baseAppUrl } from "../api-config";
-import { client } from "../api-utils/client";
+import { baseAppUrl } from '../api-config';
+import { client } from '../api-utils/client';
 
 interface IFundAllocationsInvestments {
     fundId: string;
@@ -21,13 +21,13 @@ export interface FundAllocationChangeRequest {
         investmentType: string;
         modelId?: string;
         fundAllocationsInvestments: IFundAllocationsInvestments[];
-    }
+    };
     allocationOption?: string;
 }
 
 export const checkEligibilityFundAllocation = async (
     planCode: string | undefined,
-    policyNumber: string | undefined,
+    policyNumber: string | undefined
 ): Promise<TransactionResponse> => {
     try {
         const { data } = await client.post<TransactionResponse, AxiosResponse>(
@@ -35,7 +35,10 @@ export const checkEligibilityFundAllocation = async (
         );
         return data;
     } catch (error: any) {
-        browserLogError('checkEligibilityFundAllocation::an error occurred during eligibility check', error);
+        browserLogError(
+            'checkEligibilityFundAllocation::an error occurred during eligibility check',
+            error
+        );
         return error?.data;
     }
 };
@@ -52,7 +55,10 @@ export const validateFundAllocation = async (
         );
         return data;
     } catch (error: any) {
-        browserLogError('validateFundAllocation::an error occurred during validation', error);
+        browserLogError(
+            'validateFundAllocation::an error occurred during validation',
+            error
+        );
         return error?.data as any;
     }
 };
@@ -69,7 +75,10 @@ export const fundAllocation = async (
         );
         return data;
     } catch (error: any) {
-        browserLogError('fundAllocation::an error occurred during fund allocation', error);
+        browserLogError(
+            'fundAllocation::an error occurred during fund allocation',
+            error
+        );
         return error?.data as any;
     }
-}
+};

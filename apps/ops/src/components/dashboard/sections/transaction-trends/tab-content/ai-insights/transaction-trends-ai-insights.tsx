@@ -8,7 +8,8 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 
 export const TransactionTrendsAIInsights = () => {
-    const { timerange, groupBy, selectedProcess, transactionTrendsData } = useContext(TransactionTrendsContext);
+    const { timerange, groupBy, selectedProcess, transactionTrendsData } =
+        useContext(TransactionTrendsContext);
 
     const content = JSON.stringify(transactionTrendsData?.data);
 
@@ -16,9 +17,10 @@ export const TransactionTrendsAIInsights = () => {
         `You are an expert in all things ${selectedProcess} case data.`,
         `Your job is to summarize the data for business and executive users.`,
         `They want simple and insightful information about the data provided to you.`,
-        `The data provided to you here are completed ${dashboardChartTitleFormat(selectedProcess ?? 'Any type of', false)} cases between ${
-            timerange.from
-        } and ${timerange.to}.`,
+        `The data provided to you here are completed ${dashboardChartTitleFormat(
+            selectedProcess ?? 'Any type of',
+            false
+        )} cases between ${timerange.from} and ${timerange.to}.`,
         `The data is grouped by ${groupBy}.`,
         `Avoid using phrases such as "the data".`,
         `Use percentages and real data where it makes sense.`,
@@ -27,10 +29,17 @@ export const TransactionTrendsAIInsights = () => {
     ].join(' ');
 
     return (
-        <CardContainer fullWidth={false} classNames={sharedStyles.aiInsightsTabContainer}>
+        <CardContainer
+            fullWidth={false}
+            classNames={sharedStyles.aiInsightsTabContainer}
+        >
             <TransactionTrendsHeader />
             <div className={sharedStyles.insightContainer}>
-                <AiInsightSummary className="grow" prompt={prompt} content={content} />
+                <AiInsightSummary
+                    className="grow"
+                    prompt={prompt}
+                    content={content}
+                />
             </div>
         </CardContainer>
     );

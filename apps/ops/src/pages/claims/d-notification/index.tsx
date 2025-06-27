@@ -6,13 +6,22 @@ import { TranslationFiles } from '@deps/config/translations';
 import DeathClaimContainer from '@deps/containers/death-claim-container/death-claim-container';
 import { DeathClaimProvider } from '@deps/contexts/DeathClaimContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { initialDeathClaimExistsSsr } from '@deps/queries/api/web-non-financial';
-import { logWarn, logError, parseErrorInformation, logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logWarn,
+    logError,
+    parseErrorInformation,
+    logInfo,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface DeathClaimNotificationProps {
@@ -51,11 +60,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
 
             if (!doesUserHasPagePermissions) {
                 return {
@@ -74,7 +84,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ALL_LOCALES
                 );
 
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
+                const policy = await getPolicyDetailsSsr(
+                    policyNumber,
+                    planCode,
+                    accessToken,
+                    loggingContext,
+                    true
+                );
                 if (!policy) {
                     logInfo('d-notification::Policy not found', { ...logCtx });
                     return {
@@ -87,13 +103,23 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 logInfo('d-notification::Policy found', { ...logCtx });
 
-                const response = await initialDeathClaimExistsSsr(policy?.policyNumber, policy?.carrierId, accessToken, loggingContext);
-                logInfo('d-notification::Checked claim existence', { ...logCtx, ...response });
+                const response = await initialDeathClaimExistsSsr(
+                    policy?.policyNumber,
+                    policy?.carrierId,
+                    accessToken,
+                    loggingContext
+                );
+                logInfo('d-notification::Checked claim existence', {
+                    ...logCtx,
+                    ...response,
+                });
 
                 if (response.isNewRequest === false) {
                     return {
                         redirect: {
-                            destination: response?.zlCaseId ? `/cases/${response?.zlCaseId}/progress` : '/policies',
+                            destination: response?.zlCaseId
+                                ? `/cases/${response?.zlCaseId}/progress`
+                                : '/policies',
                             permanent: false,
                         },
                     };
@@ -107,14 +133,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
             } catch (error) {
-                logError('d-notification::getServerSideProps', { ...parseErrorInformation(error), ...logCtx });
+                logError('d-notification::getServerSideProps', {
+                    ...parseErrorInformation(error),
+                    ...logCtx,
+                });
                 return {
                     props: {},
                 };
             }
         },
     },
-    { file: 'claims/d-notification/index', function: 'getServerSideProps', page: 'd-notification' }
+    {
+        file: 'claims/d-notification/index',
+        function: 'getServerSideProps',
+        page: 'd-notification',
+    }
 );
 
 export default DeathClaimNotification;

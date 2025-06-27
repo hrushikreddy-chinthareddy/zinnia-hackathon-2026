@@ -3,7 +3,11 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localData from 'dayjs/plugin/localeData';
 import { ChangeEvent, useRef, useState } from 'react';
 
-import DatePicker, { DatePickerTypes, DateQuarter, Quarter } from '@deps/components/date-picker/date-picker';
+import DatePicker, {
+    DatePickerTypes,
+    DateQuarter,
+    Quarter,
+} from '@deps/components/date-picker/date-picker';
 import Field, { FieldType, FieldProps } from '@deps/components/fields/field';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { FieldDateSelectTest } from '@deps/jest/constants/test-id-constants';
@@ -44,14 +48,19 @@ export default function FieldDateSelect({
     if (datePickerType === DatePickerTypes.Quarterly) {
         try {
             const [year, quarter] = value.split('-');
-            const dateQuarter: DateQuarter = { year: Number(year), quarter: quarter as Quarter };
+            const dateQuarter: DateQuarter = {
+                year: Number(year),
+                quarter: quarter as Quarter,
+            };
             date = dateQuarter;
         } catch (error) {
             console.error('Invalid JSON string:', value, error);
             date = null;
         }
     } else {
-        date = dayjs(value, DATE_PICKER_FORMAT, true).isValid() ? dayjs(value, DATE_PICKER_FORMAT).toDate() : null;
+        date = dayjs(value, DATE_PICKER_FORMAT, true).isValid()
+            ? dayjs(value, DATE_PICKER_FORMAT).toDate()
+            : null;
     }
 
     const handleCustomSelection = (_year: number, _quarter?: Quarter) => {
@@ -67,7 +76,9 @@ export default function FieldDateSelect({
     const handleDateSelect = (_year: number, _month: number, _day: number) => {
         onChange({
             target: {
-                value: dayjs(dayjs().year(_year).month(_month).date(_day).toDate()).format(DATE_PICKER_FORMAT),
+                value: dayjs(
+                    dayjs().year(_year).month(_month).date(_day).toDate()
+                ).format(DATE_PICKER_FORMAT),
             },
         } as ChangeEvent<HTMLInputElement>);
         handleClose();
@@ -78,7 +89,11 @@ export default function FieldDateSelect({
     useOutsideClick(containerRef, open, handleClose);
 
     return (
-        <div data-testid={FieldDateSelectTest.Container} className="relative" ref={containerRef}>
+        <div
+            data-testid={FieldDateSelectTest.Container}
+            className="relative"
+            ref={containerRef}
+        >
             <Field
                 value={value}
                 onChange={onChange}
@@ -88,7 +103,9 @@ export default function FieldDateSelect({
                     <CalendarIcon
                         width={22}
                         height={22}
-                        className={`my-auto ${rest.disabled ? 'text-secondary' : ''}`}
+                        className={`my-auto ${
+                            rest.disabled ? 'text-secondary' : ''
+                        }`}
                         onClick={() => setOpen(!open)}
                     />
                 }

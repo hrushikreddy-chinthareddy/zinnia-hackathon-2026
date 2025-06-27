@@ -24,12 +24,27 @@ export const AddressFieldsToMatchForRoleGroup = [
     'zipCode',
 ];
 
-export const PhoneFieldsToMatchForRoleGroup = ['areaCode', 'countryCode', 'dialNumber'];
+export const PhoneFieldsToMatchForRoleGroup = [
+    'areaCode',
+    'countryCode',
+    'dialNumber',
+];
 
 export const AssociatedAddressTableColumns = [
-    { field: 'check', headerName: '', type: ColumnType.Boolean, width: '5%', editable: true },
+    {
+        field: 'check',
+        headerName: '',
+        type: ColumnType.Boolean,
+        width: '5%',
+        editable: true,
+    },
     { field: 'policyNumber', headerName: 'Contract #', type: ColumnType.Text },
-    { field: 'partyRoleLabel', headerName: 'Role', editable: false, type: ColumnType.Text },
+    {
+        field: 'partyRoleLabel',
+        headerName: 'Role',
+        editable: false,
+        type: ColumnType.Text,
+    },
     { field: 'address', headerName: 'Address', type: ColumnType.Text },
     { field: 'city', headerName: 'City', type: ColumnType.Text },
     { field: 'state', headerName: 'State', type: ColumnType.Text },

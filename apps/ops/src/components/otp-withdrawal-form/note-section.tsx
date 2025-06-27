@@ -11,23 +11,29 @@ import DynamicForm from '../dynamic-form/dynamic-form';
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 
 const NoteSection = React.forwardRef(function NoteSectionComponent() {
-    const { formComment, setFormComment, isFormStateReadOnly } = useContext(FormDataContext);
+    const { formComment, setFormComment, isFormStateReadOnly } =
+        useContext(FormDataContext);
     const commentParts = formComment?.comment?.split(' - ');
 
     const formData = {
         options: commentParts?.[0] ?? '',
         comment: commentParts?.[1] ?? '',
     };
-    const handleChange = (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+    const handleChange = (
+        event: IChangeEvent<any, RJSFSchema, GenericObjectType>
+    ) => {
         const { options, comment } = event.formData ?? {};
-        setFormComment(formComment => ({
+        setFormComment((formComment) => ({
             ...formComment,
             comment: options ? `${options} - ${comment}` : comment,
         }));
     };
 
     return (
-        <CardContainer classNames={'w-full'} containerClassNames="w-full content-divider">
+        <CardContainer
+            classNames={'w-full'}
+            containerClassNames="w-full content-divider"
+        >
             <DynamicForm
                 formData={formData}
                 taskMetadata={{

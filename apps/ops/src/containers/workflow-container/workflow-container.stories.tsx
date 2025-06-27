@@ -2,14 +2,21 @@ import { Meta } from '@storybook/react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
-import { NewPremiumProvider, usePremium } from '@deps/contexts/transactions/NewPremiumContext';
+import {
+    NewPremiumProvider,
+    usePremium,
+} from '@deps/contexts/transactions/NewPremiumContext';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { Processes } from '@deps/models/case/case';
 
 import WorkflowContainer from './workflow-container';
 import PaymentStep from '../../components/workflows/payment-step/payment-step';
-import PayorStep, { PayorStepSetState } from '../../components/workflows/payor-step/payor-step';
-import StartStep, { StartStepSetState } from '../../components/workflows/start-step/start-step';
+import PayorStep, {
+    PayorStepSetState,
+} from '../../components/workflows/payor-step/payor-step';
+import StartStep, {
+    StartStepSetState,
+} from '../../components/workflows/start-step/start-step';
 import Confirm from '../financial-transactions/premium/new-premium/confirm/confirm';
 import Summary from '../financial-transactions/premium/new-premium/summary/summary';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -43,7 +50,12 @@ const premiumSteps: Step[] = [
     },
     {
         component: (
-            <PayorStep policy={mockPolicy} parentPage={ParentPage.Premiums} state={premium} setState={setPremium as PayorStepSetState} />
+            <PayorStep
+                policy={mockPolicy}
+                parentPage={ParentPage.Premiums}
+                state={premium}
+                setState={setPremium as PayorStepSetState}
+            />
         ),
         screenReaderLabel: 'Payor',
         index: 1,

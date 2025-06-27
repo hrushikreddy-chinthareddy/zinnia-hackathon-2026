@@ -1,14 +1,25 @@
 import { getAccessToken, getSession } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
+import {
+    GetServerSidePropsContext,
+    NextApiRequest,
+    NextApiResponse,
+} from 'next';
 
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ApiResponse } from '@deps/types/api-response';
 import { CheckTupleResponse, Tuple } from '@deps/types/fga';
-import { addTupleToCookie, checkPermissionsCookieForTuple } from '@deps/utils/permissionsCookie';
-import { LoggingContext, logWarn, parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    addTupleToCookie,
+    checkPermissionsCookieForTuple,
+} from '@deps/utils/permissionsCookie';
+import {
+    LoggingContext,
+    logWarn,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
 
 const checkTupleUrlSsr = `${apiServerBaseUrl}/fga/v1/check`;
 
@@ -22,9 +33,20 @@ const checkTuple = async (
     logCtx: LoggingContext
 ): Promise<ApiResponse<boolean>> => {
     if (!accessToken || !partyId) {
-        return { data: false, error: { status: 400, message: 'Missing partyId or accessToken', name: 'Error checking tuple' } };
+        return {
+            data: false,
+            error: {
+                status: 400,
+                message: 'Missing partyId or accessToken',
+                name: 'Error checking tuple',
+            },
+        };
     }
-    const loggingContext = { ...logCtx, file: 'queries/api/fga/checkTuple', function: 'checkTuple' };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/fga/checkTuple',
+        function: 'checkTuple',
+    };
 
     try {
         const tuple = {
@@ -33,7 +55,10 @@ const checkTuple = async (
             object: tupleObject,
         };
 
-        const tupleCheck = await serverApi.post<Tuple, AxiosResponse<CheckTupleResponse>>(
+        const tupleCheck = await serverApi.post<
+            Tuple,
+            AxiosResponse<CheckTupleResponse>
+        >(
             checkTupleUrlSsr,
             tuple,
             {
@@ -41,7 +66,10 @@ const checkTuple = async (
             },
             loggingContext
         );
-        const response: ApiResponse<boolean> = { data: tupleCheck?.data?.allowed || false, error: null };
+        const response: ApiResponse<boolean> = {
+            data: tupleCheck?.data?.allowed || false,
+            error: null,
+        };
 
         if (tupleCheck.status !== 200) {
             logWarn('checkTuple::An error occurred while checking tuple', {
@@ -55,7 +83,11 @@ const checkTuple = async (
                     tupleObject,
                 },
             });
-            response.error = { status: tupleCheck.status, message: tupleCheck.statusText, name: 'Error checking tuple' };
+            response.error = {
+                status: tupleCheck.status,
+                message: tupleCheck.statusText,
+                name: 'Error checking tuple',
+            };
         }
 
         return response;
@@ -73,7 +105,14 @@ const checkTuple = async (
             },
         });
 
-        return { data: false, error: { status: 500, message: error.message, name: 'Error checking tuple' } };
+        return {
+            data: false,
+            error: {
+                status: 500,
+                message: error.message,
+                name: 'Error checking tuple',
+            },
+        };
     }
 };
 
@@ -84,19 +123,41 @@ export const checkTuplePage = async (
     tupleObject: string,
     logCtx: LoggingContext
 ): Promise<boolean> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/fga/checkTuple', function: 'checkTuplePage' };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/fga/checkTuple',
+        function: 'checkTuplePage',
+    };
     try {
-        const val = checkPermissionsCookieForTuple(relation, tupleObject, ctx.req, ctx.res);
+        const val = checkPermissionsCookieForTuple(
+            relation,
+            tupleObject,
+            ctx.req,
+            ctx.res
+        );
         if (val !== undefined) {
             return val;
         }
 
         const user = await getUserData(ctx);
-        const accessToken = (await getAccessToken(ctx.req, ctx.res)).accessToken;
-        const result = await checkTuple(accessToken as string, user.partyId, relation, tupleObject, loggingContext);
+        const accessToken = (await getAccessToken(ctx.req, ctx.res))
+            .accessToken;
+        const result = await checkTuple(
+            accessToken as string,
+            user.partyId,
+            relation,
+            tupleObject,
+            loggingContext
+        );
 
         if (!result.error) {
-            addTupleToCookie(relation, tupleObject, !!result.data, ctx.req, ctx.res);
+            addTupleToCookie(
+                relation,
+                tupleObject,
+                !!result.data,
+                ctx.req,
+                ctx.res
+            );
         }
         return !!result.data;
     } catch (e) {
@@ -121,16 +182,31 @@ export const checkTupleApi = async (
     tupleObject: string,
     logCtx: LoggingContext
 ): Promise<boolean> => {
-    const loggingContext = { ...logCtx, file: 'queries/api/fga/checkTuple', function: 'checkTupleApi' };
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/fga/checkTuple',
+        function: 'checkTupleApi',
+    };
     try {
-        const val = checkPermissionsCookieForTuple(relation, tupleObject, req, res);
+        const val = checkPermissionsCookieForTuple(
+            relation,
+            tupleObject,
+            req,
+            res
+        );
         if (val !== undefined) {
             return val;
         }
 
         const session = await getSession(req, res);
         const accessToken = session?.accessToken;
-        const result = await checkTuple(accessToken as string, session?.user?.partyId, relation, tupleObject, loggingContext);
+        const result = await checkTuple(
+            accessToken as string,
+            session?.user?.partyId,
+            relation,
+            tupleObject,
+            loggingContext
+        );
 
         if (!result.error) {
             addTupleToCookie(relation, tupleObject, !!result.data, req, res);

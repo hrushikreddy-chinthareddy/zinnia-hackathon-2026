@@ -56,8 +56,10 @@ const completedArgs = {
     id: '1',
     carrier: 'EVERLY',
     caseStatus: Statuses.Completed,
-    process: 'Required Minimum Distribution Test Length Test Length Test Length',
-    requestSubType: 'A longer case sub type will go here test length test length',
+    process:
+        'Required Minimum Distribution Test Length Test Length Test Length',
+    requestSubType:
+        'A longer case sub type will go here test length test length',
     policyNumber: null,
     createdAt: '2023-06-07T05:20:44.000Z',
     updatedAt: '2023-10-07T05:20:44.000Z',

@@ -20,19 +20,37 @@ afterEach(cleanup);
 
 describe('Card Columns Component', () => {
     it('should render an MUI grid component', () => {
-        render(<CardColumns items={cardColumnsItems} titles={cardColumnsTitles} />);
+        render(
+            <CardColumns items={cardColumnsItems} titles={cardColumnsTitles} />
+        );
         expect(screen.getByTestId(CardColumnsTest.COLUMNS)).toBeInTheDocument();
     });
 
     it('should render each of the titles from props', () => {
-        render(<CardColumns items={cardColumnsItems} titles={cardColumnsTitles} />);
-        expect(screen.getByTestId(`${CardColumnsTest.ITEMS}-${cardColumnsTitles[0]}`)).toBeInTheDocument();
-        expect(screen.getByTestId(`${CardColumnsTest.ITEMS}-${cardColumnsTitles[1]}`)).toBeInTheDocument();
+        render(
+            <CardColumns items={cardColumnsItems} titles={cardColumnsTitles} />
+        );
+        expect(
+            screen.getByTestId(
+                `${CardColumnsTest.ITEMS}-${cardColumnsTitles[0]}`
+            )
+        ).toBeInTheDocument();
+        expect(
+            screen.getByTestId(
+                `${CardColumnsTest.ITEMS}-${cardColumnsTitles[1]}`
+            )
+        ).toBeInTheDocument();
     });
 
     it('should render each of the items from props', () => {
-        render(<CardColumns items={cardColumnsItems} titles={cardColumnsTitles} />);
-        expect(screen.getByTestId(`${CardColumnsTest.ITEMS}-1`)).toBeInTheDocument();
-        expect(screen.getByTestId(`${CardColumnsTest.ITEMS}-2`)).toBeInTheDocument();
+        render(
+            <CardColumns items={cardColumnsItems} titles={cardColumnsTitles} />
+        );
+        expect(
+            screen.getByTestId(`${CardColumnsTest.ITEMS}-1`)
+        ).toBeInTheDocument();
+        expect(
+            screen.getByTestId(`${CardColumnsTest.ITEMS}-2`)
+        ).toBeInTheDocument();
     });
 });

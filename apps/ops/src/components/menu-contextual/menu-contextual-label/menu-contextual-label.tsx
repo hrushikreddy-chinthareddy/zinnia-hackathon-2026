@@ -4,12 +4,18 @@ import { ReactElement } from 'react';
 import { MenuContextualItemProps } from '../menu-contextual-item/menu-contextual-item';
 
 export interface MenuContextualLabelProps {
-    children: ReactElement<MenuContextualItemProps> | ReactElement<MenuContextualItemProps>[];
+    children:
+        | ReactElement<MenuContextualItemProps>
+        | ReactElement<MenuContextualItemProps>[];
     label: string;
     hideLabel?: boolean;
 }
 
-const MenuContextualLabel = ({ label, children, hideLabel = false }: MenuContextualLabelProps) => {
+const MenuContextualLabel = ({
+    label,
+    children,
+    hideLabel = false,
+}: MenuContextualLabelProps) => {
     return (
         <DropdownMenu.Label className="flex w-full flex-col gap-4">
             <p

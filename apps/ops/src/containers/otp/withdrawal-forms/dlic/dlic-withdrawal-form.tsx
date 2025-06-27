@@ -21,7 +21,9 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 import useDlicConfig from './dlic-withdrawal-form-helpers';
 
 export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
 
     const {
         formValidation,
@@ -55,11 +57,15 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
     } = useContext(FormDataContext);
 
     useEffect(() => {
-        setFormData(fs => ({
+        setFormData((fs) => ({
             ...fs,
-            formExtName: `${initialForm?.carrier || Carrier.DLIC}_REDEMPTION_DIGITAL_FORM`, //get client code & withdrawal type from index
+            formExtName: `${
+                initialForm?.carrier || Carrier.DLIC
+            }_REDEMPTION_DIGITAL_FORM`, //get client code & withdrawal type from index
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.DLIC}_REDEMPTION_DIGITAL_FORM`,
+                formType: `${
+                    initialForm?.carrier || Carrier.DLIC
+                }_REDEMPTION_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -70,21 +76,32 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
         setFormValidator(() => formValidation);
     }, [setFormValidator]);
 
-    const ownerStateOfResidence = formParty?.parties?.[0]?.addresses?.[0]?.state;
+    const ownerStateOfResidence =
+        formParty?.parties?.[0]?.addresses?.[0]?.state;
     const shouldStateW4pRender = isAllowedState(contractIssueState);
     const showHasPreviousNigo = hasPreviousNigoPlanCodes.includes(planCode);
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
-            <DistributionReason reasonOptions={reasonOptions} isFormStateReadOnly={isFormStateReadOnly} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
+            <DistributionReason
+                reasonOptions={reasonOptions}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
 
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={partialWithdrawalOptions}
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
-                title={t('amountDetails.partialWithdrawal.withdrawalAmount') as string}
+                title={
+                    t(
+                        'amountDetails.partialWithdrawal.withdrawalAmount'
+                    ) as string
+                }
             />
             {showHasPreviousNigo && (
                 <HasPreviousNigo
@@ -97,7 +114,11 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
             <FormDistribution
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
-                title={t('distributionInstruction.investmentSelectionForDistribution') as string}
+                title={
+                    t(
+                        'distributionInstruction.investmentSelectionForDistribution'
+                    ) as string
+                }
             />
 
             <TaxWithholdings
@@ -105,14 +126,25 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
                 ownerStateOfResidence={ownerStateOfResidence}
                 additionalWithHoldingConfig={additionalWithholdingAmountConfig}
             />
-            {shouldStateW4pRender && <StateW4Form isFormStateReadOnly={isFormStateReadOnly} w4pSignaturesConfig={w4pSignaturesConfig} />}
-            <FormDisbursement isFormStateReadOnly={isFormStateReadOnly} options={disbursementOptions} />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
+            <FormDisbursement
+                isFormStateReadOnly={isFormStateReadOnly}
+                options={disbursementOptions}
+            />
             {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(state => state && cslnCheckStates.includes(state)) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
 
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 headerTranslationKey={'notaryHeader'}
@@ -120,7 +152,9 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={formESignatureData || ({} as FormEsignatureData)}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
                 setFormESignatureData={setFormESignatureData}
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}

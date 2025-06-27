@@ -1,6 +1,9 @@
 import { createElement, useEffect, useState } from 'react';
 
-import { FormValidationErrors, SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
+import {
+    FormValidationErrors,
+    SignatureWithdrawal,
+} from '@deps/models/case/withdrawal/case';
 
 import { SignatureValidationContext } from './signature-validation-context';
 import { SignaturePartProps } from './signature-validation-parts/signature-parts';
@@ -34,18 +37,30 @@ export default function SignatureValidation({
     preSelectedValues,
 }: SignatureValidationProps) {
     const [signature, setSignature] = useState(sigProp);
-    const [isSignatureValid, setIsSignatureValid] = useState(signature.isSignatureValid);
+    const [isSignatureValid, setIsSignatureValid] = useState(
+        signature.isSignatureValid
+    );
     const [isSigned, setIsSigned] = useState(signature.isSigned);
     const [signName, setSignName] = useState(signature.signName);
-    const [signatureComment, setSignatureComment] = useState(signature.signatureComment);
+    const [signatureComment, setSignatureComment] = useState(
+        signature.signatureComment
+    );
     const [signDate, setSignDate] = useState(signature.signDate);
     const [signTitle, setSignTitle] = useState(signature.signTitle);
     const [signType, setSignType] = useState(signature.signType);
     const [isNotaryValid, setIsNotaryValid] = useState(signature.isNotaryValid);
-    const [commissionExpiryDate, setCommissionExpiryDate] = useState(signature.commissionExpiryDate);
-    const [signGuaranteeStamp, setSignGuaranteeStamp] = useState(signature.signGuaranteeStamp);
-    const [ssn, setSsn] = useState(signature.ssn || (preSelectedValues?.ssn && preSelectedValues.ssn));
-    const [isSignatureCityProvided, setIsSignatureCityProvided] = useState(signature.isSignatureCityProvided);
+    const [commissionExpiryDate, setCommissionExpiryDate] = useState(
+        signature.commissionExpiryDate
+    );
+    const [signGuaranteeStamp, setSignGuaranteeStamp] = useState(
+        signature.signGuaranteeStamp
+    );
+    const [ssn, setSsn] = useState(
+        signature.ssn || (preSelectedValues?.ssn && preSelectedValues.ssn)
+    );
+    const [isSignatureCityProvided, setIsSignatureCityProvided] = useState(
+        signature.isSignatureCityProvided
+    );
 
     useEffect(() => {
         onDataChange(signature);
@@ -65,7 +80,7 @@ export default function SignatureValidation({
             commissionExpiryDate,
             signGuaranteeStamp,
             ssn,
-            isSignatureCityProvided
+            isSignatureCityProvided,
         });
     }, [
         isSignatureValid,
@@ -79,15 +94,20 @@ export default function SignatureValidation({
         commissionExpiryDate,
         signGuaranteeStamp,
         ssn,
-        isSignatureCityProvided
+        isSignatureCityProvided,
     ]);
 
-    const renderField = (field: SignatureValidationField, isFormStateReadOnly?: boolean) => {
+    const renderField = (
+        field: SignatureValidationField,
+        isFormStateReadOnly?: boolean
+    ) => {
         return createElement(field.component, {
             key: field.key,
             isFormStateReadOnly,
             label: field.label,
-            shouldDisplay: field.displayLogic ? !!field.displayLogic(signature) : true,
+            shouldDisplay: field.displayLogic
+                ? !!field.displayLogic(signature)
+                : true,
         });
     };
 
@@ -119,11 +139,13 @@ export default function SignatureValidation({
                 signTitle,
                 signType,
                 ssn,
-                isSignatureCityProvided
+                isSignatureCityProvided,
             }}
         >
-            <div className={`grid grid-cols-${fields.length} gap-4 ${className}`}>
-                {fields.map(field => renderField(field, isFormStateReadOnly))}
+            <div
+                className={`grid grid-cols-${fields.length} gap-4 ${className}`}
+            >
+                {fields.map((field) => renderField(field, isFormStateReadOnly))}
             </div>
             {bonusField && createElement(bonusField, { isFormStateReadOnly })}
         </SignatureValidationContext.Provider>

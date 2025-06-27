@@ -23,34 +23,49 @@ import {
     SignatureWithdrawal,
     SSWType,
 } from '@deps/models/case/withdrawal/case';
-import { DEFAULT_DISBURSEMENT_UPDATE, DisbursementParts, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DisbursementParts,
+    DEFAULT_BANK_DETAILS,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 import useFlicConfig from './flic-ssw-form-helpers';
 
-jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormDisbursementValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormDisbursementValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
-jest.mock('@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers');
-    return {
-        ...originalModule,
-        getDefaultSSWFormProgramValues: () => {
-            return {
-                thisIsMocked: true,
-            };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultSSWFormProgramValues: () => {
+                return {
+                    thisIsMocked: true,
+                };
+            },
+        };
+    }
+);
 
 describe('#Flic SSW form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
 
     const {
         result: { current },
@@ -96,8 +111,13 @@ describe('#Flic SSW form config', () => {
 
         describe('payload generation', () => {
             it('should generate a correct payload for an eft bank type full selection', () => {
-                const eftOption = disbursementOptions(Frequency.Monthly, '').find(option => option.value === PaymentMethod.EFT);
-                expect(eftOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const eftOption = disbursementOptions(
+                    Frequency.Monthly,
+                    ''
+                ).find((option) => option.value === PaymentMethod.EFT);
+                expect(
+                    eftOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -109,20 +129,29 @@ describe('#Flic SSW form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                         },
                     ],
                     voidCheck: bankingDetails?.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: bankingDetails?.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        bankingDetails?.doesCheckMeetSecurityRequirements,
                 });
             });
 
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions(Frequency.Annually, '').find(option => option.value === PaymentMailType.Check);
-                expect(checkOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const checkOption = disbursementOptions(
+                    Frequency.Annually,
+                    ''
+                ).find((option) => option.value === PaymentMailType.Check);
+                expect(
+                    checkOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
@@ -130,9 +159,16 @@ describe('#Flic SSW form config', () => {
             });
 
             it('should generate a correct payload for a brokerage selection', () => {
-                const brokerageOption = disbursementOptions(Frequency.Monthly, '').find(option => option.value === PaymentMethod.Brokerage);
+                const brokerageOption = disbursementOptions(
+                    Frequency.Monthly,
+                    ''
+                ).find((option) => option.value === PaymentMethod.Brokerage);
 
-                expect(brokerageOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                expect(
+                    brokerageOption?.generatePayloadFromSelection(
+                        bankingDetails
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Brokerage },
                     paymentToBrokerageAccount: true,
@@ -150,7 +186,11 @@ describe('#Flic SSW form config', () => {
     describe('Signatures config validation', () => {
         const { signaturesConfig } = current;
         describe('Owner signature', () => {
-            const ownerConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Owner);
+            const ownerConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
                 expect(ownerConfig?.fields).toHaveLength(4);
@@ -159,7 +199,9 @@ describe('#Flic SSW form config', () => {
 
         describe('Joint owner signature', () => {
             const jointOwnerConfig = signaturesConfig.find(
-                sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.JointOwner
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.JointOwner
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
@@ -272,13 +314,25 @@ describe('#Flic SSW form config', () => {
                     ],
                 };
 
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: jointOwner } as OtpWithdrawalFormState)).toBeTruthy();
-                expect(jointOwnerConfig?.shouldDisplay?.({ formParty: owner } as OtpWithdrawalFormState)).toBeFalsy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: jointOwner,
+                    } as OtpWithdrawalFormState)
+                ).toBeTruthy();
+                expect(
+                    jointOwnerConfig?.shouldDisplay?.({
+                        formParty: owner,
+                    } as OtpWithdrawalFormState)
+                ).toBeFalsy();
             });
         });
 
         describe.skip('Spouse signature', () => {
-            const spouseConfig = signaturesConfig.find(sigConfig => sigConfig.signatureType === SignatureValidationTypeWithdrawal.Spouse);
+            const spouseConfig = signaturesConfig.find(
+                (sigConfig) =>
+                    sigConfig.signatureType ===
+                    SignatureValidationTypeWithdrawal.Spouse
+            );
             it('should be in the config', () => {
                 expect(spouseConfig).toBeTruthy();
                 expect(spouseConfig?.fields).toHaveLength(3);
@@ -286,15 +340,21 @@ describe('#Flic SSW form config', () => {
 
             it('should have shouldDisplay logic', () => {
                 expect(
-                    spouseConfig?.shouldDisplay?.({ ownerStateOfResidence: statesAndTerritories.ARIZONA } as OtpWithdrawalFormState)
+                    spouseConfig?.shouldDisplay?.({
+                        ownerStateOfResidence: statesAndTerritories.ARIZONA,
+                    } as OtpWithdrawalFormState)
                 ).toBeTruthy();
                 expect(
-                    spouseConfig?.shouldDisplay?.({ ownerStateOfResidence: statesAndTerritories.GUAM } as OtpWithdrawalFormState)
+                    spouseConfig?.shouldDisplay?.({
+                        ownerStateOfResidence: statesAndTerritories.GUAM,
+                    } as OtpWithdrawalFormState)
                 ).toBeFalsy();
             });
 
             it('should have a bonusField (Spousal Consent', () => {
-                expect(spouseConfig?.bonusField).toEqual(SignatureBonusFields.SpousalConsent);
+                expect(spouseConfig?.bonusField).toEqual(
+                    SignatureBonusFields.SpousalConsent
+                );
             });
         });
     });
@@ -310,8 +370,14 @@ describe('#Flic SSW form config', () => {
                 duration: { text: '1' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.FixDollar);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.FixDollar
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.FixDollar },
                 programFrequency: {
@@ -320,7 +386,10 @@ describe('#Flic SSW form config', () => {
                     fixedPeriodYear: { text: null },
                     duration: formProgram.duration,
                 },
-                programAmount: { text: formProgram.amount?.text, amountType: AmountType.Dollar },
+                programAmount: {
+                    text: formProgram.amount?.text,
+                    amountType: AmountType.Dollar,
+                },
             });
         });
 
@@ -331,8 +400,14 @@ describe('#Flic SSW form config', () => {
                 duration: { text: '12' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.AnnualFree);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.AnnualFree
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.AnnualFree },
                 programFrequency: {
@@ -352,8 +427,14 @@ describe('#Flic SSW form config', () => {
                 duration: { text: '1' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.PercentOfAmountValue);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) => option.value === SSWType.PercentOfAmountValue
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.PercentOfAmountValue },
                 programFrequency: {
@@ -362,7 +443,10 @@ describe('#Flic SSW form config', () => {
                     fixedPeriodYear: { text: null },
                     duration: formProgram.duration,
                 },
-                partialPercent: { text: formProgram.percent?.text, amountType: AmountType.Percent },
+                partialPercent: {
+                    text: formProgram.percent?.text,
+                    amountType: AmountType.Percent,
+                },
             });
         });
 
@@ -373,8 +457,15 @@ describe('#Flic SSW form config', () => {
                 duration: { text: '12' },
             };
 
-            const option = systematicWithdrawalOptions.find(option => option.value === SSWType.InterestEarningDividendsGains);
-            expect(option?.generateSSWPayloadFromSelection(formProgram as SSWProgram)).toEqual({
+            const option = systematicWithdrawalOptions.find(
+                (option) =>
+                    option.value === SSWType.InterestEarningDividendsGains
+            );
+            expect(
+                option?.generateSSWPayloadFromSelection(
+                    formProgram as SSWProgram
+                )
+            ).toEqual({
                 thisIsMocked: true,
                 ...getDefaultSSWFormProgramValues(),
                 programSubType: { text: SSWType.InterestEarningDividendsGains },

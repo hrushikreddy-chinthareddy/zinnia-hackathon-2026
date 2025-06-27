@@ -13,10 +13,17 @@ import BaseDeathBenefit from './display-fields/base-death-benefit';
 import { QuickViewRoot } from './policy-summary-card';
 
 export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
-    const reinstatement = policy.features.getFirstFeatureByType(FeatureType.REINSTATEMENT);
-    const pendingLapse = policy.features.getFirstFeatureByType(FeatureType.LAPSEASSESSMENT);
+    const reinstatement = policy.features.getFirstFeatureByType(
+        FeatureType.REINSTATEMENT
+    );
+    const pendingLapse = policy.features.getFirstFeatureByType(
+        FeatureType.LAPSEASSESSMENT
+    );
 
     let reinstatementPeriodText;
 
@@ -28,21 +35,33 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
             reinstatementPeriodText = t('common:temporal.oneYear');
             break;
         default:
-            reinstatementPeriodText = t('common:temporal.nYears', { n: reinstatement?.period });
+            reinstatementPeriodText = t('common:temporal.nYears', {
+                n: reinstatement?.period,
+            });
             break;
     }
 
     return (
-        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
+        <QuickViewRoot
+            title={t('dashboard.search.results.policySummaryCard.header2')}
+        >
             <div>
                 <Label
                     variant={LabelVariant.FieldLabel}
                     label={t('colDefs:policySummary.lapseEffectiveDate')}
                     tooltipTitle={t('colDefs:policySummary.lapseEffectiveDate')}
-                    tooltipBody={t('colDefs:policySummary.lapseEffectiveDateTooltip')}
+                    tooltipBody={t(
+                        'colDefs:policySummary.lapseEffectiveDateTooltip'
+                    )}
                 />
                 <Content
-                    details={pendingLapse?.effectiveDate ? dayjs(pendingLapse?.effectiveDate).format(DEFAULT_EXTENDED_DATE_FORMAT) : '--'}
+                    details={
+                        pendingLapse?.effectiveDate
+                            ? dayjs(pendingLapse?.effectiveDate).format(
+                                  DEFAULT_EXTENDED_DATE_FORMAT
+                              )
+                            : '--'
+                    }
                     variant={ContentVariant.BodySm}
                 />
             </div>
@@ -50,10 +69,17 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
                 <Label
                     variant={LabelVariant.FieldLabel}
                     label={t('colDefs:policySummary.reinstatementPeriod')}
-                    tooltipTitle={t('colDefs:policySummary.reinstatementPeriod')}
-                    tooltipBody={t('colDefs:policySummary.reinstatementPeriodTooltip')}
+                    tooltipTitle={t(
+                        'colDefs:policySummary.reinstatementPeriod'
+                    )}
+                    tooltipBody={t(
+                        'colDefs:policySummary.reinstatementPeriodTooltip'
+                    )}
                 />
-                <Content details={reinstatementPeriodText} variant={ContentVariant.BodySm} />
+                <Content
+                    details={reinstatementPeriodText}
+                    variant={ContentVariant.BodySm}
+                />
             </div>
             {reinstatement && (
                 <>
@@ -61,9 +87,15 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
                         <div>
                             <Label
                                 variant={LabelVariant.FieldLabel}
-                                label={t('colDefs:policySummary.underwritingDecision')}
-                                tooltipTitle={t('colDefs:policySummary.underwritingDecision')}
-                                tooltipBody={t('colDefs:policySummary.underwritingDecisionTooltip')}
+                                label={t(
+                                    'colDefs:policySummary.underwritingDecision'
+                                )}
+                                tooltipTitle={t(
+                                    'colDefs:policySummary.underwritingDecision'
+                                )}
+                                tooltipBody={t(
+                                    'colDefs:policySummary.underwritingDecisionTooltip'
+                                )}
                             />
                             <Content
                                 details={
@@ -80,14 +112,24 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
                         <div>
                             <Label
                                 variant={LabelVariant.FieldLabel}
-                                label={t('colDefs:policySummary.reinstatementPaymentPeriod')}
-                                tooltipTitle={t('colDefs:policySummary.reinstatementPaymentPeriod')}
-                                tooltipBody={t('colDefs:policySummary.reinstatementPaymentPeriodTooltip')}
+                                label={t(
+                                    'colDefs:policySummary.reinstatementPaymentPeriod'
+                                )}
+                                tooltipTitle={t(
+                                    'colDefs:policySummary.reinstatementPaymentPeriod'
+                                )}
+                                tooltipBody={t(
+                                    'colDefs:policySummary.reinstatementPaymentPeriodTooltip'
+                                )}
                             />
                             <Content
-                                details={`${dayjs(reinstatement?.approvalDate).format(DEFAULT_EXTENDED_DATE_FORMAT)} - ${dayjs(
-                                    reinstatement?.endDate
-                                ).format(DEFAULT_EXTENDED_DATE_FORMAT)}`}
+                                details={`${dayjs(
+                                    reinstatement?.approvalDate
+                                ).format(
+                                    DEFAULT_EXTENDED_DATE_FORMAT
+                                )} - ${dayjs(reinstatement?.endDate).format(
+                                    DEFAULT_EXTENDED_DATE_FORMAT
+                                )}`}
                                 variant={ContentVariant.BodySm}
                             />
                         </div>
@@ -97,11 +139,22 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
                         <div>
                             <Label
                                 variant={LabelVariant.FieldLabel}
-                                label={t('colDefs:policySummary.reinstatementMinPayment')}
-                                tooltipTitle={t('colDefs:policySummary.reinstatementMinPayment')}
-                                tooltipBody={t('colDefs:policySummary.reinstatementMinPaymentTooltip')}
+                                label={t(
+                                    'colDefs:policySummary.reinstatementMinPayment'
+                                )}
+                                tooltipTitle={t(
+                                    'colDefs:policySummary.reinstatementMinPayment'
+                                )}
+                                tooltipBody={t(
+                                    'colDefs:policySummary.reinstatementMinPaymentTooltip'
+                                )}
                             />
-                            <Content details={numberFormatify(reinstatement?.paymentAmount)} variant={ContentVariant.BodySm} />
+                            <Content
+                                details={numberFormatify(
+                                    reinstatement?.paymentAmount
+                                )}
+                                variant={ContentVariant.BodySm}
+                            />
                         </div>
                     )}
                 </>

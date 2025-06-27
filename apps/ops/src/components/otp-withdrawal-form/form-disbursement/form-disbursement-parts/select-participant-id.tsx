@@ -13,7 +13,7 @@ const SelectParticipantId = ({
     onDataChange,
 }: DisbursementInformation) => {
     const value = disbursementInformation.participantId ?? '';
-    const participantIdOptions = ParticipantCompanies.map(company => {
+    const participantIdOptions = ParticipantCompanies.map((company) => {
         return {
             label: `${company.companyName} (${company.code})`,
             value: company.code,
@@ -21,7 +21,7 @@ const SelectParticipantId = ({
     });
 
     const setDataChange = (val: string) => {
-        onDataChange(ogData => ({
+        onDataChange((ogData) => ({
             ...ogData,
             [fieldName]: val,
         }));
@@ -37,7 +37,11 @@ const SelectParticipantId = ({
             value={value}
             data-testid={fieldName}
             disabled={isFormStateReadOnly}
-            variant={isFormStateReadOnly ? FieldVariant.Inactive : FieldVariant.Default}
+            variant={
+                isFormStateReadOnly
+                    ? FieldVariant.Inactive
+                    : FieldVariant.Default
+            }
         />
     );
 };

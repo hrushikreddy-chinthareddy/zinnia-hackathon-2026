@@ -16,7 +16,9 @@ import { Carrier } from '@deps/models/case/withdrawal/case';
 import usePrdnOftConfig from './prdn-oft-form-helpers';
 
 export default function PrdnOftWithdrawalForm() {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const {
         signaturesConfig,
         formPartyConfigs,
@@ -46,11 +48,15 @@ export default function PrdnOftWithdrawalForm() {
     }, []);
 
     useEffect(() => {
-        setFormData(fs => ({
+        setFormData((fs) => ({
             ...fs,
-            formExtName: `${initialForm?.carrier || Carrier.PRDN}_${ProcessType.OFT}_DIGITAL_FORM`,
+            formExtName: `${initialForm?.carrier || Carrier.PRDN}_${
+                ProcessType.OFT
+            }_DIGITAL_FORM`,
             metaData: {
-                formType: `${initialForm?.carrier || Carrier.PRDN}_${ProcessType.OFT}_DIGITAL_FORM`,
+                formType: `${initialForm?.carrier || Carrier.PRDN}_${
+                    ProcessType.OFT
+                }_DIGITAL_FORM`,
                 formId: null,
                 formNumber: '',
             },
@@ -64,27 +70,46 @@ export default function PrdnOftWithdrawalForm() {
         }
     }, [formParty, ownerStateOfResidence]);
 
-    const hasTpaAuthorization = formTpaAuthorization && !Object.values(formTpaAuthorization).every(val => val === null);
+    const hasTpaAuthorization =
+        formTpaAuthorization &&
+        !Object.values(formTpaAuthorization).every((val) => val === null);
 
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <FormParties isFormStateReadOnly={isFormStateReadOnly} configs={formPartyConfigs} />
+            <FormParties
+                isFormStateReadOnly={isFormStateReadOnly}
+                configs={formPartyConfigs}
+            />
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={surrenderingInstructionsOptions}
-                title={t('amountDetails.surrenderingInstructions.title') as string}
+                title={
+                    t('amountDetails.surrenderingInstructions.title') as string
+                }
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
                 showContractReplacement={showContractReplacement}
             />
-            <SignatureValidations isFormStateReadOnly={isFormStateReadOnly} config={signaturesConfig} />
-            {hasTpaAuthorization && <EmployerTpaAuthorization isFormStateReadOnly={isFormStateReadOnly} />}
-            <CedingCompanyDistribution qualificationOptions={qualificationOptions} isFormStateReadOnly={isFormStateReadOnly} />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
+            <CedingCompanyDistribution
+                qualificationOptions={qualificationOptions}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             <FormDisbursement
                 options={disbursementOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                title={t('distributionMethod.cedingCompanyDistribution') as string}
+                title={
+                    t('distributionMethod.cedingCompanyDistribution') as string
+                }
                 defaultValue={defaultValues.disbursementOption}
             />
         </>

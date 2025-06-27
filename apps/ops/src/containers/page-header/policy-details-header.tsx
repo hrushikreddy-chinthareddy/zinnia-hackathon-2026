@@ -13,11 +13,17 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.detailCards.policyDetails',
     });
-    const currencyFormat: Intl.NumberFormatOptions = { currency: policy.currency ?? 'USD', style: 'currency' };
-    const { accountValue, costBasis, baseDeathBenefit, surrenderValue } = policy;
+    const currencyFormat: Intl.NumberFormatOptions = {
+        currency: policy.currency ?? 'USD',
+        style: 'currency',
+    };
+    const { accountValue, costBasis, baseDeathBenefit, surrenderValue } =
+        policy;
     const transactionCards = buildTransactionCards(policy, t);
 
-    const title = t(`${policy.isAnnuity ? 'contractDetails' : 'policyDetails'}`);
+    const title = t(
+        `${policy.isAnnuity ? 'contractDetails' : 'policyDetails'}`
+    );
 
     const belowHeaderTextChildren = (
         <>
@@ -29,7 +35,13 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
                         tooltipTitle={t(`baseDeathBenefit`)}
                         variant={LabelVariant.FieldLabel}
                     />
-                    <Content details={numberFormatify(baseDeathBenefit as number, currencyFormat)} variant={ContentVariant.Value} />
+                    <Content
+                        details={numberFormatify(
+                            baseDeathBenefit as number,
+                            currencyFormat
+                        )}
+                        variant={ContentVariant.Value}
+                    />
                 </div>
                 <div>
                     <Label
@@ -38,7 +50,13 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
                         tooltipTitle={t(`accountValue`)}
                         variant={LabelVariant.FieldLabel}
                     />
-                    <Content details={numberFormatify(accountValue as number, currencyFormat)} variant={ContentVariant.Value} />
+                    <Content
+                        details={numberFormatify(
+                            accountValue as number,
+                            currencyFormat
+                        )}
+                        variant={ContentVariant.Value}
+                    />
                 </div>
                 <div>
                     <Label
@@ -47,7 +65,13 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
                         tooltipTitle={t(`netSurrenderValue`)}
                         variant={LabelVariant.FieldLabel}
                     />
-                    <Content details={numberFormatify(surrenderValue as number, currencyFormat)} variant={ContentVariant.Value} />
+                    <Content
+                        details={numberFormatify(
+                            surrenderValue as number,
+                            currencyFormat
+                        )}
+                        variant={ContentVariant.Value}
+                    />
                 </div>
                 <div>
                     <Label
@@ -56,18 +80,35 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
                         tooltipTitle={t(`costBasis`)}
                         variant={LabelVariant.FieldLabel}
                     />
-                    <Content details={numberFormatify(costBasis as number, currencyFormat)} variant={ContentVariant.Value} />
+                    <Content
+                        details={numberFormatify(
+                            costBasis as number,
+                            currencyFormat
+                        )}
+                        variant={ContentVariant.Value}
+                    />
                 </div>
             </div>
-            <div className="mt-4 flex gap-4 flex-wrap" data-testid="transaction-cards">
-                {transactionCards.map(transactionCardProps => (
-                    <TransactionCard key={transactionCardProps.cardTitle} {...transactionCardProps} />
+            <div
+                className="mt-4 flex gap-4 flex-wrap"
+                data-testid="transaction-cards"
+            >
+                {transactionCards.map((transactionCardProps) => (
+                    <TransactionCard
+                        key={transactionCardProps.cardTitle}
+                        {...transactionCardProps}
+                    />
                 ))}
             </div>
         </>
     );
 
-    return <PageHeader headerText={title} belowHeaderTextChildren={belowHeaderTextChildren} />;
+    return (
+        <PageHeader
+            headerText={title}
+            belowHeaderTextChildren={belowHeaderTextChildren}
+        />
+    );
 };
 
 export default PolicyDetailsHeader;

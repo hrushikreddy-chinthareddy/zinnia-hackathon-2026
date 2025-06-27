@@ -12,11 +12,20 @@ interface FindKeyValueSearchProps {
     policyNumber?: string;
 }
 
-export const FindKeyValueSearch = ({ keyValues, planCode, policyNumber }: FindKeyValueSearchProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { useSuspense: false });
+export const FindKeyValueSearch = ({
+    keyValues,
+    planCode,
+    policyNumber,
+}: FindKeyValueSearchProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        useSuspense: false,
+    });
     const { sessionId, partyId } = usePermissionsContext();
 
-    const searchClasses = clsx('mt-4 flex w-full items-center sm:pl-14', 'lg:mt-0 lg:justify-end lg:pl-0');
+    const searchClasses = clsx(
+        'mt-4 flex w-full items-center sm:pl-14',
+        'lg:mt-0 lg:justify-end lg:pl-0'
+    );
 
     return (
         <div className={searchClasses}>

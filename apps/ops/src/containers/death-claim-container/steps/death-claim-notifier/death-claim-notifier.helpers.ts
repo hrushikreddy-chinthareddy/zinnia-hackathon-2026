@@ -1,4 +1,9 @@
-import { PartyRole, PhoneType, Policy, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    PhoneType,
+    Policy,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -6,7 +11,12 @@ import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
-import { ClaimActionTypes, DeceasedParty, NotifierParty, PartyObj } from '../../death-claim.types';
+import {
+    ClaimActionTypes,
+    DeceasedParty,
+    NotifierParty,
+    PartyObj,
+} from '../../death-claim.types';
 
 export const getTransformPhone = (phone: any) => {
     return {
@@ -18,20 +28,38 @@ export const getTransformPhone = (phone: any) => {
     };
 };
 
-export const getExtractedPartyRoles = (policy: Policy, roles: PartyRole[]): PolicyPartyRoles[] => {
-    return policy?.partyRoles?.filter(role => role.partyRole && roles.includes(role.partyRole)) || [];
+export const getExtractedPartyRoles = (
+    policy: Policy,
+    roles: PartyRole[]
+): PolicyPartyRoles[] => {
+    return (
+        policy?.partyRoles?.filter(
+            (role) => role.partyRole && roles.includes(role.partyRole)
+        ) || []
+    );
 };
 
-export const getNotifiersByRoles = (policy: Policy, roles: PartyRole[]): NotifierParty[] => {
-    const extractedPartyRoles: PolicyPartyRoles[] = getExtractedPartyRoles(policy, roles);
+export const getNotifiersByRoles = (
+    policy: Policy,
+    roles: PartyRole[]
+): NotifierParty[] => {
+    const extractedPartyRoles: PolicyPartyRoles[] = getExtractedPartyRoles(
+        policy,
+        roles
+    );
     const notifierList: NotifierParty[] = [];
 
-    extractedPartyRoles?.map(correspondingRole => {
-        const party = policy?.parties?.find(party => party.partyId === correspondingRole?.partyId);
+    extractedPartyRoles?.map((correspondingRole) => {
+        const party = policy?.parties?.find(
+            (party) => party.partyId === correspondingRole?.partyId
+        );
 
         if (party && correspondingRole) {
             const { phones } = party;
-            const homePhone = phones?.filter(phone => phone.phoneType === PhoneType.HOME)?.[0] || {};
+            const homePhone =
+                phones?.filter(
+                    (phone) => phone.phoneType === PhoneType.HOME
+                )?.[0] || {};
             const notifier = {
                 notifierRole: '',
                 dateOfNotification: dayjs().format(ZAHARA_DATE_FORMAT),
@@ -49,7 +77,8 @@ export const getNotifiersByRoles = (policy: Policy, roles: PartyRole[]): Notifie
                     fullName: party.fullName,
                     gender: party.gender,
                     dateOfBirth: party.dateOfBirth,
-                    relationshipToInsured: correspondingRole.relationshipToInsured,
+                    relationshipToInsured:
+                        correspondingRole.relationshipToInsured,
                     phone: {
                         ...getTransformPhone(homePhone),
                     },
@@ -76,12 +105,20 @@ export const validatePhoneNumber = (phone: any, t: TFunction) => {
     return errors;
 };
 
-export const getPolicyOwnersByRole = (policy: Policy, roles: PartyRole[]): DeceasedParty[] => {
-    const extractedPartyRoles: PolicyPartyRoles[] = getExtractedPartyRoles(policy, roles);
+export const getPolicyOwnersByRole = (
+    policy: Policy,
+    roles: PartyRole[]
+): DeceasedParty[] => {
+    const extractedPartyRoles: PolicyPartyRoles[] = getExtractedPartyRoles(
+        policy,
+        roles
+    );
     const owners: DeceasedParty[] = [];
 
-    extractedPartyRoles?.map(correspondingRole => {
-        const party = policy?.parties?.find(party => party.partyId === correspondingRole?.partyId);
+    extractedPartyRoles?.map((correspondingRole) => {
+        const party = policy?.parties?.find(
+            (party) => party.partyId === correspondingRole?.partyId
+        );
 
         if (party && correspondingRole) {
             const owner = {
@@ -98,7 +135,8 @@ export const getPolicyOwnersByRole = (policy: Policy, roles: PartyRole[]): Decea
                     fullName: party.fullName,
                     gender: party.gender,
                     dateOfBirth: party.dateOfBirth,
-                    relationshipToInsured: correspondingRole.relationshipToInsured,
+                    relationshipToInsured:
+                        correspondingRole.relationshipToInsured,
                 } as PartyObj,
                 isDeceased: false,
                 isDiedInForeignCountry: null,

@@ -2,7 +2,13 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
-import { ChangeEvent, HTMLAttributes, useCallback, useEffect, useState } from 'react';
+import {
+    ChangeEvent,
+    HTMLAttributes,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { LabelValue } from '@deps/types/data';
@@ -14,7 +20,8 @@ import Typography, { TypographyVariant } from '../typography/typography';
 
 export const SearchBarInitialValues: SearchViewQuery = {};
 
-interface SearchBarProps extends Omit<HTMLAttributes<HTMLInputElement>, 'onToggle'> {
+interface SearchBarProps
+    extends Omit<HTMLAttributes<HTMLInputElement>, 'onToggle'> {
     searchValue: SearchViewQuery;
     onSearch: (value: SearchViewQuery) => void;
     initialToggleValue: PolicySearchKeys;
@@ -38,14 +45,18 @@ const SearchBar = ({
     const { t } = useTranslation(TranslationFiles.COMMON);
     const getToggleLabel = useCallback(
         (targetVal: string) => {
-            return toggleLabels(t).find(a => a.value === targetVal) as LabelValue<PolicySearchKeys>;
+            return toggleLabels(t).find(
+                (a) => a.value === targetVal
+            ) as LabelValue<PolicySearchKeys>;
         },
         [t, toggleLabels]
     );
 
     const [values, setValues] = useState<SearchViewQuery>({});
     const [activeToggleBtn, setActiveToggleBtn] = useState(initialToggleValue);
-    const [activeLabels, setActiveLabels] = useState(getToggleLabel(initialToggleValue));
+    const [activeLabels, setActiveLabels] = useState(
+        getToggleLabel(initialToggleValue)
+    );
 
     useEffect(() => {
         setValues(searchValue);
@@ -57,11 +68,13 @@ const SearchBar = ({
     }, [initialToggleValue, getToggleLabel]);
 
     const handleSearch = () => {
-        const searchValue: SearchViewQuery = { [activeToggleBtn]: values[activeToggleBtn] };
+        const searchValue: SearchViewQuery = {
+            [activeToggleBtn]: values[activeToggleBtn],
+        };
         const activeToggle = getToggleLabel(activeToggleBtn);
 
         if (activeToggle.group) {
-            activeToggle.group.forEach(group => {
+            activeToggle.group.forEach((group) => {
                 if (group.value) searchValue[group.value] = values[group.value];
             });
         }
@@ -73,12 +86,16 @@ const SearchBar = ({
         event.preventDefault();
     };
 
-    const handleNewValue = (e: ChangeEvent<HTMLInputElement>, value: string, key: PolicySearchKeys) => {
+    const handleNewValue = (
+        e: ChangeEvent<HTMLInputElement>,
+        value: string,
+        key: PolicySearchKeys
+    ) => {
         handleError?.(false); // reset field error message on change
         if (activeLabels?.value != 'firmName') {
             value = (value || '').trim();
         }
-        setValues(prevValues => ({ ...prevValues, [key]: value || '' }));
+        setValues((prevValues) => ({ ...prevValues, [key]: value || '' }));
     };
 
     const handleToggle = useCallback(
@@ -100,14 +117,29 @@ const SearchBar = ({
     const dropdownLabels = toggleLabels(t);
 
     return (
-        <form className={clsx(styles.formContainer, className)} onSubmit={handleFormSubmit}>
+        <form
+            className={clsx(styles.formContainer, className)}
+            onSubmit={handleFormSubmit}
+        >
             <div className={styles.searchContainer}>
                 <DropdownMenu.Root>
-                    <DropdownMenu.Trigger className={clsx(styles.dropdownTrigger, 'typography-content-body-sm whitespace-nowrap')}>
+                    <DropdownMenu.Trigger
+                        className={clsx(
+                            styles.dropdownTrigger,
+                            'typography-content-body-sm whitespace-nowrap'
+                        )}
+                    >
                         <label id="case-search-label">
-                            <Typography variant={TypographyVariant.BodySm}>{activeLabels.label}</Typography>
+                            <Typography variant={TypographyVariant.BodySm}>
+                                {activeLabels.label}
+                            </Typography>
                         </label>
-                        <Icon type={IconType.CHEVRON} height={22} width={22} color="#00628B" />
+                        <Icon
+                            type={IconType.CHEVRON}
+                            height={22}
+                            width={22}
+                            color="#00628B"
+                        />
                     </DropdownMenu.Trigger>
 
                     <DropdownMenu.Portal>
@@ -116,15 +148,26 @@ const SearchBar = ({
                                 <DropdownMenu.Item
                                     className={styles.dropdownItem}
                                     key={`dropdown-item-${index}`}
-                                    onSelect={() => handleToggle(item.value || '')}
+                                    onSelect={() =>
+                                        handleToggle(item.value || '')
+                                    }
                                 >
-                                    <Typography variant={TypographyVariant.BodySm}>{item.label}</Typography>
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                    >
+                                        {item.label}
+                                    </Typography>
                                 </DropdownMenu.Item>
                             ))}
                         </DropdownMenu.Content>
                     </DropdownMenu.Portal>
                 </DropdownMenu.Root>
-                <SearchFieldToggle activeLabels={activeLabels} handleChange={handleNewValue} values={values} onClear={onClear} />
+                <SearchFieldToggle
+                    activeLabels={activeLabels}
+                    handleChange={handleNewValue}
+                    values={values}
+                    onClear={onClear}
+                />
             </div>
             <Button
                 className="md:mt-1"

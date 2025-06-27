@@ -1,7 +1,10 @@
 import { FieldVariant, FieldSize } from '@deps/components/fields/field';
 import { mergeClasses } from '@deps/helpers/props.helpers';
 
-export const getLabelClasses = (variant: FieldVariant = FieldVariant.Default, classNames: string) => {
+export const getLabelClasses = (
+    variant: FieldVariant = FieldVariant.Default,
+    classNames: string
+) => {
     switch (variant) {
         case FieldVariant.Default:
             return mergeClasses(classNames, 'text-gray-900');
@@ -12,7 +15,10 @@ export const getLabelClasses = (variant: FieldVariant = FieldVariant.Default, cl
     }
 };
 
-export const getInputSizeClasses = (size: FieldSize = FieldSize.Default, classNames: string) => {
+export const getInputSizeClasses = (
+    size: FieldSize = FieldSize.Default,
+    classNames: string
+) => {
     switch (size) {
         case FieldSize.Default:
             return mergeClasses(classNames, 'h-[58px] pb-4 pt-4');
@@ -33,7 +39,9 @@ export const getInputClasses = (
 
     switch (variant) {
         case FieldVariant.Default:
-            activeClasses = isActive ? 'border-[3px] rounded-md border-primary' : '';
+            activeClasses = isActive
+                ? 'border-[3px] rounded-md border-primary'
+                : '';
             return mergeClasses(
                 getInputSizeClasses(size, classNames),
                 `bg-white border-2 border-gray-200  [&>div>svg]:text-secondary-main hover:border-accent-one active:border-[3px] active:rounded-md active:border-primary focus:border-[3px] focus:rounded-md focus:border-primary ${activeClasses}`

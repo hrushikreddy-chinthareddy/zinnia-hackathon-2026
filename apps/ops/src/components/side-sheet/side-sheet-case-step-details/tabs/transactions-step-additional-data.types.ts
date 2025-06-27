@@ -6,21 +6,21 @@ export enum TransactionsAdditionalDataStepIds {
     stopSystematicPrograms = 'verifyFunds.stopSystematicPrograms',
     stopRMD = 'verifyFunds.stopRMD',
     stopSpecialPrograms = 'verifyFunds.stopSpecialPrograms',
-};
+}
 
 export enum TransactionActionStatuses {
     SUCCESS = 'SUCCESS',
     FAIL = 'FAIL',
     NONE = 'NONE',
-};
+}
 
 export enum TransactionActions {
     DELETE = 'DELETE',
     TERMINATE = 'TERMINATE',
     NONE = 'NONE',
-};
+}
 
 export interface ViewTransactionsProps {
     stepAdditionalData: CaseAdditionalStepData;
     prop: string;
-};
+}

@@ -4,19 +4,32 @@ import { useState } from 'react';
 
 import { TreeMapInsights } from '@deps/components/dashboard/charts/tree-map-insights';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
-import { CaseTypeFilter, ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
+import {
+    CaseTypeFilter,
+    ExtendedProcesses,
+} from '@deps/components/dashboard/filters/case-type-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
-import { formatProcessFilter, startDates, TimeframeFilterOptions } from '@deps/components/dashboard/utils';
+import {
+    formatProcessFilter,
+    startDates,
+    TimeframeFilterOptions,
+} from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { getExceptionCountQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
 export const NigoOpenTransactions = () => {
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
+    const [selectedProcess, setSelectedProcess] = useState<
+        Processes | ExtendedProcesses
+    >(Processes.NewBusiness);
 
-    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+    const [timeframeRadio, setTimeframeRadio] = useState<
+        TimeframeFilterOptions | undefined
+    >(TimeframeFilterOptions.Trailing12Months);
 
     const [timerange, setTimerange] = useState({
         from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
@@ -37,24 +50,35 @@ export const NigoOpenTransactions = () => {
     };
 
     const filter = {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        caseStatus: [
+            Statuses.InProgress,
+            Statuses.Exception,
+            Statuses.NotStarted,
+        ],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         createdDateStart: timerange.from,
         process: formatProcessFilter(selectedProcess),
     };
 
-    const { data: insightExceptionStats, isFetching: insightExceptionStatsFetching } = useQuery({
+    const {
+        data: insightExceptionStats,
+        isFetching: insightExceptionStatsFetching,
+    } = useQuery({
         queryKey: ['exceptionStats', filter],
         queryFn: async () => {
-            const response = await getExceptionCountQuery(filter, [ExceptionCountGroupByEnum.EXCEPTION_CATEGORY]);
+            const response = await getExceptionCountQuery(filter, [
+                ExceptionCountGroupByEnum.EXCEPTION_CATEGORY,
+            ]);
             if (response?.data?.length) {
-                response.data = response?.data?.filter(item => item.name !== '');
+                response.data = response?.data?.filter(
+                    (item) => item.name !== ''
+                );
             }
 
             return response;
         },
-        placeholderData: previousData => previousData,
+        placeholderData: (previousData) => previousData,
         enabled: Object.keys(filter).length > 0,
     });
     return (
@@ -68,7 +92,11 @@ export const NigoOpenTransactions = () => {
                             <div className="w-1/2">
                                 <CaseTypeFilter
                                     onValueChange={setSelectedProcess}
-                                    caseStatus={[Statuses.InProgress, Statuses.Exception, Statuses.NotStarted]}
+                                    caseStatus={[
+                                        Statuses.InProgress,
+                                        Statuses.Exception,
+                                        Statuses.NotStarted,
+                                    ]}
                                     defaultProcess={Processes.NewBusiness}
                                 />
                             </div>
@@ -77,7 +105,11 @@ export const NigoOpenTransactions = () => {
                                     timerange={timerange}
                                     defaultValue={timeframeRadio}
                                     controlledTimeValue={timeframeRadio}
-                                    onRadioChange={val => handleTimeframeRadioChange(val as TimeframeFilterOptions)}
+                                    onRadioChange={(val) =>
+                                        handleTimeframeRadioChange(
+                                            val as TimeframeFilterOptions
+                                        )
+                                    }
                                     handleTimerangeChange={handleRangeChange}
                                 />
                             </div>

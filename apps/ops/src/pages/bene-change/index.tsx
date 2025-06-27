@@ -12,9 +12,18 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
-import { getPolicyDetailsSsr, searchPolicySSR } from '@deps/queries/api/policies';
+import {
+    getPolicyDetailsSsr,
+    searchPolicySSR,
+} from '@deps/queries/api/policies';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
-import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logError,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
@@ -30,7 +39,11 @@ const BeneChange = ({ policy, document, planCode }: AddressChangeProps) => {
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
             <BeneChangeProvider>
-                <BeneChangeContainer policy={policy} document={document} planCode={planCode} />
+                <BeneChangeContainer
+                    policy={policy}
+                    document={document}
+                    planCode={planCode}
+                />
             </BeneChangeProvider>
         </div>
     );
@@ -49,18 +62,22 @@ export const getServerSideProps = withPageAuthAndLogging(
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
-                logWarn('getServerSidePropsAddressChangePage::Access token expired', {
-                    ...parseErrorInformation(e),
-                    ...loggingContext,
-                });
+                logWarn(
+                    'getServerSidePropsAddressChangePage::Access token expired',
+                    {
+                        ...parseErrorInformation(e),
+                        ...loggingContext,
+                    }
+                );
                 return serverSidePropsLogout();
             }
             // Create a permissions object to pass to the page, strongly typed using the enum.
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -99,7 +116,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
                 const planCode = response ? response[0]?.planCode : null;
                 if (!planCode) {
-                    logInfo('address_change/:id::Plan code not found', loggingContext);
+                    logInfo(
+                        'address_change/:id::Plan code not found',
+                        loggingContext
+                    );
                     return {
                         redirect: {
                             destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
@@ -107,7 +127,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 } else {
-                    logInfo('address_change/:id::Plan code found', loggingContext);
+                    logInfo(
+                        'address_change/:id::Plan code found',
+                        loggingContext
+                    );
                 }
 
                 const document = documentNumber
@@ -119,7 +142,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                           loggingContext
                       )
                     : null;
-                const policy = await getPolicyDetailsSsr(policyNumber, planCode, accessToken, loggingContext, true);
+                const policy = await getPolicyDetailsSsr(
+                    policyNumber,
+                    planCode,
+                    accessToken,
+                    loggingContext,
+                    true
+                );
 
                 if (!policy) {
                     return {
@@ -139,14 +168,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             } catch (error) {
-                logError('getServerSidePropsAddressChangePage', { ...parseErrorInformation(error), ...loggingContext });
+                logError('getServerSidePropsAddressChangePage', {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                });
                 return {
                     props: {},
                 };
             }
         },
     },
-    { file: 'bene-change/index', function: 'getServerSideProps', page: 'bene-change' }
+    {
+        file: 'bene-change/index',
+        function: 'getServerSideProps',
+        page: 'bene-change',
+    }
 );
 
 export default BeneChange;

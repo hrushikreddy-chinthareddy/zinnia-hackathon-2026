@@ -11,12 +11,31 @@ import {
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 
-export default function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    props: WidgetProps<T, S, F>
-) {
-    const { schema, id, value, formContext, disabled, label = '', hideLabel, onChange, registry, options, uiSchema } = props;
+export default function CheckboxWidget<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+    const {
+        schema,
+        id,
+        value,
+        formContext,
+        disabled,
+        label = '',
+        hideLabel,
+        onChange,
+        registry,
+        options,
+        uiSchema,
+    } = props;
     const readonly = formContext?.isReadOnlyOverride || props.readonly;
-    const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>('DescriptionFieldTemplate', registry, options);
+    const DescriptionFieldTemplate = getTemplate<
+        'DescriptionFieldTemplate',
+        T,
+        S,
+        F
+    >('DescriptionFieldTemplate', registry, options);
     const required = schemaRequiresTrueValue<S>(schema);
     const description = options.description ?? schema.description;
     const uiOptions = getUiOptions(uiSchema);
@@ -34,7 +53,13 @@ export default function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJS
                     registry={registry}
                 />
             )}
-            {helpText && <div className={'body-sm text-[#676767] text-gray-500 mb-4 pt-0'}>{helpText}</div>}
+            {helpText && (
+                <div
+                    className={'body-sm text-[#676767] text-gray-500 mb-4 pt-0'}
+                >
+                    {helpText}
+                </div>
+            )}
             <CheckboxText
                 id={id}
                 key={value}

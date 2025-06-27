@@ -12,7 +12,7 @@ export default {
             control: 'object',
         },
     },
-    decorators: [Story => <div>{Story()}</div>],
+    decorators: [(Story) => <div>{Story()}</div>],
 } as Meta<typeof ExceptionRow>;
 
 const exceptionsArray = [
@@ -48,11 +48,15 @@ const exceptionsArray = [
     },
 ];
 
-export const SingleException = (args: { exceptions: ExceptionInstance[] }) => <ExceptionRow {...args} />;
+export const SingleException = (args: { exceptions: ExceptionInstance[] }) => (
+    <ExceptionRow {...args} />
+);
 SingleException.args = {
     exceptions: [exceptionsArray[1]],
 };
-export const MultipleExceptions = (args: { exceptions: ExceptionInstance[] }) => <ExceptionRow {...args} />;
+export const MultipleExceptions = (args: {
+    exceptions: ExceptionInstance[];
+}) => <ExceptionRow {...args} />;
 MultipleExceptions.args = {
     exceptions: exceptionsArray,
 };

@@ -10,7 +10,10 @@ import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-f
 import { EmailWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import { SideSheetPeopleHeaderProps } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 
 export interface SortEmailsByType {
@@ -20,31 +23,52 @@ export interface SortEmailsByType {
 interface EmailsProps {
     editable?: boolean;
     emails: Email[];
-    onEditClick: (params: { email: Email; header: SideSheetPeopleHeaderProps }) => void;
+    onEditClick: (params: {
+        email: Email;
+        header: SideSheetPeopleHeaderProps;
+    }) => void;
     showAdditional: boolean;
 }
 
-export const Emails = ({ editable, emails, onEditClick, showAdditional }: EmailsProps) => {
+export const Emails = ({
+    editable,
+    emails,
+    onEditClick,
+    showAdditional,
+}: EmailsProps) => {
     const { t } = useTranslation();
 
     if (!emails.length) return null;
 
-    const filteredEmails = emails.filter(email => !!email.emailAddress);
+    const filteredEmails = emails.filter((email) => !!email.emailAddress);
     const sortedEmails = sortEmailsByType({ emails: filteredEmails });
 
     return (
         <>
             {sortedEmails.map((email, index) => {
-                const { emailId, emailType = EmailType.PERSONAL, isPending } = email as EmailWithPending;
+                const {
+                    emailId,
+                    emailType = EmailType.PERSONAL,
+                    isPending,
+                } = email as EmailWithPending;
                 const emailIdKey = emailId ?? uuid4();
-                const emailTypeKey = emailType?.toLocaleLowerCase() ?? EmailType.PERSONAL.toLocaleLowerCase();
+                const emailTypeKey =
+                    emailType?.toLocaleLowerCase() ??
+                    EmailType.PERSONAL.toLocaleLowerCase();
 
                 return (
-                    <div className={clsx('flex flex-col', { hidden: !showAdditional && index > 3 })} key={emailIdKey}>
+                    <div
+                        className={clsx('flex flex-col', {
+                            hidden: !showAdditional && index > 3,
+                        })}
+                        key={emailIdKey}
+                    >
                         <div className="flex items-center gap-1">
                             <Label
                                 id={`people-email-card-${emailIdKey}`}
-                                label={t(`people.card.email.emailOptions.${emailTypeKey}`)}
+                                label={t(
+                                    `people.card.email.emailOptions.${emailTypeKey}`
+                                )}
                                 variant={LabelVariant.FieldLabel}
                             />
                             {isPending && <PendingTag />}
@@ -56,14 +80,19 @@ export const Emails = ({ editable, emails, onEditClick, showAdditional }: Emails
                                             email,
                                             header: {
                                                 action: NonFinancialTransactionActions.Edit,
-                                                transaction: NonFinancialTransactions.Email,
-                                                typeTranslation: t(`people.card.email.emailOptions.${emailTypeKey}`) as string,
+                                                transaction:
+                                                    NonFinancialTransactions.Email,
+                                                typeTranslation: t(
+                                                    `people.card.email.emailOptions.${emailTypeKey}`
+                                                ) as string,
                                             },
                                         })
                                     }
                                 >
                                     <EditIcon height={16} width={16} />
-                                    <span className="sr-only">{t('people.card.general.edit')}</span>
+                                    <span className="sr-only">
+                                        {t('people.card.general.edit')}
+                                    </span>
                                 </IconButton>
                             )}
                         </div>
@@ -83,14 +112,15 @@ export const Emails = ({ editable, emails, onEditClick, showAdditional }: Emails
 export const sortEmailsByType = ({ emails }: SortEmailsByType): Email[] => {
     if (!emails) return [];
 
-    const validEmails = emails?.filter(email => !isEndDated(email.endDate)) ?? [];
+    const validEmails =
+        emails?.filter((email) => !isEndDated(email.endDate)) ?? [];
 
     const businessEmails: Email[] = [];
     const otherEmails: Email[] = [];
     const personalEmails: Email[] = [];
     const unknownEmails: Email[] = [];
 
-    validEmails.forEach(validEmail => {
+    validEmails.forEach((validEmail) => {
         switch (validEmail.emailType) {
             case EmailType.BUSINESS:
                 businessEmails.push(validEmail);
@@ -107,5 +137,10 @@ export const sortEmailsByType = ({ emails }: SortEmailsByType): Email[] => {
         }
     });
 
-    return [...personalEmails, ...businessEmails, ...otherEmails, ...unknownEmails];
+    return [
+        ...personalEmails,
+        ...businessEmails,
+        ...otherEmails,
+        ...unknownEmails,
+    ];
 };

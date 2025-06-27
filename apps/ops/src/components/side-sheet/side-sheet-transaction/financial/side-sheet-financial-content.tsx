@@ -4,7 +4,9 @@ import { TFunction } from 'next-i18next';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
 import { TransactionSideSheetValues } from '../types';
@@ -15,8 +17,19 @@ export interface SideSheetFinancialTransactionContentProps {
     t: TFunction;
 }
 
-const SideSheetFinancialTransactionContent = ({ loading, values, t }: SideSheetFinancialTransactionContentProps) => {
-    const { appliedAmount, paymentMethod, processDate, submittedAmount, status, transactionType } = values;
+const SideSheetFinancialTransactionContent = ({
+    loading,
+    values,
+    t,
+}: SideSheetFinancialTransactionContentProps) => {
+    const {
+        appliedAmount,
+        paymentMethod,
+        processDate,
+        submittedAmount,
+        status,
+        transactionType,
+    } = values;
 
     return (
         <div className="mt-8 border-t-2 border-gray-200 pt-8">
@@ -26,7 +39,9 @@ const SideSheetFinancialTransactionContent = ({ loading, values, t }: SideSheetF
                 </Typography>
             )}
             <div className="grid grid-cols-2 gap-8">
-                <FieldData label={t('policy.history.sidesheet.transactionType')}>
+                <FieldData
+                    label={t('policy.history.sidesheet.transactionType')}
+                >
                     {loading ? (
                         // to do - add optional alt text?
                         // alt={t('policy.history.sidesheet.general.downloading')}
@@ -37,14 +52,18 @@ const SideSheetFinancialTransactionContent = ({ loading, values, t }: SideSheetF
                 </FieldData>
                 <FieldData
                     label={t('policy.history.sidesheet.processDate')}
-                    tooltipBody={t('policy.history.sidesheet.processDateTooltip')}
+                    tooltipBody={t(
+                        'policy.history.sidesheet.processDateTooltip'
+                    )}
                     tooltipTitle={t('policy.history.sidesheet.processDate')}
                 >
                     {processDate}
                 </FieldData>
                 <FieldData
                     label={t('policy.history.sidesheet.submittedAmount')}
-                    tooltipBody={t('policy.history.sidesheet.submittedAmountTooltip')}
+                    tooltipBody={t(
+                        'policy.history.sidesheet.submittedAmountTooltip'
+                    )}
                     tooltipTitle={t('policy.history.sidesheet.submittedAmount')}
                 >
                     {numberFormatify(submittedAmount)}
@@ -52,8 +71,12 @@ const SideSheetFinancialTransactionContent = ({ loading, values, t }: SideSheetF
                 {status !== TransactionStatus.CANCELED && (
                     <FieldData
                         label={t('policy.history.sidesheet.appliedAmount')}
-                        tooltipBody={t('policy.history.sidesheet.appliedAmountTooltip')}
-                        tooltipTitle={t('policy.history.sidesheet.appliedAmount')}
+                        tooltipBody={t(
+                            'policy.history.sidesheet.appliedAmountTooltip'
+                        )}
+                        tooltipTitle={t(
+                            'policy.history.sidesheet.appliedAmount'
+                        )}
                     >
                         {numberFormatify(appliedAmount)}
                     </FieldData>

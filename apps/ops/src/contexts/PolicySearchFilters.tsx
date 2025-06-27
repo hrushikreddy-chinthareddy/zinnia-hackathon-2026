@@ -3,7 +3,10 @@ import { createContext, useEffect, useMemo, useState } from 'react';
 
 import { SearchBarInitialValues } from '@deps/components/search/search-bar';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
-import { POLICY_SEARCH_FILTERS_STORAGE_KEY, isResetQueryParam } from '@deps/types/constants';
+import {
+    POLICY_SEARCH_FILTERS_STORAGE_KEY,
+    isResetQueryParam,
+} from '@deps/types/constants';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 export interface PolicySearchFilters {
     searchValue: SearchViewQuery;
@@ -29,16 +32,18 @@ interface PolicySearchFiltersProps {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
-export const PolicySearchFiltersContext = createContext<PolicySearchFiltersProps>({
-    policySearchFilters: initialFilters,
-    setPolicySearchFilters: noop,
-    clearPolicySearchFilters: noop,
-    setShowFieldErrorMessage: noop,
-    showFieldErrorMessage: false,
-});
+export const PolicySearchFiltersContext =
+    createContext<PolicySearchFiltersProps>({
+        policySearchFilters: initialFilters,
+        setPolicySearchFilters: noop,
+        clearPolicySearchFilters: noop,
+        setShowFieldErrorMessage: noop,
+        showFieldErrorMessage: false,
+    });
 
 export const PolicySearchFiltersProvider = ({ children }: any) => {
-    const [policySearchFilters, setPolicySearchFilters] = useState(initialFilters);
+    const [policySearchFilters, setPolicySearchFilters] =
+        useState(initialFilters);
     const [showFieldErrorMessage, setShowFieldErrorMessage] = useState(false);
     const router = useRouter();
 
@@ -48,7 +53,9 @@ export const PolicySearchFiltersProvider = ({ children }: any) => {
     };
 
     useEffect(() => {
-        const filtersFromStorage = storage.getItem(POLICY_SEARCH_FILTERS_STORAGE_KEY) as PolicySearchFilters;
+        const filtersFromStorage = storage.getItem(
+            POLICY_SEARCH_FILTERS_STORAGE_KEY
+        ) as PolicySearchFilters;
 
         if (filtersFromStorage) {
             setPolicySearchFilters(filtersFromStorage);
@@ -83,5 +90,9 @@ export const PolicySearchFiltersProvider = ({ children }: any) => {
         [policySearchFilters, showFieldErrorMessage, setShowFieldErrorMessage]
     );
 
-    return <PolicySearchFiltersContext.Provider value={memoizedValues}>{children}</PolicySearchFiltersContext.Provider>;
+    return (
+        <PolicySearchFiltersContext.Provider value={memoizedValues}>
+            {children}
+        </PolicySearchFiltersContext.Provider>
+    );
 };

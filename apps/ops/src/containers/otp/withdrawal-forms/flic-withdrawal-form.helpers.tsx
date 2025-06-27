@@ -80,10 +80,19 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getFlicConfig(t: TFunction, qualType: string = '', isLC: boolean = true) {
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
+export default function getFlicConfig(
+    t: TFunction,
+    qualType: string = '',
+    isLC: boolean = true
+) {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null } => {
         if (formProgram?.programType?.text === ProgramType.TotalFreeAmt) {
-            return { selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal, amount: '' };
+            return {
+                selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal,
+                amount: '',
+            };
         }
         if (formProgram?.program?.text === ProgramType.Withdrawal) {
             const amount = formProgram?.partialAmount?.text || '';
@@ -106,25 +115,40 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
         return validQualTypesForSpousalSignatureFAST.includes(qualType);
     }
 
-    const shouldCheckSpouseSignatureOnAnnuitantState = isLC ? isValidQualTypeLC(qualType) : isValidQualType(qualType);
+    const shouldCheckSpouseSignatureOnAnnuitantState = isLC
+        ? isValidQualTypeLC(qualType)
+        : isValidQualType(qualType);
 
-    const isSpousalSignatureRequired = (ownerState: string | null, annuitantState: string | null): boolean => {
+    const isSpousalSignatureRequired = (
+        ownerState: string | null,
+        annuitantState: string | null
+    ): boolean => {
         if (shouldCheckSpouseSignatureOnAnnuitantState) {
-            return !!annuitantState && spousalSignatureOnAnnuitantStateCodes.includes(annuitantState);
+            return (
+                !!annuitantState &&
+                spousalSignatureOnAnnuitantStateCodes.includes(annuitantState)
+            );
         }
-        return !!ownerState && spousalSignatureStateCodes.includes(ownerState?.toUpperCase());
+        return (
+            !!ownerState &&
+            spousalSignatureStateCodes.includes(ownerState?.toUpperCase())
+        );
     };
 
     const partialWithdrawalOptions: PartialWithdrawalOption[] = [
         {
-            label: t('amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'),
+            label: t(
+                'amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'
+            ),
             value: WithdrawalSelectionValues.TotalFreeWithdrawal,
             generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -138,7 +162,10 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                     withdrawType: { text: WithdrawalType.Net },
                     programType: { text: ProgramType.NetWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                    partialNetAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                     programSubType: { text: ProgramType.NetWithdrawal },
                 };
             },
@@ -153,7 +180,10 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.GrossWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                     programSubType: { text: ProgramType.GrossWithdrawal },
                 };
             },
@@ -172,8 +202,14 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Default,
+        },
+        {
+            label: t('distributionInstruction.specifyFunds'),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [
@@ -221,7 +257,9 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
         {
@@ -244,7 +282,8 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         },
         {
             key: `sig-val-spouse`,
@@ -298,7 +337,20 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
         },
     ];
 
-    const cslnCheckStates = ['AZ', 'CA', 'CO', 'LA', 'MT', 'NV', 'NM', 'OH', 'TX', 'WA', 'ND', 'RI'];
+    const cslnCheckStates = [
+        'AZ',
+        'CA',
+        'CO',
+        'LA',
+        'MT',
+        'NV',
+        'NM',
+        'OH',
+        'TX',
+        'WA',
+        'ND',
+        'RI',
+    ];
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,
@@ -402,7 +454,9 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -428,7 +482,10 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
 
                 {
@@ -442,11 +499,16 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -462,25 +524,36 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -517,7 +590,8 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -532,7 +606,9 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                 },
                 {
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
                 {
@@ -556,7 +632,10 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -568,11 +647,16 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -587,25 +671,36 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -642,7 +737,8 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -696,17 +792,28 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
         {
-            label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t(
+                'amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+            ),
             value: ProcessRequestType.NoLongerSubject,
         },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
     const fullWithdrawalOptions = [
         {
-            label: t('amountDetails.fullWithdrawal.withdrawTheEntireContractValue'),
+            label: t(
+                'amountDetails.fullWithdrawal.withdrawTheEntireContractValue'
+            ),
             value: AccountCloseReason.Surrender,
         },
     ];
@@ -719,8 +826,16 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
     };
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
 
     return {
@@ -728,7 +843,8 @@ export default function getFlicConfig(t: TFunction, qualType: string = '', isLC:
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,
-        formValidation: (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values),
+        formValidation: (values: Partial<FormParts> = {}) =>
+            commonOftFormValidation(t, values),
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         irsSignatureConfig,

@@ -4,7 +4,11 @@ import { useTranslation } from 'next-i18next';
 import { useCallback } from 'react';
 
 import { ButtonSize } from '@deps/components/button/button';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import {
@@ -19,18 +23,27 @@ type SendDocumentNavigationButtonsProps = TransactionClickProps & {
     handleCancel: () => void;
 };
 
-const SendDocumentNavigationButtons = ({ handleContinue, handleCancel, trackEventProps }: SendDocumentNavigationButtonsProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument.formActions' });
+const SendDocumentNavigationButtons = ({
+    handleContinue,
+    handleCancel,
+    trackEventProps,
+}: SendDocumentNavigationButtonsProps) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'sendDocument.formActions',
+    });
     const { sessionId, partyId } = usePermissionsContext();
 
     const onContinueClick = useCallback(() => {
         if (trackEventProps) {
             // TODO MG: prevent track from being called if ui validation error
-            segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(SegmentTrackedEventName.TransactionContinueClicked, {
-                session_id: sessionId,
-                userId: partyId,
-                ...trackEventProps,
-            });
+            segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
+                SegmentTrackedEventName.TransactionContinueClicked,
+                {
+                    session_id: sessionId,
+                    userId: partyId,
+                    ...trackEventProps,
+                }
+            );
         }
 
         handleContinue();
@@ -38,18 +51,26 @@ const SendDocumentNavigationButtons = ({ handleContinue, handleCancel, trackEven
 
     const onCancelClick = useCallback(() => {
         if (trackEventProps) {
-            segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(SegmentTrackedEventName.TransactionCancelClicked, {
-                session_id: sessionId,
-                userId: partyId,
-                ...trackEventProps,
-            });
+            segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(
+                SegmentTrackedEventName.TransactionCancelClicked,
+                {
+                    session_id: sessionId,
+                    userId: partyId,
+                    ...trackEventProps,
+                }
+            );
         }
         handleCancel();
     }, [handleCancel, partyId, sessionId, trackEventProps]);
 
     return (
         <div className={clsx('flex flex-row justify-start gap-6')}>
-            <Button aria-label={t('continue') as string} onClick={onContinueClick} size={ButtonSize.Small} type={'submit'}>
+            <Button
+                aria-label={t('continue') as string}
+                onClick={onContinueClick}
+                size={ButtonSize.Small}
+                type={'submit'}
+            >
                 {t('continue')}
             </Button>
             <NavElement

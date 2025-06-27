@@ -26,7 +26,9 @@ describe('FormWaiverItem Component', () => {
                 onChange={() => {}}
             />
         );
-        const checkbox: HTMLInputElement = screen.getByTestId('NURSING_HOME_AND_HOSPITAL-checkbox');
+        const checkbox: HTMLInputElement = screen.getByTestId(
+            'NURSING_HOME_AND_HOSPITAL-checkbox'
+        );
         expect(checkbox.checked).toBe(false);
         fireEvent.click(checkbox);
         expect(checkbox.checked).toBe(true);
@@ -74,7 +76,9 @@ describe('FormWaiverItem Component', () => {
             />
         );
 
-        const Option: HTMLInputElement = screen.getByTestId('button-group-label-test-id-yes');
+        const Option: HTMLInputElement = screen.getByTestId(
+            'button-group-label-test-id-yes'
+        );
         fireEvent.click(Option);
         expect(onChangeMock).toHaveBeenCalledWith({
             text: PolicyWaiver.NURSING_HOME_AND_HOSPITAL,
@@ -103,7 +107,9 @@ describe('FormWaiverItem Component', () => {
             />
         );
 
-        const Option: HTMLInputElement = screen.getByTestId('button-group-label-test-id-no');
+        const Option: HTMLInputElement = screen.getByTestId(
+            'button-group-label-test-id-no'
+        );
         fireEvent.click(Option);
         expect(onChangeMock).toHaveBeenCalledWith({
             text: PolicyWaiver.NURSING_HOME_AND_HOSPITAL,
@@ -132,7 +138,9 @@ describe('FormWaiverItem Component', () => {
             />
         );
 
-        const checkbox: HTMLInputElement = screen.getByTestId('NURSING_HOME_AND_HOSPITAL-checkbox');
+        const checkbox: HTMLInputElement = screen.getByTestId(
+            'NURSING_HOME_AND_HOSPITAL-checkbox'
+        );
         fireEvent.click(checkbox);
         expect(checkbox.checked).toBe(false);
 

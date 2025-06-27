@@ -22,7 +22,14 @@ export const getSuitabilitySteps = ({
     const steps: Step[] = [
         {
             isVisible: () => true,
-            component: <TaskReviewStep caseId={caseId} clientCode={carrierId} taskInfoLink={taskInfoLink} taskType={taskType} />,
+            component: (
+                <TaskReviewStep
+                    caseId={caseId}
+                    clientCode={carrierId}
+                    taskInfoLink={taskInfoLink}
+                    taskType={taskType}
+                />
+            ),
             text: t('tabs.start'),
             index: 0,
             isCompleted: true,
@@ -36,7 +43,9 @@ export const getSuitabilitySteps = ({
                     taskInfoLink={taskInfoLink}
                     isSubmit={false}
                     taskMetadata={taskMetadata[0]}
-                    isSaveAsDraftEnabled={readOnly ? false : isSaveAsDraftEnabled}
+                    isSaveAsDraftEnabled={
+                        readOnly ? false : isSaveAsDraftEnabled
+                    }
                     isContinueButtonEnabled={isContinueButtonEnabled}
                 ></TaskFormStep>
             ),
@@ -62,7 +71,12 @@ export const getSuitabilitySteps = ({
 
         {
             isVisible: () => true,
-            component: <ConfirmStep taskType={taskType} taskInfoLink={taskInfoLink}></ConfirmStep>,
+            component: (
+                <ConfirmStep
+                    taskType={taskType}
+                    taskInfoLink={taskInfoLink}
+                ></ConfirmStep>
+            ),
             text: t('confirm'),
             index: 3,
             screenReaderLabel: t('confirm'),

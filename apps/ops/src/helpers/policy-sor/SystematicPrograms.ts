@@ -1,4 +1,8 @@
-import { ArrangementType, Reason, SystematicProgram as SysProg } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    Reason,
+    SystematicProgram as SysProg,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -18,14 +22,16 @@ export class SystematicPrograms {
     constructor(programs: SysProg[] = []) {
         this.allPrograms = programs;
         programs
-            .filter(program => program.status === 'ACTIVE')
-            .forEach(program => {
+            .filter((program) => program.status === 'ACTIVE')
+            .forEach((program) => {
                 const { arrangementType, arrangementId, reason } = program;
                 if (arrangementType) {
                     if (!this.systematicProgramsByType[arrangementType]) {
                         this.systematicProgramsByType[arrangementType] = [];
                     }
-                    this.systematicProgramsByType[arrangementType].push(program);
+                    this.systematicProgramsByType[arrangementType].push(
+                        program
+                    );
                 }
 
                 if (reason) {
@@ -52,7 +58,9 @@ export class SystematicPrograms {
         return this.systematicProgramById[reasonId];
     }
 
-    public getProgramsByType(arrangementType: ArrangementType | TempAnnuityArrangementTypes): SysProg[] {
+    public getProgramsByType(
+        arrangementType: ArrangementType | TempAnnuityArrangementTypes
+    ): SysProg[] {
         if (!arrangementType) {
             return [];
         }
@@ -60,33 +68,44 @@ export class SystematicPrograms {
     }
 
     // Grabs the program with the closest future nextProgramDate.  Returns undefined if no future program is found
-    public getNextProgramByType(arrangementType: ArrangementType): SysProg | undefined {
+    public getNextProgramByType(
+        arrangementType: ArrangementType
+    ): SysProg | undefined {
         if (!arrangementType) {
             return;
         }
-        return this.getProgramsByType(arrangementType)?.reduce((acc, sysProg) => {
-            let sysProgDate;
-            let accDate;
-            if (sysProg.nextProgramDate) {
-                sysProgDate = dayjs(sysProg.nextProgramDate, ZAHARA_API_DATE_FORMAT);
-                if (sysProgDate.isBefore(dayjs())) {
-                    sysProgDate = undefined;
+        return this.getProgramsByType(arrangementType)?.reduce(
+            (acc, sysProg) => {
+                let sysProgDate;
+                let accDate;
+                if (sysProg.nextProgramDate) {
+                    sysProgDate = dayjs(
+                        sysProg.nextProgramDate,
+                        ZAHARA_API_DATE_FORMAT
+                    );
+                    if (sysProgDate.isBefore(dayjs())) {
+                        sysProgDate = undefined;
+                    }
                 }
-            }
-            if (acc?.nextProgramDate) {
-                accDate = dayjs(acc.nextProgramDate, ZAHARA_API_DATE_FORMAT);
-            }
-            if (!accDate) {
-                return sysProg;
-            }
-            if (!sysProgDate) {
+                if (acc?.nextProgramDate) {
+                    accDate = dayjs(
+                        acc.nextProgramDate,
+                        ZAHARA_API_DATE_FORMAT
+                    );
+                }
+                if (!accDate) {
+                    return sysProg;
+                }
+                if (!sysProgDate) {
+                    return acc;
+                }
+                if (sysProgDate.isBefore(accDate)) {
+                    return sysProg;
+                }
                 return acc;
-            }
-            if (sysProgDate.isBefore(accDate)) {
-                return sysProg;
-            }
-            return acc;
-        }, undefined as SysProg | undefined);
+            },
+            undefined as SysProg | undefined
+        );
     }
 
     public get all(): SysProg[] {

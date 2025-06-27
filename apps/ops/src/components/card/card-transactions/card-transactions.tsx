@@ -1,4 +1,7 @@
-import FieldData, { FieldDataProps, FieldDataVariant } from '@deps/components/fields/field-data/field-data';
+import FieldData, {
+    FieldDataProps,
+    FieldDataVariant,
+} from '@deps/components/fields/field-data/field-data';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import ResponsiveFlex from '@deps/components/responsive-flex/responsive-flex';
@@ -50,7 +53,9 @@ const CardTransactions = ({
     premium,
     'data-testid': dataTestId,
 }: CardTransactionsProps) => {
-    const additionalTotal = additionalCharges ? additionalCharges?.reduce((acc, val) => (val?.amount || 0) + acc, 0) : 0;
+    const additionalTotal = additionalCharges
+        ? additionalCharges?.reduce((acc, val) => (val?.amount || 0) + acc, 0)
+        : 0;
     const total = premium + additionalTotal;
 
     return (
@@ -83,7 +88,10 @@ const CardTransactions = ({
                         itemPadding={ItemPadding.XSmall}
                         itemSpacing={ItemSpacing.XSmall}
                     >
-                        <Label label={additionalChargesTitle} variant={LabelVariant.LabelSmAlt} />
+                        <Label
+                            label={additionalChargesTitle}
+                            variant={LabelVariant.LabelSmAlt}
+                        />
                         <Content
                             layoutDirection={LayoutDirection.Vertical}
                             layoutAlignment={LayoutAlignment.MiddleEvenly}
@@ -92,9 +100,17 @@ const CardTransactions = ({
                             itemPadding={ItemPadding.None}
                             itemSpacing={ItemSpacing.None}
                         >
-                            {additionalCharges.map(({ key, ...props }, index) => (
-                                <ChargeItem key={key || index} {...props} tooltipPlacement={PopoverPlacement.TopLeft} />
-                            ))}
+                            {additionalCharges.map(
+                                ({ key, ...props }, index) => (
+                                    <ChargeItem
+                                        key={key || index}
+                                        {...props}
+                                        tooltipPlacement={
+                                            PopoverPlacement.TopLeft
+                                        }
+                                    />
+                                )
+                            )}
                         </Content>
                     </BottomContent>
                 </>

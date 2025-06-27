@@ -38,13 +38,24 @@ export default function NavElement({ type, ...rest }: NavElementProps) {
     );
     const iconClone = startIcon
         ? cloneElement(startIcon as React.ReactElement<any>, {
-              className: clsx(`inline-flex align-top`, size === NavElementSize.Small ? 'mr-1' : 'mr-2'),
+              className: clsx(
+                  `inline-flex align-top`,
+                  size === NavElementSize.Small ? 'mr-1' : 'mr-2'
+              ),
           })
         : null;
 
     return type === NavElementType.Button ? (
-        <NavButton className={classes} startIcon={iconClone} {...(newRest as NavButtonProps)} />
+        <NavButton
+            className={classes}
+            startIcon={iconClone}
+            {...(newRest as NavButtonProps)}
+        />
     ) : (
-        <NavLink className={classes} startIcon={iconClone} {...(newRest as NavLinkProps)} />
+        <NavLink
+            className={classes}
+            startIcon={iconClone}
+            {...(newRest as NavLinkProps)}
+        />
     );
 }

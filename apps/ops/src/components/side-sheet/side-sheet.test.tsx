@@ -8,7 +8,9 @@ import Popover from '../popover/popover';
 
 describe('SideSheet', () => {
     test('should disable scroll when opened and enable when closed', () => {
-        const { rerender } = render(<SideSheet open={false} handleClose={() => {}} />);
+        const { rerender } = render(
+            <SideSheet open={false} handleClose={() => {}} />
+        );
 
         // Scroll should be enabled initially
         expect(document.documentElement.style.overflow).toBe('');
@@ -39,13 +41,15 @@ describe('SideSheet', () => {
 
         const children = screen.getByText('Children');
         // if a match exists- returns an array- index 0 is the matched string
-        const childrenZIndexValue = Number(children.className.match(regex)?.[0].substring(2)) ?? 0;
+        const childrenZIndexValue =
+            Number(children.className.match(regex)?.[0].substring(2)) ?? 0;
 
         userEvent.click(screen.getByText('Popover trigger'));
 
         const popover = await screen.findByTestId('popover-content-test-id');
         // if a match exists- returns an array- index 0 is the matched string
-        const popoverZIndexValue = Number(popover.className.match(regex)?.[0].substring(2)) ?? 0;
+        const popoverZIndexValue =
+            Number(popover.className.match(regex)?.[0].substring(2)) ?? 0;
 
         expect(popoverZIndexValue).toBeGreaterThanOrEqual(childrenZIndexValue);
     });

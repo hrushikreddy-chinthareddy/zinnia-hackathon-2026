@@ -6,7 +6,10 @@ import { processReferenceDataAdapter } from './default-case-data-entry';
 
 const DEFAULT_CASE_TYPE = 'Case Type Not Found';
 
-export const DocumentMatchingHandler: TaskHandler<Record<string, never>, ProcessReferenceData[]> = {
+export const DocumentMatchingHandler: TaskHandler<
+    Record<string, never>,
+    ProcessReferenceData[]
+> = {
     api: processReferenceDataAdapter,
     getPayload: () => ({}),
     transformResponse: (response, metadata) => {
@@ -16,10 +19,12 @@ export const DocumentMatchingHandler: TaskHandler<Record<string, never>, Process
         if (!schema?.formSchema?.definitions) return;
 
         schema.formSchema.definitions.caseTypeEnum = {
-            enum: response.map(item => item.key) || [DEFAULT_CASE_TYPE],
+            enum: response.map((item) => item.key) || [DEFAULT_CASE_TYPE],
         };
 
-        schema.uiSchema.caseType['ui:options'] = { enumNames: response.map(item => item.value) };
+        schema.uiSchema.caseType['ui:options'] = {
+            enumNames: response.map((item) => item.value),
+        };
     },
 };
 

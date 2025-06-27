@@ -32,7 +32,10 @@ export default function FieldLabel({
     if (!label) return null;
     const labelClasses = clsx(
         'field-label',
-        { 'text-gray-300': isReadOnly || variant === FieldVariant.Inactive, 'text-gray-900': variant !== FieldVariant.Inactive },
+        {
+            'text-gray-300': isReadOnly || variant === FieldVariant.Inactive,
+            'text-gray-900': variant !== FieldVariant.Inactive,
+        },
         labelClassNames
     );
 
@@ -40,7 +43,9 @@ export default function FieldLabel({
         <div className={`mb-1 flex items-center gap-2 ${classNames}`}>
             <p className={labelClasses} data-testid={label}>
                 {label}
-                {required && <span className="text-semantic-error">&nbsp;*</span>}
+                {required && (
+                    <span className="text-semantic-error">&nbsp;*</span>
+                )}
             </p>
             {label != 'None' && labelTooltip && labelTooltipBody && (
                 <Popover
@@ -49,7 +54,11 @@ export default function FieldLabel({
                     body={labelTooltipBody}
                     popoverClassName={popoverClassName}
                 >
-                    <CircleInfoIcon height={'16px'} width={'16px'} className="text-primary" />
+                    <CircleInfoIcon
+                        height={'16px'}
+                        width={'16px'}
+                        className="text-primary"
+                    />
                 </Popover>
             )}
         </div>

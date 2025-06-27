@@ -207,7 +207,10 @@ export default function getRslnConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Net },
                     programType: { text: ProgramType.NetWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialNetAmount: { text: val, amountType: AmountType.Dollar },
+                    partialNetAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -221,7 +224,10 @@ export default function getRslnConfig(t: TFunction) {
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.GrossWithdrawal },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: { text: val, amountType: AmountType.Dollar },
+                    partialGrossAmount: {
+                        text: val,
+                        amountType: AmountType.Dollar,
+                    },
                 };
             },
         },
@@ -233,7 +239,9 @@ export default function getRslnConfig(t: TFunction) {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -246,7 +254,9 @@ export default function getRslnConfig(t: TFunction) {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.Withdrawal },
-                    programSubType: { text: ProgramSubType.MaturingGuranteePeriod },
+                    programSubType: {
+                        text: ProgramSubType.MaturingGuranteePeriod,
+                    },
                     maturityGuaranteePeriod: { text: val },
                 };
             },
@@ -265,58 +275,103 @@ export default function getRslnConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Default,
+        },
+        {
+            label: t('distributionInstruction.specifyFunds'),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.overAge595'), value: RestrictionOption.Age595 },
+        {
+            label: t('distributionReason.reasonOptions.overAge595'),
+            value: RestrictionOption.Age595,
+        },
         {
             label: t('distributionReason.reasonOptions.separatedFromService'),
             value: RestrictionOption.Severance,
             subElement: <ReasonDate />,
         },
 
-        { label: t('distributionReason.reasonOptions.disability'), value: RestrictionOption.Disabled },
-        { label: t('distributionReason.reasonOptions.hardship'), value: RestrictionOption.Hardship },
+        {
+            label: t('distributionReason.reasonOptions.disability'),
+            value: RestrictionOption.Disabled,
+        },
+        {
+            label: t('distributionReason.reasonOptions.hardship'),
+            value: RestrictionOption.Hardship,
+        },
         {
             label: t('distributionReason.reasonOptions.qualifiedReservist'),
             value: RestrictionOption.QualifiedReservist,
         },
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
-    const formValidation = ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
-        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
             ) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
             }
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
             ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
             }
         }
 
         const ownerSignature = formSignature?.signatures?.find(
-            sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
         );
 
         if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                'formValidation.signaturePresentOptionMustBeSelected'
-            );
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+            ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
         return errors;
@@ -339,7 +394,9 @@ export default function getRslnConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
                 {
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
@@ -366,7 +423,10 @@ export default function getRslnConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -379,11 +439,16 @@ export default function getRslnConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -399,18 +464,25 @@ export default function getRslnConfig(t: TFunction) {
                     classNames: 'col-start-2',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
                 };
@@ -445,7 +517,8 @@ export default function getRslnConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -460,7 +533,9 @@ export default function getRslnConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
                 {
-                    fieldLabel: t('distributionMethod.doesCheckMeetSecurityRequirements'),
+                    fieldLabel: t(
+                        'distributionMethod.doesCheckMeetSecurityRequirements'
+                    ),
                     fieldName: BankingFields.DoesCheckMeetSecurityRequirements,
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
@@ -490,7 +565,10 @@ export default function getRslnConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -502,11 +580,16 @@ export default function getRslnConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -521,19 +604,27 @@ export default function getRslnConfig(t: TFunction) {
                     classNames: 'col-start-2',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, isWireApprovalPresent, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                isWireApprovalPresent,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     isWireApprovalPresent: isWireApprovalPresent?.text ?? null,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
                 };
@@ -569,8 +660,11 @@ export default function getRslnConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
-                    isWireApprovalPresent: { text: isWireApprovalPresent ?? null },
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
+                    isWireApprovalPresent: {
+                        text: isWireApprovalPresent ?? null,
+                    },
                 };
             },
         },
@@ -600,19 +694,31 @@ export default function getRslnConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, firstTimeExpressCheck }: FormDisbursement) {
-                if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                firstTimeExpressCheck,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === FormDisbursementSelections.Check &&
+                    paymentMailType.text === PaymentMailType.ExpressCheck
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        firstTimeExpressCheck: firstTimeExpressCheck?.text ?? null,
+                        firstTimeExpressCheck:
+                            firstTimeExpressCheck?.text ?? null,
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ firstTimeExpressCheck }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                firstTimeExpressCheck,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
-                    firstTimeExpressCheck: { text: firstTimeExpressCheck || null },
+                    firstTimeExpressCheck: {
+                        text: firstTimeExpressCheck || null,
+                    },
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: PaymentMailType.ExpressCheck },
                 };
@@ -639,7 +745,9 @@ export default function getRslnConfig(t: TFunction) {
                 },
             ],
             getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {
-                if (paymentMethod.text !== PaymentMethod.AlternatePayeeAddress) {
+                if (
+                    paymentMethod.text !== PaymentMethod.AlternatePayeeAddress
+                ) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
 
@@ -651,10 +759,16 @@ export default function getRslnConfig(t: TFunction) {
                     consentAvailable: false,
                 };
             },
-            generatePayloadFromSelection: ({ payeeName, address, taxId }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                taxId,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.AlternatePayeeAddress },
+                    paymentMethod: {
+                        text: PaymentMethod.AlternatePayeeAddress,
+                    },
                     payee: {
                         name: {
                             text: payeeName || null,
@@ -687,7 +801,9 @@ export default function getRslnConfig(t: TFunction) {
         {
             id: PolicyWaiver.NURSING_HOME_AND_HOSPITAL,
             title: t('additionalWaivers.nursingAndHospitalBenefits'),
-            optionTitle: t('additionalWaivers.isNursingAndHospitalBenefitValid'),
+            optionTitle: t(
+                'additionalWaivers.isNursingAndHospitalBenefitValid'
+            ),
             options: getStandardYesNoOptions(t),
         },
         {
@@ -775,7 +891,9 @@ export default function getRslnConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             partyRole: PartyRoles.JOINT_OWNER,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
     ];
@@ -790,20 +908,33 @@ export default function getRslnConfig(t: TFunction) {
     const meritalStatusAllowanceConfig = {
         label: 'maritalStatusAllowancesLabel',
         maritalStatusAllowancesOptions: [
-            { label: 'maritalStatusAllowanceItems.single', value: MaritalStatusAllowances.Single },
-            { label: 'maritalStatusAllowanceItems.married', value: MaritalStatusAllowances.Married },
+            {
+                label: 'maritalStatusAllowanceItems.single',
+                value: MaritalStatusAllowances.Single,
+            },
+            {
+                label: 'maritalStatusAllowanceItems.married',
+                value: MaritalStatusAllowances.Married,
+            },
         ],
     };
 
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
-    ): { selectedOption: string | null; amount: string | null; maturityGuaranteePeriod?: string | null } => {
+    ): {
+        selectedOption: string | null;
+        amount: string | null;
+        maturityGuaranteePeriod?: string | null;
+    } => {
         const programTypeText = formProgram?.programType?.text || '';
         const programSubTypeText = formProgram?.programSubType?.text || '';
         const amount = formProgram?.partialAmount?.text || '';
 
         if (programTypeText === ProgramType.TotalFreeAmt) {
-            return { selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal, amount: '' };
+            return {
+                selectedOption: WithdrawalSelectionValues.TotalFreeWithdrawal,
+                amount: '',
+            };
         }
         if (programTypeText === ProgramType.NetWithdrawal) {
             return { selectedOption: ProgramType.NetWithdrawal, amount };
@@ -813,13 +944,24 @@ export default function getRslnConfig(t: TFunction) {
             return { selectedOption: ProgramType.GrossWithdrawal, amount };
         }
 
-        if (programTypeText === ProgramType.Withdrawal && programSubTypeText === ProgramSubType.MaturingGuranteePeriod) {
-            const maturityGuaranteePeriod = formProgram?.maturityGuaranteePeriod?.text || '';
+        if (
+            programTypeText === ProgramType.Withdrawal &&
+            programSubTypeText === ProgramSubType.MaturingGuranteePeriod
+        ) {
+            const maturityGuaranteePeriod =
+                formProgram?.maturityGuaranteePeriod?.text || '';
             return {
-                selectedOption: WithdrawalSelectionValues.MaturingGuranteePeriod,
+                selectedOption:
+                    WithdrawalSelectionValues.MaturingGuranteePeriod,
                 amount: '',
-                maturityGuaranteePeriod: dayjs(maturityGuaranteePeriod, ZAHARA_API_DATE_FORMAT).isValid()
-                    ? dayjs(maturityGuaranteePeriod, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
+                maturityGuaranteePeriod: dayjs(
+                    maturityGuaranteePeriod,
+                    ZAHARA_API_DATE_FORMAT
+                ).isValid()
+                    ? dayjs(
+                          maturityGuaranteePeriod,
+                          ZAHARA_API_DATE_FORMAT
+                      ).format(DATE_PICKER_FORMAT)
                     : '',
             };
         }

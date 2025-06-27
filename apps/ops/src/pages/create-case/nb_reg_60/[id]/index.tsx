@@ -5,8 +5,12 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useMemo, useState } from 'react';
 
 import OtpLayout from '@deps/components/otp-layout';
-import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import WithdrawalDrawer, {
+    SidebarContent,
+} from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormControls } from '@deps/containers/otp/reg60-forms/components/form-controls';
@@ -17,7 +21,10 @@ import { CreateReg60CaseProps } from '@deps/containers/otp/reg60-forms/reg60.typ
 import { DefaultSidebarContent } from '@deps/containers/otp/reg60-forms/utils/reg60-constants';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -31,25 +38,50 @@ import { SegmentPageName } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    logError,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
 
-const determineFormToRender = (clientId: string, document: DocumentData, planCode: string): React.ReactNode => {
+const determineFormToRender = (
+    clientId: string,
+    document: DocumentData,
+    planCode: string
+): React.ReactNode => {
     switch (clientId.toUpperCase()) {
         case Carrier.MASS:
-            return <MassMutualReg60Form document={document} planCode={planCode} />;
+            return (
+                <MassMutualReg60Form document={document} planCode={planCode} />
+            );
         default:
-            console.error('determineFormToRender::unsupported clientId', clientId);
+            console.error(
+                'determineFormToRender::unsupported clientId',
+                clientId
+            );
             return null;
     }
 };
 
-export default function Reg60({ document, form, transactionsHistory, user }: CreateReg60CaseProps) {
+export default function Reg60({
+    document,
+    form,
+    transactionsHistory,
+    user,
+}: CreateReg60CaseProps) {
     const router = useRouter();
     const { clientId, clientIdOverride, id } = router.query;
-    const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
+    const clientForFormDetermination = isNonProductionEnvironment()
+        ? clientIdOverride || clientId
+        : clientId;
 
     useSegmentPageTracker(user, SegmentPageName.Reg60, {
         clientId,
@@ -64,23 +96,34 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
 
     const accInfo = useAccountInfo(document.contract, clientId as string);
 
-    const formParts = determineFormToRender(clientForFormDetermination as string, document, accInfo.planCode || '');
+    const formParts = determineFormToRender(
+        clientForFormDetermination as string,
+        document,
+        accInfo.planCode || ''
+    );
     if (!formParts) {
         browserLogError('NBReg60Case::No form parts', {
             documentNumber: document?.documentNumber,
             clientId,
             contract: document?.contract,
         });
-        router.push(`/create-case/error?errorCode=${ERROR_CODES.NB_REG60_FORM_CREATION}`);
+        router.push(
+            `/create-case/error?errorCode=${ERROR_CODES.NB_REG60_FORM_CREATION}`
+        );
     }
 
     // Sidebar metadata
     const [isLargeScreen, setIsLargeScreen] = useState(false); // isLargeScreen true means screen width is >= 1025
     const [isOpenOverride, setIsOpenOverride] = useState<null | boolean>(null);
-    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(DefaultSidebarContent);
+    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
+        DefaultSidebarContent
+    );
 
     // get the contract issue type from custom hook
-    const { qualType, issueDate } = useAccountInfo(document?.contract, clientId as string);
+    const { qualType, issueDate } = useAccountInfo(
+        document?.contract,
+        clientId as string
+    );
 
     // Set state on mount
     useEffect(() => {
@@ -102,7 +145,15 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
             qualType,
             issueDate,
         });
-    }, [qualType, document, form, transactionsHistory, clientId, issueDate, id]);
+    }, [
+        qualType,
+        document,
+        form,
+        transactionsHistory,
+        clientId,
+        issueDate,
+        id,
+    ]);
 
     // If the user has manually opened or closed the nav drawer, we want to override the default behavior
     const isNavDrawerOpen = useMemo(() => {
@@ -122,7 +173,10 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
     return (
         <>
             <PageHead titleKey="createCaseReg60" />
-            <OtpLayout clientId={clientId as string} contractNumber={document?.contract}>
+            <OtpLayout
+                clientId={clientId as string}
+                contractNumber={document?.contract}
+            >
                 <div className={classes}>
                     <WithdrawalDrawer
                         content={transactionDetail}
@@ -133,7 +187,9 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
                     <div>
                         {isLoading && (
                             <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                                <PageLoader variant={PageLoaderVariant.Center} />
+                                <PageLoader
+                                    variant={PageLoaderVariant.Center}
+                                />
                             </div>
                         )}
                         <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0">
@@ -142,12 +198,16 @@ export default function Reg60({ document, form, transactionsHistory, user }: Cre
                                     {
                                         <>
                                             {formParts}
-                                            <FormErrors taskApiError={taskApiError} />
+                                            <FormErrors
+                                                taskApiError={taskApiError}
+                                            />
                                             <FormControls
                                                 document={document}
                                                 isLoading={isLoading}
                                                 setIsLoading={setIsLoading}
-                                                setTaskApiError={setTaskApiError}
+                                                setTaskApiError={
+                                                    setTaskApiError
+                                                }
                                             ></FormControls>
                                         </>
                                     }
@@ -165,8 +225,13 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const shouldShowReg60Page = featureFlagDecisions?.[FEATURE_FLAGS.REG_60];
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const shouldShowReg60Page =
+                featureFlagDecisions?.[FEATURE_FLAGS.REG_60];
             const { locale = DEFAULT_LOCALE, query, res, req } = context;
             let accessToken;
             let form;
@@ -180,11 +245,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
             if (!doesUserHasPagePermissions || !shouldShowReg60Page) {
                 return {
                     redirect: {
@@ -199,8 +265,17 @@ export const getServerSideProps = withPageAuthAndLogging(
             const taskId = (query.taskId as string) || '';
 
             const [translations, document] = await Promise.all([
-                serverSideTranslations(locale, [TranslationFiles.COMMON, TranslationFiles.REG60DEFS]),
-                getDocumentV2SSR(documentNumber, DocumentType.Reg60, clientId.toUpperCase(), accessToken, loggingContext),
+                serverSideTranslations(locale, [
+                    TranslationFiles.COMMON,
+                    TranslationFiles.REG60DEFS,
+                ]),
+                getDocumentV2SSR(
+                    documentNumber,
+                    DocumentType.Reg60,
+                    clientId.toUpperCase(),
+                    accessToken,
+                    loggingContext
+                ),
             ]);
 
             if (!document?.caseId) {
@@ -224,7 +299,11 @@ export const getServerSideProps = withPageAuthAndLogging(
             });
 
             if (taskId) {
-                form = await getCaseTaskByIdSSR(taskId, accessToken, loggingContext);
+                form = await getCaseTaskByIdSSR(
+                    taskId,
+                    accessToken,
+                    loggingContext
+                );
             } else {
                 form = {
                     data: {
@@ -246,5 +325,9 @@ export const getServerSideProps = withPageAuthAndLogging(
             };
         },
     },
-    { file: 'create-case/nb_reg_60/[id]', function: 'getServerSideProps', page: 'create-case/nb_reg_60/:id' }
+    {
+        file: 'create-case/nb_reg_60/[id]',
+        function: 'getServerSideProps',
+        page: 'create-case/nb_reg_60/:id',
+    }
 );

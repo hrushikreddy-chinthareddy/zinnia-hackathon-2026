@@ -7,9 +7,17 @@ interface BlurOverlayLoaderProps {
     loading: boolean;
 }
 
-export const BlurOverlayLoader: FC<PropsWithChildren<BlurOverlayLoaderProps>> = ({ loading, children }) => {
+export const BlurOverlayLoader: FC<
+    PropsWithChildren<BlurOverlayLoaderProps>
+> = ({ loading, children }) => {
     return (
-        <div className={clsx(styles.overlayContainer, loading && styles.isLoading)} data-testid="test-loader">
+        <div
+            className={clsx(
+                styles.overlayContainer,
+                loading && styles.isLoading
+            )}
+            data-testid="test-loader"
+        >
             {loading && (
                 <div className={styles.overlayLoader}>
                     <Loader />

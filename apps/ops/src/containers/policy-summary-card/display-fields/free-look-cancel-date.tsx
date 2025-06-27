@@ -9,13 +9,24 @@ interface FreeLookCancelDateProps {
     freeLookCancelDate?: string;
 }
 
-const FreeLookCancelDate = ({ freeLookCancelDate }: FreeLookCancelDateProps) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+const FreeLookCancelDate = ({
+    freeLookCancelDate,
+}: FreeLookCancelDateProps) => {
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
     return (
         <div>
-            <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.freeLookCancelDate')} />
-            <Content details={convertKebabedDateString(freeLookCancelDate)} variant={ContentVariant.BodySm} />
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={t('colDefs:policySummary.freeLookCancelDate')}
+            />
+            <Content
+                details={convertKebabedDateString(freeLookCancelDate)}
+                variant={ContentVariant.BodySm}
+            />
         </div>
     );
 };

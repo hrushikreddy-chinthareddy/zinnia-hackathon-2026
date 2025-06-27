@@ -14,7 +14,12 @@ import { AgentDataResponse } from '@deps/types/agents';
 import { findCarrierAgents } from '@deps/utils/agent-helpers';
 import { encryptWellabeToppanMerrill } from '@deps/utils/crypto/crypto';
 import { ToppanMerrillStorefrontAgent } from '@deps/utils/merrill-toppan/merrill-toppan-xml';
-import { logTrace, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    logTrace,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface ToppanMerrillProps {
@@ -28,15 +33,33 @@ interface ToppanMerrillProps {
  */
 function ToppanMerrill({ postUrl, postData }: ToppanMerrillProps) {
     useEffect(() => {
-        const form = document.getElementById('auto-post-form') as HTMLFormElement;
+        const form = document.getElementById(
+            'auto-post-form'
+        ) as HTMLFormElement;
         form.submit();
     }, []);
 
     return (
         <div>
-            <form id="auto-post-form" method="POST" action={postUrl} style={{ display: 'none' }}>
+            <form
+                id="auto-post-form"
+                method="POST"
+                action={postUrl}
+                style={{ display: 'none' }}
+            >
                 {Object.entries(postData).map(([key, value]) => (
-                    <input key={key} type="hidden" name={key} value={value as string | number | readonly string[] | undefined} />
+                    <input
+                        key={key}
+                        type="hidden"
+                        name={key}
+                        value={
+                            value as
+                                | string
+                                | number
+                                | readonly string[]
+                                | undefined
+                        }
+                    />
                 ))}
             </form>
         </div>
@@ -51,7 +74,8 @@ export const getServerSideProps = withPageAuthAndLogging(
             const now = performance.now();
 
             const user = await getUserData(context);
-            const accessToken = (await getAccessToken(context.req, context.res)).accessToken;
+            const accessToken = (await getAccessToken(context.req, context.res))
+                .accessToken;
             const agentInfo = new ToppanMerrillStorefrontAgent();
             const partyId = user.partyId;
             const url = `${apiServerBaseUrl}/party/v1/parties/${partyId}/reference`;
@@ -107,7 +131,10 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                     agentData = agentReq.data as AgentDataResponse;
 
-                    const agent = agentData && agentData.items?.[0] ? agentData.items[0] : undefined;
+                    const agent =
+                        agentData && agentData.items?.[0]
+                            ? agentData.items[0]
+                            : undefined;
                     // Populate the agent xml file required for the SSO to MerrillToppan
                     if (agent) {
                         const individaul = agent.individuals?.[0];
@@ -127,7 +154,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         agentInfo.setDistribution('AR');
                         agentInfo.setCompany('A2');
 
-                        agent.licenses.forEach(license => {
+                        agent.licenses.forEach((license) => {
                             if (!isNullEmptyOrUndefined(license.description)) {
                                 agentInfo.addState(license.description);
                             }
@@ -141,10 +168,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                 } else {
                     // If the user is not a wellabe agent redirect them to the home page
-                    logWarn('toppan-merrill/index::error::user is not a wellabe agent', {
-                        ...loggingContext,
-                        duration: performance.now() - now,
-                    });
+                    logWarn(
+                        'toppan-merrill/index::error::user is not a wellabe agent',
+                        {
+                            ...loggingContext,
+                            duration: performance.now() - now,
+                        }
+                    );
                     return {
                         redirect: {
                             destination: '/',
@@ -153,11 +183,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
             } catch (error) {
-                logWarn('toppan-merrill/index::error::something went wrong while retrieving the party metatdata', {
-                    ...parseErrorInformation(error),
-                    ...loggingContext,
-                    duration: performance.now() - now,
-                });
+                logWarn(
+                    'toppan-merrill/index::error::something went wrong while retrieving the party metatdata',
+                    {
+                        ...parseErrorInformation(error),
+                        ...loggingContext,
+                        duration: performance.now() - now,
+                    }
+                );
             }
 
             const xml = agentInfo.toXml();
@@ -187,5 +220,9 @@ export const getServerSideProps = withPageAuthAndLogging(
             };
         },
     },
-    { file: 'ToppanMerrill/index', function: 'getServerSideProps', page: 'ToppanMerrill' }
+    {
+        file: 'ToppanMerrill/index',
+        function: 'getServerSideProps',
+        page: 'ToppanMerrill',
+    }
 );

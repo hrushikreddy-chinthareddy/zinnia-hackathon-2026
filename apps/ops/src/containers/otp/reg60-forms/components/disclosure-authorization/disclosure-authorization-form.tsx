@@ -1,20 +1,26 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 
 import { DisclosureAuthorization } from './disclosure-authorization';
-import { DisclosureAuthorizationFormProps, DisclosureAuthorizationInformation } from './disclosure-authorization.types';
+import {
+    DisclosureAuthorizationFormProps,
+    DisclosureAuthorizationInformation,
+} from './disclosure-authorization.types';
 
-export const getDefaultDisclosureAuthorization = (): DisclosureAuthorizationInformation => {
-    return {
-        signatureDate: '',
-        expectedAcctValue: '',
-        product: '',
-        cdscPeriod: '',
+export const getDefaultDisclosureAuthorization =
+    (): DisclosureAuthorizationInformation => {
+        return {
+            signatureDate: '',
+            expectedAcctValue: '',
+            product: '',
+            cdscPeriod: '',
+        };
     };
-};
 
 export default function DisclosureAuthorizationForm({
     configs,
@@ -24,11 +30,15 @@ export default function DisclosureAuthorizationForm({
     setFormDisclosureAuthorization,
     planCode,
 }: DisclosureAuthorizationFormProps) {
-    const { t } = useTranslation(TranslationFiles.REG60DEFS, { keyPrefix: 'caseReg60.request.disclosureAuthorization' });
+    const { t } = useTranslation(TranslationFiles.REG60DEFS, {
+        keyPrefix: 'caseReg60.request.disclosureAuthorization',
+    });
 
     const [disclosureAuthorizationInfo] = useState(formDisclosureAuthorization);
 
-    const handleSetDisclosureAuthorizationInfo = (val: DisclosureAuthorizationInformation) => {
+    const handleSetDisclosureAuthorizationInfo = (
+        val: DisclosureAuthorizationInformation
+    ) => {
         setFormDisclosureAuthorization({ ...val });
     };
     return (
@@ -42,7 +52,9 @@ export default function DisclosureAuthorizationForm({
                     fields={configs.fields}
                     disclosureAuthorizationInfo={disclosureAuthorizationInfo}
                     formErrors={formErrors}
-                    onDataChange={val => handleSetDisclosureAuthorizationInfo(val)}
+                    onDataChange={(val) =>
+                        handleSetDisclosureAuthorizationInfo(val)
+                    }
                     planCode={planCode}
                 />
             </div>

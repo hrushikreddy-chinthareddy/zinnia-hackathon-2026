@@ -2,7 +2,11 @@ import { Transition } from '@headlessui/react';
 import { Country, State } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
-import Field, { FieldSize, FieldType, FieldVariant } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import IconButton from '@deps/components/icon-button/icon-button';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
@@ -17,7 +21,14 @@ interface AdditionalAddressLineProps {
     value?: string;
 }
 
-export const AdditionalAddressLine = ({ disabled, label, onChange, removeAddressLine, show, value }: AdditionalAddressLineProps) => {
+export const AdditionalAddressLine = ({
+    disabled,
+    label,
+    onChange,
+    removeAddressLine,
+    show,
+    value,
+}: AdditionalAddressLineProps) => {
     const { t } = useTranslation();
 
     return (
@@ -39,10 +50,14 @@ export const AdditionalAddressLine = ({ disabled, label, onChange, removeAddress
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
                 value={toTitleCase(value)}
-                variant={disabled ? FieldVariant.Inactive : FieldVariant.Default}
+                variant={
+                    disabled ? FieldVariant.Inactive : FieldVariant.Default
+                }
             />
             <IconButton
-                aria-label={`${t('people.sideSheet.address.general.remove')} ${label}`}
+                aria-label={`${t(
+                    'people.sideSheet.address.general.remove'
+                )} ${label}`}
                 disabled={disabled}
                 onClick={removeAddressLine}
             >
@@ -59,7 +74,8 @@ export const ENTERPRISE_ADDRESS_TYPE = {
     SECONDARY: 'SECONDARYADDRESS',
 };
 
-export type EnterpriseAddressType = (typeof ENTERPRISE_ADDRESS_TYPE)[keyof typeof ENTERPRISE_ADDRESS_TYPE];
+export type EnterpriseAddressType =
+    (typeof ENTERPRISE_ADDRESS_TYPE)[keyof typeof ENTERPRISE_ADDRESS_TYPE];
 
 export const INITIAL_ADDRESS = {
     addressType: ENTERPRISE_ADDRESS_TYPE.HOME,
@@ -93,15 +109,22 @@ export interface EnterpriseAddresses {
     addresses?: EnterpriseAddress[];
 }
 
-export const getAddresses = ({ addresses }: EnterpriseAddresses): EnterpriseAddress[] => {
+export const getAddresses = ({
+    addresses,
+}: EnterpriseAddresses): EnterpriseAddress[] => {
     if (!addresses) return [];
-    return addresses?.filter((address: any) => !isEndDated(address.endDate)) ?? [];
+    return (
+        addresses?.filter((address: any) => !isEndDated(address.endDate)) ?? []
+    );
 };
 
-export const getResidenceAddresses = ({ addresses }: EnterpriseAddresses): EnterpriseAddress[] => {
+export const getResidenceAddresses = ({
+    addresses,
+}: EnterpriseAddresses): EnterpriseAddress[] => {
     if (!addresses) return [];
 
-    const validAddresses = addresses?.filter((address: any) => !isEndDated(address.endDate)) ?? [];
+    const validAddresses =
+        addresses?.filter((address: any) => !isEndDated(address.endDate)) ?? [];
 
     const residenceAddresses: any[] = [];
 
@@ -114,10 +137,13 @@ export const getResidenceAddresses = ({ addresses }: EnterpriseAddresses): Enter
     return residenceAddresses?.[0] || [];
 };
 
-export const getDefaultAddresses = ({ addresses }: EnterpriseAddresses): EnterpriseAddress[] => {
+export const getDefaultAddresses = ({
+    addresses,
+}: EnterpriseAddresses): EnterpriseAddress[] => {
     if (!addresses) return [];
 
-    const validAddresses = addresses?.filter((address: any) => !isEndDated(address.endDate)) ?? [];
+    const validAddresses =
+        addresses?.filter((address: any) => !isEndDated(address.endDate)) ?? [];
 
     const defaultAddresses: any[] = [];
 

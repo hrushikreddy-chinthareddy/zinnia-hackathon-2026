@@ -45,7 +45,7 @@ export enum SignatureFieldNames {
     SignatureGuaranteeStamp = 'SignatureGuaranteeStamp',
     SignatureSsn = 'SignatureSsn',
     SignaturePrintName = 'SignaturePrintName',
-    SignatureCityProvided = 'SignatureCityProvided'
+    SignatureCityProvided = 'SignatureCityProvided',
 }
 
 export const SignatureFields = {
@@ -60,7 +60,7 @@ export const SignatureFields = {
     SignGuaranteeStamp,
     SignatureSsn,
     SignaturePrintName,
-    SignatureCityProvided
+    SignatureCityProvided,
 };
 
 export const SignatureBonusFields = {

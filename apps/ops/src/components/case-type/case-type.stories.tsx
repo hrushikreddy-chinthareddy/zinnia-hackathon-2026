@@ -9,7 +9,7 @@ export default {
     title: 'Components/CaseType',
     component: CaseType,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="h-screen w-screen p-10">
                 <div
                     style={{
@@ -36,46 +36,60 @@ export default {
     },
 } as Meta<typeof CaseType>;
 
-export const NewBusinessTableColumn = (args: CaseTypeProps) => <CaseType {...args} />;
+export const NewBusinessTableColumn = (args: CaseTypeProps) => (
+    <CaseType {...args} />
+);
 NewBusinessTableColumn.args = {
     caseType: Processes.NewBusiness,
     createdAt: new Date().toISOString(),
     variant: 'table-column',
 };
 
-export const CorrespondenceTableColumn = (args: CaseTypeProps) => <CaseType {...args} />;
+export const CorrespondenceTableColumn = (args: CaseTypeProps) => (
+    <CaseType {...args} />
+);
 CorrespondenceTableColumn.args = {
     caseType: Processes.Correspondence,
     createdAt: new Date().toISOString(),
     variant: 'table-column',
 };
 
-export const RedemptionTableColumn = (args: CaseTypeProps) => <CaseType {...args} />;
+export const RedemptionTableColumn = (args: CaseTypeProps) => (
+    <CaseType {...args} />
+);
 RedemptionTableColumn.args = {
     caseType: Processes.Redemption,
     createdAt: new Date().toISOString(),
     variant: 'table-column',
 };
-export const FakeCaseTypeTableColumn = (args: CaseTypeProps) => <CaseType {...args} />;
+export const FakeCaseTypeTableColumn = (args: CaseTypeProps) => (
+    <CaseType {...args} />
+);
 FakeCaseTypeTableColumn.args = {
     caseType: 'Fake Case Type',
     createdAt: new Date().toISOString(),
     variant: 'table-column',
 };
 
-export const NewBusinessHorizontal = (args: CaseTypeProps) => <CaseType {...args} />;
+export const NewBusinessHorizontal = (args: CaseTypeProps) => (
+    <CaseType {...args} />
+);
 NewBusinessHorizontal.args = {
     caseType: Processes.NewBusiness,
     variant: 'horizontal',
 };
 
-export const RedemptionHorizontal = (args: CaseTypeProps) => <CaseType {...args} />;
+export const RedemptionHorizontal = (args: CaseTypeProps) => (
+    <CaseType {...args} />
+);
 RedemptionHorizontal.args = {
     caseType: Processes.Redemption,
     variant: 'horizontal',
 };
 
-export const CorrespondenceHorizontal = (args: CaseTypeProps) => <CaseType {...args} />;
+export const CorrespondenceHorizontal = (args: CaseTypeProps) => (
+    <CaseType {...args} />
+);
 CorrespondenceHorizontal.args = {
     caseType: Processes.Correspondence,
     variant: 'horizontal',

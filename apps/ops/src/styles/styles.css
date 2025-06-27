@@ -5,9 +5,15 @@
 
 :root {
     --color-secondary-color-primary: var(--color-primary-color-primary);
-    --color-secondary-color-primary-lighter: var(--color-primary-color-primary-lighter);
-    --color-secondary-color-primary-light: var(--color-primary-color-primary-light);
-    --color-secondary-color-primary-lightest: var(--color-primary-color-primary-lightest);
+    --color-secondary-color-primary-lighter: var(
+        --color-primary-color-primary-lighter
+    );
+    --color-secondary-color-primary-light: var(
+        --color-primary-color-primary-light
+    );
+    --color-secondary-color-primary-lightest: var(
+        --color-primary-color-primary-lightest
+    );
     --bg-primary-lightest: var(--color-base-surface-surface-secondary);
 }
 
@@ -83,8 +89,13 @@ body {
 
         /** Calculated values */
         --gap-count: calc(var(--responsive-grid-column-count) - 1);
-        --total-gap-width: calc(var(--gap-count) * var(--responsive-grid-column-gap));
-        --responsive-grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--responsive-grid-column-count));
+        --total-gap-width: calc(
+            var(--gap-count) * var(--responsive-grid-column-gap)
+        );
+        --responsive-grid-item--max-width: calc(
+            (100% - var(--total-gap-width)) /
+                var(--responsive-grid-column-count)
+        );
 
         @screen md {
             --responsive-grid-row-gap: theme('spacing.6');
@@ -108,7 +119,13 @@ body {
         */
         grid-template-columns: repeat(
             auto-fill,
-            minmax(max(var(--responsive-grid-item--min-width), var(--responsive-grid-item--max-width)), 1fr)
+            minmax(
+                max(
+                    var(--responsive-grid-item--min-width),
+                    var(--responsive-grid-item--max-width)
+                ),
+                1fr
+            )
         );
     }
 
@@ -328,12 +345,14 @@ body {
                 white,
                 white
             ),
-            linear-gradient(to left, rgba(0, 0, 0, 0.2), white), linear-gradient(to right, white, white),
+            linear-gradient(to left, rgba(0, 0, 0, 0.2), white),
+            linear-gradient(to right, white, white),
             linear-gradient(to right, rgba(0, 0, 0, 0.2), white);
         background-attachment: local, scroll, local, scroll;
         background-size: 10px 100%, 10px 100%, 10px 100%, 10px 100%;
         background-repeat: no-repeat;
-        background-position: right center, right center, left center, left center;
+        background-position: right center, right center, left center,
+            left center;
 
         &:has(.sticky-right-column) {
             background-image:
@@ -346,12 +365,14 @@ body {
                     white,
                     white
                 ),
-                linear-gradient(to left, rgba(0, 0, 0, 0.2), white), linear-gradient(to right, white, white),
+                linear-gradient(to left, rgba(0, 0, 0, 0.2), white),
+                linear-gradient(to right, white, white),
                 linear-gradient(to right, rgba(0, 0, 0, 0.2), white);
             background-attachment: local, local, local, scroll;
             background-size: 10px 100%, 10px 100%, 10px 100%, 10px 100%;
             background-repeat: no-repeat;
-            background-position: right center, right center, left center, left center;
+            background-position: right center, right center, left center,
+                left center;
         }
     }
 
@@ -440,21 +461,30 @@ body {
     }
 
     /* sticky column drop-shadow */
-    .scrollable-table.scrollable.scrolled-left thead th.sticky-right-column::before,
-    .scrollable-table.scrollable.scrolled-left tbody td.sticky-right-column::before {
+    .scrollable-table.scrollable.scrolled-left
+        thead
+        th.sticky-right-column::before,
+    .scrollable-table.scrollable.scrolled-left
+        tbody
+        td.sticky-right-column::before {
         @apply absolute -left-2.5 bottom-0 top-0 w-2.5;
         content: '';
         background: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent);
     }
 
     /* Prevents the table contents from showing up behind rounded borders */
-    .scrollable-table.scrollable.scrolled-left thead th.sticky-right-column::after {
+    .scrollable-table.scrollable.scrolled-left
+        thead
+        th.sticky-right-column::after {
         @apply absolute -right-[1px] -top-[1px] bottom-0 w-2.5;
         content: '';
         background-image: url('./images/table-header-border.svg');
         background-repeat: no-repeat;
     }
-    .scrollable-table.scrollable.scrolled-left tbody tr:last-child td.sticky-right-column::after {
+    .scrollable-table.scrollable.scrolled-left
+        tbody
+        tr:last-child
+        td.sticky-right-column::after {
         @apply absolute -bottom-[1px] -right-[1px] top-0 w-2.5 rotate-180;
         content: '';
         background-image: url('./images/table-bottom-border.svg');
@@ -552,7 +582,9 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(var(--color-300-gray)); /* color of the scroll thumb */
+    background-color: rgb(
+        var(--color-300-gray)
+    ); /* color of the scroll thumb */
     border-radius: 100px; /* radius of the scroll thumb */
     border: 3px solid rgb(var(--color-300-gray)); /* creates padding around scroll thumb */
 }
@@ -585,7 +617,8 @@ input:-webkit-autofill:active {
 }
 
 .case-search-card {
-    box-shadow: 0px 0.3px 0.9px rgba(0, 0, 0, 0.07), 0px 1.6px 3.6px rgba(0, 0, 0, 0.11);
+    box-shadow: 0px 0.3px 0.9px rgba(0, 0, 0, 0.07),
+        0px 1.6px 3.6px rgba(0, 0, 0, 0.11);
     margin-bottom: 8px;
     width: 1130px;
 }
@@ -605,7 +638,9 @@ input:-webkit-autofill:active {
     width: max-content;
     background-color: white;
     padding: 16px;
-    grid-template-columns: [carrier] 48px [status] 128px [type] 214px repeat(3, 106px [data-col]) [owner] 148px [data-col] 90px [chevron] 24px;
+    grid-template-columns:
+        [carrier] 48px [status] 128px [type] 214px repeat(3, 106px [data-col])
+        [owner] 148px [data-col] 90px [chevron] 24px;
     column-gap: 16px;
     align-items: center;
 }

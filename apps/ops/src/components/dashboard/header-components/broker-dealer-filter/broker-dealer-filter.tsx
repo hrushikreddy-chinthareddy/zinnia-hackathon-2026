@@ -7,7 +7,10 @@ import { MultiselectOption } from '@deps/components/select/select.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { CarrierListItem } from '@deps/pages/dashboard';
-import { DashboardResponseData, fetchAgents } from '@deps/queries/api/dashboard';
+import {
+    DashboardResponseData,
+    fetchAgents,
+} from '@deps/queries/api/dashboard';
 type BrokerDealerFilterProps = {
     brokerDealers: DashboardResponseData[];
     selectedCarriers: string[];
@@ -18,10 +21,16 @@ type BrokerDealerFilterProps = {
     handleOnOpenChangeBroker?: (open: boolean) => void;
 };
 
-const getBrokerDealerOptions = (brokerDealers: DashboardResponseData[]): MultiselectOption[] => {
-    return brokerDealers.map(agent => {
+const getBrokerDealerOptions = (
+    brokerDealers: DashboardResponseData[]
+): MultiselectOption[] => {
+    return brokerDealers.map((agent) => {
         const formattedName = toTitleCase(agent.name);
-        return { label: <span>{formattedName}</span>, value: agent.name, displayText: `${formattedName}` };
+        return {
+            label: <span>{formattedName}</span>,
+            value: agent.name,
+            displayText: `${formattedName}`,
+        };
     });
 };
 
@@ -60,7 +69,9 @@ export const BrokerDealerFilter = ({
             onChange={updateBrokerDealerFilters}
             size={FieldSize.Small}
             placeholder={t('allDistributors') || ''}
-            disabled={disabled !== undefined ? disabled : brokerDealers.length === 0}
+            disabled={
+                disabled !== undefined ? disabled : brokerDealers.length === 0
+            }
             name="agent-dropdown-btn"
             onOpenChange={handleOnOpenChangeBroker}
         />

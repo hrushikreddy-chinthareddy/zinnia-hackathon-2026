@@ -3,7 +3,10 @@ import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { Reg60FormData } from '@deps/containers/otp/reg60-forms/reg60.types';
 
 import { Channel } from './renewal/case-renewal';
-import { ActiveWithdrawalCase, ActiveWithdrawalCaseData } from './withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    ActiveWithdrawalCaseData,
+} from './withdrawal/case';
 export const INTERVAL = 3000;
 
 export enum TaskType {
@@ -141,7 +144,10 @@ export interface CreateTaskBody<TaskStatus, K> {
 }
 
 export type TaskV1Payload = RenewalsFormData | ActiveWithdrawalCase;
-export type TaskV2Payload = Reg60FormData | ActiveWithdrawalCaseData | RenewalsFormData;
+export type TaskV2Payload =
+    | Reg60FormData
+    | ActiveWithdrawalCaseData
+    | RenewalsFormData;
 
 export interface CreateTaskResponse {
     id: string;

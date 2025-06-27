@@ -8,7 +8,12 @@ import styles from '@deps/pages/dashboard/Dashboard.module.css';
 export const NIGOAnalysis = () => {
     return (
         <div className={styles.container}>
-            <div className={clsx(sharedStyles.dashboardCard, sharedStyles.dashboardCardFirst)}>
+            <div
+                className={clsx(
+                    sharedStyles.dashboardCard,
+                    sharedStyles.dashboardCardFirst
+                )}
+            >
                 <NIGOOverview />
             </div>
             <div className={clsx(sharedStyles.dashboardCard)}>

@@ -1,4 +1,6 @@
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import { ReactComponent as CircleAlertIcon } from '@deps/styles/elements/icons/circles/circle-exclamation.svg';
 
 export type EmptyCardProps = {

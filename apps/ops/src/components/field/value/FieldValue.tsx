@@ -1,4 +1,8 @@
-import { AssistiveText, AssistiveTextVariant, Label } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Label,
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import React, { ChangeEvent, cloneElement } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,7 +29,10 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
         },
         forwardRef
     ) => {
-        if (!!label && (label.type as React.JSXElementConstructor<any>).name !== Label.name) {
+        if (
+            !!label &&
+            (label.type as React.JSXElementConstructor<any>).name !== Label.name
+        ) {
             throw new Error('Required field: label is not of type Label');
         }
 
@@ -54,10 +61,25 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
 
         return (
             <div>
-                <div data-testid={FieldDataActiveTestIds.LABEL}>{clonedLabel}</div>
-                <div className={clsx(fieldStyles.inputContainer, fieldStyles[fieldStatus])}>
-                    <div className={clsx(fieldStyles.symbolBox, fieldStyles[fieldStatus], 'typography-content-body-sm-bold')}>
-                        <span className={clsx(fieldStyles[fieldStatus])}>{currencySymbol || '$'}</span>
+                <div data-testid={FieldDataActiveTestIds.LABEL}>
+                    {clonedLabel}
+                </div>
+                <div
+                    className={clsx(
+                        fieldStyles.inputContainer,
+                        fieldStyles[fieldStatus]
+                    )}
+                >
+                    <div
+                        className={clsx(
+                            fieldStyles.symbolBox,
+                            fieldStyles[fieldStatus],
+                            'typography-content-body-sm-bold'
+                        )}
+                    >
+                        <span className={clsx(fieldStyles[fieldStatus])}>
+                            {currencySymbol || '$'}
+                        </span>
                     </div>
                     <input
                         type={type ?? 'text'}
@@ -76,7 +98,11 @@ export const FieldValue = React.forwardRef<HTMLInputElement, FieldValueProps>(
                     />
                 </div>
                 {fieldStatus === FieldStatus.ERROR && errorMessage && (
-                    <AssistiveText className={fieldStyles.assistiveMessage} text={errorMessage} variant={AssistiveTextVariant.Error} />
+                    <AssistiveText
+                        className={fieldStyles.assistiveMessage}
+                        text={errorMessage}
+                        variant={AssistiveTextVariant.Error}
+                    />
                 )}
             </div>
         );

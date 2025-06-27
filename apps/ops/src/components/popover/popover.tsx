@@ -9,7 +9,11 @@ import { PopoverTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 } from '@deps/types/constants';
 
-import { getPlacementProps, commonPopoverClasses, commonTriggerClasses } from './popover.helpers';
+import {
+    getPlacementProps,
+    commonPopoverClasses,
+    commonTriggerClasses,
+} from './popover.helpers';
 
 export enum PopoverPlacement {
     TopRight = 'top-right',
@@ -41,7 +45,10 @@ export default function Popover({
     const router = useRouter();
     if (router) {
         const isPoliciesPage = router.pathname.includes('policies');
-        const hideTooltips = HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 && isPoliciesPage && !!policyDetails.isAnnuity;
+        const hideTooltips =
+            HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 &&
+            isPoliciesPage &&
+            !!policyDetails.isAnnuity;
         if (hideTooltips) {
             return null;
         }
@@ -49,11 +56,20 @@ export default function Popover({
     const popoverContent = (
         <div className={clsx(commonPopoverClasses, popoverClassName)}>
             <div className="flex justify-between">
-                <p className="label-lg mb-1 mr-6" data-testid={PopoverTest.Title}>
+                <p
+                    className="label-lg mb-1 mr-6"
+                    data-testid={PopoverTest.Title}
+                >
                     {title}
                 </p>
-                <ReactPopover.Close className={`default-focus-icons test-cancel-icon !absolute right-2 top-2.5 cursor-pointer rounded-xl`}>
-                    <CancelIcon width={24} height={24} data-testid={PopoverTest.Cancel} />
+                <ReactPopover.Close
+                    className={`default-focus-icons test-cancel-icon !absolute right-2 top-2.5 cursor-pointer rounded-xl`}
+                >
+                    <CancelIcon
+                        width={24}
+                        height={24}
+                        data-testid={PopoverTest.Cancel}
+                    />
                 </ReactPopover.Close>
             </div>
             <span className="body-sm" data-testid={PopoverTest.Body}>
@@ -72,7 +88,12 @@ export default function Popover({
                 {children}
             </ReactPopover.Trigger>
             <ReactPopover.Portal>
-                <ReactPopover.Content align={align} side={side} className="z-20 my-0.5" data-testid={PopoverTest.Content}>
+                <ReactPopover.Content
+                    align={align}
+                    side={side}
+                    className="z-20 my-0.5"
+                    data-testid={PopoverTest.Content}
+                >
                     {popoverContent}
                 </ReactPopover.Content>
             </ReactPopover.Portal>

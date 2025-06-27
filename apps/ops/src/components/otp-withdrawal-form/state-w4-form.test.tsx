@@ -2,10 +2,19 @@ import '@testing-library/jest-dom';
 import { cleanup, screen, fireEvent, render } from '@testing-library/react';
 
 import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { SignPresent } from '@deps/models/case/renewal/signature-validation';
-import { AddressTypes, CaseStatus, IrsFormType, maritalStatusType, PartyRoles } from '@deps/models/case/withdrawal/case';
+import {
+    AddressTypes,
+    CaseStatus,
+    IrsFormType,
+    maritalStatusType,
+    PartyRoles,
+} from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
 import StateW4Form from './state-w4-form';
@@ -280,8 +289,12 @@ describe('state-w4-form', () => {
         fireEvent.change(ssnElement, { target: { value: '33933311' } });
         expect(ssnElement.value).toBe('33933311');
 
-        const ownerSignPresentElement = screen.getByTestId('Owner-signature-present');
-        fireEvent.change(ownerSignPresentElement, { target: { value: SignPresent.Yes } });
+        const ownerSignPresentElement = screen.getByTestId(
+            'Owner-signature-present'
+        );
+        fireEvent.change(ownerSignPresentElement, {
+            target: { value: SignPresent.Yes },
+        });
 
         expect(setMockData).toHaveBeenCalledWith([
             {

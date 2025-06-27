@@ -1,4 +1,13 @@
-import { Table, TableHeader, TableHeaderCell, TableRow, TableBody, TableCell, Icon, IconType } from '@zinnia/bloom/components';
+import {
+    Table,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+    TableBody,
+    TableCell,
+    Icon,
+    IconType,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -26,7 +35,10 @@ const SegmentsTable = ({ fund }: SegmentsTableProps) => {
                         <TableRow>
                             <TableHeaderCell>
                                 <div className={styles.tableHeaderContainer}>
-                                    <Content details={t('segmentID') as string} variant={ContentVariant.BodySmBold} />
+                                    <Content
+                                        details={t('segmentID') as string}
+                                        variant={ContentVariant.BodySmBold}
+                                    />
                                     <Popover
                                         title={t('segmentID') as string}
                                         body={t('segmentIDTooltip') as string}
@@ -43,7 +55,10 @@ const SegmentsTable = ({ fund }: SegmentsTableProps) => {
                             </TableHeaderCell>
                             <TableHeaderCell>
                                 <div className={styles.tableHeaderContainer}>
-                                    <Content details={'Start date'} variant={ContentVariant.BodySmBold} />
+                                    <Content
+                                        details={'Start date'}
+                                        variant={ContentVariant.BodySmBold}
+                                    />
                                     <Popover
                                         title={t('startDate') as string}
                                         body={t('startDateTooltip') as string}
@@ -60,7 +75,10 @@ const SegmentsTable = ({ fund }: SegmentsTableProps) => {
                             </TableHeaderCell>
                             <TableHeaderCell>
                                 <div className={styles.tableHeaderContainer}>
-                                    <Content details={'End date'} variant={ContentVariant.BodySmBold} />
+                                    <Content
+                                        details={'End date'}
+                                        variant={ContentVariant.BodySmBold}
+                                    />
                                     <Popover
                                         title={t('endDate') as string}
                                         body={t('endDateTooltip') as string}
@@ -77,10 +95,15 @@ const SegmentsTable = ({ fund }: SegmentsTableProps) => {
                             </TableHeaderCell>
                             <TableHeaderCell>
                                 <div className={styles.tableHeaderContainer}>
-                                    <Content details={'Deposit amount'} variant={ContentVariant.BodySmBold} />
+                                    <Content
+                                        details={'Deposit amount'}
+                                        variant={ContentVariant.BodySmBold}
+                                    />
                                     <Popover
                                         title={t('depositAmount') as string}
-                                        body={t('depositAmountTooltip') as string}
+                                        body={
+                                            t('depositAmountTooltip') as string
+                                        }
                                         placement={PopoverPlacement.TopRight}
                                     >
                                         <Icon
@@ -94,7 +117,10 @@ const SegmentsTable = ({ fund }: SegmentsTableProps) => {
                             </TableHeaderCell>
                             <TableHeaderCell>
                                 <div className={styles.tableHeaderContainer}>
-                                    <Content details={'Segment Cap'} variant={ContentVariant.BodySmBold} />
+                                    <Content
+                                        details={'Segment Cap'}
+                                        variant={ContentVariant.BodySmBold}
+                                    />
                                     <Popover
                                         title={t('segmentCap') as string}
                                         body={t('segmentCapTooltip') as string}
@@ -114,21 +140,38 @@ const SegmentsTable = ({ fund }: SegmentsTableProps) => {
                     <TableBody>
                         {fund.segments.map((segment, index) => {
                             return (
-                                <TableRow key={`fund-segment-${segment.id}-${index}`}>
+                                <TableRow
+                                    key={`fund-segment-${segment.id}-${index}`}
+                                >
                                     <TableCell>
-                                        <Content details={segment.id} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={segment.id}
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
                                     <TableCell>
-                                        <Content details={segment.startDate} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={segment.startDate}
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
                                     <TableCell>
-                                        <Content details={segment.endDate} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={segment.endDate}
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
                                     <TableCell>
-                                        <Content details={segment.depositAmount} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={segment.depositAmount}
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
                                     <TableCell>
-                                        <Content details={segment.capRate} variant={ContentVariant.BodySm} />
+                                        <Content
+                                            details={segment.capRate}
+                                            variant={ContentVariant.BodySm}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             );

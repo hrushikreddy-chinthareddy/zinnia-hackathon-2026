@@ -1,4 +1,7 @@
-import { CommunicationPreferenceChangeRequest, TransactionAcceptedResponse } from '@zinnia/api-types/types/bpm';
+import {
+    CommunicationPreferenceChangeRequest,
+    TransactionAcceptedResponse,
+} from '@zinnia/api-types/types/bpm';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
@@ -7,7 +10,12 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import { AddressBase, BankAccountBase, EmailBase, PhoneBase } from '@zinnia/api-types/types/sor';
+import {
+    AddressBase,
+    BankAccountBase,
+    EmailBase,
+    PhoneBase,
+} from '@zinnia/api-types/types/sor';
 
 import { baseAppUrl } from '@deps/queries/api-config';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
@@ -84,7 +92,9 @@ export const addNonFinancialTransaction = async ({
     transaction,
 }: AddNonFinancialTransaction): Promise<any> => {
     if (!planCode || !policyNumber || !partyId) {
-        console.error('addNonFinancialTransaction::missing plancode, policyNumber, or partyId');
+        console.error(
+            'addNonFinancialTransaction::missing plancode, policyNumber, or partyId'
+        );
         return;
     }
 
@@ -98,9 +108,15 @@ export const addNonFinancialTransaction = async ({
     } catch (error: any) {
         // 400 is a BPM validation error
         if (error?.status === StatusCode.BadRequest) {
-            console.warn('addNonFinancialTransaction::BPM error occurred', error);
+            console.warn(
+                'addNonFinancialTransaction::BPM error occurred',
+                error
+            );
         } else {
-            console.error('addNonFinancialTransaction::an error occurred', error);
+            console.error(
+                'addNonFinancialTransaction::an error occurred',
+                error
+            );
         }
         return error;
     }
@@ -115,13 +131,16 @@ export const editNonFinancialTransaction = async ({
     transaction,
 }: EditNonFinancialTransaction): Promise<any> => {
     if (!itemId || !planCode || !policyNumber || !partyId) {
-        console.error('editNonFinancialTransaction::missing itemid, plancode, policyNumber, or partyId');
+        console.error(
+            'editNonFinancialTransaction::missing itemid, plancode, policyNumber, or partyId'
+        );
         return;
     }
 
     const today = dayjs().format(ZAHARA_API_DATE_FORMAT);
 
-    if ((body as AddressBody).address) (body as AddressBody).address.startDate = today;
+    if ((body as AddressBody).address)
+        (body as AddressBody).address.startDate = today;
     if ((body as EmailBody).email) (body as EmailBody).email.startDate = today;
     if ((body as PhoneBody).phone) (body as PhoneBody).phone.startDate = today;
 
@@ -135,9 +154,15 @@ export const editNonFinancialTransaction = async ({
     } catch (error: any) {
         // 400 is a BPM validation error
         if (error?.status === StatusCode.BadRequest) {
-            console.warn('editNonFinancialTransaction::BPM error occurred', error);
+            console.warn(
+                'editNonFinancialTransaction::BPM error occurred',
+                error
+            );
         } else {
-            console.error('editNonFinancialTransaction::an error occurred', error);
+            console.error(
+                'editNonFinancialTransaction::an error occurred',
+                error
+            );
         }
         return error;
     }
@@ -170,17 +195,23 @@ export const updateEDeliveryPreferenceByPlanCode = async ({
     };
 
     try {
-        const response = await client.post<CommunicationPreferenceChangeRequest, AxiosResponse<TransactionAcceptedResponse>>(
-            url.toString(),
-            body
-        );
+        const response = await client.post<
+            CommunicationPreferenceChangeRequest,
+            AxiosResponse<TransactionAcceptedResponse>
+        >(url.toString(), body);
         return response;
     } catch (error: any) {
         if (error?.status === StatusCode.BadRequest) {
-            console.warn('updateEDeliveryPreferenceByPlanCode::BPM error occurred', error);
+            console.warn(
+                'updateEDeliveryPreferenceByPlanCode::BPM error occurred',
+                error
+            );
             return error;
         }
-        console.error('updateEDeliveryPreferenceByPlanCode::an error occurred', error);
+        console.error(
+            'updateEDeliveryPreferenceByPlanCode::an error occurred',
+            error
+        );
         return error;
     }
 };

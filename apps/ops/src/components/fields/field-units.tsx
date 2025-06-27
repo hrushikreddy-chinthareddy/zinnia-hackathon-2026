@@ -14,7 +14,11 @@ export type FieldUnitsProps = {
     variant?: FieldVariant;
 };
 
-export default function FieldUnits({ children, location, variant }: FieldUnitsProps) {
+export default function FieldUnits({
+    children,
+    location,
+    variant,
+}: FieldUnitsProps) {
     if (!children) return null;
 
     // min-w-[32px] for edge case when Field is within a container that restricts width of Field
@@ -26,9 +30,12 @@ export default function FieldUnits({ children, location, variant }: FieldUnitsPr
             'justify-center': !!location,
         },
         {
-            'border-gray-300 bg-gray-100 text-gray-300': variant === FieldVariant.Inactive,
-            'border-semantic-error bg-gray-50 text-semantic-error': variant === FieldVariant.Error,
-            'border-semantic-success bg-gray-50 text-semantic-success': variant === FieldVariant.Success,
+            'border-gray-300 bg-gray-100 text-gray-300':
+                variant === FieldVariant.Inactive,
+            'border-semantic-error bg-gray-50 text-semantic-error':
+                variant === FieldVariant.Error,
+            'border-semantic-success bg-gray-50 text-semantic-success':
+                variant === FieldVariant.Success,
         }
     );
 

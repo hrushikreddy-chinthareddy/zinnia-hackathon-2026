@@ -8,7 +8,10 @@ interface SelectSearchGroupContainerProps {
     values: DataDefinition<any>[];
 }
 
-const SelectSearchGroupContainer = ({ values, groupKey = 'group' }: SelectSearchGroupContainerProps) => {
+const SelectSearchGroupContainer = ({
+    values,
+    groupKey = 'group',
+}: SelectSearchGroupContainerProps) => {
     const groupedData = groupValues(values, groupKey);
 
     return (
@@ -24,7 +27,10 @@ const SelectSearchGroupContainer = ({ values, groupKey = 'group' }: SelectSearch
                         headerText={header}
                         icon={<Icon width={16.5} height={16.5} />}
                         groupArray={groupArray}
-                        lastGroup={Object.keys(groupedData).indexOf(key) === Object.keys(groupedData).length - 1}
+                        lastGroup={
+                            Object.keys(groupedData).indexOf(key) ===
+                            Object.keys(groupedData).length - 1
+                        }
                     />
                 );
             })}

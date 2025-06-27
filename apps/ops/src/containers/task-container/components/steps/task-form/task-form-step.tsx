@@ -1,11 +1,20 @@
 import Form from '@rjsf/core';
 import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { createRef, memo, useCallback, useContext, useEffect, useState } from 'react';
+import {
+    createRef,
+    memo,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+} from 'react';
 
 import AssistiveText from '@deps/components/assistive-text/assistive-text';
 import PageLoader from '@deps/components/page-loader/page-loader';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
@@ -38,7 +47,9 @@ const TaskFormStep = ({
     isContinueButtonEnabled,
     stepIndex,
 }: TaskFormStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: `taskManagement.taskForm` });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: `taskManagement.taskForm`,
+    });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
     const formState = useContext(TaskDataContext);
     const { task, correlationId, formErrors } = formState;
@@ -100,7 +111,11 @@ const TaskFormStep = ({
             footerContent={
                 <TransactionNavigationButtons
                     readonly={readonly}
-                    submitLabel={isSubmit ? (t('submit') as string) : (t('continue') as string)}
+                    submitLabel={
+                        isSubmit
+                            ? (t('submit') as string)
+                            : (t('continue') as string)
+                    }
                     cancelLabel={t('cancel') as string}
                     isSubmit={readonly ? false : true}
                     handleContinue={handleStepContinue}
@@ -108,7 +123,12 @@ const TaskFormStep = ({
                     isDraft={isSaveAsDraftEnabled}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
-                    disableContinue={!(isContinueButtonEnabled || task?.status === TaskStatus.Completed) && !isValidForm}
+                    disableContinue={
+                        !(
+                            isContinueButtonEnabled ||
+                            task?.status === TaskStatus.Completed
+                        ) && !isValidForm
+                    }
                 />
             }
         >
@@ -119,8 +139,20 @@ const TaskFormStep = ({
                     </div>
                 )}
                 <div className="flex flex-col gap-4">
-                    <TaskForm readonly={readonly} ref={formRef} onSubmit={handleSubmit} isSubmit={isSubmit} taskMetadata={taskMetadata} />
-                    {error && <AssistiveText text={error} variant={AssistiveTextVariant.Error} className="mt-2" />}
+                    <TaskForm
+                        readonly={readonly}
+                        ref={formRef}
+                        onSubmit={handleSubmit}
+                        isSubmit={isSubmit}
+                        taskMetadata={taskMetadata}
+                    />
+                    {error && (
+                        <AssistiveText
+                            text={error}
+                            variant={AssistiveTextVariant.Error}
+                            className="mt-2"
+                        />
+                    )}
                 </div>
             </div>
         </WorkflowCard>

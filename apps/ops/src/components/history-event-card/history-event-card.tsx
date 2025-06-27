@@ -1,5 +1,9 @@
 // TODO MG: why is this warning that TagProps isnt in bloom?
-import { Policy, Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    Transaction,
+    TransactionStatus,
+} from '@zinnia/api-types/types/sor';
 import { Tag, TagProps, TagVariant } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
@@ -16,7 +20,10 @@ import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
 
-import { getEventTitle, getHistoryEventCardValues } from './history-event-card.helpers';
+import {
+    getEventTitle,
+    getHistoryEventCardValues,
+} from './history-event-card.helpers';
 import { FinancialTransactionTypes } from '../side-sheet/side-sheet-transaction/financial/types';
 import { SideSheetTransactionProps } from '../side-sheet/side-sheet-transaction/types';
 
@@ -31,15 +38,24 @@ const getDate = (date?: Date | string) => {
     return '';
 };
 
-const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryEventCardProps) => {
+const HistoryEventCard = ({
+    refreshTransactions,
+    policy,
+    transaction,
+}: HistoryEventCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const sideSheet = useSideSheetContext();
 
     const { processDate, status } = transaction || {};
-    const { amount, requestedAmount, caption, eventBody, eventTitle, isClickable, isPending } = getHistoryEventCardValues(
-        policy as Policy,
-        transaction as Transaction
-    );
+    const {
+        amount,
+        requestedAmount,
+        caption,
+        eventBody,
+        eventTitle,
+        isClickable,
+        isPending,
+    } = getHistoryEventCardValues(policy as Policy, transaction as Transaction);
 
     const openTransactionSidesheet = () => {
         if (!transaction) {
@@ -57,7 +73,10 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
             refreshTransactions: refreshTransactions,
         };
 
-        if (transactionType && FinancialTransactionTypes.includes(transactionType)) {
+        if (
+            transactionType &&
+            FinancialTransactionTypes.includes(transactionType)
+        ) {
             Component = SideSheetFinancialTransaction;
         } else {
             Component = SideSheetNonFinancialTransaction;
@@ -84,7 +103,9 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
 
     const containerClasses = clsx(
         'flex w-full flex-col rounded border-2 p-4',
-        isPending ? 'border-dashed border-gray-300 bg-gray-100' : 'border-gray-100 bg-white',
+        isPending
+            ? 'border-dashed border-gray-300 bg-gray-100'
+            : 'border-gray-100 bg-white',
         isClickable ? 'hover:border-yellow-400' : 'pointer-events-none'
     );
 
@@ -97,13 +118,21 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
     return (
         <li>
             {/* TODO MG: warning about aria-disabled not being set correctly */}
-            <button aria-disabled={isClickable} className={containerClasses} onClick={openTransactionSidesheet}>
+            <button
+                aria-disabled={isClickable}
+                className={containerClasses}
+                onClick={openTransactionSidesheet}
+            >
                 <div className="flex min-h-[62px] w-full items-center justify-between gap-4">
                     <div className="flex grow flex-col items-start">
-                        <div className="text-content-caption font-medium text-gray-500">{caption}</div>
+                        <div className="text-content-caption font-medium text-gray-500">
+                            {caption}
+                        </div>
 
                         <div className="flex items-center gap-2">
-                            <div className="font-primary text-label-lg font-semibold">{eventTitle}</div>
+                            <div className="font-primary text-label-lg font-semibold">
+                                {eventTitle}
+                            </div>
                             {tagProps && <Tag {...tagProps} />}
                         </div>
 
@@ -113,7 +142,12 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                             </div>
                         )}
                     </div>
-                    <div className={'flex flex-col flex-shrink items-end ' + (isClickable ? '' : 'mr-[40px]')}>
+                    <div
+                        className={
+                            'flex flex-col flex-shrink items-end ' +
+                            (isClickable ? '' : 'mr-[40px]')
+                        }
+                    >
                         {amount !== undefined && (
                             <div className="font-bold md:text-content-value">
                                 <AccessibleFormattedAmount amount={amount} />
@@ -122,11 +156,19 @@ const HistoryEventCard = ({ refreshTransactions, policy, transaction }: HistoryE
                         {requestedAmount != null && (
                             <div className="font-secondary text-body-sm text-gray-500">
                                 {`${t('policy.history.requested')}: `}
-                                <AccessibleFormattedAmount amount={requestedAmount} />
+                                <AccessibleFormattedAmount
+                                    amount={requestedAmount}
+                                />
                             </div>
                         )}
                     </div>
-                    {isClickable && <ChevronRightIcon className="text-secondary" height={24} width={24} />}
+                    {isClickable && (
+                        <ChevronRightIcon
+                            className="text-secondary"
+                            height={24}
+                            width={24}
+                        />
+                    )}
                 </div>
             </button>
         </li>

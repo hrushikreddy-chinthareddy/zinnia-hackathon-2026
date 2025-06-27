@@ -10,7 +10,9 @@ export type SideSheetCommnunicationPreferenceProps = {
     party?: PolicyParty;
     planCode?: string;
     policyNumber?: string;
-    setPreferredCommunication: Dispatch<SetStateAction<Email | Address | undefined>>;
+    setPreferredCommunication: Dispatch<
+        SetStateAction<Email | Address | undefined>
+    >;
 };
 
 interface GetFormErrors {
@@ -27,11 +29,19 @@ export interface Errors {
     communicationPreference?: string;
 }
 
-export const getFormErrors = ({ caseId, preferredCommunication, isDelete, t }: GetFormErrors) => {
+export const getFormErrors = ({
+    caseId,
+    preferredCommunication,
+    isDelete,
+    t,
+}: GetFormErrors) => {
     let errors: Errors = {};
 
     if (caseId == null) {
-        errors = { ...errors, caseId: `${t('people.sideSheet.email.errors.missingCaseDocument')}` };
+        errors = {
+            ...errors,
+            caseId: `${t('people.sideSheet.email.errors.missingCaseDocument')}`,
+        };
     }
 
     if (isDelete) {
@@ -39,19 +49,49 @@ export const getFormErrors = ({ caseId, preferredCommunication, isDelete, t }: G
     }
 
     if (preferredCommunication === undefined) {
-        errors = { ...errors, communicationPreference: `${t('people.sideSheet.communicationpreference.errors.isMissing')}` };
+        errors = {
+            ...errors,
+            communicationPreference: `${t(
+                'people.sideSheet.communicationpreference.errors.isMissing'
+            )}`,
+        };
         return errors;
     }
     if ('addressId' in preferredCommunication) {
-        if (!preferredCommunication.addressId || !preferredCommunication.addressLine1) {
-            errors = { ...errors, emailAddress: `${t('people.sideSheet.communicationpreference.errors.address')}` };
+        if (
+            !preferredCommunication.addressId ||
+            !preferredCommunication.addressLine1
+        ) {
+            errors = {
+                ...errors,
+                emailAddress: `${t(
+                    'people.sideSheet.communicationpreference.errors.address'
+                )}`,
+            };
         }
     }
     if ('emailId' in preferredCommunication) {
-        if (!preferredCommunication.emailId || !preferredCommunication.emailAddress) {
-            errors = { ...errors, emailAddress: `${t('people.sideSheet.communicationpreference.errors.emailAddress')}` };
-        } else if (!/\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+/.test(preferredCommunication.emailAddress)) {
-            errors = { ...errors, emailAddress: t('people.sideSheet.communicationpreference.errors.isInvalid') as string };
+        if (
+            !preferredCommunication.emailId ||
+            !preferredCommunication.emailAddress
+        ) {
+            errors = {
+                ...errors,
+                emailAddress: `${t(
+                    'people.sideSheet.communicationpreference.errors.emailAddress'
+                )}`,
+            };
+        } else if (
+            !/\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+/.test(
+                preferredCommunication.emailAddress
+            )
+        ) {
+            errors = {
+                ...errors,
+                emailAddress: t(
+                    'people.sideSheet.communicationpreference.errors.isInvalid'
+                ) as string,
+            };
         }
     }
 

@@ -1,12 +1,18 @@
 import { Meta, StoryObj } from '@storybook/react';
 
 import { generateFields } from '@deps/utils/mock/mockPolicyExtrasFields';
-import { tooltipPlacementArgTypes, numberOfFieldsArgTypes } from '@deps/utils/storybook';
+import {
+    tooltipPlacementArgTypes,
+    numberOfFieldsArgTypes,
+} from '@deps/utils/storybook';
 
 import PolicyExtrasCard, { PolicyExtrasCardProps } from './policy-extras-card';
 import BadgeWithTooltip from '../badge/badge-with-tooltip/badge-with-tooltip';
 import { BadgeVariant } from '../badge/badge.helpers';
-import { NoTooltip as HeaderNoTooltip, WithTooltip as HeaderWithTooltip } from '../policy-extras-header/policy-extras-header.stories';
+import {
+    NoTooltip as HeaderNoTooltip,
+    WithTooltip as HeaderWithTooltip,
+} from '../policy-extras-header/policy-extras-header.stories';
 import { PopoverPlacement } from '../popover/popover';
 
 type StoryType = StoryObj<
@@ -32,11 +38,19 @@ export default meta;
 
 export const NoTooltip: StoryType = {
     render: ({ numberOfFields, rainbow, ...args }) => (
-        <PolicyExtrasCard {...args}>{generateFields(numberOfFields, rainbow)}</PolicyExtrasCard>
+        <PolicyExtrasCard {...args}>
+            {generateFields(numberOfFields, rainbow)}
+        </PolicyExtrasCard>
     ),
     args: {
         ...HeaderNoTooltip.args,
-        badge: <BadgeWithTooltip label="terminated" tooltip="tooltip text" variant={BadgeVariant.Success} />,
+        badge: (
+            <BadgeWithTooltip
+                label="terminated"
+                tooltip="tooltip text"
+                variant={BadgeVariant.Success}
+            />
+        ),
         numberOfFields: 12,
     },
 };

@@ -1,4 +1,10 @@
-import { Icon, IconType, TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import {
+    Icon,
+    IconType,
+    TabGroup,
+    TabList,
+    TabTrigger,
+} from '@zinnia/bloom/components';
 import { FC, PropsWithChildren } from 'react';
 
 import styles from '@deps/components/dashboard/sections-tab-nav/sections-tab-nav.module.css';
@@ -33,14 +39,22 @@ const defaultTabs = [
     },
 ];
 
-export const SectionTabNavs: FC<PropsWithChildren<SectionTabNavsProps>> = ({ tabs, children, defaultValue = SectionTabValues.CHART }) => {
+export const SectionTabNavs: FC<PropsWithChildren<SectionTabNavsProps>> = ({
+    tabs,
+    children,
+    defaultValue = SectionTabValues.CHART,
+}) => {
     const tabsToRender = tabs || defaultTabs;
     return (
         <TabGroup defaultValue={defaultValue} className="bg-white">
             <div className="flex">
                 <TabList className={styles.tabList}>
-                    {tabsToRender.map(tab => (
-                        <TabTrigger aria-label={`View ${tab.value}`} value={tab.value} key={tab.value}>
+                    {tabsToRender.map((tab) => (
+                        <TabTrigger
+                            aria-label={`View ${tab.value}`}
+                            value={tab.value}
+                            key={tab.value}
+                        >
                             <Icon type={tab.iconType} width={28} height={28} />
                         </TabTrigger>
                     ))}

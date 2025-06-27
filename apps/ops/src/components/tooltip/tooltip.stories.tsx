@@ -9,7 +9,7 @@ const meta: Meta<typeof Tooltip> = {
     title: 'Components/Tooltip',
     component: Tooltip,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="mt-20">
                 <div className="mx-auto block max-w-[20px]">
                     <Story />
@@ -23,7 +23,12 @@ const meta: Meta<typeof Tooltip> = {
             defaultValue: true,
         },
         placement: {
-            options: [PopoverPlacement.BottomLeft, PopoverPlacement.BottomRight, PopoverPlacement.TopLeft, PopoverPlacement.TopRight],
+            options: [
+                PopoverPlacement.BottomLeft,
+                PopoverPlacement.BottomRight,
+                PopoverPlacement.TopLeft,
+                PopoverPlacement.TopRight,
+            ],
             defaultValue: PopoverPlacement.BottomLeft,
         },
     },

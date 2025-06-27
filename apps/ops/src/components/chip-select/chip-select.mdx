@@ -22,7 +22,11 @@ Imagine you're at a chip buffet, but you can only choose one flavor – that's w
 ### How To Use
 
 ```jsx
-<RadioGroup.Root onValueChange={value => setValue(value)} defaultValue="default" aria-label={ariaLabel}>
+<RadioGroup.Root
+    onValueChange={(value) => setValue(value)}
+    defaultValue="default"
+    aria-label={ariaLabel}
+>
     {chips.map((chip, index) => (
         <RadioGroup.Item className="chip" value={chip} key={index} id={chip}>
             {chip}

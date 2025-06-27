@@ -15,19 +15,28 @@ interface GlWbWrapperProps {
 }
 
 const GlWbWrapper = ({ sswData }: GlWbWrapperProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request.sswProgram' });
-    const { formParty, setFormParty, formProgram, setFormProgram } = useContext(FormDataContext);
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.sswProgram',
+    });
+    const { formParty, setFormParty, formProgram, setFormProgram } =
+        useContext(FormDataContext);
 
-    const [glwbType, setGlwbType] = useState(formProgram?.glwbType?.text || GlwbType.Dynamic);
-
-    const applicablePartyRoles = [PartyRoles.GLWB_FIRST_COVERED_PERSON, PartyRoles.GLWB_SEC_COVERED_PERSON];
-    const showCoverPerson = [SSWType.SingleLifetimeIncomeOption, SSWType.JointLifetimeIncomeOption].includes(
-        sswData?.programSubType.text as SSWType
+    const [glwbType, setGlwbType] = useState(
+        formProgram?.glwbType?.text || GlwbType.Dynamic
     );
+
+    const applicablePartyRoles = [
+        PartyRoles.GLWB_FIRST_COVERED_PERSON,
+        PartyRoles.GLWB_SEC_COVERED_PERSON,
+    ];
+    const showCoverPerson = [
+        SSWType.SingleLifetimeIncomeOption,
+        SSWType.JointLifetimeIncomeOption,
+    ].includes(sswData?.programSubType.text as SSWType);
 
     useEffect(() => {
         if (showCoverPerson) {
-            setFormProgram(fs => ({
+            setFormProgram((fs) => ({
                 ...fs,
                 glwbType: { text: glwbType },
             }));
@@ -43,15 +52,17 @@ const GlWbWrapper = ({ sswData }: GlWbWrapperProps) => {
                             className="max-w-lg my-3"
                             label={t('glwbTypeLabel') as string}
                             options={glwbTypeOptions(t)}
-                            onChange={val => setGlwbType(val)}
+                            onChange={(val) => setGlwbType(val)}
                             size={FieldSize.Small}
                             value={glwbType}
                             name="glwb-type"
                         />
                     </div>
                     {formParty.parties.map(
-                        item =>
-                            applicablePartyRoles.includes(item.partyRoleType) && (
+                        (item) =>
+                            applicablePartyRoles.includes(
+                                item.partyRoleType
+                            ) && (
                                 <>
                                     <GuaranteedWithdrawalBenefits
                                         glwbDetails={item}

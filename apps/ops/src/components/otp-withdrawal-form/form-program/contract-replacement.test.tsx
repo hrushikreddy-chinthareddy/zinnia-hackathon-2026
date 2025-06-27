@@ -1,7 +1,10 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
@@ -50,7 +53,8 @@ describe('ContractReplacement component', () => {
                 </FormDataContext.Provider>
             );
 
-            const contractReplacedElement = screen.getByTestId('isContractReplaced');
+            const contractReplacedElement =
+                screen.getByTestId('isContractReplaced');
             expect(contractReplacedElement).toBeInTheDocument();
             expect(contractReplacedElement).not.toBeChecked();
             fireEvent.click(contractReplacedElement);

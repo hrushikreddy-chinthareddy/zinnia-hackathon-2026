@@ -5,7 +5,9 @@ import dayjs from 'dayjs';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import AssistiveText, { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import CustomLoader from '@deps/components/loader/customLoader';
 import { TranslationFiles } from '@deps/config/translations';
@@ -27,7 +29,9 @@ export default function NotesWidget(props: WidgetProps) {
 
     const formState = useContext(TaskDataContext);
     const { task, setTask, correlationId, initialTask } = formState;
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'taskManagementQueue' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'taskManagementQueue',
+    });
 
     const addNote = async () => {
         setError(false);
@@ -48,7 +52,7 @@ export default function NotesWidget(props: WidgetProps) {
         };
         setLoader(true);
         updateTask(noteTask, correlationId, TaskStatus.InProgress)
-            .then(success => {
+            .then((success) => {
                 if (success) {
                     setNotes(updatedNotes);
                     setTask({
@@ -66,7 +70,7 @@ export default function NotesWidget(props: WidgetProps) {
                     setError(true);
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 browserLogError('updateTask::Error updating task', {
                     ...parseErrorInformation(error),
                     taskId: task.id,
@@ -81,10 +85,12 @@ export default function NotesWidget(props: WidgetProps) {
     return (
         <div className="flex w-full flex-col">
             <div className="font-primary text-2xl mt-8">{t('noteTitle')}</div>
-            <div className={`w-full border-2 border-gray-200 mt-6 min-h-[100px] rounded-lg `}>
+            <div
+                className={`w-full border-2 border-gray-200 mt-6 min-h-[100px] rounded-lg `}
+            >
                 <textarea
                     className="mt-1 w-full resize-none border-none text-md px-4 py-2 !outline-none !ring-0"
-                    onChange={e => {
+                    onChange={(e) => {
                         setCurrentNote(e?.target?.value ?? '');
                     }}
                     placeholder={t('notePlaceholder') ?? ''}
@@ -102,16 +108,35 @@ export default function NotesWidget(props: WidgetProps) {
             >
                 {loader ? <CustomLoader /> : t('addNote')}
             </Button>
-            {error && <AssistiveText text={t('errorSavingNote')} variant={AssistiveTextVariant.Error} />}
+            {error && (
+                <AssistiveText
+                    text={t('errorSavingNote')}
+                    variant={AssistiveTextVariant.Error}
+                />
+            )}
             {notes.map((note: any, index: number) => (
                 <div key={index} className="gap-lg mt-8">
-                    <Content variant={ContentVariant.BodySm} className="!font-medium" details={note.note} />
+                    <Content
+                        variant={ContentVariant.BodySm}
+                        className="!font-medium"
+                        details={note.note}
+                    />
                     <Content
                         variant={ContentVariant.BodySmBold}
                         className="mt-4 text-[#676767] block !font-semibold"
-                        details={t('notePostDate', { date: dayjs(note.createdAt).format('MM/DD/YYYY') }) ?? ''}
+                        details={
+                            t('notePostDate', {
+                                date: dayjs(note.createdAt).format(
+                                    'MM/DD/YYYY'
+                                ),
+                            }) ?? ''
+                        }
                     />
-                    <Content variant={ContentVariant.BodyBold} className="mt-2 block" details={note.user} />
+                    <Content
+                        variant={ContentVariant.BodyBold}
+                        className="mt-2 block"
+                        details={note.user}
+                    />
                 </div>
             ))}
         </div>

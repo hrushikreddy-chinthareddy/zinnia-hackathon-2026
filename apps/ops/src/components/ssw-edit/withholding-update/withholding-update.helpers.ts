@@ -6,9 +6,18 @@ import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
-import { CreateTaskBody, TaskSource, TaskV2Payload } from '@deps/models/case/task';
+import {
+    CreateTaskBody,
+    TaskSource,
+    TaskV2Payload,
+} from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { ActiveWithdrawalCase, FormSignature, FormTaxWithholding, PartyRoles } from '@deps/models/case/withdrawal/case';
+import {
+    ActiveWithdrawalCase,
+    FormSignature,
+    FormTaxWithholding,
+    PartyRoles,
+} from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SignatureFields } from '../../otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -58,7 +67,9 @@ export const signaturesConfig = [
         ],
         signatureType: SignatureValidationTypeWithdrawal.JointOwner,
         shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-            return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+            return !!formParty?.parties?.find(
+                (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+            );
         },
     },
     {
@@ -100,7 +111,12 @@ export const taxWithholdingUpdateFormData = (
         source: TaskSource.ZinniaTaskManagement,
         taskType: initialForm.taskType,
         status,
-        data: getWithholdingUpdatePayload(initialForm, formSignature, formTaxWithholding, document) as any,
+        data: getWithholdingUpdatePayload(
+            initialForm,
+            formSignature,
+            formTaxWithholding,
+            document
+        ) as any,
     };
 };
 
@@ -135,8 +151,14 @@ export const getWithholdingUpdatePayload = (
             text: document.source,
         },
         businessKey: document.documentNumber,
-        receivedDate: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format(ZAHARA_API_DATE_FORMAT),
-        receivedDateTime: dayjs(document.dateReceived, 'M/D/YYYY hh:mm:ss A').format('YYYY-MM-DDTHH:mm:ss:Z'),
+        receivedDate: dayjs(
+            document.dateReceived,
+            'M/D/YYYY hh:mm:ss A'
+        ).format(ZAHARA_API_DATE_FORMAT),
+        receivedDateTime: dayjs(
+            document.dateReceived,
+            'M/D/YYYY hh:mm:ss A'
+        ).format('YYYY-MM-DDTHH:mm:ss:Z'),
         sourceSysId: 'ONBASE',
     };
 
@@ -155,7 +177,8 @@ export const getWithholdingUpdatePayload = (
             formParty: null,
             formProgram: null,
             formRestriction: null,
-            formSignature: documentSource !== ChannelType.Phone ? formSignature : null,
+            formSignature:
+                documentSource !== ChannelType.Phone ? formSignature : null,
             formTaxWithholding: formTaxWithholding,
             formTpaAuthorization: null,
             formSurrenderingCompany: null,

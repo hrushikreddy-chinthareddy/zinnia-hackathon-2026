@@ -15,23 +15,35 @@ interface PageLoaderProps {
     textKey?: string;
 }
 
-export const PageLoader: React.FC<PageLoaderProps> = ({ showText = false, variant = PageLoaderVariant.Left, textKey }) => {
+export const PageLoader: React.FC<PageLoaderProps> = ({
+    showText = false,
+    variant = PageLoaderVariant.Left,
+    textKey,
+}) => {
     const { t } = useTranslation();
 
     return (
-        <div className={`flex items-center ${variant === PageLoaderVariant.Center ? 'justify-center' : 'ml-2'}`} data-testid="test-loader">
+        <div
+            className={`flex items-center ${
+                variant === PageLoaderVariant.Center ? 'justify-center' : 'ml-2'
+            }`}
+            data-testid="test-loader"
+        >
             <Loader />
             {showText && (
                 <span
                     className="ml-2 font-primary"
                     style={{
                         color:
-                            variant === PageLoaderVariant.LeftWhiteText || variant === PageLoaderVariant.CenterWhiteText
+                            variant === PageLoaderVariant.LeftWhiteText ||
+                            variant === PageLoaderVariant.CenterWhiteText
                                 ? 'white'
                                 : 'inherit',
                     }}
                 >
-                    {textKey ? t(textKey) : t('caseManagementDashboard.search.loading.title')}
+                    {textKey
+                        ? t(textKey)
+                        : t('caseManagementDashboard.search.loading.title')}
                 </span>
             )}
         </div>

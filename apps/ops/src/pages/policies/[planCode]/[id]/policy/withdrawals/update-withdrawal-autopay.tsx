@@ -16,8 +16,12 @@ const UpdateWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
     const router = useRouter();
     const { type } = router.query;
 
-    const arrangementType = type === 'RMD' ? ArrangementType.REQUIREDMINIMUMDISTRIBUTION : ArrangementType.WITHDRAWAL;
-    const reason = type === 'RMD' ? Reason.REQUIREDMINIMUMDISTRIBUTION : Reason.WITHDRAWAL;
+    const arrangementType =
+        type === 'RMD'
+            ? ArrangementType.REQUIREDMINIMUMDISTRIBUTION
+            : ArrangementType.WITHDRAWAL;
+    const reason =
+        type === 'RMD' ? Reason.REQUIREDMINIMUMDISTRIBUTION : Reason.WITHDRAWAL;
 
     return (
         <AutopayProvider>

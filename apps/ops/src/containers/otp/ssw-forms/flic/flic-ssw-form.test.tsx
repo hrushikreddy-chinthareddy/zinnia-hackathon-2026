@@ -1,6 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { CaseStatus, QualTypes } from '@deps/models/case/withdrawal/case';
@@ -95,7 +98,9 @@ describe('FlicSSWForm', () => {
                 </FormDataContext.Provider>
             );
 
-            const el = await waitFor(() => screen.getByTestId('data-testid-form-party-title'));
+            const el = await waitFor(() =>
+                screen.getByTestId('data-testid-form-party-title')
+            );
             expect(el).toBeInTheDocument();
 
             expect(setMockData).toHaveBeenCalledWith({
@@ -151,7 +156,9 @@ describe('FlicSSWForm', () => {
                 </FormDataContext.Provider>
             );
 
-            const el = await waitFor(() => screen.getByTestId('data-testid-form-party-title'));
+            const el = await waitFor(() =>
+                screen.getByTestId('data-testid-form-party-title')
+            );
             expect(el).toBeInTheDocument();
         });
     });

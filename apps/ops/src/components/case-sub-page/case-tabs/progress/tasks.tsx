@@ -52,23 +52,43 @@ export function Task({ task }: { task: TaskView }) {
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
-            `${task.taskName ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}` : t('sideSheet.task.taskHeading')}`,
+            `${
+                task.taskName
+                    ? `${t('sideSheet.task.taskHeading')}: ${task.taskName}`
+                    : t('sideSheet.task.taskHeading')
+            }`,
 
-            <GlobalTaskSideSheet taskId={task.id} taskDescription={task.description} />
+            <GlobalTaskSideSheet
+                taskId={task.id}
+                taskDescription={task.description}
+            />
         );
         sideSheet.handleOpen(true);
     };
 
-    const dateString = [Statuses.New, Statuses.InProgress, 'OPEN', Statuses.NotStarted, Statuses.Inprogress, Statuses.Pending].includes(
-        task.status
-    )
-        ? t('caseOverview.tabs.openSince', { date: convertKebabedDateString(task.createdAt) })
-        : t('caseOverview.tabs.closedOn', { date: convertKebabedDateString(task.updatedAt) });
+    const dateString = [
+        Statuses.New,
+        Statuses.InProgress,
+        'OPEN',
+        Statuses.NotStarted,
+        Statuses.Inprogress,
+        Statuses.Pending,
+    ].includes(task.status)
+        ? t('caseOverview.tabs.openSince', {
+              date: convertKebabedDateString(task.createdAt),
+          })
+        : t('caseOverview.tabs.closedOn', {
+              date: convertKebabedDateString(task.updatedAt),
+          });
 
     return (
         <li className={`flex w-full flex-row items-center gap-2`}>
             <button
-                aria-label={t('caseOverview.tabs.taskSideSheetLabel', { task: task.description }) as string}
+                aria-label={
+                    t('caseOverview.tabs.taskSideSheetLabel', {
+                        task: task.description,
+                    }) as string
+                }
                 className="default-focus default-hover flex w-full flex-row items-center gap-4 rounded-md border-2 border-gray-100 px-4 py-2"
                 onClick={() => handleClick(task)}
             >
@@ -76,12 +96,26 @@ export function Task({ task }: { task: TaskView }) {
                     <Content
                         contentClassName="min-w-max"
                         variant={ContentVariant.BodySm}
-                        details={task.taskName ? task.taskName : (t('caseOverview.tabs.reviewIssues') as string)}
+                        details={
+                            task.taskName
+                                ? task.taskName
+                                : (t(
+                                      'caseOverview.tabs.reviewIssues'
+                                  ) as string)
+                        }
                     />
 
-                    <Content className="min-w-max" variant={ContentVariant.BodySm} details={dateString} />
+                    <Content
+                        className="min-w-max"
+                        variant={ContentVariant.BodySm}
+                        details={dateString}
+                    />
                 </div>
-                <ChevronDown className="rotate-270 text-secondary" width={16} height={16} />
+                <ChevronDown
+                    className="rotate-270 text-secondary"
+                    width={16}
+                    height={16}
+                />
             </button>
         </li>
     );
@@ -93,7 +127,7 @@ export default function Tasks({ tasks }: { tasks: TaskView[] }) {
     }
     return (
         <ul className="mt-2 flex w-full flex-col gap-1">
-            {tasks.map(task => (
+            {tasks.map((task) => (
                 <Task task={task} key={task.id} />
             ))}
         </ul>

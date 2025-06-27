@@ -8,7 +8,7 @@ export default {
     title: 'Components/CardColumns',
     component: CardColumns,
     decorators: [
-        Story => (
+        (Story) => (
             <div>
                 <Story />
             </div>
@@ -18,4 +18,9 @@ export default {
 
 const [info, summary] = mockPolicyData();
 
-export const CardColumnsDefault = () => <CardColumns titles={['Owner Info', 'Policy Summary']} items={[info, summary]} />;
+export const CardColumnsDefault = () => (
+    <CardColumns
+        titles={['Owner Info', 'Policy Summary']}
+        items={[info, summary]}
+    />
+);

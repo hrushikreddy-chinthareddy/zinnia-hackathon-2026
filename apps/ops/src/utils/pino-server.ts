@@ -32,8 +32,8 @@ const redactKeys = [
     'inputs.content', // OpenAi has a content field that can contain lots of sensitive data
     'inputs.data', // Tasks have a data field that can contain lots of sensitive data
     ...nestedRedactKeys,
-    ...nestedRedactKeys.map(key => `inputs.${key}`),
-    ...nestedRedactKeys.map(key => `params.${key}`),
+    ...nestedRedactKeys.map((key) => `inputs.${key}`),
+    ...nestedRedactKeys.map((key) => `params.${key}`),
 ];
 
 const browserWriter = {
@@ -47,7 +47,11 @@ const browserWriter = {
             if (err instanceof Error) {
                 console.log(JSON.stringify(err, ['name', 'message', 'stack]']));
             } else {
-                console.log(JSON.stringify({ message: 'unknown error occurred while logging' }));
+                console.log(
+                    JSON.stringify({
+                        message: 'unknown error occurred while logging',
+                    })
+                );
             }
         }
     },
@@ -80,7 +84,9 @@ const logger = pino({
     },
     redact,
     // level of logs to display. trace|debug|info|warn|error|fatal
-    level: isNonProductionEnvironment() ? process.env.PINO_LOG_LEVEL || 'trace' : 'trace',
+    level: isNonProductionEnvironment()
+        ? process.env.PINO_LOG_LEVEL || 'trace'
+        : 'trace',
 }).child({
     service: 'zinnia-live-xd',
     env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',

@@ -16,11 +16,26 @@ interface LocalePrefix {
 export const DEFAULT_LOCALE = nextI18nextConfig.i18n.defaultLocale;
 export const ALL_LOCALES = nextI18nextConfig.i18n.locales;
 
-export const lPrefix = ({ prefix = '', locale = DEFAULT_LOCALE, suffix = '' }: LocalePrefix) =>
-    locale && (locale === DEFAULT_LOCALE || locale === 'en') ? '' : `${prefix}${locale}${suffix}`;
+export const lPrefix = ({
+    prefix = '',
+    locale = DEFAULT_LOCALE,
+    suffix = '',
+}: LocalePrefix) =>
+    locale && (locale === DEFAULT_LOCALE || locale === 'en')
+        ? ''
+        : `${prefix}${locale}${suffix}`;
 
-export const setNextLocaleCookie = (locale: string, req: IncomingMessage, res: ServerResponse<IncomingMessage>) => {
-    setCookie('NEXT_LOCALE', locale, { req, res, maxAge: 60 * 60 * 24, path: '/' });
+export const setNextLocaleCookie = (
+    locale: string,
+    req: IncomingMessage,
+    res: ServerResponse<IncomingMessage>
+) => {
+    setCookie('NEXT_LOCALE', locale, {
+        req,
+        res,
+        maxAge: 60 * 60 * 24,
+        path: '/',
+    });
 };
 
 type RouteParams = {
@@ -31,7 +46,12 @@ type GoToOptions = {
     replace?: boolean;
 };
 
-export const goTo = (path: string, router: NextRouter, params?: RouteParams, options?: GoToOptions): void => {
+export const goTo = (
+    path: string,
+    router: NextRouter,
+    params?: RouteParams,
+    options?: GoToOptions
+): void => {
     const { replace = false } = options || {};
 
     let formattedPath = path;
@@ -49,13 +69,22 @@ export const goTo = (path: string, router: NextRouter, params?: RouteParams, opt
     }
 };
 
-export const convertToQueryString = (params: { [key: string]: string | number | boolean | string[] }): string => {
+export const convertToQueryString = (params: {
+    [key: string]: string | number | boolean | string[];
+}): string => {
     const queryString = Object.keys(params)
-        .map(key => {
+        .map((key) => {
             const value = params[key];
 
             if (Array.isArray(value)) {
-                return value.map(v => `${encodeURIComponent(key)}=${encodeURIComponent(v)}`).join('&');
+                return value
+                    .map(
+                        (v) =>
+                            `${encodeURIComponent(key)}=${encodeURIComponent(
+                                v
+                            )}`
+                    )
+                    .join('&');
             }
 
             return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
@@ -90,16 +119,27 @@ const sentenceCaseExceptions: RegExp[] = [isPeopleDetailPage];
  * @returns {string} The breadcrumb text.
  * @export
  */
-export const getBreadcrumbText = (t: TFunction, h1Tag: string, url: string): string => {
+export const getBreadcrumbText = (
+    t: TFunction,
+    h1Tag: string,
+    url: string
+): string => {
     const breadcrumbPath = t('breadcrumb', { path: h1Tag });
 
-    return sentenceCaseExceptions.some(regex => regex.test(url)) ? breadcrumbPath : toSentenceCase(breadcrumbPath);
+    return sentenceCaseExceptions.some((regex) => regex.test(url))
+        ? breadcrumbPath
+        : toSentenceCase(breadcrumbPath);
 };
 
-export const scrollToElement = <T extends HTMLDivElement>(containerRef: RefObject<T>, activeElementIndex: number, scrollAmount = 0) => {
+export const scrollToElement = <T extends HTMLDivElement>(
+    containerRef: RefObject<T>,
+    activeElementIndex: number,
+    scrollAmount = 0
+) => {
     if (containerRef.current && activeElementIndex > -1) {
         const containerLeft = containerRef.current.getBoundingClientRect().left;
-        const element = containerRef.current.children[0].children[activeElementIndex];
+        const element =
+            containerRef.current.children[0].children[activeElementIndex];
 
         if (element) {
             if (scrollAmount > 0) {

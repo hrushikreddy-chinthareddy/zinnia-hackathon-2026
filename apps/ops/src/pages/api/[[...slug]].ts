@@ -8,7 +8,12 @@ export default withAuthAndLogging(
         const re = new RegExp('^.*?/api');
         const proxyUrl = req.url?.replace(re, apiServerBaseUrl as string);
 
-        return await requestHandler<any>(proxyUrl as string, req, res, loggingContext);
+        return await requestHandler<any>(
+            proxyUrl as string,
+            req,
+            res,
+            loggingContext
+        );
     },
     { file: 'reverse-proxy (slug)', function: 'routeHandler' }
 );

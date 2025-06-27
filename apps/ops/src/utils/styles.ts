@@ -5,7 +5,15 @@ import myConfig from '../../tailwind.config';
 
 const fullConfig = resolveConfig(myConfig);
 
-type CssMeasurementUnit = 'px' | 'em' | 'rem' | '%' | 'vh' | 'vw' | 'vmin' | 'vmax';
+type CssMeasurementUnit =
+    | 'px'
+    | 'em'
+    | 'rem'
+    | '%'
+    | 'vh'
+    | 'vw'
+    | 'vmin'
+    | 'vmax';
 export type CssValue = `${number}${CssMeasurementUnit}`;
 
 /**
@@ -26,7 +34,7 @@ export const getMaximumWidth = (elements: JSX.Element[]): Promise<number> =>
             document.body.appendChild(tempDiv);
 
             // Render the elements to the temporary div
-            elements.forEach(element => {
+            elements.forEach((element) => {
                 const container = document.createElement('div');
                 tempDiv.appendChild(container);
                 root = createRoot(container);
@@ -37,7 +45,8 @@ export const getMaximumWidth = (elements: JSX.Element[]): Promise<number> =>
             requestAnimationFrame(() => {
                 // Find the maximum width among the rendered elements
                 const maxWidth = Array.from(tempDiv.children).reduce(
-                    (maxWidth, child) => Math.max(maxWidth, child.getBoundingClientRect().width),
+                    (maxWidth, child) =>
+                        Math.max(maxWidth, child.getBoundingClientRect().width),
                     0
                 );
 
@@ -49,7 +58,11 @@ export const getMaximumWidth = (elements: JSX.Element[]): Promise<number> =>
                 resolve(maxWidth);
             });
         } catch (error) {
-            reject(new Error('An error occurred while calculating the maximum width'));
+            reject(
+                new Error(
+                    'An error occurred while calculating the maximum width'
+                )
+            );
         }
     });
 

@@ -1,10 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
-import { CaseCountGroupByEnum, CaseCountInputFilter, CaseCountOutput } from '@zinnia/api-types/types/analytics';
-import { createContext, FC, PropsWithChildren, useEffect, useState } from 'react';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutput,
+} from '@zinnia/api-types/types/analytics';
+import {
+    createContext,
+    FC,
+    PropsWithChildren,
+    useEffect,
+    useState,
+} from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
 import { combineSubmissionTypes } from '@deps/components/dashboard/sections/submission-type/utils';
-import { TimeframeFilterOptions, startDates, formatProcessFilter, createBaseQuery } from '@deps/components/dashboard/utils';
+import {
+    TimeframeFilterOptions,
+    startDates,
+    formatProcessFilter,
+    createBaseQuery,
+} from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
 
@@ -54,23 +69,36 @@ const defaultState = {
     handleRangeChange: () => {},
 };
 
-export const SubmissionTypeContext = createContext<SubmissionTypeContextTypes>(defaultState);
+export const SubmissionTypeContext =
+    createContext<SubmissionTypeContextTypes>(defaultState);
 
 export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [timeframeRadio, setTimeframeRadio] = useState<TimeframeFilterOptions | undefined>(TimeframeFilterOptions.Trailing12Months);
+    const [timeframeRadio, setTimeframeRadio] = useState<
+        TimeframeFilterOptions | undefined
+    >(TimeframeFilterOptions.Trailing12Months);
 
     const [timerange, setTimerange] = useState({
         from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
         to: '',
     });
 
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(state => state);
-    const [selectedProcess, setSelectedProcess] = useState<Processes | ExtendedProcesses>(Processes.NewBusiness);
-    const [submissionVs, setSubmissionVs] = useState<CaseCountGroupByEnum>(CaseCountGroupByEnum.CARRIER);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
+    const [selectedProcess, setSelectedProcess] = useState<
+        Processes | ExtendedProcesses
+    >(Processes.NewBusiness);
+    const [submissionVs, setSubmissionVs] = useState<CaseCountGroupByEnum>(
+        CaseCountGroupByEnum.CARRIER
+    );
     const graphGroupBy = [submissionVs, CaseCountGroupByEnum.APPLICATION_TYPE];
 
     const filter = {
-        caseStatus: [Statuses.InProgress, Statuses.Exception, Statuses.NotStarted],
+        caseStatus: [
+            Statuses.InProgress,
+            Statuses.Exception,
+            Statuses.NotStarted,
+        ],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         createdDateStart: timerange.from,
@@ -98,10 +126,11 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         error: pieChartStatsError,
     } = useQuery({
         queryKey: ['submissionTypePieChartStats', filter],
-        queryFn: () => createBaseQuery(filter, [CaseCountGroupByEnum.APPLICATION_TYPE]),
-        placeholderData: previousData => previousData,
+        queryFn: () =>
+            createBaseQuery(filter, [CaseCountGroupByEnum.APPLICATION_TYPE]),
+        placeholderData: (previousData) => previousData,
         enabled: Object.keys(filter).length > 0,
-        select: response => {
+        select: (response) => {
             const { data } = response;
             const updatedData = combineSubmissionTypes(data || []);
             return {
@@ -119,9 +148,9 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
     } = useQuery({
         queryKey: ['submissionTypeGraphStats', graphGroupBy, filter],
         queryFn: () => createBaseQuery(filter, graphGroupBy),
-        placeholderData: previousData => previousData,
+        placeholderData: (previousData) => previousData,
         enabled: Object.keys(filter).length > 0,
-        select: response => {
+        select: (response) => {
             const { data } = response;
             const updatedData = combineSubmissionTypes(data || []);
             return {

@@ -1,20 +1,33 @@
-import { FullSurrenderRequest, PartialWithdrawalOneTimeRequest } from '@zinnia/api-types/types/bpm';
+import {
+    FullSurrenderRequest,
+    PartialWithdrawalOneTimeRequest,
+} from '@zinnia/api-types/types/bpm';
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import PayeesStep, { PayeesStepSetState } from '@deps/components/workflows/payees-step/payees-step';
+import PayeesStep, {
+    PayeesStepSetState,
+} from '@deps/components/workflows/payees-step/payees-step';
 import PaymentStep from '@deps/components/workflows/payment-step/payment-step';
 import PaymentStepMoneyOut from '@deps/components/workflows/payment-step/payment-step-money-out';
 import { PaymentStepSetState } from '@deps/components/workflows/payment-step/types';
-import StartStep, { StartStepSetState } from '@deps/components/workflows/start-step/start-step';
+import StartStep, {
+    StartStepSetState,
+} from '@deps/components/workflows/start-step/start-step';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { WithdrawalType, useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
+import {
+    WithdrawalType,
+    useWithdrawal,
+} from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
-import { validateFullSurrenderWithdrawal, validatePartialWithdrawalOneTime } from '@deps/queries/api/bpm';
+import {
+    validateFullSurrenderWithdrawal,
+    validatePartialWithdrawalOneTime,
+} from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -33,7 +46,8 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
     const { withdrawal, setWithdrawal } = useWithdrawal();
     const { featureFlags } = useOptimizely();
 
-    const wireCheckPaymentsEnabled = featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
+    const wireCheckPaymentsEnabled =
+        featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
 
     const startLabel = t('withdrawals.start.label');
     const amountLabel = t('withdrawals.amount.label');
@@ -44,15 +58,28 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
     const confirmLabel = t('withdrawals.confirm.label');
 
     const transactionType = useMemo(() => {
-        return withdrawal.type === WithdrawalType.Surrender ? TransactionType.FULL_SURRENDER : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+        return withdrawal.type === WithdrawalType.Surrender
+            ? TransactionType.FULL_SURRENDER
+            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     const validateCall = () => {
-        const query = buildWithdrawalsRequestBody(withdrawal, wireCheckPaymentsEnabled);
+        const query = buildWithdrawalsRequestBody(
+            withdrawal,
+            wireCheckPaymentsEnabled
+        );
 
         return withdrawal.type === WithdrawalType.Surrender
-            ? validateFullSurrenderWithdrawal(policy.product?.planCode, policy.policyNumber, query as FullSurrenderRequest)
-            : validatePartialWithdrawalOneTime(policy.product?.planCode, policy.policyNumber, query as PartialWithdrawalOneTimeRequest);
+            ? validateFullSurrenderWithdrawal(
+                  policy.product?.planCode,
+                  policy.policyNumber,
+                  query as FullSurrenderRequest
+              )
+            : validatePartialWithdrawalOneTime(
+                  policy.product?.planCode,
+                  policy.policyNumber,
+                  query as PartialWithdrawalOneTimeRequest
+              );
     };
 
     const steps: Step[] = [
@@ -66,7 +93,10 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                     state={withdrawal}
                     title={t('withdrawals.start.title') as string}
                     subtitle={t('withdrawals.start.subtitle') as string}
-                    trackEventProps={{ type: transactionType, step: TransactionStep.Start }}
+                    trackEventProps={{
+                        type: transactionType,
+                        step: TransactionStep.Start,
+                    }}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -92,7 +122,10 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                     policy={policy as Policy}
                     setState={setWithdrawal as PayeesStepSetState}
                     state={withdrawal}
-                    trackEventProps={{ type: transactionType, step: TransactionStep.Payees }}
+                    trackEventProps={{
+                        type: transactionType,
+                        step: TransactionStep.Payees,
+                    }}
                 />
             ),
             screenReaderLabel: payeeLabel,

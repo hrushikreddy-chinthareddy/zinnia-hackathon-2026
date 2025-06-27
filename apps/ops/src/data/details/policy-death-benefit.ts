@@ -4,7 +4,8 @@ import { DataDefinition } from '@deps/types/data';
 
 export type DeathBenefitDto = DeathBenefit;
 
-export const toDeathBenefitDto = (policy: Policy): DeathBenefitDto => policy.deathBenefit as DeathBenefit;
+export const toDeathBenefitDto = (policy: Policy): DeathBenefitDto =>
+    policy.deathBenefit as DeathBenefit;
 
 export const PolicyDeathBenefitInfo = (): DataDefinition<DeathBenefitDto>[] => [
     {

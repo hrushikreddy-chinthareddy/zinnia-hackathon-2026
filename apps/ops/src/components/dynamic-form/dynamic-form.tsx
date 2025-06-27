@@ -14,8 +14,14 @@ import { ApplyUITemplates } from './helpers/template.helpers';
 import transformErrors from './helpers/validator.helpers';
 
 type DynamicFormProps = {
-    onChange: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, id?: string) => void;
-    onSubmit: (data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>, event: FormEvent<any>) => void;
+    onChange: (
+        data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>,
+        id?: string
+    ) => void;
+    onSubmit: (
+        data: IChangeEvent<unknown, RJSFSchema, GenericObjectType>,
+        event: FormEvent<any>
+    ) => void;
     formData: any;
     taskMetadata: FormMetadata;
     readonly?: boolean;
@@ -30,7 +36,15 @@ type DynamicFormProps = {
 };
 
 const DynamicForm = React.forwardRef(function DynamicFormComponent(
-    { formData, taskMetadata, readonly = false, onChange, onSubmit, formButtons, formContext }: DynamicFormProps,
+    {
+        formData,
+        taskMetadata,
+        readonly = false,
+        onChange,
+        onSubmit,
+        formButtons,
+        formContext,
+    }: DynamicFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
     const { t } = useTranslation(TranslationFiles.COMMON);
@@ -53,7 +67,7 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
                 readonly={readonly}
                 showErrorList={false}
                 formContext={formContext}
-                transformErrors={errors => transformErrors({ errors, t })}
+                transformErrors={(errors) => transformErrors({ errors, t })}
             >
                 {formButtons}
             </Form>

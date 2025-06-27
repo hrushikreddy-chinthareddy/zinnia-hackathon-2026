@@ -10,12 +10,21 @@ interface IssueDateProps {
 }
 
 const IssueDate = ({ issueDate }: IssueDateProps) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
     return (
         <div>
-            <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.issueDate')} />
-            <Content details={convertKebabedDateString(issueDate)} variant={ContentVariant.BodySm} />
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={t('colDefs:policySummary.issueDate')}
+            />
+            <Content
+                details={convertKebabedDateString(issueDate)}
+                variant={ContentVariant.BodySm}
+            />
         </div>
     );
 };

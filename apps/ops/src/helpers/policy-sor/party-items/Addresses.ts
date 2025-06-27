@@ -20,7 +20,10 @@ export class Addresses extends BasePartyItems<Address> {
     }
 
     public get bestAvailable(): Address | undefined {
-        return this.preferred || sortAddressesByType({ addresses: this.currentList })?.[0];
+        return (
+            this.preferred ||
+            sortAddressesByType({ addresses: this.currentList })?.[0]
+        );
     }
 
     public getById(id: string): Address | undefined {
@@ -29,11 +32,16 @@ export class Addresses extends BasePartyItems<Address> {
 
     public get preferred(): Address | undefined {
         if (this.preferredAddressIndicator) {
-            return this.currentList?.find(address => address.addressId === this.preferredAddressIndicator);
+            return this.currentList?.find(
+                (address) =>
+                    address.addressId === this.preferredAddressIndicator
+            );
         }
         // BPB - preferredAddress was showing up in QA.  Use it if we have it
         return this.currentList?.find(
-            address => (address as Address & { preferredAddress: boolean }).preferredAddress && !isEndDated(address.endDate)
+            (address) =>
+                (address as Address & { preferredAddress: boolean })
+                    .preferredAddress && !isEndDated(address.endDate)
         );
     }
 }

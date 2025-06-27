@@ -4,7 +4,9 @@ import { baseAppUrl } from '../api-config';
 
 export const getFeatureFlags = async () => {
     try {
-        const { data } = await client.get(`${baseAppUrl}/api/optimizely/feature-flags`);
+        const { data } = await client.get(
+            `${baseAppUrl}/api/optimizely/feature-flags`
+        );
         return data;
     } catch (e) {
         console.error('getFeatureFlags::error', e);
@@ -14,7 +16,9 @@ export const getFeatureFlags = async () => {
 
 export const getFeatureFlagVariables = async () => {
     try {
-        const { data } = await client.get(`${baseAppUrl}/api/optimizely/feature-variables`);
+        const { data } = await client.get(
+            `${baseAppUrl}/api/optimizely/feature-variables`
+        );
         return data;
     } catch (e) {
         console.error('getFeatureFlagVariables::error', e);

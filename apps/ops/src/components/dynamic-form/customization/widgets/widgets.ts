@@ -14,7 +14,6 @@ import TextWidget from './text-widget/text-widget';
 import ValueWidget from './text-widget/value-widget';
 import TextareaWidget from './textarea-widget/textarea-widget';
 
-
 export function generateWidgets(): RegistryWidgetsType {
     return {
         CheckboxWidget,
@@ -29,7 +28,7 @@ export function generateWidgets(): RegistryWidgetsType {
         HyperLinkWidget,
         AutoCompleteWidget,
         NotesWidget,
-        ArithmeticOperationWidget
+        ArithmeticOperationWidget,
     };
 }
 

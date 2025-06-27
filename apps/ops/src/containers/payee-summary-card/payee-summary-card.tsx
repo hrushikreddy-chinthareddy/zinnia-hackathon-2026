@@ -1,5 +1,14 @@
-import { Address, DisbursementPaymentForm, DisbursementType } from '@zinnia/api-types/types/sor';
-import { Label, Tag, TagVariant, TooltipPlacement } from '@zinnia/bloom/components';
+import {
+    Address,
+    DisbursementPaymentForm,
+    DisbursementType,
+} from '@zinnia/api-types/types/sor';
+import {
+    Label,
+    Tag,
+    TagVariant,
+    TooltipPlacement,
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
 
@@ -7,7 +16,9 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import DotContainer from '@deps/components/dot-container/dot-container';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import PopoverOnTruncate from '@deps/components/popover-on-truncate/popover-on-truncate';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { formatAddress } from '@deps/helpers/address.helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { getPaymentType } from '@deps/helpers/systematic-program.helpers';
@@ -50,7 +61,10 @@ interface TranslationProps {
     t: TFunction;
 }
 
-export interface PayeeSummaryCardProps extends FinancialDataProps, PayeeNameProps, PaymentProps {
+export interface PayeeSummaryCardProps
+    extends FinancialDataProps,
+        PayeeNameProps,
+        PaymentProps {
     classNames?: string;
     showFinancialData?: boolean;
 }
@@ -72,10 +86,15 @@ const FinancialData = ({
     return (
         <div className="mt-6">
             <div className="relative mb-4 inline-flex items-center justify-start gap-4 align-middle">
-                <Typography variant={TypographyVariant.H4}>{t('payeeSummaryCard.financial')}</Typography>
+                <Typography variant={TypographyVariant.H4}>
+                    {t('payeeSummaryCard.financial')}
+                </Typography>
                 {!!disbursementType && (
                     <span className="pointer-events-none inline-flex items-center uppercase">
-                        <Tag variant={TagVariant.White} text={disbursementType} />
+                        <Tag
+                            variant={TagVariant.White}
+                            text={disbursementType}
+                        />
                     </span>
                 )}
             </div>
@@ -98,10 +117,18 @@ const FinancialData = ({
             />
             <PayeeSummaryCardRow
                 amount={stateTaxDollarAmount}
-                label={t('payeeSummaryCard.stateTax', { state: ownerTaxState }) as string}
+                label={
+                    t('payeeSummaryCard.stateTax', {
+                        state: ownerTaxState,
+                    }) as string
+                }
                 percentage={stateTaxPercentage}
             />
-            <PayeeSummaryCardRow amount={totalAllocationAmount} isSumTotalRow={true} label={t('payeeSummaryCard.totalPayment') as string} />
+            <PayeeSummaryCardRow
+                amount={totalAllocationAmount}
+                isSumTotalRow={true}
+                label={t('payeeSummaryCard.totalPayment') as string}
+            />
         </div>
     );
 };
@@ -111,12 +138,22 @@ const PayeeName = ({ beneficiaryColor, index, payeeName }: PayeeNameProps) => {
         <div className="flex w-fit">
             {!!beneficiaryColor && !!index && (
                 <div className="mr-2 flex flex-col">
-                    <div className={`${getBeneficiaryColor(index)} h-[24px] min-w-[24px] self-center rounded`}></div>
+                    <div
+                        className={`${getBeneficiaryColor(
+                            index
+                        )} h-[24px] min-w-[24px] self-center rounded`}
+                    ></div>
                 </div>
             )}
-            <PopoverOnTruncate title={payeeName} placement={TooltipPlacement.TopRight}>
+            <PopoverOnTruncate
+                title={payeeName}
+                placement={TooltipPlacement.TopRight}
+            >
                 <span>
-                    <Typography className="text-left" variant={TypographyVariant.H3}>
+                    <Typography
+                        className="text-left"
+                        variant={TypographyVariant.H3}
+                    >
                         <PiiWrapper>{payeeName}</PiiWrapper>
                     </Typography>
                 </span>
@@ -125,7 +162,13 @@ const PayeeName = ({ beneficiaryColor, index, payeeName }: PayeeNameProps) => {
     );
 };
 
-const PaymentInfo = ({ accountNumber, address, branchName, paymentType, t }: PaymentProps & TranslationProps) => {
+const PaymentInfo = ({
+    accountNumber,
+    address,
+    branchName,
+    paymentType,
+    t,
+}: PaymentProps & TranslationProps) => {
     switch (paymentType) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -140,7 +183,12 @@ const PaymentInfo = ({ accountNumber, address, branchName, paymentType, t }: Pay
                     <Content
                         pii={true}
                         details={
-                            t('payeeSummaryCard.checkingEndingIn', { accountNumber: formatAccountNumber(accountNumber, true) }) as string
+                            t('payeeSummaryCard.checkingEndingIn', {
+                                accountNumber: formatAccountNumber(
+                                    accountNumber,
+                                    true
+                                ),
+                            }) as string
                         }
                         variant={ContentVariant.BodySm}
                     />
@@ -151,7 +199,7 @@ const PaymentInfo = ({ accountNumber, address, branchName, paymentType, t }: Pay
                 <div className="font-secondary text-md font-normal leading-[22px]">
                     {address ? (
                         <div className="flex flex-col">
-                            {formatAddress(address).map(line => (
+                            {formatAddress(address).map((line) => (
                                 <p key={line}>
                                     <PiiWrapper>{line}</PiiWrapper>
                                 </p>
@@ -167,7 +215,14 @@ const PaymentInfo = ({ accountNumber, address, branchName, paymentType, t }: Pay
     }
 };
 
-const PaymentMethod = ({ accountNumber, address, branchName, paymentType, t, fboFfc }: PaymentProps & TranslationProps) => {
+const PaymentMethod = ({
+    accountNumber,
+    address,
+    branchName,
+    paymentType,
+    t,
+    fboFfc,
+}: PaymentProps & TranslationProps) => {
     if (!paymentType) return;
     else {
         return (
@@ -178,12 +233,29 @@ const PaymentMethod = ({ accountNumber, address, branchName, paymentType, t, fbo
                 <div className="flex flex-col gap-4">
                     {fboFfc && (
                         <DotContainer
-                            dotLeftSide={<Label>{t('workflows.paymentStep.paymentMethod.fboFfc.tooltipTitle')}</Label>}
-                            dotRightSide={<Typography variant={TypographyVariant.Body}>{fboFfc}</Typography>}
+                            dotLeftSide={
+                                <Label>
+                                    {t(
+                                        'workflows.paymentStep.paymentMethod.fboFfc.tooltipTitle'
+                                    )}
+                                </Label>
+                            }
+                            dotRightSide={
+                                <Typography variant={TypographyVariant.Body}>
+                                    {fboFfc}
+                                </Typography>
+                            }
                         />
                     )}
                     <div className="flex gap-4">
-                        <Tag isSelected={false} variant={TagVariant.White} text={getPaymentType(paymentType, t) ?? DEFAULT_ERROR_STRING} />
+                        <Tag
+                            isSelected={false}
+                            variant={TagVariant.White}
+                            text={
+                                getPaymentType(paymentType, t) ??
+                                DEFAULT_ERROR_STRING
+                            }
+                        />
                         <PaymentInfo
                             t={t}
                             accountNumber={accountNumber}
@@ -233,7 +305,11 @@ const PayeeSummaryCard = ({
     return (
         <div className={containerClasses}>
             <div className={sectionClasses}>
-                <PayeeName index={index} payeeName={payeeName} beneficiaryColor={beneficiaryColor} />
+                <PayeeName
+                    index={index}
+                    payeeName={payeeName}
+                    beneficiaryColor={beneficiaryColor}
+                />
                 <div className="flex flex-col">
                     {showFinancialData && (
                         <FinancialData
@@ -241,13 +317,21 @@ const PayeeSummaryCard = ({
                             beneficiaryColor={beneficiaryColor}
                             federalTaxDollarAmount={federalTaxDollarAmount}
                             federalTaxPercentage={federalTaxPercentage}
-                            requestedAmountDollarAmount={requestedAmountDollarAmount}
-                            requestedAmountPercentage={requestedAmountPercentage}
+                            requestedAmountDollarAmount={
+                                requestedAmountDollarAmount
+                            }
+                            requestedAmountPercentage={
+                                requestedAmountPercentage
+                            }
                             stateTaxDollarAmount={stateTaxDollarAmount}
                             stateTaxPercentage={stateTaxPercentage}
                             totalAllocationAmount={totalAllocationAmount}
-                            withdrawalChargeDollarAmount={withdrawalChargeDollarAmount}
-                            withdrawalChargePercentage={withdrawalChargePercentage}
+                            withdrawalChargeDollarAmount={
+                                withdrawalChargeDollarAmount
+                            }
+                            withdrawalChargePercentage={
+                                withdrawalChargePercentage
+                            }
                             disbursementType={disbursementType}
                             ownerTaxState={ownerTaxState}
                         />
@@ -262,7 +346,9 @@ const PayeeSummaryCard = ({
                     accountNumber={accountNumber ?? DEFAULT_ERROR_STRING}
                     address={address}
                     t={t}
-                    branchName={branchName?.toLocaleUpperCase() ?? DEFAULT_ERROR_STRING}
+                    branchName={
+                        branchName?.toLocaleUpperCase() ?? DEFAULT_ERROR_STRING
+                    }
                     paymentType={paymentType}
                     fboFfc={fboFfc}
                 />

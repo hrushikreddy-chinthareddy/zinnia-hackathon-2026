@@ -2,33 +2,53 @@ import { renderHook } from '@testing-library/react';
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
-import { AccountType, BankDetails, PaymentMailType, PaymentMethod } from '@deps/models/case/withdrawal/case';
-import { DEFAULT_DISBURSEMENT_UPDATE, DisbursementParts, DEFAULT_BANK_DETAILS } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    AccountType,
+    BankDetails,
+    PaymentMailType,
+    PaymentMethod,
+} from '@deps/models/case/withdrawal/case';
+import {
+    DEFAULT_DISBURSEMENT_UPDATE,
+    DisbursementParts,
+    DEFAULT_BANK_DETAILS,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 import useDlicConfig from './dlic-withdrawal-form-helpers';
 
-jest.mock('@deps/components/otp-withdrawal-form/form-program/form-program.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-program/form-program.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormProgramValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-program/form-program.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-program/form-program.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormProgramValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
-jest.mock('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers', () => {
-    const originalModule = jest.requireActual('@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers');
-    return {
-        ...originalModule,
-        getDefaultFormDisbursementValues: () => {
-            return { thisIsMocked: true };
-        },
-    };
-});
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
+    () => {
+        const originalModule = jest.requireActual(
+            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
+        );
+        return {
+            ...originalModule,
+            getDefaultFormDisbursementValues: () => {
+                return { thisIsMocked: true };
+            },
+        };
+    }
+);
 
 describe('Dlic withdrawal form config', () => {
-    const t: TFunction = (key: string | string[]) => key as unknown as TFunctionDetailedResult<string>;
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
 
     const {
         result: { current },
@@ -89,8 +109,12 @@ describe('Dlic withdrawal form config', () => {
 
         describe('payload generation', () => {
             it('should generate a correct payload for an eft bank type full selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
-                expect(eftOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const eftOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+                expect(
+                    eftOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -102,11 +126,16 @@ describe('Dlic withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            isDirectDepositValid: { text: bankingDetails.isDirectDepositValid },
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            isDirectDepositValid: {
+                                text: bankingDetails.isDirectDepositValid,
+                            },
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                             isDirectDeposit: { text: true },
                             reEnterAccountNumber: '123',
                             reEnterBankRoutingNumber: '123',
@@ -116,9 +145,16 @@ describe('Dlic withdrawal form config', () => {
             });
 
             it('should generate a correct payload for an eft bank type masked selection', () => {
-                const eftOption = disbursementOptions.find(option => option.value === PaymentMethod.EFT);
+                const eftOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
                 // const eftMasked: BankDetails = { ...DEFAULT_BANK_DETAILS, maskedAccountNumber: '1234', isDirectDeposit: { text: false } };
-                expect(eftOption?.generatePayloadFromSelection({ ...bankingDetails, isDirectDeposit: false })).toEqual({
+                expect(
+                    eftOption?.generatePayloadFromSelection({
+                        ...bankingDetails,
+                        isDirectDeposit: false,
+                    })
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
@@ -133,8 +169,12 @@ describe('Dlic withdrawal form config', () => {
             });
 
             it('should generate a correct payload for a wire selection', () => {
-                const wireOption = disbursementOptions.find(option => option.value === PaymentMethod.Wire);
-                expect(wireOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const wireOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.Wire
+                );
+                expect(
+                    wireOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Wire },
                     paymentMailType: { text: null },
@@ -147,10 +187,13 @@ describe('Dlic withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount: bankingDetails.accountHolder ?? '',
+                            nameOnBankAccount:
+                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount: bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName: bankingDetails.bankFurtherCreditName,
+                            bankFurtherCreditAccount:
+                                bankingDetails.bankFurtherCreditAccount,
+                            bankFurtherCreditName:
+                                bankingDetails.bankFurtherCreditName,
                             isDirectDeposit: { text: true },
                             isDirectDepositValid: { text: null },
                             reEnterAccountNumber: '123',
@@ -158,17 +201,24 @@ describe('Dlic withdrawal form config', () => {
                         },
                     ],
                     voidCheck: bankingDetails?.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt: bankingDetails?.doesCheckMeetSecurityRequirements,
+                    doesCheckMeetSecRequiremnt:
+                        bankingDetails?.doesCheckMeetSecurityRequirements,
                 });
             });
 
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions.find(option => option.value === PaymentMailType.Check);
-                expect(checkOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                const checkOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                expect(
+                    checkOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
-                    isDifferentPayeeOrAddress: { text: bankingDetails.selectIfPayeeIsDifferent },
+                    isDifferentPayeeOrAddress: {
+                        text: bankingDetails.selectIfPayeeIsDifferent,
+                    },
                     payee: {
                         name: { text: bankingDetails.payeeName },
                         addresses: [bankingDetails.address],
@@ -178,9 +228,15 @@ describe('Dlic withdrawal form config', () => {
             });
 
             it('should generate a correct payload for an expressCheck selection', () => {
-                const expressCheckOption = disbursementOptions.find(option => option.value === PaymentMailType.ExpressCheck);
+                const expressCheckOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMailType.ExpressCheck
+                );
 
-                expect(expressCheckOption?.generatePayloadFromSelection(bankingDetails)).toEqual({
+                expect(
+                    expressCheckOption?.generatePayloadFromSelection(
+                        bankingDetails
+                    )
+                ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: PaymentMailType.ExpressCheck },

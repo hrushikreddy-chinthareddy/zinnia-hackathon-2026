@@ -13,17 +13,28 @@ import UpcomingPremiumDisplayField from './display-fields/upcoming-premium';
 import { QuickViewRoot } from './policy-summary-card';
 
 export const TermQuickView = ({ policy }: BasePolicyComponentArgs) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
     return (
-        <QuickViewRoot title={t('dashboard.search.results.policySummaryCard.header2')}>
+        <QuickViewRoot
+            title={t('dashboard.search.results.policySummaryCard.header2')}
+        >
             <UpcomingPremiumDisplayField policy={policy} />
             <BaseDeathBenefit baseDeathBenefit={policy.baseDeathBenefit} />
             <IssueDate issueDate={policy.issueDate} />
             <MaturityDate maturityDate={policy.maturityDate} />
             <div>
-                <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.policyTerm')} />
-                <Content details={translateYearOrYears(policy.fixedCostPeriod, t)} variant={ContentVariant.BodySm} />
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('colDefs:policySummary.policyTerm')}
+                />
+                <Content
+                    details={translateYearOrYears(policy.fixedCostPeriod, t)}
+                    variant={ContentVariant.BodySm}
+                />
             </div>
         </QuickViewRoot>
     );

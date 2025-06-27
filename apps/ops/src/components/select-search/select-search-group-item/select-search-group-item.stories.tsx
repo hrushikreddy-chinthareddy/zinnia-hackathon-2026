@@ -9,7 +9,7 @@ export default {
     title: 'Components/SelectSearchGroupItem',
     component: SelectSearchGroupItem,
     decorators: [
-        Story => (
+        (Story) => (
             <div className=" container max-w-[1302px]">
                 <Story />
             </div>
@@ -45,6 +45,12 @@ const groupArray = [
 ];
 
 export const Default = () => (
-    <SelectSearchGroupItem icon={<NewspaperIcon height={16.5} width={16.5} />} headerText="Header Text" groupArray={groupArray} />
+    <SelectSearchGroupItem
+        icon={<NewspaperIcon height={16.5} width={16.5} />}
+        headerText="Header Text"
+        groupArray={groupArray}
+    />
 );
-export const NoIcon = () => <SelectSearchGroupItem headerText="Header Text" groupArray={groupArray} />;
+export const NoIcon = () => (
+    <SelectSearchGroupItem headerText="Header Text" groupArray={groupArray} />
+);

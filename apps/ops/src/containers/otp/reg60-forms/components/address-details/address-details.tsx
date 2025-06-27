@@ -8,14 +8,20 @@ import { USStates } from '@deps/constants/geography/us-states';
 
 import { AddressDetailsProps } from './address-details.type';
 
-const usStates = Object.keys(USStates).map(key => ({
+const usStates = Object.keys(USStates).map((key) => ({
     label: key,
     value: USStates[key as keyof typeof USStates],
 }));
 
 const zipFormat = { format: '#####' };
 
-const AddressDetails = ({ userData, errors, setUserData, addressFieldConfig, isFormStateReadOnly }: AddressDetailsProps) => {
+const AddressDetails = ({
+    userData,
+    errors,
+    setUserData,
+    addressFieldConfig,
+    isFormStateReadOnly,
+}: AddressDetailsProps) => {
     return (
         <>
             <div className="my-4 max-w-lg">
@@ -23,8 +29,14 @@ const AddressDetails = ({ userData, errors, setUserData, addressFieldConfig, isF
                     disabled={isFormStateReadOnly}
                     label={addressFieldConfig.fields?.streetAddress.fieldLabel}
                     message={errors?.addressLine1}
-                    onChange={e => {
-                        setUserData({ ...userData, addressDetails: { ...userData.addressDetails, addressLine1: xss(e.target.value) } });
+                    onChange={(e) => {
+                        setUserData({
+                            ...userData,
+                            addressDetails: {
+                                ...userData.addressDetails,
+                                addressLine1: xss(e.target.value),
+                            },
+                        });
                     }}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
@@ -42,10 +54,13 @@ const AddressDetails = ({ userData, errors, setUserData, addressFieldConfig, isF
             <div className="my-4 max-w-lg">
                 <Field
                     label={addressFieldConfig.fields?.streetAddress2.fieldLabel}
-                    onChange={e => {
+                    onChange={(e) => {
                         setUserData({
                             ...userData,
-                            addressDetails: { ...userData.addressDetails, addressLine2: xss(e.target.value) },
+                            addressDetails: {
+                                ...userData.addressDetails,
+                                addressLine2: xss(e.target.value),
+                            },
                         });
                     }}
                     size={FieldSize.Small}
@@ -63,10 +78,13 @@ const AddressDetails = ({ userData, errors, setUserData, addressFieldConfig, isF
             <div className="my-4 max-w-lg">
                 <Field
                     label={addressFieldConfig.fields?.streetAddress3.fieldLabel}
-                    onChange={e => {
+                    onChange={(e) => {
                         setUserData({
                             ...userData,
-                            addressDetails: { ...userData.addressDetails, addressLine3: xss(e.target.value) },
+                            addressDetails: {
+                                ...userData.addressDetails,
+                                addressLine3: xss(e.target.value),
+                            },
                         });
                     }}
                     size={FieldSize.Small}
@@ -84,10 +102,13 @@ const AddressDetails = ({ userData, errors, setUserData, addressFieldConfig, isF
                 <Field
                     label={addressFieldConfig.fields?.city.fieldLabel}
                     message={errors?.city}
-                    onChange={e => {
+                    onChange={(e) => {
                         setUserData({
                             ...userData,
-                            addressDetails: { ...userData.addressDetails, city: xss(e.target.value) },
+                            addressDetails: {
+                                ...userData.addressDetails,
+                                city: xss(e.target.value),
+                            },
                         });
                     }}
                     size={FieldSize.Small}
@@ -108,7 +129,10 @@ const AddressDetails = ({ userData, errors, setUserData, addressFieldConfig, isF
                     onChange={(value: string) => {
                         setUserData({
                             ...userData,
-                            addressDetails: { ...userData.addressDetails, state: value },
+                            addressDetails: {
+                                ...userData.addressDetails,
+                                state: value,
+                            },
                         });
                     }}
                     value={userData?.addressDetails?.state || ''}
@@ -128,10 +152,13 @@ const AddressDetails = ({ userData, errors, setUserData, addressFieldConfig, isF
                 <Field
                     label={addressFieldConfig.fields?.zip.fieldLabel}
                     message={errors?.zipCode}
-                    onChange={e => {
+                    onChange={(e) => {
                         setUserData({
                             ...userData,
-                            addressDetails: { ...userData.addressDetails, zipCode: xss(e.target.value) },
+                            addressDetails: {
+                                ...userData.addressDetails,
+                                zipCode: xss(e.target.value),
+                            },
                         });
                     }}
                     size={FieldSize.Small}

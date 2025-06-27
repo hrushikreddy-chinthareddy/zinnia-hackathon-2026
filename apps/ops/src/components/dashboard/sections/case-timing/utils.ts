@@ -7,7 +7,7 @@ dayjs.extend(duration);
 export const generateSeries = (seriesData: CompletedCaseTimeOutputLevel1[]) => {
     return [
         {
-            data: seriesData.map(item => {
+            data: seriesData.map((item) => {
                 return {
                     name: item.name,
                     y: item.secondMedian,
@@ -18,11 +18,14 @@ export const generateSeries = (seriesData: CompletedCaseTimeOutputLevel1[]) => {
     ];
 };
 
-export const getDaysFromSeconds = (seconds: number) => dayjs.duration(seconds, 'seconds').asDays();
+export const getDaysFromSeconds = (seconds: number) =>
+    dayjs.duration(seconds, 'seconds').asDays();
 
-export const getHoursFromSeconds = (seconds: number) => dayjs.duration(seconds, 'seconds').asHours();
+export const getHoursFromSeconds = (seconds: number) =>
+    dayjs.duration(seconds, 'seconds').asHours();
 
-export const getMinutesFromSeconds = (seconds: number) => dayjs.duration(seconds, 'seconds').asMinutes();
+export const getMinutesFromSeconds = (seconds: number) =>
+    dayjs.duration(seconds, 'seconds').asMinutes();
 
 /**
  *
@@ -30,7 +33,9 @@ export const getMinutesFromSeconds = (seconds: number) => dayjs.duration(seconds
  *
  * It reads the time value and formats it to hours if under 24 hours, else days
  */
-export const generateTooltip = (tooltipVal: Highcharts.TooltipFormatterContextObject) => {
+export const generateTooltip = (
+    tooltipVal: Highcharts.TooltipFormatterContextObject
+) => {
     // @ts-expect-error: this actually exists
     const count = tooltipVal.point.count;
     const name = tooltipVal.point.name;
@@ -40,9 +45,13 @@ export const generateTooltip = (tooltipVal: Highcharts.TooltipFormatterContextOb
 
     return `<div>
                 <span><b>&nbsp;${name}</b></span><br />
-                <span>Median time: ${isOver24Hours ? daysFromSeconds.toFixed(1) : hoursFromSeconds.toFixed(1)} ${
-        isOver24Hours ? 'day' : 'hour'
-    }${count !== 1 ? 's' : ''}</span><br />
+                <span>Median time: ${
+                    isOver24Hours
+                        ? daysFromSeconds.toFixed(1)
+                        : hoursFromSeconds.toFixed(1)
+                } ${isOver24Hours ? 'day' : 'hour'}${
+        count !== 1 ? 's' : ''
+    }</span><br />
                 <span>Total cases: ${count}</span>
             </div>`;
 };
@@ -51,14 +60,21 @@ export const generateTooltip = (tooltipVal: Highcharts.TooltipFormatterContextOb
  *
  * Formats the time value to hours if under 24 hours, else days
  */
-export const generateLabel = (label: Highcharts.AxisLabelsFormatterContextObject, isSeriesShowingDays: boolean) => {
+export const generateLabel = (
+    label: Highcharts.AxisLabelsFormatterContextObject,
+    isSeriesShowingDays: boolean
+) => {
     const secondsNumber = Number(label.value);
     const hoursFromSeconds = getHoursFromSeconds(secondsNumber);
     const daysFromSeconds = getDaysFromSeconds(secondsNumber);
     const isOver24Hours = hoursFromSeconds > 24;
-    const time = isOver24Hours ? daysFromSeconds.toFixed(0) : hoursFromSeconds.toFixed(0);
+    const time = isOver24Hours
+        ? daysFromSeconds.toFixed(0)
+        : hoursFromSeconds.toFixed(0);
 
-    return `${time} ${isOver24Hours || isSeriesShowingDays ? 'day' : 'hour'}${time !== '1' ? 's' : ''}`;
+    return `${time} ${isOver24Hours || isSeriesShowingDays ? 'day' : 'hour'}${
+        time !== '1' ? 's' : ''
+    }`;
 };
 
 /**

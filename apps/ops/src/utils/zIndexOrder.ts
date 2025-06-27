@@ -2,10 +2,10 @@
 // https://dev.to/mimafogeus2/a-better-way-to-manage-z-indexes-1nf
 
 export enum zIndexOrder {
-  CardLinkClickArea = 100,
-  CardPopoverTrigger = 200,
-  DatePickerDialog = 201,
-  Overlay = 300,
-  Popover = 400,
-  Dialog = 500,
+    CardLinkClickArea = 100,
+    CardPopoverTrigger = 200,
+    DatePickerDialog = 201,
+    Overlay = 300,
+    Popover = 400,
+    Dialog = 500,
 }

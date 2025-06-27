@@ -15,7 +15,13 @@ export interface TransactionCardProps {
     value: number | string;
 }
 
-const TransactionCard: React.FC<TransactionCardProps> = ({ href, fieldLabel, summary, cardTitle, value }) => {
+const TransactionCard: React.FC<TransactionCardProps> = ({
+    href,
+    fieldLabel,
+    summary,
+    cardTitle,
+    value,
+}) => {
     const { t } = useTranslation();
     const router = useRouter();
 
@@ -25,19 +31,46 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ href, fieldLabel, sum
 
     return (
         <ClickContainer
-            ariaLabel={t('policy.detailCards.policyDetails.goToThisPolicysPage', { page: cardTitle })}
+            ariaLabel={t(
+                'policy.detailCards.policyDetails.goToThisPolicysPage',
+                { page: cardTitle }
+            )}
             classes="w-[226px] border-2 p-px !z-[1]"
             role="link"
             onClick={() => goto(href)}
         >
-            <div className="flex justify-between" data-testid="transaction-card">
-                <Label className="text-gray-900" label={cardTitle} variant={LabelVariant.LabelLg} />
-                <Icon type={IconType.CHEVRON_RIGHT} height={18} width={18} color="var(--color-base-text-text-link)" />
+            <div
+                className="flex justify-between"
+                data-testid="transaction-card"
+            >
+                <Label
+                    className="text-gray-900"
+                    label={cardTitle}
+                    variant={LabelVariant.LabelLg}
+                />
+                <Icon
+                    type={IconType.CHEVRON_RIGHT}
+                    height={18}
+                    width={18}
+                    color="var(--color-base-text-text-link)"
+                />
             </div>
             <dl className="mt-4">
-                <Label className="text-gray-900" label={fieldLabel} variant={LabelVariant.FieldLabel} />
-                <Content className="text-gray-900" details={`${value}`} variant={ContentVariant.Value} />
-                <Content className="text-gray-600" details={summary} variant={ContentVariant.Caption} />
+                <Label
+                    className="text-gray-900"
+                    label={fieldLabel}
+                    variant={LabelVariant.FieldLabel}
+                />
+                <Content
+                    className="text-gray-900"
+                    details={`${value}`}
+                    variant={ContentVariant.Value}
+                />
+                <Content
+                    className="text-gray-600"
+                    details={summary}
+                    variant={ContentVariant.Caption}
+                />
             </dl>
         </ClickContainer>
     );

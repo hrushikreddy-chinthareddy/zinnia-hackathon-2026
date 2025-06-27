@@ -6,14 +6,19 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { v4 as uuid4 } from 'uuid';
 
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
-import NavElement, { NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import SelectSearchItem from '@deps/components/select-search/select-search-item/select-search-item';
 import { TranslationFiles } from '@deps/config/translations';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { filterOnSearchHandler } from '@deps/helpers/search.helpers';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { DataDefinition } from '@deps/types/data';
-import { DropdownClickedEvent, SegmentTrackedEventName } from '@deps/types/segment-analytics';
+import {
+    DropdownClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 
 import SelectSearchGroupContainer from './select-search-group-container/select-search-group-container';
 import { getInputClasses, getLabelClasses } from './select-search.helpers';
@@ -52,27 +57,38 @@ const SelectFieldPopupContainer = ({
 }: SelectFieldPopupContainerProps): JSX.Element => {
     let fields = null;
     let container = null;
-    let containerClasses = 'max-h-[288px] h-fit overflow-y-scroll first:[&>div]:border-t-2 first:[&>div]:border-gray-900 z-50';
+    let containerClasses =
+        'max-h-[288px] h-fit overflow-y-scroll first:[&>div]:border-t-2 first:[&>div]:border-gray-900 z-50';
 
     if (values.length > 0) {
         if (group) {
             fields = <SelectSearchGroupContainer values={values} />;
         } else {
             fields = values.map(({ value, label }, index) => (
-                <SelectSearchItem key={'select-search-item-' + index} fieldLabel={label} data={value?.toString()} />
+                <SelectSearchItem
+                    key={'select-search-item-' + index}
+                    fieldLabel={label}
+                    data={value?.toString()}
+                />
             ));
         }
 
         container = fields;
     } else if (values.length === 0 && hasSearchValue) {
-        container = <div className={'mt-[2px] px-4 py-2 text-[14px]'}>{errorMessage}</div>;
+        container = (
+            <div className={'mt-[2px] px-4 py-2 text-[14px]'}>
+                {errorMessage}
+            </div>
+        );
 
         containerClasses = 'h-auto';
     }
 
     return (
         <div
-            className={`${dropUp ? 'bottom-[48px]' : 'top-[48px]'} absolute z-10 w-full rounded-lg bg-white shadow-xl ${containerClasses}`}
+            className={`${
+                dropUp ? 'bottom-[48px]' : 'top-[48px]'
+            } absolute z-10 w-full rounded-lg bg-white shadow-xl ${containerClasses}`}
         >
             {container}
         </div>
@@ -105,12 +121,15 @@ const SelectSearch = ({
     const ref = useRef<HTMLInputElement>(null);
 
     const onOutsideClick = () => {
-        segmentAnalyticsTrackEvent<DropdownClickedEvent>(SegmentTrackedEventName.DropdownClicked, {
-            dropdownName: 'Key Value Search',
-            searchText: searchValue as string,
-            session_id: sessionId as string,
-            userId: userPartyId as string,
-        });
+        segmentAnalyticsTrackEvent<DropdownClickedEvent>(
+            SegmentTrackedEventName.DropdownClicked,
+            {
+                dropdownName: 'Key Value Search',
+                searchText: searchValue as string,
+                session_id: sessionId as string,
+                userId: userPartyId as string,
+            }
+        );
     };
     useOutsideClick(ref, open, setOpen, onOutsideClick);
 
@@ -118,14 +137,21 @@ const SelectSearch = ({
 
     useEffect(() => {
         if (debouncedSearchValue) {
-            setSearchResults(filterOnSearchHandler(values, { searchValue: debouncedSearchValue }));
+            setSearchResults(
+                filterOnSearchHandler(values, {
+                    searchValue: debouncedSearchValue,
+                })
+            );
             setOpen(true);
         } else {
             setSearchResults(values);
         }
     }, [debouncedSearchValue]);
 
-    const mergedLabelClassNames = getLabelClasses(variant, `field-label ${labelClassNames}`);
+    const mergedLabelClassNames = getLabelClasses(
+        variant,
+        `field-label ${labelClassNames}`
+    );
 
     const inputClassNames = getInputClasses(
         variant,
@@ -137,7 +163,11 @@ const SelectSearch = ({
     errorMessage = (
         <div className="font-secondary">
             <b>{t('dashboard.quickSearch.errorMessage.question')}</b>{' '}
-            <NavElement type={NavElementType.Link} className="font-primary text-md" href={errorMessageLink}>
+            <NavElement
+                type={NavElementType.Link}
+                className="font-primary text-md"
+                href={errorMessageLink}
+            >
                 {t('dashboard.quickSearch.errorMessage.navlink')}
             </NavElement>{' '}
             {t('dashboard.quickSearch.errorMessage.message')}
@@ -167,27 +197,43 @@ const SelectSearch = ({
                 {label}
             </label>
 
-            <div className="relative" ref={ref} onFocus={() => handleSelect(true)} onBlur={() => handleSelect(false)}>
+            <div
+                className="relative"
+                ref={ref}
+                onFocus={() => handleSelect(true)}
+                onBlur={() => handleSelect(false)}
+            >
                 <div className={clsx(inputClassNames, 'bg-transparent')}>
                     <input
                         type="text"
                         value={searchValue}
-                        onChange={event => setSearchValue(event.target.value)}
+                        onChange={(event) => setSearchValue(event.target.value)}
                         className="w-full border-none bg-transparent pl-4 font-secondary text-md font-normal leading-5.5 shadow-none placeholder:text-gray-300 focus-visible:ring-0"
                         placeholder={placeHolder}
                         id={labelId}
                         aria-label={label}
                     />
-                    <button className="py-2 pr-4" onClick={() => setOpen(!open)}>
+                    <button
+                        className="py-2 pr-4"
+                        onClick={() => setOpen(!open)}
+                    >
                         <Icon
                             type={IconType.CHEVRON}
-                            className={'simple-transition' + (open ? 'flip180' : '')}
-                            aria-label={`${t('ariaLabel.findKeyValuesIcon')} ${label}`}
+                            className={
+                                'simple-transition' + (open ? 'flip180' : '')
+                            }
+                            aria-label={`${t(
+                                'ariaLabel.findKeyValuesIcon'
+                            )} ${label}`}
                             height={24}
                             width={24}
                             color="var(--color-base-icon-icon-action-text-link)"
                         />
-                        <span className="sr-only">{t(`site.controlActions.${open ? 'close' : 'open'}`)}</span>
+                        <span className="sr-only">
+                            {t(
+                                `site.controlActions.${open ? 'close' : 'open'}`
+                            )}
+                        </span>
                         <span className="sr-only">{label}</span>
                     </button>
                 </div>

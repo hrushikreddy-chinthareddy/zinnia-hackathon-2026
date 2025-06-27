@@ -50,11 +50,15 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
-import { commonOftFormValidation, getQualTypeOptions } from '../oft-form-helpers';
+import {
+    commonOftFormValidation,
+    getQualTypeOptions,
+} from '../oft-form-helpers';
 
 export default function getMassOftConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.
-    const formValidation = (values: Partial<FormParts> = {}) => commonOftFormValidation(t, values);
+    const formValidation = (values: Partial<FormParts> = {}) =>
+        commonOftFormValidation(t, values);
 
     const signaturesConfig: SignatureValidationConfig[] = [
         {
@@ -101,7 +105,9 @@ export default function getMassOftConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
 
@@ -125,7 +131,8 @@ export default function getMassOftConfig(t: TFunction) {
                     key: 'beneficiary-date',
                 },
             ],
-            signatureType: SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
+            signatureType:
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
         },
         {
             key: `sig-val-spouse`,
@@ -144,18 +151,36 @@ export default function getMassOftConfig(t: TFunction) {
                     key: 'spouse-date',
                 },
             ],
-            shouldDisplay: ({ ownerStateOfResidence }: OtpWithdrawalFormState): boolean => {
-                return !!ownerStateOfResidence && spousalSignatureStateCodes.includes(ownerStateOfResidence?.toUpperCase());
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
+                return (
+                    !!ownerStateOfResidence &&
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
+                );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
-    const oftFormValidation = ({ formParty, formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
+    const oftFormValidation = ({
+        formParty,
+        formSignature,
+        formDisbursement,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = formValidation({
+            formParty,
+            formSignature,
+            formDisbursement,
+        });
 
         // fbo details required
-        if (formDisbursement?.paymentMethod.text && !formDisbursement?.payee?.fboDetails?.text) {
+        if (
+            formDisbursement?.paymentMethod.text &&
+            !formDisbursement?.payee?.fboDetails?.text
+        ) {
             errors['fboDetails'] = t('formValidation.fboDetails');
         }
 
@@ -263,7 +288,9 @@ export default function getMassOftConfig(t: TFunction) {
             },
         },
         {
-            label: t('amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'),
+            label: t(
+                'amountDetails.partialWithdrawal.freeWithdrawalAmountOnly'
+            ),
             value: ProgramType.TotalFreeAmt,
             generatePayloadFromSelection: () => {
                 return {
@@ -273,7 +300,9 @@ export default function getMassOftConfig(t: TFunction) {
                         text: Program.OFT,
                     },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -310,7 +339,9 @@ export default function getMassOftConfig(t: TFunction) {
             },
         },
         {
-            label: `${t('amountDetails.partialWithdrawal.percetageOfAccountValue')}`,
+            label: `${t(
+                'amountDetails.partialWithdrawal.percetageOfAccountValue'
+            )}`,
             value: ProgramType.PartialPercent,
             amountFieldType: AmountType.Percent,
             generatePayloadFromSelection: (val = null) => {
@@ -322,7 +353,10 @@ export default function getMassOftConfig(t: TFunction) {
                     },
                     programType: { text: ProgramType.WITHDRAWAL },
                     programSubType: { text: ProgramSubType.PercentageofAV },
-                    partialPercent: { text: val, amountType: AmountType.Percent },
+                    partialPercent: {
+                        text: val,
+                        amountType: AmountType.Percent,
+                    },
                 };
             },
         },
@@ -348,7 +382,8 @@ export default function getMassOftConfig(t: TFunction) {
             label: t('distributionMethod.wire'),
             value: FormDisbursementSelections.Wire,
             additionalOptions: {
-                disbursementToggleType: DisbursementToggleType.AutoFillInfoToggle,
+                disbursementToggleType:
+                    DisbursementToggleType.AutoFillInfoToggle,
                 toggleOptions: [
                     {
                         label: t('distributionMethod.mmAscend'),
@@ -399,7 +434,10 @@ export default function getMassOftConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -412,11 +450,16 @@ export default function getMassOftConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -432,7 +475,9 @@ export default function getMassOftConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
                 {
@@ -448,8 +493,12 @@ export default function getMassOftConfig(t: TFunction) {
                     maxLength: 35,
                     tooltip: {
                         shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                        title: t(
+                            'distributionMethod.contractLabelPopoverTitle'
+                        ) as string,
+                        body: t(
+                            'distributionMethod.contractLabelPopoverMessage'
+                        ) as string,
                     },
                 },
                 {
@@ -459,7 +508,11 @@ export default function getMassOftConfig(t: TFunction) {
                     classNames: 'col-start-1 col-span-3 w-full',
                 },
             ],
-            getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                bank,
+                payee,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
@@ -468,11 +521,14 @@ export default function getMassOftConfig(t: TFunction) {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
                     accountHolder: selectedBank.nameOnBankAccount ?? '',
                     accountNumber: selectedBank.accountNumber ?? '',
-                    accountType: selectedBank.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank.bankName ?? '',
                     bankRoutingNumber: selectedBank.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                     payeeName: payee?.name?.text ?? '',
                     fboDetails: payee?.fboDetails?.text || '',
                     contractNumber: payee?.contractNumber.text ?? '',
@@ -547,8 +603,12 @@ export default function getMassOftConfig(t: TFunction) {
                     maxLength: 35,
                     tooltip: {
                         shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                        title: t(
+                            'distributionMethod.contractLabelPopoverTitle'
+                        ) as string,
+                        body: t(
+                            'distributionMethod.contractLabelPopoverMessage'
+                        ) as string,
                     },
                 },
                 {
@@ -557,8 +617,15 @@ export default function getMassOftConfig(t: TFunction) {
                     component: DisbursementFields.BankAddress,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, payee }: FormDisbursement) {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                payee,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === PaymentMailType.Check &&
+                    paymentMailType.text === null
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         payeeName: payee?.name.text ?? '',
@@ -569,7 +636,12 @@ export default function getMassOftConfig(t: TFunction) {
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, contractNumber, fboDetails }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                contractNumber,
+                fboDetails,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
@@ -607,8 +679,12 @@ export default function getMassOftConfig(t: TFunction) {
                     maxLength: 35,
                     tooltip: {
                         shouldDisplay: true,
-                        title: t('distributionMethod.contractLabelPopoverTitle') as string,
-                        body: t('distributionMethod.contractLabelPopoverMessage') as string,
+                        title: t(
+                            'distributionMethod.contractLabelPopoverTitle'
+                        ) as string,
+                        body: t(
+                            'distributionMethod.contractLabelPopoverMessage'
+                        ) as string,
                     },
                 },
                 {
@@ -628,8 +704,16 @@ export default function getMassOftConfig(t: TFunction) {
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, paymentMailType, payee, upsAccount }: FormDisbursement) {
-                if (paymentMethod.text === FormDisbursementSelections.Check && paymentMailType.text === PaymentMailType.ExpressCheck) {
+            getDefaultPayload({
+                paymentMethod,
+                paymentMailType,
+                payee,
+                upsAccount,
+            }: FormDisbursement) {
+                if (
+                    paymentMethod.text === FormDisbursementSelections.Check &&
+                    paymentMailType.text === PaymentMailType.ExpressCheck
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
                         payeeName: payee?.name.text ?? '',
@@ -671,32 +755,49 @@ export default function getMassOftConfig(t: TFunction) {
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
         {
-            label: t('amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'),
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t(
+                'amountDetails.processTimeframe.whenTheContractIsNoLongerSubjectToWithdrawalCharges'
+            ),
             value: ProcessRequestType.NoLongerSubject,
         },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
 
         switch (programTypeText) {
             case ProgramType.FullSurrender:
-                return { selectedOption: ProgramType.FullSurrender, amount: '' };
+                return {
+                    selectedOption: ProgramType.FullSurrender,
+                    amount: '',
+                };
             case ProgramType.TotalFreeAmt:
                 return { selectedOption: ProgramType.TotalFreeAmt, amount: '' };
             case ProgramType.Withdrawal:
                 return {
                     selectedOption:
-                        formProgram.withdrawType.text === WithdrawalType.Net ? ProgramType.NetWithdrawal : ProgramType.GrossWithdrawal,
+                        formProgram.withdrawType.text === WithdrawalType.Net
+                            ? ProgramType.NetWithdrawal
+                            : ProgramType.GrossWithdrawal,
                     amount: formProgram?.partialAmount?.text || '',
                 };
             case ProgramType.WITHDRAWAL:
                 return {
                     selectedOption:
-                        formProgram.programSubType.text === ProgramSubType.MaximumAmount
+                        formProgram.programSubType.text ===
+                        ProgramSubType.MaximumAmount
                             ? ProgramType.WITHDRAWAL
                             : ProgramType.PartialPercent,
                     amount: formProgram?.partialPercent?.text || '',
@@ -707,8 +808,14 @@ export default function getMassOftConfig(t: TFunction) {
     };
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Default },
-        { label: t('distributionInstruction.specifyFunds'), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Default,
+        },
+        {
+            label: t('distributionInstruction.specifyFunds'),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const defaultValues = {
@@ -723,7 +830,10 @@ export default function getMassOftConfig(t: TFunction) {
         accordForm: true,
     };
 
-    const getUpdatedData = (preFillBankInfo: DisbursementParts, method: BankDetailsInputMethod): DisbursementParts => {
+    const getUpdatedData = (
+        preFillBankInfo: DisbursementParts,
+        method: BankDetailsInputMethod
+    ): DisbursementParts => {
         switch (method) {
             case BankDetailsInputMethod.Auto:
                 return {

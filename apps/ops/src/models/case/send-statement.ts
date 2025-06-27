@@ -52,7 +52,10 @@ export type SendCommunicationRequestBody = {
 export enum SendStatementFormType {
     ServiceRequestForm = 'Service Request Form',
 }
-export const AllowedRoleTypes: string[] = [PartyRole.JOINTOWNER, PartyRole.OWNER];
+export const AllowedRoleTypes: string[] = [
+    PartyRole.JOINTOWNER,
+    PartyRole.OWNER,
+];
 
 export type Confirm = {
     caseId: string;

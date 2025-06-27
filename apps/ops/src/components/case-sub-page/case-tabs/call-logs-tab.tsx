@@ -5,9 +5,13 @@ import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import UnauthorizedCard from '@deps/components/card/card-unauthorized';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -49,8 +53,12 @@ const CallLogCard = ({
     tag = toSentenceCase(tag);
     const displayName = (
         <Typography variant={TypographyVariant.LabelLg}>
-            <PiiWrapper>{callerRole ? `${callerName}, ` : callerName}</PiiWrapper>
-            {callerRole && <span className="font-normal italic">{callerRole}</span>}
+            <PiiWrapper>
+                {callerRole ? `${callerName}, ` : callerName}
+            </PiiWrapper>
+            {callerRole && (
+                <span className="font-normal italic">{callerRole}</span>
+            )}
         </Typography>
     );
 
@@ -66,7 +74,12 @@ const CallLogCard = ({
     const openSideBar = () => {
         sideSheet.changeSideSheetContent(
             t('sideSheet.audioDetailsContent.audioDetailsTitle') as string,
-            <AudioDetailsContent callEntryId={callEntryId} callerName={callerName} createdAt={createdAt} sessionID={sessionID} />
+            <AudioDetailsContent
+                callEntryId={callEntryId}
+                callerName={callerName}
+                createdAt={createdAt}
+                sessionID={sessionID}
+            />
         );
         sideSheet.handleOpen(true);
     };
@@ -78,27 +91,42 @@ const CallLogCard = ({
                     <div className="flex w-full justify-between">
                         {createdAt && (
                             <div className="justify-self-start">
-                                <Typography variant={TypographyVariant.Caption} className="mb-1">
+                                <Typography
+                                    variant={TypographyVariant.Caption}
+                                    className="mb-1"
+                                >
                                     {timestampText}
                                 </Typography>
                             </div>
                         )}
                         {callEntryId && (
                             <div className="justify-self-end flex gap-4 items-center">
-                                <Typography variant={TypographyVariant.Caption}>{`ID: ${callEntryId}`}</Typography>
+                                <Typography
+                                    variant={TypographyVariant.Caption}
+                                >{`ID: ${callEntryId}`}</Typography>
                                 {permittedToListen && (
                                     <div
                                         className={`flex items-center gap-1 ${
-                                            sessionID != undefined ? 'text-[#00628B] cursor-pointer' : 'text-[#B3B3B3] cursor-not-allowed'
+                                            sessionID != undefined
+                                                ? 'text-[#00628B] cursor-pointer'
+                                                : 'text-[#B3B3B3] cursor-not-allowed'
                                         }`}
-                                        onClick={sessionID ? openSideBar : undefined}
+                                        onClick={
+                                            sessionID ? openSideBar : undefined
+                                        }
                                     >
                                         <VolumeUp width={16} height={16} />
                                         <Typography
-                                            className={sessionID != undefined ? 'cursor-pointer' : 'cursor-not-allowed'}
+                                            className={
+                                                sessionID != undefined
+                                                    ? 'cursor-pointer'
+                                                    : 'cursor-not-allowed'
+                                            }
                                             variant={TypographyVariant.LabelMd}
                                         >
-                                            {t('sideSheet.audioDetailsContent.audioDetails')}
+                                            {t(
+                                                'sideSheet.audioDetailsContent.audioDetails'
+                                            )}
                                         </Typography>
                                     </div>
                                 )}
@@ -115,21 +143,33 @@ const CallLogCard = ({
             )}
             {notes && (
                 <>
-                    <Typography variant={TypographyVariant.LabelLg}>{t('sideSheet.callLogNotes')}</Typography>
-                    <Typography variant={TypographyVariant.Body} className="break-normal">
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {t('sideSheet.callLogNotes')}
+                    </Typography>
+                    <Typography
+                        variant={TypographyVariant.Body}
+                        className="break-normal"
+                    >
                         <PiiWrapper>{notes}</PiiWrapper>
                     </Typography>
                 </>
             )}
             {summary && (
                 <>
-                    <Typography variant={TypographyVariant.LabelLg}>{t('sideSheet.callLogSummary')}</Typography>
-                    <Typography variant={TypographyVariant.Body} className="break-normal">
+                    <Typography variant={TypographyVariant.LabelLg}>
+                        {t('sideSheet.callLogSummary')}
+                    </Typography>
+                    <Typography
+                        variant={TypographyVariant.Body}
+                        className="break-normal"
+                    >
                         <PiiWrapper>{summary}</PiiWrapper>
                     </Typography>
                 </>
             )}
-            {!summary && !notes && <NoSummaryCard content={missingSummaryText} />}
+            {!summary && !notes && (
+                <NoSummaryCard content={missingSummaryText} />
+            )}
         </div>
     );
 };
@@ -139,7 +179,10 @@ interface CallLogsTabProps {
     queryLimit: number;
 }
 
-export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsTabProps) {
+export default function CallLogsTab({
+    policyNumber,
+    queryLimit = 10,
+}: CallLogsTabProps) {
     const { t } = useTranslation();
 
     const { data: callLogsData, isLoading: callLogsLoading } = useQuery({
@@ -151,16 +194,26 @@ export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsT
     return (
         <CardContainer>
             <div>
-                <Typography variant={TypographyVariant.H2}>{toTitleCase(`${t('caseOverview.tabs.call-logs')}`)}</Typography>
+                <Typography variant={TypographyVariant.H2}>
+                    {toTitleCase(`${t('caseOverview.tabs.call-logs')}`)}
+                </Typography>
             </div>
             {callLogsLoading ? (
                 <div className="p-8">
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
-            ) : !callLogsData?.data.length && callLogsData?.status !== StatusCode.Forbidden ? (
+            ) : !callLogsData?.data.length &&
+              callLogsData?.status !== StatusCode.Forbidden ? (
                 <div className="flex justify-center">
                     <CardInfo
-                        icon={<Icon type={IconType.PHONE} width={50} height={50} className="text-gray-300" />}
+                        icon={
+                            <Icon
+                                type={IconType.PHONE}
+                                width={50}
+                                height={50}
+                                className="text-gray-300"
+                            />
+                        }
                         title={t('sideSheet.callLogsEmptyTitle')}
                         subtitle={t('sideSheet.callLogsEmptyText')}
                         className="mt-8"
@@ -170,7 +223,16 @@ export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsT
                 !!callLogsData?.data.length && (
                     <>
                         {callLogsData.data.map(
-                            ({ callEntryID, callerName, callerType, createdDate, callType, callSummary, notes, sessionID }) => (
+                            ({
+                                callEntryID,
+                                callerName,
+                                callerType,
+                                createdDate,
+                                callType,
+                                callSummary,
+                                notes,
+                                sessionID,
+                            }) => (
                                 <CallLogCard
                                     key={`call-log-${callEntryID}`}
                                     callEntryId={callEntryID}
@@ -187,7 +249,9 @@ export default function CallLogsTab({ policyNumber, queryLimit = 10 }: CallLogsT
                     </>
                 )
             )}
-            {callLogsData?.status === StatusCode.Forbidden && <UnauthorizedCard />}
+            {callLogsData?.status === StatusCode.Forbidden && (
+                <UnauthorizedCard />
+            )}
         </CardContainer>
     );
 }

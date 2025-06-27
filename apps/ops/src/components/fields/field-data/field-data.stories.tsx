@@ -33,13 +33,15 @@ export default meta;
 
 const createStory = (args?: Partial<FieldDataProps>): StoryType => ({ args });
 
-const createVariantStory = (variant: FieldDataVariant, props?: Partial<StoryType>) => (args?: Partial<FieldDataProps>) => ({
-    ...props,
-    ...createStory({
-        ...args,
-        variant,
-    }),
-});
+const createVariantStory =
+    (variant: FieldDataVariant, props?: Partial<StoryType>) =>
+    (args?: Partial<FieldDataProps>) => ({
+        ...props,
+        ...createStory({
+            ...args,
+            variant,
+        }),
+    });
 
 export const Default = createStory();
 
@@ -62,19 +64,29 @@ const createLargeStory = createVariantStory(FieldDataVariant.Large);
 export const Large: StoryType = createLargeStory();
 export const LargeWithCaption: StoryType = createLargeStory(WithCaption.args);
 export const LargeWithTooltip: StoryType = createLargeStory(WithTooltip.args);
-export const LargeWithCaptionAndTooltip: StoryType = createLargeStory(WithCaptionAndTooltip.args);
+export const LargeWithCaptionAndTooltip: StoryType = createLargeStory(
+    WithCaptionAndTooltip.args
+);
 
-const createInformationStory = createVariantStory(FieldDataVariant.Information, {
-    decorators: [
-        Story => (
-            <div className="w-72">
-                <Story />
-            </div>
-        ),
-    ],
-});
+const createInformationStory = createVariantStory(
+    FieldDataVariant.Information,
+    {
+        decorators: [
+            (Story) => (
+                <div className="w-72">
+                    <Story />
+                </div>
+            ),
+        ],
+    }
+);
 
 export const Information: StoryType = createInformationStory();
-export const InformationWithCaption: StoryType = createInformationStory(WithCaption.args);
-export const InformationWithTooltip: StoryType = createInformationStory(WithTooltip.args);
-export const InformationWithCaptionAndTooltip: StoryType = createInformationStory(WithCaptionAndTooltip.args);
+export const InformationWithCaption: StoryType = createInformationStory(
+    WithCaption.args
+);
+export const InformationWithTooltip: StoryType = createInformationStory(
+    WithTooltip.args
+);
+export const InformationWithCaptionAndTooltip: StoryType =
+    createInformationStory(WithCaptionAndTooltip.args);

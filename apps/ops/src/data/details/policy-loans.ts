@@ -4,7 +4,8 @@ import { DataDefinition } from '@deps/types/data';
 
 export type LoanValuesDto = LoanValues;
 
-export const toLoanValuesDto = (policy: Policy): LoanValuesDto => policy.loanValues as LoanValues;
+export const toLoanValuesDto = (policy: Policy): LoanValuesDto =>
+    policy.loanValues as LoanValues;
 
 export const PolicyLoansInfo = (): DataDefinition<LoanValuesDto>[] => [
     {

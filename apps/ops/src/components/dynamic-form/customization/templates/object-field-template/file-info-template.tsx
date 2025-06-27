@@ -14,14 +14,29 @@ import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 function FileInfoTemplate(props: ArrayFieldTemplateProps) {
     const { items: _items, uiSchema, readonly } = props;
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'general' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'general',
+    });
     let { formData, formContext } = props;
-    const [toastMessage, setToastMessage] = useState<string | undefined>(undefined);
-    const [toastVariant, setToastVariant] = useState<ToastVariant | undefined>(undefined);
+    const [toastMessage, setToastMessage] = useState<string | undefined>(
+        undefined
+    );
+    const [toastVariant, setToastVariant] = useState<ToastVariant | undefined>(
+        undefined
+    );
     if (formData.length === 0) {
-        const formContextOptions: any = (uiSchema as UiSchema)?.['ui:options']?.formContext ?? {};
-        if (formContextOptions && props.formContext[formContextOptions?.keyName]?.[formContextOptions?.listName]) {
-            const data = props.formContext[formContextOptions?.keyName][formContextOptions?.listName];
+        const formContextOptions: any =
+            (uiSchema as UiSchema)?.['ui:options']?.formContext ?? {};
+        if (
+            formContextOptions &&
+            props.formContext[formContextOptions?.keyName]?.[
+                formContextOptions?.listName
+            ]
+        ) {
+            const data =
+                props.formContext[formContextOptions?.keyName][
+                    formContextOptions?.listName
+                ];
             formData = data;
         }
     }
@@ -33,9 +48,17 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
         try {
             const updatedMappedDocuments =
                 attachments.map((item: any) => {
-                    return { ...item, operationType: item.documentId === fileInfo.documentId ? ActionTypes.Remove : null };
+                    return {
+                        ...item,
+                        operationType:
+                            item.documentId === fileInfo.documentId
+                                ? ActionTypes.Remove
+                                : null,
+                    };
                 }) || [];
-            attachments = attachments.filter(item => item.documentId !== fileInfo.documentId);
+            attachments = attachments.filter(
+                (item) => item.documentId !== fileInfo.documentId
+            );
             if (formContext?.setCustomData) {
                 formContext.setCustomData({ attachments });
             }
@@ -45,15 +68,26 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
                     ...formContext?.customData?.task?.data,
                     attachments,
                 },
-                mappedDocuments: [...(formContext?.customData?.task?.mappedDocuments || []), ...updatedMappedDocuments],
+                mappedDocuments: [
+                    ...(formContext?.customData?.task?.mappedDocuments || []),
+                    ...updatedMappedDocuments,
+                ],
             };
-            const success = await updateTask(updatedTask, formContext?.customData?.correlationId, TaskStatus.InProgress);
+            const success = await updateTask(
+                updatedTask,
+                formContext?.customData?.correlationId,
+                TaskStatus.InProgress
+            );
             if (success) {
                 setToastVariant(ToastVariant.Success);
-                setToastMessage(t(`fileUploadToastMessages.fileDeletedSuccess`) as string);
+                setToastMessage(
+                    t(`fileUploadToastMessages.fileDeletedSuccess`) as string
+                );
             } else {
                 setToastVariant(ToastVariant.Error);
-                setToastMessage(t(`fileUploadToastMessages.fileDeletedError`) as string);
+                setToastMessage(
+                    t(`fileUploadToastMessages.fileDeletedError`) as string
+                );
             }
         } catch (error) {
             if (formContext?.setCustomData) {
@@ -83,14 +117,26 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
                 {formData.map((fileInfo: any, index: number) => {
                     const { documentId, documentName } = fileInfo;
                     return (
-                        <li key={index} className="p-2 border-1 border-gray-100 my-4 max-w-sm">
+                        <li
+                            key={index}
+                            className="p-2 border-1 border-gray-100 my-4 max-w-sm"
+                        >
                             <div className="flex justify-between">
                                 <div className="typography-content-body-sm-bold flex gap-2">
                                     <UploadIcon height={25} width={25} />
-                                    <div>{documentName || documentId || ''}</div>
+                                    <div>
+                                        {documentName || documentId || ''}
+                                    </div>
                                 </div>
-                                <span onClick={() => removeAttachment(fileInfo)} className={`ml-4 ${className}`}>
-                                    <Icon type={IconType.CLOSE} height={25} width={25} />
+                                <span
+                                    onClick={() => removeAttachment(fileInfo)}
+                                    className={`ml-4 ${className}`}
+                                >
+                                    <Icon
+                                        type={IconType.CLOSE}
+                                        height={25}
+                                        width={25}
+                                    />
                                 </span>
                             </div>
                         </li>

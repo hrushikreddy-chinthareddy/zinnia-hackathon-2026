@@ -35,7 +35,8 @@ import getGlcoConfig from '../withdrawal-forms/flic-withdrawal-form.helpers';
 
 export default function getGlcoRmdConfig(t: TFunction) {
     // importing base configuration from GLCO form helper.
-    const { cslnCheckStates, irsSignatureConfig, formValidation } = getGlcoConfig(t);
+    const { cslnCheckStates, irsSignatureConfig, formValidation } =
+        getGlcoConfig(t);
 
     // CMW-13796 remove further credit info
     const disbursementOptions: PaymentMethodOption[] = [
@@ -71,7 +72,10 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
 
                 {
@@ -85,11 +89,16 @@ export default function getGlcoRmdConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankName,
@@ -99,17 +108,24 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     classNames: 'col-start-1',
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.EFT) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
                 };
@@ -144,7 +160,8 @@ export default function getGlcoRmdConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached ?? null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements ?? null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements ?? null,
                 };
             },
         },
@@ -205,25 +222,41 @@ export default function getGlcoRmdConfig(t: TFunction) {
         formSignature,
         formProgram,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({ formParty, formSignature, formDisbursement });
+        const errors = formValidation({
+            formParty,
+            formSignature,
+            formDisbursement,
+        });
         const rmds = formProgram?.rmd?.rmdPrograms;
-        if ([PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod)) {
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
             ) {
-                errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
             }
             if (
                 formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
             ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
             }
         }
 
         if (rmds && rmds?.length === 0) {
-            errors['rmdMinimumRequiredProgram'] = t('rmdMethod.rmdWarnings.minimumRequiredProgram');
+            errors['rmdMinimumRequiredProgram'] = t(
+                'rmdMethod.rmdWarnings.minimumRequiredProgram'
+            );
         }
 
         return errors;
@@ -289,8 +322,14 @@ export default function getGlcoRmdConfig(t: TFunction) {
     ];
 
     const isBeneSpouseOption = [
-        { label: t('beneficiaryInfo.isBeneficiarySpouse.yes'), value: stringifyTrueFalseNull(true) },
-        { label: t('beneficiaryInfo.isBeneficiarySpouse.no'), value: stringifyTrueFalseNull(false) },
+        {
+            label: t('beneficiaryInfo.isBeneficiarySpouse.yes'),
+            value: stringifyTrueFalseNull(true),
+        },
+        {
+            label: t('beneficiaryInfo.isBeneficiarySpouse.no'),
+            value: stringifyTrueFalseNull(false),
+        },
     ];
     const w4pSignaturesConfig = [
         {
@@ -308,7 +347,9 @@ export default function getGlcoRmdConfig(t: TFunction) {
     ];
 
     const beneficiaryConfig: BeneficiaryConfig = {
-        isYourSpouseYoungerThanYouLabel: t('beneficiaryInfo.isYourSpouseYoungerThanYouLabel'),
+        isYourSpouseYoungerThanYouLabel: t(
+            'beneficiaryInfo.isYourSpouseYoungerThanYouLabel'
+        ),
         fields: [
             {
                 fieldName: PartyFields.Dob,

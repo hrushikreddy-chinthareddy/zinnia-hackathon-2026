@@ -1,5 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { AssistiveText, AssistiveTextVariant, Loader } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Loader,
+} from '@zinnia/bloom/components';
 import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
@@ -9,7 +13,9 @@ import { useCallback, useContext, useState } from 'react';
 import 'react-pdf/dist/Page/TextLayer.css';
 
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
-import TransactionNavigationButtons, { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import TransactionNavigationButtons, {
+    ParentPage,
+} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { CarrierToCarrierTitleMap } from '@deps/constants/page-title';
@@ -51,10 +57,19 @@ type FormEntryStepProps = {
     planCode: string;
 };
 
-function FormEntryStep({ document, clientCode, docType, planCode }: FormEntryStepProps) {
+function FormEntryStep({
+    document,
+    clientCode,
+    docType,
+    planCode,
+}: FormEntryStepProps) {
     const router = useRouter();
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'nigoEntry.formEntry' });
-    const { t: withdrawalTxt } = useTranslation(undefined, { keyPrefix: 'caseWithdrawal.request' });
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'nigoEntry.formEntry',
+    });
+    const { t: withdrawalTxt } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request',
+    });
     const { goToNext } = useWorkflow();
 
     //const { qualType } = useAccountInfo(document.contract, clientCode);
@@ -74,24 +89,41 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
         contractValue,
     } = useContext(RenewalFormDataContext);
     const { areDiaryNotesViewed } = useContext(DiaryNotesContext);
-    const shouldShowNewExperience = formState.featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-    const isFormStateReadOnly = shouldShowNewExperience ? formState.isFormStateReadOnly : false;
+    const shouldShowNewExperience =
+        formState.featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+    const isFormStateReadOnly = shouldShowNewExperience
+        ? formState.isFormStateReadOnly
+        : false;
     const [timer] = useState(performance.now());
 
     const { setSubmitFailed } = useNigoEntry();
-    const isLC = !isFastFeatureEnabled(formState?.initialForm?.taskType, formState.featureFlagDecisions);
+    const isLC = !isFastFeatureEnabled(
+        formState?.initialForm?.taskType,
+        formState.featureFlagDecisions
+    );
     const accountInfo = useAccountInfo(document.contract, clientCode as string);
-    const contractAccountInfo = useContractAccountInfo(document.contract, planCode as string);
+    const contractAccountInfo = useContractAccountInfo(
+        document.contract,
+        planCode as string
+    );
     const { qualType } = isLC ? accountInfo : contractAccountInfo;
 
-    const formParts = getFormParts(caseType, clientCode, qualType, planCode, isLC);
+    const formParts = getFormParts(
+        caseType,
+        clientCode,
+        qualType,
+        planCode,
+        isLC
+    );
     const [taskApiError, setTaskApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const carrier = clientCode?.toUpperCase();
     const carrierMappedText = CarrierToCarrierTitleMap[carrier];
     const carrierTitle = carrierMappedText ? carrierMappedText : carrier;
 
-    const formTitle = caseType ? t(`formTitles.${caseType.toLowerCase()}`, { carrier: carrierTitle }) : t(`formTitles.defaultTitle`);
+    const formTitle = caseType
+        ? t(`formTitles.${caseType.toLowerCase()}`, { carrier: carrierTitle })
+        : t(`formTitles.defaultTitle`);
 
     if (!formParts) {
         console.error(`form-entry::${caseType}::No form parts found`, {
@@ -100,7 +132,9 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
             contract: document?.contract,
             isNonProdEnv: isNonProductionEnvironment(),
         });
-        router.push(`/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_FORM_CREATION}`);
+        router.push(
+            `/create-case/error?errorCode=${ERROR_CODES.WITHDRAWAL_FORM_CREATION}`
+        );
     }
 
     const validateOTPForm = () => {
@@ -176,20 +210,22 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
         email: string,
         renewalDoc: DocumentData
     ) => {
-        const updatedOwnerInformation = ownerInfo?.map(owner => {
+        const updatedOwnerInformation = ownerInfo?.map((owner) => {
             if (OWNER_TYPES.includes(owner.type)) {
                 return {
                     ...owner,
                     signature: {
                         ...owner?.signature,
-                        ...(channel === Channel.Phone && { signDate: renewalRequestSignDate }), // CMW-13965 updaing Call Received Date in signDate
+                        ...(channel === Channel.Phone && {
+                            signDate: renewalRequestSignDate,
+                        }), // CMW-13965 updaing Call Received Date in signDate
                     },
                 };
             }
             return owner;
         });
 
-        const funds = subsequentTargetFunds?.map(item => {
+        const funds = subsequentTargetFunds?.map((item) => {
             return {
                 fundName: item.fundName,
                 value: item.value,
@@ -244,9 +280,20 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
                     source: TaskSource.ZinniaTaskManagement,
                     taskType: renewalInitialForm.taskType,
                     status: TaskStatus.Completed,
-                    data: getRenewalFormDataPayload(ownerInformation, contractValue, transOption, user?.email ?? '', renewalDocument),
+                    data: getRenewalFormDataPayload(
+                        ownerInformation,
+                        contractValue,
+                        transOption,
+                        user?.email ?? '',
+                        renewalDocument
+                    ),
                 };
-                const successfulCaseUpdate = await updateTask(renewalInitialForm.caseId, renewalInitialForm.taskId, payload, timer);
+                const successfulCaseUpdate = await updateTask(
+                    renewalInitialForm.caseId,
+                    renewalInitialForm.taskId,
+                    payload,
+                    timer
+                );
                 if (successfulCaseUpdate && successfulCaseUpdate.id) {
                     setSubmitFailed(false);
                 } else {
@@ -257,7 +304,8 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
             }
         } else {
             if (
-                TaskApiVersionMapper[formState.initialForm.taskType] === ApiVersion.v2 &&
+                TaskApiVersionMapper[formState.initialForm.taskType] ===
+                    ApiVersion.v2 &&
                 formState.initialForm.status !== TaskStatus.Completed
             ) {
                 const successfulCaseUpdate = await updateTask(
@@ -315,7 +363,9 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
                     handleContinue={handleFormSubmit}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
-                    disableContinue={formState.initialForm?.status === TaskStatus.Completed}
+                    disableContinue={
+                        formState.initialForm?.status === TaskStatus.Completed
+                    }
                 />
             }
         >
@@ -327,11 +377,16 @@ function FormEntryStep({ document, clientCode, docType, planCode }: FormEntrySte
                 )}
                 {formParts}
                 {caseType !== CaseType.Renewal && <NoteSection />}
-                <FormErrors t={withdrawalTxt} taskApiError={taskApiError}></FormErrors>
+                <FormErrors
+                    t={withdrawalTxt}
+                    taskApiError={taskApiError}
+                ></FormErrors>
                 <div className="my-2">
                     {!areDiaryNotesViewed && !isFormStateReadOnly && (
                         <AssistiveText
-                            text={withdrawalTxt('formValidation.diaryNotesViewWarning')}
+                            text={withdrawalTxt(
+                                'formValidation.diaryNotesViewWarning'
+                            )}
                             variant={AssistiveTextVariant.Error}
                             className="mt-2"
                         />

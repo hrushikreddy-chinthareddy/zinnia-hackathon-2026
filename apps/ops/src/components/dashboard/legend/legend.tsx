@@ -20,12 +20,31 @@ export const Legend: FC<LegendProps> = ({ title, items, containerClass }) => {
     return (
         <div className={clsx(styles.legendContainer, containerClass)}>
             <div>
-                <div className={clsx('typography-labels-label-sm', styles.title)}>{title}</div>
-                <div className={styles.items} style={{ gridTemplateColumns: `repeat(${columnCount}, 1fr)` }}>
+                <div
+                    className={clsx('typography-labels-label-sm', styles.title)}
+                >
+                    {title}
+                </div>
+                <div
+                    className={styles.items}
+                    style={{
+                        gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
+                    }}
+                >
                     {items.map((item, index) => (
                         <div key={index} className={styles.item}>
-                            <div className={styles.color} style={{ backgroundColor: item.color }}></div>
-                            <div className={clsx('typography-content-body-sm', styles.label)}>{item.label}</div>
+                            <div
+                                className={styles.color}
+                                style={{ backgroundColor: item.color }}
+                            ></div>
+                            <div
+                                className={clsx(
+                                    'typography-content-body-sm',
+                                    styles.label
+                                )}
+                            >
+                                {item.label}
+                            </div>
                         </div>
                     ))}
                 </div>

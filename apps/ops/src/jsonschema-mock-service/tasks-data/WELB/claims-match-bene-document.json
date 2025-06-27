@@ -28,9 +28,7 @@
                             "value": "CA0000429686"
                         }
                     ],
-                    "entityType": [
-                        "IDN_CLAIM_BENE_RECORD"
-                    ]
+                    "entityType": ["IDN_CLAIM_BENE_RECORD"]
                 }
             }
         }

@@ -17,7 +17,10 @@ const caseDocumentOption = {
 export const Default = (args: any) => {
     return (
         <div className="flex max-w-[500px] flex-col">
-            <CardCaseDocument caseDocumentOption={caseDocumentOption} {...args} />
+            <CardCaseDocument
+                caseDocumentOption={caseDocumentOption}
+                {...args}
+            />
         </div>
     );
 };

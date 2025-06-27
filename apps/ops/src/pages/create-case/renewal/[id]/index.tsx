@@ -6,10 +6,16 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useEffect, useState, useMemo } from 'react';
 
 import OtpLayout from '@deps/components/otp-layout';
-import WithdrawalDrawer, { SidebarContent } from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
-import PageLoader, { PageLoaderVariant } from '@deps/components/page-loader/page-loader';
+import WithdrawalDrawer, {
+    SidebarContent,
+} from '@deps/components/otp-withdrawal-form/withdrawal-drawer';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import RenewalFormActions from '@deps/containers/otp/renewal-forms/components/renewal-form-actions';
 import RenewalFormProvider from '@deps/containers/otp/renewal-forms/components/renewal-form-provider';
@@ -20,7 +26,10 @@ import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { determineFormToRender } from '@deps/helpers/form-selector.helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { shouldNavbarOverlay } from '@deps/helpers/page-layout';
-import { doesUserHavePagePermissions, getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
@@ -33,14 +42,29 @@ import { UserPermission } from '@deps/models/user-profile';
 import { initializeRenewalTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
-import { getPolicyPartiesSSR, searchPolicySSR } from '@deps/queries/api/policies';
+import {
+    getPolicyPartiesSSR,
+    searchPolicySSR,
+} from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
-import { SegmentPageName, SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { FeatureFlags, optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { logError, logInfo, logWarn, parseErrorInformation, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import {
+    logError,
+    logInfo,
+    logWarn,
+    parseErrorInformation,
+    withPageAuthAndLogging,
+} from '@deps/utils/server-logging';
 
 import { ERROR_CODES } from '../../error';
 
@@ -71,11 +95,22 @@ const getFormComponentMap = (): Record<string, React.ReactNode> => ({
     [Carrier.DLIC]: <DlicRenewalForm />,
 });
 
-export default function RenewalCase({ document, form, featureFlagDecisions, user, caseId, userId, planCode, parties }: RenewalCaseProps) {
+export default function RenewalCase({
+    document,
+    form,
+    featureFlagDecisions,
+    user,
+    caseId,
+    userId,
+    planCode,
+    parties,
+}: RenewalCaseProps) {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
     const { clientId, clientIdOverride, action } = router.query;
-    const clientForFormDetermination = isNonProductionEnvironment() ? clientIdOverride || clientId : clientId;
+    const clientForFormDetermination = isNonProductionEnvironment()
+        ? clientIdOverride || clientId
+        : clientId;
 
     useSegmentPageTracker(user, SegmentPageName.OftCase, {
         clientId,
@@ -86,7 +121,10 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
         planCode,
     });
 
-    const formParts = determineFormToRender(clientForFormDetermination as string, getFormComponentMap());
+    const formParts = determineFormToRender(
+        clientForFormDetermination as string,
+        getFormComponentMap()
+    );
 
     if (!formParts) {
         console.error('RenewalCase::No form parts', {
@@ -94,13 +132,17 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
             clientId,
             contract: document?.contract,
         });
-        router.push(`/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_CREATION}`);
+        router.push(
+            `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_CREATION}`
+        );
     }
 
     const [taskApiError, setTaskApiError] = useState('');
 
     // Transaction Details
-    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(DefaultSidebarContent);
+    const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
+        DefaultSidebarContent
+    );
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
     const [isOpenOverride, setIsOpenOverride] = useState<null | boolean>(null);
 
@@ -151,7 +193,10 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
         <>
             <PageHead titleKey="createCaseRenewal" />
             <DiaryNotesProvider caseDetails={caseDetailsData}>
-                <OtpLayout contractNumber={document.contract} clientId={clientId as string}>
+                <OtpLayout
+                    contractNumber={document.contract}
+                    clientId={clientId as string}
+                >
                     <div className={classes}>
                         <WithdrawalDrawer
                             content={transactionDetail}
@@ -161,11 +206,15 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
                         />
                         <div>
                             <header className="px-5 pt-2">
-                                <Typography variant={TypographyVariant.H1}>{formTitle}</Typography>
+                                <Typography variant={TypographyVariant.H1}>
+                                    {formTitle}
+                                </Typography>
                             </header>
                             {isLoading && (
                                 <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                                    <PageLoader variant={PageLoaderVariant.Center} />
+                                    <PageLoader
+                                        variant={PageLoaderVariant.Center}
+                                    />
                                 </div>
                             )}
                             <article className="my-4 min-h-[390px] min-w-[275px] rounded bg-white !p-0">
@@ -177,7 +226,9 @@ export default function RenewalCase({ document, form, featureFlagDecisions, user
                                         userId={userId}
                                         document={document}
                                         action={action as string}
-                                        featureFlagDecisions={featureFlagDecisions}
+                                        featureFlagDecisions={
+                                            featureFlagDecisions
+                                        }
                                         planCode={planCode}
                                     >
                                         {formParts}
@@ -202,8 +253,18 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags = await optimizelyService.getFeatureFlagDecisions(user.sub, loggingContext);
-            const { locale = DEFAULT_LOCALE, params, query, res, req } = context;
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const {
+                locale = DEFAULT_LOCALE,
+                params,
+                query,
+                res,
+                req,
+            } = context;
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
@@ -215,11 +276,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const doesUserHasPagePermissions = await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                loggingContext
-            );
+            const doesUserHasPagePermissions =
+                await doesUserHavePagePermissions(
+                    context,
+                    UserPermission.AllowReadOtpRenewals,
+                    loggingContext
+                );
             if (!doesUserHasPagePermissions) {
                 return {
                     redirect: {
@@ -238,11 +300,20 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const [translations, document] = await Promise.all([
                 serverSideTranslations(locale, [TranslationFiles.COMMON]),
-                getDocumentV2SSR(documentNumber, DocumentType.Exchange, clientId.toUpperCase(), accessToken, loggingContext),
+                getDocumentV2SSR(
+                    documentNumber,
+                    DocumentType.Exchange,
+                    clientId.toUpperCase(),
+                    accessToken,
+                    loggingContext
+                ),
             ]);
 
             if (!document?.contract) {
-                logError('create-case/renewal/:id::Error getting document', loggingContext);
+                logError(
+                    'create-case/renewal/:id::Error getting document',
+                    loggingContext
+                );
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${ERROR_CODES.DOCUMENT_RETRIEVAL}`,
@@ -251,11 +322,22 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const shouldShowNewExperience = featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-            const isUsedLastSaved = shouldShowNewExperience && deStringifyTrueFalseNull(getLastSaved.toLowerCase());
+            const shouldShowNewExperience =
+                featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
+            const isUsedLastSaved =
+                shouldShowNewExperience &&
+                deStringifyTrueFalseNull(getLastSaved.toLowerCase());
             if (shouldShowNewExperience && action !== 'readonly') {
-                logInfo('create-case/renewal/:id:Checking NIGO', loggingContext);
-                const isNigoCase = await checkNigoExistsSSR(clientId.toUpperCase(), document.caseId, accessToken, loggingContext);
+                logInfo(
+                    'create-case/renewal/:id:Checking NIGO',
+                    loggingContext
+                );
+                const isNigoCase = await checkNigoExistsSSR(
+                    clientId.toUpperCase(),
+                    document.caseId,
+                    accessToken,
+                    loggingContext
+                );
                 if (isNigoCase && !isUsedLastSaved) {
                     logInfo('create-case/renewal/:id::Nigo exists for case', {
                         ...loggingContext,
@@ -270,7 +352,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
             } else {
-                logInfo('create-case/renewal/:id::Skipping NIGO check', loggingContext);
+                logInfo(
+                    'create-case/renewal/:id::Skipping NIGO check',
+                    loggingContext
+                );
             }
 
             const policies = await searchPolicySSR(
@@ -282,7 +367,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
             const planCode = policies?.[0]?.planCode || '';
-            logInfo('create-case/renewal/:id::Retrieved plancode', { ...loggingContext, planCode });
+            logInfo('create-case/renewal/:id::Retrieved plancode', {
+                ...loggingContext,
+                planCode,
+            });
 
             try {
                 const form = await initializeRenewalTaskSSR({
@@ -301,10 +389,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
 
                 if (!form) {
-                    logWarn('create-case/renewal/:id::Error initializing task renewal form', {
-                        ...loggingContext,
-                        contract: document?.contract,
-                    });
+                    logWarn(
+                        'create-case/renewal/:id::Error initializing task renewal form',
+                        {
+                            ...loggingContext,
+                            contract: document?.contract,
+                        }
+                    );
                     return {
                         redirect: {
                             destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_CREATION}`,
@@ -314,7 +405,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 }
 
                 const parties = document?.contract
-                    ? await getPolicyPartiesSSR(document?.contract, clientId, accessToken as string, loggingContext)
+                    ? await getPolicyPartiesSSR(
+                          document?.contract,
+                          clientId,
+                          accessToken as string,
+                          loggingContext
+                      )
                     : [];
 
                 return {
@@ -331,7 +427,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             } catch (error: any) {
-                const message = error?.message ? error.message : `${ERROR_CODES.RENEWAL_FORM_CREATION}`;
+                const message = error?.message
+                    ? error.message
+                    : `${ERROR_CODES.RENEWAL_FORM_CREATION}`;
                 return {
                     redirect: {
                         destination: `/create-case/error?errorCode=${message}`,
@@ -341,5 +439,9 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
         },
     },
-    { file: 'create-case/renewal/[id]/index', function: 'getServerSideProps', page: 'create-case/renewal/:id' }
+    {
+        file: 'create-case/renewal/[id]/index',
+        function: 'getServerSideProps',
+        page: 'create-case/renewal/:id',
+    }
 );

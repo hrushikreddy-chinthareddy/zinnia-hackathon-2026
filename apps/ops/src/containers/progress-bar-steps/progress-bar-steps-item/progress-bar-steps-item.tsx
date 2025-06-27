@@ -34,7 +34,11 @@ const ProgressBarStepsItem = ({
 }: ProgressBarStepsItemProps) => {
     const isCompletedAndNotDisabled = isCompleted && !isDisabled;
     const icon = isCompletedAndNotDisabled ? (
-        <CheckmarkIcon className="mr-1 text-semantic-success" height={24} width={24} />
+        <CheckmarkIcon
+            className="mr-1 text-semantic-success"
+            height={24}
+            width={24}
+        />
     ) : (
         `${index + 1}. `
     );
@@ -42,12 +46,22 @@ const ProgressBarStepsItem = ({
     return (
         <button
             onClick={onClick}
-            className={clsx(styles.stepButton, isActive && styles.active, isDisabled && styles.disabled)}
+            className={clsx(
+                styles.stepButton,
+                isActive && styles.active,
+                isDisabled && styles.disabled
+            )}
             disabled={isDisabled}
             data-testid={ProgressBarStepsTest.StepsContainer}
             style={{ minWidth: `${stepWidth}px` }}
         >
-            <div className={clsx(styles.colorBar, isActive && styles.active, isDisabled && styles.disabled)}></div>
+            <div
+                className={clsx(
+                    styles.colorBar,
+                    isActive && styles.active,
+                    isDisabled && styles.disabled
+                )}
+            ></div>
 
             {isCompletedAndNotDisabled && icon}
             <Content

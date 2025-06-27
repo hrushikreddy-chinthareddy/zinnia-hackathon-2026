@@ -1,18 +1,21 @@
-import { BannerAlert, BannerVariant } from "@zinnia/bloom/components";
-import { useTranslation } from "next-i18next";
-import { useCallback, useEffect, useState } from "react";
+import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
+import { useTranslation } from 'next-i18next';
+import { useCallback, useEffect, useState } from 'react';
 
-import { TranslationFiles } from "@deps/config/translations";
-import { useOptimizely } from "@deps/contexts/OptimizelyContext";
-import { Processes, Statuses } from "@deps/models/case/case";
-import { getCases } from "@deps/queries/api/cases";
+import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { Processes, Statuses } from '@deps/models/case/case';
+import { getCases } from '@deps/queries/api/cases';
 
 type PendingUpcomingBannerProps = {
     policyNumber?: string;
     requestSubTypes?: string[];
 };
 
-const PendingUpcomingBanner = ({ policyNumber, requestSubTypes }: PendingUpcomingBannerProps) => {
+const PendingUpcomingBanner = ({
+    policyNumber,
+    requestSubTypes,
+}: PendingUpcomingBannerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'autopay.pendingBanner',
     });
@@ -23,13 +26,16 @@ const PendingUpcomingBanner = ({ policyNumber, requestSubTypes }: PendingUpcomin
 
     const fetchCases = useCallback(async () => {
         try {
-            const response = await getCases({
-                limit: 5,
-                caseStatus: [Statuses.InProgress],
-                policyNumber,
-                process: [Processes.SSW],
-                requestSubType: requestSubTypes,
-            }, featureFlags);
+            const response = await getCases(
+                {
+                    limit: 5,
+                    caseStatus: [Statuses.InProgress],
+                    policyNumber,
+                    process: [Processes.SSW],
+                    requestSubType: requestSubTypes,
+                },
+                featureFlags
+            );
 
             if (!response) {
                 console.log('Error fetching cases: No data in response');
@@ -41,7 +47,9 @@ const PendingUpcomingBanner = ({ policyNumber, requestSubTypes }: PendingUpcomin
                 console.log('Error fetching cases: No data in response');
             }
         } catch (error) {
-            console.error(`Error fetching cases: No data in response: ${error}`);
+            console.error(
+                `Error fetching cases: No data in response: ${error}`
+            );
         }
     }, [policyNumber]);
 

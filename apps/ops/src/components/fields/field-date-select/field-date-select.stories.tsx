@@ -10,7 +10,7 @@ export default {
     title: 'Components/Field',
     component: FieldDateSelect,
     decorators: [
-        Story => (
+        (Story) => (
             <div className="max-w-[300px]">
                 <Story />
             </div>
@@ -21,5 +21,11 @@ export default {
 export const DateSelect = () => {
     const [value, setValue] = useState('');
 
-    return <FieldDateSelect value={value} size={FieldSize.Default} onChange={e => setValue(e.target.value)} />;
+    return (
+        <FieldDateSelect
+            value={value}
+            size={FieldSize.Default}
+            onChange={(e) => setValue(e.target.value)}
+        />
+    );
 };

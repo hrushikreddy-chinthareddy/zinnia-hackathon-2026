@@ -10,12 +10,21 @@ interface MaturityDateProps {
 }
 
 const MaturityDate = ({ maturityDate }: MaturityDateProps) => {
-    const { t } = useTranslation([TranslationFiles.COMMON, TranslationFiles.COLDEFS]);
+    const { t } = useTranslation([
+        TranslationFiles.COMMON,
+        TranslationFiles.COLDEFS,
+    ]);
 
     return (
         <div>
-            <Label variant={LabelVariant.FieldLabel} label={t('colDefs:policySummary.maturityDate')} />
-            <Content details={convertKebabedDateString(maturityDate)} variant={ContentVariant.BodySm} />
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={t('colDefs:policySummary.maturityDate')}
+            />
+            <Content
+                details={convertKebabedDateString(maturityDate)}
+                variant={ContentVariant.BodySm}
+            />
         </div>
     );
 };

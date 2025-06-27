@@ -1,7 +1,13 @@
 import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { hasFilter } from '@deps/components/history/filters/filter.helpers';
-import { EventFilterKeys, EventFilters, PeopleFilters, PolicyFilters, TransactionFilters } from '@deps/contexts/HistoryFiltersContext';
+import {
+    EventFilterKeys,
+    EventFilters,
+    PeopleFilters,
+    PolicyFilters,
+    TransactionFilters,
+} from '@deps/contexts/HistoryFiltersContext';
 import {
     allTransactions,
     allTransactionTypes,
@@ -20,7 +26,9 @@ export const getEvents = (eventFilter?: EventFilters) => {
         return allTransactionTypes;
     }
 
-    const [filterName, subfilterName] = Object.entries(eventFilter as EventFilters)[0];
+    const [filterName, subfilterName] = Object.entries(
+        eventFilter as EventFilters
+    )[0];
 
     switch (filterName) {
         case EventFilterKeys.Policy:
@@ -44,9 +52,13 @@ export const getEvents = (eventFilter?: EventFilters) => {
                 case TransactionFilters.Premiums:
                     return financialTransactions[TransactionFilters.Premiums];
                 case TransactionFilters.SystematicPrograms:
-                    return financialTransactions[TransactionFilters.SystematicPrograms];
+                    return financialTransactions[
+                        TransactionFilters.SystematicPrograms
+                    ];
                 case TransactionFilters.Withdrawals:
-                    return financialTransactions[TransactionFilters.Withdrawals];
+                    return financialTransactions[
+                        TransactionFilters.Withdrawals
+                    ];
                 default:
                     return financialTransactions.all;
             }
@@ -60,7 +72,9 @@ export const getEvents = (eventFilter?: EventFilters) => {
                 case PeopleFilters.Beneficiary:
                     return peopleTransactions[PeopleFilters.Beneficiary];
                 case PeopleFilters.CommunicationPreference:
-                    return peopleTransactions[PeopleFilters.CommunicationPreference];
+                    return peopleTransactions[
+                        PeopleFilters.CommunicationPreference
+                    ];
                 case PeopleFilters.Email:
                     return peopleTransactions[PeopleFilters.Email];
                 case PeopleFilters.Name:

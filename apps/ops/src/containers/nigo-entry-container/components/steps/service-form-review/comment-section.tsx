@@ -14,9 +14,11 @@ const CommentSection = React.forwardRef(function CommentSectionComponent() {
     const formData = {
         comment: formComment?.comment ?? '',
     };
-    const handleChange = (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
+    const handleChange = (
+        event: IChangeEvent<any, RJSFSchema, GenericObjectType>
+    ) => {
         const { comment } = event.formData ?? {};
-        setFormComment(formComment => ({
+        setFormComment((formComment) => ({
             ...formComment,
             comment: comment ?? '',
         }));

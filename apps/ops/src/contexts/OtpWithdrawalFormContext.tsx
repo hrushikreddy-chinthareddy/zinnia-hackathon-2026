@@ -75,34 +75,60 @@ export interface OtpWithdrawalFormState {
     formPeriodicPension: PeriodicPensionFormType | null;
     formESignatureData?: FormEsignatureData | any;
     setFormESignatureData: React.Dispatch<React.SetStateAction<any>>;
-    setFormPeriodicPension: React.Dispatch<React.SetStateAction<PeriodicPensionFormType | null>>;
-    setCurrentFormState: React.Dispatch<React.SetStateAction<WithdrawalTaskStatus>>;
+    setFormPeriodicPension: React.Dispatch<
+        React.SetStateAction<PeriodicPensionFormType | null>
+    >;
+    setCurrentFormState: React.Dispatch<
+        React.SetStateAction<WithdrawalTaskStatus>
+    >;
     setFormSubtype?: React.Dispatch<React.SetStateAction<FormSubtype>>;
     setFormData: React.Dispatch<React.SetStateAction<FormData>>;
     setFormDisbursement: React.Dispatch<React.SetStateAction<FormDisbursement>>;
     setFormDistribution: React.Dispatch<React.SetStateAction<FormDistribution>>;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setFormWarnings: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
-    setFormFullSurrenderAck: React.Dispatch<React.SetStateAction<FormFullSurrenderAck>>;
+    setFormFullSurrenderAck: React.Dispatch<
+        React.SetStateAction<FormFullSurrenderAck>
+    >;
     setFormIrsData: React.Dispatch<React.SetStateAction<FormIrsData[]>>;
-    setFormOL4753Data: React.Dispatch<React.SetStateAction<FormOL4753Data | null>>;
+    setFormOL4753Data: React.Dispatch<
+        React.SetStateAction<FormOL4753Data | null>
+    >;
     setFormLoan: React.Dispatch<React.SetStateAction<FormLoan>>;
     setFormParty: React.Dispatch<React.SetStateAction<FormParty>>;
     setFormProgram: React.Dispatch<React.SetStateAction<FormProgram>>;
     setFormRestriction: React.Dispatch<React.SetStateAction<FormRestriction>>;
     setFormSignature: React.Dispatch<React.SetStateAction<FormSignature>>;
     setFormSource: React.Dispatch<React.SetStateAction<FormSource>>;
-    setFormTaxWithholding: React.Dispatch<React.SetStateAction<FormTaxWithholding>>;
-    setFormTpaAuthorization: React.Dispatch<React.SetStateAction<FormTpaAuthorization>>;
-    setFormAdditionalWaivers: React.Dispatch<React.SetStateAction<FormAdditionalWaiver[]>>;
-    setFormValidator: React.Dispatch<React.SetStateAction<(val?: FormParts) => FormValidationErrors>>;
+    setFormTaxWithholding: React.Dispatch<
+        React.SetStateAction<FormTaxWithholding>
+    >;
+    setFormTpaAuthorization: React.Dispatch<
+        React.SetStateAction<FormTpaAuthorization>
+    >;
+    setFormAdditionalWaivers: React.Dispatch<
+        React.SetStateAction<FormAdditionalWaiver[]>
+    >;
+    setFormValidator: React.Dispatch<
+        React.SetStateAction<(val?: FormParts) => FormValidationErrors>
+    >;
     setFundWithdrawnMethod: React.Dispatch<React.SetStateAction<string | null>>;
-    setOwnerStateOfResidence: React.Dispatch<React.SetStateAction<string | null>>;
-    setFormSurrenderingCompany: React.Dispatch<React.SetStateAction<FormSurrenderingCompany | null>>;
-    setFormSpecialInstruction: React.Dispatch<React.SetStateAction<FormSpecialInstruction>>;
-    setOwnerAcknowledgement: React.Dispatch<React.SetStateAction<OwnerAcknowledgement | undefined>>;
+    setOwnerStateOfResidence: React.Dispatch<
+        React.SetStateAction<string | null>
+    >;
+    setFormSurrenderingCompany: React.Dispatch<
+        React.SetStateAction<FormSurrenderingCompany | null>
+    >;
+    setFormSpecialInstruction: React.Dispatch<
+        React.SetStateAction<FormSpecialInstruction>
+    >;
+    setOwnerAcknowledgement: React.Dispatch<
+        React.SetStateAction<OwnerAcknowledgement | undefined>
+    >;
     setFormNigos: React.Dispatch<React.SetStateAction<FormNigos | null>>;
-    setFormReindexingData: React.Dispatch<React.SetStateAction<FormReIndexingData | null>>;
+    setFormReindexingData: React.Dispatch<
+        React.SetStateAction<FormReIndexingData | null>
+    >;
     setFormComment: React.Dispatch<React.SetStateAction<FormComment>>;
     setFormBeneInfo: React.Dispatch<React.SetStateAction<any>>;
 }
@@ -179,4 +205,6 @@ export const defaultFormDataContext = {
     setFormESignatureData: noop,
 };
 
-export const FormDataContext = createContext<OtpWithdrawalFormState>(defaultFormDataContext as OtpWithdrawalFormState);
+export const FormDataContext = createContext<OtpWithdrawalFormState>(
+    defaultFormDataContext as OtpWithdrawalFormState
+);

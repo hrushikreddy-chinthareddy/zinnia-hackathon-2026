@@ -1,7 +1,10 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
@@ -36,17 +39,22 @@ describe('CslnCheck component', () => {
                 <FormDataContext.Provider
                     value={{
                         ...defaultFormDataContext,
-                        formSignature: CaseDetails.data.formRequest.formSignature,
+                        formSignature:
+                            CaseDetails.data.formRequest.formSignature,
                         setFormSignature: setMockData,
                     }}
                 >
                     <CslnCheck />
                 </FormDataContext.Provider>
             );
-            const validOptionElement = screen.getByTestId('button-group-label-test-id-valid');
+            const validOptionElement = screen.getByTestId(
+                'button-group-label-test-id-valid'
+            );
             expect(validOptionElement).toBeInTheDocument();
 
-            const notvalidOptionElement = screen.getByTestId('button-group-label-test-id-notValid');
+            const notvalidOptionElement = screen.getByTestId(
+                'button-group-label-test-id-notValid'
+            );
             expect(notvalidOptionElement).toBeInTheDocument();
 
             expect(setMockData).toHaveBeenCalledWith({
@@ -62,7 +70,8 @@ describe('CslnCheck component', () => {
                 <FormDataContext.Provider
                     value={{
                         ...defaultFormDataContext,
-                        formSignature: CaseDetails.data.formRequest.formSignature,
+                        formSignature:
+                            CaseDetails.data.formRequest.formSignature,
                         setFormSignature: setMockData,
                         currentFormState: CaseStatus.Pending,
                     }}
@@ -70,7 +79,9 @@ describe('CslnCheck component', () => {
                     <CslnCheck />
                 </FormDataContext.Provider>
             );
-            const validElement = screen.getByTestId('button-group-label-test-id-valid');
+            const validElement = screen.getByTestId(
+                'button-group-label-test-id-valid'
+            );
 
             fireEvent.click(validElement);
             expect(validElement).toBeChecked();
@@ -88,7 +99,8 @@ describe('CslnCheck component', () => {
                 <FormDataContext.Provider
                     value={{
                         ...defaultFormDataContext,
-                        formSignature: CaseDetails.data.formRequest.formSignature,
+                        formSignature:
+                            CaseDetails.data.formRequest.formSignature,
                         setFormSignature: setMockData,
                         currentFormState: CaseStatus.Pending,
                     }}
@@ -96,7 +108,9 @@ describe('CslnCheck component', () => {
                     <CslnCheck />
                 </FormDataContext.Provider>
             );
-            const notValidElement = screen.getByTestId('button-group-label-test-id-notValid');
+            const notValidElement = screen.getByTestId(
+                'button-group-label-test-id-notValid'
+            );
 
             fireEvent.click(notValidElement);
             expect(notValidElement).toBeChecked();

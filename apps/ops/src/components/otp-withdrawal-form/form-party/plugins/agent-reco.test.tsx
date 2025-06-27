@@ -1,6 +1,9 @@
 import { render, fireEvent } from '@testing-library/react';
 
-import { FormDataContext, defaultFormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 
 import { RecommendedByAgent } from './agent-reco';
@@ -26,7 +29,9 @@ describe('RecommendedByAgent Component', () => {
             </FormDataContext.Provider>
         );
 
-        expect(getByText('additionalInformation.isAgentOrBrokerRecommended')).toBeInTheDocument();
+        expect(
+            getByText('additionalInformation.isAgentOrBrokerRecommended')
+        ).toBeInTheDocument();
         expect(getByTestId('isRecommendedByAgent')).toBeInTheDocument();
     });
 
@@ -49,12 +54,17 @@ describe('RecommendedByAgent Component', () => {
         const prevState = {
             isAgentOrBrokerRecommended: { text: false },
         };
-        const mockSetter = jest.fn().mockImplementation(callback => {
+        const mockSetter = jest.fn().mockImplementation((callback) => {
             nextState = callback(prevState);
         });
 
         const { getByTestId } = render(
-            <FormDataContext.Provider value={{ ...defaultFormDataContext, setFormFullSurrenderAck: mockSetter }}>
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    setFormFullSurrenderAck: mockSetter,
+                }}
+            >
                 <RecommendedByAgent />
             </FormDataContext.Provider>
         );

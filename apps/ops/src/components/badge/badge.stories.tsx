@@ -5,7 +5,12 @@ import { BadgeVariant } from './badge.helpers';
 
 export const BadgeComponent = (args: any) => {
     const badge = args.icon ? (
-        <Badge icon={calendarSVG} variant={args.variant} label={args.label} rounded={args.rounded} />
+        <Badge
+            icon={calendarSVG}
+            variant={args.variant}
+            label={args.label}
+            rounded={args.rounded}
+        />
     ) : (
         <Badge {...args}>{args.label}</Badge>
     );
@@ -49,7 +54,14 @@ const meta: Meta<typeof Badge> = {
 export default meta;
 
 const calendarSVG = (
-    <svg width="16px" height="16px" preserveAspectRatio="none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+        width="16px"
+        height="16px"
+        preserveAspectRatio="none"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
         <path
             fillRule="evenodd"
             clipRule="evenodd"

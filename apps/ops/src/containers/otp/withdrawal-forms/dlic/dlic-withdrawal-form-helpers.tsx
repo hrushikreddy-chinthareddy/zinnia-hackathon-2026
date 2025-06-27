@@ -53,43 +53,65 @@ import { createValidator } from '../../utils/helper-utils';
 
 export default function useDlicConfig(t: TFunction) {
     const formValidation = useCallback(
-        ({ formSignature, formDisbursement }: Partial<FormParts> = {}): FormValidationErrors => {
+        ({
+            formSignature,
+            formDisbursement,
+        }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
             if (
-                [PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod) ||
-                ([PaymentMethod.EFT].includes(formDisbursement?.paymentMethod?.text as PaymentMethod) &&
+                [PaymentMethod.Wire].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                ) ||
+                ([PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                ) &&
                     formDisbursement?.bank[0].isDirectDeposit?.text &&
                     !formDisbursement?.bank[0]?.maskedAccountNumber)
             ) {
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !== formDisbursement?.bank[0].reEnterAccountNumber
+                    formDisbursement?.bank[0].accountNumber !==
+                        formDisbursement?.bank[0].reEnterAccountNumber
                 ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t('formValidation.accountNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterAccountNumber] = t(
+                        'formValidation.accountNumberDoesNotMatch'
+                    );
                 }
                 if (
                     formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !== formDisbursement?.bank[0].reEnterBankRoutingNumber
+                    formDisbursement?.bank[0].routingNumber !==
+                        formDisbursement?.bank[0].reEnterBankRoutingNumber
                 ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t('formValidation.routingNumberDoesNotMatch');
+                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                        'formValidation.routingNumberDoesNotMatch'
+                    );
                 }
             }
             const ownerSignature = formSignature?.signatures?.find(
-                sigInfo => sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
             );
 
             // No choice made for signature
-            if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-                errors[`${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`] = t(
-                    'formValidation.signaturePresentOptionMustBeSelected'
-                );
+            if (
+                ownerSignature?.isSigned !== false &&
+                !ownerSignature?.isSigned
+            ) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT, PaymentMethod.Wire].includes(formDisbursement?.paymentMethod?.text as PaymentMethod) &&
+                [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                ) &&
                 formDisbursement?.bank[0].isDirectDeposit?.text
             ) {
-                errors[BankingFields.AccountType] = t('formValidation.accountTypeMustBeSelected');
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
             }
             return errors;
         },
@@ -149,7 +171,9 @@ export default function useDlicConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
-                return !!formParty?.parties?.find(party => party.partyRoleType === PartyRoles.JOINT_OWNER);
+                return !!formParty?.parties?.find(
+                    (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
+                );
             },
         },
     ];
@@ -179,7 +203,9 @@ export default function useDlicConfig(t: TFunction) {
         },
     ];
 
-    const identifySelectedFormProgramOption = (formProgram: FormProgram): { selectedOption: string | null; amount: string | null } => {
+    const identifySelectedFormProgramOption = (
+        formProgram: FormProgram
+    ): { selectedOption: string | null; amount: string | null } => {
         const programTypeText = formProgram?.programType?.text || '';
         if (programTypeText === ProgramType.TotalFreeAmt) {
             return { selectedOption: ProgramType.TotalFreeAmt, amount: '' };
@@ -191,7 +217,9 @@ export default function useDlicConfig(t: TFunction) {
             const amount = formProgram?.partialAmount?.text || '';
             return {
                 selectedOption:
-                    formProgram?.withdrawType?.text === WithdrawalType.Gross ? ProgramType.GrossWithdrawal : ProgramType.NetWithdrawal,
+                    formProgram?.withdrawType?.text === WithdrawalType.Gross
+                        ? ProgramType.GrossWithdrawal
+                        : ProgramType.NetWithdrawal,
                 amount,
             };
         }
@@ -207,7 +235,9 @@ export default function useDlicConfig(t: TFunction) {
                     ...getDefaultFormProgramValues(),
                     withdrawType: { text: WithdrawalType.Gross },
                     programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: { text: ProgramSubType.TotalFreeWithdrawal },
+                    programSubType: {
+                        text: ProgramSubType.TotalFreeWithdrawal,
+                    },
                 };
             },
         },
@@ -266,7 +296,9 @@ export default function useDlicConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.IsDirectDepositValid,
-                    fieldLabel: t('distributionMethod.isDirectDepositFormValid'),
+                    fieldLabel: t(
+                        'distributionMethod.isDirectDepositFormValid'
+                    ),
                     classNames: 'col-start-1',
                     component: DisbursementFields.BankBooleanButtonGroup,
                 },
@@ -294,7 +326,10 @@ export default function useDlicConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -307,11 +342,16 @@ export default function useDlicConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.AccountHolder,
@@ -333,7 +373,9 @@ export default function useDlicConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
             ],
@@ -345,16 +387,22 @@ export default function useDlicConfig(t: TFunction) {
 
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    isDirectDepositValid: selectedBank?.isDirectDepositValid?.text ?? true,
+                    isDirectDepositValid:
+                        selectedBank?.isDirectDepositValid?.text ?? true,
                     accountHolder: selectedBank?.nameOnBankAccount ?? '',
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    isDirectDeposit: selectedBank?.isDirectDeposit?.text ?? true,
-                    maskedAccountNumber: selectedBank?.maskedAccountNumber ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    isDirectDeposit:
+                        selectedBank?.isDirectDeposit?.text ?? true,
+                    maskedAccountNumber:
+                        selectedBank?.maskedAccountNumber ?? '',
                 };
             },
             generatePayloadFromSelection: ({
@@ -386,7 +434,9 @@ export default function useDlicConfig(t: TFunction) {
                               bankFurtherCreditAccount,
                               bankFurtherCreditName,
                               isDirectDeposit: { text: true },
-                              isDirectDepositValid: { text: isDirectDepositValid },
+                              isDirectDepositValid: {
+                                  text: isDirectDepositValid,
+                              },
                               reEnterAccountNumber,
                               reEnterBankRoutingNumber,
                           },
@@ -433,7 +483,10 @@ export default function useDlicConfig(t: TFunction) {
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('accountNumber', t('formValidation.accountNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -446,11 +499,16 @@ export default function useDlicConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
-                    fieldLabel: t('distributionMethod.reEnterBankRoutingNumber'),
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
                     component: DisbursementFields.BankTextField,
                     isBankingField: true,
                     disableCopyPaste: true,
-                    validator: createValidator('bankRoutingNumber', t('formValidation.routingNumberDoesNotMatch')),
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
                 },
                 {
                     fieldName: BankingFields.AccountHolder,
@@ -471,25 +529,36 @@ export default function useDlicConfig(t: TFunction) {
                 },
                 {
                     fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditAccount'),
+                    fieldLabel: t(
+                        'distributionMethod.bankFurtherCreditAccount'
+                    ),
                     component: DisbursementFields.BankTextField,
                 },
             ],
-            getDefaultPayload({ paymentMethod, doesCheckMeetSecRequiremnt, voidCheck, bank }: FormDisbursement) {
+            getDefaultPayload({
+                paymentMethod,
+                doesCheckMeetSecRequiremnt,
+                voidCheck,
+                bank,
+            }: FormDisbursement) {
                 if (paymentMethod.text !== PaymentMethod.Wire) {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 }
                 const selectedBank = bank[0];
                 return {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements: doesCheckMeetSecRequiremnt,
+                    doesCheckMeetSecurityRequirements:
+                        doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
                     accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
+                    accountType:
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
                     bankName: selectedBank?.bankName ?? '',
                     bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
+                    bankFurtherCreditName:
+                        selectedBank?.bankFurtherCreditName ?? '',
+                    bankFurtherCreditAccount:
+                        selectedBank?.bankFurtherCreditAccount ?? '',
                     accountHolder: selectedBank?.nameOnBankAccount ?? '',
                 };
             },
@@ -527,7 +596,8 @@ export default function useDlicConfig(t: TFunction) {
                         },
                     ],
                     voidCheck: isVoidCheckAttached || null,
-                    doesCheckMeetSecRequiremnt: doesCheckMeetSecurityRequirements || null,
+                    doesCheckMeetSecRequiremnt:
+                        doesCheckMeetSecurityRequirements || null,
                 };
             },
         },
@@ -554,23 +624,38 @@ export default function useDlicConfig(t: TFunction) {
                     component: DisbursementFields.BankAddress,
                 },
             ],
-            getDefaultPayload: ({ paymentMethod, paymentMailType, isDifferentPayeeOrAddress, payee }: FormDisbursement) => {
-                if (paymentMethod.text === PaymentMailType.Check && paymentMailType.text === null) {
+            getDefaultPayload: ({
+                paymentMethod,
+                paymentMailType,
+                isDifferentPayeeOrAddress,
+                payee,
+            }: FormDisbursement) => {
+                if (
+                    paymentMethod.text === PaymentMailType.Check &&
+                    paymentMailType.text === null
+                ) {
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent: isDifferentPayeeOrAddress.text ?? '',
+                        selectIfPayeeIsDifferent:
+                            isDifferentPayeeOrAddress.text ?? '',
                         address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
                         payeeName: payee?.name?.text ?? '',
                     };
                 }
                 return DEFAULT_DISBURSEMENT_UPDATE;
             },
-            generatePayloadFromSelection: ({ payeeName, address, selectIfPayeeIsDifferent }: DisbursementParts) => {
+            generatePayloadFromSelection: ({
+                payeeName,
+                address,
+                selectIfPayeeIsDifferent,
+            }: DisbursementParts) => {
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
-                    isDifferentPayeeOrAddress: { text: selectIfPayeeIsDifferent || false },
+                    isDifferentPayeeOrAddress: {
+                        text: selectIfPayeeIsDifferent || false,
+                    },
                     payee: {
                         name: { text: payeeName || null },
                         addresses: [address || DEFAULT_ADDRESS],
@@ -675,14 +760,32 @@ export default function useDlicConfig(t: TFunction) {
     ];
 
     const fundWithdrawnMethodOptions = [
-        { label: t('distributionInstruction.prorata'), value: FundWithdrawnMethod.Prorata },
-        { label: t(`distributionInstruction.specifyFunds`), value: FundWithdrawnMethod.SpecifyFunds },
+        {
+            label: t('distributionInstruction.prorata'),
+            value: FundWithdrawnMethod.Prorata,
+        },
+        {
+            label: t(`distributionInstruction.specifyFunds`),
+            value: FundWithdrawnMethod.SpecifyFunds,
+        },
     ];
 
     const selectOneOptions: SelectOneOption[] = [
-        { label: t('amountDetails.processTimeframe.immediately'), value: ProcessRequestType.Immediately },
-        { label: t('amountDetails.processTimeframe.withdrawalUponContractMaturity'), value: ProcessRequestType.NoLongerSubject },
-        { label: t('amountDetails.processTimeframe.asOfThisDate'), value: ProcessRequestType.AsOfDate, subElement: <AsOfDateComponent /> },
+        {
+            label: t('amountDetails.processTimeframe.immediately'),
+            value: ProcessRequestType.Immediately,
+        },
+        {
+            label: t(
+                'amountDetails.processTimeframe.withdrawalUponContractMaturity'
+            ),
+            value: ProcessRequestType.NoLongerSubject,
+        },
+        {
+            label: t('amountDetails.processTimeframe.asOfThisDate'),
+            value: ProcessRequestType.AsOfDate,
+            subElement: <AsOfDateComponent />,
+        },
     ];
 
     const additionalWithholdingAmountConfig = {
@@ -712,8 +815,16 @@ export default function useDlicConfig(t: TFunction) {
         auditTrial: true,
     };
     const reasonOptions = [
-        { label: t('distributionReason.reasonOptions.deathinheritedira'), value: RestrictionOption.DeathInheritedIRA },
-        { label: t('distributionReason.reasonOptions.deathdeferredsettlement'), value: RestrictionOption.DeathDeferredSettlement },
+        {
+            label: t('distributionReason.reasonOptions.deathinheritedira'),
+            value: RestrictionOption.DeathInheritedIRA,
+        },
+        {
+            label: t(
+                'distributionReason.reasonOptions.deathdeferredsettlement'
+            ),
+            value: RestrictionOption.DeathDeferredSettlement,
+        },
     ];
 
     const hasPreviousNigoPlanCodes = ['674', '722'];
