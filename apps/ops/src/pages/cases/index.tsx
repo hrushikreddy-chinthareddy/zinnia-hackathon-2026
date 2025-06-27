@@ -367,6 +367,7 @@ const CaseManagementDashboard = ({ authorizedCarriers, isAdvisorsExcel, user }: 
                                 const nonConflictingNicsVals = notInCaseStatus.filter(val => !vals.includes(val)); // remove any values that are both in caseStatus and notInCaseStatus
                                 return {
                                     ...prev,
+                                    offset: 0,
                                     additionalFilters: {
                                         ...prev.additionalFilters,
                                         caseStatus: vals,

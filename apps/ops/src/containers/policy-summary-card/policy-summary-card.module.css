@@ -33,7 +33,7 @@
 
 .quickViewSection {
     display: grid;
-    grid-template-columns: repeat(2, max-content);
+    grid-template-columns: repeat(2, minmax(50%, max-content));
     column-gap: 32px;
     row-gap: 16px;
 }
