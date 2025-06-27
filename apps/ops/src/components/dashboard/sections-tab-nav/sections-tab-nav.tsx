@@ -15,6 +15,7 @@ interface Tabs {
 
 interface SectionTabNavsProps {
     tabs?: Tabs[];
+    defaultValue?: string;
 }
 
 const defaultTabs = [
@@ -32,10 +33,10 @@ const defaultTabs = [
     },
 ];
 
-export const SectionTabNavs: FC<PropsWithChildren<SectionTabNavsProps>> = ({ tabs, children }) => {
+export const SectionTabNavs: FC<PropsWithChildren<SectionTabNavsProps>> = ({ tabs, children, defaultValue = SectionTabValues.CHART }) => {
     const tabsToRender = tabs || defaultTabs;
     return (
-        <TabGroup defaultValue={SectionTabValues.CHART} className="bg-white">
+        <TabGroup defaultValue={defaultValue} className="bg-white">
             <div className="flex">
                 <TabList className={styles.tabList}>
                     {tabsToRender.map(tab => (

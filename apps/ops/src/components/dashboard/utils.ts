@@ -32,6 +32,8 @@ export const caseStatusMap = {
     [Statuses.Withdrawn]: 'Withdrawn',
     [Statuses.Inprogress]: 'In progress',
     [Statuses.Pending]: 'Pending',
+    [Statuses.Unresolved]: 'Unresolved',
+    [Statuses.Resolved]: 'Resolved',
 };
 
 export const defaultDateFormat = 'YYYY-MM-DD';
@@ -210,4 +212,8 @@ export const friendlyGroupByName: Record<CaseCountGroupByEnum | ExceptionCountGr
     [CaseCountGroupByEnum.CREATED_DAY]: 'Created date',
     [CaseCountGroupByEnum.UPDATED_DAY]: 'Updated date',
     [ExceptionCountGroupByEnum.EXCEPTION_CATEGORY]: 'Exception category',
+    [ExceptionCountGroupByEnum.EXCEPTION_DETAILED_REASON]: 'Exception detailed reason',
+    [ExceptionCountGroupByEnum.EXCEPTION_REASON]: 'Exception reason',
+    [ExceptionCountGroupByEnum.EXCEPTION_CREATED_DAY]: 'Exception created date',
+    [ExceptionCountGroupByEnum.EXCEPTION_UPDATED_DAY]: 'Exception updated date',
 };

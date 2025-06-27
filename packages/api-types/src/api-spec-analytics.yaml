@@ -7,12 +7,12 @@ info:
     email: data-science@se2office365.onmicrosoft.com
   version: 1.0.0
 servers:
-  - url: http://127.0.0.1:8080
-    description: Local Dev
-  - url: https://qa.api.zinnia.io
-    description: QA Environment
-  - url: https://api.zinnia.io
-    description: Production Environment
+- url: http://127.0.0.1:8080
+  description: Local Dev
+- url: https://qa.api.zinnia.io
+  description: QA Environment
+- url: https://api.zinnia.io
+  description: Production Environment
 paths:
   /analytics/v1/dashboard/completed_case_time:
     post:
@@ -91,15 +91,15 @@ components:
     CaseCountGroupByEnum:
       type: string
       enum:
-        - brokerDealerName
-        - carrier
-        - caseStatus
-        - processSubType
-        - process
-        - productName
-        - applicationType
-        - createdDay
-        - updatedDay
+      - brokerDealerName
+      - carrier
+      - caseStatus
+      - processSubType
+      - process
+      - productName
+      - applicationType
+      - createdDay
+      - updatedDay
       title: CaseCountGroupByEnum
     CaseCountInput:
       properties:
@@ -113,94 +113,94 @@ components:
           minItems: 1
           title: Groupby
           example:
-            - carrier
+          - carrier
       type: object
       required:
-        - filter
-        - groupBy
+      - filter
+      - groupBy
       title: CaseCountInput
     CaseCountInputFilter:
       properties:
         caseStatus:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Casestatus
           example:
-            - COMPLETED
+          - COMPLETED
         carrier:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Carrier
           example:
-            - MASS
+          - MASS
         process:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Process
           example:
-            - New Business
+          - New Business
         requestSubType:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Requestsubtype
           example:
-            - Suitability Review
+          - Suitability Review
         productName:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Productname
           example:
-            - Security Benefit Foundations Annuity 5 Yr product
+          - Security Benefit Foundations Annuity 5 Yr product
         brokerDealerName:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Brokerdealername
           example:
-            - SANTANDER  SECURITIES LLC
+          - SANTANDER  SECURITIES LLC
         createdDateStart:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Createddatestart
           example: '2025-01-11T01:01:31.316Z'
         createdDateEnd:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Createddateend
           example: '2025-01-21T23:34:31.316Z'
         updatedDateStart:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Updateddatestart
           example: '2025-01-11T01:01:01.316Z'
         updatedDateEnd:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Updateddateend
           example: '2025-01-21T23:34:31.316Z'
       type: object
@@ -218,8 +218,8 @@ components:
           example: 12345
       type: object
       required:
-        - data
-        - totalElements
+      - data
+      - totalElements
       title: CaseCountOutput
     CaseCountOutputLevel1:
       properties:
@@ -237,16 +237,16 @@ components:
           example: 5832
         values:
           anyOf:
-            - items:
-                $ref: '#/components/schemas/CaseCountOutputLevel2'
-              type: array
-            - type: 'null'
+          - items:
+              $ref: '#/components/schemas/CaseCountOutputLevel2'
+            type: array
+          - type: 'null'
           title: Values
       type: object
       required:
-        - key
-        - name
-        - count
+      - key
+      - name
+      - count
       title: CaseCountOutputLevel1
     CaseCountOutputLevel2:
       properties:
@@ -264,16 +264,16 @@ components:
           example: 2294
         values:
           anyOf:
-            - items:
-                $ref: '#/components/schemas/CaseCountOutputLevel3'
-              type: array
-            - type: 'null'
+          - items:
+              $ref: '#/components/schemas/CaseCountOutputLevel3'
+            type: array
+          - type: 'null'
           title: Values
       type: object
       required:
-        - key
-        - name
-        - count
+      - key
+      - name
+      - count
       title: CaseCountOutputLevel2
     CaseCountOutputLevel3:
       properties:
@@ -291,19 +291,19 @@ components:
           example: 28
       type: object
       required:
-        - key
-        - name
-        - count
+      - key
+      - name
+      - count
       title: CaseCountOutputLevel3
     CompletedCaseTimeGroupByEnum:
       type: string
       enum:
-        - brokerDealerName
-        - carrier
-        - processSubType
-        - process
-        - productName
-        - applicationType
+      - brokerDealerName
+      - carrier
+      - processSubType
+      - process
+      - productName
+      - applicationType
       title: CompletedCaseTimeGroupByEnum
     CompletedCaseTimeInput:
       properties:
@@ -317,85 +317,85 @@ components:
           minItems: 1
           title: Groupby
           example:
-            - carrier
+          - carrier
       type: object
       required:
-        - filter
-        - groupBy
+      - filter
+      - groupBy
       title: CompletedCaseTimeInput
     CompletedCaseTimeInputFilter:
       properties:
         carrier:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Carrier
           example:
-            - MASS
+          - MASS
         process:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Process
           example:
-            - New Business
+          - New Business
         requestSubType:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Requestsubtype
           example:
-            - Suitability Review
+          - Suitability Review
         productName:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Productname
           example:
-            - Security Benefit Foundations Annuity 5 Yr product
+          - Security Benefit Foundations Annuity 5 Yr product
         brokerDealerName:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Brokerdealername
           example:
-            - SANTANDER  SECURITIES LLC
+          - SANTANDER  SECURITIES LLC
         createdDateStart:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Createddatestart
           example: '2025-01-11T01:01:31.316Z'
         createdDateEnd:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Createddateend
           example: '2025-01-21T23:34:31.316Z'
         updatedDateStart:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Updateddatestart
           example: '2025-01-11T01:01:01.316Z'
         updatedDateEnd:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Updateddateend
           example: '2025-01-21T23:34:31.316Z'
       type: object
@@ -409,7 +409,7 @@ components:
           title: Data
       type: object
       required:
-        - data
+      - data
       title: CompletedCaseTimeOutput
     CompletedCaseTimeOutputLevel1:
       properties:
@@ -443,20 +443,20 @@ components:
           example: 5832
         values:
           anyOf:
-            - items:
-                $ref: '#/components/schemas/CompletedCaseTimeOutputLevel2'
-              type: array
-            - type: 'null'
+          - items:
+              $ref: '#/components/schemas/CompletedCaseTimeOutputLevel2'
+            type: array
+          - type: 'null'
           title: Values
       type: object
       required:
-        - key
-        - name
-        - secondLow
-        - secondMedian
-        - secondMean
-        - secondHigh
-        - count
+      - key
+      - name
+      - secondLow
+      - secondMedian
+      - secondMean
+      - secondHigh
+      - count
       title: CompletedCaseTimeOutputLevel1
     CompletedCaseTimeOutputLevel2:
       properties:
@@ -490,20 +490,20 @@ components:
           example: 19
         values:
           anyOf:
-            - items:
-                $ref: '#/components/schemas/CompletedCaseTimeOutputLevel3'
-              type: array
-            - type: 'null'
+          - items:
+              $ref: '#/components/schemas/CompletedCaseTimeOutputLevel3'
+            type: array
+          - type: 'null'
           title: Values
       type: object
       required:
-        - key
-        - name
-        - secondLow
-        - secondMedian
-        - secondMean
-        - secondHigh
-        - count
+      - key
+      - name
+      - secondLow
+      - secondMedian
+      - secondMean
+      - secondHigh
+      - count
       title: CompletedCaseTimeOutputLevel2
     CompletedCaseTimeOutputLevel3:
       properties:
@@ -537,27 +537,31 @@ components:
           example: 19
       type: object
       required:
-        - key
-        - name
-        - secondLow
-        - secondMedian
-        - secondMean
-        - secondHigh
-        - count
+      - key
+      - name
+      - secondLow
+      - secondMedian
+      - secondMean
+      - secondHigh
+      - count
       title: CompletedCaseTimeOutputLevel3
     ExceptionCountGroupByEnum:
       type: string
       enum:
-        - applicationType
-        - brokerDealerName
-        - carrier
-        - caseStatus
-        - exceptionCategory
-        - process
-        - processSubType
-        - productName
-        - createdDay
-        - updatedDay
+      - applicationType
+      - brokerDealerName
+      - carrier
+      - caseStatus
+      - exceptionCategory
+      - process
+      - processSubType
+      - productName
+      - createdDay
+      - updatedDay
+      - exceptionDetailedReason
+      - exceptionReason
+      - exceptionCreatedDay
+      - exceptionUpdatedDay
       title: ExceptionCountGroupByEnum
     ExceptionCountInput:
       properties:
@@ -571,96 +575,133 @@ components:
           minItems: 1
           title: Groupby
           example:
-            - carrier
+          - carrier
       type: object
       required:
-        - filter
-        - groupBy
+      - filter
+      - groupBy
       title: ExceptionCountInput
     ExceptionCountInputFilter:
       properties:
         caseStatus:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Casestatus
           example:
-            - COMPLETED
+          - COMPLETED
         carrier:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Carrier
           example:
-            - MASS
+          - MASS
         process:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Process
           example:
-            - New Business
+          - New Business
         requestSubType:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Requestsubtype
           example:
-            - Suitability Review
+          - Suitability Review
         productName:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Productname
           example:
-            - Security Benefit Foundations Annuity 5 Yr product
+          - Security Benefit Foundations Annuity 5 Yr product
         brokerDealerName:
           anyOf:
-            - items:
-                type: string
-              type: array
-            - type: 'null'
+          - items:
+              type: string
+            type: array
+          - type: 'null'
           title: Brokerdealername
           example:
-            - SANTANDER  SECURITIES LLC
+          - SANTANDER  SECURITIES LLC
         createdDateStart:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Createddatestart
           example: '2025-01-11T01:01:31.316Z'
         createdDateEnd:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Createddateend
           example: '2025-01-21T23:34:31.316Z'
         updatedDateStart:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Updateddatestart
           example: '2025-01-11T01:01:01.316Z'
         updatedDateEnd:
           anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          - type: string
+            format: date-time
+          - type: 'null'
           title: Updateddateend
           example: '2025-01-21T23:34:31.316Z'
+        exceptionCreatedDateStart:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Exceptioncreateddatestart
+          example: '2025-01-21T23:34:31.316Z'
+        exceptionCreatedDateEnd:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Exceptioncreateddateend
+          example: '2025-01-21T23:34:31.316Z'
+        exceptionUpdatedDateStart:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Exceptionupdateddatestart
+          example: '2025-01-21T23:34:31.316Z'
+        exceptionUpdatedDateEnd:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Exceptionupdateddateend
+          example: '2025-01-21T23:34:31.316Z'
+        exceptionStatus:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Exceptionstatus
+          example:
+          - Resolved
       type: object
       title: ExceptionCountInputFilter
     ExceptionCountOutput:
@@ -674,10 +715,15 @@ components:
           type: integer
           title: Totalelements
           example: 12345
+        totalUniqueCases:
+          type: integer
+          title: Totaluniquecases
+          example: 999
       type: object
       required:
-        - data
-        - totalElements
+      - data
+      - totalElements
+      - totalUniqueCases
       title: ExceptionCountOutput
     ExceptionCountOutputLevel1:
       properties:
@@ -693,18 +739,23 @@ components:
           type: integer
           title: Count
           example: 5832
+        uniqueCaseCount:
+          type: integer
+          title: Uniquecasecount
+          example: 1234
         values:
           anyOf:
-            - items:
-                $ref: '#/components/schemas/ExceptionCountOutputLevel2'
-              type: array
-            - type: 'null'
+          - items:
+              $ref: '#/components/schemas/ExceptionCountOutputLevel2'
+            type: array
+          - type: 'null'
           title: Values
       type: object
       required:
-        - key
-        - name
-        - count
+      - key
+      - name
+      - count
+      - uniqueCaseCount
       title: ExceptionCountOutputLevel1
     ExceptionCountOutputLevel2:
       properties:
@@ -720,18 +771,23 @@ components:
           type: integer
           title: Count
           example: 2294
+        uniqueCaseCount:
+          type: integer
+          title: Uniquecasecount
+          example: 1234
         values:
           anyOf:
-            - items:
-                $ref: '#/components/schemas/ExceptionCountOutputLevel3'
-              type: array
-            - type: 'null'
+          - items:
+              $ref: '#/components/schemas/ExceptionCountOutputLevel3'
+            type: array
+          - type: 'null'
           title: Values
       type: object
       required:
-        - key
-        - name
-        - count
+      - key
+      - name
+      - count
+      - uniqueCaseCount
       title: ExceptionCountOutputLevel2
     ExceptionCountOutputLevel3:
       properties:
@@ -747,11 +803,16 @@ components:
           type: integer
           title: Count
           example: 28
+        uniqueCaseCount:
+          type: integer
+          title: Uniquecasecount
+          example: 1234
       type: object
       required:
-        - key
-        - name
-        - count
+      - key
+      - name
+      - count
+      - uniqueCaseCount
       title: ExceptionCountOutputLevel3
     HTTPValidationError:
       properties:
@@ -767,8 +828,8 @@ components:
         loc:
           items:
             anyOf:
-              - type: string
-              - type: integer
+            - type: string
+            - type: integer
           type: array
           title: Location
         msg:
@@ -779,7 +840,7 @@ components:
           title: Error Type
       type: object
       required:
-        - loc
-        - msg
-        - type
+      - loc
+      - msg
+      - type
       title: ValidationError

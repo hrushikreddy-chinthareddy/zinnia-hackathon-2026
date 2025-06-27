@@ -123,6 +123,8 @@ export enum Statuses {
     Withdrawn = 'WITHDRAWN',
     Inprogress = 'INPROGRESS',
     Pending = 'IMPEDED',
+    Resolved = 'RESOLVED',
+    Unresolved = 'UNRESOLVED',
 }
 
 export interface StatCount {

@@ -76,10 +76,10 @@ export const getDashboardExceptionStats = async (query: ExceptionCountInput): Pr
             `${baseAppUrl}/api/dashboard/exception-count`,
             query
         );
-
         return {
             data: response.data,
             totalElements: response.totalElements,
+            totalUniqueCases: response.totalUniqueCases,
         };
     } catch (error: any) {
         console.error('getCaseDashboardStats::An error occurred while getting case dashboard stats results', error);
