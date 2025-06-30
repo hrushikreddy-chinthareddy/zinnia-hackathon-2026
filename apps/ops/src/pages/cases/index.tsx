@@ -118,13 +118,25 @@ const CaseManagementDashboard = ({
         useCaseFilterQueryStore();
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
-    const handleCreatedBySort = useCallback(() => {
-        setCaseManagementFilters((prevFilters) => ({
-            ...prevFilters,
-            sortDirection: prevFilters.sortDirection === 'asc' ? 'desc' : 'asc',
-            offset: 0,
-        }));
-    }, [setCaseManagementFilters]);
+
+    const handleCreatedBySort = useCallback(
+        (key: 'createdAt') => {
+            setCaseManagementFilters((prevFilters) => {
+                const sameColumn = prevFilters.sortBy === key;
+
+                return {
+                    ...prevFilters,
+                    sortBy: key,
+                    sortDirection:
+                        sameColumn && prevFilters.sortDirection === 'asc'
+                            ? 'desc'
+                            : 'asc',
+                    offset: 0,
+                };
+            });
+        },
+        [setCaseManagementFilters]
+    );
 
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -408,6 +420,7 @@ const CaseManagementDashboard = ({
                     searchValues={caseManagementFilters.searchValue}
                     handleSort={handleCreatedBySort}
                     sortDirection={caseManagementFilters.sortDirection}
+                    sortBy={caseManagementFilters.sortBy}
                 />
 
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">

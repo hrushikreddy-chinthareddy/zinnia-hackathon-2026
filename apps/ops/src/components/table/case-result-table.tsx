@@ -380,8 +380,9 @@ const NoResultsRow = ({
 interface CaseResultTableProps {
     cases: Case[];
     searchValues?: SearchViewQuery;
-    handleSort: () => void;
+    handleSort: (key: 'createdAt') => void;
     sortDirection: 'asc' | 'desc';
+    sortBy: string | null;
 }
 
 export const CaseResultTable = ({
@@ -389,6 +390,7 @@ export const CaseResultTable = ({
     searchValues,
     handleSort,
     sortDirection,
+    sortBy,
 }: CaseResultTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     return (
@@ -424,16 +426,35 @@ export const CaseResultTable = ({
                             {t('caseManagementDashboard.case.agentSsn')}
                         </Typography>
                     </TableHeaderCell>
+
                     <TableHeaderCell
+                        scope="col"
+                        aria-sort={
+                            sortBy === 'createdAt'
+                                ? sortDirection === 'asc'
+                                    ? 'ascending'
+                                    : 'descending'
+                                : 'none'
+                        }
                         sortable
-                        onClick={handleSort}
                         className={styles.tableHeader}
+                        onClick={() => handleSort('createdAt')}
                     >
                         <Typography
                             variant={TypographyVariant.BodySmBold}
                             className="flex align-center gap-1 justify-end"
                         >
-                            {t('caseManagementDashboard.case.createdAt')}
+                            <span className="sr-only">
+                                Sort by Created At{' '}
+                                {sortDirection === 'asc'
+                                    ? 'ascending'
+                                    : 'descending'}
+                            </span>
+
+                            <span aria-hidden="true">
+                                {t('caseManagementDashboard.case.createdAt')}
+                            </span>
+
                             <Icon
                                 type={
                                     sortDirection === 'asc'
@@ -446,6 +467,7 @@ export const CaseResultTable = ({
                     </TableHeaderCell>
                 </TableRow>
             </TableHeader>
+
             <TableBody>
                 {cases && cases.length ? (
                     cases.map((singleCase) => (
