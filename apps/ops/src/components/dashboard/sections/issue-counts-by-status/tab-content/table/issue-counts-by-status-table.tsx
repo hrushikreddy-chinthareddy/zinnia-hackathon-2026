@@ -13,7 +13,6 @@ import {
     TableCell,
     PopoverPlacement,
 } from '@zinnia/bloom/components';
-import * as changeCase from 'change-case';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
@@ -24,6 +23,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
@@ -277,7 +277,9 @@ export const IssueCountsByStatusTable = () => {
                                             <TableCell>
                                                 <Tooltip
                                                     body={
-                                                        item.category || 'Issue'
+                                                        toSentenceCase(
+                                                            item.category
+                                                        ) || 'Issue'
                                                     }
                                                     placement={
                                                         PopoverPlacement.TopRight
@@ -285,7 +287,7 @@ export const IssueCountsByStatusTable = () => {
                                                 >
                                                     {
                                                         <div className="text-left">
-                                                            {changeCase.sentenceCase(
+                                                            {toSentenceCase(
                                                                 item.category
                                                             ) || 'Issue'}
                                                         </div>
@@ -295,8 +297,12 @@ export const IssueCountsByStatusTable = () => {
                                             <TableCell>
                                                 <Tooltip
                                                     body={
-                                                        item.reason ||
-                                                        item.category
+                                                        toSentenceCase(
+                                                            item.reason
+                                                        ) ||
+                                                        toSentenceCase(
+                                                            item.category
+                                                        )
                                                     }
                                                     placement={
                                                         PopoverPlacement.TopRight
@@ -304,10 +310,10 @@ export const IssueCountsByStatusTable = () => {
                                                 >
                                                     {
                                                         <div className="text-left">
-                                                            {changeCase.sentenceCase(
+                                                            {toSentenceCase(
                                                                 item.reason
                                                             ) ||
-                                                                changeCase.sentenceCase(
+                                                                toSentenceCase(
                                                                     item.category
                                                                 )}
                                                         </div>
@@ -317,8 +323,12 @@ export const IssueCountsByStatusTable = () => {
                                             <TableCell>
                                                 <Tooltip
                                                     body={
-                                                        item.details ||
-                                                        item.reason
+                                                        toSentenceCase(
+                                                            item.details
+                                                        ) ||
+                                                        toSentenceCase(
+                                                            item.reason
+                                                        )
                                                     }
                                                     placement={
                                                         PopoverPlacement.TopRight
@@ -326,10 +336,10 @@ export const IssueCountsByStatusTable = () => {
                                                 >
                                                     {
                                                         <div className="text-left">
-                                                            {changeCase.sentenceCase(
+                                                            {toSentenceCase(
                                                                 item.details
                                                             ) ||
-                                                                changeCase.sentenceCase(
+                                                                toSentenceCase(
                                                                     item.reason
                                                                 )}
                                                         </div>
@@ -338,7 +348,7 @@ export const IssueCountsByStatusTable = () => {
                                             </TableCell>
                                             <TableCell>
                                                 <Tooltip
-                                                    body={item.count}
+                                                    body={item.count?.toLocaleString()}
                                                     placement={
                                                         PopoverPlacement.TopRight
                                                     }
