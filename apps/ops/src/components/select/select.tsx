@@ -49,6 +49,7 @@ const SingleSelectOptions = ({
                         options.length,
                         option.value === value
                     )}
+                    aria-label={`Button ${option.label}`}
                 >
                     <Select.ItemText>
                         <Typography
@@ -92,6 +93,7 @@ const MultiselectOptionItem = ({
                         options.length,
                         false
                     )}
+                    aria-label={`Button ${option.label}`}
                 >
                     {/* Pseudo-element for the checkbox square */}
                     <div className={getCheckboxClasses(!!value[option.value])}>
@@ -237,10 +239,11 @@ const SelectComponent = ({
             />
             <MainComponent.Root {...rootProps}>
                 <MainComponent.Trigger
-                    aria-label={label}
+                    aria-label={label ?? placeholder}
                     className={`${variantClass} ${getTriggerClasses(isOpen)}`}
                     data-testid={name}
-                    disabled={readOnly || disabled}
+                    disabled={disabled}
+                    aria-haspopup="listbox"
                 >
                     <Typography
                         variant={TypographyVariant.BodySm}
