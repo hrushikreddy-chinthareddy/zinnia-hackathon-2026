@@ -31,18 +31,12 @@ export const QuickViewSkeleton = () => {
 export const OwnerInfoSkeleton = () => {
     return (
         <QuickViewRoot title={' '}>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <LabelContentSkeleton />
-                <LabelContentSkeleton />
-            </div>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <LabelContentSkeleton />
-                <LabelContentSkeleton />
-            </div>
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-1 lg:grid-cols-2">
-                <LabelContentSkeleton />
-                <LabelContentSkeleton contentLines={3} />
-            </div>
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+            <LabelContentSkeleton />
+            <LabelContentSkeleton contentLines={3} />
         </QuickViewRoot>
     );
 };

@@ -5,7 +5,6 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
 import FreeLookCancelDate from '@deps/containers/policy-summary-card/display-fields/free-look-cancel-date';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import FixedCostPeriod from '../display-fields/fixed-cost-period';
 import IssueDate from '../display-fields/issue-date';
@@ -61,17 +60,6 @@ const EverlyIul = ({ policyTimelineCardData, productType }: EverlyIulProps) => {
                 fixedCostPeriod={fixedCostPeriod}
                 fixedCostPeriodLeft={fixedCostPeriodLeft}
             />
-            <div>
-                <Label
-                    label={t('freeLookExpiration')}
-                    tooltipTitle={t('freeLookExpiration')}
-                    variant={LabelVariant.FieldLabel}
-                />
-                <Content
-                    details={convertKebabedDateString(freeLookCancelDate)}
-                    variant={ContentVariant.BodySm}
-                />
-            </div>
         </div>
     );
 };

@@ -12,16 +12,15 @@ interface FreeLookCancelDateProps {
 const FreeLookCancelDate = ({
     freeLookCancelDate,
 }: FreeLookCancelDateProps) => {
-    const { t } = useTranslation([
-        TranslationFiles.COMMON,
-        TranslationFiles.COLDEFS,
-    ]);
+    const { t } = useTranslation([TranslationFiles.COMMON]);
 
     return (
         <div>
             <Label
                 variant={LabelVariant.FieldLabel}
-                label={t('colDefs:policySummary.freeLookCancelDate')}
+                label={t(
+                    'policy.detailCards.policyTimeline.freeLookExpiration'
+                )}
             />
             <Content
                 details={convertKebabedDateString(freeLookCancelDate)}

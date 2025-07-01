@@ -261,7 +261,7 @@ const QuickViewHeader = ({
     return (
         <header data-testid={CardDetailsTest.HEADER}>
             <div className="flex w-full items-end justify-between">
-                <div className="w-full flex-wrap lg:flex lg:items-end lg:justify-between">
+                <div className="w-full flex-wrap flex lg:items-end lg:justify-between gap-8">
                     <GlobalPolicyInfo
                         loadingPolicyDetails={loadingPolicyDetails}
                         carrierId={carrierId}
@@ -275,7 +275,7 @@ const QuickViewHeader = ({
                         tooltip={getTooltipText(policyStatus) ?? ''}
                         openSideSheet={openDetailsSidesheet}
                     />
-                    <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 lg:mt-0">
+                    <div className="flex flex-wrap gap-x-8 gap-y-4">
                         <Skeleton
                             loading={loadingPolicyDetails || loadingQuickLinks}
                             maxWidth="550px"
