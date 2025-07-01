@@ -48,22 +48,26 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
     }
 
     return (
-        <div className={`${styles.paginationRow}`}>
+        <nav aria-label="Pagination" className={`${styles.paginationRow}`}>
             <ArrowLeft
                 onClick={goToPreviousPage}
                 disabled={currentPage === 1}
             />
-            <div className="hidden items-center justify-center md:flex gap-2">
-                {renderPageNumbers.md}
-            </div>
-            <div className="flex items-center justify-center md:hidden gap-2">
-                {renderPageNumbers.sm}
-            </div>
+            <ul className="hidden items-center justify-center md:flex gap-2">
+                {renderPageNumbers.md.map((pageButton, idx) => (
+                    <li key={idx}>{pageButton}</li>
+                ))}
+            </ul>
+            <ul className="flex items-center justify-center md:hidden gap-2">
+                {renderPageNumbers.sm.map((pageButton, idx) => (
+                    <li key={idx}>{pageButton}</li>
+                ))}
+            </ul>
             <ArrowRight
                 onClick={goToNextPage}
                 disabled={currentPage === totalPages}
             />
-        </div>
+        </nav>
     );
 };
 
