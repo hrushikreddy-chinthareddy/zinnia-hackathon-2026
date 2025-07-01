@@ -59,7 +59,7 @@ export const getSuitabilitySteps = ({
                 <TaskFormStep
                     isContinueButtonEnabled={isContinueButtonEnabled}
                     taskInfoLink={taskInfoLink}
-                    readonly={readOnly || true}
+                    readonly={readOnly}
                     isSubmit={!readOnly ? true : false}
                     taskMetadata={taskMetadata[0]}
                 ></TaskFormStep>
