@@ -1,7 +1,4 @@
-import {
-    TaxWithholdingInstructions,
-    TaxWithholdingType,
-} from '@zinnia/api-types/types/bpm';
+import { TaxWithholdingType } from '@zinnia/api-types/types/bpm';
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -26,10 +23,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import {
-    useWithdrawal,
-    WithdrawalType,
-} from '@deps/contexts/transactions/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TransactionStep } from '@deps/types/segment-analytics';
@@ -41,10 +35,7 @@ import {
     mapTaxWithholdingInstructionsFromViewModel,
     mapTaxWithholdingInstructionsToViewModel,
 } from './taxes.helpers';
-
-export type TaxesType = {
-    taxWithholdingInstructions: TaxWithholdingInstructions[];
-};
+import { WithdrawalType } from '../amount/types';
 
 interface TaxesProps {
     policy: Policy;

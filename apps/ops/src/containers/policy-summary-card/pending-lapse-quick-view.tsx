@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
+import { DashboardContext } from '@deps/contexts/DashboardContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { DashboardContext } from '@deps/pages/policies';
 import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
@@ -16,7 +16,8 @@ import {
 
 import BaseDeathBenefit from './display-fields/base-death-benefit';
 import UpcomingPremiumDisplayField from './display-fields/upcoming-premium';
-import { getPolicyHighlighter, QuickViewRoot } from './policy-summary-card';
+import { getPolicyHighlighter } from './policy-summary-card.helpers';
+import { QuickViewRoot } from './quick-view-root/quick-view-root';
 
 export const PendingLapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([

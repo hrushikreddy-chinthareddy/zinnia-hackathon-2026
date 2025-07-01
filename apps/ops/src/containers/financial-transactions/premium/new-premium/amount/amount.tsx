@@ -33,15 +33,6 @@ interface AmountProps {
     policy: Policy;
 }
 
-export type AmountType = {
-    effectiveDate: string;
-    paymentAmount: string;
-};
-
-export type ReverseInitiatorType = {
-    reverseInitiator: boolean;
-};
-
 type Errors = {
     effectiveDate?: string;
     paymentAmount?: string;

@@ -36,15 +36,6 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
-export type AmountType = {
-    amount: number;
-    disbursementType: DisbursementType;
-    effectiveDate: string;
-    paymentAmount: string;
-    loanAmount?: string;
-    loanCustomAmount?: string;
-};
-
 interface AmountProps {
     policy: Policy;
 }

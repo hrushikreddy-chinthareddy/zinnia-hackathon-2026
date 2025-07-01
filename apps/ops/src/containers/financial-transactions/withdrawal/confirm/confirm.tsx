@@ -15,10 +15,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { buildWithdrawalsRequestBody } from '@deps/containers/financial-transactions/withdrawal/withdrawals.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import {
-    WithdrawalType,
-    useWithdrawal,
-} from '@deps/contexts/transactions/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { Statuses } from '@deps/models/case/case';
 import {
@@ -32,6 +29,8 @@ import {
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+
+import { WithdrawalType } from '../amount/types';
 
 interface ConfirmProps {
     policy: Policy;

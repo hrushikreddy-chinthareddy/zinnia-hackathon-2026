@@ -12,7 +12,6 @@ import {
     AvailableFormsTransaction,
     SearchTransactionRequestBody,
 } from '@deps/models/case/send-document';
-import { TransactionDetails } from '@deps/pages/nigo-entry';
 import {
     getSearchTransactions,
     getTransactionSubTypes,
@@ -30,6 +29,13 @@ import { NigoDetailsStep } from './steps/nigo-details/nigo-details-step';
 import { SelOptionType } from './steps/service-form-review/service-form-review';
 import { ServiceFormReviewStep } from './steps/service-form-review/service-form-review-step';
 import TabGroupContainer from './tab-group-container';
+
+export type TransactionDetails = {
+    policyNumber: string;
+    transactionSubType: string;
+    requestSubType: string;
+    formName: string;
+};
 
 interface NigoEntryContainerContainerProps {
     policyNumber: string;

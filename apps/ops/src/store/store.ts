@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { CarrierListItem } from '@deps/pages/dashboard';
+import { CarrierListItem } from '@deps/components/dashboard/types';
 
 interface DashboardStoreTypes {
     selectedCarriers: CarrierListItem;

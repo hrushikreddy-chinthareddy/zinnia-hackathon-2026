@@ -10,7 +10,7 @@ import FixedCostPeriod from '../display-fields/fixed-cost-period';
 import IssueDate from '../display-fields/issue-date';
 import PolicyAge from '../display-fields/policy-age';
 import PolicyLength from '../display-fields/policy-length';
-import { PolicyTimelineCardData } from '../timeline-card';
+import { PolicyTimelineCardData } from '../timeline-card.types';
 
 interface EverlyIulProps {
     policyTimelineCardData: PolicyTimelineCardData;

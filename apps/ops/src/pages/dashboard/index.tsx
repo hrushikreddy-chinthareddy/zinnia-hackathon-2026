@@ -41,9 +41,6 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './Dashboard.module.css';
-export interface CarrierListItem {
-    [key: string]: string;
-}
 
 interface DashboardPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];

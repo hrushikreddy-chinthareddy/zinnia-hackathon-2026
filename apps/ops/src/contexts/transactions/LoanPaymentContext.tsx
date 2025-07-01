@@ -14,7 +14,7 @@ import { PayorType } from '@deps/components/workflows/payor-step/payor-step';
 import {
     AmountType,
     ReverseInitiatorType,
-} from '@deps/containers/financial-transactions/loan/loan-payment/amount/amount';
+} from '@deps/containers/financial-transactions/loan/loan-payment/amount/types';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 // ACH is the only supported payment type for MVP

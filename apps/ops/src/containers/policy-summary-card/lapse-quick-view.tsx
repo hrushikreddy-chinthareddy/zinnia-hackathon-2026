@@ -10,7 +10,7 @@ import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails'
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 
 import BaseDeathBenefit from './display-fields/base-death-benefit';
-import { QuickViewRoot } from './policy-summary-card';
+import { QuickViewRoot } from './quick-view-root/quick-view-root';
 
 export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([

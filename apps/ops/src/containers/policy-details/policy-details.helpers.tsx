@@ -5,8 +5,8 @@ import {
 } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
-import { ApplicationDetailsCardData } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card.tsx';
-import { PolicyTimelineCardData } from '@deps/containers/policy-details/cards/timeline-card';
+import { ApplicationDetailsCardData } from '@deps/containers/policy-details/cards/application-details/types';
+import { PolicyTimelineCardData } from '@deps/containers/policy-details/cards/timeline-card.types';
 import { TransactionCardProps } from '@deps/containers/policy-details/cards/transaction-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';

@@ -1,12 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 
+import { CarrierListItem } from '@deps/components/dashboard/types';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { MultiselectOption } from '@deps/components/select/select.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { CarrierListItem } from '@deps/pages/dashboard';
 import {
     DashboardResponseData,
     fetchAgents,

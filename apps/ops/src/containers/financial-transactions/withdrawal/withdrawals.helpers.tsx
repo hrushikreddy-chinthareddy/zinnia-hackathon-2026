@@ -8,7 +8,7 @@ import {
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
-import { Withdrawal } from '@deps/contexts/transactions/WithdrawalContext';
+import { Withdrawal } from '@deps/contexts/transactions/WithdrawalContext.types';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 

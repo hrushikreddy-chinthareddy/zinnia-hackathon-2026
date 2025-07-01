@@ -4,7 +4,7 @@ import { TFunction } from 'next-i18next';
 
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { RIDER_NOT_ELECTED } from '../policy-extras-cards/policy-extras-cards-helpers';
+import { RIDER_NOT_ELECTED } from '../policy-extras-cards/consts';
 
 export enum ExtraFilters {
     All = 'All',

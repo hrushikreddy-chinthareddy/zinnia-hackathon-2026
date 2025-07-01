@@ -8,7 +8,7 @@ import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails'
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 } from '@deps/types/constants';
 
-import { QuickViewRoot } from '../policy-summary-card';
+import { QuickViewRoot } from '../quick-view-root/quick-view-root';
 
 type AnnuityQuickViewFieldProps = {
     label: string;

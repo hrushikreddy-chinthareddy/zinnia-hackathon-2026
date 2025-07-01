@@ -10,7 +10,7 @@ import BaseDeathBenefit from './display-fields/base-death-benefit';
 import IssueDate from './display-fields/issue-date';
 import MaturityDate from './display-fields/maturity-date';
 import UpcomingPremiumDisplayField from './display-fields/upcoming-premium';
-import { QuickViewRoot } from './policy-summary-card';
+import { QuickViewRoot } from './quick-view-root/quick-view-root';
 
 export const TermQuickView = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([

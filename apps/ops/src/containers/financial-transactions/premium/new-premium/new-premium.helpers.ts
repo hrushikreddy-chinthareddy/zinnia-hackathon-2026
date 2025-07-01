@@ -2,12 +2,13 @@ import { PaymentForm } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
-import { Premium } from '@deps/contexts/transactions/NewPremiumContext';
 import { OneTimePremiumRequestQuery } from '@deps/queries/api/bpm';
 import {
     EDS_DATE_DISPLAY_FORMAT,
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
+
+import { Premium } from './amount/types';
 
 export const buildNewPremiumRequestBody = (
     premium: Premium

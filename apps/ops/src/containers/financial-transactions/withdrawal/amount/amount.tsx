@@ -23,28 +23,16 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import {
-    WithdrawalType,
-    useWithdrawal,
-} from '@deps/contexts/transactions/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
-import { WithdrawalContainerProps } from '../withdrawal-container';
+import { WithdrawalContainerProps } from '../types';
 import PartialViewContainer from './partial-view-container/partial-view-container';
-
-export type AmountType = {
-    amount: number;
-    disbursementType: DisbursementType;
-    effectiveDate: string;
-    paymentAmount: string;
-    type: WithdrawalType;
-    withdrawalAmount?: string;
-    withdrawalCustomAmount?: string;
-};
+import { WithdrawalType } from './types';
 
 const Amount = ({ policy }: WithdrawalContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {

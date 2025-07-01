@@ -16,7 +16,7 @@ import {
 
 import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
 import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
-import { AmountType } from '@deps/containers/financial-transactions/loan/new-loan/amount/amount';
+import { AmountType } from '@deps/containers/financial-transactions/loan/new-loan/amount/types';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 export interface NewLoan extends AmountType, PayeesType, PaymentMethodType {

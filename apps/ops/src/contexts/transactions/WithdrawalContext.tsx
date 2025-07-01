@@ -13,25 +13,10 @@ import {
     useState,
 } from 'react';
 
-import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
-import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
-import { AmountType } from '@deps/containers/financial-transactions/withdrawal/amount/amount';
-import { TaxesType } from '@deps/containers/financial-transactions/withdrawal/taxes/taxes';
+import { WithdrawalType } from '@deps/containers/financial-transactions/withdrawal/amount/types';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
-export enum WithdrawalType {
-    Surrender = 'surrender',
-    Partial = 'partial',
-    Default = '',
-}
-
-export interface Withdrawal
-    extends AmountType,
-        TaxesType,
-        PayeesType,
-        PaymentMethodType {
-    caseId?: string;
-}
+import { Withdrawal } from './WithdrawalContext.types';
 
 type WithdrawalContextType = {
     withdrawal: Withdrawal;

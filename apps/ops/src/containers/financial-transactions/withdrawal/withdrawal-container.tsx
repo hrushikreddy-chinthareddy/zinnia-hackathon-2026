@@ -19,10 +19,7 @@ import StartStep, {
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import {
-    WithdrawalType,
-    useWithdrawal,
-} from '@deps/contexts/transactions/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
 import {
     validateFullSurrenderWithdrawal,
@@ -32,14 +29,12 @@ import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import Amount from './amount/amount';
+import { WithdrawalType } from './amount/types';
 import Confirm from './confirm/confirm';
 import Summary from './summary/summary';
 import Taxes from './taxes/taxes';
+import { WithdrawalContainerProps } from './types';
 import { buildWithdrawalsRequestBody } from './withdrawals.helpers';
-
-export type WithdrawalContainerProps = {
-    policy: Policy;
-};
 
 const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
     const { t } = useTranslation();

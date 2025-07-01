@@ -45,13 +45,12 @@ import {
     RiderBenefit,
 } from '@deps/types/product-rate';
 
+import { RIDER_NOT_ELECTED } from './consts';
 import { ExtrasCardType } from './policy-extras-cards';
 import {
     ExtraFilters,
     filterValidFeature,
 } from '../riders-and-features-sub-page/riders-and-features-sub-page.helpers';
-
-export const RIDER_NOT_ELECTED = 'NOT ELECTED';
 
 export const riderChronicIllnessSettings = [
     ConfiguredSettingId.MaxAmount,

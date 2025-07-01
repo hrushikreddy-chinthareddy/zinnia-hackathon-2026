@@ -1,6 +1,6 @@
 import { Skeleton } from '@radix-ui/themes';
 
-import { QuickViewRoot } from './policy-summary-card';
+import { QuickViewRoot } from './quick-view-root/quick-view-root';
 
 export const LabelContentSkeleton = ({
     contentLines = 1,

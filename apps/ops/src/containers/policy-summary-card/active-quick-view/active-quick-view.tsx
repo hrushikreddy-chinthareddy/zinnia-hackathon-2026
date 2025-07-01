@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 
-import { QuickViewRoot } from '../policy-summary-card';
 import EverlyIul from './everly-iul';
 import EverlyUl from './everly-ul';
+import { QuickViewRoot } from '../quick-view-root/quick-view-root';
 
 export const ActiveQuickView = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation();

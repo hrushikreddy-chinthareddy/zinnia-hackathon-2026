@@ -8,13 +8,13 @@ import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.ty
 import { ButtonSize } from '@deps/components/button/button';
 import { BrokerDealerFilter } from '@deps/components/dashboard/header-components/broker-dealer-filter/broker-dealer-filter';
 import styles from '@deps/components/dashboard/header-components/filters-header/filters-header.module.css';
+import { CarrierListItem } from '@deps/components/dashboard/types';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { CarrierListItem } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { useDashboardStore } from '@deps/store/store';
 import {

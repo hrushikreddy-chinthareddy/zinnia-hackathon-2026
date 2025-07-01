@@ -80,7 +80,6 @@ export const ServiceFormReviewStep = ({
         formSubtype,
         setFormReindexingData,
         setFormNigos,
-        formNigos,
         formComment,
         setFormComment,
     } = formState;

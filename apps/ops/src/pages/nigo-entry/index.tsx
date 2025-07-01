@@ -5,7 +5,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { ProcessesToCaseTypeMap } from '@deps/constants/case';
-import NigoEntryContainer from '@deps/containers/nigo-entry-container/components/nigo-entry-container';
+import NigoEntryContainer, {
+    TransactionDetails,
+} from '@deps/containers/nigo-entry-container/components/nigo-entry-container';
 import { NigoEntryProvider } from '@deps/containers/nigo-entry-container/components/nigo-entry-provider';
 import { getNigoExceptions } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.helpers';
 import RenewalFormProvider from '@deps/containers/otp/renewal-forms/components/renewal-form-provider';
@@ -60,13 +62,6 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
-
-export type TransactionDetails = {
-    policyNumber: string;
-    transactionSubType: string;
-    requestSubType: string;
-    formName: string;
-};
 
 interface NigoEntryProps extends SegmentTrackedPageProps {
     documentNumber: string;
@@ -134,7 +129,7 @@ const NigoEntry = ({
     const accountInfo = useAccountInfo(document.contract, clientCode as string);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        planCode as string
+        clientCode as string
     );
     const { issueState } = isLC ? accountInfo : contractAccountInfo;
 

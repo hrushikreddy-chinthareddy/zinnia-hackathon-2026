@@ -20,7 +20,6 @@ import {
 import { useTranslation } from 'next-i18next';
 import {
     PropsWithChildren,
-    ReactNode,
     useContext,
     useEffect,
     useMemo,
@@ -125,6 +124,7 @@ import { LapseQuickView } from './lapse-quick-view';
 import { PendingLapseQuickView } from './pending-lapse-quick-view';
 import { deathClaimApplicableStatuses } from './policy-summary-card.helpers';
 import { default as styles } from './policy-summary-card.module.css';
+import { QuickViewRoot } from './quick-view-root/quick-view-root';
 import { OwnerInfoSkeleton, QuickViewSkeleton } from './skeletons';
 import { TermQuickView } from './term-quick-view';
 import SideSheetAddress from '../people-data-cards/address-card/side-sheet/side-sheet-address';
@@ -347,23 +347,6 @@ function KeyValuesBar({
         </div>
     );
 }
-
-interface QuickViewProp extends PropsWithChildren {
-    children: ReactNode;
-    title: string;
-}
-
-export const QuickViewRoot = ({ children, title }: QuickViewProp) => {
-    return (
-        <div
-            data-testid={`${CardColumnsTest.ITEMS}-${title}`}
-            className={styles.quickViewRoot}
-        >
-            <h3 className="pb-4">{title}</h3>
-            <div className={styles.quickViewSection}>{children}</div>
-        </div>
-    );
-};
 
 const StatusBanner = ({
     policy,

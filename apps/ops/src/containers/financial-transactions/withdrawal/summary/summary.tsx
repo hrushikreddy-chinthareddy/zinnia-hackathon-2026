@@ -30,10 +30,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
-import {
-    useWithdrawal,
-    WithdrawalType,
-} from '@deps/contexts/transactions/WithdrawalContext';
+import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
@@ -48,6 +45,7 @@ import {
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 
+import { WithdrawalType } from '../amount/types';
 import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helpers';
 
 interface SummaryProps {

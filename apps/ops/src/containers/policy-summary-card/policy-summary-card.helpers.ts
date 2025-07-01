@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import { PolicyStatus } from '@deps/models/policy/sor-policy';
+import { SearchViewQuery } from '@deps/types/search';
 
 export const deathClaimNotApplicableStatuses: any[] = [
     PolicyStatus.CANCELEDNOPREMIUM,
@@ -88,4 +89,30 @@ export const getCancelledPolicyStatuses = (
                 'dashboard.search.results.policySummaryCard.deathClaimNotApplicable'
             );
     }
+};
+
+export const getPolicyHighlighter = ({
+    firstName,
+    lastName,
+    policyNumber,
+    ssn,
+}: SearchViewQuery) => {
+    if (!firstName && !lastName && !policyNumber && !ssn) return [];
+
+    const descriptionListHighlighter = [];
+
+    if (firstName) {
+        descriptionListHighlighter.push(firstName.trim());
+    }
+    if (lastName) {
+        descriptionListHighlighter.push(lastName.trim());
+    }
+    if (ssn) {
+        descriptionListHighlighter.push(`***-**-${ssn.slice(-4)}`);
+    }
+    if (policyNumber) {
+        descriptionListHighlighter.push(policyNumber);
+    }
+
+    return descriptionListHighlighter;
 };

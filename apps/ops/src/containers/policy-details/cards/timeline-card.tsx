@@ -15,16 +15,6 @@ import EverlyIul from './policy-timeline-details/everly-iul';
 import EverlyUl from './policy-timeline-details/everly-ul';
 
 const BASE_KEY = 'policy.detailCards.policyTimeline.';
-export interface PolicyTimelineCardData {
-    issueDate: string;
-    fixedCostPeriod?: number;
-    fixedCostPeriodLeft?: number;
-    freeLookCancelDate?: string;
-    maturityDate: string | null;
-    policyAge: string;
-    policyLength: string;
-    policyYearsLeft: string | null;
-}
 
 export function LifeTimelineCard({ policy }: BasePolicyComponentArgs) {
     const { t } = useTranslation();
