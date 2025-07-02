@@ -37,9 +37,31 @@
                                 }
                             }
                         },
+                        "onwerDetails": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "firstName": {
+                                    "type": "string",
+                                    "title": "First Name",
+                                    "ui:field": "title"
+                                },
+                                "ssn": {
+                                    "type": "string",
+                                    "title": "SSN",
+                                    "ui:field": "subTitle",
+                                    "dataType": "ssn"
+                                },
+                                "lastName": {
+                                    "type": "string",
+                                    "title": "Last Name",
+                                    "ui:field": "title"
+                                }
+                            }
+                        },
                         "documents": {
                             "type": "array",
-                            "title": "Supporting Information",
+                            "title": "",
                             "items": {
                                 "type": "object",
                                 "properties": {
@@ -49,14 +71,11 @@
                                         "ui:placeholder": "Documemt ID: "
                                     },
                                     "documentType": {
-                                        "type": "string",
-                                        "ui:field": "title",
-                                        "ui:separator": " - "
+                                        "type": "string"
                                     },
-                                    "documentName": {
-                                        "type": "string",
-                                        "ui:field": "title",
-                                        "ui:separator": " - "
+                                    "documentTypeDescription": {
+                                        "type": ["string", "null"],
+                                        "ui:field": "title"
                                     },
                                     "documentSource": {
                                         "type": "string"
@@ -158,6 +177,7 @@
                 "uiSchema": {
                     "ui:order": [
                         "issuesList",
+                        "onwerDetails",
                         "documents",
                         "issueResolved",
                         "declineReason",
@@ -200,6 +220,16 @@
                             }
                         }
                     },
+                    "onwerDetails": {
+                        "ui:options": {
+                            "cardtype": "Detailed",
+                            "icon": "CIRCLE_USER",
+                            "label": true,
+                            "ObjectFieldTemplate": "CardTemplate",
+                            "key": "onwerDetails"
+                        },
+                        "ui:dataPath": ["details", "onwerDetails"]
+                    },
                     "documents": {
                         "props": {
                             "readonly": true
@@ -214,7 +244,7 @@
                             "documentId": {
                                 "ui:widget": "text"
                             },
-                            "documentName": {
+                            "documentTypeDescription": {
                                 "ui:widget": "text"
                             },
                             "documentSource": {
@@ -225,7 +255,8 @@
                             }
                         },
                         "ui:options": {
-                            "addable": false
+                            "addable": false,
+                            "label": false
                         },
                         "ui:dataPath": ["details", "documents"]
                     },
