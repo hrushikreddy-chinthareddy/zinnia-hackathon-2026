@@ -167,7 +167,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const carrierName = getCarrierNameByClientId(singleCase.carrier);
 
     const viewCaseText = t('caseManagementDashboard.case.viewCaseNumber', {
-        caseNumber: String(singleCase.policyNumber).split('').join(' '),
+        caseNumber: String(singleCase.id).split('').join(' '),
     });
 
     const getTimeText = () => {
@@ -204,6 +204,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             <TableCell className={styles.caseLinkContainer}>
                 {/* This lives as a visibly hidden link instead of as a click handler on the table row for acccessibility concerns. Nested interactive elements are not allowed */}
                 <Link
+                    aria-label={`View case details for case number ${singleCase.id}`}
                     onClick={() =>
                         loadCaseDetails(
                             `/cases/${singleCase.id}/${CaseDetailsTabValues.progress}`
@@ -306,6 +307,12 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                                 ? [searchValues?.policyNumber]
                                 : null
                         }
+                        aria-label={`Policy number ${String(
+                            singleCase.policyNumber
+                        )
+                            .split('')
+                            .join(' ')}`}
+                        tabIndex={0}
                     />
                 </div>
             </TableCell>

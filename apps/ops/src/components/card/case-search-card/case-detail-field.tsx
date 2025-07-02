@@ -9,6 +9,7 @@ import Typography, {
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 interface CaseDetailFieldProps extends PiiProps {
+    ariaLabel?: string;
     label?: string | null;
     text?: string | null;
     sentenceCase?: boolean;
@@ -19,6 +20,7 @@ interface CaseDetailFieldProps extends PiiProps {
 }
 
 const CaseDetailField = ({
+    ariaLabel,
     label,
     text,
     highlights,
@@ -43,7 +45,10 @@ const CaseDetailField = ({
                 triggerClassName={triggerClassName}
                 popoverClassName={popoverClassName}
             >
-                <span className="line-clamp-1 break-all font-secondary text-md">
+                <span
+                    aria-label={ariaLabel}
+                    className="line-clamp-1 break-all font-secondary text-md"
+                >
                     {textWithHighlights}
                 </span>
             </PopoverOnTruncate>
