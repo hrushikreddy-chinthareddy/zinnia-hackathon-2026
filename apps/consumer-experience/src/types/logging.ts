@@ -10,6 +10,8 @@ export type LoggingContext = {
   inputs:
     | {
         // request body
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         [key: string]: any;
       }
     | undefined;
@@ -17,9 +19,11 @@ export type LoggingContext = {
   function: string; // what function/method you're calling this from
   method: string | undefined; // http verb
   page: string | undefined; // the page for page views,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params: Record<string, any> | undefined; // query params of the page for page views, request params for api requests
   referrer?: string | null; // the referer for page views and api requests
   url: string | undefined; // the request URL for api requests, undefined for page views
   user: UserInfo | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any; // any other values
 };

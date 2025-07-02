@@ -125,6 +125,7 @@ export const MfaChallenge = ({
     }
   }, [authenticator, id, onChallengeFailure, selectedVerificationId]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
     const response = await verifyMfaChallenge({
       ...authenticator,

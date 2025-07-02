@@ -22,8 +22,8 @@ import {
 import { zIndexOrder } from '@/utils/zIndexOrder';
 
 import styles from './DevMenu.module.css';
-import { Link } from '../link/Link';
 import { MockApiErrors } from './MockApiErrors';
+import { Link } from '../link/Link';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);

@@ -1,10 +1,12 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { ApiEndpoints } from './types';
-import styles from './DevMenu.module.css';
-import { MouseEvent, useEffect, useState } from 'react';
-import { MOCK_ERROR_COOKIE_KEY } from '@/utils/serverClientUtils';
 import Cookies from 'js-cookie';
+import { MouseEvent, useEffect, useState } from 'react';
+
 import { ROOT_URL_PATH } from '@/types';
+import { MOCK_ERROR_COOKIE_KEY } from '@/utils/serverClientUtils';
+
+import styles from './DevMenu.module.css';
+import { ApiEndpoints } from './types';
 
 export const MockApiErrors = () => {
   const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);

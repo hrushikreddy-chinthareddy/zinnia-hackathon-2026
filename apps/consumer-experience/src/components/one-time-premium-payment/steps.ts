@@ -1,5 +1,5 @@
 // TODO: add tests!!!!!
-import { ZodObject } from 'zod';
+import { ZodObject, ZodRawShape } from 'zod';
 
 import {
   selectBankSchema,
@@ -21,7 +21,7 @@ interface StepProps {
 
 interface StepInfo {
   title: string;
-  requiredData?: ZodObject<any>;
+  requiredData?: ZodObject<ZodRawShape>;
 }
 
 export const defaultStep = Steps.AMOUNT;

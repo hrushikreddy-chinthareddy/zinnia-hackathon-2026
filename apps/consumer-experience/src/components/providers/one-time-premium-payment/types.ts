@@ -40,6 +40,7 @@ export const selectBankSchema = z.object({
   paymentAmount: paymentAmountSchema,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Action = { type: OttpAction; payload: any };
 export type Dispatch = (action: Action) => void;
 export interface OttpState {

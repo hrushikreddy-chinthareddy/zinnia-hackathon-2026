@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { ApiResponse } from '@/services';
 import { getAgentInformation } from '@/services/agent';
+import { ModifiedAgentData } from '@/types/agent';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: { clientCode: string } }
-) {
+): Promise<NextResponse<ApiResponse<ModifiedAgentData>>> {
   const loggingContext = buildNextReqLoggingContext(_request);
   logTrace('agent::GET::start', loggingContext);
 
@@ -22,6 +24,8 @@ export async function GET(
     logTrace('agent::GET::complete', {
       ...loggingContext,
     });
+
+    if (!data || error) throw error;
 
     return NextResponse.json({
       data,

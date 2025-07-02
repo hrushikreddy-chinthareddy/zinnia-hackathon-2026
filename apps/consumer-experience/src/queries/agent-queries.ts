@@ -9,6 +9,7 @@ export const getAgentInformation = async ({
   clientCode?: string;
   agentId?: string | null;
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response: ApiResponse<any> = await (
     await ClientApi.get(`/api/agent/${clientCode}?agentId=${agentId}`)
   ).json();

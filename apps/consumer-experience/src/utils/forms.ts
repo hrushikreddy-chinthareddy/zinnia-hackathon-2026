@@ -26,7 +26,8 @@ export function getDirtyValues<T extends Record<string, any>>(
     const isArray = Array.isArray(value);
     const nestedValue =
       isObject && !isArray
-        ? getDirtyValues(value as Record<string, any>, values[key])
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          getDirtyValues(value as Record<string, any>, values[key])
         : values[key];
     return { ...prev, [key]: isArray ? values[key] : nestedValue };
   }, {} as Partial<T>);

@@ -57,6 +57,7 @@ export interface PaymentusPaymentMethodTokenParams {
 export const getPaymentusToken = async (
   paymentusOptions: PaymentusPaymentMethodTokenParams
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response: ApiResponse<any> = await (
     await ClientApi.post(
       `/api/paymentus/token`,

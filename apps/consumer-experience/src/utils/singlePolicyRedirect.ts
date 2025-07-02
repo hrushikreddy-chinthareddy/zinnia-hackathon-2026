@@ -1,5 +1,6 @@
 import { RouteKey, routeMap, getRedirectUrl } from '@/route-map';
 import { getMyPoliciesByCarrier } from '@/services';
+import { CarrierPolicyDetails } from '@/types/policy';
 
 import { baseExperienceCarriers } from './carriers';
 import { lineOfBusinessUrlPath } from './data';
@@ -37,7 +38,7 @@ export const getFriendlyRedirectUrl = async ({
   policy,
 }: {
   redirectTo?: string;
-  policy?: any;
+  policy?: CarrierPolicyDetails | null;
 }) => {
   const friendlyUrlObj = redirectTo && routeMap[redirectTo as RouteKey];
   if (!friendlyUrlObj) {

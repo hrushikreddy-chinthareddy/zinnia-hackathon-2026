@@ -11,7 +11,7 @@ const meta: Meta<typeof FieldDate> = {
 
 export default meta;
 
-export const Default: StoryObj<any> = {
+export const Default: StoryObj<typeof meta> = {
   args: {
     label: <Label>Date</Label>,
   },

@@ -31,6 +31,8 @@ const CardListItems = ({ children, isPending }: CardListProps) => {
 };
 
 export const CardListHistory: CardListHistoryProps = ({
+  // honestly idk how to fix this
+  // eslint-disable-next-line react/prop-types
   children,
   ...restProps
 }) => {

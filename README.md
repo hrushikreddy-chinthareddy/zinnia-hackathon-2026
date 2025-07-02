@@ -100,6 +100,36 @@ To run Consumer Experience, use the following command:
 pnpm run dev:consumer-experience
 ```
 
+#### Setting up Remote Cache
+
+Since we use Turborepo, we share a build cache between all developers
+This means every machine shares the same cache, and builds should only happen once unless changes are made
+
+> Remote Caching makes your caching multiplayer,
+> sharing build outputs and logs between developers and CI/CD systems.
+>
+> For more information, visit: https://turborepo.com/docs/core-concepts/remote-caching
+
+##### Set up Remote Caching
+
+1. Login to turbo using this command from the root directory `digital-experience-monorepo/`
+
+```bash
+npx turbo login
+```
+
+2. Once you have logged in make sure you connect to the remote cache by running this command
+
+```bash
+npx turbo link
+```
+
+Type `y` to accept connection to remote cache
+
+Use arrows to connect to `Zinnia XD` project, and press `enter`
+
+You should see a success message!
+
 #### Contributing
 
 - PRs should be opened off of dev and branches must use
@@ -158,16 +188,13 @@ pnpm add <package>
 Below are some examples of how you would make an update to a `package` and see it reflected in an `app`.
 
 - Making an update to `@zinnia/utils`
-
   1. Run the following command at the `root` of the monorepo:
 
   ```bash
     pnpm run dev --filter @zinnia/utils
     pnpm run dev --filter APP_NAME (example consumer-experience)
   ```
-
   2. Make the necessary changes
-
   - You should see the `utils` package reflected in the `consumer-experience` app.
 
   > NOTE: We don't want to run `pnpm run dev` without filtering because it will run the `dev` script for all `apps` and `packages` in the monorepo.
