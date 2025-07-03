@@ -1,0 +1,23 @@
+.comparisonFieldContainer {
+  display: flex;
+  flex-direction: row;
+  gap: var(--measure-dimension-gap-md);
+  align-items: center;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-sm);
+}
+
+.newTag {
+  padding: var(--measure-dimension-padding-xs)
+    var(--measure-dimension-padding-lg);
+}
+
+.headerContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--measure-dimension-gap-sm);
+}
