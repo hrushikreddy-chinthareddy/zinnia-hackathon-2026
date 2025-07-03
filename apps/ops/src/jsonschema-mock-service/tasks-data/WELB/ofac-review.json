@@ -10,7 +10,7 @@
     "status": "INPROGRESS",
     "data": {
         "details": {
-            "documentDetails": [
+            "documents": [
                 {
                     "documentId": "67cec3f9f2f846195327e33a",
                     "documentSource": "EDS"

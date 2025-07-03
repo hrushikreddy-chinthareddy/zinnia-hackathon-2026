@@ -49,7 +49,7 @@
                             "type": "string",
                             "title": "Payment record ID"
                         },
-                        "onwerDetails": {
+                        "ownerDetails": {
                             "type": "object",
                             "title": "Supporting Information",
                             "properties": {
@@ -371,7 +371,7 @@
                         "issuesList",
                         "details",
                         "paymentRecordId",
-                        "onwerDetails",
+                        "ownerDetails",
                         "documents",
                         "issueResolved",
                         "surrenderCompanyName",
@@ -444,15 +444,15 @@
                             "paymentRecordId"
                         ]
                     },
-                    "onwerDetails": {
+                    "ownerDetails": {
                         "ui:options": {
                             "cardtype": "Detailed",
                             "icon": "CIRCLE_USER",
                             "label": true,
                             "ObjectFieldTemplate": "CardTemplate",
-                            "key": "onwerDetails"
+                            "key": "ownerDetails"
                         },
-                        "ui:dataPath": ["details", "onwerDetails"]
+                        "ui:dataPath": ["details", "ownerDetails"]
                     },
                     "documents": {
                         "props": {

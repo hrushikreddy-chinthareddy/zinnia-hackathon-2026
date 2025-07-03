@@ -15,10 +15,12 @@
                 "firstName": "AGENT",
                 "lastName": "TEST"
             },
-            "documentDetails": {
-                "documentId": "67bc2fb305bed22312f9a89e",
-                "documentSource": "EDS"
-            }
+            "documents": [
+                {
+                    "documentId": "67bc2fb305bed22312f9a89e",
+                    "documentSource": "EDS"
+                }
+            ]
         },
         "issuesList": [
             {

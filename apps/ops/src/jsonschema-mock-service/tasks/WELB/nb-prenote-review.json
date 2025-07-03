@@ -37,7 +37,7 @@
                                 }
                             }
                         },
-                        "onwerDetails": {
+                        "ownerDetails": {
                             "type": "object",
                             "title": "Supporting Information",
                             "properties": {
@@ -177,7 +177,7 @@
                 "uiSchema": {
                     "ui:order": [
                         "issuesList",
-                        "onwerDetails",
+                        "ownerDetails",
                         "documents",
                         "issueResolved",
                         "declineReason",
@@ -220,15 +220,15 @@
                             }
                         }
                     },
-                    "onwerDetails": {
+                    "ownerDetails": {
                         "ui:options": {
                             "cardtype": "Detailed",
                             "icon": "CIRCLE_USER",
                             "label": true,
                             "ObjectFieldTemplate": "CardTemplate",
-                            "key": "onwerDetails"
+                            "key": "ownerDetails"
                         },
-                        "ui:dataPath": ["details", "onwerDetails"]
+                        "ui:dataPath": ["details", "ownerDetails"]
                     },
                     "documents": {
                         "props": {

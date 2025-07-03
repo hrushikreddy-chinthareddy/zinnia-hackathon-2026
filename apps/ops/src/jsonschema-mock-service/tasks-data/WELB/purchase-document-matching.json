@@ -16,9 +16,12 @@
                 "firstName": "TEST FIRSTNAME",
                 "lastName": "TEST LASTNAME"
             },
-            "purchaseDocument": {
-                "documentSource": "EDS"
-            }
+            "documents": [
+                {
+                    "documentId": "6798daf49588c60cdbc18970",
+                    "documentSource": "EDS"
+                }
+            ]
         },
         "potentialMatches": [
             {

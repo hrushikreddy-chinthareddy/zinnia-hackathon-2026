@@ -12,7 +12,7 @@
         "details": {
             "processSubtype": "Legal",
             "processType": "Compliance",
-            "documentDetails": [
+            "documents": [
                 {
                     "documentId": "682ef5cc6ca3de7db583e46b",
                     "docType": "Ops Review",

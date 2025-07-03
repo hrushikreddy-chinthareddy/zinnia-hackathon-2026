@@ -43,28 +43,34 @@
                             "type": "object",
                             "title": "Supporting Information",
                             "properties": {
-                                "documentDetails": {
-                                    "type": "object",
-                                    "properties": {
-                                        "documentId": {
-                                            "type": "string",
-                                            "ui:field": "subTitle",
-                                            "ui:placeholder": "Document ID: "
-                                        },
-                                        "documentTypeDescription": {
-                                            "type": "string",
-                                            "ui:field": "title"
-                                        },
-                                        "createdDate": {
-                                            "type": "string"
-                                        },
-                                        "carrier": {
-                                            "type": "string",
-                                            "default": "{{carrier}}"
+                                "documents": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentTypeDescription": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
                                         }
                                     }
                                 },
-                                "onwerDetails": {
+                                "ownerDetails": {
                                     "type": "object",
                                     "properties": {
                                         "firstName": {
@@ -217,7 +223,7 @@
                         "ui:options": {
                             "label": true
                         },
-                        "onwerDetails": {
+                        "ownerDetails": {
                             "ui:options": {
                                 "cardType": "Detailed",
                                 "icon": "CIRCLE_USER",
@@ -226,16 +232,19 @@
                                 "sectionTitle": "Details"
                             }
                         },
-                        "documentDetails": {
-                            "props": {
-                                "readonly": true
-                            },
+                        "documents": {
                             "ui:options": {
                                 "canAdd": false,
                                 "label": false,
-                                "cardType": "Document",
-                                "icon": "DOCUMENT_TEXT",
-                                "ObjectFieldTemplate": "CardTemplate"
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                }
                             },
                             "carrier": {
                                 "ui:options": {

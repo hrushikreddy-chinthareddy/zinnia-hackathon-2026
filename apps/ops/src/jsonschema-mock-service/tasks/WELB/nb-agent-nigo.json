@@ -68,24 +68,30 @@
                                         }
                                     }
                                 },
-                                "agentDocument": {
-                                    "type": "object",
-                                    "properties": {
-                                        "documentName": {
-                                            "type": "string"
-                                        },
-                                        "documentId": {
-                                            "type": "string"
-                                        },
-                                        "documentSource": {
-                                            "type": "string"
-                                        },
-                                        "createdDate": {
-                                            "type": "string"
-                                        },
-                                        "carrier": {
-                                            "type": "string",
-                                            "default": "{{carrier}}"
+                                "documents": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
+                                            },
+                                            "docType": {
+                                                "type": "string"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
                                         }
                                     }
                                 }
@@ -221,13 +227,24 @@
                                 "sectionTitle": "Details"
                             }
                         },
-                        "agentDocument": {
+                        "documents": {
                             "ui:options": {
                                 "canAdd": false,
                                 "label": false,
-                                "cardType": "Document",
-                                "icon": "DOCUMENT_TEXT",
-                                "ObjectFieldTemplate": "CardTemplate"
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                }
+                            },
+                            "carrier": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
                             }
                         }
                     },

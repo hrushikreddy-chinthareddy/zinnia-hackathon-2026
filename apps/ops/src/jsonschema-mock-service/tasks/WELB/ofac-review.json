@@ -49,7 +49,7 @@
                         "details": {
                             "type": "object",
                             "properties": {
-                                "documentDetails": {
+                                "documents": {
                                     "type": "array",
                                     "title": "Supporting Information",
                                     "items": {
@@ -65,8 +65,7 @@
                                                 "ui:field": "title"
                                             },
                                             "documentSource": {
-                                                "type": "string",
-                                                "ui:field": "subTitle"
+                                                "type": "string"
                                             },
                                             "carrier": {
                                                 "type": "string",
@@ -141,6 +140,13 @@
                                                 "type": "string",
                                                 "$ref": "#/definitions/declineReason"
                                             }
+                                        },
+                                        "reviewFailureReasonDisplay": {
+                                            "type": "array",
+                                            "title": "These issues will be created for the case:",
+                                            "items": {
+                                                "type": "string"
+                                            }
                                         }
                                     }
                                 }
@@ -160,6 +166,7 @@
                         "details",
                         "issueResolved",
                         "declineReason",
+                        "reviewFailureReasonDisplay",
                         "uploadDocuments",
                         "attachments"
                     ],
@@ -177,7 +184,7 @@
                         "ui:options": {
                             "label": false
                         },
-                        "documentDetails": {
+                        "documents": {
                             "props": {
                                 "readonly": true
                             },
@@ -200,6 +207,11 @@
                                 },
                                 "documentSource": {
                                     "ui:widget": "text"
+                                },
+                                "carrier": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
                                 }
                             }
                         }
@@ -308,6 +320,19 @@
                             }
                         },
                         "ui:placeholder": "Select Issues"
+                    },
+                    "reviewFailureReasonDisplay": {
+                        "ui:options": {
+                            "label": true,
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "hasBg": true,
+                            "formContext": {
+                                "keyName": "customData",
+                                "listName": "declineReason",
+                                "parseKey": "detailedReason"
+                            },
+                            "omitValue": true
+                        }
                     }
                 }
             }

@@ -33,7 +33,7 @@
                             "type": "object",
                             "title": "Supporting Information",
                             "properties": {
-                                "documentDetails": {
+                                "documents": {
                                     "type": "array",
                                     "items": {
                                         "type": "object",
@@ -175,7 +175,7 @@
                         "ui:options": {
                             "label": true
                         },
-                        "documentDetails": {
+                        "documents": {
                             "items": {
                                 "ui:options": {
                                     "ObjectFieldTemplate": "CardTemplate",

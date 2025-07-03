@@ -10,15 +10,17 @@
     "status": "NEW",
     "data": {
         "details": {
-            "onwerDetails": {
+            "ownerDetails": {
                 "ssn": "879746523",
                 "firstName": "CHRISTY",
                 "lastName": "COOSENBERRY"
             },
-            "documentDetails": {
-                "documentId": "67bc2fb305bed22312f9a89e",
-                "documentSource": "EDS"
-            }
+            "documents": [
+                {
+                    "documentId": "67bc2fb305bed22312f9a89e",
+                    "documentSource": "EDS"
+                }
+            ]
         },
         "issuesList": [
             {

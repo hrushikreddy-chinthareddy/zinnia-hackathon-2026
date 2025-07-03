@@ -18,7 +18,7 @@
                 "ssn": "202512425",
                 "percent": 0
             },
-            "documentDetails": [
+            "documents": [
                 {
                     "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25f",
                     "docType": "NB Application"

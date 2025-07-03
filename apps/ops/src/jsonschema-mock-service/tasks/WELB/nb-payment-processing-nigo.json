@@ -60,7 +60,7 @@
                                         }
                                     }
                                 },
-                                "onwerDetails": {
+                                "ownerDetails": {
                                     "type": "object",
                                     "properties": {
                                         "firstName": {
@@ -274,13 +274,13 @@
                                 }
                             }
                         },
-                        "onwerDetails": {
+                        "ownerDetails": {
                             "ui:options": {
                                 "cardtype": "Detailed",
                                 "icon": "CIRCLE_USER",
                                 "label": true,
                                 "ObjectFieldTemplate": "CardTemplate",
-                                "key": "onwerDetails"
+                                "key": "ownerDetails"
                             }
                         },
                         "documents": {
