@@ -118,7 +118,7 @@ export default function useNassauConfig(t: TFunction) {
                 );
             }
 
-            if (ownerEsignature?.isSigned === null) {
+            if (formESignatureData?.isFormESignaturePresent && ownerEsignature?.isSigned === null) {
                 errors[
                     `${ESignatureValidationTypeWithdrawal.Owner}-signPresent`
                 ] = t('formValidation.signaturePresentOptionMustBeSelected');

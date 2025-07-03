@@ -23,13 +23,14 @@ interface ESignatureValidationProps {
     isFormStateReadOnly: boolean;
 }
 
-const ESignatureValidation: React.FC<ESignatureValidationProps> = ({
+
+const ESignatureValidation = ({
     formESignatureData,
     setFormESignatureData,
     fieldConfig,
     formErrors,
     isFormStateReadOnly,
-}) => {
+}: ESignatureValidationProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.eSignatureValidation',
     });
