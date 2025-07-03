@@ -58,12 +58,12 @@ export const HyperLink = ({
     };
 
     return (
-        <div className={`flex flex-col ${className}`}>
+        <div className={`flex ${className}`}>
             {title && <div>{title}</div>}
 
             {type === 'link' ? (
                 <NavElement
-                    className="text-left font-semibold"
+                    className="text-left"
                     size={NavElementSize.Small}
                     title={label}
                     type={NavElementType.Link}
@@ -78,7 +78,7 @@ export const HyperLink = ({
             ) : (
                 <div className="">
                     <NavElement
-                        className="text-left font-semibold underline underline-offset-2"
+                        className="text-left"
                         size={NavElementSize.Small}
                         title={label}
                         type={NavElementType.Link}
