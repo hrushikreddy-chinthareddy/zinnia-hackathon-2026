@@ -53,11 +53,11 @@ export default function WithdrawalRules({ policy }: WithdrawalRulesProps) {
     let badgeTooltipText: string;
 
     if (totalAnnualAmount && totalAnnualAmount > 0) {
-        badgeLabel = t('withdrawals.eligible');
-        badgeTooltipText = t('withdrawals.eligibleForRmdsTooltip');
+        badgeLabel = t('withdrawals.required');
+        badgeTooltipText = t('withdrawals.requiredRmdsTooltip');
     } else if (totalAnnualAmount === 0 || totalAnnualAmount === null) {
-        badgeLabel = t('withdrawals.ineligible');
-        badgeTooltipText = t('withdrawals.ineligibleForRmdsTooltip');
+        badgeLabel = t('withdrawals.notRequired');
+        badgeTooltipText = t('withdrawals.notRequiredRmdsTooltip');
     } else {
         badgeLabel = t('withdrawals.notAvailable');
         badgeTooltipText = '';

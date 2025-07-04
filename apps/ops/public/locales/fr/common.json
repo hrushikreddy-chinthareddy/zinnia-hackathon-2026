@@ -4675,7 +4675,11 @@
         "withdrawal": "retrait",
         "withdrawals": "Retraits",
         "taken": "pris",
-        "left": "restants"
+        "left": "restants",
+        "required": "Requis",
+        "notRequired": "Non requis",
+        "requiredRmdsTooltip": "Ce contrat répond aux exigences relatives aux distributions minimales requises (RMD). Ces dernières garantissent la conformité du titulaire avec la réglementation de l'IRS en exigeant des retraits annuels une fois l'âge requis atteint.",
+        "notRequiredRmdsTooltip": "Ce contrat n’est actuellement pas tenu de prendre des distributions minimales requises (RMD)."
     },
     "loanAutopay": {
         "start": {

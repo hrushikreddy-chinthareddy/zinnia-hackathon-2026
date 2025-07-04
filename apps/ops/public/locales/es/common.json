@@ -4646,7 +4646,11 @@
         "withdrawal": "retiro",
         "withdrawals": "Retiros",
         "taken": "tomado",
-        "left": "restante"
+        "left": "restante",
+        "requiredRmdsTooltip": "Este contrato cumple con los requisitos de las Distribuciones Mínimas Obligatorias (RMD). Las RMD garantizan que el titular cumpla con las regulaciones del IRS al exigir retiros anuales una vez que alcanza la edad aplicable.",
+        "required": "Requerido",
+        "notRequired": "No requerido",
+        "notRequiredRmdsTooltip": "Actualmente, este contrato no requiere realizar Distribuciones Mínimas Requeridas (RMD)."
     },
     "loanAutopay": {
         "start": {
