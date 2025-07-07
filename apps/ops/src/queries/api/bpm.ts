@@ -95,6 +95,22 @@ export interface TransactionRequest {
     effectiveDate: string;
 }
 
+export interface FullSurrenderEligibilityRequest {
+    correlationId: string;
+    effectiveDate: string;
+    reverseInitiator: boolean;
+    taxWithholdingInstructions: [];
+    payeeOrBeneficiary: null;
+    parties: [];
+    transactionAmounts: {
+        requestedAmount: number | null;
+        amountType: string;
+        disbursementType: string;
+        disbursementPaymentForm: string;
+    };
+    charges: null;
+}
+
 export interface ValidationResult {
     attribute: string | null;
     error: string;
@@ -185,7 +201,7 @@ export const checkEligibilityOneTimePremium = async (
     policyNumber: string | undefined
 ): Promise<TransactionResponse> => {
     try {
-        const { data } = await client.post<TransactionResponse, AxiosResponse>(
+        const { data } = await client.post<TransactionRequest, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/onetimepremium/eligibilitycheck`
         );
 
@@ -229,7 +245,7 @@ export const checkEligibilitySystematicPrograms = async (
     arrangementId: string
 ): Promise<TransactionResponse> => {
     try {
-        const { data } = await client.post<TransactionResponse, AxiosResponse>(
+        const { data } = await client.post<TransactionRequest, AxiosResponse>(
             `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/eligibilitycheck`
         );
 
@@ -273,8 +289,28 @@ export const checkEligibilityFullSurrender = async (
     policyNumber: string | undefined
 ): Promise<TransactionResponse> => {
     try {
-        const { data } = await client.post<TransactionRequest, AxiosResponse>(
-            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`
+        // to do - DEPU-4981 - this eligibility check requires this huge body, however all the values are ignored
+        // waiting on BPM to make updates to this endpoint so that hopefully no body is required in the future
+        const { data } = await client.post<
+            FullSurrenderEligibilityRequest,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`,
+            {
+                correlationId: '',
+                effectiveDate: '',
+                reverseInitiator: false,
+                taxWithholdingInstructions: [],
+                payeeOrBeneficiary: null,
+                parties: [],
+                transactionAmounts: {
+                    requestedAmount: null,
+                    amountType: '',
+                    disbursementType: '',
+                    disbursementPaymentForm: '',
+                },
+                charges: null,
+            }
         );
         return data;
     } catch (error: any) {
