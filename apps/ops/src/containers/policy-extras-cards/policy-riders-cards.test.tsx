@@ -20,8 +20,8 @@ import {
     CoverageToBenefitId,
 } from '@deps/types/product-rate';
 
+import { RIDER_NOT_ELECTED } from './consts';
 import PolicyExtrasCards from './policy-extras-cards';
-import { RIDER_NOT_ELECTED } from './policy-extras-cards-helpers';
 
 const baseRider = {
     amount: undefined,

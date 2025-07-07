@@ -34,12 +34,13 @@ const handleKeyDown = (e: React.KeyboardEvent, onClick: () => void) => {
 function Arrow({ direction, disabled, selected, onClick }: ArrowProps) {
     const ariaLabel = () => {
         return direction === ArrowDirections.Left
-            ? 'Paginate back'
-            : 'Paginate forward';
+            ? 'Go to previous page'
+            : 'Go to next page';
     };
 
     return (
         <button
+            type="button"
             className={clsx(styles.paginationItem, selected && styles.selected)}
             onClick={() => !disabled && onClick()}
             data-testid={`arrow-${direction}`}
