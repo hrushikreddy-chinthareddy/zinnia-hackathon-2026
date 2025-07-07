@@ -85,6 +85,14 @@
                                 }
                             }
                         },
+                        "backgroundRequestResult": {
+                            "type": "string",
+                            "title": "Background check result :"
+                        },
+                        "backgroundRequestId": {
+                            "type": "string",
+                            "title": "Background check order ID :"
+                        },
                         "issuesResolved": {
                             "type": "string",
                             "enum": ["APPROVE", "DENY", "DISPUTE"],
@@ -174,6 +182,8 @@
                     "ui:order": [
                         "issuesList",
                         "details",
+                        "backgroundRequestResult",
+                        "backgroundRequestId",
                         "issuesResolved",
                         "approveReason",
                         "denyReason",
@@ -250,6 +260,20 @@
                                     "nobackground": true
                                 }
                             }
+                        }
+                    },
+                    "backgroundRequestResult": {
+                        "ui:options": {
+                            "label": false,
+                            "disabled": true,
+                            "inline": true
+                        }
+                    },
+                    "backgroundRequestId": {
+                        "ui:options": {
+                            "disabled": true,
+                            "inline": true,
+                            "label": false
                         }
                     },
                     "issuesResolved": {
