@@ -17,6 +17,8 @@ import {
 import { TargetFundAllocation } from '@deps/models/case/task';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getProductFunds } from '@deps/queries/api/integration';
+import { browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { Loader } from '../page-loader';
 import Typography, { TypographyVariant } from '../typography/typography';
@@ -32,7 +34,7 @@ export default function RenewalPeriodMultiSection({
     isFormStateReadOnly,
     planCode,
 }: RenewalPeriodMultiSectionProps) {
-    const { setSubsequentTargetFunds, transOption, formErrors, document } =
+    const { setSubsequentTargetFunds, transOption, formErrors, document, subsequentTargetFunds } =
         useContext(RenewalFormDataContext);
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseRenewal.request',
@@ -41,7 +43,7 @@ export default function RenewalPeriodMultiSection({
 
     const [fundAllocations, setFundAllocations] = useState<
         TargetFundAllocation[]
-    >([]);
+    >(subsequentTargetFunds || []);
     const [loader, setLoader] = useState(false);
     const [transOptions, setTransOptions] = useState<TransactionTypes>(
         (transOption || TransactionTypes.Percentage) as TransactionTypes
@@ -64,7 +66,7 @@ export default function RenewalPeriodMultiSection({
                 if (!fundsList?.length) {
                     throw new Error('No funds returned from getProductFunds');
                 }
-
+                subsequentTargetFunds
                 // filtering out duplicate funds coming back from the funds list
                 const uniqueFunds = fundsList.map((fund) => {
                     return {
@@ -75,14 +77,23 @@ export default function RenewalPeriodMultiSection({
                         value: null,
                     };
                 });
-
+                browserLogInfo(
+                    'RenewalPeriodMultiSelection::Fund allocations retrieved and set from API',
+                    {
+                        contractNumber: document?.contract,
+                        clientCode: document?.processCompanyCode,
+                        planCode: planCode,
+                    }
+                );
                 setFundAllocations(uniqueFunds);
 
                 setLoader(false);
             } catch (e) {
-                console.error(
+                browserLogInfo(
                     'RenewalPeriodMultiSelection::Error retrieving funds list',
-                    e
+                    {
+                        ...parseErrorInformation(e)
+                    }
                 );
                 setLoader(false);
                 router.push(
@@ -90,8 +101,17 @@ export default function RenewalPeriodMultiSection({
                 );
             }
         };
-
-        getFundsList();
+        const subsequentTargetFundsCount = subsequentTargetFunds?.length || 0;
+        if (subsequentTargetFundsCount === 0) {
+              browserLogInfo('Set fund allocation with received one', {
+                contractNumber: document?.contract,
+                clientCode: document?.processCompanyCode,
+                planCode: planCode,
+                subsequentTargetFundsCount: subsequentTargetFundsCount,
+                function: 'RenewalPeriodMultiSelection',
+            });
+            getFundsList();
+        }
     }, []);
 
     const setFundAllocation = (fundName: string, val: string) => {
@@ -150,11 +170,11 @@ export default function RenewalPeriodMultiSection({
                 {fundAllocations.map((fundAlloc, index) => (
                     <div key={index} className="my-2 grid grid-cols-2 gap-4">
                         <Typography variant={TypographyVariant.LabelMd}>
-                            {fundAlloc?.sourceFundName}
+                            {fundAlloc?.sourceFundName || fundAlloc?.fundName}
                         </Typography>
 
                         <Field
-                            aria-labelledby={`fund-code-${fundAlloc.sourceFundName}`}
+                            aria-labelledby={`fund-code-${fundAlloc?.fundCode}`}
                             onChange={(e) => {
                                 setFundAllocation(
                                     fundAlloc.fundName,

@@ -461,6 +461,22 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ]);
 
                 const planCode = policies?.[0]?.planCode || null;
+                if (!planCode) {
+                    logInfo('nigo-entry::Policy plan code not found', {
+                        taskId,
+                        documentNumber,
+                        clientCode,
+                        contractNum,
+                        ...loggingContext,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                            permanent: false,
+                        },
+                    };
+                }
+
                 const { nigoExceptions, nigoSubExceptions } =
                     nigoExceptionResponse;
                 logInfo(
@@ -500,7 +516,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     );
                     if (!policy) {
                         logInfo(
-                            'create-case/withdrawal/:id::Policy not found',
+                            'nigo-entry::Policy not found',
                             loggingContext
                         );
                         return {
@@ -511,7 +527,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         };
                     }
                     logInfo(
-                        'create-case/withdrawal/:id::Policy details found',
+                        'nigo-entry::Policy details found',
                         loggingContext
                     );
 
