@@ -1,4 +1,4 @@
-import { ArrayFieldTemplateProps } from '@rjsf/utils';
+import { ArrayFieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 
 import Typography, {
@@ -26,9 +26,8 @@ export default function TextListTemplate(
     props: ArrayFieldTemplateProps
 ): JSX.Element {
     const { formData, uiSchema } = props;
-    const keyName = uiSchema?.['ui:options']?.keyName;
-    const listType = (uiSchema?.['ui:options']?.type as string) || 'error';
-    const hasBg = uiSchema?.['ui:options']?.hasBg;
+
+    const { label, keyName, type: listType, hasBg } = getUiOptions(uiSchema);
     const { title } = props;
     const formContextOptions: FormContextOptions = uiSchema?.['ui:options']
         ?.formContext as FormContextOptions;
@@ -64,7 +63,7 @@ export default function TextListTemplate(
 
     return list.length > 0 ? (
         <div className={`${hasBg ? 'bg-gray-50 w-2/4 p-4' : ''}`}>
-            {title && (
+            {title && label && (
                 <Typography variant={TypographyVariant.BodyBold}>
                     {title as string}
                 </Typography>
@@ -75,7 +74,7 @@ export default function TextListTemplate(
                         className="mb-2"
                         key={index}
                         text={text}
-                        variant={getVariant(listType)}
+                        variant={getVariant(listType as string)}
                     />
                 ))}
             </ul>

@@ -123,15 +123,51 @@
                                     "properties": {
                                         "issueResolved": {
                                             "const": true
+                                        },
+                                        "issueResolvedWarning": {
+                                            "type": "array",
+                                            "title": "",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "reason": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "default": [
+                                                {
+                                                    "reason": "Please mark all the listed issues as resolved to proceed."
+                                                }
+                                            ]
+                                        },
+                                        "issuesList": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "resolved": {
+                                                        "enum": [true]
+                                                    }
+                                                },
+                                                "required": ["resolved"]
+                                            }
                                         }
-                                    }
+                                    },
+                                    "required": ["issuesList"]
                                 },
                                 {
                                     "properties": {
                                         "issueResolved": {
                                             "const": false
+                                        },
+                                        "notes": {
+                                            "type": "string",
+                                            "title": "Please provide details explaining why the issue(s) cannot be resolved",
+                                            "minLength": 1
                                         }
-                                    }
+                                    },
+                                    "required": ["notes"]
                                 }
                             ]
                         }
@@ -148,6 +184,8 @@
                         "issuesList",
                         "details",
                         "issueResolved",
+                        "issueResolvedWarning",
+                        "notes",
                         "uploadDocuments",
                         "attachments"
                     ],
@@ -183,7 +221,8 @@
                                 "ui:readonly": false,
                                 "ui:options": {
                                     "label": false
-                                }
+                                },
+                                "ui:hideError": true
                             }
                         }
                     },
@@ -215,6 +254,22 @@
                         "ui:hideError": true
                     },
 
+                    "notes": {
+                        "ui:widget": "textarea",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:hideError": true
+                    },
+                    "issueResolvedWarning": {
+                        "ui:options": {
+                            "label": false,
+                            "ArrayFieldTemplate": "TextListTemplate",
+                            "keyName": "reason",
+                            "type": "info",
+                            "omitValue": true
+                        }
+                    },
                     "uploadDocuments": {
                         "inline": true,
                         "ui:options": {
