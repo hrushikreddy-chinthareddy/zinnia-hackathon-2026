@@ -236,14 +236,18 @@ export class TransformedStep {
                 );
                 return;
             }
-            this.name = this.parentStage.parentCase.t(
-                `caseOverview.tabs.entityTypes.${entityType.toLowerCase()}`,
-                {
-                    label: toTitleCase(
-                        this.stepRaw?.instanceInfo?.label ?? this.stepRaw?.label
-                    ),
-                }
+
+            const translation = this.parentStage.parentCase.t(
+                `caseOverview.tabs.entityTypes.${entityType.toLowerCase()}`
             );
+            const label = this.stepRaw?.instanceInfo?.label;
+            if (label) {
+                this.name = `${translation}: ${toTitleCase(
+                    label ?? this.stepRaw?.label
+                )}`;
+            } else {
+                this.name = translation;
+            }
             return;
         }
         this.name = this.parentStage.parentCase.t(

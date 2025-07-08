@@ -1538,14 +1538,14 @@
             "amendedOfferRequested": "Demande d'offre modifiée",
             "amendmentAccepted": "Demande d'offre modifiée acceptée",
             "entityTypes": {
-                "agent": "Agent: {{label}}",
-                "pre-note": "Pre-Note: {{label}}",
-                "source of premium": "Source de Financement: {{label}}",
-                "transfer of assets": "Transfert d'actifs: {{label}}",
-                "ceding carrier": "Transporteur cédant: {{label}}",
-                "premium source": "Source de Financement: {{label}}",
-                "re-illustration": "Nouvelle illustration: {{label}}",
-                "bene": "Notifier {{label}}"
+                "agent": "Agent",
+                "pre-note": "Pre-Note",
+                "source of premium": "Source de Financement",
+                "transfer of assets": "Transfert d'actifs",
+                "ceding carrier": "Transporteur cédant",
+                "premium source": "Source de Financement",
+                "re-illustration": "Nouvelle illustration",
+                "bene": "Notifier"
             },
             "reviewIssues": "Revoir problèmes",
             "suitabilityReview": "suitability",

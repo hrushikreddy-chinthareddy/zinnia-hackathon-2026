@@ -1559,14 +1559,14 @@
             "amendedOfferRequested": "Amended offer requested",
             "amendmentAccepted": "Amendment accepted",
             "entityTypes": {
-                "agent": "Agent: {{label}}",
-                "pre-note": "Pre-Note: {{label}}",
-                "source of premium": "Funding Source: {{label}}",
-                "transfer of assets": "Transfer of Assets: {{label}}",
-                "ceding carrier": "Ceding Carrier: {{label}}",
-                "premium source": "Funding Source: {{label}}",
-                "re-illustration": "Re-Illustration: {{label}}",
-                "bene": "Notify {{label}}"
+                "agent": "Agent",
+                "pre-note": "Pre-Note",
+                "source of premium": "Funding Source",
+                "transfer of assets": "Transfer of Assets",
+                "ceding carrier": "Ceding Carrier",
+                "premium source": "Funding Source",
+                "re-illustration": "Re-Illustration",
+                "bene": "Notify"
             },
             "reviewIssues": "Review",
             "suitabilityReview": "suitability",
