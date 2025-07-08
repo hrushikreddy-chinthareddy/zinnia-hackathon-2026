@@ -1,0 +1,25 @@
+.pagination {
+    margin-top: var(--measure-dimension-gap-xl);
+}
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-2xl);
+}
+
+.filters {
+    display: flex;
+    margin-top: var(--measure-dimension-gap-lg);
+    align-items: end;
+    justify-content: space-between;
+}
+
+.carrierSelect {
+    max-width: 250px;
+}
+
+.carrierCell {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-xl);
+}

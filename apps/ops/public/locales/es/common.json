@@ -135,6 +135,10 @@
                 "link": "/create-case",
                 "text": "Créer un cas"
             },
+            "commissions": {
+                "text": "Declaraciones de comisiones",
+                "link": "/commissions/statements"
+            },
             "contactCenter": {
                 "link": "/contact-center",
                 "text": "Contact Center"
@@ -2464,6 +2468,17 @@
                 "amount": "Quantité",
                 "status": "Statut"
             }
+        }
+    },
+    "commissions": {
+        "statements": {
+            "title": "Declaraciones de comisiones",
+            "carrierSelectPlaceholder": "-- Seleccione un transportista --",
+            "notFound": "No pudimos encontrar declaraciones de comisiones que coincidan con su búsqueda.",
+            "documentId": "ID del Documento",
+            "receivedDate": "Fecha de recepción",
+            "createdDate": "Fecha de creación",
+            "actions": "Acciones"
         }
     },
     "sendDocument": {

@@ -19,6 +19,7 @@ const MenuContextual = ({
         useState<DropdownMenu.DropdownMenuContentProps['align']>('end');
     const [side, setSide] =
         useState<DropdownMenu.DropdownMenuContentProps['side']>('bottom');
+    const [open, setOpen] = useState(false);
 
     const triggerRef = useCallback((node: HTMLButtonElement) => {
         if (node !== null && node.dataset.state === 'open') {
@@ -52,11 +53,13 @@ const MenuContextual = ({
             onOpenChange={(open: boolean) => {
                 onOpenChange(open);
             }}
+            open={open}
         >
             <DropdownMenu.Trigger
                 asChild={triggerAsChild}
                 className="default-focus group block rounded"
                 ref={triggerRef}
+                onClick={() => setOpen(true)}
             >
                 {trigger}
             </DropdownMenu.Trigger>
@@ -68,6 +71,8 @@ const MenuContextual = ({
                 )}
                 side={side}
                 align={align}
+                onClick={() => setOpen(false)}
+                onEscapeKeyDown={() => setOpen(false)}
             >
                 <ul className="flex flex-col items-start gap-4 rounded-md">
                     {children}

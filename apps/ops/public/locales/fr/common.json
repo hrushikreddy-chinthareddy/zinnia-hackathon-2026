@@ -135,6 +135,10 @@
                 "link": "/create-case",
                 "text": "Créer un cas"
             },
+            "commissions": {
+                "text": "Déclarations de la Commission",
+                "link": "/commissions/statements"
+            },
             "contactCenter": {
                 "link": "/contact-center",
                 "text": "Contact Center"
@@ -2464,6 +2468,18 @@
                 "amount": "Quantité",
                 "status": "Statut"
             }
+        }
+    },
+    "commissions": {
+        "statements": {
+            "title": "Déclarations de la Commission",
+            "carrierSelectPlaceholder": "-- Sélectionnez un transporteur --",
+            "notFound": "Nous n'avons pas pu trouver de relevés de commission correspondant à votre recherche.",
+            "selectACarrer": "Sélectionnez un transporteur pour consulter les relevés de commission.",
+            "documentId": "ID du Document",
+            "receivedDate": "Date de reception",
+            "createdDate": "Date de création",
+            "actions": "Actions"
         }
     },
     "sendDocument": {

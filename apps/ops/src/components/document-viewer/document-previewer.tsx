@@ -17,8 +17,8 @@ import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 export interface DocumentPreviewerProps {
     activeDocType: DocumentTypeView;
     carrier: string;
-    displayName: string;
-    documentId: string;
+    displayName?: string;
+    documentId?: string;
     className?: string;
     variant?: NavElementVariant;
 }
@@ -42,7 +42,7 @@ export default function DocumentPreviewer({
                 session_id: sessionId,
                 userId: partyId,
                 type: 'Preview',
-                documentId,
+                documentId: documentId || '',
             }
         );
     };

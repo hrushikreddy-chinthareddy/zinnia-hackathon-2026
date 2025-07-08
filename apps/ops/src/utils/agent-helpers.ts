@@ -3,6 +3,8 @@ import {
     PartyReferenceDataModel,
 } from '@zinnia/api-types/types/partyreference';
 
+import { PartyRole } from '@deps/models/policy/sor-policy';
+
 /**
  * Checks if there is a Wellabe agent in the party reference data
  * @param partyRefData The party reference data
@@ -31,9 +33,27 @@ export const findCarrierAgents = (
         partyRefData.alias?.filter((v) => {
             return (
                 v.carrier?.toLowerCase() === carrier.toLowerCase() &&
-                v.partyRoles?.includes('PRIMARYSERVICINGAGENT')
+                v.partyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT)
             );
         }) || [];
 
     return agents;
+};
+
+export const getMasterAgentNumber = (
+    partyRefData?: PartyReferenceDataModel
+) => {
+    const alias = partyRefData?.alias?.find((v) =>
+        v.partyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT)
+    );
+
+    return alias?.masterAgentNumber;
+};
+
+export const getExternalAgentId = (partyRefData?: PartyReferenceDataModel) => {
+    const alias = partyRefData?.alias?.find((v) =>
+        v.partyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT)
+    );
+
+    return alias?.externalId;
 };

@@ -195,6 +195,7 @@ export interface PolicyDocument {
     contractNumber: string;
     displayName: string;
     documentDate: string;
+    createDate?: string;
     documentID?: string;
     documentId?: string; // added due to inconsistency in the Documents API when source=Policy
     docStatus: string;

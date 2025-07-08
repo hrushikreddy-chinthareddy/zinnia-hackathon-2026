@@ -3,10 +3,12 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { IconType, Icon, CarrierName } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { getCookie } from 'cookies-next';
+import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
 import { firstNameAndLastInitial } from '@deps/helpers/string.helpers';
@@ -18,6 +20,7 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
     const { user } = useUser();
     const [role, setRole] = useState<CarrierName>(CarrierName.ZINNIA);
     const apexUrl = process.env.NEXT_PUBLIC_APEX_URL;
+    const { showCommissions } = usePermissionsContext();
 
     useEffect(() => {
         const cookie = getCookie('role') as string | undefined;
@@ -67,7 +70,27 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
                 </DropdownMenu.Item>
             )}
 
-            <DropdownMenu.Item onSelect={handleAnalytics} className="w-full">
+            {showCommissions && (
+                <DropdownMenu.Item onSelect={handleAnalytics}>
+                    <Link
+                        className={
+                            'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10'
+                        }
+                        href={
+                            t('site.navLinks.commissions.link') ??
+                            '/commissions/statements'
+                        }
+                    >
+                        <Icon
+                            type={IconType.DOCUMENT_REPORT}
+                            width={20}
+                            height={20}
+                        />
+                        {t('site.navLinks.commissions.text')}
+                    </Link>
+                </DropdownMenu.Item>
+            )}
+            <DropdownMenu.Item onSelect={handleAnalytics}>
                 <a
                     className={
                         'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10'

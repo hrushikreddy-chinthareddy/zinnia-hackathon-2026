@@ -135,6 +135,10 @@
                 "text": "Create Case",
                 "link": "/create-case"
             },
+            "commissions": {
+                "text": "Commision statements",
+                "link": "/commissions/statements"
+            },
             "contactCenter": {
                 "text": "Contact Center",
                 "link": "/contact-center"
@@ -2487,6 +2491,18 @@
                 "amount": "Amount",
                 "status": "Status"
             }
+        }
+    },
+    "commissions": {
+        "statements": {
+            "title": "Commission Statements",
+            "carrierSelectPlaceholder": "-- Select a carrier --",
+            "notFound": "We couldn't find commission statements that match your search.",
+            "selectACarrer": "Select a carrier to view commission statements",
+            "documentId": "Document/ID",
+            "receivedDate": "Received Date",
+            "createdDate": "Created date",
+            "actions": "Actions"
         }
     },
     "sendDocument": {

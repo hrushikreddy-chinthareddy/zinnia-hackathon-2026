@@ -22,7 +22,10 @@ import {
 } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
-import { isWellabeAgent } from '@deps/utils/agent-helpers';
+import {
+    getMasterAgentNumber,
+    isWellabeAgent,
+} from '@deps/utils/agent-helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { useOptimizely } from './OptimizelyContext';
@@ -41,6 +44,8 @@ export interface PermissionsContextProps {
     isAllowReadOtpRenewals: boolean;
     isCallLogAudioPermitted: boolean;
     showToppanMerrill: boolean;
+    showCommissions: boolean;
+    partyReferenceData?: PartyReferenceDataModel;
     permissionsLoadingComplete: boolean;
     hasHomeExperience: boolean;
 }
@@ -135,16 +140,15 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             staleTime: FIFTEEN_MINUTES_IN_MS,
         });
 
-    const { data: showToppanMerrill, isLoading: showToppanMerrillLoading } =
-        useQuery({
-            queryKey: ['partyReferenceMetaData', partyId],
-            queryFn: () => getPartyMetadataById(partyId),
-            enabled: !!partyId,
-            select: (response: any) => {
-                const partyRefData = response?.data as PartyReferenceDataModel;
-                return isWellabeAgent(partyRefData);
-            },
-        });
+    const { data: partyReferenceData, isLoading: showToppanMerrillLoading } = useQuery({
+        queryKey: ['partyReferenceMetaData', partyId],
+        queryFn: () => getPartyMetadataById(partyId),
+        enabled: !!partyId,
+        select: response => {
+            const partyRefData = response?.data as PartyReferenceDataModel;
+            return partyRefData;
+        },
+    });
 
     const {
         data: fgaRoleData,
@@ -204,7 +208,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,
                 isCallLogAudioPermitted: !!fgaRoleData?.isCallLogAudioPermitted,
                 hasHomeExperience: !!homeCheck?.data,
-                showToppanMerrill: !!showToppanMerrill,
+                showToppanMerrill: partyReferenceData ? !!isWellabeAgent(partyReferenceData) : false,
+                showCommissions: partyReferenceData ? !!getMasterAgentNumber(partyReferenceData) : false,
+                partyReferenceData,
                 permissionsLoadingComplete,
             }}
         >
