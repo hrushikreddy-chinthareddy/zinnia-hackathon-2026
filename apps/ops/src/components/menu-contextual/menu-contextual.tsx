@@ -73,6 +73,7 @@ const MenuContextual = ({
                 align={align}
                 onClick={() => setOpen(false)}
                 onEscapeKeyDown={() => setOpen(false)}
+                onInteractOutside={() => setOpen(false)}
             >
                 <ul className="flex flex-col items-start gap-4 rounded-md">
                     {children}
