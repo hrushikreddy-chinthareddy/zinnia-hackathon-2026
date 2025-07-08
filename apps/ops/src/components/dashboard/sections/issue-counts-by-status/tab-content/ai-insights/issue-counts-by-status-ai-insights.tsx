@@ -21,7 +21,7 @@ export const IssueCountsByStatusAiInsights = () => {
                               }
                           )}.
                           Give insights on what the top 5 issues are based on the applied filters. Also, include the total issue count.
-Your responses should be insightful and will be displayed on a UI as a summary. Your response should not include any suggestions. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. standards. Any keys you use should be formatted to title case. For example, "FUTURE DATED REQUEST" should be shown as "Future Dated Request".`;
+Your responses should be insightful and will be displayed on a UI as a summary. Your response should not include any suggestions. Your response should not include symbols like '*' and the response should be in a paragraph rather than points. Use percentages and real data where it makes sense. Keep it concise and to the point. Format number values to U.S. standards. Any keys you use should be formatted to title case. For example, "FUTURE DATED REQUEST" should be shown as "Future Dated Request".`;
     return (
         <CardContainer
             fullWidth={false}
