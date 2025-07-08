@@ -111,7 +111,8 @@ const NotificationCard = ({
             if (!isNullEmptyOrUndefined(email)) {
                 if (
                     policyBeneficiaries[index]['email']['emailAddress'] !==
-                    email
+                        email ||
+                    !isNullEmptyOrUndefined(email)
                 ) {
                     if (
                         isNullEmptyOrUndefined(

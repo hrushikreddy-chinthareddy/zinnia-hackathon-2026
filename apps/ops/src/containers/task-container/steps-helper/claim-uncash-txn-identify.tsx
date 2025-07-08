@@ -1,3 +1,5 @@
+import { TaskStatus } from '@deps/models/case/task-instance';
+
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
@@ -8,6 +10,7 @@ export const getClaimUncashTxnIdentifySteps = ({
     t,
     taskMetadata,
     task,
+    isContinueButtonEnabled,
 }: GetStepsProps) => {
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
@@ -19,6 +22,8 @@ export const getClaimUncashTxnIdentifySteps = ({
                     isSubmit={true}
                     taskMetadata={metadata}
                     key={`step_${index}`}
+                    readonly={task.status === TaskStatus.Completed}
+                    isContinueButtonEnabled={isContinueButtonEnabled}
                 ></TaskFormStep>
             </div>
         ),

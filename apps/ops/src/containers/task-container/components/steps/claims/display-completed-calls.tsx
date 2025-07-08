@@ -1,7 +1,7 @@
-import { Label } from '@zinnia/bloom/components';
+import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
+import { formatPhone } from '@deps/helpers/string.helpers';
 
 import { CallLog, ContactRole } from './claims.type';
-import styles from '../../../../../components/dynamic-form/components/text-field/text-field.module.css';
 
 export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
     const dynamicKey = task?.data?.details?.beneCall
@@ -30,51 +30,73 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                         </h3>
                         <div className="grid grid-cols-5 gap-4">
                             <div>
-                                <Label labelFor={`role-${index}`}>
-                                    {t('contactRole')}
-                                </Label>
-                                <div className={styles.textField}>
-                                    {log.partyRoleCategory === 'AGENT'
-                                        ? 'Agent'
-                                        : log.partyRole === 'PRIMARYBENEFICIARY'
-                                        ? 'Beneficiary'
-                                        : 'Other'}
-                                </div>
+                                <TextField
+                                    id={`role-${index}`}
+                                    onChange={() => { }}
+                                    disabled={true}
+                                    placeholder={t('contactRole') as string}
+                                    value={
+                                        log.partyRoleCategory ===
+                                            ContactRole.AGENT
+                                            ? 'Agent'
+                                            : log.partyRole ===
+                                                ContactRole.PRIMARYBENEFICIARY
+                                                ? 'Beneficiary'
+                                                : 'Other'
+                                    }
+                                    label={t('contactRole') as string}
+                                    className="w-full"
+                                />
                             </div>
                             <div>
-                                <Label labelFor={`name-${index}`}>
-                                    {t('name')}
-                                </Label>
-                                <div className={styles.textField}>
-                                    {log.fullName}
-                                </div>
+                                <TextField
+                                    disabled={true}
+                                    id={`name-${index}`}
+                                    onChange={() => { }}
+                                    placeholder={t('name') as string}
+                                    value={log.fullName}
+                                    label={t('name') as string}
+                                    className="w-full"
+                                />
                             </div>
                             <div>
-                                <Label labelFor={`phone-${index}`}>
-                                    {t('phone')}
-                                </Label>
-                                <div className={styles.textField}>
-                                    {log.phone
-                                        ? `+${log.phone.countryCode} (${log.phone.areaCode}) ${log.phone.dialNumber}`
-                                        : ''}
-                                </div>
+                                <TextField
+                                    disabled={true}
+                                    id={`phone-${index}`}
+                                    onChange={() => { }}
+                                    placeholder={t('phone') as string}
+                                    value={formatPhone(log.phone)}
+                                    label={t('phone') as string}
+                                    className="w-full"
+                                />
                             </div>
                             <div>
-                                <Label labelFor={`relationship-${index}`}>
-                                    {t('callOutcome')}
-                                </Label>
-                                <div className={styles.textField}>
-                                    {t('noChangeRecorded')}
-                                </div>
+                                <TextField
+                                    disabled={true}
+                                    id={`callOutcome-${index}`}
+                                    onChange={() => { }}
+                                    placeholder={t('callOutcome') as string}
+                                    value={t('noChangeRecorded')}
+                                    label={t('callOutcome') as string}
+                                    className="w-full"
+                                />
                             </div>
+
                             {log.partyRoleCategory === ContactRole.OTHER && (
                                 <div>
-                                    <Label labelFor={`relationship-${index}`}>
-                                        {t('relationshipToOwner')}
-                                    </Label>
-                                    <div className={styles.textField}>
-                                        {log.relationshipToInsured}
-                                    </div>
+                                    <TextField
+                                        disabled={true}
+                                        id={`relationship-${index}`}
+                                        onChange={() => { }}
+                                        placeholder={
+                                            t('relationshipToOwner') as string
+                                        }
+                                        value={log.relationshipToInsured}
+                                        label={
+                                            t('relationshipToOwner') as string
+                                        }
+                                        className="w-full"
+                                    />
                                 </div>
                             )}
                         </div>

@@ -1,4 +1,4 @@
-import { Phone } from '@xd/api-types/dist/generated-types/sor';
+import { Phone, PhoneBase } from '@xd/api-types/dist/generated-types/sor';
 
 import { ClaimActionTypes } from '@deps/containers/death-claim-container/death-claim.types';
 
@@ -39,14 +39,7 @@ export interface NotificationMethod {
         zipCode: string;
         country: string;
     };
-    phone: {
-        phoneType: string;
-        countryCode: string;
-        areaCode: string;
-        dialNumber: string;
-        bestTime: string;
-        phoneId: string;
-    };
+    phone: PhoneBase;
 }
 
 export interface BeneficiaryRecord {
@@ -80,14 +73,7 @@ export interface CallLog {
     partyRole: string;
     fullName: string;
     relationshipToInsured: string;
-    phone: {
-        phoneType: string;
-        countryCode: string;
-        areaCode: string;
-        dialNumber: string;
-        bestTime: string;
-        phoneId: string;
-    };
+    phone: PhoneBase;
     callSequence: number;
     callDone: boolean;
 }

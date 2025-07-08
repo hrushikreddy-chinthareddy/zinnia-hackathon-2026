@@ -9,24 +9,24 @@ import { useEffect, useState } from 'react';
 
 import { ButtonSize } from '@deps/components/button/button';
 import { PROCESS_WITHOUT_CASE_DOCUMENT } from '@deps/components/case-document-select/case-document-select';
-import PageLoader, {
-    PageLoaderVariant,
-} from '@deps/components/page-loader/page-loader';
 import Radio, { RadioItem, RadioVariant } from '@deps/components/radio/radio';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
-import { useDeathClaimSupportingDocument } from '@deps/hooks/useDeathClaimSupportingDocument';
+import { DocumentInfo } from '@deps/hooks/useDeathClaimSupportingDocument';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+
 interface DocumentSelectionProps {
     policyNumber: string;
     lob: string;
+    supportingDocuments: DocumentInfo[];
     onCancel: () => void;
 }
 
 const DocumentSelection = ({
+    supportingDocuments,
     policyNumber,
     lob,
     onCancel,
@@ -35,10 +35,6 @@ const DocumentSelection = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims.documentSelection',
     });
-    const { supportingDocuments, isLoading } = useDeathClaimSupportingDocument(
-        lob,
-        policyNumber
-    );
     const [caseOptions, setCaseOptions] = useState<RadioItem[]>([]);
     const [selectedCaseId, setSelectedCaseId] = useState<string | undefined>(
         undefined
@@ -83,6 +79,9 @@ const DocumentSelection = ({
 
     const handleCancel = () => {
         onCancel();
+        setIsDocumentSelected(false);
+        setOnbaseCaseId(PROCESS_WITHOUT_CASE_DOCUMENT);
+        setOnbaseDocumentNumber(PROCESS_WITHOUT_CASE_DOCUMENT);
         router.push('/policies');
     };
 
@@ -95,14 +94,6 @@ const DocumentSelection = ({
         setOnbaseDocumentNumber(selectedDocumentNumber);
         onCancel();
     };
-
-    if (isLoading) {
-        return (
-            <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
-                <PageLoader variant={PageLoaderVariant.Center} />
-            </div>
-        );
-    }
 
     return (
         <div className="responsive-padding flex grow flex-col gap-6">

@@ -221,8 +221,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                     task?.status !== TaskStatus.Completed &&
                     isSaveAsDraftEnabled;
                 isContinueButtonEnabled =
-                    task?.status === TaskStatus.Completed ||
-                    isContinueButtonEnabled;
+                    isContinueButtonEnabled ||
+                    task?.status === TaskStatus.Completed;
 
                 const nigoFilters = {
                     categoryIds: ['Form', 'Signature', 'Account Information'],

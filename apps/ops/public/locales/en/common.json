@@ -292,8 +292,9 @@
     "formValidations": {
         "required": "This field is required.",
         "patternDigit": "Only digits are allowed.",
-        "patternNumer": "Only digits are allowed. Must start with 82000.",
+        "patternNumber": "Only digits are allowed. Must start with 82000.",
         "patternNoSpecial": "Only contain letters and numbers (no special characters).",
+        "patternWithSpecial": "Only contain letters and numbers with characters: -, _.",
         "maxLength": "Field cannot be longer than {{limit}} characters.",
         "minLength": "Field must not have fewer than {{limit}} characters.",
         "minItems": "Please select atleast {{limit}} item(s)."
@@ -1153,6 +1154,8 @@
             "viewDetails": "View details"
         },
         "steps": {
+            "initiateClaims.updateDeceasedDate": "Date of Death and Date of Notification updated in Admin System",
+            "initiateClaims.processDeathClaimTransaction": "Death Claim Pending transaction updated in Admin System",
             "requestAck.nbRequestReceived": "Receive {{subType}}",
             "requestAck.caseProcessing": "Set up {{subType}} for processing",
             "requestAck.draftContractCreation": "Create draft contract",
@@ -5466,7 +5469,10 @@
     "transactionListing": {
         "loadingTransactions": "Retrieving stopped transactions...",
         "errorGettingTransactions": "Stopped transactions data couldn't be retrieved.",
+        "uncashedTransactions": "Outstanding Checks Status",
         "stoppedTransactions": "Stopped Transactions",
+        "noUncashedTransactions": "No uncashed checks available for this contract.",
+        "noUncashedTransactionsTableHead": "Contract #{{contractNumber}}",
         "noTransactionsFoundTitle": "No transactions were found",
         "noTransactionsMessage": "There are no transactions related with this event.",
         "labels": {
@@ -5474,10 +5480,15 @@
             "terminated": "Terminated",
             "deleteFailed": "Delete Failed",
             "terminateFailed": "Terminate Failed",
-            "on": "On"
+            "on": "On",
+            "outstanding": "Outstanding",
+            "stopped": "Stopped",
+            "reversed": "Reversed",
+            "checkToEstate": "Check to Estate"
         },
         "tableColumns": {
             "transaction": "Transaction",
+            "checkNo": "Check Number / Date",
             "status": "Status",
             "amount": "Amount"
         }
@@ -5977,7 +5988,7 @@
                 "notifierDetails": "Notifier Details",
                 "role": "Role",
                 "phoneNumber": "Phone Number",
-                "beneInfoOnFile": "Check this box if the beneficiary listed above is incorrect or incomplete, and details should be added to the system of record based on the supporting documents.",
+                "beneInfoOnFile": "Check this box if the beneficiary listed above is incorrect or incomplete, and details should be added to the Admin System based on the supporting documents.",
                 "selectARole": "Select a role...",
                 "listedBenificary": "Listed Beneficiaries",
                 "noBeneficiaries": "Primary beneficiaries not present",
@@ -6072,7 +6083,7 @@
         },
         "documentSelection": {
             "title": "Select Supporting Document",
-            "subtitle": "We found one or more documents related to this contract in OnBase. Please select a document ID or proceed without selecting a document.",
+            "subtitle": "Select one of the documents below to proceed. These are the related documents associated with this contract.",
             "proceedWithoutDocument": "Proceed without document",
             "continue": "Continue",
             "cancel": "Cancel",
@@ -6297,7 +6308,7 @@
             "sourceOfInfo": "Source of Information",
             "newInformation": "New Information",
             "relationshipToOwner": "Relationship to Owner",
-            "didYouMakeAnyChanges": "Did you make any changes to the system of record?",
+            "didYouMakeAnyChanges": "Did you make any changes to the Admin System?",
             "addAnotherCall": "Add Another Call",
             "contactRoles": {
                 "agent": "Agent",
@@ -6307,7 +6318,9 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Beneficiary Notification Change",
                 "beneficiaryDeceased": "Beneficiary Deceased"
-            }
+            },
+            "invalidEmail": "Invalid email",
+            "invalidFax": "Invalid fax"
         },
         "confirmStep": {
             "title": "Got It!",
@@ -6387,7 +6400,7 @@
             "newInformation": "New Information",
             "relationshipToDeceased": "Relationship to Deceased",
             "relationshipToOwner": "Relationship to Owner",
-            "didYouMakeAnyChanges": "Did you make any changes to the system of record?",
+            "didYouMakeAnyChanges": "Did you make any changes to the Admin System?",
             "addAnotherCall": "Add Another Call",
             "contactRoles": {
                 "agent": "Agent",
@@ -6397,7 +6410,9 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Beneficiary Notification Change",
                 "beneficiaryDeceased": "Beneficiary Deceased"
-            }
+            },
+            "invalidEmail": "Invalid email",
+            "invalidFax": "Invalid fax"
         }
     },
     "claimsDay150": {
@@ -6421,5 +6436,16 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "reverseTransaction": {
+        "postFunds": "Post Death Funds",
+        "preFunds": "Pre Death Funds",
+        "sendCheckToEstate": "Manual checks have been sent to the estate",
+        "reverseTransaction": "I have reversed these transactions in the Admin System",
+        "reviewFunds": "Checks Stopped by Finance – Review Required",
+        "reviewFundsRadio": "I have reviewed the checks and taken the necessary action",
+        "preFundTransactionsInstruction": "Manually issue checks for pre-fund transactions as needed. ",
+        "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
+        "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     }
 }

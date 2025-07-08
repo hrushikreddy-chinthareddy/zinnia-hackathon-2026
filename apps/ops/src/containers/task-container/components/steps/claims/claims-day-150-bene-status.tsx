@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import { Label, Radio } from '@zinnia/bloom/components';
+import { Radio } from '@zinnia/bloom/components';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,10 +14,16 @@ import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
 import { UpdatedBeneficiaryRecord } from './claims.type';
+
+const BENE_STATUS = {
+    YES: 'yes',
+    NO: 'no',
+} as const;
 
 type TaskReviewStepProps = {
     beneficiary: UpdatedBeneficiaryRecord;
@@ -38,6 +44,7 @@ export const ClaimBeneStatus = ({
         formErrors,
         setFormErrors,
     } = useContext(TaskDataContext);
+
     const { goToNext, setCurrentStepIndex } = useWorkflow();
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'claimsDay150.beneStatus',
@@ -45,7 +52,7 @@ export const ClaimBeneStatus = ({
     const [isBeneDeceased, setIsBeneDeceased] = useState<string>('');
 
     const handleContinueFn = async () => {
-        if (isBeneDeceased === 'yes') {
+        if (isBeneDeceased === BENE_STATUS.YES) {
             const success = await updateTask(task, correlationId);
             setSubmitFailed && setSubmitFailed(!success);
             setCurrentStepIndex(3);
@@ -57,16 +64,16 @@ export const ClaimBeneStatus = ({
         const errors: FormValidationErrors = {};
         if (!isBeneDeceased) {
             errors['beneDeceased'] =
-                'Missing contactRole or phone or name or changeType ';
+                'Missing contactRole or phone or name or changeType';
         }
 
         if (
             !beneficiary.beneDeceased &&
             !beneficiary.beneDeathSourceOfInfo &&
-            isBeneDeceased === 'yes'
+            isBeneDeceased === BENE_STATUS.YES
         ) {
             errors['beneDeceased'] =
-                'Missing contactRole or phone or name or changeType ';
+                'Missing contactRole or phone or name or changeType';
         }
         setFormErrors(errors);
     };
@@ -85,10 +92,13 @@ export const ClaimBeneStatus = ({
                 ...(updatedTask.data.details.benefinalcontactattempt
                     ?.beneficiaryChangeDetail || {}),
                 ...beneficiary,
-                beneDeceased: isBeneDeceased === 'yes',
+                beneDeceased: isBeneDeceased === BENE_STATUS.YES,
                 changeType:
-                    isBeneDeceased === 'yes' ? 'BENEFICIARY_DECEASED' : null,
-                changeRequire: isBeneDeceased === 'yes' ? true : false,
+                    isBeneDeceased === BENE_STATUS.YES
+                        ? 'BENEFICIARY_DECEASED'
+                        : null,
+                changeRequire:
+                    isBeneDeceased === BENE_STATUS.YES ? true : false,
             };
 
         setTask(updatedTask);
@@ -117,51 +127,48 @@ export const ClaimBeneStatus = ({
                     {t('title') as string}
                 </Typography>
 
-                <div>
-                    <Label labelFor="beneStatus">
-                        {t('isDeceased') as string}
-                    </Label>
-                    <div className="py-2">
-                        <Radio
-                            id="beneStatus"
-                            value={isBeneDeceased}
-                            onValueChange={(value) => {
-                                setIsBeneDeceased(value);
-                                setTask({
-                                    ...task,
-                                    data: {
-                                        ...task.data,
-                                        details: {
-                                            ...task.data.details,
-                                            benefinalcontactattempt: {
-                                                ...task.data.details
-                                                    .benefinalcontactattempt,
-                                                subTaskBeneDeceasedChangeRequire:
-                                                    value == 'yes'
-                                                        ? true
-                                                        : false,
-                                            },
+                <div className="py-2">
+                    <Radio
+                        isDisabled={task.status === TaskStatus.Completed}
+                        id="beneStatus"
+                        value={isBeneDeceased}
+                        groupLabel={t('isDeceased') as string}
+                        onValueChange={(value) => {
+                            setIsBeneDeceased(value);
+                            setTask({
+                                ...task,
+                                data: {
+                                    ...task.data,
+                                    details: {
+                                        ...task.data.details,
+                                        benefinalcontactattempt: {
+                                            ...task.data.details
+                                                .benefinalcontactattempt,
+                                            subTaskBeneDeceasedChangeRequire:
+                                                value == BENE_STATUS.YES
+                                                    ? true
+                                                    : false,
                                         },
                                     },
-                                });
-                            }}
-                            options={[
-                                {
-                                    label: t('yes') as string,
-                                    value: 'yes',
-                                    ariaLabel: t('yes') as string,
                                 },
-                                {
-                                    label: t('no') as string,
-                                    value: 'no',
-                                    ariaLabel: t('no') as string,
-                                },
-                            ]}
-                        />
-                    </div>
+                            });
+                        }}
+                        options={[
+                            {
+                                label: t('yes') as string,
+                                value: BENE_STATUS.YES,
+                                ariaLabel: t('yes') as string,
+                            },
+                            {
+                                label: t('no') as string,
+                                value: BENE_STATUS.NO,
+                                ariaLabel: t('no') as string,
+                            },
+                        ]}
+                    />
                 </div>
 
-                {isBeneDeceased === 'yes' && (
+                {isBeneDeceased === BENE_STATUS.YES && (
                     <div className="grid grid-cols-4">
                         <div className="col-span-1">
                             <BeneficiaryDeceased

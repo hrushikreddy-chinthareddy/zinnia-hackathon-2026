@@ -57,6 +57,8 @@ const TaskFormStep = ({
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [isValidForm, setIsValidForm] = useState(false);
+    const [submitEnabled, setSubmitEnabled] = useState(true);
+
     const handleStepContinue = useCallback(async () => {
         if (formRef.current) {
             setIsValidForm(formRef?.current?.validateForm() || false);
@@ -124,10 +126,8 @@ const TaskFormStep = ({
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
                     disableContinue={
-                        !(
-                            isContinueButtonEnabled ||
-                            task?.status === TaskStatus.Completed
-                        ) && !isValidForm
+                        (!isContinueButtonEnabled && !isValidForm) ||
+                        !submitEnabled
                     }
                 />
             }
@@ -145,6 +145,7 @@ const TaskFormStep = ({
                         onSubmit={handleSubmit}
                         isSubmit={isSubmit}
                         taskMetadata={taskMetadata}
+                        setSubmitEnabled={setSubmitEnabled}
                     />
                     {error && (
                         <AssistiveText

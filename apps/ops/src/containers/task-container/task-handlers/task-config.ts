@@ -19,7 +19,6 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Claims_Reverse_Uncashed_Transactions,
     TaskType.Background_Review,
     TaskType.Bene_Address_Verification,
-    TaskType.Claims_Bene_Review,
     TaskType.Bene_Call,
     TaskType.Payment_Follow_Up,
     TaskType.Ops_Review,

@@ -41,6 +41,7 @@ type TaskFormProps = {
     onSubmit: (error: string) => void;
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
+    setSubmitEnabled: (enabled: boolean) => void;
 };
 
 const getPaymentCards = (
@@ -60,7 +61,13 @@ const getPaymentCards = (
 };
 
 export const TaskForm = React.forwardRef(function TaskFormComponent(
-    { readonly, onSubmit, isSubmit, taskMetadata }: TaskFormProps,
+    {
+        readonly,
+        onSubmit,
+        isSubmit,
+        taskMetadata,
+        setSubmitEnabled,
+    }: TaskFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -70,6 +77,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const { task, setTask, setSubmitFailed, correlationId, initialTask } =
         formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
+
     const formContext = {
         carrier: task.carrier,
         caseId: task.caseId,
@@ -335,6 +343,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 setCustomData: setFormContext,
                 updateSchema: updateSchemaHandler,
                 isReadOnlyOverride: readonly,
+                setSubmitEnabled: setSubmitEnabled,
             }}
         ></DynamicForm>
     );

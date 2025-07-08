@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { getDocuments } from '@deps/queries/api/integration';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 export enum QueueNames {
     CPNEW = 'CP - NEW',
@@ -16,12 +17,28 @@ const applicableQueueNames: QueueNames[] = [
     QueueNames.CASECREATION,
 ];
 
+export interface DocumentInfo {
+    lob: string;
+    contract: string;
+    documentNumber: string;
+    system: string;
+    productLine: string;
+    productName: string;
+    productCompanyCode: string;
+    caseId: string;
+    queueName: string;
+    transactionType: string;
+    sysDocumentHandle: string;
+}
+
 export const useDeathClaimSupportingDocument = (
     lob: string,
     policyNumber: string
 ) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [supportingDocuments, setSupportingDocuments] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [supportingDocuments, setSupportingDocuments] = useState<
+        DocumentInfo[]
+    >([]);
 
     const getSupportingDocuments = useCallback(async () => {
         try {
@@ -32,12 +49,19 @@ export const useDeathClaimSupportingDocument = (
                 'Initial Death Notify',
                 policyNumber
             );
+
             const documentList =
                 documents?.filter((document: any) => {
                     return applicableQueueNames.includes(
                         document.queueName as QueueNames
                     );
                 }) || [];
+            browserLogInfo('getSupportingDocuments::success', {
+                lob,
+                policyNumber,
+                documentListCount: documentList.length,
+                function: 'integration.getDocuments',
+            });
             setSupportingDocuments(documentList);
             setIsLoading(false);
         } catch (e) {

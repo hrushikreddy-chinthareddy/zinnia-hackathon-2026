@@ -2,15 +2,18 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { Modal } from '@deps/components/modal/modal';
+import { DocumentInfo } from '@deps/hooks/useDeathClaimSupportingDocument';
 
 import DocumentSelection from './document-selection';
 
 interface DocumentSelectionProps {
     policyNumber: string;
     lob: string;
+    supportingDocuments: DocumentInfo[];
 }
 
 const DocumentSelectionModal = ({
+    supportingDocuments,
     policyNumber,
     lob,
 }: DocumentSelectionProps) => {
@@ -31,6 +34,7 @@ const DocumentSelectionModal = ({
             open={open}
             content={
                 <DocumentSelection
+                    supportingDocuments={supportingDocuments}
                     policyNumber={policyNumber}
                     lob={lob}
                     onCancel={onCancel}

@@ -60,28 +60,7 @@ export const getNotificationStatusText = (
             ),
             dateText,
         };
-    } else if (send === true && receive === false) {
-        timestamp = sendDateTime;
-        dateText = timestamp
-            ? t('caseOverview.notifications.completedStatusTooltipWithDate', {
-                  date: formatTimestamp(timestamp),
-              })
-            : '';
-        return {
-            notificationText: t('caseOverview.notifications.sendNotification', {
-                method: translatedMethod,
-                followup: notification.followupId,
-            }),
-            notificationIcon: (
-                <CompletedIcon
-                    className="text-semantic-success"
-                    width={16}
-                    height={16}
-                />
-            ),
-            dateText,
-        };
-    } else if (send === true && receive === true) {
+    } else if (send === true && (receive === false || receive === true)) {
         timestamp = sendDateTime;
         dateText = timestamp
             ? t('caseOverview.notifications.completedStatusTooltipWithDate', {
@@ -367,27 +346,32 @@ export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
                                     </div>
                                 )}
 
-                                {notification.followupId !== 5 && (
-                                    <div
-                                        className="flex flex-row gap-2 mb-4"
-                                        key={`receive-notification-${index}`}
-                                    >
-                                        <div className="flex h-6 w-6 shrink-0 items-center justify-center">
-                                            {notificationIcon}
+                                {notification.followupId !== 5 &&
+                                    notificationText !== '' && (
+                                        <div
+                                            className="flex flex-row gap-2 mb-4"
+                                            key={`receive-notification-${index}`}
+                                        >
+                                            <div className="flex h-6 w-6 shrink-0 items-center justify-center">
+                                                {notificationIcon}
+                                            </div>
+                                            <div className="flex w-full flex-col gap-1">
+                                                <Content
+                                                    variant={
+                                                        ContentVariant.BodySm
+                                                    }
+                                                    details={notificationText}
+                                                />
+                                                <Content
+                                                    className="text-gray-600"
+                                                    variant={
+                                                        ContentVariant.BodySm
+                                                    }
+                                                    details={dateText}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex w-full flex-col gap-1">
-                                            <Content
-                                                variant={ContentVariant.BodySm}
-                                                details={notificationText}
-                                            />
-                                            <Content
-                                                className="text-gray-600"
-                                                variant={ContentVariant.BodySm}
-                                                details={dateText}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
+                                    )}
 
                                 {notification.followupStatus ===
                                     NotificationStatus.Resend && (

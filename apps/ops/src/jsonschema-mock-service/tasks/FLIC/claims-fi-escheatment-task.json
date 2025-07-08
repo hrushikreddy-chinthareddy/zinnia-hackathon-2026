@@ -46,7 +46,7 @@
                                         },
                                         "escheatmentSorUpdateConfirmed": {
                                             "type": "boolean",
-                                            "title": "I have confirmed that the System of Record (SOR) has been updated to reflect the escheatment status.",
+                                            "title": "I have confirmed that the Admin System has been updated to reflect the escheatment status.",
                                             "enum": [true]
                                         }
                                     },

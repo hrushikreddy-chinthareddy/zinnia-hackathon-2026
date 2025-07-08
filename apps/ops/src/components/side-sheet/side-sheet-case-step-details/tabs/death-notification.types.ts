@@ -1,6 +1,8 @@
 import { CaseAdditionalStepData as CaseAdditionalStepDataBase } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
-import { DeliveryMethods } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
-
+import {
+    ClaimActionTypes,
+    ClaimCommunicationTypes,
+} from '@deps/containers/death-claim-container/death-claim.types';
 export interface DeathNotificationSidesheetProps {
     stepAdditionalData: CaseAdditionalStepDataBase;
 }
@@ -11,6 +13,7 @@ export interface Party {
 }
 
 export interface Address {
+    action: ClaimActionTypes;
     addressLine1: string;
     addressLine2: string;
     addressLine3?: string;
@@ -21,13 +24,14 @@ export interface Address {
 }
 
 export interface Email {
+    action: ClaimActionTypes;
     emailAddress: string;
 }
 
 export interface Phone {
+    action: ClaimActionTypes;
     dialNumber: string;
 }
-
 export interface Notifier {
     dateOfNotification?: string | null;
     notifierRole: string;
@@ -47,7 +51,7 @@ export interface Owner {
 
 export interface Beneficiary {
     party: Party;
-    notificationMethod: DeliveryMethods;
+    notificationMethod: ClaimCommunicationTypes;
     email?: Email;
     address?: Address;
     faxNumber?: string;

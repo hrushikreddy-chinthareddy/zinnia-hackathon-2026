@@ -22,7 +22,7 @@
 .customRow {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
     gap: 12px;
     width: 100%;
     /* flex grow 1 */

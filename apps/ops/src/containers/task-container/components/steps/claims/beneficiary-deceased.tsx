@@ -1,11 +1,12 @@
 import { Label } from '@zinnia/bloom/components';
 import { TFunction } from 'i18next';
 
+import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
 import { FieldDate } from '@deps/components/field/date/FieldDate';
 import { TranslationFiles } from '@deps/config/translations';
 
 import { UpdatedBeneficiaryRecord } from './claims.type';
-import styles from '../../../../../components/dynamic-form/components/text-field/text-field.module.css';
+
 interface BeneficiaryDeceasedProps {
     beneficiary: UpdatedBeneficiaryRecord;
     setBeneficiary: React.Dispatch<
@@ -38,19 +39,17 @@ function BeneficiaryDeceased({
             </div>
 
             <div className="col-span-1 mt-4">
-                <Label labelFor="sourceOfInfo">{t('sourceOfInfo')}</Label>
-                <input
-                    type="text"
+                <TextField
+                    label={t('sourceOfInfo') as string}
                     id="sourceOfInfo"
-                    placeholder={t('sourceOfInfo') ?? 'Source of Information'}
-                    className={`${styles.textField} w-full`}
-                    value={beneficiary.beneDeathSourceOfInfo || ''}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    onChange={(value: string) => {
                         setBeneficiary({
                             ...beneficiary,
-                            beneDeathSourceOfInfo: e.target.value,
+                            beneDeathSourceOfInfo: value,
                         });
                     }}
+                    value={beneficiary.beneDeathSourceOfInfo || ''}
+                    className="w-full"
                 />
             </div>
         </>

@@ -3,10 +3,12 @@ import { ArrayFieldTemplateProps, isObject, UiSchema } from '@rjsf/utils';
 import AddressFieldTemplate from '../customization/templates/address-field-template/address-field-template';
 import ArrayFieldTableTemplate from '../customization/templates/array-field-template/array-field-table-template';
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
+import { TransactionsArrayFieldTemplate } from '../customization/templates/array-field-template/TransactionsArrayFieldTemplate';
 import { CardTemplate } from '../customization/templates/card-templates/card-template';
 import { ChangeAddressTemplate } from '../customization/templates/change-address-templete/change-address-template';
 import DifferenceTemplate from '../customization/templates/difference-template/difference-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
+import TransactionInstructionTemplate from '../customization/templates/instructions-template/transaction-instruction-template';
 import FileInfoTemplate from '../customization/templates/object-field-template/file-info-template';
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import TextListTemplate from '../customization/templates/text-list-template';
@@ -19,6 +21,7 @@ export const UIArrayTemplateMap: Record<
     ['ArrayFieldTableTemplate']: ArrayFieldTableTemplate,
     ['TextListTemplate']: TextListTemplate,
     ['FileInfoTemplate']: FileInfoTemplate,
+    ['TransactionsArrayFieldTemplate']: TransactionsArrayFieldTemplate,
 };
 
 export const UIObjectTemplateMap: Record<
@@ -27,6 +30,7 @@ export const UIObjectTemplateMap: Record<
 > = {
     ['CardTemplate']: CardTemplate,
     ['InstructionsTemplate']: InstructionsTemplate,
+    ['TransactionInstructionTemplate']: TransactionInstructionTemplate,
     ['AddressFieldTemplate']: AddressFieldTemplate,
     ['ObjectRowFieldTemplate']: ObjectRowFieldTemplate,
     ['DifferenceTemplate']: DifferenceTemplate,

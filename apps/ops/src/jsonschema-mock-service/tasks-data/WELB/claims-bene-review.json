@@ -1,0 +1,183 @@
+{
+    "id": "TA000000033367",
+    "caseId": "CA0000431496",
+    "source": "BPM.ClaimProcessing",
+    "process": "Claims",
+    "carrier": "FLIC",
+    "taskType": "CLAIMS_BENE_REVIEW",
+    "taskName": "Bene Review",
+    "taskDetails": "Review and validate beneficiary details available in the Admin System against the re-reg or new business document to ensure accuracy and completeness before claim processing.",
+    "status": "New",
+    "data": {
+        "details": {
+            "beneReview": {
+                "beneficiaries": [
+                    {
+                        "party": {
+                            "relationshipToInsured": "SON",
+                            "partyType": "INDIVIDUAL",
+                            "dateOfBirth": "1976-01-02",
+                            "beneficiaryPercentage": 25,
+                            "ssn": "211221029",
+                            "partyId": "1810645041",
+                            "partyRoleId": "-2|0|3",
+                            "partyRole": "PRIMARYBENEFICIARY",
+                            "prefix": "Mr.",
+                            "firstName": "SAUN",
+                            "lastName": "Bene",
+                            "fullName": "SAUN Bene",
+                            "gender": "MALE"
+                        },
+                        "notificationPreferences": {
+                            "email": {
+                                "emailAddress": "rakesh.patil@zinnia.com",
+                                "emailType": "PERSONAL",
+                                "emailId": "-999"
+                            },
+                            "notificationMethod": {
+                                "method": "MAIL",
+                                "faxOpted": false,
+                                "emailOpted": true,
+                                "mailOpted": false
+                            },
+                            "address": {
+                                "addressId": "743666613",
+                                "addressType": "DEFAULT",
+                                "addressLine1": "437 N HIGHLAND AVE",
+                                "city": "LOS ANGELES",
+                                "state": "CA",
+                                "zipCode": "90036",
+                                "country": "USA"
+                            },
+                            "phone": {
+                                "phoneType": "HOMEFAX",
+                                "countryCode": "1",
+                                "areaCode": "567",
+                                "dialNumber": "6567876",
+                                "bestTime": "Any",
+                                "phoneId": "40964500"
+                            }
+                        },
+                        "isAccurate": true,
+                        "recordType": "IDN_CLAIM_BENE_RECORD"
+                    },
+                    {
+                        "party": {
+                            "relationshipToInsured": "BROTHER",
+                            "partyType": "INDIVIDUAL",
+                            "dateOfBirth": "1976-01-02",
+                            "beneficiaryPercentage": 25,
+                            "ssn": "211221029",
+                            "partyId": "1810645042",
+                            "partyRoleId": "-2|0|4",
+                            "partyRole": "PRIMARYBENEFICIARY",
+                            "prefix": "Mr.",
+                            "firstName": "SAGAR",
+                            "lastName": "Bene",
+                            "fullName": "SAGAR Bene",
+                            "gender": "MALE"
+                        },
+                        "isAccurate": true,
+                        "recordType": "IDN_CLAIM_BENE_RECORD",
+                        "notificationPreferences": {
+                            "notificationMethod": {
+                                "method": "MAIL",
+                                "faxOpted": false,
+                                "emailOpted": false,
+                                "mailOpted": true
+                            },
+                            "address": {
+                                "addressId": "743666613",
+                                "addressType": "DEFAULT",
+                                "addressLine1": "437 N HIGHLAND AVE",
+                                "city": "LOS ANGELES",
+                                "state": "CA",
+                                "zipCode": "90036",
+                                "country": "USA"
+                            }
+                        }
+                    },
+                    {
+                        "party": {
+                            "relationshipToInsured": "UNCLE",
+                            "partyType": "INDIVIDUAL",
+                            "dateOfBirth": "1976-01-02",
+                            "beneficiaryPercentage": 25,
+                            "ssn": "211221029",
+                            "partyId": "1810645043",
+                            "partyRoleId": "-2|0|5",
+                            "partyRole": "PRIMARYBENEFICIARY",
+                            "prefix": "Mr.",
+                            "firstName": "Pratik",
+                            "lastName": "Bene",
+                            "fullName": "Pratik Bene",
+                            "gender": "MALE"
+                        },
+                        "isAccurate": true,
+                        "recordType": "IDN_CLAIM_BENE_RECORD",
+                        "notificationPreferences": {
+                            "notificationMethod": {
+                                "method": "MAIL",
+                                "faxOpted": false,
+                                "emailOpted": false,
+                                "mailOpted": true
+                            },
+                            "address": {
+                                "addressId": "743666613",
+                                "addressType": "DEFAULT",
+                                "addressLine1": "437 N HIGHLAND AVE",
+                                "city": "LOS ANGELES",
+                                "state": "CA",
+                                "zipCode": "90036",
+                                "country": "USA"
+                            }
+                        }
+                    },
+                    {
+                        "party": {
+                            "relationshipToInsured": "BROTHER",
+                            "partyType": "INDIVIDUAL",
+                            "dateOfBirth": "1976-01-02",
+                            "beneficiaryPercentage": 25,
+                            "ssn": "211221029",
+                            "partyId": "1810645044",
+                            "partyRoleId": "-2|0|6",
+                            "partyRole": "PRIMARYBENEFICIARY",
+                            "prefix": "Mr.",
+                            "firstName": "Vinod",
+                            "lastName": "Bene",
+                            "fullName": "Vinod Bene",
+                            "gender": "MALE"
+                        },
+                        "isAccurate": true,
+                        "recordType": "IDN_CLAIM_BENE_RECORD",
+                        "notificationPreferences": {
+                            "notificationMethod": {
+                                "method": "MAIL",
+                                "faxOpted": false,
+                                "emailOpted": false,
+                                "mailOpted": true
+                            },
+                            "address": {
+                                "addressId": "743666613",
+                                "addressType": "DEFAULT",
+                                "addressLine1": "437 N HIGHLAND AVE",
+                                "city": "LOS ANGELES",
+                                "state": "CA",
+                                "zipCode": "90036",
+                                "country": "USA"
+                            }
+                        }
+                    }
+                ],
+                "carrierApprovalRequired": false,
+                "beneReviewDocumentId": ""
+            }
+        },
+        "uploadRequired": false
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "initial_death_notification_ops",
+    "priority": ""
+}

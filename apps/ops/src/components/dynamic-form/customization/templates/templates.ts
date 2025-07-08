@@ -2,6 +2,7 @@ import AddressFieldTemplate from './address-field-template/address-field-templat
 import ArrayFieldItemTemplate from './array-field-item-template/array-field-item-template';
 import ArrayFieldTableTemplate from './array-field-template/array-field-table-template';
 import ArrayFieldTemplate from './array-field-template/array-field-template';
+import { TransactionsArrayFieldTemplate } from './array-field-template/TransactionsArrayFieldTemplate';
 import AddButton from './button-templates/add-button/add-button';
 import RemoveButton from './button-templates/remove-button/remove-button';
 import SubmitButton from './button-templates/submit-button/submit-button';
@@ -22,6 +23,7 @@ export function generateTemplates() {
         TitleFieldTemplate,
         FieldTemplate,
         ArrayFieldTemplate,
+        TransactionsArrayFieldTemplate,
         ArrayFieldItemTemplate,
         ObjectFieldTemplate,
         FieldErrorTemplate,

@@ -63,16 +63,10 @@
                                                                     "pattern": "^[0-9]+$",
                                                                     "maxLength": 22
                                                                 },
-                                                                "transactionNumber": {
-                                                                    "type": "string",
-                                                                    "title": "Lifecad Transaction ID",
-                                                                    "pattern": "^[a-zA-Z0-9]*$",
-                                                                    "maxLength": 15
-                                                                },
-                                                                "transactionDate": {
+                                                                "checkIssueDate": {
                                                                     "type": "string",
                                                                     "format": "date",
-                                                                    "title": "Check Transaction Date"
+                                                                    "title": "Check Date"
                                                                 },
                                                                 "checkNumber": {
                                                                     "type": "string",
@@ -90,7 +84,7 @@
                                                             },
                                                             "required": [
                                                                 "policyNumber",
-                                                                "transactionDate",
+                                                                "checkIssueDate",
                                                                 "checkNumber",
                                                                 "transactionAmount"
                                                             ]
@@ -162,12 +156,7 @@
                                             "label": true
                                         }
                                     },
-                                    "transactionNumber": {
-                                        "ui:options": {
-                                            "label": true
-                                        }
-                                    },
-                                    "transactionDate": {
+                                    "checkIssueDate": {
                                         "ui:options": {
                                             "label": true,
                                             "format": "MM-DD-YYYY",

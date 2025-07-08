@@ -17,8 +17,7 @@
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
-                            "title": "Processing Instructions",
-                            "description": "Reverse all uncashed transactions in LifeCAD."
+                            "title": "Processing Instructions"
                         },
                         "details": {
                             "type": "object",
@@ -29,6 +28,11 @@
                                     "type": "object",
                                     "title": "",
                                     "properties": {
+                                        "additionalNote": {
+                                            "type": "string",
+                                            "title": "Additional Notes",
+                                            "readOnly": true
+                                        },
                                         "transactions": {
                                             "type": "array",
                                             "title": "",
@@ -40,13 +44,9 @@
                                                         "type": "string",
                                                         "title": "Contract Number"
                                                     },
-                                                    "transactionNumber": {
+                                                    "checkIssueDate": {
                                                         "type": "string",
-                                                        "title": "Lifecad Transaction ID"
-                                                    },
-                                                    "transactionDate": {
-                                                        "type": "string",
-                                                        "title": "Check Transaction Date"
+                                                        "title": "Check  Date"
                                                     },
                                                     "checkNumber": {
                                                         "type": "string",
@@ -58,20 +58,8 @@
                                                     }
                                                 }
                                             }
-                                        },
-                                        "additionalNote": {
-                                            "type": "string",
-                                            "title": "Additional Notes",
-                                            "readOnly": true
-                                        },
-                                        "stopSorTransaction": {
-                                            "type": "boolean",
-                                            "title": "I have reversed these transaction in LifeCAD",
-                                            "default": null,
-                                            "enum": [null, true]
                                         }
-                                    },
-                                    "required": ["stopSorTransaction"]
+                                    }
                                 }
                             }
                         }
@@ -91,15 +79,22 @@
                     "sectionHeader": {
                         "ui:options": {
                             "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
+                            "ObjectFieldTemplate": "TransactionInstructionTemplate"
                         }
                     },
                     "details": {
                         "uncashTransaction": {
+                            "additionalNote": {
+                                "ui:options": {
+                                    "label": true,
+                                    "isQuoted": true,
+                                    "classNames": "mt-3"
+                                }
+                            },
                             "transactions": {
                                 "ui:options": {
                                     "label": false,
-                                    "ArrayFieldTemplate": "ArrayFieldTableTemplate",
+                                    "ArrayFieldTemplate": "TransactionsArrayFieldTemplate",
                                     "sorting": true
                                 },
                                 "items": {
@@ -113,12 +108,7 @@
                                             "label": false
                                         }
                                     },
-                                    "transactionNumber": {
-                                        "ui:options": {
-                                            "label": false
-                                        }
-                                    },
-                                    "transactionDate": {
+                                    "checkIssueDate": {
                                         "ui:options": {
                                             "label": false
                                         }
@@ -158,19 +148,6 @@
                                             "widget": "hidden"
                                         }
                                     }
-                                }
-                            },
-                            "additionalNote": {
-                                "ui:options": {
-                                    "label": true,
-                                    "isQuoted": true,
-                                    "classNames": "mt-3"
-                                }
-                            },
-                            "stopSorTransaction": {
-                                "ui:hideError": true,
-                                "ui:options": {
-                                    "classNames": "mt-3"
                                 }
                             }
                         }

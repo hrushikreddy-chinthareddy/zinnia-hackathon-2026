@@ -291,8 +291,9 @@
     "formValidations": {
         "required": "Ce champ est obligatoire.",
         "patternDigit": "Seuls les chiffres sont autorisés.",
-        "patternNumer": "Seuls les chiffres sont autorisés. Doit commencer par 82000.",
+        "patternNumber": "Seuls les chiffres sont autorisés. Doit commencer par 82000.",
         "patternNoSpecial": "Ne contient que des lettres et des chiffres (pas de caractères spéciaux).",
+        "patternWithSpecial": "Contient uniquement des lettres et des chiffres avec les caractères : -, _.",
         "maxLength": "Le champ ne peut pas dépasser {{limit}} caractères.",
         "minLength": "Le champ ne doit pas contenir moins de {{limit}} caractères.",
         "minItems": "Veuillez sélectionner au moins {{limit}} élément(s)."
@@ -1128,6 +1129,8 @@
             "viewDetails": "View details"
         },
         "steps": {
+            "initiateClaims.updateDeceasedDate": "Demande de décès en attente de transaction mise à jour dans le système d'administration.",
+            "initiateClaims.processDeathClaimTransaction": "Transacción pendiente de reclamación por fallecimiento actualizada en el sistema de administración",
             "requestAck.nbRequestReceived": "Réception de {{subType}}",
             "requestAck.caseProcessing": "Préparer {{subType}} pour le traitement",
             "requestAck.draftContractCreation": "Créer un contrat provisoire",
@@ -5395,18 +5398,26 @@
     "transactionListing": {
         "loadingTransactions": "Récupération des transactions arrêtées...",
         "errorGettingTransactions": "Les données des transactions arrêtées n'ont pas pu être récupérées.",
+        "uncashedTransactions": "Statut des chèques en attente",
         "stoppedTransactions": "Transactions arrêtées",
-        "noTransactionsFoundTitle": "Aucune transaction n'a été trouvée",
-        "noTransactionsMessage": "Aucune transaction n'est liée à cet événement.",
+        "noUncashedTransactions": "Aucun chèque non encaissé disponible pour ce contrat.",
+        "noUncashedTransactionsTableHead": "Contrat #{{contractNumber}}",
+        "noTransactionsFoundTitle": "Aucune transaction trouvée",
+        "noTransactionsMessage": "Il n'y a pas de transactions liées à cet événement.",
         "labels": {
             "deleted": "Supprimé",
             "terminated": "Terminé",
             "deleteFailed": "Échec de la suppression",
             "terminateFailed": "Échec de la terminaison",
-            "on": "Sur"
+            "on": "Le",
+            "outstanding": "En attente",
+            "stopped": "Arrêté",
+            "reversed": "Annulé",
+            "checkToEstate": "Chèque au patrimoine"
         },
         "tableColumns": {
             "transaction": "Transaction",
+            "checkNo": "Numéro de chèque / Date",
             "status": "Statut",
             "amount": "Montant"
         }
@@ -5992,7 +6003,7 @@
         },
         "documentSelection": {
             "title": "Sélectionnez le document justificatif",
-            "subtitle": "Nous avons trouvé un ou plusieurs documents liés à ce contrat dans OnBase. Veuillez sélectionner un identifiant de document ou poursuivre sans sélectionner de document.",
+            "subtitle": "Sélectionnez l'un des documents ci-dessous pour continuer. Voici les documents associés à ce contrat.",
             "proceedWithoutDocument": "Procéder sans document",
             "continue": "Continuer",
             "cancel": "Annuler",
@@ -6243,7 +6254,7 @@
             "dateOfDeath": "Date of Death",
             "sourceOfInfo": "Source of Information",
             "relationshipToOwner": "Relation avec le défunt",
-            "didYouMakeAnyChanges": "Avez-vous effectué des changements dans le système d’enregistrement ?",
+            "didYouMakeAnyChanges": "Avez-vous apporté des modifications au système d’administration ? ",
             "addAnotherCall": "Ajouter un autre appel",
             "contactRoles": {
                 "agent": "Agent",
@@ -6311,7 +6322,7 @@
             "newInformation": "Nouvelle information",
             "relationshipToDeceased": "Relation avec le propriétaire",
             "relationshipToOwner": "Relación con el fallecido",
-            "didYouMakeAnyChanges": "¿Hizo algún cambio en el sistema de registro?",
+            "didYouMakeAnyChanges": "Avez-vous apporté des modifications au système d’administration ?",
             "addAnotherCall": "Agregar otra llamada",
             "contactRoles": {
                 "agent": "Agente",
@@ -6321,8 +6332,12 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
-            }
-        }
+            },
+            "invalidEmail": "E-mail invalide",
+            "invalidFax": "Fax invalide"
+        },
+        "invalidEmail": "E-mail invalide",
+        "invalidFax": "Fax invalide"
     },
     "claimsDay150": {
         "beneStatus": {
@@ -6345,5 +6360,16 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
+    },
+    "reverseTransaction": {
+        "postFunds": "Fonds Post-Muerte",
+        "preFunds": "Fonds Pre-Muerte",
+        "sendCheckToEstate": "Des chèques manuels ont été envoyés à la succession.",
+        "reverseTransaction": "J'ai annulé la transaction dans le Système de Gestion",
+        "reviewFunds": "Chèques bloqués par les services financiers – Révision requise",
+        "reviewFundsRadio": "J'ai revu les chèques et pris l'action nécessaire",
+        "preFundTransactionsInstruction": "Emitir manuellement des chèques pour les transactions prédécédentes en fonction des besoins.",
+        "postFundTransactionsInstruction": "Revertir les transactions post-décès dans le Système de Gestion. ",
+        "reviewFundsInstruction": "La date de décès n'a pas été fournie par le notificateur, donc les chèques ne peuvent pas être classifiés comme des fonds prédécédents ou post-décédents. Veuillez les revérifier et prendre les mesures appropriées."
     }
 }

@@ -14,10 +14,13 @@ function transformErrors({ errors, t }: TransformErrorsProps) {
                 error.message = t('formValidations.patternDigit');
             }
             if (error.params.pattern === '^82000[0-9]*$') {
-                error.message = t('formValidations.patternNumer');
+                error.message = t('formValidations.patternNumber');
             }
             if (error.params.pattern === '^[a-zA-Z0-9]*$') {
                 error.message = t('formValidations.patternNoSpecial');
+            }
+            if (error.params.pattern === '^[a-zA-Z0-9-_]+$') {
+                error.message = t('formValidations.patternWithSpecial');
             }
         } else if (error.name === 'minLength') {
             error.message = t('formValidations.minLength', {

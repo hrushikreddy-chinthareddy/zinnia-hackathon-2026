@@ -1,6 +1,7 @@
 {
     "formId": "c620918f-2067-47b2-957f-8fc6f6e78c16",
     "process": "Claims",
+    "carrier": "FLIC",
     "taskType": "CLAIMS_BENE_REVIEW",
     "formSchema": {
         "type": "object"
@@ -32,7 +33,7 @@
                         "sectionHeader": {
                             "type": "object",
                             "title": "Processing Instructions",
-                            "description": "Confirm beneficiary details match the system of record."
+                            "description": "Confirm beneficiary details match the Admin System."
                         },
                         "details": {
                             "type": "object",
@@ -105,6 +106,7 @@
                                                         "type": "boolean"
                                                     }
                                                 },
+                                                "required": ["isAccurate"],
                                                 "dependencies": {
                                                     "isAccurate": {
                                                         "required": [
@@ -134,6 +136,12 @@
                                                 }
                                             }
                                         },
+                                        "beneReviewDocumentId": {
+                                            "type": "string",
+                                            "title": "Document ID used for Beneficiary Review",
+                                            "maxLength": 50,
+                                            "pattern": "^[a-zA-Z0-9-_]+$"
+                                        },
                                         "carrierApprovalTitle": {
                                             "type": "object",
                                             "title": "Carrier Approval/Restricted Beneficiary"
@@ -143,7 +151,8 @@
                                             "default": false,
                                             "enum": [true, false]
                                         }
-                                    }
+                                    },
+                                    "required": ["beneReviewDocumentId"]
                                 }
                             }
                         }
@@ -151,12 +160,6 @@
                 },
                 "uiSchema": {
                     "ui:order": ["sectionHeader", "details"],
-                    "ui:globalOptions": {
-                        "duplicateKeySuffixSeparator": "_",
-                        "orderable": false,
-                        "copyable": false
-                    },
-                    "$schema": "http://json-schema.org/draft-07/schema#",
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
@@ -277,8 +280,8 @@
                                     "inaccuracyReasons": {
                                         "ui:options": {
                                             "label": true,
-                                            "title": "What data was updated in the system of records? (Select at least one)",
-                                            "help": "Update the system of record to match the data above",
+                                            "title": "What data was updated in the Admin System? (Select at least one)",
+                                            "help": "Update the Admin System to match the data above",
                                             "enumNames": [
                                                 "Relationship",
                                                 "Beneficiary Type",
@@ -292,6 +295,14 @@
                                         }
                                     }
                                 }
+                            },
+                            "beneReviewDocumentId": {
+                                "ui:widget": "text",
+                                "ui:options": {
+                                    "label": true,
+                                    "title": "Document ID used for Beneficiary Review"
+                                },
+                                "ui:hideError": false
                             },
                             "carrierApprovalTitle": {
                                 "ui:options": {

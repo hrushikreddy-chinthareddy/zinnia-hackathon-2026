@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Icon, IconType } from '@zinnia/bloom/components';
+import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import AssistiveText, {
@@ -11,8 +11,12 @@ import Typography, {
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 
-import { ViewTransactionsProps } from './transactions-step-additional-data.types';
+import {
+    StepProgramTypes,
+    ViewTransactionsProps,
+} from './transactions-step-additional-data.types';
 import TransactionsTable from './transactions-table';
+import UncashedTransactionsTable from './uncashed-transactions-table';
 
 export function ViewTransactions({
     stepAdditionalData,
@@ -20,24 +24,38 @@ export function ViewTransactions({
 }: ViewTransactionsProps) {
     const { t } = useTranslation();
     const entityId = stepAdditionalData.value;
+
     const {
         data: transactionEntity,
         isLoading,
         isError,
+        refetch,
     } = useQuery({
         queryKey: ['claimsTransactions', entityId],
         queryFn: () => getTransactionEntityQuery(entityId),
     });
-    const programs = transactionEntity
-        ? transactionEntity?.entity?.stopPrograms?.[prop]
-        : [];
+
+    const programs =
+        prop === StepProgramTypes.UNCASHED
+            ? transactionEntity?.entity?.stopTransactions?.transactions ?? []
+            : transactionEntity?.entity?.stopPrograms?.[prop] ?? [];
+
+    const refreshData = () => {
+        refetch();
+    };
 
     const displayNoTransactions = () => {
         return (
             <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
                 <div className="text-sm font-bold">
                     <AssistiveText
-                        text={t('transactionListing.noTransactionsFoundTitle')}
+                        text={
+                            prop === StepProgramTypes.UNCASHED
+                                ? t('transactionListing.noUncashedTransactions')
+                                : t(
+                                      'transactionListing.noTransactionsFoundTitle'
+                                  )
+                        }
                         variant={AssistiveTextVariant.Default}
                         iconOverride={
                             <Icon
@@ -103,12 +121,36 @@ export function ViewTransactions({
     return (
         <div className="flex w-full flex-col">
             <div>
-                <Typography variant={TypographyVariant.H3} className="mb-4">
-                    {t('transactionListing.stoppedTransactions')}
-                </Typography>
+                {prop === StepProgramTypes.UNCASHED ? (
+                    <div className="flex flex-row items-center gap-2 mb-4">
+                        <Typography variant={TypographyVariant.H4}>
+                            {t('transactionListing.uncashedTransactions')}
+                        </Typography>
+                        <Button onClick={refreshData} mode="link" size="small">
+                            <Icon
+                                width={16}
+                                height={16}
+                                type={IconType.REFRESH}
+                            />
+                        </Button>
+                    </div>
+                ) : (
+                    <Typography variant={TypographyVariant.H3} className="mb-4">
+                        {t('transactionListing.stoppedTransactions')}
+                    </Typography>
+                )}
             </div>
-            {programs && programs?.length > 0 ? (
-                <TransactionsTable transactions={programs} t={t} />
+            {programs.length > 0 ? (
+                prop === StepProgramTypes.UNCASHED ? (
+                    <>
+                        <UncashedTransactionsTable
+                            transactions={programs}
+                            t={t}
+                        />
+                    </>
+                ) : (
+                    <TransactionsTable transactions={programs} t={t} />
+                )
             ) : (
                 displayNoTransactions()
             )}

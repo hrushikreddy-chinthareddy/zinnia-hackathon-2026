@@ -1,16 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
-import { Address } from '@zinnia/api-types/types/sor';
+import { Address as SorAddress } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import AssistiveText, {
     AssistiveTextVariant,
 } from '@deps/components/assistive-text/assistive-text';
-import { DeliveryMethods } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import {
+    ClaimActionTypes,
+    ClaimCommunicationTypes,
+} from '@deps/containers/death-claim-container/death-claim.types';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
+import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import {
     parseAndFormatDate,
     formatPhoneWithAreacode,
@@ -48,7 +52,7 @@ const DeathNotificationSidesheet = ({
         return {
             notifiers: {
                 dateOfNotification: parseAndFormatDate(
-                    'YYYY-MM-DD',
+                    ZAHARA_DATE_FORMAT,
                     'MM-DD-YYYY',
                     entity.notifiers?.dateOfNotification
                 ),
@@ -67,7 +71,7 @@ const DeathNotificationSidesheet = ({
                         partyRole: owner.party?.partyRole,
                     },
                     dateOfDeath: parseAndFormatDate(
-                        'YYYY-MM-DD',
+                        ZAHARA_DATE_FORMAT,
                         'MM-DD-YYYY',
                         owner.dateOfDeath
                     ),
@@ -76,9 +80,7 @@ const DeathNotificationSidesheet = ({
                 })) || [],
             beneficiaries:
                 entity.beneficiaries?.map((bene: any) => ({
-                    party: {
-                        fullName: bene.party?.fullName,
-                    },
+                    party: { fullName: bene.party?.fullName },
                     notificationMethod:
                         bene.notificationPreferences?.notificationMethod
                             ?.method,
@@ -87,10 +89,37 @@ const DeathNotificationSidesheet = ({
                               emailAddress:
                                   bene.notificationPreferences.email
                                       .emailAddress,
+                              action: bene.notificationPreferences.email.action,
                           }
                         : DEFAULT_ERROR_STRING,
-                    address: bene.notificationPreferences.address,
-                    faxNumber: bene.notificationPreferences?.fax?.faxNumber,
+                    address: bene.notificationPreferences?.address?.country
+                        ? {
+                              action: bene.notificationPreferences.address
+                                  .action,
+                              addressLine1:
+                                  bene.notificationPreferences.address
+                                      .addressLine1 || '',
+                              addressLine2:
+                                  bene.notificationPreferences.address
+                                      .addressLine2 || '',
+                              addressLine3:
+                                  bene.notificationPreferences.address
+                                      .addressLine3 || '',
+                              city:
+                                  bene.notificationPreferences.address.city ||
+                                  '',
+                              state:
+                                  bene.notificationPreferences.address.state ||
+                                  '',
+                              pincode:
+                                  bene.notificationPreferences.address
+                                      .pincode || '',
+                              country:
+                                  bene.notificationPreferences.address
+                                      .country || '',
+                          }
+                        : DEFAULT_ERROR_STRING,
+                    faxNumber: bene.notificationPreferences.faxNumber,
                 })) || [],
         };
     };
@@ -296,46 +325,75 @@ const DeathNotificationSidesheet = ({
                     {t('deathNotification.beneficiaryDetails.title')}
                 </label>
                 {data.beneficiaries.length > 0 ? (
-                    data.beneficiaries.map((bene, index) => (
-                        <div key={index} className="mb-4">
-                            <Typography
-                                variant={TypographyVariant.BodySmBold}
-                                className="text-gray-800 mb-2"
-                            >
-                                {toTitleCase(bene.party.fullName)}
-                            </Typography>
-                            <div className="grid grid-cols-5 gap-2 text-md align-center">
-                                <div className="col-span-2 text-[--color-base-text-text-secondary]">
-                                    {t(
-                                        `deathNotification.beneficiaryDetails.${bene.notificationMethod.toLowerCase()}`
-                                    )}
-                                </div>
+                    data.beneficiaries.map((bene, index) => {
+                        const hasValidNotification =
+                            (bene.notificationMethod ===
+                                ClaimCommunicationTypes.Email &&
+                                bene.email?.emailAddress &&
+                                bene.email.action !== ClaimActionTypes.NONE) ||
+                            (bene.notificationMethod ===
+                                ClaimCommunicationTypes.Fax &&
+                                bene.faxNumber) ||
+                            (bene.notificationMethod ===
+                                ClaimCommunicationTypes.Mail &&
+                                bene.address &&
+                                bene.address.country &&
+                                bene.address.action !== ClaimActionTypes.NONE);
+
+                        return (
+                            <div key={index} className="mb-4">
                                 <Typography
-                                    variant={TypographyVariant.BodySm}
-                                    className="col-span-3"
+                                    variant={TypographyVariant.BodySmBold}
+                                    className="text-gray-800 mb-2"
                                 >
-                                    {bene.notificationMethod ===
-                                        DeliveryMethods.Email &&
-                                    bene.email?.emailAddress ? (
-                                        bene.email.emailAddress
-                                    ) : bene.notificationMethod ===
-                                          DeliveryMethods.Faxnumber &&
-                                      bene.faxNumber ? (
-                                        formatFaxNumber(bene.faxNumber)
-                                    ) : bene.notificationMethod ===
-                                          DeliveryMethods.Mail &&
-                                      bene.address &&
-                                      bene.address.country ? (
-                                        <FormattedAddress
-                                            address={bene?.address as Address}
-                                        />
-                                    ) : (
-                                        DEFAULT_ERROR_STRING
-                                    )}
+                                    {toTitleCase(bene.party.fullName)}
                                 </Typography>
+                                {hasValidNotification ? (
+                                    <div className="grid grid-cols-5 gap-2 text-md align-center">
+                                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                                            {t(
+                                                `deathNotification.beneficiaryDetails.${bene.notificationMethod.toLowerCase()}`
+                                            )}
+                                        </div>
+                                        <Typography
+                                            variant={TypographyVariant.BodySm}
+                                            className="col-span-3"
+                                        >
+                                            {bene.notificationMethod ===
+                                                ClaimCommunicationTypes.Email &&
+                                            bene.email?.emailAddress ? (
+                                                bene.email.emailAddress
+                                            ) : bene.notificationMethod ===
+                                                  ClaimCommunicationTypes.Fax &&
+                                              bene.faxNumber ? (
+                                                formatFaxNumber(bene.faxNumber)
+                                            ) : bene.notificationMethod ===
+                                                  ClaimCommunicationTypes.Mail &&
+                                              bene.address &&
+                                              bene.address.country ? (
+                                                <FormattedAddress
+                                                    address={
+                                                        bene.address as SorAddress
+                                                    }
+                                                />
+                                            ) : (
+                                                DEFAULT_ERROR_STRING
+                                            )}
+                                        </Typography>
+                                    </div>
+                                ) : (
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="text-gray-600"
+                                    >
+                                        {t(
+                                            'deathNotification.beneficiaryDetails.noData'
+                                        )}
+                                    </Typography>
+                                )}
                             </div>
-                        </div>
-                    ))
+                        );
+                    })
                 ) : (
                     <Typography
                         variant={TypographyVariant.BodySm}

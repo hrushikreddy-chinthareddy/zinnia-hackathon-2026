@@ -32,6 +32,7 @@ type DynamicFormProps = {
         setCustomData: (data: any) => void;
         onCancel?: () => void;
         updateSchema?: (data: any) => void;
+        setSubmitEnabled?: (data: any) => void;
     };
 };
 

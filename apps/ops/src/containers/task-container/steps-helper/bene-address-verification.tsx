@@ -1,3 +1,5 @@
+import { TaskStatus } from '@deps/models/case/task-instance';
+
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
@@ -7,6 +9,7 @@ export const getBeneAddressVerificationSteps = ({
     taskInfoLink,
     t,
     taskMetadata,
+    isContinueButtonEnabled,
     task,
 }: GetStepsProps) => {
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
@@ -14,6 +17,8 @@ export const getBeneAddressVerificationSteps = ({
         isVisible: () => true,
         component: (
             <TaskFormStep
+                readonly={task.status === TaskStatus.Completed}
+                isContinueButtonEnabled={isContinueButtonEnabled}
                 taskInfoLink={taskInfoLink}
                 isSubmit={true}
                 taskMetadata={metadata}

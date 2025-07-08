@@ -40,13 +40,9 @@
                                                         "type": "string",
                                                         "title": "Contract Number"
                                                     },
-                                                    "transactionNumber": {
+                                                    "checkIssueDate": {
                                                         "type": "string",
-                                                        "title": "Lifecad Transaction ID"
-                                                    },
-                                                    "transactionDate": {
-                                                        "type": "string",
-                                                        "title": "Check Transaction Date"
+                                                        "title": "Check  Date"
                                                     },
                                                     "checkNumber": {
                                                         "type": "string",
@@ -113,12 +109,7 @@
                                             "label": false
                                         }
                                     },
-                                    "transactionNumber": {
-                                        "ui:options": {
-                                            "label": false
-                                        }
-                                    },
-                                    "transactionDate": {
+                                    "checkIssueDate": {
                                         "ui:options": {
                                             "label": false
                                         }
