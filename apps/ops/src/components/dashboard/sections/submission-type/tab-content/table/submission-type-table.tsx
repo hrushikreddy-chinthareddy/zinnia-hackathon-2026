@@ -19,20 +19,13 @@ import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
 import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
-import {
-    friendlyGroupByName,
-    generateCaseLink,
-} from '@deps/components/dashboard/utils';
-import NavElement, {
-    NavElementType,
-} from '@deps/components/nav-element/nav-element';
+import { friendlyGroupByName } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import { SubmissionMethodTooltip } from '../../submission-type';
@@ -238,26 +231,26 @@ export const SubmissionTypeTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell>Actions</TableHeaderCell>
+                                    {/* <TableHeaderCell>Actions</TableHeaderCell> */}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map((item) => {
-                                    const link = generateCaseLink({
-                                        process: selectedProcess,
-                                        carrierOrProductName: item.name,
-                                        submissionMethod: item.submissionMethod,
-                                        startDate: timerange.from,
-                                        endDate: timerange.to,
-                                        status: [
-                                            Statuses.InProgress,
-                                            Statuses.Exception,
-                                            Statuses.NotStarted,
-                                        ],
-                                        groupBy: submissionVs,
-                                        carrier: filter.carrier,
-                                        brokerDealer: filter.brokerDealerName,
-                                    });
+                                    // const link = generateCaseLink({
+                                    //     process: selectedProcess,
+                                    //     carrierOrProductName: item.name,
+                                    //     submissionMethod: item.submissionMethod,
+                                    //     startDate: timerange.from,
+                                    //     endDate: timerange.to,
+                                    //     status: [
+                                    //         Statuses.InProgress,
+                                    //         Statuses.Exception,
+                                    //         Statuses.NotStarted,
+                                    //     ],
+                                    //     groupBy: submissionVs,
+                                    //     carrier: filter.carrier,
+                                    //     brokerDealer: filter.brokerDealerName,
+                                    // });
                                     return (
                                         <TableRow
                                             key={`${item.name}-${item.submissionMethod}`}
@@ -267,7 +260,7 @@ export const SubmissionTypeTable = () => {
                                                 {item.submissionMethod}
                                             </TableCell>
                                             <TableCell>{item.count}</TableCell>
-                                            <TableCell>
+                                            {/* <TableCell>
                                                 <NavElement
                                                     type={NavElementType.Link}
                                                     className="underline"
@@ -277,7 +270,7 @@ export const SubmissionTypeTable = () => {
                                                 >
                                                     View cases
                                                 </NavElement>
-                                            </TableCell>
+                                            </TableCell> */}
                                         </TableRow>
                                     );
                                 })}
