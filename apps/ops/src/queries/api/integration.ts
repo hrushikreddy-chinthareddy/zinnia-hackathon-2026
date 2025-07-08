@@ -236,6 +236,7 @@ export const getDocuments = async (
 
         browserLogInfo('getDocuments::success', {
             payload: body,
+            totalDocumets: data.data?.length || 0,
             function: 'integration.getDocuments',
         });
         return data.data || [];

@@ -53,7 +53,6 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
             addressData,
             notificationMethodSelected
         );
-        console.log(payload);
 
         const successfulSubmit = await updateNotificationMethod(payload);
 

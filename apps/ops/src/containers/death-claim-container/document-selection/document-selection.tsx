@@ -19,6 +19,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { useDeathClaimSupportingDocument } from '@deps/hooks/useDeathClaimSupportingDocument';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 interface DocumentSelectionProps {
     policyNumber: string;
     lob: string;
@@ -54,12 +55,18 @@ const DocumentSelection = ({
                 value: document?.caseId,
             };
         });
+        browserLogInfo('DocumentSelection::Set list of supporting documents', {
+            lob: lob,
+            policyNumber: policyNumber,
+            documentListCount: supportingDocuments?.length || 0,
+            docsList: items,
+        });
         const noDocumentOption = {
             label: t('proceedWithoutDocument'),
             value: PROCESS_WITHOUT_CASE_DOCUMENT,
         };
         setCaseOptions([...items, noDocumentOption]);
-    }, [supportingDocuments, t]);
+    }, [lob, policyNumber, supportingDocuments, t]);
 
     const onDocumentSelection = (selection: string) => {
         const selectedOption = caseOptions.find(

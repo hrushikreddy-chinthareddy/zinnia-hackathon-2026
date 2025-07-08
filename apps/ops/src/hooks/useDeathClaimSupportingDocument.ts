@@ -4,14 +4,14 @@ import { getDocuments } from '@deps/queries/api/integration';
 
 export enum QueueNames {
     CPNEW = 'CP - NEW',
-    CPASSIGN = 'CP - ASSIGN',
+    CPASSIGNED = 'CP - ASSIGNED',
     CPRETURNING = 'CP - RETURNING',
     CASECREATION = 'CASE CREATION',
 }
 
 const applicableQueueNames: QueueNames[] = [
     QueueNames.CPNEW,
-    QueueNames.CPASSIGN,
+    QueueNames.CPASSIGNED,
     QueueNames.CPRETURNING,
     QueueNames.CASECREATION,
 ];

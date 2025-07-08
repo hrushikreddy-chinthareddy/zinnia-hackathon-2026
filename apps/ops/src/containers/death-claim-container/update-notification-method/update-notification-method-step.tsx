@@ -133,7 +133,6 @@ const UpdateNotificationMethodStep = ({
             addressData,
             notificationMethodSelected
         );
-        console.log(payload);
 
         const successfulSubmit = await updateNotificationMethod(payload);
 
