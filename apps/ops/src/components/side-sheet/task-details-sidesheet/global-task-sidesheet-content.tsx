@@ -900,9 +900,11 @@ export default function GlobalTaskSideSheet({
                     <TabTrigger value={TabOptions.Details}>
                         {t('sideSheet.task.tabs.details') ?? ''}
                     </TabTrigger>
-                    <TabTrigger value={TabOptions.Documents}>
-                        {t('sideSheet.task.tabs.documents') ?? ''}
-                    </TabTrigger>
+                    {type === 'task' && (
+                        <TabTrigger value={TabOptions.Documents}>
+                            {t('sideSheet.task.tabs.documents') ?? ''}
+                        </TabTrigger>
+                    )}
                     {!noCommentsAvailable && (
                         <TabTrigger value={TabOptions.Comments}>
                             {t('sideSheet.task.tabs.comments') ?? ''}
