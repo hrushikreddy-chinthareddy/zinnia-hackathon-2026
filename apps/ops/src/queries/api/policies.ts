@@ -149,7 +149,8 @@ export const searchPolicy = async (
 
 export const fetchPolicy = async (
     id?: string,
-    planCode?: string
+    planCode?: string,
+    date?: string
 ): Promise<Policy | null> => {
     if (isMockPolicyDetailsRequestEnabled()) {
         return mockPolicy;
@@ -172,11 +173,15 @@ export const fetchPolicy = async (
         });
         return null;
     }
+
+    const dateParam = date ? `&date=${date}` : '';
     try {
         const { data } = await client.get<
             any,
             AxiosResponse<GetPolicyResponse>
-        >(`${baseAppUrl}/api/policies/${planCode}/${id}?viewDetails=true`);
+        >(
+            `${baseAppUrl}/api/policies/${planCode}/${id}?viewDetails=true${dateParam}`
+        );
 
         if (!data.data) {
             browserLogInfo('fetchPolicy::Policy data not', {

@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localData from 'dayjs/plugin/localeData';
@@ -13,6 +14,8 @@ import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { FieldDateSelectTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as CalendarIcon } from '@deps/styles/elements/icons/icons_outlined/calendar.svg';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+
+import styles from './field-date-select.module.css';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localData);
@@ -91,7 +94,7 @@ export default function FieldDateSelect({
     return (
         <div
             data-testid={FieldDateSelectTest.Container}
-            className="relative"
+            className={clsx('relative', rest.className)}
             ref={containerRef}
         >
             <Field
@@ -112,7 +115,12 @@ export default function FieldDateSelect({
                 type={FieldType.BaseActive}
                 {...rest}
             />
-            <div className="absolute top-[70px] z-20 w-[fit-content] !min-w-[250px] rounded-md bg-white shadow-elevation-light-16">
+            <div
+                className={clsx(
+                    'absolute top-[70px] w-[fit-content] !min-w-[250px] rounded-md bg-white shadow-elevation-light-16',
+                    styles.z500
+                )}
+            >
                 <DatePicker
                     isDateAllowed={isDateAllowed}
                     isFutureDateDisabled={isFutureDateDisabled}

@@ -6,7 +6,7 @@ import styles from './overlay-loader.module.css';
 interface BlurOverlayLoaderProps {
     loading: boolean;
 }
-
+//TODO: Move this to XD Components some day
 export const BlurOverlayLoader: FC<
     PropsWithChildren<BlurOverlayLoaderProps>
 > = ({ loading, children }) => {

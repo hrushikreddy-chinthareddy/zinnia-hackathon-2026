@@ -1,29 +1,15 @@
 import { Skeleton } from '@radix-ui/themes';
-import { LineOfBusiness, PartyRole, Policy } from '@zinnia/api-types/types/sor';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren } from 'react';
 
-import { FindKeyValueSearch } from '@deps/components/global-values/find-key-value-search/find-key-value-search';
+import { FindKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-key-values-sidesheet';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import PageLoader, {
     PageLoaderVariant,
 } from '@deps/components/page-loader/page-loader';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import {
-    AnnuityDetailsViewInfo,
-    AnnuityViewDetailsDto,
-} from '@deps/data/annuity-details-view';
-import {
-    generatePolicyAnnuityDetailsDto,
-    isTermLifeProduct,
-} from '@deps/data/details-view';
-import {
-    PolicyDetailsViewInfo,
-    PolicyViewDetailsDto,
-    TermLifeDetailsViewInfo,
-} from '@deps/data/policy-details-view';
-import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 
@@ -73,17 +59,6 @@ const ContentContainer = ({
         (party) => party.partyId === jointOwnerId
     );
 
-    const searchableDetailsDto = generatePolicyAnnuityDetailsDto(policy);
-    const colDefFunction =
-        policy.product?.lineOfBusiness === LineOfBusiness.LIFE
-            ? isTermLifeProduct(policy)
-                ? TermLifeDetailsViewInfo
-                : PolicyDetailsViewInfo
-            : AnnuityDetailsViewInfo;
-    const searchableDetailsData = fillColDefs<
-        PolicyViewDetailsDto | AnnuityViewDetailsDto
-    >(searchableDetailsDto, colDefFunction(), t, 'colDefs:policyDetails');
-
     const policyDetails = new PolicyDetails(policy);
     const { partyId: userPartyId, sessionId } = usePermissionsContext();
 
@@ -113,10 +88,10 @@ const ContentContainer = ({
                         variant={variant}
                         showJointOwner={showJointOwner}
                         showLink={showLink}
+                        className="justify-between items-center"
                     >
                         {hideSearch ? null : (
-                            <FindKeyValueSearch
-                                keyValues={searchableDetailsData}
+                            <FindKeyValuesSidesheet
                                 planCode={planCode}
                                 policyNumber={policyNumber}
                             />

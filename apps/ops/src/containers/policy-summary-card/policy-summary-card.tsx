@@ -33,6 +33,7 @@ import {
 import CardInfo from '@deps/components/card/card-info/card-info';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
+import { FindKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-key-values-sidesheet';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
@@ -125,7 +126,11 @@ import { PendingLapseQuickView } from './pending-lapse-quick-view';
 import { deathClaimApplicableStatuses } from './policy-summary-card.helpers';
 import { default as styles } from './policy-summary-card.module.css';
 import { QuickViewRoot } from './quick-view-root/quick-view-root';
-import { OwnerInfoSkeleton, QuickViewSkeleton } from './skeletons';
+import {
+    ButtonSkeleton,
+    OwnerInfoSkeleton,
+    QuickViewSkeleton,
+} from './skeletons';
 import { TermQuickView } from './term-quick-view';
 import SideSheetAddress from '../people-data-cards/address-card/side-sheet/side-sheet-address';
 import { sortEmailsByType } from '../people-data-cards/email-card/email-card.helpers';
@@ -828,10 +833,18 @@ export function PolicyQuickView({
                     <QuickViewModule policy={policyDetails} />
                 )}
             </div>
-            <KeyValuesBar
-                policy={policyDetails?.policy}
-                loadingPolicyDetails={isLoading}
-            />
+            <div>
+                {isLoading ? (
+                    <div className="flex justify-start">
+                        <ButtonSkeleton />
+                    </div>
+                ) : (
+                    <FindKeyValuesSidesheet
+                        policyNumber={policyDetails?.policyNumber}
+                        planCode={policyDetails?.planCode}
+                    />
+                )}
+            </div>
         </section>
     );
 }

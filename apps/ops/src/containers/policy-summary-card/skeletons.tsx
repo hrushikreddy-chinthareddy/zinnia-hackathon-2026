@@ -28,6 +28,14 @@ export const QuickViewSkeleton = () => {
     );
 };
 
+export const ButtonSkeleton = () => {
+    return (
+        <div className="flex justify-end">
+            <Skeleton width="100px" height="32px" />
+        </div>
+    );
+};
+
 export const OwnerInfoSkeleton = () => {
     return (
         <QuickViewRoot title={' '}>

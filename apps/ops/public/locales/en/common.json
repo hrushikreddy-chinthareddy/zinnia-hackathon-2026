@@ -3527,7 +3527,11 @@
         }
     },
     "label": {
-        "findKeyValues": "Search key values"
+        "findKeyValues": "Search key values",
+        "findKeyValuesTitle": "Find key values",
+        "findKeyValuesDate": "Display data from",
+        "findKeyValuesDateError": "Unable to retrieve data for the selected date.",
+        "searchLabel": "Search for a value"
     },
     "temporal": {
         "month": "month",

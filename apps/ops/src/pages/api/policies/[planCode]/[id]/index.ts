@@ -15,7 +15,8 @@ import { withAuthAndLogging } from '@deps/utils/server-logging';
 export default withAuthAndLogging(
     async (req, res, loggingContext) => {
         const session = await getSession(req, res);
-        const { id, planCode } = req.query;
+        const { id, planCode, date } = req.query;
+
         const unmaskingResponse = await serverApi.post<
             any,
             AxiosResponse<CheckTupleResponse>
@@ -32,8 +33,9 @@ export default withAuthAndLogging(
         const masker = unmaskingResponse.data?.allowed
             ? policyResponseSanitizer
             : fullyMaskPolicyResponse;
+        const dateParam = date ? `&date=${date}` : '';
         return await requestHandler<any>(
-            `${policyApiBaseUrl}/${planCode}/${id}?viewDetails=true`,
+            `${policyApiBaseUrl}/${planCode}/${id}?viewDetails=true${dateParam}`,
             req,
             res,
             loggingContext,

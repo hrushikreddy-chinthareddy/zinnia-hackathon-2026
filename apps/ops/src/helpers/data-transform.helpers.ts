@@ -6,56 +6,48 @@ import { DataDefinition, KeyObjectDef } from '@deps/types/data';
 import { percentFormatify } from './numbers.helpers';
 import { getObjDeepValue } from './objects.helpers';
 
+/**
+ *
+ * @param obj
+ * @param colDefs
+ * @param t
+ * @param translationPath
+ * @returns
+ */
 export const fillColDefs = <T extends object>(
     obj: T,
-    colDef: DataDefinition<T>[],
+    colDefs: DataDefinition<T>[],
     t?: TFunction,
     translationPath = 'common.default'
-) => {
-    if (!obj) return colDef;
+): DataDefinition<T>[] => {
+    if (!obj) return colDefs;
 
-    for (let colIndex = 0; colIndex < colDef.length; colIndex++) {
-        const { key, accessKey, defaultValue, format } = colDef[colIndex];
-        let value = getObjDeepValue(obj, key);
+    return colDefs.map((colDef) => {
+        const { key, accessKey, defaultValue, format, group, tooltip } = colDef;
+        const emptyValue = defaultValue ?? '-';
+        let value = getObjDeepValue(obj, key) ?? emptyValue;
 
-        const emptyValue = defaultValue !== undefined ? defaultValue : '-';
+        // Apply formatting if value isn't empty
+        value = format && value !== emptyValue ? format(value) : value;
 
-        if (value === undefined || value === null || value === '') {
-            value = emptyValue;
-        }
+        // Handle translations
+        const translations = !t
+            ? {}
+            : {
+                  label: t(`${translationPath}.${accessKey ?? key}`),
+                  tooltip: tooltip
+                      ? t(`${translationPath}.${accessKey ?? key}Tooltip`)
+                      : '',
+                  tooltipBody: tooltip
+                      ? t(`${translationPath}.${accessKey ?? key}TooltipBody`)
+                      : '',
+                  groupLabel: group
+                      ? t(`${translationPath}.groups.${group}`)
+                      : '',
+              };
 
-        colDef[colIndex].value =
-            format && value !== emptyValue ? format(value) : value;
-
-        if (t) {
-            if (translationPath) {
-                colDef[colIndex].label = t(
-                    `${translationPath}.${accessKey ?? key}`
-                );
-
-                colDef[colIndex].tooltip = colDef[colIndex].tooltip
-                    ? t(`${translationPath}.${accessKey ?? key}Tooltip`)
-                    : '';
-
-                colDef[colIndex].tooltipBody = colDef[colIndex].tooltip
-                    ? t(`${translationPath}.${accessKey ?? key}TooltipBody`)
-                    : '';
-
-                colDef[colIndex].groupLabel = colDef[colIndex].group
-                    ? t(`${translationPath}.groups.${colDef[colIndex].group}`)
-                    : '';
-            } else {
-                colDef[colIndex].label = t(translationPath);
-                colDef[colIndex].tooltip = colDef[colIndex].tooltip
-                    ? t(translationPath)
-                    : '';
-                colDef[colIndex].groupLabel = colDef[colIndex].group
-                    ? t(translationPath)
-                    : '';
-            }
-        }
-    }
-    return colDef;
+        return { ...colDef, value, ...translations };
+    });
 };
 
 export const defToObject = <T extends object>(colDef: DataDefinition<T>[]) => {

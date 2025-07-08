@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import PolicyInfo, {
     PolicyInfoProps,
 } from '@deps/components/global-values/policy-info/policy-info';
@@ -22,6 +24,7 @@ export interface GlobalValuesBarProps
     showLink?: boolean;
     showDocument?: boolean;
     documentNumber?: string;
+    className?: string;
 }
 
 const GlobalValuesBar = ({
@@ -46,10 +49,14 @@ const GlobalValuesBar = ({
     showLink = true,
     showDocument = false,
     documentNumber,
+    className,
 }: GlobalValuesBarProps) => {
     return (
         <div
-            className={'flex w-full flex-col pb-4 md:pb-6 lg:pb-8 lg:flex-row'}
+            className={clsx(
+                'flex w-full flex-col pb-4 md:pb-6 lg:pb-8 lg:flex-row',
+                className
+            )}
         >
             <div className="mr-0 flex flex-col md:flex-row">
                 <PolicyInfo

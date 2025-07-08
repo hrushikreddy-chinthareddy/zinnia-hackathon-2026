@@ -3483,7 +3483,11 @@
         }
     },
     "label": {
-        "findKeyValues": "Trouver des valeurs clés"
+        "findKeyValues": "Trouver des valeurs clés",
+        "findKeyValuesTitle": "Rechercher des valeurs clés",
+        "findKeyValuesDate": "Afficher les données de",
+        "findKeyValuesDateError": "Impossible de trouver des données pour la date choisie.",
+        "searchLabel": "Rechercher une valeur"
     },
     "temporal": {
         "month": "mois",

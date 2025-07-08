@@ -7,13 +7,13 @@ import { getMockPolicy } from '@deps/services/mocks/mock-policy.helpers';
 import { SearchViewQuery } from '@deps/types/search';
 
 export const getPolicyQueryKey = 'policyData';
-export const getPolicyQuery = async (id: string, planCode: string) => {
+export const getPolicyQuery = async (id: string, planCode: string, date?: string) => {
     const isMocked = hasCookie(MOCK_COOKIE_KEY);
     if (isMocked) {
         return getMockPolicy();
     }
 
-    const response = await fetchPolicy(id, planCode);
+    const response = await fetchPolicy(id, planCode, date);
     if (!response) {
         throw 'No policy found';
     }
