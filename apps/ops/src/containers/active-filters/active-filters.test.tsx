@@ -155,21 +155,21 @@ describe('ActiveFilters', () => {
                     authorizedCarriers={['mass']}
                     filters={{
                         ...baseFilters,
-                        carriers: { mass: 'Mass Mutual' },
+                        carriers: { mass: 'MassMutual' },
                     }}
                     onReset={() => null}
                     removeFilter={() => null}
                 />
             );
 
-            expect(screen.getByText('Mass Mutual')).toBeInTheDocument();
+            expect(screen.getByText('MassMutual')).toBeInTheDocument();
             expect(
                 screen.getByText(
                     'caseManagementDashboard.refineResultsOptions.clearAll'
                 )
             ).toBeInTheDocument();
             expect(
-                screen.getByText('Mass Mutual').parentElement?.parentElement
+                screen.getByText('MassMutual').parentElement?.parentElement
             ).toHaveClass('bds-chip-x');
         });
 
@@ -347,14 +347,14 @@ describe('ActiveFilters', () => {
                     authorizedCarriers={['mass']}
                     filters={{
                         ...baseFilters,
-                        carriers: { mass: 'Mass Mutual' },
+                        carriers: { mass: 'MassMutual' },
                     }}
                     onReset={() => null}
                     removeFilter={mockRemoveFilter}
                 />
             );
 
-            expect(screen.getByText('Mass Mutual')).toBeInTheDocument();
+            expect(screen.getByText('MassMutual')).toBeInTheDocument();
             fireEvent.click(screen.getByTestId('bds-chip-x-button'));
             expect(mockRemoveFilter).toHaveBeenCalledTimes(1);
             expect(mockRemoveFilter).toHaveBeenCalledWith(
@@ -362,7 +362,7 @@ describe('ActiveFilters', () => {
             );
             waitFor(() =>
                 expect(
-                    screen.getAllByText('Mass Mutual')
+                    screen.getAllByText('MassMutual')
                 ).not.toBeInTheDocument()
             );
         });

@@ -30,7 +30,7 @@ import zinnia from '@deps/styles/elements/icons/carriers/zinnia.svg';
 const carriers = {
     ALLM: 'Allmerica',
     ALLS: 'Allstate',
-    CWA: 'Commomwealth',
+    CWA: 'Commonwealth',
     DLIC: 'Delaware',
     ELIC: 'Everly', // DEPU-2067 - used by Policy Management until we get a carrier API integration
     EMRS: 'Empower',
@@ -41,7 +41,7 @@ const carriers = {
     ILIC: 'Arcus',
     ILNA: 'Arcus',
     JHLI: 'John Hancock',
-    MASS: 'Mass Mutual',
+    MASS: 'MassMutual',
     MWOA: 'Modern Woodman',
     NASU: 'Nassau Re',
     NLVF: 'National Life',
