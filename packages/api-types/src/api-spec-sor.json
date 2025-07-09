@@ -8157,6 +8157,12 @@
             "description": "The actual dollar amount withheld for taxes.",
             "example": 100
           },
+           "withholdAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "The actual dollar amount withheld for taxes.",
+            "example": 100
+          },
           "withheldTaxableAmount": {
             "type": "number",
             "format": "double",

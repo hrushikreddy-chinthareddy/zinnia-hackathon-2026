@@ -57,17 +57,16 @@ export const getReturnedWithheldTaxesDisplay = (
     const withheldAmount = taxWithheldAmounts?.find(
         (tw) => tw.taxWithholdingType === withholdingType
     );
-
     if (
-        !withheldAmount?.withheldAmount &&
+        !withheldAmount?.withholdAmount &&
         emptyFormat === DEFAULT_ERROR_STRING
     ) {
         return DEFAULT_ERROR_STRING;
-    } else if (!withheldAmount?.withheldAmount && emptyFormat === 0) {
+    } else if (!withheldAmount?.withholdAmount && emptyFormat === 0) {
         return numberFormatify(emptyFormat);
     }
 
-    return negativeNumberFormatify(withheldAmount?.withheldAmount);
+    return negativeNumberFormatify(withheldAmount?.withholdAmount);
 };
 
 export const getTaxWithheldByType = (
