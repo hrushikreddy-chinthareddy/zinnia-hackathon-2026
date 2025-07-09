@@ -2,7 +2,7 @@ import { TFunction } from 'next-i18next';
 
 import { CDSCPeriods, Products } from './disclosure-authorization.types';
 
-const stableVoyagePlusPlanCodes: string[] = [];
+const stableVoyagePlusPlanCodes: string[] = ['900'];
 
 export const productOptions = (t: TFunction, planCode: string) => {
     const isStableVoyagePlus = stableVoyagePlusPlanCodes?.includes(planCode);
