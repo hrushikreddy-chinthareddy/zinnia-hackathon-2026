@@ -291,14 +291,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                     accessToken,
                     currentTaskMetadata
                 );
+                const updatedTaskMetadata = await TaskMetadataHelper(
+                    task,
+                    currentTaskMetadata,
+                    accessToken as string,
+                    loggingContext
+                );
 
                 return {
                     props: {
                         ...translations,
-                        taskMetadata: await TaskMetadataHelper(
-                            task,
-                            currentTaskMetadata
-                        ),
+                        taskMetadata: updatedTaskMetadata,
                         task,
                         correlationId,
                         taskInfoLink,

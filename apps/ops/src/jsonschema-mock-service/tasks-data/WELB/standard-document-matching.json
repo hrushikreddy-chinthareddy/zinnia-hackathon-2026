@@ -28,30 +28,16 @@
                 }
             ]
         },
-        "potentialMatches": [
-            {
-                "taxId": "202512425",
-                "applicationId": "WELLANI041120241125012496",
-                "zlCaseId": "CA0000394980",
-                "policyNumber": "ADA2501906",
-                "firstName": "CHRISTY",
-                "lastName": "COOSENBERRY",
-                "correlationid": "b1e3617f-35d8-4e8f-a43f-faafd4b827ac",
-                "entityType": "NB_APPLICATION_DATA",
-                "recordId": "67bc2c03e02b754bac38504b"
-            },
-            {
-                "taxId": "202512425",
-                "applicationId": "WELLANI041120241125012497",
-                "zlCaseId": "CA0000395020",
-                "policyNumber": "ADA2501924",
-                "firstName": "CHRISTY",
-                "lastName": "COOSENBERRY",
-                "correlationid": "b738b2ab-6e2e-4d47-8f79-c18d7d4f398f",
-                "entityType": "NB_APPLICATION_DATA",
-                "recordId": "67bc5547e02b754bac3850be"
-            }
-        ],
+        "potentialMatchCriteria": {
+            "entityType": ["NB_APPLICATION_DATA"],
+            "status": null,
+            "identifiers": [
+                {
+                    "identifier": "policyNumber",
+                    "value": "ADA2505107"
+                }
+            ]
+        },
         "isPrimaryDocumentPresent": false
     },
     "mappedExceptions": [],

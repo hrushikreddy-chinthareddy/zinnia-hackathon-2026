@@ -4,7 +4,14 @@ import { TransactionData } from '@deps/models/case/task/doc-matching-payment';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { browserLogError } from '@deps/utils/browser-logging';
-import { parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    logInfo,
+    parseErrorInformation,
+} from '@deps/utils/server-logging';
+
+import { serverApi } from '../api-utils/serverApiClient';
 
 export interface SearchTransactionFilters {
     paymentRecordId: string;
@@ -45,6 +52,39 @@ export const searchTransactionsByPaymentRecordId = async (
         browserLogError('transactions::getTransactionsByCorrelationId::error', {
             ...parseErrorInformation(e),
             ...loggingContext,
+        });
+        return null;
+    }
+};
+
+export const searchTransactionsSSR = async (
+    payload: SearchTransactionPayload,
+    accessToken: string | undefined,
+    loggingContext: LoggingContext
+): Promise<TransactionData[] | null> => {
+    logInfo('transaction-search::searchTransactionsSSR::info', {
+        ...loggingContext,
+        payload,
+    });
+    const config = {
+        authorization: `Bearer ${accessToken}`,
+        headers: {
+            'Content-type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        },
+    };
+
+    try {
+        const { data } = await serverApi.post<
+            any,
+            AxiosResponse<TransactionData[]>
+        >(transactionSearchUrl, payload, config, loggingContext);
+        return data;
+    } catch (error: any) {
+        logError('transaction-search::searchTransactionsSSR::error', {
+            ...parseErrorInformation(error),
+            ...loggingContext,
+            payload,
         });
         return null;
     }

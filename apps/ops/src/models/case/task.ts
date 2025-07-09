@@ -9,6 +9,10 @@ import {
 } from './withdrawal/case';
 export const INTERVAL = 3000;
 
+export enum CaseIdentifierType {
+    ZL_CASE_ID = 'zlCaseId',
+}
+
 export enum TaskType {
     Withdrawal = 'WithdrawalFormInputTask',
     OFT = 'OFTFormInputTask',

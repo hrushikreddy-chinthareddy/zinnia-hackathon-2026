@@ -44,6 +44,7 @@ export enum MatchingCase {
 
 type Entity = {
     paymentRecordId: string;
+    status?: string;
     payment: {
         id: string;
         paymentMethod: string;
