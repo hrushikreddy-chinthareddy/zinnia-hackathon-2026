@@ -3988,6 +3988,33 @@
                     "PT": "Heure du Pacifique ({{abbreviation}})"
                 }
             },
+            "name": {
+                "editName": "Modifier le nom",
+                "fullName": "Nom et prénom",
+                "organizationName": "Nom de l'organisation",
+                "trustName": "Nom de la confiance",
+                "prefix": "Préfixe",
+                "firstName": "Prénom",
+                "middle": "Initiale du milieu",
+                "lastName": "Nom de famille",
+                "suffix": "Suffixe",
+                "supportingDocMatches": "Le nom du document justificatif correspond-il au nouveau nom ?",
+                "signPresent": "Signature présente sur le document pour tous les propriétaires ?",
+                "dateOfSignature": "Date de signature",
+                "errors": {
+                    "organizationError": "Les informations sur le nom de l'organisation sont manquantes",
+                    "trustError": "Les informations sur le nom de la fiducie sont manquantes",
+                    "firstNameError": "Les informations sur le prénom sont manquantes",
+                    "lastNameError": "Les informations sur le nom de famille sont manquantes",
+                    "supportingDocumentNotMatchesError": "Le champ « Nom du document justificatif » correspond au nouveau nom. Il est obligatoire.",
+                    "signatureNotPresentOnDocument": "Le champ Signature présente sur le document pour tous les propriétaires est obligatoire",
+                    "dateOfSignature": "Le champ Date de signature est obligatoire"
+                },
+                "mainCta": {
+                    "updateName": "Mettre à jour le nom",
+                    "cancel": "Annuler"
+                }
+            },
             "states": {
                 "success": {
                     "title": {
@@ -4000,7 +4027,8 @@
                             "1": "{{name}}'s ",
                             "2": "demande à",
                             "3": " {{action}} {{type}} {{transaction}}",
-                            "4": " a été reçu. Il devrait être finalisé prochainement, sauf problème. Vous pouvez suivre l'avancement du dossier en le consultant."
+                            "4": " a été reçu. Il devrait être finalisé prochainement, sauf problème. Vous pouvez suivre l'avancement du dossier en le consultant.",
+                            "5": " le nom a été mis à jour en "
                         },
                         "nigo": "Nous avons soumis cette demande pour traitement NIGO."
                     },
@@ -4051,7 +4079,8 @@
                 "communicationpreference": "Préférences de communication",
                 "email": "E-mail",
                 "number": "Numéro",
-                "phone": "Téléphone"
+                "phone": "Téléphone",
+                "name": "Nom"
             }
         },
         "card": {

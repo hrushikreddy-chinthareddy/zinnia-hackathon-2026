@@ -4041,6 +4041,33 @@
                     "PT": "Pacific Time ({{abbreviation}})"
                 }
             },
+            "name": {
+                "editName": "Edit Name",
+                "fullName": "Full Name",
+                "organizationName": "Organization Name",
+                "trustName": "Trust Name",
+                "prefix": "Prefix",
+                "firstName": "First name",
+                "middle": "Middle initial",
+                "lastName": "Last name",
+                "suffix": "Suffix",
+                "supportingDocMatches": "Supporting Document Name matches with New Name?",
+                "signPresent": "Signature Present on Document for all Owners?",
+                "dateOfSignature": "Date of Signature",
+                "errors": {
+                    "organizationError": "Organization name info is missing",
+                    "trustError": "Trust name info is missing",
+                    "firstNameError": "First Name info is missing",
+                    "lastNameError": "Last Name info is missing",
+                    "supportingDocumentNotMatchesError": "Supporting Document Name matches with New Name field is required",
+                    "signatureNotPresentOnDocument": "Signature Present on Document for all Owners field is required",
+                    "dateOfSignature": "Date of Signature field is required"
+                },
+                "mainCta": {
+                    "updateName": "Update name",
+                    "cancel": "Cancel"
+                }
+            },
             "states": {
                 "success": {
                     "title": {
@@ -4053,7 +4080,8 @@
                             "1": "{{name}}'s ",
                             "2": "request to",
                             "3": " {{action}} {{type}} {{transaction}}",
-                            "4": " was received. It should be complete shortly unless there's an issue. You can track the progress by viewing the case."
+                            "4": " was received. It should be complete shortly unless there's an issue. You can track the progress by viewing the case.",
+                            "5": " name has been updated to "
                         },
                         "nigo": "We submitted this request for NIGO processing."
                     },
@@ -4105,7 +4133,8 @@
                 "email": "Email",
                 "emailaddress": "Email",
                 "number": "Number",
-                "phone": "Phone"
+                "phone": "Phone",
+                "name": "Name"
             }
         },
         "card": {

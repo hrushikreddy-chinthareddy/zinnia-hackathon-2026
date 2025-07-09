@@ -3941,6 +3941,33 @@
                     "PT": "Hora del Pacífico ({{abbreviation}})"
                 }
             },
+            "name": {
+                "editName": "Editar nombre",
+                "fullName": "Nombre completo",
+                "organizationName": "Nombre de la organización",
+                "trustName": "Nombre de confianza",
+                "prefix": "Prefijo",
+                "firstName": "Nombre de pila",
+                "middle": "Inicial del segundo nombre",
+                "lastName": "Apellido",
+                "suffix": "Sufijo",
+                "supportingDocMatches": "¿El nombre del documento de respaldo coincide con el nuevo nombre?",
+                "signPresent": "¿Firma presente en el documento para todos los propietarios?",
+                "dateOfSignature": "Fecha de la firma",
+                "errors": {
+                    "organizationError": "Falta la información del nombre de la organización",
+                    "trustError": "Falta la información del nombre del fideicomiso",
+                    "firstNameError": "Falta la información del nombre",
+                    "lastNameError": "Falta la información del apellido",
+                    "supportingDocumentNotMatchesError": "El nombre del documento de respaldo coincide con el campo Nuevo nombre (es obligatorio)",
+                    "signatureNotPresentOnDocument": "El campo Firma presente en el documento para todos los propietarios es obligatorio",
+                    "dateOfSignature": "El campo Fecha de firma es obligatorio"
+                },
+                "mainCta": {
+                    "updateName": "Nombre de actualización",
+                    "cancel": "Cancelar"
+                }
+            },
             "states": {
                 "success": {
                     "title": {
@@ -3953,7 +3980,8 @@
                             "1": "La solicitud de {{name}} para",
                             "2": " {{action}} {{type}} {{transaction}}",
                             "3": " fue recibida. Debería completarse en breve, a menos que haya un problema. Puedes seguir el progreso viendo el caso.",
-                            "4": " fue recibida. Debería completarse en breve a menos que haya un problema. Puedes seguir el progreso viendo el caso."
+                            "4": " fue recibida. Debería completarse en breve a menos que haya un problema. Puedes seguir el progreso viendo el caso.",
+                            "5": " El nombre ha sido actualizado a "
                         },
                         "nigo": "Hemos enviado esta solicitud para el procesamiento NIGO."
                     },
@@ -4005,7 +4033,8 @@
                 "email": "Correo electrónico",
                 "emailaddress": "Correo electrónico",
                 "number": "Número",
-                "phone": "Teléfono"
+                "phone": "Teléfono",
+                "name": "Nombre"
             }
         },
         "card": {

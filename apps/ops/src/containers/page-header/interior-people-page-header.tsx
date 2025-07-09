@@ -31,6 +31,7 @@ import { ReactComponent as UserGroup } from '@deps/styles/elements/icons/icons_o
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { HeaderInfoCard } from '../people-data-cards/header-info-card/header-info-card';
+import { NameCard } from '../people-data-cards/name-card/name-card';
 import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
 
 interface InteriorPeoplePageHeaderContainerProps {
@@ -214,7 +215,15 @@ const InteriorPeoplePageHeaderContainer = ({
     );
 
     // props
-    const headerText = getHeaderText(selectedPolicyParty);
+    const headerText = (
+        <NameCard
+            t={t}
+            selectedPolicyParty={selectedPolicyParty}
+            editable={editable}
+        >
+            {getHeaderText(selectedPolicyParty)}
+        </NameCard>
+    );
     const headerTextSiblingsGroupOne = getPronouns(
         selectedPolicyParty?.partyType
     );

@@ -15,12 +15,14 @@ import {
     BankAccountBase,
     EmailBase,
     PhoneBase,
+    PartyNameChangeRequest,
 } from '@zinnia/api-types/types/sor';
 
 import { baseAppUrl } from '@deps/queries/api-config';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
 
@@ -44,6 +46,7 @@ export enum NonFinancialTransactions {
     EmailAddress = 'emailaddress',
     Number = 'number',
     Phone = 'phone',
+    Name = 'name',
 }
 
 export interface NonFinancialTransactionBody {
@@ -210,6 +213,63 @@ export const updateEDeliveryPreferenceByPlanCode = async ({
         }
         console.error(
             'updateEDeliveryPreferenceByPlanCode::an error occurred',
+            error
+        );
+        return error;
+    }
+};
+
+export const changePartyName = async ({
+    partyId,
+    planCode,
+    policyNumber,
+    newPartyData,
+}: {
+    partyId: string;
+    planCode: string;
+    policyNumber: string;
+    newPartyData: PartyNameChangeRequest;
+}): Promise<AxiosResponse<TransactionAcceptedResponse>> => {
+    const url = `${baseAppUrl}/api/policy/v1/transactions/${planCode}/${policyNumber}/parties/${partyId}/partyname`;
+
+    browserLogInfo('existingPartyNameChange::transaction_started', {
+        planCode,
+        policyNumber,
+        partyId,
+    });
+    try {
+        const response = await client.post<
+            PartyNameChangeRequest,
+            AxiosResponse<TransactionAcceptedResponse>
+        >(url.toString(), newPartyData);
+        browserLogInfo('existingPartyNameChange::transaction_completed', {
+            planCode,
+            policyNumber,
+            partyId,
+        });
+        return response;
+    } catch (error: any) {
+        if (error?.status === StatusCode.BadRequest) {
+            browserLogInfo(
+                'existingPartyNameChange::transaction_error::BPM error occurred',
+                {
+                    error,
+                }
+            );
+            console.warn(
+                'existingPartyNameChange::transaction_error::BPM error occurred',
+                error
+            );
+            return error;
+        }
+        browserLogInfo(
+            'existingPartyNameChange::transaction_error::BPM error occurred',
+            {
+                error,
+            }
+        );
+        console.error(
+            'existingPartyNameChange::transaction_error::an error occurred',
             error
         );
         return error;
