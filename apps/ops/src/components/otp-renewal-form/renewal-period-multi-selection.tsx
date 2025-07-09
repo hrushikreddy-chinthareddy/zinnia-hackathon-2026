@@ -34,8 +34,13 @@ export default function RenewalPeriodMultiSection({
     isFormStateReadOnly,
     planCode,
 }: RenewalPeriodMultiSectionProps) {
-    const { setSubsequentTargetFunds, transOption, formErrors, document, subsequentTargetFunds } =
-        useContext(RenewalFormDataContext);
+    const {
+        setSubsequentTargetFunds,
+        transOption,
+        formErrors,
+        document,
+        subsequentTargetFunds,
+    } = useContext(RenewalFormDataContext);
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseRenewal.request',
     });
@@ -66,7 +71,7 @@ export default function RenewalPeriodMultiSection({
                 if (!fundsList?.length) {
                     throw new Error('No funds returned from getProductFunds');
                 }
-                subsequentTargetFunds
+                subsequentTargetFunds;
                 // filtering out duplicate funds coming back from the funds list
                 const uniqueFunds = fundsList.map((fund) => {
                     return {
@@ -92,7 +97,7 @@ export default function RenewalPeriodMultiSection({
                 browserLogInfo(
                     'RenewalPeriodMultiSelection::Error retrieving funds list',
                     {
-                        ...parseErrorInformation(e)
+                        ...parseErrorInformation(e),
                     }
                 );
                 setLoader(false);
@@ -103,7 +108,7 @@ export default function RenewalPeriodMultiSection({
         };
         const subsequentTargetFundsCount = subsequentTargetFunds?.length || 0;
         if (subsequentTargetFundsCount === 0) {
-              browserLogInfo('Set fund allocation with received one', {
+            browserLogInfo('Set fund allocation with received one', {
                 contractNumber: document?.contract,
                 clientCode: document?.processCompanyCode,
                 planCode: planCode,

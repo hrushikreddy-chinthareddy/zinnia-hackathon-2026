@@ -17,6 +17,7 @@ import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { ProcessType } from '@deps/models/case/enums';
 import {
     Carrier,
+    FASTQualTypes,
     ProgramType,
     QualTypes,
 } from '@deps/models/case/withdrawal/case';
@@ -24,7 +25,7 @@ import {
 import useGdmnOftConfig from './gdmn-oft-form.helpers';
 
 type GdmnOftWithdrawalFormProps = {
-    qualType: QualTypes | '';
+    qualType: QualTypes | FASTQualTypes | '';
 };
 
 export default function GdmnOftWithdrawalForm({

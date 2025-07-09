@@ -515,10 +515,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         true
                     );
                     if (!policy) {
-                        logInfo(
-                            'nigo-entry::Policy not found',
-                            loggingContext
-                        );
+                        logInfo('nigo-entry::Policy not found', loggingContext);
                         return {
                             redirect: {
                                 destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
@@ -526,10 +523,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                             },
                         };
                     }
-                    logInfo(
-                        'nigo-entry::Policy details found',
-                        loggingContext
-                    );
+                    logInfo('nigo-entry::Policy details found', loggingContext);
 
                     const { parties, partyRoles = [] } = policy ?? {};
 

@@ -13,12 +13,17 @@ import HasPreviousNigo from '@deps/components/previous-nigo-check/has-previous-n
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import { Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FASTQualTypes,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import getOftDlicConfig from './dlic-oft-form.helpers';
 
 type OftDlicFormProps = {
-    qualType: QualTypes | '';
+    qualType: QualTypes | FASTQualTypes | '';
     planCode: string;
 };
 
@@ -56,12 +61,19 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
         formErrors,
         formESignatureData,
         setFormESignatureData,
+        featureFlagDecisions,
     } = useContext(FormDataContext);
 
     const isNonQualifiedOr403b = [
         QualTypes.b403,
         QualTypes.NonQualified,
+        FASTQualTypes.NONQUALIFIED,
+        FASTQualTypes.Q403B,
     ].includes(qualType as QualTypes);
+    const isLC = !isFastFeatureEnabled(
+        initialForm?.taskType,
+        featureFlagDecisions
+    );
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -101,7 +113,7 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
             />
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
-                options={surrenderingInstructionsOptions}
+                options={surrenderingInstructionsOptions(isLC)}
                 title={
                     t('amountDetails.surrenderingInstructions.title') as string
                 }

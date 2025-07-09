@@ -140,15 +140,16 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             staleTime: FIFTEEN_MINUTES_IN_MS,
         });
 
-    const { data: partyReferenceData, isLoading: showToppanMerrillLoading } = useQuery({
-        queryKey: ['partyReferenceMetaData', partyId],
-        queryFn: () => getPartyMetadataById(partyId),
-        enabled: !!partyId,
-        select: response => {
-            const partyRefData = response?.data as PartyReferenceDataModel;
-            return partyRefData;
-        },
-    });
+    const { data: partyReferenceData, isLoading: showToppanMerrillLoading } =
+        useQuery({
+            queryKey: ['partyReferenceMetaData', partyId],
+            queryFn: () => getPartyMetadataById(partyId),
+            enabled: !!partyId,
+            select: (response) => {
+                const partyRefData = response?.data as PartyReferenceDataModel;
+                return partyRefData;
+            },
+        });
 
     const {
         data: fgaRoleData,
@@ -208,8 +209,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,
                 isCallLogAudioPermitted: !!fgaRoleData?.isCallLogAudioPermitted,
                 hasHomeExperience: !!homeCheck?.data,
-                showToppanMerrill: partyReferenceData ? !!isWellabeAgent(partyReferenceData) : false,
-                showCommissions: partyReferenceData ? !!getMasterAgentNumber(partyReferenceData) : false,
+                showToppanMerrill: partyReferenceData
+                    ? !!isWellabeAgent(partyReferenceData)
+                    : false,
+                showCommissions: partyReferenceData
+                    ? !!getMasterAgentNumber(partyReferenceData)
+                    : false,
                 partyReferenceData,
                 permissionsLoadingComplete,
             }}

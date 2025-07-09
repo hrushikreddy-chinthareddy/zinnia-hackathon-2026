@@ -12,12 +12,16 @@ import SignatureValidations from '@deps/components/otp-withdrawal-form/signature
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import { Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FASTQualTypes,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
 
 import getRSLNOftConfig from './rsln-oft-form.helpers';
 
 type OftRSLNFormProps = {
-    qualType: QualTypes | '';
+    qualType: QualTypes | FASTQualTypes | '';
 };
 export default function RSLNOftWithdrawalForm({ qualType }: OftRSLNFormProps) {
     const { t } = useTranslation(undefined, {

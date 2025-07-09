@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { Party } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -46,6 +47,7 @@ import {
     toTitleCase,
 } from '@deps/helpers/string.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
+import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
@@ -55,6 +57,7 @@ import { TaskType } from '@deps/models/case/task';
 import {
     ActiveWithdrawalCase,
     Carrier,
+    FASTQualTypes,
     PartyRoles,
     QualTypes,
 } from '@deps/models/case/withdrawal/case';
@@ -62,7 +65,11 @@ import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
-import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
+import {
+    getPolicyDetailsSsr,
+    getPolicyPartiesSSR,
+    searchPolicySSR,
+} from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import {
     SegmentPageName,
@@ -75,7 +82,10 @@ import {
     FeatureFlags,
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import {
+    isFastFeatureEnabled,
+    isFormFeatureEnabled,
+} from '@deps/utils/optimizely/utils';
 import {
     logError,
     logInfo,
@@ -92,7 +102,7 @@ interface OftCaseProps extends SegmentTrackedPageProps {
     userId: string;
     formParts: React.ReactNode;
     featureFlagDecisions: FeatureFlags;
-    parties: LifeCadParty[];
+    parties: LifeCadParty[] | Party[];
 }
 
 const DefaultSidebarContent = {
@@ -106,7 +116,7 @@ const DefaultSidebarContent = {
 
 const getFormComponentMap = (
     planCode: string | '',
-    qualType: QualTypes | ''
+    qualType: QualTypes | FASTQualTypes | ''
 ): Record<string, React.ReactNode> => ({
     [Carrier.FLIC]: <FlicOftWithdrawalForm qualType={qualType} />,
     [Carrier.GLCO]: <GlcoOftWithdrawalForm />,
@@ -137,10 +147,18 @@ export default function OftCase({
     const clientForFormDetermination = isNonProductionEnvironment()
         ? clientIdOverride || clientId
         : clientId;
-    const { qualType, issueState, planCode } = useAccountInfo(
+
+    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
+    const accountInfo = useAccountInfo(document.contract, clientId as string);
+
+    const contractAccountInfo = useContractAccountInfo(
         document.contract,
         clientId as string
     );
+
+    const { issueState, qualType, planCode } = isLC
+        ? accountInfo
+        : contractAccountInfo;
 
     useSegmentPageTracker(user, SegmentPageName.OftCase, {
         clientId,
@@ -155,7 +173,7 @@ export default function OftCase({
 
     const formParts = determineFormToRender(
         clientForFormDetermination as string,
-        getFormComponentMap(planCode, qualType)
+        getFormComponentMap(planCode, qualType as QualTypes)
     );
 
     if (!formParts) {
@@ -442,15 +460,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext,
             });
 
-            const parties = document?.contract
-                ? await getPolicyPartiesSSR(
-                      document?.contract,
-                      clientId,
-                      accessToken as string,
-                      loggingContext
-                  )
-                : [];
-
             if (!form) {
                 logWarn(
                     'create-case/oft/id::Error initializing task oft form',
@@ -467,17 +476,98 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            return {
-                props: {
-                    ...translations,
-                    document,
-                    form,
-                    locale,
-                    featureFlagDecisions,
-                    user,
-                    parties,
-                },
-            };
+            const isLC = !isFastFeatureEnabled(
+                form?.taskType,
+                featureFlagDecisions
+            );
+
+            if (isLC) {
+                const parties = document?.contract
+                    ? await getPolicyPartiesSSR(
+                          document?.contract,
+                          clientId,
+                          accessToken as string,
+                          loggingContext
+                      )
+                    : [];
+                return {
+                    props: {
+                        ...translations,
+                        document,
+                        form,
+                        locale,
+                        featureFlagDecisions,
+                        user,
+                        parties,
+                    },
+                };
+            } else {
+                const policies = await searchPolicySSR(
+                    document?.contract,
+                    [clientId?.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
+                const planCode = policies?.[0]?.planCode || null;
+                if (!planCode) {
+                    logInfo(
+                        'create-case/withdrawal/:id::Plan code not found',
+                        loggingContext
+                    );
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                            permanent: false,
+                        },
+                    };
+                }
+                logInfo('create-case/withdrawal/:id::Plan code found', {
+                    ...loggingContext,
+                    planCode: planCode,
+                });
+
+                const policy = await getPolicyDetailsSsr(
+                    document?.contract,
+                    planCode,
+                    accessToken,
+                    loggingContext,
+                    true
+                );
+                if (!policy) {
+                    logInfo(
+                        'create-case/withdrawal/:id::Policy not found',
+                        loggingContext
+                    );
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
+                            permanent: false,
+                        },
+                    };
+                }
+                logInfo(
+                    'create-case/withdrawal/:id::Policy details found',
+                    loggingContext
+                );
+
+                const { parties, partyRoles = [] } = policy ?? {};
+
+                return {
+                    props: {
+                        ...translations,
+                        document,
+                        form,
+                        locale,
+                        featureFlagDecisions,
+                        parties: Array.isArray(parties) ? parties : [],
+                        partyRoles,
+                        user,
+                        planCode,
+                    },
+                };
+            }
         },
     },
     {

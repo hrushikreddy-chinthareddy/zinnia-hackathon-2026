@@ -23,7 +23,6 @@ interface ESignatureValidationProps {
     isFormStateReadOnly: boolean;
 }
 
-
 const ESignatureValidation = ({
     formESignatureData,
     setFormESignatureData,

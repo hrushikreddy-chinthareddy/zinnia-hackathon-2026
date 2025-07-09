@@ -11,14 +11,18 @@ import SignatureValidations from '@deps/components/otp-withdrawal-form/signature
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import { Carrier } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FASTQualTypes,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
 
 import getFlicOftConfig from './flic-oft-form.helpers';
 
 export default function FlicOftWithdrawalForm({
     qualType,
 }: {
-    qualType: string;
+    qualType: QualTypes | FASTQualTypes | '';
 }) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',

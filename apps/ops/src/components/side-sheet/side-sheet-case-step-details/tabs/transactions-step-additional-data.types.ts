@@ -2,30 +2,30 @@ import { CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs
 
 // StepIds with an stepadditionalData sidesheet
 export enum TransactionsAdditionalDataStepIds {
-  receiveClaimRequest = 'requestAck.receiveClaimRequest',
-  stopSystematicPrograms = 'verifyFunds.stopSystematicPrograms',
-  stopRMD = 'verifyFunds.stopRMD',
-  stopSpecialPrograms = 'verifyFunds.stopSpecialPrograms',
-  stopUncashedTransactions = 'verifyFunds.stopUncashedTransactions',
+    receiveClaimRequest = 'requestAck.receiveClaimRequest',
+    stopSystematicPrograms = 'verifyFunds.stopSystematicPrograms',
+    stopRMD = 'verifyFunds.stopRMD',
+    stopSpecialPrograms = 'verifyFunds.stopSpecialPrograms',
+    stopUncashedTransactions = 'verifyFunds.stopUncashedTransactions',
 }
 
 export enum TransactionActionStatuses {
-  SUCCESS = 'SUCCESS',
-  FAIL = 'FAIL',
-  NONE = 'NONE',
+    SUCCESS = 'SUCCESS',
+    FAIL = 'FAIL',
+    NONE = 'NONE',
 }
 
 export enum TransactionActions {
-  DELETE = 'DELETE',
-  TERMINATE = 'TERMINATE',
-  NONE = 'NONE',
+    DELETE = 'DELETE',
+    TERMINATE = 'TERMINATE',
+    NONE = 'NONE',
 }
 
 export enum UncashedTransactionStatus {
-  OUTSTANDING = 'OUTSTANDING',
-  STOP = 'STOP',
-  REVERSED = 'REVERSED',
-  SEND_CHECK_TO_ESTATE = 'SEND_CHECK_TO_ESTATE',
+    OUTSTANDING = 'OUTSTANDING',
+    STOP = 'STOP',
+    REVERSED = 'REVERSED',
+    SEND_CHECK_TO_ESTATE = 'SEND_CHECK_TO_ESTATE',
 }
 
 export interface ViewTransactionsProps {

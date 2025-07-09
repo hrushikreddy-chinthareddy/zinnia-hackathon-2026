@@ -32,17 +32,17 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                             <div>
                                 <TextField
                                     id={`role-${index}`}
-                                    onChange={() => { }}
+                                    onChange={() => {}}
                                     disabled={true}
                                     placeholder={t('contactRole') as string}
                                     value={
                                         log.partyRoleCategory ===
-                                            ContactRole.AGENT
+                                        ContactRole.AGENT
                                             ? 'Agent'
                                             : log.partyRole ===
-                                                ContactRole.PRIMARYBENEFICIARY
-                                                ? 'Beneficiary'
-                                                : 'Other'
+                                              ContactRole.PRIMARYBENEFICIARY
+                                            ? 'Beneficiary'
+                                            : 'Other'
                                     }
                                     label={t('contactRole') as string}
                                     className="w-full"
@@ -52,7 +52,7 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                                 <TextField
                                     disabled={true}
                                     id={`name-${index}`}
-                                    onChange={() => { }}
+                                    onChange={() => {}}
                                     placeholder={t('name') as string}
                                     value={log.fullName}
                                     label={t('name') as string}
@@ -63,7 +63,7 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                                 <TextField
                                     disabled={true}
                                     id={`phone-${index}`}
-                                    onChange={() => { }}
+                                    onChange={() => {}}
                                     placeholder={t('phone') as string}
                                     value={formatPhone(log.phone)}
                                     label={t('phone') as string}
@@ -74,7 +74,7 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                                 <TextField
                                     disabled={true}
                                     id={`callOutcome-${index}`}
-                                    onChange={() => { }}
+                                    onChange={() => {}}
                                     placeholder={t('callOutcome') as string}
                                     value={t('noChangeRecorded')}
                                     label={t('callOutcome') as string}
@@ -87,7 +87,7 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                                     <TextField
                                         disabled={true}
                                         id={`relationship-${index}`}
-                                        onChange={() => { }}
+                                        onChange={() => {}}
                                         placeholder={
                                             t('relationshipToOwner') as string
                                         }

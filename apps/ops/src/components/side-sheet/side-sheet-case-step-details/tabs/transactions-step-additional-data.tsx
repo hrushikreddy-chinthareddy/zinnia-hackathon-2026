@@ -2,19 +2,19 @@ import { CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs
 
 import DeathNotificationSidesheet from './death-notification';
 import {
-  StepProgramTypes,
-  TransactionsAdditionalDataStepIds,
+    StepProgramTypes,
+    TransactionsAdditionalDataStepIds,
 } from './transactions-step-additional-data.types';
 import { ViewTransactions } from './view-transactions';
 
 type TransactionalStepAdditionalDataProps = {
-  stepAdditionalData: CaseAdditionalStepData;
-  stepKey: TransactionsAdditionalDataStepIds;
+    stepAdditionalData: CaseAdditionalStepData;
+    stepKey: TransactionsAdditionalDataStepIds;
 };
 
 export const TransactionsStepAdditionalData = ({
-  stepAdditionalData,
-  stepKey,
+    stepAdditionalData,
+    stepKey,
 }: TransactionalStepAdditionalDataProps) => {
     const renderAdditionalData = (id: TransactionsAdditionalDataStepIds) => {
         switch (id) {
@@ -57,5 +57,5 @@ export const TransactionsStepAdditionalData = ({
         }
     };
 
-  return <>{stepKey && renderAdditionalData(stepKey)}</>;
+    return <>{stepKey && renderAdditionalData(stepKey)}</>;
 };

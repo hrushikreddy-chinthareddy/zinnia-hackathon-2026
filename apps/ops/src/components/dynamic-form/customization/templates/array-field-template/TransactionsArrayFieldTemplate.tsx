@@ -5,9 +5,7 @@ import {
     RJSFSchema,
     StrictRJSFSchema,
 } from '@rjsf/utils';
-import {
-    Label
-} from '@zinnia/bloom/components';
+import { Label } from '@zinnia/bloom/components';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -45,8 +43,12 @@ export function TransactionsArrayFieldTemplate<
     const { postFundData, preFundData, reviewData } = useMemo(() => {
         const data = Array.isArray(formData) ? formData : [];
         return {
-            postFundData: data.filter((item: Transaction) => item?.postFund === true),
-            preFundData: data.filter((item: Transaction) => item?.postFund === false),
+            postFundData: data.filter(
+                (item: Transaction) => item?.postFund === true
+            ),
+            preFundData: data.filter(
+                (item: Transaction) => item?.postFund === false
+            ),
             reviewData: data.filter(
                 (item: Transaction) =>
                     item?.postFund === null || item?.postFund === undefined
@@ -79,16 +81,18 @@ export function TransactionsArrayFieldTemplate<
                 (!hasReviewFunds || reviewFundsRadio)
             );
         });
-        const updatedTransactions = uncash.transactions.map((tx: Transaction) => ({
-            ...tx,
-            reverseSor: tx.postFund ? reverseTransactionRadio : false,
-            sendCheckToEstate:
-                tx.postFund === false ? sendCheckToEstateRadio : false,
-            isReverseUncashTxnReviewRequired:
-                tx.postFund === null || tx.postFund === undefined
-                    ? reviewFundsRadio
-                    : false,
-        }));
+        const updatedTransactions = uncash.transactions.map(
+            (tx: Transaction) => ({
+                ...tx,
+                reverseSor: tx.postFund ? reverseTransactionRadio : false,
+                sendCheckToEstate:
+                    tx.postFund === false ? sendCheckToEstateRadio : false,
+                isReverseUncashTxnReviewRequired:
+                    tx.postFund === null || tx.postFund === undefined
+                        ? reviewFundsRadio
+                        : false,
+            })
+        );
 
         setCustomData({
             details: {
@@ -183,4 +187,3 @@ export function TransactionsArrayFieldTemplate<
         </div>
     );
 }
-

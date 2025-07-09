@@ -293,81 +293,87 @@ export default function getOftDlicConfig(t: TFunction) {
         },
     ];
 
-    const surrenderingInstructionsOptions: PartialWithdrawalOption[] = [
-        {
-            label: t('amountDetails.programTypes.full'),
-            value: ProgramType.FullSurrender,
-            generatePayloadFromSelection: () => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.FullSurrender },
-                    programSubType: { text: ProgramSubType.FullSurrender },
-                };
+    const surrenderingInstructionsOptions = (
+        isLC: boolean
+    ): PartialWithdrawalOption[] =>
+        [
+            {
+                label: t('amountDetails.programTypes.full'),
+                value: ProgramType.FullSurrender,
+                generatePayloadFromSelection: () => {
+                    return {
+                        ...getDefaultFormProgramValues(),
+                        withdrawType: { text: WithdrawalType.Gross },
+                        program: {
+                            text: Program.OFT,
+                        },
+                        programType: { text: ProgramType.FullSurrender },
+                        programSubType: { text: ProgramSubType.FullSurrender },
+                    };
+                },
             },
-        },
-        {
-            label: `${t('amountDetails.programTypes.partial')} $`,
-            value: ProgramType.PartialDollar,
-            amountFieldType: AmountType.Dollar,
-            generatePayloadFromSelection: (val = null) => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.WITHDRAWAL },
-                    programSubType: { text: ProgramSubType.Dollar },
-                    partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: {
-                        text: val,
-                        amountType: AmountType.Dollar,
-                    },
-                };
+            {
+                label: `${t('amountDetails.programTypes.partial')} $`,
+                value: ProgramType.PartialDollar,
+                amountFieldType: AmountType.Dollar,
+                generatePayloadFromSelection: (val = null) => {
+                    return {
+                        ...getDefaultFormProgramValues(),
+                        withdrawType: { text: WithdrawalType.Gross },
+                        program: {
+                            text: Program.OFT,
+                        },
+                        programType: { text: ProgramType.WITHDRAWAL },
+                        programSubType: { text: ProgramSubType.Dollar },
+                        partialAmount: {
+                            text: val,
+                            amountType: AmountType.Dollar,
+                        },
+                        partialGrossAmount: {
+                            text: val,
+                            amountType: AmountType.Dollar,
+                        },
+                    };
+                },
             },
-        },
-        {
-            label: `${t('amountDetails.programTypes.partial')} %`,
-            value: ProgramType.PartialPercent,
-            amountFieldType: AmountType.Percent,
-            generatePayloadFromSelection: (val = null) => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.WITHDRAWAL },
-                    programSubType: { text: ProgramSubType.PercentageofAV },
-                    partialPercent: {
-                        text: val,
-                        amountType: AmountType.Percent,
-                    },
-                };
+            isLC && {
+                label: `${t('amountDetails.programTypes.partial')} %`,
+                value: ProgramType.PartialPercent,
+                amountFieldType: AmountType.Percent,
+                generatePayloadFromSelection: (val = null) => {
+                    return {
+                        ...getDefaultFormProgramValues(),
+                        withdrawType: { text: WithdrawalType.Gross },
+                        program: {
+                            text: Program.OFT,
+                        },
+                        programType: { text: ProgramType.WITHDRAWAL },
+                        programSubType: { text: ProgramSubType.PercentageofAV },
+                        partialPercent: {
+                            text: val,
+                            amountType: AmountType.Percent,
+                        },
+                    };
+                },
             },
-        },
-        {
-            label: t('amountDetails.programTypes.penaltyFreeAmount'),
-            value: ProgramType.PenaltyFreeAmount,
-            generatePayloadFromSelection: () => {
-                return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
-                    program: {
-                        text: Program.OFT,
-                    },
-                    programType: { text: ProgramType.TotalFreeAmt },
-                    programSubType: {
-                        text: ProgramSubType.TotalFreeWithdrawal,
-                    },
-                };
+            {
+                label: t('amountDetails.programTypes.penaltyFreeAmount'),
+                value: ProgramType.PenaltyFreeAmount,
+                generatePayloadFromSelection: () => {
+                    return {
+                        ...getDefaultFormProgramValues(),
+                        withdrawType: { text: WithdrawalType.Gross },
+                        program: {
+                            text: Program.OFT,
+                        },
+                        programType: { text: ProgramType.TotalFreeAmt },
+                        programSubType: {
+                            text: ProgramSubType.TotalFreeWithdrawal,
+                        },
+                    };
+                },
             },
-        },
-    ];
+        ].filter(Boolean) as PartialWithdrawalOption[];
 
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
