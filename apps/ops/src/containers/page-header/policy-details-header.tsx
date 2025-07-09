@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -5,6 +6,7 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import PageHeader from '@deps/components/page-header/page-header';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
+import { getPolicyVisibility } from '@deps/helpers/policy-visibility/policy-visibility-helper';
 
 import TransactionCard from '../policy-details/cards/transaction-card';
 import { buildTransactionCards } from '../policy-details/policy-details.helpers';
@@ -13,13 +15,20 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.detailCards.policyDetails',
     });
+
     const currencyFormat: Intl.NumberFormatOptions = {
         currency: policy.currency ?? 'USD',
         style: 'currency',
     };
+
     const { accountValue, costBasis, baseDeathBenefit, surrenderValue } =
         policy;
-    const transactionCards = buildTransactionCards(policy, t);
+
+    const { data: transactionCards } = useQuery({
+        queryKey: ['policyVisibility', policy],
+        queryFn: () => getPolicyVisibility(policy),
+        select: (visibility) => buildTransactionCards(policy, t, visibility),
+    });
 
     const title = t(
         `${policy.isAnnuity ? 'contractDetails' : 'policyDetails'}`
@@ -93,7 +102,7 @@ export const PolicyDetailsHeader = ({ policy }: BasePolicyComponentArgs) => {
                 className="mt-4 flex gap-4 flex-wrap"
                 data-testid="transaction-cards"
             >
-                {transactionCards.map((transactionCardProps) => (
+                {(transactionCards ?? []).map((transactionCardProps) => (
                     <TransactionCard
                         key={transactionCardProps.cardTitle}
                         {...transactionCardProps}

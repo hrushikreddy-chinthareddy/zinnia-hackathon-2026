@@ -51,7 +51,12 @@ export const mapDistribution = (
 
 export const buildTransactionCards = (
     policy: PolicyDetails,
-    t: TFunction
+    t: TFunction,
+    visibility: {
+        showFundsAndAccounts: boolean;
+        showLoans: boolean;
+        showWithdrawals: boolean;
+    }
 ): TransactionCardProps[] => {
     const { policyNumber, planCode, currency, isAnnuity } = policy;
     // BPB - TODO: add these to PolicyDetails
@@ -122,11 +127,20 @@ export const buildTransactionCards = (
             : '',
     };
 
-    if (policy.isAnnuity) {
-        return [premiumsCard, withdrawalsCard, fundsCard];
+    const cards: TransactionCardProps[] = [premiumsCard];
+
+    if (visibility.showWithdrawals) {
+        cards.push(withdrawalsCard);
     }
 
-    return [premiumsCard, withdrawalsCard, loansCard, fundsCard];
+    if (!policy.isAnnuity && visibility.showLoans) {
+        cards.push(loansCard);
+    }
+
+    if (visibility.showFundsAndAccounts) {
+        cards.push(fundsCard);
+    }
+    return cards;
 };
 
 export const mapPolicyTimelineValues = (

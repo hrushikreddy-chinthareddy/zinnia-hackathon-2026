@@ -15,9 +15,15 @@ let policyDetails: PolicyDetails;
 describe('policy details helpers', () => {
     describe('buildTransactionCards', () => {
         it('should build the transaction cards for the policy', () => {
+            const visibility = {
+                showFundsAndAccounts: true,
+                showLoans: true,
+                showWithdrawals: true,
+            };
             const result = buildTransactionCards(
                 new PolicyDetails(mockPolicy),
-                tSpy
+                tSpy,
+                visibility
             );
 
             expect(result).toEqual([

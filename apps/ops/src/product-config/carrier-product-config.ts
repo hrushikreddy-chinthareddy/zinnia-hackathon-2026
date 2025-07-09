@@ -19,4 +19,7 @@ export const productTypeVisibilityRules: ProductTypeVisibilityRules = {
 // This can be expanded with more carriers and products as needed
 export const planCodeProductOverrides: Record<string, ProductOverrides> = {
     // Override rules for specific planCodes
+    TR0101: {
+        allowsLoans: true,
+    },
 };
