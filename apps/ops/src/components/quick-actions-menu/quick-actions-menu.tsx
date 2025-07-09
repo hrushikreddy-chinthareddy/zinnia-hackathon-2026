@@ -31,16 +31,9 @@ import {
     checkSystematicProgramsEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
-import { ReactComponent as PaymentIcon } from '@deps/styles/elements/icons/content/payment.svg';
-import { ReactComponent as AutopayIcon } from '@deps/styles/elements/icons/currency/autopay.svg';
-import { ReactComponent as BankIcon } from '@deps/styles/elements/icons/icons_outlined/bank.svg';
-import { ReactComponent as BriefcaseIcon } from '@deps/styles/elements/icons/icons_outlined/briefcase.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/icons_outlined/clipboard.svg';
-import { ReactComponent as DocumentReportIcon } from '@deps/styles/elements/icons/icons_outlined/document-report.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
-import { ReactComponent as TableIcon } from '@deps/styles/elements/icons/icons_outlined/table.svg';
-import { ReactComponent as TicketIcon } from '@deps/styles/elements/icons/icons_outlined/ticket.svg';
 import {
     DropdownClickedEvent,
     PolicyClickedEvent,
@@ -109,6 +102,8 @@ const MenuContextualContent = ({
     const isNewDeathClaim = featureFlags[FEATURE_FLAGS.NEW_DEATH_CLAIM];
     const serviceRequestFormEnabled =
         featureFlags[FEATURE_FLAGS.SERVICE_REQUEST_FORM_ENABLED];
+    const sendCorrespondenceEnabled =
+        featureFlags[FEATURE_FLAGS.SEND_CORRESPONDENCE];
 
     const trackClick = (linkName: string, linkUrl: string) => {
         // TODO MG: do we always want to call both of these?
@@ -317,7 +312,13 @@ const MenuContextualContent = ({
                         }
                         content={t('transactions.managePremiumAutopay')}
                         href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/update-premium-autopay/`}
-                        icon={<AutopayIcon height={20} width={20} />}
+                        icon={
+                            <Icon
+                                type={IconType.AUTOPAY}
+                                height={20}
+                                width={20}
+                            />
+                        }
                         onClick={() => {
                             trackClick(
                                 'Manage Premium Autopay',
@@ -332,7 +333,13 @@ const MenuContextualContent = ({
                         }
                         content={t('transactions.newPremium')}
                         href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`}
-                        icon={<PaymentIcon height={20} width={20} />}
+                        icon={
+                            <Icon
+                                type={IconType.PAYMENT}
+                                height={20}
+                                width={20}
+                            />
+                        }
                         onClick={() => {
                             trackClick(
                                 'New Premium',
@@ -353,7 +360,13 @@ const MenuContextualContent = ({
                             }
                             content={t('transactions.newDeathClaim')}
                             href={`/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`}
-                            icon={<BriefcaseIcon height={20} width={20} />}
+                            icon={
+                                <Icon
+                                    type={IconType.BRIEFCASE}
+                                    height={20}
+                                    width={20}
+                                />
+                            }
                             onClick={() => {
                                 trackClick(
                                     'New Death Claim',
@@ -368,7 +381,9 @@ const MenuContextualContent = ({
                         }
                         content={t('transactions.startAWithdrawal')}
                         href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`}
-                        icon={<CashIcon height={20} width={20} />}
+                        icon={
+                            <Icon type={IconType.CASH} height={20} width={20} />
+                        }
                         onClick={() => {
                             trackClick(
                                 'Start a Withdrawal',
@@ -392,7 +407,9 @@ const MenuContextualContent = ({
                         disabled={!newLoanEligibility?.isEligibleNewLoan}
                         content={t('transactions.newLoan')}
                         href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/new-loan/`}
-                        icon={<BankIcon height={20} width={20} />}
+                        icon={
+                            <Icon type={IconType.BANK} height={20} width={20} />
+                        }
                         onClick={() => {
                             trackClick(
                                 'New Loan',
@@ -407,7 +424,13 @@ const MenuContextualContent = ({
                             }
                             content={t('transactions.loanPayment')}
                             href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`}
-                            icon={<PaymentIcon height={20} width={20} />}
+                            icon={
+                                <Icon
+                                    type={IconType.PAYMENT}
+                                    height={20}
+                                    width={20}
+                                />
+                            }
                             onClick={() => {
                                 trackClick(
                                     'Loan Payment',
@@ -419,54 +442,92 @@ const MenuContextualContent = ({
                 </>
             </MenuContextualLabel>
             <MenuContextualLabel label={t('documents.label')}>
-                <MenuContextualItem
-                    content={t('documents.sendForms')}
-                    href={`/contact-center/send-document?planCode=${
-                        policy.planCode
-                    }&policyNumber=${
-                        policy.policyNumber
-                    }&correlationId=${uuidV4()}`}
-                    icon={<ClipboardIcon height={20} width={20} />}
-                    onClick={() => {
-                        trackClick(
-                            'Send Forms',
-                            `/contact-center/send-document?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
-                        );
-                    }}
-                    openInNewTab={true}
-                />
-                <MenuContextualItem
-                    content={t('documents.sendStatements')}
-                    href={`/contact-center/send-correspondence?planCode=${
-                        policy.planCode
-                    }&policyNumber=${
-                        policy.policyNumber
-                    }&correlationId=${uuidV4()}`}
-                    icon={<DocumentReportIcon height={20} width={20} />}
-                    onClick={() => {
-                        trackClick(
-                            'Send Statements',
-                            `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
-                        );
-                    }}
-                    openInNewTab={true}
-                />
-                <MenuContextualItem
-                    content={t('documents.sendTaxForms')}
-                    href={`/contact-center/send-taxform?planCode=${
-                        policy.planCode
-                    }&policyNumber=${
-                        policy.policyNumber
-                    }&correlationId=${uuidV4()}`}
-                    icon={<TableIcon height={20} width={20} />}
-                    onClick={() => {
-                        trackClick(
-                            'Send Tax Forms',
-                            `/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
-                        );
-                    }}
-                    openInNewTab={true}
-                />
+                <>
+                    <MenuContextualItem
+                        content={t('documents.sendForms')}
+                        href={`/contact-center/send-document?planCode=${
+                            policy.planCode
+                        }&policyNumber=${
+                            policy.policyNumber
+                        }&correlationId=${uuidV4()}`}
+                        icon={<ClipboardIcon height={20} width={20} />}
+                        onClick={() => {
+                            trackClick(
+                                'Send Forms',
+                                `/contact-center/send-document?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                            );
+                        }}
+                        openInNewTab={true}
+                    />
+                    <MenuContextualItem
+                        content={t('documents.sendStatements')}
+                        href={`/contact-center/send-correspondence?planCode=${
+                            policy.planCode
+                        }&policyNumber=${
+                            policy.policyNumber
+                        }&correlationId=${uuidV4()}`}
+                        icon={
+                            <Icon
+                                type={IconType.DOCUMENT_REPORT}
+                                height={20}
+                                width={20}
+                            />
+                        }
+                        onClick={() => {
+                            trackClick(
+                                'Send Statements',
+                                `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                            );
+                        }}
+                        openInNewTab={true}
+                    />
+                    <MenuContextualItem
+                        content={t('documents.sendTaxForms')}
+                        href={`/contact-center/send-taxform?planCode=${
+                            policy.planCode
+                        }&policyNumber=${
+                            policy.policyNumber
+                        }&correlationId=${uuidV4()}`}
+                        icon={
+                            <Icon
+                                type={IconType.TABLE}
+                                height={20}
+                                width={20}
+                            />
+                        }
+                        onClick={() => {
+                            trackClick(
+                                'Send Tax Forms',
+                                `/contact-center/send-taxform?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                            );
+                        }}
+                        openInNewTab={true}
+                    />
+                    {sendCorrespondenceEnabled && (
+                        <MenuContextualItem
+                            content={t('documents.sendCorrespondence')}
+                            href={`/contact-center/send-correspondence?planCode=${
+                                policy.planCode
+                            }&policyNumber=${
+                                policy.policyNumber
+                            }&correlationId=${uuidV4()}`}
+                            icon={
+                                <Icon
+                                    type={IconType.LIBRARY}
+                                    height={20}
+                                    width={20}
+                                />
+                            }
+                            onClick={() => {
+                                trackClick(
+                                    'Send Correspondence',
+                                    `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                                );
+                            }}
+                            openInNewTab={true}
+                        />
+                    )}
+                </>
             </MenuContextualLabel>
 
             {serviceRequestFormEnabled && (
@@ -474,7 +535,13 @@ const MenuContextualContent = ({
                     <MenuContextualItem
                         content={t('additionalActions.serviceRequestForm')}
                         href={`/policies/${policy.planCode}/${policy.policyNumber}/default-case/`}
-                        icon={<TicketIcon height={20} width={20} />}
+                        icon={
+                            <Icon
+                                type={IconType.TICKET}
+                                height={20}
+                                width={20}
+                            />
+                        }
                         onClick={() => {
                             trackClick(
                                 'Raise a Service Request',

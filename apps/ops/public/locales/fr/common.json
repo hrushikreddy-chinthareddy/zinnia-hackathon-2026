@@ -5138,7 +5138,8 @@
             "label": "Envoyer des documents",
             "sendForms": "Envoyer des formulaires",
             "sendStatements": "Envoyer des relevés",
-            "sendTaxForms": "Envoyer des formulaires fiscaux"
+            "sendTaxForms": "Envoyer des formulaires fiscaux",
+            "sendCorrespondence": "Envoyer une correspondance"
         },
         "additionalActions": {
             "label": "Actions supplémentaires",

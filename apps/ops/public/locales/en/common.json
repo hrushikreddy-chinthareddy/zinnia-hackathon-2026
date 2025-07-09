@@ -5208,7 +5208,8 @@
             "label": "Send Documents",
             "sendForms": "Send forms",
             "sendStatements": "Send statements",
-            "sendTaxForms": "Send tax forms"
+            "sendTaxForms": "Send tax forms",
+            "sendCorrespondence": "Send Correspondence"
         },
         "additionalActions": {
             "label": "Additional Actions",

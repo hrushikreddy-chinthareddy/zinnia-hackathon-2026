@@ -5010,7 +5010,8 @@
             "label": "Enviar Documentos",
             "sendForms": "Enviar formularios",
             "sendStatements": "Enviar estados de cuenta",
-            "sendTaxForms": "Enviar formularios fiscales"
+            "sendTaxForms": "Enviar formularios fiscales",
+            "sendCorrespondence": "Enviar correspondencia"
         },
         "additionalActions": {
             "label": "Acciones adicionales",

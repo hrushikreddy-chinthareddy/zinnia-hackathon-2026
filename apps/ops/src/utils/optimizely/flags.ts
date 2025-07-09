@@ -141,4 +141,5 @@ export enum FEATURE_FLAGS {
     DASHBOARD_NIGO_TAB = 'dashboard_nigo_tab',
     SERVICE_REQUEST_FORM_ENABLED = 'service_request_default_case',
     PARTY_NAME_CHANGE_TRANSACTION = 'party_name_change_transaction',
+    SEND_CORRESPONDENCE = 'send_correspondence',
 }
