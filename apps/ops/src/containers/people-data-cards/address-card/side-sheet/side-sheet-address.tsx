@@ -161,6 +161,21 @@ const SideSheetAddress = ({
         ? t('mainCta.add', { type: addressTypeTranslation })
         : t('mainCta.update', { type: addressTypeTranslation });
 
+    const handleZipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const digits = event.target.value.replace(/\D/g, '').substring(0, 9);
+
+        setCurrentErrors((prevState) => {
+            const { zipCode, ...errors } = prevState ?? {};
+            return errors;
+        });
+
+        setAddress((prevState) => ({
+            ...prevState,
+            zipCode: digits.substring(0, 5),
+            zipCodeExtension: digits.substring(5, 9),
+        }));
+    };
+
     const handleDelete = async () => {
         const response = await editNonFinancialTransaction({
             body: {
@@ -413,27 +428,19 @@ const SideSheetAddress = ({
                         <Field
                             aria-label={t('labels.zip') as string}
                             disabled={isDelete}
-                            formatOptions={{ format: '#####-####' }}
                             label={t('labels.zip') as string}
                             message={currentErrors?.zipCode}
-                            onChange={(event) => {
-                                setCurrentErrors((prevState) => {
-                                    const { zipCode, ...errors } =
-                                        prevState ?? {};
-                                    return errors;
-                                });
-                                setAddress((prevState) => ({
-                                    ...prevState,
-                                    zipCode: event.target.value.substring(0, 5),
-                                    zipCodeExtension:
-                                        event.target.value.substring(5, 9),
-                                }));
-                            }}
+                            onChange={handleZipChange}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={
-                                (address.zipCode ?? '') +
-                                (address.zipCodeExtension ?? '')
+                                address.zipCode
+                                    ? address.zipCode.length === 5 &&
+                                      address.zipCodeExtension
+                                        ? `${address.zipCode}-${address.zipCodeExtension}`
+                                        : address.zipCode +
+                                          (address.zipCodeExtension || '')
+                                    : ''
                             }
                             variant={
                                 currentErrors?.zipCode
