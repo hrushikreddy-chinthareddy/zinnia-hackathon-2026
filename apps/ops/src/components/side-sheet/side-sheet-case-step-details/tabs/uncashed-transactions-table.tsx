@@ -42,7 +42,7 @@ const badgeVariant = (status: UncashedTransactionStatus): BadgeVariant => {
 };
 
 interface UncashedTransaction {
-    arrangementId: string;
+    id: string;
     checkNumber: string;
     checkIssueDate: string;
     transactionAmount: number;
@@ -173,7 +173,7 @@ export default function UncashedTransactionsTable({
                                     {paginatedTransactions.map(
                                         (transaction) => (
                                             <TableRow
-                                                key={`task-${transaction.arrangementId}`}
+                                                key={`task-${transaction.id}`}
                                             >
                                                 <TableCell className="typography-content-body-sm !px-3">
                                                     <Content
