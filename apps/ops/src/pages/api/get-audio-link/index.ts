@@ -36,8 +36,7 @@ export default withAuthAndLogging(
                 'Accept-Encoding': 'gzip, deflate, br',
                 Connection: 'keep-alive',
                 'Access-Control-Allow-Origin': '*',
-                'x-api-key': process.env
-                    .NEXT_PUBLIC_CALL_LOG_X_API_KEY as string,
+                'x-api-key': process.env.CALL_LOG_X_API_KEY,
             },
         };
 
