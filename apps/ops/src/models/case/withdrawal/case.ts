@@ -1124,7 +1124,7 @@ export const ParticipantCompanies = [
         "companyName": "AMERICAN GENERAL LIFE/AIG ANN-SVC ONLY FIX (4507)"
     },
     {
-        "code": "0",
+        "code": "0000",
         "companyName": "Disburse to Broker"
     },
     {
