@@ -221,6 +221,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                     !withdrawalProgram?.nextProgramDate,
                             },
                         ]}
+                        displayCardWithZeroAmount={true}
                     />
                     <hr className="h-0.5 border-none bg-gray-200" />
                 </>
@@ -269,6 +270,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                 !rmdProgram?.nextProgramDate,
                         },
                     ]}
+                    displayCardWithZeroAmount={false}
                 />
             )}
         </>

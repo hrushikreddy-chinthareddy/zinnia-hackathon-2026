@@ -4367,6 +4367,7 @@
             "paymentText": "Payment amount",
             "paymentDateText": "Next payment",
             "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "pendingCalculation": "Pending calculation",
             "noPaymentDateText": "Due",
             "accountText": "$t(bankAccountType.checking)",
             "additionalCharges": {

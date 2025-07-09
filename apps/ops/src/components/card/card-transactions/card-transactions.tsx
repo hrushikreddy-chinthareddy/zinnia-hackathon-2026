@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import FieldData, {
     FieldDataProps,
     FieldDataVariant,
@@ -13,6 +15,7 @@ import {
     ItemPadding,
     VerticalResizing,
 } from '@deps/components/responsive-flex/responsive-flex.types';
+import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { JestProps } from '@deps/types/props';
 
@@ -25,12 +28,14 @@ export type CardTransactionsProps = {
     premium: number;
     additionalChargesTitle: string;
     additionalCharges?: AdditionalCharge[];
+    displayCardWithZeroAmount?: boolean;
 } & JestProps;
 
 export type AdditionalCharge = {
     amount: number | undefined;
     label: string;
     key?: string | number;
+    displayCardWithZeroAmount?: boolean;
 } & Omit<FieldDataProps, 'variant'>;
 
 // Figma Element Names
@@ -40,17 +45,29 @@ const BottomContent = ResponsiveFlex;
 const Content = ResponsiveFlex;
 
 // all data rows on the page share the same prop
-const ChargeItem = ({ amount = 0, ...props }: AdditionalCharge) => (
-    <FieldData {...props} variant={FieldDataVariant.Information}>
-        {numberFormatify(amount)}
-    </FieldData>
-);
+const ChargeItem = ({
+    amount = 0,
+    displayCardWithZeroAmount,
+    ...props
+}: AdditionalCharge) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'premium.upcoming',
+    });
+    return (
+        <FieldData {...props} variant={FieldDataVariant.Information}>
+            {!amount && displayCardWithZeroAmount
+                ? t('pendingCalculation')
+                : numberFormatify(amount)}
+        </FieldData>
+    );
+};
 
 const CardTransactions = ({
     title,
     additionalChargesTitle,
     additionalCharges,
     premium,
+    displayCardWithZeroAmount,
     'data-testid': dataTestId,
 }: CardTransactionsProps) => {
     const additionalTotal = additionalCharges
@@ -75,7 +92,11 @@ const CardTransactions = ({
                 horizontalResizing={HorizontalResizing.Fill}
                 itemPadding={ItemPadding.XSmall}
             >
-                <ChargeItem label={title} amount={total} />
+                <ChargeItem
+                    label={title}
+                    amount={total}
+                    displayCardWithZeroAmount={displayCardWithZeroAmount}
+                />
             </TopContent>
             {!!additionalCharges?.length && (
                 <>
@@ -107,6 +128,9 @@ const CardTransactions = ({
                                         {...props}
                                         tooltipPlacement={
                                             PopoverPlacement.TopLeft
+                                        }
+                                        displayCardWithZeroAmount={
+                                            displayCardWithZeroAmount
                                         }
                                     />
                                 )

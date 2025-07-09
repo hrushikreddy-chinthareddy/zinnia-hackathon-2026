@@ -4312,6 +4312,7 @@
             },
             "paymentText": "Montant du paiement",
             "paymentDateText": "Prochain paiement",
+            "pendingCalculation": "Calcul en attente",
             "noPaymentDateText": "Dû",
             "accountText": "$t(bankAccountType.checking)",
             "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",

@@ -38,4 +38,5 @@ export type UpcomingPaymentCardProps = {
     startLoanText?: string;
     footerLinks: FooterContent[];
     requestSubTypes?: string[];
+    displayCardWithZeroAmount?: boolean;
 } & ClassNameProps;

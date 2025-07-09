@@ -25,6 +25,12 @@ jest.mock('@deps/queries/api/cases', () => {
     };
 });
 
+jest.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
+
 describe('UpcomingPaymentCard', () => {
     let props: UpcomingPaymentCardProps;
     let element: HTMLElement;
@@ -43,18 +49,18 @@ describe('UpcomingPaymentCard', () => {
         props = defaultProps;
     });
 
-    const renderComponent = () =>
+    const renderComponent = (props: UpcomingPaymentCardProps) =>
         render(<UpcomingPaymentCard data-testid="jfjfj" {...props} />);
 
     it('renders without crashing', () => {
-        const { getByTestId } = renderComponent();
+        const { getByTestId } = renderComponent(defaultProps);
         const element = getByTestId(UpcomingPaymentCardTest.CONTAINER);
         expect(element).toHaveTextContent(toTitleCase(pageTitle));
     });
 
     describe('design requirements', () => {
         beforeEach(() => {
-            const { getByTestId } = renderComponent();
+            const { getByTestId } = renderComponent(defaultProps);
             element = getByTestId(UpcomingPaymentCardTest.CONTAINER);
         });
 
@@ -74,7 +80,7 @@ describe('UpcomingPaymentCard', () => {
                 ...defaultProps,
                 title,
             };
-            const { getByTestId } = renderComponent();
+            const { getByTestId } = renderComponent(props);
             const element = getByTestId(UpcomingPaymentCardTest.CONTAINER);
             expect(element).toBeInTheDocument();
             expect(element).toHaveTextContent(toTitleCase(title));
@@ -91,20 +97,19 @@ describe('UpcomingPaymentCard', () => {
             max: 1000,
         });
 
-        beforeEach(() => {
-            props = {
-                ...defaultProps,
-                autopayAmount,
-                paymentDate,
-                paymentText,
-                paymentDateText,
-                bankDetails,
-            };
-            const { getByTestId } = renderComponent();
-            element = getByTestId(UpcomingPaymentCardTest.ACTIVE);
-        });
+        const activeProps = {
+            ...defaultProps,
+            autopayAmount,
+            paymentDate,
+            paymentText,
+            paymentDateText,
+            bankDetails,
+            displayCardWithZeroAmount: false,
+        };
 
         it('renders correct content', () => {
+            const { getByTestId } = renderComponent(activeProps);
+            const element = getByTestId(UpcomingPaymentCardTest.ACTIVE);
             expect(element).toBeInTheDocument();
             [
                 convertKebabedDateString(paymentDate),
@@ -113,6 +118,8 @@ describe('UpcomingPaymentCard', () => {
         });
 
         it('title cases correct props', () => {
+            const { getByTestId } = renderComponent(activeProps);
+            const element = getByTestId(UpcomingPaymentCardTest.ACTIVE);
             expect(element).toBeInTheDocument();
             [toTitleCase(paymentText)].map((prop) =>
                 expect(element).toHaveTextContent(prop)
@@ -120,10 +127,30 @@ describe('UpcomingPaymentCard', () => {
         });
 
         it('only shows last 4 digits in account', () => {
+            const { getByTestId } = renderComponent(activeProps);
+            const element = getByTestId(UpcomingPaymentCardTest.ACTIVE);
             expect(element).toBeInTheDocument();
             expect(element).toHaveTextContent(
                 bankDetails.accountNumber?.slice(-4) as string
             );
+        });
+
+        it('displays "Pending calculation" when amount is zero and displayCardWithZeroAmount is true', () => {
+            props = {
+                ...defaultProps,
+                autopayAmount: 0,
+                additionalCharges: [],
+                displayCardWithZeroAmount: true,
+                paymentDate,
+                paymentText,
+                paymentDateText,
+                bankDetails,
+            };
+            const { getByTestId } = renderComponent(props);
+            const activeElement = getByTestId(UpcomingPaymentCardTest.ACTIVE);
+            expect(activeElement).toBeInTheDocument();
+            expect(activeElement).toHaveTextContent('pendingCalculation');
+            expect(activeElement).not.toHaveTextContent(numberFormatify(0));
         });
     });
 
@@ -139,7 +166,7 @@ describe('UpcomingPaymentCard', () => {
                 inactiveText,
                 inactiveHeaderText,
             };
-            const { getByTestId } = renderComponent();
+            const { getByTestId } = renderComponent(props);
             element = getByTestId(UpcomingPaymentCardTest.INACTIVE);
         });
 
@@ -180,7 +207,7 @@ describe('UpcomingPaymentCard', () => {
                 additionalChargesTitle,
                 additionalCharges,
             };
-            const { getByTestId } = renderComponent();
+            const { getByTestId } = renderComponent(props);
             element = getByTestId(CardTransactionsTest.Container);
         });
 
@@ -212,7 +239,7 @@ describe('UpcomingPaymentCard', () => {
                 ...defaultProps,
                 footerLinks: footerLinksLabels,
             };
-            const { getByTestId } = renderComponent();
+            const { getByTestId } = renderComponent(props);
             element = getByTestId(UpcomingPaymentCardTest.CONTAINER);
         });
         it('shows correct number of footer links', () => {

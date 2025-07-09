@@ -57,6 +57,7 @@ const UpcomingPaymentCard = ({
     className,
     titleCase = true,
     requestSubTypes,
+    displayCardWithZeroAmount = false,
 }: UpcomingPaymentCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'premium.upcoming',
@@ -100,7 +101,7 @@ const UpcomingPaymentCard = ({
                 headerContent={<h2 className="headline-2">{title}</h2>}
                 footerContent={footerLinks}
             >
-                {hasUpcomingPayment ? (
+                {hasUpcomingPayment || displayCardWithZeroAmount ? (
                     <>
                         <ResponsiveFlex
                             data-testid={UpcomingPaymentCardTest.ACTIVE}
@@ -113,9 +114,15 @@ const UpcomingPaymentCard = ({
                         >
                             <FieldData
                                 label={paymentText || t('paymentText')}
-                                variant={FieldDataVariant.Large}
+                                variant={
+                                    displayCardWithZeroAmount
+                                        ? FieldDataVariant.Default
+                                        : FieldDataVariant.Large
+                                }
                             >
-                                {numberFormatify(paymentAmount)}
+                                {!paymentAmount && displayCardWithZeroAmount
+                                    ? t('pendingCalculation')
+                                    : numberFormatify(paymentAmount)}
                             </FieldData>
                             <FieldData
                                 label={`${
@@ -157,6 +164,7 @@ const UpcomingPaymentCard = ({
                                     t('additionalCharges.text')
                                 }
                                 additionalCharges={additionalCharges}
+                                displayCardWithZeroAmount
                             />
                         )}
                     </>
