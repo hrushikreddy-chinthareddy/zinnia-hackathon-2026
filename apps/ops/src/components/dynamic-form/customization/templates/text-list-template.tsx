@@ -19,7 +19,8 @@ type FormContextOptions = {
 };
 
 const getVariant = (value: string): AssistiveTextVariant => {
-    return variantMap[value.toLowerCase()] || AssistiveTextVariant.Info;
+    const key = value?.toLowerCase?.();
+    return variantMap[key] ?? AssistiveTextVariant.Info;
 };
 
 export default function TextListTemplate(
@@ -74,7 +75,9 @@ export default function TextListTemplate(
                         className="mb-2"
                         key={index}
                         text={text}
-                        variant={getVariant(listType as string)}
+                        variant={getVariant(
+                            (listType as string) || AssistiveTextVariant.Error
+                        )}
                     />
                 ))}
             </ul>

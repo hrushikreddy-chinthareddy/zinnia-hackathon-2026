@@ -31,7 +31,7 @@
                                         "type": "string",
                                         "title": "Processing Instructions"
                                     },
-                                    "applicationInformation": {
+                                    "applicationValue": {
                                         "type": "string",
                                         "title": "Application Information"
                                     },

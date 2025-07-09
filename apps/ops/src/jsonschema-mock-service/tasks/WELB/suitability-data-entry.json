@@ -1,7 +1,6 @@
 {
     "formId": "9569c24d-250e-45bd-ab0f-c85f04a192a9",
     "process": "New Business",
-    "carrier": "WELB",
     "taskType": "SUITABILITY_DATA_ENTRY",
     "formSchema": {
         "type": "object"
@@ -1654,7 +1653,7 @@
                                             "Owner",
                                             "Joint Owner",
                                             "Agent",
-                                            "Agent of Record",
+                                            "Primary Writing Agent",
                                             "Primary Servicing Agent",
                                             "Broker Dealer"
                                         ]
@@ -2131,7 +2130,7 @@
                                             "ui:options": {
                                                 "enumNames": [
                                                     "Liquid Asset",
-                                                    "Non Liquid QUID Asset"
+                                                    "Non Liquid Asset"
                                                 ]
                                             }
                                         },
