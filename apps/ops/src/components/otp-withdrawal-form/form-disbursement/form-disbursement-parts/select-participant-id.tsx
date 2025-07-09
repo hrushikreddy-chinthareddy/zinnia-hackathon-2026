@@ -1,4 +1,3 @@
-import React from 'react';
 
 import Autocomplete from '@deps/components/autocomplete/autocomplete';
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
@@ -15,7 +14,7 @@ const SelectParticipantId = ({
     const value = disbursementInformation.participantId ?? '';
     const participantIdOptions = ParticipantCompanies.map((company) => {
         return {
-            label: `${company.companyName} (${company.code})`,
+            label: `${company.companyName}`,
             value: company.code,
         };
     });

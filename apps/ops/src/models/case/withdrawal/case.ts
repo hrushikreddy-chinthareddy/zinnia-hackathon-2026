@@ -1111,65 +1111,210 @@ export enum Carrier {
 }
 
 export const ParticipantCompanies = [
-    { companyName: 'AIG ANNUITIES-VAR & IDX/VAR.ANN.LIFE', code: '3179' },
-
-    { companyName: 'AMERICAN GENERAL LIFE/AIG ANN-SVC FIX', code: '4507' },
-
-    { companyName: 'AMERICAN GENERAL LIFE/AIG ANN-VAR&INDEX', code: '4516' },
-
-    { companyName: 'AXA EQUITABLE LIFE INSURANCE COMPANY', code: '4535' },
-
-    { companyName: 'JACKSON NATIONAL LIFE INS CO/BROOKE LIFE', code: '4581' },
-
-    { companyName: 'JACKSON NATIONAL LIFE INS CO OF NEW YORK', code: '4584' },
-
-    { companyName: 'JACKSON NATIONAL LIFE INSURANCE COMPANY', code: '4552' },
-
-    { companyName: 'JEFFERSON NATIONAL LIFE CO/J.N.L INS.', code: '3165' },
-
-    { companyName: 'LINCOLN NATIONAL LIFE INSURANCE COMPANY', code: '4500' },
-
-    { companyName: 'MIDLAND NATIONAL LIFE INSURANCE COMPANY', code: '4709' },
-
-    { companyName: 'NATIONWIDE LIFE INS CO/INCOME PRODUCTS', code: '453' },
-
-    { companyName: 'NATIONWIDE LIFE INS CO/N.WIDE ADV SOLS', code: '3881' },
-
-    { companyName: 'NATIONWIDE LIFE INSURANCE COMPANY', code: '4514' },
-
-    { companyName: 'NEW YORK LIFE & ANNUITY CORP/FIXED CORP', code: '4571' },
-
-    { companyName: 'NORTH AMERICAN COMP FOR LIFE AND HEALTH', code: '8367' },
-
-    { companyName: 'PACIFIC LIFE & ANNUITY CO/LIFE DIVISION', code: '6545' },
-
-    { companyName: 'PACIFIC LIFE & ANNUITY COMPANY', code: '4589' },
-
-    { companyName: 'PACIFIC LIFE & ANNUITY CO/LIFE DIV.LYNCH', code: '1187' },
-
-    { companyName: 'PACIFIC LIFE INSURANCE CO/LIFE DIVISION', code: '4616' },
-
-    { companyName: 'PACIFIC LIFE INSURANCE COMPANY', code: '4532' },
-
-    { companyName: 'TRANSAMERICA FINANCIAL INSURANCE COMPANY', code: '4561' },
-
-    { companyName: 'TRANSAMERICA LIFE INSURANCE COMPANY', code: '4566' },
-
-    { companyName: 'TRANSAMERICA PREMIER LIFE INSURANCE CO/WR', code: '4567' },
-
-    { companyName: 'TRANSAMERICA PREMIER LIFE INSURANCE COMP', code: '4564' },
-
-    { companyName: 'US LIFE/AIG ANNUITIES(NY)-VARIABLE', code: '4517' },
-
-    { companyName: 'VENERABLE INSURANCE AND ANNUITY COMPANY', code: '4506' },
-
-    { companyName: 'VOYA INSTITUTIONAL TRUST COMPANY', code: '5377' },
-
-    { companyName: 'VOYA RETIREMENT INS.& ANN CO/VOYA ANN', code: '4740' },
-
-    { companyName: 'VOYA RETIREMENT INS.& ANNUITY CO/VOYA', code: '4635' },
-
-    { companyName: 'AMERICAN NATIONAL INSURANCE COMPANY', code: '4569' },
+    {
+        "code": "3179",
+        "companyName": "AIG ANNUITIES-VAR & IDX/VAR.ANN.LIFE INS CO (3179)"
+    },
+    {
+        "code": "4516",
+        "companyName": "AMERICAN GENERAL LIFE/AIG ANN.-VAR&INDEX (4516)"
+    },
+    {
+        "code": "4507",
+        "companyName": "AMERICAN GENERAL LIFE/AIG ANN-SVC ONLY FIX (4507)"
+    },
+    {
+        "code": "0",
+        "companyName": "Disburse to Broker"
+    },
+    {
+        "code": "4535",
+        "companyName": "AXA EQUITABLE LIFE INSURANCE COMPANY (4535)"
+    },
+    {
+        "code": "4581",
+        "companyName": "JACKSON NATIONAL LIFE INS. CO. /BROOKE LIFE (4581)"
+    },
+    {
+        "code": "4584",
+        "companyName": "JACKSON NATIONAL LIFE INS. CO. OF NEW YORK (4584)"
+    },
+    {
+        "code": "4552",
+        "companyName": "JACKSON NATIONAL LIFE INSURANCE COMPANY (4552)"
+    },
+    {
+        "code": "3165",
+        "companyName": "JEFFERSON NATIONAL LIFE INS. CO/J.N.L. INS. (3165)"
+    },
+    {
+        "code": "4500",
+        "companyName": "LINCOLN NATIONAL LIFE INSURANCE COMPANY (4500)"
+    },
+    {
+        "code": "4530",
+        "companyName": "NATIONWIDE LIFE INS. CO/INCOME PRODUCTS (4530)"
+    },
+    {
+        "code": "4514",
+        "companyName": "NATIONWIDE LIFE INSURANCE CO. (4514)"
+    },
+    {
+        "code": "3881",
+        "companyName": "NATIONWIDE LIFE INS. CO/N.WIDE ADV. SOLs. (3881)"
+    },
+    {
+        "code": "4571",
+        "companyName": "NEW YORK LIFE INS & ANNUITY CORP/FIXED CORP (4571)"
+    },
+    {
+        "code": "6545",
+        "companyName": "PACIFIC LIFE & ANNUITY CO./LIFE DIVISION (6545)"
+    },
+    {
+        "code": "4589",
+        "companyName": "PACIFIC LIFE & ANNUITY COMPANY (4589)"
+    },
+    {
+        "code": "1187",
+        "companyName": "PACIFIC LIFE INSURANCE CO./LIFE DIV. LYNCH (1187)"
+    },
+    {
+        "code": "4616",
+        "companyName": "PACIFIC LIFE INSURANCE CO./LIFE DIVISION (4616)"
+    },
+    {
+        "code": "4532",
+        "companyName": "PACIFIC LIFE INSURANCE COMPANY (4532)"
+    },
+    {
+        "code": "4561",
+        "companyName": "TRANSAMERICA FINANCIAL INSURANCE COMPANY (4561)"
+    },
+    {
+        "code": "4566",
+        "companyName": "TRANSAMERICA LIFE INSURANCE COMPANY (4566)"
+    },
+    {
+        "code": "4567",
+        "companyName": "TRANSAMERICA PREMIER LIFE INSURANCE CO./WRL (4567)"
+    },
+    {
+        "code": "4564",
+        "companyName": "TRANSAMERICA PREMIER LIFE INSURANCE COMPANY (4564)"
+    },
+    {
+        "code": "4517",
+        "companyName": "US LIFE/AIG ANNUITIES (NY) - VARIABLE (4517)"
+    },
+    {
+        "code": "4506",
+        "companyName": "VENERABLE INSURANCE AND ANNUITY COMPANY (4506)"
+    },
+    {
+        "code": "5377",
+        "companyName": "VOYA INSTITUTIONAL TRUST COMPANY/IFS (5377)"
+    },
+    {
+        "code": "4635",
+        "companyName": "VOYA RETIREMENT INS. AND ANNUITY CO./VOYA (4635)"
+    },
+    {
+        "code": "4740",
+        "companyName": "VOYA RETIREMENT INS. & ANN. CO./VOYA ANN. (4740)"
+    },
+    {
+        "code": "4709",
+        "companyName": "MIDLAND NATIONAL LIFE INSURANCE COMPANY (4709)"
+    },
+    {
+        "code": "8367",
+        "companyName": "NORTH AMERICAN COMP FOR LIFE AND HEALTH INS (8367)"
+    },
+    {
+        "code": "4598",
+        "companyName": "PRUCO LIFE INSURANCE COMPANY OF NEW JERSEY (4598)"
+    },
+    {
+        "code": "4597",
+        "companyName": "PRUCO LIFE INSURANCE COMPANY (4597)"
+    },
+    {
+        "code": "4504",
+        "companyName": "PRUDENTIAL ANNUITIES LIFE ASSURANCE CORP (4504)"
+    },
+    {
+        "code": "4596",
+        "companyName": "THE PRUDENTIAL INSURANCE COMPANY OF AMERICA (4596)"
+    },
+    {
+        "code": "4569",
+        "companyName": "AMERICAN NATIONAL INSURANCE COMPANY (4569)"
+    },
+    {
+        "code": "4061",
+        "companyName": "USAA Life Insurance Company(4061)"
+    },
+    {
+        "code": "4062",
+        "companyName": "USAA Life Insurance Company of New York(4062)"
+    },
+    {
+        "code": "3055",
+        "companyName": "DELAWARE LIFE INSURANCE COMPANY/DLIC (3055)"
+    },
+    {
+        "code": "3389",
+        "companyName": "MASSACHUSETTS MUTUAL LIFE INSURANCE COMPANY (3389)"
+    },
+    {
+        "code": "4527",
+        "companyName": "SECURITY BENEFIT LIFE INSURANCE CO. (4527)"
+    },
+    {
+        "code": "4602",
+        "companyName": "BRIGHTHOUSE LIFE INSURANCE COMPANY (4602)"
+    },
+    {
+        "code": "4609",
+        "companyName": "SYMETRA LIFE INSURANCE COMPANY (4609)"
+    },
+    {
+        "code": "4621",
+        "companyName": "FIRST SYMETRA NATIONAL LIFE INSURANCE CO. O (4621)"
+    },
+    {
+        "code": "4687",
+        "companyName": "EVERLAKE LIFE INSURANCE COMPANY/ADMINISTERE (4687)"
+    },
+    {
+        "code": "4701",
+        "companyName": "STANDARD INSURANCE COMPANY (4701)"
+    },
+    {
+        "code": "4749",
+        "companyName": "MASSMUTUAL ASCEND LIFE INSURANCE COMPANY/ A (4749)"
+    },
+    {
+        "code": "5949",
+        "companyName": "MASSMUTUAL ASCEND LIFE INSURANCE COMPANY (5949)"
+    },
+    {
+        "code": "7012",
+        "companyName": "FORETHOUGHT LIFE INSURANCE COMPANY/FORETHOU (7012)"
+    },
+    {
+        "code": "4542",
+        "companyName": "WESTERN-SOUTHERN LIFE ASSURANCE COMPAN (4542)"
+    },
+    {
+        "code": "4549",
+        "companyName": "INTEGRITY LIFE INSURANCE CO. (4549)"
+    },
+    {
+        "code": "4550",
+        "companyName": "NATIONAL INTEGRITY LIFE INSURANCE CO. (4550)"
+    }
 ];
 
 export enum SignVerificationReason {

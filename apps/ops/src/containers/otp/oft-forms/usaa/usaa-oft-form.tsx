@@ -17,7 +17,7 @@ import {
     FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
 
-import getUsaaOftConfig from './usaa-oft-form-helper';
+import getUsaaOftConfig from './usaa-oft-form-helpers';
 
 export default function UsaaOftWithdrawalForm() {
     const { t } = useTranslation(undefined, {
