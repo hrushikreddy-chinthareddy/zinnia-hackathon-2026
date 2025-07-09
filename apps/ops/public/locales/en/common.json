@@ -804,7 +804,7 @@
                     "pendingLapseBannerLink": "Make a premium payment",
                     "lapseBannerText": "This policy is approved for a reinstatement premium.  Go there now?",
                     "lapseBannerLink": "Make a premium payment",
-                    "freeLookCancelBannerText": "This policy is still in its free look period and can be canceled without penalty until",
+                    "freeLookCancelBannerText": "This policy has a free look period. It can be canceled with an effective date on or before {{endDate}} without penalty.",
                     "freeLookCancelBannerLink": "Cancel policy",
                     "caseBannerLink": "View cases",
                     "caseBannerText_one": "This policy has {{count}} open case",

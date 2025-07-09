@@ -897,7 +897,7 @@
                     "pendingLapseBannerLink": "Effectuer un paiement de prime",
                     "lapseBannerText": "Ce contrat est agréé moyennant une prime de réintégration. Y aller maintenant ?",
                     "lapseBannerLink": "Effectuer un paiement de prime",
-                    "freeLookCancelBannerText": "Cette police est encore dans sa période d'examen gratuit et peut être annulée sans pénalité jusqu'à cette date.",
+                    "freeLookCancelBannerText": "Cette police dispose d'une période d'examen gratuit. Elle peut être annulée avec une date d'effet au plus tard le {{endDate}}, sans pénalité.",
                     "freeLookCancelBannerLink": "Annuler la police",
                     "caseBannerLink": "Voir les cas",
                     "caseBannerText_one": "Cette politique a {{count}} cas ouvert",

@@ -455,11 +455,14 @@ const StatusBanner = ({
                 policy.freeLookPeriodDetails.isInFreeLookPeriod && (
                     <BannerAlert
                         variant={BannerVariant.Warning}
-                        bodyText={`${t(
-                            'dashboard.search.results.policySummaryCard.freeLookCancelBannerText'
-                        )} ${convertKebabedDateString(
-                            policy.freeLookPeriodDetails?.endDate
-                        )}`}
+                        bodyText={t(
+                            'dashboard.search.results.policySummaryCard.freeLookCancelBannerText',
+                            {
+                                endDate: convertKebabedDateString(
+                                    policy.freeLookPeriodDetails?.endDate
+                                ),
+                            }
+                        )}
                         cta={{
                             href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
                             text: t(

@@ -794,7 +794,7 @@
                     "pendingLapseBannerLink": "Realizar un pago de prima",
                     "lapseBannerText": "Esta póliza está aprobada para una prima de reinstalación. ¿Ir allí ahora?",
                     "lapseBannerLink": "Realizar un pago de prima",
-                    "freeLookCancelBannerText": "Esta póliza todavía está en su período de prueba gratuita y puede cancelarse sin penalización hasta",
+                    "freeLookCancelBannerText": "Esta póliza tiene un período de prueba gratuita. Puede cancelarse con una fecha de vigencia en o antes del {{endDate}} sin penalización.",
                     "freeLookCancelBannerLink": "Cancelar póliza",
                     "caseBannerLink": "Ver casos",
                     "caseBannerText_one": "Esta póliza tiene {{count}} caso abierto",
