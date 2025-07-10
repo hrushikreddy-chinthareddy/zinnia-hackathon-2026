@@ -129,7 +129,7 @@ const NigoEntry = ({
     const accountInfo = useAccountInfo(document.contract, clientCode as string);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        clientCode as string
+        planCode as string
     );
     const { issueState } = isLC ? accountInfo : contractAccountInfo;
 
