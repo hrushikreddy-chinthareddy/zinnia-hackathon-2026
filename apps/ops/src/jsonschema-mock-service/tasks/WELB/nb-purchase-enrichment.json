@@ -1,0 +1,182 @@
+{
+    "formId": "0017516c-b7a7-4cf5-a098-c4cc2f1da5ea",
+    "process": "Qualification",
+    "carrier": "WELB",
+    "taskType": "NB_PURCHASE_ENRICHMENT",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Purchase Enrichment",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Payment is missing required information. Please ensure all missing details are completed before submission."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Informtion",
+                            "properties": {
+                                "agentDetails": {
+                                    "type": "object",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name",
+                                            "ui:field": "title"
+                                        },
+                                        "agentExternalId": {
+                                            "type": "string",
+                                            "title": "External Id",
+                                            "ui:field": "subTitle"
+                                        },
+                                        "taxId": {
+                                            "type": "string",
+                                            "title": "SSN",
+                                            "dataType": "ssn"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name",
+                                            "ui:field": "title"
+                                        }
+                                    }
+                                },
+                                "documents": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "transactionDesc": {
+                            "type": "string",
+                            "title": "Transaction description",
+                            "$ref": "#/definitions/transactionDescEnum"
+                        },
+                        "processCompanyCode": {
+                            "type": "string",
+                            "title": "Client",
+                            "$ref": "#/definitions/processCompanyCodeEnum"
+                        },
+                        "amount": {
+                            "type": "string",
+                            "title": "Amount",
+                            "minLength": 1
+                        },
+                        "transactionDateTime": {
+                            "type": "string",
+                            "title": "Date"
+                        }
+                    },
+                    "required": ["transactionDesc", "processCompanyCode", "amount", "transactionDateTime"],
+                    "definitions": {
+                        "transactionDescEnum": {
+                            "enum": ["Check", "Wire"]
+                        },
+                        "processCompanyCodeEnum": {
+                            "enum": ["WELB"]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "agentDetails": {
+                            "ui:options": {
+                                "cardType": "Detailed",
+                                "icon": "CIRCLE_USER",
+                                "label": false,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "key": "agentDetails",
+                                "sectionTitle": "Details"
+                            }
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": false,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                }
+                            }
+                        }
+                    },
+                    "transactionDesc": {
+                        "ui:widget": "select",
+                        "ui:placeholder": "Select Transaction description",
+                        "ui:hideError": true
+                    },
+                    "processCompanyCode": {
+                        "ui:widget": "select",
+                        "ui:placeholder": "Select Client",
+                        "ui:hideError": true
+                    },
+                    "amount": {
+                        "ui:options": {
+                            "widget": "ValueWidget"
+                        },
+                        "ui:hideError": true
+                    },
+                    "transactionDateTime": {
+                        "ui:widget": "date",
+                        "ui:hideError": true
+                    }
+                }
+            }
+        ]
+    }
+}

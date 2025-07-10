@@ -1,4 +1,3 @@
-
 import Autocomplete from '@deps/components/autocomplete/autocomplete';
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
 import { ParticipantCompanies } from '@deps/models/case/withdrawal/case';

@@ -1,7 +1,10 @@
 import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 
-import { searchTransactionsByPaymentRecordId, SearchTransactionFilters } from '../../../../queries/api/transaction-search';
+import {
+    searchTransactionsByPaymentRecordId,
+    SearchTransactionFilters,
+} from '../../../../queries/api/transaction-search';
 import { TaskHandler } from '../types';
 
 interface CostBasisReviewPayload {
@@ -11,11 +14,12 @@ interface CostBasisReviewPayload {
 const costBasisReviewHandler: TaskHandler<CostBasisReviewPayload, any> = {
     api: async (payload: CostBasisReviewPayload) => {
         if (!payload.paymentRecordId) {
-            console.error('costBasisReviewHandler::api::missingPaymentRecordId', { payload });
             return null;
         }
 
-        const filters: SearchTransactionFilters = { paymentRecordId: payload.paymentRecordId };
+        const filters: SearchTransactionFilters = {
+            paymentRecordId: payload.paymentRecordId,
+        };
         const response = await searchTransactionsByPaymentRecordId(filters);
 
         if (!response || !Array.isArray(response) || response.length === 0) {
@@ -30,10 +34,15 @@ const costBasisReviewHandler: TaskHandler<CostBasisReviewPayload, any> = {
     },
 
     getPayload: (taskData: any) => ({
-        paymentRecordId: taskData?.data?.details?.paymentRecord?.paymentRecordId || '',
+        paymentRecordId:
+            taskData?.data?.details?.paymentRecord?.paymentRecordId || '',
     }),
 
-    transformResponse: (response, metadata: FormMetadata[], task?: ManagementTask) => {
+    transformResponse: (
+        response,
+        metadata: FormMetadata[],
+        task?: ManagementTask
+    ) => {
         if (!response || !metadata[0]?.uiSchema?.details?.paymentRecord) {
             return;
         }

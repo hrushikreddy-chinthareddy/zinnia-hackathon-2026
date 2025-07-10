@@ -84,6 +84,7 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.Claims_Match_Bene_Document]: ApiVersion.v2,
     [TaskType.Background_Nigo]: ApiVersion.v2,
     [TaskType.Background_Review]: ApiVersion.v2,
+    [TaskType.Purchase_enrichment]: ApiVersion.v2,
     [TaskType.Claims_Fi_Escheatment_Task]: ApiVersion.v2,
     [TaskType.Bene_Address_Verification]: ApiVersion.v2,
     [TaskType.Claims_Bene_Review]: ApiVersion.v2,

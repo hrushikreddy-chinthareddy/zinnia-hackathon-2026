@@ -6328,6 +6328,15 @@
             "submitTask": "Submit"
         }
     },
+    "nbPurchaseEnrichment": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Purchase Enrichment Check was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "claimsBeneReview": {
         "confirmStep": {
             "title": "Got It!",

@@ -2,9 +2,16 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import NavElement, { NavElementSize, NavElementType, NavElementVariant } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+    NavElementVariant,
+} from '@deps/components/nav-element/nav-element';
 import { TranslationFiles } from '@deps/config/translations';
-import { NonFinancialTransactionActions, NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 interface SuccessStateProps {
@@ -19,8 +26,20 @@ interface SuccessStateProps {
     caseId?: string;
 }
 
-const SuccessState = ({ action, isNigo, name, onCancel, transaction, type, caseId, oldName, newName }: SuccessStateProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'people.sideSheet.states.success' });
+const SuccessState = ({
+    action,
+    isNigo,
+    name,
+    onCancel,
+    transaction,
+    type,
+    caseId,
+    oldName,
+    newName,
+}: SuccessStateProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'people.sideSheet.states.success',
+    });
     const { t: defaultT } = useTranslation();
     const router = useRouter();
 

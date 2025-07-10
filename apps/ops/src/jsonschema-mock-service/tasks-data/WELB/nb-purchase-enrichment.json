@@ -1,0 +1,42 @@
+{
+    "id": "TA000000031809",
+    "caseId": "CA0000428532",
+    "source": "BPM.IndexationOrkestr",
+    "templateId": "24b53531-5dd1-4056-9f20-8ab76c45513c",
+    "process": "Qualification",
+    "carrier": "WELB",
+    "taskType": "NB_PURCHASE_ENRICHMENT",
+    "taskName": "Purchase Enrichment",
+    "status": "INPROGRESS",
+    "data": {
+        "processCompanyCode": "WELB",
+        "amount": "20000"
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "qualification",
+    "priority": "",
+    "escalated": false,
+    "assigneeFirstName": "Vijayalaxmi",
+    "assigneeLastName": "Sambhane",
+    "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+    "assigneePartyId": "fa49a69c3939412d87b315cb39459497",
+    "assignedAt": "2025-06-16T08:55:38Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-06-16T08:36:21Z",
+    "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
+    "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
+    "updatedAt": "2025-06-16T08:55:42Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000428532"
+        },
+        {
+            "identifier": "batchId",
+            "value": "90003150"
+        }
+    ],
+    "externalId": "d792de45-796f-4c7d-964c-557f6ddf8215"
+}

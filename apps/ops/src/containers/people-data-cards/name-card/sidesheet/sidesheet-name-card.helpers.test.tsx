@@ -17,7 +17,9 @@ describe('getFormErrors', () => {
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
         });
-        expect(errors.caseId).toBe('people.sideSheet.email.errors.missingCaseDocument');
+        expect(errors.caseId).toBe(
+            'people.sideSheet.email.errors.missingCaseDocument'
+        );
     });
 
     it('returns organization fullName error if fullName is empty', () => {
@@ -32,7 +34,9 @@ describe('getFormErrors', () => {
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
         });
-        expect(errors.fullName).toBe('people.sideSheet.name.errors.organizationError');
+        expect(errors.fullName).toBe(
+            'people.sideSheet.name.errors.organizationError'
+        );
     });
 
     it('returns trust fullName error if type is TRUST and fullName is empty', () => {
@@ -62,8 +66,12 @@ describe('getFormErrors', () => {
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
         });
-        expect(errors.firstName).toBe('people.sideSheet.name.errors.firstNameError');
-        expect(errors.lastName).toBe('people.sideSheet.name.errors.lastNameError');
+        expect(errors.firstName).toBe(
+            'people.sideSheet.name.errors.firstNameError'
+        );
+        expect(errors.lastName).toBe(
+            'people.sideSheet.name.errors.lastNameError'
+        );
     });
 
     it('returns supportingDocumentMatchesWithNewName error if missing', () => {
@@ -78,7 +86,9 @@ describe('getFormErrors', () => {
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
         });
-        expect(errors.supportingDocumentMatchesWithNewName).toBe('people.sideSheet.name.errors.supportingDocumentNotMatchesError');
+        expect(errors.supportingDocumentMatchesWithNewName).toBe(
+            'people.sideSheet.name.errors.supportingDocumentNotMatchesError'
+        );
     });
 
     it('returns signaturePresentOnDocumentForAllOwners error if missing', () => {
@@ -93,7 +103,9 @@ describe('getFormErrors', () => {
             signaturePresentOnDocumentForAllOwners: '',
             dateOfSignature: '2023-01-01',
         });
-        expect(errors.signaturePresentOnDocumentForAllOwners).toBe('people.sideSheet.name.errors.signatureNotPresentOnDocument');
+        expect(errors.signaturePresentOnDocumentForAllOwners).toBe(
+            'people.sideSheet.name.errors.signatureNotPresentOnDocument'
+        );
     });
 
     it('returns dateOfSignature error if signaturePresentOnDocumentForAllOwners is Yes and dateOfSignature is missing', () => {
@@ -108,7 +120,9 @@ describe('getFormErrors', () => {
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '',
         });
-        expect(errors.dateOfSignature).toBe('people.sideSheet.name.errors.dateOfSignature');
+        expect(errors.dateOfSignature).toBe(
+            'people.sideSheet.name.errors.dateOfSignature'
+        );
     });
 
     it('returns no errors if all fields are valid', () => {

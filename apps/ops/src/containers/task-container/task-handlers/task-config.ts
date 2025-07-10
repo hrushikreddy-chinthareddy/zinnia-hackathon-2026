@@ -11,7 +11,6 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Payment_Processing_Review,
     TaskType.Application_Review,
     TaskType.Agent_Onboarding_Review,
-    TaskType.Background_Review,
     TaskType.Cost_Basis_Review,
     TaskType.Claims_Fi_Escheatment_Task,
     TaskType.Default_Case_DataEntry,

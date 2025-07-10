@@ -6243,6 +6243,15 @@
             "submitTask": "Soumettre"
         }
     },
+    "nbPurchaseEnrichment": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche: Le chèque d'enrichissement d'achat a été soumis.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "claimsFiEscheatmentTask": {
         "confirmStep": {
             "title": "Compris!",

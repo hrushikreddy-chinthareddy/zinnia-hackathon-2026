@@ -177,7 +177,7 @@ export default function getMassOftConfig(t: TFunction) {
         });
 
         // fbo details required
-         if (
+        if (
             ![PaymentMethod.DTCC].includes(
                 formDisbursement?.paymentMethod.text as PaymentMethod
             ) &&
@@ -755,7 +755,7 @@ export default function getMassOftConfig(t: TFunction) {
                 };
             },
         },
-                {
+        {
             label: t('distributionMethod.dtcc'),
             value: FormDisbursementSelections.DTCC,
             fields: [

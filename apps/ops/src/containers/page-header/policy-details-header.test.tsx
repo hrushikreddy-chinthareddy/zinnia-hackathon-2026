@@ -1,10 +1,9 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { PopoverTest } from '@deps/jest/constants/test-id-constants';
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
-
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import PolicyDetailsHeader from './policy-details-header';
 
@@ -27,13 +26,17 @@ jest.mock('@deps/hooks/useBreadcrumbs', () =>
 afterEach(cleanup);
 
 const renderWithQueryClient = (ui: React.ReactElement) => {
-  const queryClient = new QueryClient();
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+    const queryClient = new QueryClient();
+    return render(
+        <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+    );
 };
 
 describe('verify correct labels and tooltip values are present', () => {
     it('should contain correct labels', () => {
-        renderWithQueryClient(<PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />);
+        renderWithQueryClient(
+            <PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />
+        );
 
         expect(screen.getByText('Basedeathbenefit')).toBeInTheDocument();
         expect(screen.getByText('Accountvalue')).toBeInTheDocument();
@@ -42,7 +45,9 @@ describe('verify correct labels and tooltip values are present', () => {
     });
 
     it('should correctly display the death benefit tooltip', async () => {
-        renderWithQueryClient(<PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />);
+        renderWithQueryClient(
+            <PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />
+        );
 
         const allPopovers = screen.getAllByTestId(PopoverTest.Popover);
 
@@ -61,7 +66,9 @@ describe('verify correct labels and tooltip values are present', () => {
     });
 
     it('should correctly display the account value tooltip', async () => {
-        renderWithQueryClient(<PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />);
+        renderWithQueryClient(
+            <PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />
+        );
 
         const allPopovers = screen.getAllByTestId(PopoverTest.Popover);
 
@@ -80,7 +87,9 @@ describe('verify correct labels and tooltip values are present', () => {
     });
 
     it('should correctly display the net surrender value tooltip', async () => {
-        renderWithQueryClient(<PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />);
+        renderWithQueryClient(
+            <PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />
+        );
 
         const allPopovers = screen.getAllByTestId(PopoverTest.Popover);
 
@@ -99,7 +108,9 @@ describe('verify correct labels and tooltip values are present', () => {
     });
 
     it('should correctly display the cost basis tooltip', async () => {
-        renderWithQueryClient(<PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />);
+        renderWithQueryClient(
+            <PolicyDetailsHeader policy={new PolicyDetails(mockPolicy)} />
+        );
 
         const allPopovers = screen.getAllByTestId(PopoverTest.Popover);
 

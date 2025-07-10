@@ -2,7 +2,10 @@ import { Party } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'next-i18next';
 import { FC, useContext, useState } from 'react';
 
-import NavElement, { NavElementSize, NavElementType } from '@deps/components/nav-element/nav-element';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -18,11 +21,17 @@ interface INameCardProps {
     editable?: boolean;
 }
 
-export const NameCard: FC<INameCardProps> = ({ children, selectedPolicyParty, t, editable }) => {
+export const NameCard: FC<INameCardProps> = ({
+    children,
+    selectedPolicyParty,
+    t,
+    editable,
+}) => {
     const sidesheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
     const { featureFlags } = useOptimizely();
-    const partyNameChangeEnabled = featureFlags[FEATURE_FLAGS.PARTY_NAME_CHANGE_TRANSACTION];
+    const partyNameChangeEnabled =
+        featureFlags[FEATURE_FLAGS.PARTY_NAME_CHANGE_TRANSACTION];
 
     const handleEditClick = () => {
         sidesheet.changeSideSheetContent(
@@ -41,8 +50,17 @@ export const NameCard: FC<INameCardProps> = ({ children, selectedPolicyParty, t,
             <div className="flex h-6 items-center gap-2 xs:mt-2">
                 {children}
                 {editable && partyNameChangeEnabled && (
-                    <NavElement type={NavElementType.Button} size={NavElementSize.Small} tabIndex={0} className=" h-4">
-                        <EditIcon height={16} onClick={handleEditClick} data-testid="edit-icon" />
+                    <NavElement
+                        type={NavElementType.Button}
+                        size={NavElementSize.Small}
+                        tabIndex={0}
+                        className=" h-4"
+                    >
+                        <EditIcon
+                            height={16}
+                            onClick={handleEditClick}
+                            data-testid="edit-icon"
+                        />
                     </NavElement>
                 )}
             </div>
