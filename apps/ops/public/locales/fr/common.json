@@ -1943,6 +1943,7 @@
                 "calculationType": "Type de calcul",
                 "amount": "Montante",
                 "newRmdProgram": "Ajouter un nouveau Programme RMD",
+                "oneTimeRmd": "Ajouter un RMD unique",
                 "active": "Active",
                 "terminate": "Terminate",
                 "action": "Action",
@@ -1968,7 +1969,8 @@
                 },
                 "rmdTypes": {
                     "auto": "Auto RMD",
-                    "calculate": "Calculate RMD"
+                    "calculate": "Calculate RMD",
+                    "oneTime": "RMD unique"
                 },
                 "jointLifeExpectancy": {
                     "title": {

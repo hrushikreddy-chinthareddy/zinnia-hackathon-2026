@@ -1961,6 +1961,7 @@
                 "calculationType": "Calculation type",
                 "amount": "Amount",
                 "newRmdProgram": "Add new RMD program",
+                "oneTimeRmd": "Add One time RMD",
                 "active": "Active",
                 "terminate": "Terminate",
                 "action": "Action",
@@ -1975,7 +1976,8 @@
                     "nextDate": "Next date",
                     "mode": "Mode",
                     "amount": "Amount",
-                    "action": "Terminate"
+                    "action": "Terminate",
+                    "endDate": "End date"
                 },
                 "frequencyOptions": {
                     "none": "None",
@@ -1986,7 +1988,8 @@
                 },
                 "rmdTypes": {
                     "auto": "Auto RMD",
-                    "calculate": "Calculate RMD"
+                    "calculate": "Calculate RMD",
+                    "oneTime": "One-Time RMD"
                 },
                 "jointLifeExpectancy": {
                     "title": {

@@ -401,6 +401,7 @@ export interface RMD {
     lastName: string | null;
     dob: { text: string | null };
     isJointLifeExpectancy: boolean;
+    isOneTimeWithdrawal?: boolean;
     rmdPrograms: RMDProgram[];
     taxId: { text: string | null };
 }
@@ -1025,6 +1026,7 @@ export enum Frequency {
 export enum RMDType {
     AutoRMD = 'Auto RMD',
     CalculateRMD = 'Calculate RMD',
+    OneTimeRMD = 'One Time RMD',
 }
 
 export enum RMDProgramType {
@@ -1343,3 +1345,31 @@ export interface FormReIndexingData {
     docTypeToReindex?: string | null;
     notes: string | null;
 }
+
+export type EnterpriseParty = {
+    partyRole: string;
+    partyId: string;
+    percentage: number;
+    bankId: string;
+    paymentForm: string;
+};
+
+export type SystematicSpecialPrograms = {
+    arrangementType: string;
+    arrangementId: string;
+    allocationOptionType: string | null;
+    reason: string;
+    numberOfOccurrence: number | null;
+    disbursementType: string;
+    status: string;
+    paymentForm: string;
+    frequency: string;
+    requestedDate: string;
+    startDate: string;
+    endDate: string;
+    previousProgramDate: string | null;
+    nextProgramDate: string;
+    amountType: string;
+    amount: number;
+    party: EnterpriseParty[];
+};

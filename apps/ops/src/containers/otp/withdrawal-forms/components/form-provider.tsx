@@ -21,6 +21,7 @@ import {
     FormValidationErrors,
     FundWithdrawnMethod,
     ProgramSubType,
+    SystematicSpecialPrograms,
 } from '@deps/models/case/withdrawal/case';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
@@ -42,6 +43,7 @@ type FormProviderProps = {
     featureFlagDecisions?: FeatureFlags;
     parties?: LifeCadParty[] | Party[];
     partyRoles?: PolicyPartyRoles[];
+    systematicPrograms?: SystematicSpecialPrograms[] | [];
 };
 
 const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
@@ -96,6 +98,7 @@ export const FormProvider = ({
     isOpenNigo,
     featureFlagDecisions,
     partyRoles,
+    systematicPrograms,
 }: FormProviderProps) => {
     const searchParams = useSearchParams();
     const [formData, setFormData] = useState(form?.data?.formRequest?.formData);
@@ -206,6 +209,7 @@ export const FormProvider = ({
             formParty
         )
     );
+    const [policySystematicPrograms, _] = useState(systematicPrograms || []);
 
     // Update contract issue state when issue state changes
     useEffect(() => {
@@ -270,6 +274,7 @@ export const FormProvider = ({
                 formReindexingData,
                 formBeneInfo,
                 formPeriodicPension,
+                policySystematicPrograms,
                 setFormPeriodicPension,
                 setFormSubtype,
                 setCurrentFormState,

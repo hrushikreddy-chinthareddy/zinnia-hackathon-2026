@@ -9,6 +9,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useSpecialProgram } from '@deps/hooks/useSpecialProgram';
+import { CaseType } from '@deps/models/case/case';
 import {
     RMDProgramType,
     Terminateprogram,
@@ -27,18 +28,20 @@ interface ExistingProgramsProps {
     disableAllPrograms?: boolean;
     terminated?: Terminateprogram[];
     onDataChange?: (value: Terminateprogram[]) => void;
+    isLC?: boolean;
 }
 
 export default function ExistingPrograms({
     disableAllPrograms = false,
     terminated,
     onDataChange,
+    isLC = true,
 }: ExistingProgramsProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.rmdMethod',
     });
-    const { initialForm } = useContext(FormDataContext);
-
+    const { initialForm, policySystematicPrograms } =
+        useContext(FormDataContext);
     const [sswprograms, setsswprograms] = useState<Program[]>([]);
     const [rmdPrograms, setrmdPrograms] = useState<Program[]>([]);
 
@@ -53,53 +56,72 @@ export default function ExistingPrograms({
         },
     ];
 
-    const { activePrograms, isLoading } = useSpecialProgram(initialForm);
+    const { activePrograms, isLoading } = useSpecialProgram(initialForm, isLC);
+    const activeSystematicPrograms = policySystematicPrograms?.filter(
+        (item) => item.status === 'ACTIVE'
+    );
 
     useEffect(() => {
+        // TODO: Types to be updated on dev completion of DEPU-5199
+        const mapProgramToSSW = (program: any) => ({
+            programType: CaseType.SSW,
+            startDate: program.startDate,
+            nextDate: isLC ? program.nextDate : program.nextProgramDate,
+            amount: (isLC ? program.dbAmount : program.amount).toString(),
+            frequency: isLC ? program.mode : program.frequency,
+            duration: isLC ? program.duration.toString() : '',
+            status: RMDProgramType.Active,
+            allocationId: isLC ? program?.allocationId : 0,
+        });
+        // TODO: any type to be updated on dev completion of DEPU-5199
+        const mapProgramToRMD = (program: any) => ({
+            programType: CaseType.Rmd,
+            startDate: program.startDate,
+            nextDate: isLC ? program.nextDate : program.nextProgramDate,
+            amount: (isLC ? program.dbAmount : program.amount).toString(),
+            frequency: isLC ? program.mode : program.frequency,
+            duration: isLC ? program.duration.toString() : '',
+            status: RMDProgramType.Active,
+            allocationId: isLC ? program?.allocationId : 0,
+        });
+
         const sswPrograms: Program[] = [];
         const rmdPrograms: Program[] = [];
 
-        activePrograms?.forEach((program) => {
-            if (
-                [ProgramType.SSW, ProgramType.SSWNet].includes(
-                    program.typeOfAlloc
-                )
-            ) {
-                sswPrograms.push({
-                    programType: 'SSW',
-                    startDate: program.startDate,
-                    nextDate: program.nextDate,
-                    amount: program.dbAmount.toString(),
-                    frequency: program.mode,
-                    duration: program.duration.toString(),
-                    status: RMDProgramType.Active,
-                    allocationId: program.allocationId,
-                });
-            }
-
-            if (program.typeOfAlloc === ProgramType.RMD) {
-                rmdPrograms.push({
-                    programType: 'RMD',
-                    startDate: program.startDate,
-                    nextDate: program.nextDate,
-                    amount: program.dbAmount.toString(),
-                    frequency: program.mode,
-                    duration: program.duration.toString(),
-                    status: RMDProgramType.Active,
-                    allocationId: program.allocationId,
-                });
-            }
-        });
+        if (isLC) {
+            activePrograms?.forEach((program) => {
+                if (
+                    [ProgramType.SSW, ProgramType.SSWNet].includes(
+                        program.typeOfAlloc
+                    )
+                ) {
+                    sswPrograms.push(mapProgramToSSW(program));
+                }
+                if (program.typeOfAlloc === ProgramType.RMD) {
+                    rmdPrograms.push(mapProgramToRMD(program));
+                }
+            });
+        } else {
+            activeSystematicPrograms?.forEach((program) => {
+                if (program.disbursementType === CaseType.Rmd) {
+                    rmdPrograms.push(mapProgramToRMD(program));
+                }
+                if (program.disbursementType === 'Gross') {
+                    sswPrograms.push(mapProgramToSSW(program));
+                }
+            });
+        }
 
         setsswprograms(sswPrograms);
         setrmdPrograms(rmdPrograms);
-    }, [activePrograms]);
+    }, [activePrograms, activeSystematicPrograms, isLC]);
+    // ...existing code...
 
     const addtoTerminatedprograms = (
         status: RMDProgramType,
         program: Program
     ) => {
-        program.programType === 'RMD' &&
+        program.programType === CaseType.Rmd &&
             setrmdPrograms(
                 rmdPrograms.map((item) => ({
                     ...item,
@@ -109,7 +131,7 @@ export default function ExistingPrograms({
                             : item.status,
                 }))
             );
-        program.programType === 'SSW' &&
+        program.programType === CaseType.SSW &&
             setsswprograms(
                 sswprograms.map((item) => ({
                     ...item,
@@ -133,7 +155,7 @@ export default function ExistingPrograms({
         if (status === RMDProgramType.Terminate) {
             const termProgram = {
                 startDate: { text: program.startDate },
-                allocationId: { text: program.allocationId },
+                allocationId: { text: program?.allocationId },
             };
             if (terminated && onDataChange) {
                 onDataChange([...terminated, termProgram]);
@@ -161,6 +183,7 @@ export default function ExistingPrograms({
                             <Program
                                 program={item}
                                 isFormStateReadOnly={disableAllPrograms}
+                                isLC={isLC}
                             />
 
                             <SelectSimple
@@ -202,6 +225,7 @@ export default function ExistingPrograms({
                             <Program
                                 program={item}
                                 isFormStateReadOnly={disableAllPrograms}
+                                isLC={isLC}
                             />
                             <SelectSimple
                                 label={t('action') as string}
@@ -230,7 +254,9 @@ export default function ExistingPrograms({
     return (
         <>
             {isLoading && <Loader />}
-            {activePrograms && activePrograms.length > 0 ? allPrograms : null}
+            {activePrograms?.length > 0 || activeSystematicPrograms?.length > 0
+                ? allPrograms
+                : null}
         </>
     );
 }

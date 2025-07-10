@@ -33,6 +33,7 @@ import {
     FormReIndexingData,
     FormComment,
     PeriodicPensionFormType,
+    SystematicSpecialPrograms,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
@@ -74,6 +75,7 @@ export interface OtpWithdrawalFormState {
     formBeneInfo: FormBeneInfo | null;
     formPeriodicPension: PeriodicPensionFormType | null;
     formESignatureData?: FormEsignatureData | any;
+    policySystematicPrograms: SystematicSpecialPrograms[] | [];
     setFormESignatureData: React.Dispatch<React.SetStateAction<any>>;
     setFormPeriodicPension: React.Dispatch<
         React.SetStateAction<PeriodicPensionFormType | null>
@@ -173,6 +175,7 @@ export const defaultFormDataContext = {
     formBeneInfo: {} as FormBeneInfo,
     formPeriodicPension: {} as PeriodicPensionFormType,
     formEsignatureData: {} as FormEsignatureData,
+    policySystematicPrograms: [] as SystematicSpecialPrograms[],
     setFormPeriodicPension: noop,
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,

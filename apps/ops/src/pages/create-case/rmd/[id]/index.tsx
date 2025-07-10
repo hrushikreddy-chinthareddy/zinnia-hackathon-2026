@@ -42,6 +42,7 @@ import {
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
+import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
@@ -50,13 +51,19 @@ import { TaskType } from '@deps/models/case/task';
 import {
     ActiveWithdrawalCase,
     Carrier,
+    FASTQualTypes,
     QualTypes,
+    SystematicSpecialPrograms,
 } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
-import { getPolicyPartiesSSR } from '@deps/queries/api/policies';
+import {
+    getPolicyDetailsSsr,
+    getPolicyPartiesSSR,
+    searchPolicySSR,
+} from '@deps/queries/api/policies';
 import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
 import {
     SegmentPageName,
@@ -68,6 +75,7 @@ import {
     FeatureFlags,
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import {
     logError,
     logInfo,
@@ -85,6 +93,8 @@ interface RmdCaseProps extends SegmentTrackedPageProps {
     formParts: React.ReactNode;
     featureFlagDecisions: FeatureFlags;
     parties: LifeCadParty[];
+    systematicPrograms: SystematicSpecialPrograms[] | [];
+    planCode: string;
 }
 
 const DefaultSidebarContent = {
@@ -96,7 +106,7 @@ const DefaultSidebarContent = {
 
 const determineFormToRender = (
     clientId: string,
-    qualType: QualTypes | ''
+    qualType: QualTypes | FASTQualTypes | ''
 ): React.ReactNode => {
     switch (clientId.toUpperCase()) {
         case Carrier.FLIC:
@@ -137,6 +147,8 @@ export default function RmdCase({
     featureFlagDecisions,
     parties,
     user,
+    systematicPrograms,
+    planCode = '',
 }: RmdCaseProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
@@ -149,10 +161,17 @@ export default function RmdCase({
         ? clientIdOverride || clientId
         : clientId;
     // get the contract issue type from custom hook
-    const { issueState, issueDate, qualType } = useAccountInfo(
+
+    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
+
+    const accountInfo = useAccountInfo(document.contract, clientId as string);
+    const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        clientId as string
+        planCode as string
     );
+    const { issueState, qualType, issueDate } = isLC
+        ? accountInfo
+        : contractAccountInfo;
 
     useSegmentPageTracker(user, SegmentPageName.RmdCase, {
         clientForFormDetermination,
@@ -274,6 +293,7 @@ export default function RmdCase({
                                             featureFlagDecisions
                                         }
                                         parties={parties}
+                                        systematicPrograms={systematicPrograms}
                                     >
                                         {
                                             <>
@@ -422,14 +442,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 action: action,
                 loggingContext,
             });
-            const parties = document?.contract
-                ? await getPolicyPartiesSSR(
-                      document?.contract,
-                      clientId,
-                      accessToken as string,
-                      loggingContext
-                  )
-                : [];
 
             if (!form) {
                 logError(
@@ -446,17 +458,107 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             }
-            return {
-                props: {
-                    ...translations,
-                    document,
-                    form,
-                    locale,
-                    featureFlagDecisions,
-                    parties: Array.isArray(parties) ? parties : [],
-                    user,
-                },
-            };
+
+            const isLC = !isFastFeatureEnabled(
+                form?.taskType,
+                featureFlagDecisions
+            );
+
+            if (isLC) {
+                const parties = document?.contract
+                    ? await getPolicyPartiesSSR(
+                          document?.contract,
+                          clientId,
+                          accessToken as string,
+                          loggingContext
+                      )
+                    : [];
+
+                return {
+                    props: {
+                        ...translations,
+                        document,
+                        form,
+                        locale,
+                        featureFlagDecisions,
+                        parties: Array.isArray(parties) ? parties : [],
+                        partyRoles: [],
+                        user,
+                    },
+                };
+            } else {
+                const policies = await searchPolicySSR(
+                    document?.contract,
+                    [clientId?.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
+                const planCode = policies?.[0]?.planCode || null;
+                if (!planCode) {
+                    logInfo(
+                        'create-case/rmd/:id::Plan code not found',
+                        loggingContext
+                    );
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                            permanent: false,
+                        },
+                    };
+                }
+                logInfo('create-case/rmd/:id::Plan code found', {
+                    ...loggingContext,
+                    planCode: planCode,
+                });
+
+                const policy = await getPolicyDetailsSsr(
+                    document?.contract,
+                    planCode,
+                    accessToken,
+                    loggingContext,
+                    true
+                );
+                if (!policy) {
+                    logInfo(
+                        'create-case/rmd/:id::Policy not found',
+                        loggingContext
+                    );
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
+                            permanent: false,
+                        },
+                    };
+                }
+                logInfo(
+                    'create-case/rmd/:id::Policy details found',
+                    loggingContext
+                );
+
+                const {
+                    parties,
+                    partyRoles = [],
+                    systematicPrograms = [],
+                } = policy ?? {};
+
+                return {
+                    props: {
+                        ...translations,
+                        document,
+                        form,
+                        locale,
+                        featureFlagDecisions,
+                        parties: Array.isArray(parties) ? parties : [],
+                        partyRoles,
+                        user,
+                        planCode,
+                        policy,
+                        systematicPrograms,
+                    },
+                };
+            }
         },
     },
     {

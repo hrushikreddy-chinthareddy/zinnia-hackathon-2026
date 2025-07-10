@@ -81,12 +81,21 @@ interface RMDMethodProps {
         value: RMDType;
     }[];
     isQCD?: boolean;
+    isLC?: boolean;
 }
+
+export type RmdOptionsFieldsConfig = {
+    startDate: boolean;
+    frequency: boolean;
+    duration: boolean;
+    amount: boolean;
+};
 
 export default function RMDMethod({
     isFormStateReadOnly,
     rmdTypeOptions,
     isQCD = false,
+    isLC = true,
 }: RMDMethodProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.rmdMethod',
@@ -192,10 +201,13 @@ export default function RMDMethod({
             programType: {
                 text: 'RMD',
             },
-            rmd,
+            rmd: {
+                ...rmd,
+                isOneTimeWithdrawal: rmdType === RMDType.OneTimeRMD,
+            },
             terminateprograms: terminated,
         });
-    }, [rmdRows, terminated]);
+    }, [rmdRows, terminated, rmdType]);
 
     const validateDuration = (programs: RMDProgram[]) => {
         return programs.some((program) => program?.duration?.text === '0');
@@ -206,12 +218,37 @@ export default function RMDMethod({
         { label: t(`rmdTypes.calculate`), value: RMDType.CalculateRMD },
     ];
 
+    let rmdOptionsFieldsConfig = {
+        startDate: true,
+        frequency: true,
+        duration: true,
+        amount: true,
+    };
+
+    if (!isLC) {
+        if (rmdType === RMDType.AutoRMD) {
+            rmdOptionsFieldsConfig = {
+                startDate: true,
+                frequency: true,
+                duration: true,
+                amount: false,
+            };
+        }
+        if (rmdType === RMDType.OneTimeRMD) {
+            rmdOptionsFieldsConfig = {
+                startDate: true,
+                frequency: false,
+                duration: false,
+                amount: true,
+            };
+        }
+    }
+
     return (
         <CardContainer containerClassNames={`border-b-2 border-gray-100`}>
             <Typography variant={TypographyVariant.H3} className="my-2">
                 {t(`title`)}
             </Typography>
-
             <div>
                 <ButtonGrp
                     activeValue={rmdType || ''}
@@ -223,10 +260,12 @@ export default function RMDMethod({
                     disabled={isFormStateReadOnly}
                 />
             </div>
+
             <ExistingPrograms
                 terminated={terminated}
                 onDataChange={setTerminated}
                 disableAllPrograms={true}
+                isLC={isLC}
             />
             {rmdType === RMDType.CalculateRMD && <RMDCalculator />}
             {!isQCD && (
@@ -235,7 +274,9 @@ export default function RMDMethod({
                         variant={TypographyVariant.BodyBold}
                         className="my-2"
                     >
-                        {t(`newRmdProgram`)}
+                        {rmdType === RMDType.AutoRMD
+                            ? t(`newRmdProgram`)
+                            : t(`oneTimeRmd`)}
                     </Typography>
                     {rmdRows.map((rmdMethod, index) => (
                         <div
@@ -256,6 +297,7 @@ export default function RMDMethod({
                                     }
                                     rmdData={rmdMethod}
                                     isFormStateReadOnly={isFormStateReadOnly}
+                                    formConfig={rmdOptionsFieldsConfig}
                                 />
                                 <IconButton
                                     className="ml-5 mt-6"
@@ -267,26 +309,30 @@ export default function RMDMethod({
                                     }
                                     disabled={isFormStateReadOnly}
                                 >
-                                    <RemoveIcon height={25} width={25} />
+                                    {isLC && (
+                                        <RemoveIcon height={25} width={25} />
+                                    )}
                                 </IconButton>
                             </div>
                         </div>
                     ))}
 
-                    <Button
-                        onClick={addRmdRow}
-                        size={ButtonSize.Small}
-                        type={ButtonType.Primary}
-                        className="my-4"
-                        disabled={validateDuration(rmdRows) ? true : false}
-                        variant={
-                            validateDuration(rmdRows) || isFormStateReadOnly
-                                ? ButtonVariant.Inactive
-                                : ButtonVariant.Default
-                        }
-                    >
-                        {t('add')}
-                    </Button>
+                    {isLC && (
+                        <Button
+                            onClick={addRmdRow}
+                            size={ButtonSize.Small}
+                            type={ButtonType.Primary}
+                            className="my-4"
+                            disabled={validateDuration(rmdRows) ? true : false}
+                            variant={
+                                validateDuration(rmdRows) || isFormStateReadOnly
+                                    ? ButtonVariant.Inactive
+                                    : ButtonVariant.Default
+                            }
+                        >
+                            {t('add')}
+                        </Button>
+                    )}
                 </div>
             )}
 

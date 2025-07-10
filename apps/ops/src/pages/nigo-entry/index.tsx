@@ -26,6 +26,7 @@ import { CaseType, Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
+import { SystematicSpecialPrograms } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import {
     mapTaskToActiveRenewalCaseTask,
@@ -80,6 +81,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     prevTransactionDetails: TransactionDetails | null;
     isNigoCase?: boolean;
     partyRoles?: PolicyPartyRoles[];
+    systematicPrograms: SystematicSpecialPrograms[] | [];
 }
 
 const isNigoEntryEnabled = (
@@ -114,6 +116,7 @@ const NigoEntry = ({
     user,
     caseType,
     partyRoles,
+    systematicPrograms,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
         policyNumber,
@@ -174,6 +177,7 @@ const NigoEntry = ({
                     featureFlagDecisions={featureFlagDecisions}
                     parties={parties}
                     partyRoles={partyRoles}
+                    systematicPrograms={systematicPrograms}
                 >
                     <NigoEntryProvider>
                         <NigoEntryContainer
@@ -525,7 +529,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                     logInfo('nigo-entry::Policy details found', loggingContext);
 
-                    const { parties, partyRoles = [] } = policy ?? {};
+                    const {
+                        parties,
+                        partyRoles = [],
+                        systematicPrograms = [],
+                    } = policy ?? {};
 
                     return {
                         props: {
@@ -549,6 +557,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                                 ? latestForm?.additionalData || null
                                 : null,
                             isNigoCase: false,
+                            systematicPrograms,
                         },
                     };
                 } else {

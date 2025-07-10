@@ -19,6 +19,7 @@ export interface Program {
     programType: string;
     startDate: string;
     nextDate: string;
+    nextProgramDate?: string;
     amount: string;
     frequency: string;
     duration: string;
@@ -28,11 +29,19 @@ export interface Program {
 export interface ProgramProps {
     program: Program;
     isFormStateReadOnly: boolean;
+    isLC?: boolean;
 }
-export function Program({ program, isFormStateReadOnly }: ProgramProps) {
+export function Program({
+    program,
+    isFormStateReadOnly,
+    isLC = true,
+}: ProgramProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.rmdMethod',
     });
+    const dateLabel = isLC
+        ? t('transactions.nextDate')
+        : t('transactions.endDate');
 
     return (
         <div className="readonly pointer-events-none grid grid-cols-auto-4 gap-2">
@@ -60,7 +69,7 @@ export function Program({ program, isFormStateReadOnly }: ProgramProps) {
             />
 
             <FieldDateSelect
-                label={t('transactions.nextDate') as string}
+                label={dateLabel as string}
                 id="nextDate"
                 isFutureDateDisabled={false}
                 size={FieldSize.Small}
@@ -82,18 +91,20 @@ export function Program({ program, isFormStateReadOnly }: ProgramProps) {
                 disabled={isFormStateReadOnly}
             />
 
-            <Field
-                label={t(`duration`) as string}
-                value={program.duration}
-                size={FieldSize.Small}
-                type={FieldType.BaseActive}
-                variant={
-                    isFormStateReadOnly
-                        ? FieldVariant.Inactive
-                        : FieldVariant.Default
-                }
-                onChange={noop}
-            />
+            {isLC && (
+                <Field
+                    label={t(`duration`) as string}
+                    value={program.duration}
+                    size={FieldSize.Small}
+                    type={FieldType.BaseActive}
+                    variant={
+                        isFormStateReadOnly
+                            ? FieldVariant.Inactive
+                            : FieldVariant.Default
+                    }
+                    onChange={noop}
+                />
+            )}
 
             <Field
                 label={t(`amount`) as string}

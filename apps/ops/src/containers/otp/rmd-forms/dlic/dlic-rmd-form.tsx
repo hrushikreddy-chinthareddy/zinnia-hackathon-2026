@@ -20,6 +20,7 @@ import {
     FundWithdrawnMethod,
     RMDType,
 } from '@deps/models/case/withdrawal/case';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import getDlicWithdrawalConfig from './dlic-rmd-form.helpers';
 import DistributionMethodQcd from '../qcd/qcd-distribution-method';
@@ -55,10 +56,16 @@ const DlicRmdWithdrawalForm = () => {
         formErrors,
         formESignatureData,
         setFormESignatureData,
+        featureFlagDecisions,
     } = useContext(FormDataContext);
 
     const [rmdFormType, setRmdFormType] = useState(
         (formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD
+    );
+
+    const isLC = !isFastFeatureEnabled(
+        initialForm?.taskType,
+        featureFlagDecisions
     );
 
     useEffect(() => {
@@ -103,9 +110,22 @@ const DlicRmdWithdrawalForm = () => {
         formParty?.parties?.[0]?.addresses?.[0]?.state;
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 
+    const fastRmdOptions = [
+        { label: t(`rmdMethod.rmdTypes.auto`), value: RMDType.AutoRMD },
+        { label: t('rmdMethod.rmdTypes.oneTime'), value: RMDType.OneTimeRMD },
+    ];
+
     const rmdComponents = isRmdForm && (
         <>
-            <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
+            {isLC ? (
+                <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
+            ) : (
+                <RMDMethod
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    rmdTypeOptions={fastRmdOptions}
+                    isLC={false}
+                />
+            )}
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}

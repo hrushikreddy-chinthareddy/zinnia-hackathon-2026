@@ -17,13 +17,14 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import { QualTypes } from '@deps/models/case/withdrawal/case';
+import { FASTQualTypes, QualTypes } from '@deps/models/case/withdrawal/case';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import useMassMutualRmdConfig from './mm-rmd-form.helpers';
 
 type MassMutualRmdWithdrawalFormProps = {
-    qualType: QualTypes | '';
+    qualType: QualTypes | FASTQualTypes | '';
 };
 
 export default function MassMutualRmdWithdrawalForm({
@@ -60,6 +61,7 @@ export default function MassMutualRmdWithdrawalForm({
         formESignatureData,
         setFormESignatureData,
         formErrors,
+        featureFlagDecisions,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -86,7 +88,13 @@ export default function MassMutualRmdWithdrawalForm({
     }, [formParty]);
 
     const verificationReason = formSignature?.signVerificationReason ?? [];
-    const isKeogh = qualType === QualTypes.KEOGHHR10;
+    const isLC = !isFastFeatureEnabled(
+        initialForm?.taskType,
+        featureFlagDecisions
+    );
+    const isKeogh = isLC
+        ? qualType === QualTypes.KEOGHHR10
+        : qualType === FASTQualTypes.QUALIFIED;
     const signaturesConfig = getSignaturesConfig(isKeogh);
     const isMaritalStatusAllowances = contractIssueState
         ? validateMaritalStatusAllowances(contractIssueState as USStates)

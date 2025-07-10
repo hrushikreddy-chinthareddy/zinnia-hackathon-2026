@@ -103,6 +103,7 @@ interface OftCaseProps extends SegmentTrackedPageProps {
     formParts: React.ReactNode;
     featureFlagDecisions: FeatureFlags;
     parties: LifeCadParty[] | Party[];
+    planCode: string;
 }
 
 const DefaultSidebarContent = {
@@ -137,6 +138,7 @@ export default function OftCase({
     featureFlagDecisions,
     user,
     parties,
+    planCode = '',
 }: OftCaseProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
@@ -153,12 +155,10 @@ export default function OftCase({
 
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        clientId as string
+        planCode as string
     );
 
-    const { issueState, qualType, planCode } = isLC
-        ? accountInfo
-        : contractAccountInfo;
+    const { issueState, qualType } = isLC ? accountInfo : contractAccountInfo;
 
     useSegmentPageTracker(user, SegmentPageName.OftCase, {
         clientId,
@@ -513,7 +513,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 const planCode = policies?.[0]?.planCode || null;
                 if (!planCode) {
                     logInfo(
-                        'create-case/withdrawal/:id::Plan code not found',
+                        'create-case/oft/:id::Plan code not found',
                         loggingContext
                     );
                     return {
@@ -523,7 +523,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-                logInfo('create-case/withdrawal/:id::Plan code found', {
+                logInfo('create-case/oft/:id::Plan code found', {
                     ...loggingContext,
                     planCode: planCode,
                 });
@@ -537,7 +537,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
                 if (!policy) {
                     logInfo(
-                        'create-case/withdrawal/:id::Policy not found',
+                        'create-case/oft/:id::Policy not found',
                         loggingContext
                     );
                     return {
@@ -548,7 +548,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
                 logInfo(
-                    'create-case/withdrawal/:id::Policy details found',
+                    'create-case/oft/:id::Policy details found',
                     loggingContext
                 );
 

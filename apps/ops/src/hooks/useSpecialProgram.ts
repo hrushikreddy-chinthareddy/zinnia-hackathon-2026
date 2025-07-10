@@ -7,12 +7,15 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { getSpecialPrograms } from '@deps/queries/api/policies';
 
-export const useSpecialProgram = (initialForm: ActiveWithdrawalCase) => {
+export const useSpecialProgram = (
+    initialForm: ActiveWithdrawalCase,
+    isLC: boolean
+) => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const [activePrograms, setActivePrograms] = useState<
-        SpecialProgram[] | null
-    >([]);
+    const [activePrograms, setActivePrograms] = useState<SpecialProgram[] | []>(
+        []
+    );
 
     const ProgramType = {
         PremiumDefault: 0,
@@ -53,7 +56,7 @@ export const useSpecialProgram = (initialForm: ActiveWithdrawalCase) => {
     }, [initialForm]);
 
     useEffect(() => {
-        getPrograms();
+        if (isLC) getPrograms();
     }, [getPrograms]);
 
     return { activePrograms, isLoading };
