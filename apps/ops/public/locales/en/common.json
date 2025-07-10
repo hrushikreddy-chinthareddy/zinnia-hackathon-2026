@@ -78,7 +78,7 @@
             "partyDetails": "Party Details",
             "people": "People",
             "policyDetails": "Policy Details",
-            "policySearch": "Policies",
+            "policySearch": "Policies & Contracts",
             "premiums": "Premiums",
             "ridersAndFeatures": "Riders and Features",
             "sendDocument": "Send Document",
@@ -208,9 +208,9 @@
                 "altText": "Policy"
             },
             "policySearch": {
-                "text": "Policies",
+                "text": "Policies & Contracts",
                 "link": "/policies",
-                "altText": "Policies"
+                "altText": "Policies & Contracts"
             },
             "relatedActivity": {
                 "text": "Related policy activity:"
@@ -788,7 +788,7 @@
         }
     },
     "dashboard": {
-        "h1": "Policies",
+        "h1": "Policies & Contracts",
         "h2": "Search Results",
         "productDetails": "Product Details",
         "search": {
@@ -796,6 +796,13 @@
             "searchKeyType": "Search by",
             "clear": "Clear search",
             "results": {
+                "table": {
+                    "policyContract": "Policy/Contract",
+                    "status": "Status",
+                    "ownerSSN": "Owner/SSN",
+                    "openCases": "Open Cases",
+                    "lastUpdated": "Last Updated"
+                },
                 "policySummaryCard": {
                     "header1": "Owner Information",
                     "header2": "Policy Summary",
@@ -854,7 +861,11 @@
                     "q457deferredcomp": "Qualified 457 Deferred Compensation Plan",
                     "pensionplan": "Pension Plan",
                     "ira-simple": "SIMPLE IRA (Savings Incentive Match Plan for Employees)"
-                }
+                },
+                "notFound": "We couldn't find a contract or policy that matches your search.",
+                "tryAgain": "Check your input and try again.",
+                "issues": "Still having issues?",
+                "helpDesk": "Submit a help desk ticket."
             },
             "empty": {
                 "title": "We couldn't find a policy that matches your search.",
@@ -881,13 +892,13 @@
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Submit a help desk ticket"
                 },
-                "policyNumber": "Enter a policy number to return search results",
+                "policyNumber": "Enter a policy/contract number to return search results",
                 "ssn": "Enter a Social Security number to return search results",
                 "firstName": "Enter a first name to return search results",
                 "lastName": "Enter a last name to return search results"
             },
             "buttons": {
-                "policyNumber": "Policy number",
+                "policyNumber": "Policy or contract number",
                 "policyPlaceholder": "e.g. 1234567",
                 "ownerSsn": "Owner SSN",
                 "ssn": "SSN",
@@ -2830,6 +2841,9 @@
         "transferFund": "Transfer fund value"
     },
     "policy": {
+        "index": {
+            "tablePaginationOf": "of"
+        },
         "productType": {
             "delayedImmediateFixedAndVariableAnnuity": "Delayed Immediate Fixed and Variable Annuity",
             "delayedImmediateFixedAndVariableAnnuityAcronym": "DIFVA",
@@ -2903,6 +2917,7 @@
                 "contractDetails": "$t(pageHeader.contractDetails.headerText)",
                 "costBasis": "Cost basis",
                 "costBasisTooltip": "The cost basis is how much of the account value comes from paid premiums. Account value grows as premiums are paid and earn interest. Withdrawals up to the cost basis amount are tax-free. Owners only pay taxes on gains they withdraw.",
+                "financials": "Financials",
                 "funds": "Funds",
                 "goToThisPolicysPage": "Go to the {{page}} page for this insurance policy.",
                 "lastDeposit": "Last deposit",

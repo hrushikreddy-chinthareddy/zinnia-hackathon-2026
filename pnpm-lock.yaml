@@ -412,8 +412,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: ^5.21.1
-        version: 5.21.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.44.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
+        specifier: ^5.21.2
+        version: 5.21.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.44.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
       '@zinnia/pom':
         specifier: workspace:*
         version: link:../../packages/pom
@@ -1098,8 +1098,8 @@ importers:
         specifier: ^3.1.1
         version: 3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)
       '@zinnia/bloom':
-        specifier: ^5.21.1
-        version: 5.21.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.44.0)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.33)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
+        specifier: ^5.21.2
+        version: 5.21.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.44.0)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.33)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
       '@zinnia/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -6747,8 +6747,8 @@ packages:
   '@zinnia/bloom@5.19.0':
     resolution: {integrity: sha512-cS6fU1OMUzmKZjuvjPLMmzXIAKzaQVVDnjT3EDce1aXAtwLLL9Ks+zJ0sVoXOU2qr3lYMmG5e3qvC4cxvh/MXA==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.19.0/24cae1beead39652a6a53d2f7b61d93ed7d18197}
 
-  '@zinnia/bloom@5.21.1':
-    resolution: {integrity: sha512-W2OIYlBaXQyABhrzzXjB/w7gE3dM349n405GtPRt7ovGt+2EJzpbwuC0YKTO5ulUpqHd84IfqzZDuPWBv4C3iA==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.21.1/aaee482d83d3d70da1b8c7d6294465788ba0d6db}
+  '@zinnia/bloom@5.21.2':
+    resolution: {integrity: sha512-SKUpKH1SxzYMkTmcP3LfAxoZkVhKUN2J8Ko9b+xG5YN82aXb1l8ZlKYX4zAmV/EPk1EsZmaH/AUlyMuxvWZfcQ==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.21.2/246856092ff11dec51268426ceeeb4b7e694aabd}
 
   '@zinnia/prettier-config@0.0.1':
     resolution: {integrity: sha512-H/90EcMEPKpyeXV5MQJQMqcSaKfvNKqi9Os90sBqp6dEkSaB8vdnTMKdJ6BJUSAr6jwvu/aSXkNintZFYuwQng==, tarball: https://npm.pkg.github.com/download/@zinnia/prettier-config/0.0.1/ab3051a974dc3c08ce02fb490d620bbd5fc2e1a0}
@@ -22292,7 +22292,7 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/bloom@5.21.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.44.0)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.33)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))':
+  '@zinnia/bloom@5.21.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.44.0)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.33)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))':
     dependencies:
       '@ariakit/react': 0.4.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-checkbox': 1.3.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -22324,7 +22324,7 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/bloom@5.21.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.44.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))':
+  '@zinnia/bloom@5.21.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.44.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))':
     dependencies:
       '@ariakit/react': 0.4.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-checkbox': 1.3.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

@@ -9,7 +9,7 @@ export interface MenuContextualProps {
     onOpenChange?: (open: boolean) => void;
 }
 
-const MenuContextual = ({
+export const MenuContextual = ({
     children,
     trigger,
     triggerAsChild = false,
@@ -63,22 +63,23 @@ const MenuContextual = ({
             >
                 {trigger}
             </DropdownMenu.Trigger>
-
-            <DropdownMenu.Content
-                className={clsx(
-                    'absolute z-[300] flex max-w-[320px] flex-col items-start justify-center gap-2 rounded bg-gray-900 py-4 shadow-elevation-light-16 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
-                    placementClasses
-                )}
-                side={side}
-                align={align}
-                onClick={() => setOpen(false)}
-                onEscapeKeyDown={() => setOpen(false)}
-                onInteractOutside={() => setOpen(false)}
-            >
-                <ul className="flex flex-col items-start gap-4 rounded-md">
-                    {children}
-                </ul>
-            </DropdownMenu.Content>
+            <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                    className={clsx(
+                        'absolute z-[300] flex max-w-[320px] flex-col items-start justify-center gap-2 rounded bg-gray-900 py-4 shadow-elevation-light-16 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+                        placementClasses
+                    )}
+                    side={side}
+                    align={align}
+                    onClick={() => setOpen(false)}
+                    onEscapeKeyDown={() => setOpen(false)}
+                    onInteractOutside={() => setOpen(false)}
+                >
+                    <ul className="flex flex-col items-start gap-4 rounded-md">
+                        {children}
+                    </ul>
+                </DropdownMenu.Content>
+            </DropdownMenu.Portal>
         </DropdownMenu.Root>
     );
 };

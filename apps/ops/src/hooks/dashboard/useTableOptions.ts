@@ -8,7 +8,7 @@ export enum SortOrder {
 interface UseTableOptionsArgs<T> {
     sortByDefault: string;
     defaultSortOrder?: SortOrder;
-    dataToSort: T[];
+    dataToSort?: T[];
 }
 
 export const useTableOptions = <T>({
@@ -33,6 +33,7 @@ export const useTableOptions = <T>({
     };
 
     const sortedData = useMemo(() => {
+        if (!dataToSort) return [];
         return [...dataToSort].sort((a, b) => {
             //If we're sorting numbers...
             if (

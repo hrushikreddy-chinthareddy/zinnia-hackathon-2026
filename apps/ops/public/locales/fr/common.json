@@ -78,7 +78,7 @@
             "partyDetails": "Détails de la Personne",
             "people": "Personnes",
             "policyDetails": "Détails de la Police",
-            "policySearch": "Politiques",
+            "policySearch": "Politiques & contrats",
             "premiums": "Primes",
             "ridersAndFeatures": "Avenants et Caractéristiques",
             "sendDocument": "Envoyer un document",
@@ -211,9 +211,9 @@
                 "text": "Options de police"
             },
             "policySearch": {
-                "altText": "Police",
+                "altText": "Police & Contrats",
                 "link": "/policies",
-                "text": "Politiques"
+                "text": "Politiques & Contrats"
             },
             "relatedActivity": {
                 "text": "Activité liée à la police:"
@@ -881,7 +881,7 @@
         }
     },
     "dashboard": {
-        "h1": "Politiques",
+        "h1": "Politiques et Contrats",
         "h2": "Résultats de la recherche",
         "productDetails": "Product Details",
         "search": {
@@ -889,6 +889,13 @@
             "searchKeyType": "Type de recherche",
             "clear": "Recherche claire",
             "results": {
+                "table": {
+                    "policyContract": "Police/Contrat",
+                    "status": "Statut",
+                    "ownerSSN": "Propriétaire/NSS",
+                    "openCases": "Dossiers ouverts",
+                    "lastUpdated": "Dernière mise à jour"
+                },
                 "policySummaryCard": {
                     "header1": "Information du propriétaire",
                     "header2": "Résumé de la politique",
@@ -920,7 +927,11 @@
                     "deathClaimNotApplicable": "Le traitement des demandes de remboursement en cas de décès n’est pas applicable au statut actuel de la police.",
                     "errorTitle": "Oh non ! Nous avons rencontré un problème technique...",
                     "errorSubtitle": "Nous n'avons pas pu récupérer les données pour la police {{policyNumber}}. Essayez de rafraîchir votre navigateur."
-                }
+                },
+                "notFound": "We couldn't find a contract or policy that matches your search.",
+                "tryAgain": "Check your input and try again.",
+                "issues": "Still having issues?",
+                "helpDesk": "Submit a help desk ticket."
             },
             "empty": {
                 "title": "Nous n’avons pas trouvé de politique correspondant à votre recherche.",
@@ -2787,6 +2798,9 @@
         "transferFund": "Transférer la valeur du fonds"
     },
     "policy": {
+        "index": {
+            "tablePaginationOf": "de"
+        },
         "productType": {
             "delayedImmediateFixedVariableAnnuity": "Rente différée immédiate fixe et variable",
             "delayedImmediateFixedVariableAnnuityAcronym": "RDIFV",
@@ -2860,6 +2874,7 @@
                 "contractDetails": "$t(pageHeader.contractDetails.headerText)",
                 "costBasis": "Base de coût",
                 "costBasisTooltip": "La base fiscale représente la part de la valeur du compte provenant des primes payées. La valeur du compte augmente lorsque des primes sont versées et génèrent des intérêts. Les retraits jusqu'à concurrence du montant de la base fiscale sont exonérés d'impôt. Les propriétaires ne paient des impôts que sur les gains qu'ils retirent.",
+                "financials": "Données financières",
                 "funds": "Fonds",
                 "goToThisPolicysPage": "Accédez à la page des {{page}} de cette police d'assurance.",
                 "lastDeposit": "Dernier dépôt",

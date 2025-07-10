@@ -5,6 +5,7 @@ export enum FgaRoles {
   SUPER_ADMIN = 'role:zinnia_super_admin',
   CASE_MANAGEMENT_ZL_ENTITY = 'entity:zinnia_live_case_management',
   POLICY_MANAGEMENT_ZL_ENTITY = 'entity:zinnia_live_policy_management',
+  POLICY_INDEX_ZL_ENTITY = 'entity:zinnia_live_policy_index',
   WELB_SALES_MATERIALS = 'entity:welb_sales_materials',
   CALL_LOG_ACCESS = 'entity:zinnia_live_call_log_audio',
 }
@@ -57,6 +58,11 @@ export function createBulkCheckBodyRequest(partyId: string) {
         relation: FgaRelation.UiAccess,
         object: FgaRoles.CALL_LOG_ACCESS,
       },
+      {
+        user,
+        relation: FgaRelation.UiAccess,
+        object: FgaRoles.POLICY_INDEX_ZL_ENTITY,
+      },
     ],
   };
 }
@@ -98,6 +104,22 @@ export function checkIfUserHasCaseInsightsAccess(
 ) {
   const roleVals = {
     object: FgaRoles.CASE_INSIGHTS_ENTITY,
+    relation: FgaRelation.UiAccess,
+  };
+
+  return bulkCheckTuples.find(
+    (tuple) =>
+      tuple.object === roleVals.object &&
+      tuple.relation === roleVals.relation &&
+      tuple.allowed
+  );
+}
+
+export function checkIfUserHasPolicyIndexAccess(
+  bulkCheckTuples: Array<BulkCheckTuple>
+) {
+  const roleVals = {
+    object: FgaRoles.POLICY_INDEX_ZL_ENTITY,
     relation: FgaRelation.UiAccess,
   };
 

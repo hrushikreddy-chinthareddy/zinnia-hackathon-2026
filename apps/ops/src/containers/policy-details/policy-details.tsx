@@ -14,13 +14,25 @@ import {
 } from '@deps/containers/shared-cards/covered-parties/covered-parties-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 
+import { PolicyFinancialsCard } from './cards/policy-financials-card';
+import { PolicyDetailsCard } from '../policy-summary-card/policy-details-card';
+
 const AnnuityPolicyDetailsContainer = () => {
     const { policyDetails } = useContext(PolicyData);
 
     return (
         <>
-            <PolicyDetailsHeaderCard policy={policyDetails} />
+            <PolicyDetailsHeaderCard
+                policy={policyDetails}
+                belowHeaderTextChildren={
+                    <PolicyDetailsCard
+                        isLoading={false}
+                        policyDetails={policyDetails}
+                    />
+                }
+            />
             <hr className="border-t-2 border-gray-200" />
+            <PolicyFinancialsCard policy={policyDetails} />
             <AnnuitantCard policy={policyDetails} />
             <AnnuityTimelineCard policy={policyDetails} />
             <AnnuityApplicationDetailsCard policy={policyDetails} />
@@ -34,8 +46,17 @@ const LifePolicyDetailsContainer = () => {
 
     return (
         <>
-            <PolicyDetailsHeaderCard policy={policyDetails} />
+            <PolicyDetailsHeaderCard
+                policy={policyDetails}
+                belowHeaderTextChildren={
+                    <PolicyDetailsCard
+                        isLoading={false}
+                        policyDetails={policyDetails}
+                    />
+                }
+            />
             <hr className="border-t-2 border-gray-200" />
+            <PolicyFinancialsCard policy={policyDetails} />
             <InsuredCard policy={policyDetails} />
             <LifeTimelineCard policy={policyDetails} />
             <PolicyApplicationDetailsCard policy={policyDetails} />

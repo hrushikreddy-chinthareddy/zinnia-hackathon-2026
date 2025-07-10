@@ -33,7 +33,6 @@ import {
 import CardInfo from '@deps/components/card/card-info/card-info';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize } from '@deps/components/fields/field';
-import { FindKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-key-values-sidesheet';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
@@ -89,10 +88,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
-import {
-    CardColumnsTest,
-    CardDetailsTest,
-} from '@deps/jest/constants/test-id-constants';
+import { CardDetailsTest } from '@deps/jest/constants/test-id-constants';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
 import {
@@ -123,14 +119,10 @@ import { ActiveQuickView } from './active-quick-view/active-quick-view';
 import AnnuityQuickView from './active-quick-view/annuity';
 import { LapseQuickView } from './lapse-quick-view';
 import { PendingLapseQuickView } from './pending-lapse-quick-view';
+import { PolicyDetailsCard } from './policy-details-card';
 import { deathClaimApplicableStatuses } from './policy-summary-card.helpers';
 import { default as styles } from './policy-summary-card.module.css';
 import { QuickViewRoot } from './quick-view-root/quick-view-root';
-import {
-    ButtonSkeleton,
-    OwnerInfoSkeleton,
-    QuickViewSkeleton,
-} from './skeletons';
 import { TermQuickView } from './term-quick-view';
 import SideSheetAddress from '../people-data-cards/address-card/side-sheet/side-sheet-address';
 import { sortEmailsByType } from '../people-data-cards/email-card/email-card.helpers';
@@ -353,7 +345,7 @@ function KeyValuesBar({
     );
 }
 
-const StatusBanner = ({
+export const StatusBanner = ({
     policy,
     casesTotal,
 }: BasePolicyComponentArgs & { casesTotal?: number }) => {
@@ -492,7 +484,7 @@ const StatusBanner = ({
     );
 };
 
-const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
+export const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
     if (policy.isTerm) {
         return <TermQuickView policy={policy} />;
     } else if (policy.isLife) {
@@ -509,7 +501,7 @@ const QuickViewModule = ({ policy }: BasePolicyComponentArgs) => {
     }
 };
 
-const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
+export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([
         TranslationFiles.COMMON,
         TranslationFiles.COLDEFS,
@@ -813,41 +805,11 @@ export function PolicyQuickView({
                 policy={policyDetails}
                 loadingPolicyDetails={isLoading}
             />
-            {!isLoading && (
-                <StatusBanner
-                    policy={policyDetails}
-                    casesTotal={
-                        caseData && 'total' in caseData ? caseData.total : 0
-                    }
-                />
-            )}
-            <div
-                data-testid={CardColumnsTest.COLUMNS}
-                className={styles.policyQuickColumns}
-            >
-                {isLoading ? (
-                    <OwnerInfoSkeleton />
-                ) : (
-                    <OwnerInformation policy={policyDetails} />
-                )}
-                {isLoading ? (
-                    <QuickViewSkeleton />
-                ) : (
-                    <QuickViewModule policy={policyDetails} />
-                )}
-            </div>
-            <div>
-                {isLoading ? (
-                    <div className="flex justify-start">
-                        <ButtonSkeleton />
-                    </div>
-                ) : (
-                    <FindKeyValuesSidesheet
-                        policyNumber={policyDetails?.policyNumber}
-                        planCode={policyDetails?.planCode}
-                    />
-                )}
-            </div>
+            <PolicyDetailsCard
+                isLoading={isLoading}
+                policyDetails={policyDetails}
+                caseData={caseData}
+            />
         </section>
     );
 }

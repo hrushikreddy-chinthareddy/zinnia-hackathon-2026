@@ -1,5 +1,7 @@
 import { hasCookie } from 'cookies-next';
 
+import { PolicySortBy } from '@deps/components/policy-index/types';
+import { SortOrder } from '@deps/hooks/dashboard/useTableOptions';
 import { getAgentData } from '@deps/queries/api/agents';
 import { fetchPolicy, searchPolicy } from '@deps/queries/api/policies';
 import { MOCK_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
@@ -28,7 +30,9 @@ export const getPolicyQuery = async (
 export const getPoliciesQuery = async (
     value: SearchViewQuery,
     limit: number,
-    offset: number
+    offset: number,
+    sortOrder?: SortOrder,
+    sortBy?: PolicySortBy
 ) => {
     const transformedValue = Object.fromEntries(
         Object.entries(value).map(([key, val]) =>
@@ -36,7 +40,11 @@ export const getPoliciesQuery = async (
         )
     );
 
-    const response = await searchPolicy(transformedValue, { limit, offset });
+    const response = await searchPolicy(
+        transformedValue,
+        { limit, offset },
+        { sortBy, sortOrder }
+    );
 
     if (!response) {
         throw 'No policies found';

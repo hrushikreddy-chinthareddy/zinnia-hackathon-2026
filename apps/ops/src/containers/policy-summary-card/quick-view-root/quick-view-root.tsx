@@ -14,7 +14,7 @@ export const QuickViewRoot = ({ children, title }: QuickViewProp) => {
             data-testid={`${CardColumnsTest.ITEMS}-${title}`}
             className={styles.quickViewRoot}
         >
-            <h3 className="pb-4">{title}</h3>
+            <h3 className="pb-4 text-lg">{title}</h3>
             <div className={styles.quickViewSection}>{children}</div>
         </div>
     );

@@ -6,6 +6,7 @@ import {
     checkIfUserHasAdvisorsExcel,
     checkIfUserHasCaseInsightsAccess,
     checkIfUserHasDashboardAccess,
+    checkIfUserHasPolicyIndexAccess,
     checkIfUserIsSuperAdmin,
     checkRelation,
     createBulkCheckBodyRequest,
@@ -48,6 +49,7 @@ export interface PermissionsContextProps {
     partyReferenceData?: PartyReferenceDataModel;
     permissionsLoadingComplete: boolean;
     hasHomeExperience: boolean;
+    hasPolicyIndexPageAccess: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -167,6 +169,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             const hasDashboard = checkIfUserHasDashboardAccess(data);
             const hasCaseInsight = checkIfUserHasCaseInsightsAccess(data);
             const hasAdvisorsExcel = checkIfUserHasAdvisorsExcel(data);
+            const hasPolicyIndexPageAccess =
+                checkIfUserHasPolicyIndexAccess(data);
             const isCallLogAudioPermitted = !!checkRelation(
                 data,
                 FgaRoles.CALL_LOG_ACCESS,
@@ -179,6 +183,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasCaseInsightPermission: !!hasCaseInsight,
                 isAdvisorsExcel: !!hasAdvisorsExcel,
                 isCallLogAudioPermitted,
+                hasPolicyIndexPageAccess: !!hasPolicyIndexPageAccess,
             };
         },
         enabled: !!partyId,
@@ -217,6 +222,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     : false,
                 partyReferenceData,
                 permissionsLoadingComplete,
+                hasPolicyIndexPageAccess:
+                    !!fgaRoleData?.hasPolicyIndexPageAccess,
             }}
         >
             {children}

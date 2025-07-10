@@ -19,6 +19,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--measure-dimension-gap-lg);
+    padding-top: var(--measure-dimension-gap-lg);
 }
 
 .quickViewRoot {

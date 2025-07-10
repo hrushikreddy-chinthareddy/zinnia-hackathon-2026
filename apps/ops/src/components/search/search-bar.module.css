@@ -62,7 +62,7 @@
     @media (min-width: 768px) {
         border-radius: var(--measure-dimension-radius-md) 0px 0px
             var(--measure-dimension-radius-md);
-        width: 180px;
+        width: 220px;
     }
 }
 
@@ -72,8 +72,8 @@
     box-shadow: 0px 1.2px 3.6px 0px rgba(0, 0, 0, 0.11),
         0px 6.4px 14.4px 0px rgba(0, 0, 0, 0.13);
     margin-top: var(--measure-dimension-gap-sm);
-    width: 180px;
-    z-index: 2;
+    width: 220px;
+    z-index: 400;
 }
 
 .dropdownItem {

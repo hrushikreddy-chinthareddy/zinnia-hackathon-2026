@@ -31,17 +31,22 @@ export default withAuthAndLogging(
             const session = await getSession(req, res);
             const accessToken = session?.accessToken;
 
-            const { offset = 0, limit = 5 } = req.query;
+            const { offset = 0, limit = 5, sortBy, sortOrder } = req.query;
+
             const featureFlagDecisions =
                 await optimizelyService.getFeatureFlagDecisions(
                     session?.user?.sub,
                     loggingContext
                 );
+
             const searchUrl = featureFlagDecisions?.[
                 FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
             ]
-                ? `${enterpriseSearchApiServerUrl}?searchEntity=policy&offset=${offset}&limit=${limit}`
+                ? `${enterpriseSearchApiServerUrl}?searchEntity=policy&offset=${offset}&limit=${limit}${
+                      sortBy ? `&sortBy=${sortBy}` : ''
+                  }${sortOrder ? `&sortOrder=${sortOrder}` : ''}`
                 : `${policyApiBaseUrl}/search?offset=${offset}&limit=${limit}`;
+
             logTrace('policySearch::start', {
                 ...loggingContext,
                 url: searchUrl,

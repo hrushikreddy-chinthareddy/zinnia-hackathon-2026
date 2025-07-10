@@ -87,7 +87,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(
     }
 );
 
-const MenuContextualContent = ({
+export const MenuContextualContent = ({
     t,
     policy,
 }: TranslateProps & QuickActionsMenuProps) => {

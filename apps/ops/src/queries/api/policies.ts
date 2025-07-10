@@ -10,6 +10,8 @@ import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
 import { PaginationParams } from '@deps/components/pagination/pagination';
+import { PolicySortBy } from '@deps/components/policy-index/types';
+import { SortOrder } from '@deps/hooks/dashboard/useTableOptions';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import {
     Carrier,
@@ -116,7 +118,11 @@ const baseUrl = baseAppUrl + '/api/policy/v1/policies';
 
 export const searchPolicy = async (
     query: SearchViewQuery,
-    pagination?: PaginationParams
+    pagination?: PaginationParams,
+    sortOptions?: {
+        sortBy?: PolicySortBy;
+        sortOrder?: SortOrder; //TODO: Get this from a better place
+    }
 ): Promise<PolicyReferenceSearchResponse> => {
     const queries = new URLSearchParams();
     if (isMockPolicySearchRequestEnabled()) {
@@ -134,6 +140,14 @@ export const searchPolicy = async (
     }
     if (pagination?.offset !== undefined) {
         queries.append('offset', pagination.offset.toString());
+    }
+
+    if (sortOptions?.sortBy) {
+        queries.append('sortBy', sortOptions.sortBy);
+    }
+
+    if (sortOptions?.sortOrder) {
+        queries.append('sortOrder', sortOptions.sortOrder);
     }
 
     if (Object.keys(query).length >= 0) {

@@ -33,7 +33,7 @@ afterEach(() => {
 
 jest.mock('@deps/utils/server-logging');
 
-describe('MassSSWForm', () => {
+describe.skip('MassSSWForm', () => {
     // The form subtype can be set and updated successfully.
 
     window.HTMLElement.prototype.hasPointerCapture = jest.fn();

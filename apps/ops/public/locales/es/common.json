@@ -78,7 +78,7 @@
             "partyDetails": "Detalles de la Parte",
             "people": "Personas",
             "policyDetails": "Detalles de la Póliza",
-            "policySearch": "Pólizas",
+            "policySearch": "Politiques & Contratos",
             "premiums": "Primas",
             "ridersAndFeatures": "Cláusulas Adicionales y Características",
             "sendDocument": "Enviar Documento",
@@ -204,9 +204,9 @@
                 "altText": "Póliza"
             },
             "policySearch": {
-                "text": "Pólizas",
+                "text": "Politiques & Contrats",
                 "link": "/policies",
-                "altText": "Pólizas"
+                "altText": "Police & Contrats"
             },
             "relatedActivity": {
                 "text": "Actividad relacionada con la póliza:"
@@ -778,7 +778,7 @@
         }
     },
     "dashboard": {
-        "h1": "Pólizas",
+        "h1": "Politiques  y Contratos",
         "h2": "Resultados de Búsqueda",
         "productDetails": "Detalles del Producto",
         "search": {
@@ -786,6 +786,13 @@
             "searchKeyType": "Buscar por",
             "clear": "Borrar búsqueda",
             "results": {
+                "table": {
+                    "policyContract": "Póliza/Contrato",
+                    "status": "Estado",
+                    "ownerSSN": "Propietario/SSN",
+                    "openCases": "Casos abiertos",
+                    "lastUpdated": "Última actualización"
+                },
                 "policySummaryCard": {
                     "header1": "Información del Propietario",
                     "header2": "Resumen de la Póliza",
@@ -817,7 +824,11 @@
                     "deathClaimNotApplicable": "El procesamiento de reclamos por muerte no es aplicable al estado actual de la póliza.",
                     "errorTitle": "¡Ups! Nos encontramos con un problema técnico...",
                     "errorSubtitle": "No pudimos recuperar los datos para la póliza {{policyNumber}}. Intenta refrescar tu navegador."
-                }
+                },
+                "notFound": "No pudimos encontrar un contrato o póliza que coincida con su búsqueda.",
+                "tryAgain": "Verifique su entrada e intente nuevamente.",
+                "issues": "¿Sigue teniendo problemas?",
+                "helpDesk": "Envíe un ticket al servicio de ayuda."
             },
             "empty": {
                 "title": "No pudimos encontrar una póliza que coincida con su búsqueda.",
@@ -844,7 +855,7 @@
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Enviar un ticket de ayuda"
                 },
-                "policyNumber": "Ingrese un número de póliza para mostrar resultados de búsqueda",
+                "policyNumber": "Ingrese un número de póliza o contrato para mostrar resultados de búsqueda",
                 "ssn": "Ingrese un número de Seguro Social para mostrar resultados de búsqueda",
                 "firstName": "Ingrese un nombre para mostrar resultados de búsqueda",
                 "lastName": "Ingrese un apellido para mostrar resultados de búsqueda"
@@ -2767,6 +2778,9 @@
         "transferFund": "Transferir valor del fondo"
     },
     "policy": {
+        "index": {
+            "tablePaginationOf": "de"
+        },
         "productType": {
             "delayedImmediateFixedAndVariableAnnuity": "Anualidad Fija y Variable Inmediata Diferida",
             "delayedImmediateFixedAndVariableAnnuityAcronym": "DIFVA",
@@ -2840,6 +2854,7 @@
                 "contractDetails": "$t(pageHeader.contractDetails.headerText)",
                 "costBasis": "Base de costo",
                 "costBasisTooltip": "La base de costo es cuánto del valor de la cuenta proviene de las primas pagadas. El valor de la cuenta crece a medida que se pagan las primas y se obtienen intereses. Los retiros hasta el monto de la base de costo están libres de impuestos. Los propietarios solo pagan impuestos sobre las ganancias que retiran.",
+                "financials": "Finanzas",
                 "funds": "Fondos",
                 "goToThisPolicysPage": "Ir a la página de {{page}} para esta póliza de seguro.",
                 "lastDeposit": "Último depósito",

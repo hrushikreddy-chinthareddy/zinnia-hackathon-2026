@@ -8,6 +8,7 @@ export interface MenuContextualLabelProps {
         | ReactElement<MenuContextualItemProps>
         | ReactElement<MenuContextualItemProps>[];
     label: string;
+
     hideLabel?: boolean;
 }
 
