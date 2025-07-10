@@ -211,12 +211,6 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
                         >
                             {t(`caseOverview.sidenav.unavailablePolicyNumber`)}
                         </Typography>
-                        <Typography variant={TypographyVariant.BodySm}>
-                            {t(
-                                `caseOverview.sidenav.unavailableDetailsSubtext`,
-                                { status: data.status }
-                            )}
-                        </Typography>
                     </div>
                 )}
         </div>
