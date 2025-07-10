@@ -30,7 +30,7 @@ export async function applyDynamicOptions(
         // Pass the full task object to the handler so it can construct the correct payload
         const payload = handler.getPayload(task);
         const response = await handler.api(payload, accessToken);
-        handler.transformResponse(response, currentTaskMetadata);
+        handler.transformResponse(response, currentTaskMetadata, task);
     } catch (error) {
         console.error(`Error handling task ${validatedTaskType}:`, error);
     }

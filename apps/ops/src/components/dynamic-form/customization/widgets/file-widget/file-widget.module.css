@@ -44,7 +44,7 @@
 }
 
 .linkDocumentInput {
-    border-radius: var(--measure-border-radius-radius-md);
+    border-radius: var(--border-radius-radius-sm, 8px);
     border-left-width: var(--measure-border-width-stroke-sm);
     padding-left: calc(
         var(--iconSize) + var(--measure-dimension-gap-lg) +

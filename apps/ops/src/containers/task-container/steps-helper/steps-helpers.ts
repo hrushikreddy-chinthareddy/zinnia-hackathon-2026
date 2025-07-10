@@ -50,6 +50,8 @@ export const getFormSteps = (
         case TaskType.Payment_Follow_Up:
         case TaskType.Background_Nigo:
         case TaskType.Background_Review:
+        case TaskType.Cost_Basis_Review:
+        case TaskType.Duplicate_Review:
         case TaskType.Claims_Match_Bene_Document:
         case TaskType.Claims_Fi_Escheatment_Task:
             steps = getAgentNigoSteps(props);

@@ -1,0 +1,128 @@
+{
+    "formId": "739f1330-9de0-484b-8938-4292ccd9b244",
+    "process": "Qualification",
+    "carrier": "WELB",
+    "taskType": "NB_DUPLICATE_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Match Document",
+                "formSchema": {
+                    "required": ["isDuplicate"],
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Review and confirm the potential duplicate transaction identified by the system."
+                        },
+                        "details": {
+                            "type": "object",
+                            "properties": {
+                                "documentDetails": {
+                                    "title": "Supporting Information",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                },
+                                "caseIds": {
+                                    "title": "Duplicate Case ID",
+                                    "type": "array",
+                                    "items": {
+                                        "type": ["string", "null"],
+                                        "title": "{{value}}",
+                                        "default": "/cases/{{value}}/progress"
+                                    }
+                                }
+                            }
+                        },
+                        "isDuplicate": {
+                            "type": "boolean",
+                            "enumNames": ["Yes", "No"],
+                            "enum": [true, false],
+                            "title": "Do you wish to proceed with creating a new transaction?"
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documentDetails": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": true,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                }
+                            }
+                        },
+                        "caseIds": {
+                            "ui:options": {
+                                "addable": false,
+                                "removable": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "label": false,
+                                    "type": "link",
+                                    "nobackground": true
+                                },
+                                "ui:widget": "HyperLinkWidget"
+                            }
+                        }
+                    },
+                    "isDuplicate": {
+                        "ui:widget": "radio",
+                        "ui:hideError": true
+                    }
+                }
+            }
+        ]
+    }
+}

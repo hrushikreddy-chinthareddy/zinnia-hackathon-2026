@@ -1,5 +1,5 @@
 {
-    "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c30",
+    "formId": "a4da4fe9-3e36-4010-978f-5d16f7aa09a5",
     "process": "New Business",
     "carrier": "SBGC",
     "taskType": "SUITABILITY_REVIEW",
@@ -232,7 +232,8 @@
                         "ui:options": {
                             "help": "Select suitability review decision",
                             "enumNames": ["Accept", "Decline"]
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "declineReason": {
                         "ui:options": {

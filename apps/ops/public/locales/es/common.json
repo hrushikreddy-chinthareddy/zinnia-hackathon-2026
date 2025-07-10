@@ -6276,5 +6276,36 @@
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
         }
+
+    },
+    "reverseTransaction": {
+        "postFunds": "Fonds Post-Muerte",
+        "preFunds": "Fonds Pre-Muerte",
+        "sendCheckToEstate": "Des chèques manuels ont été envoyés à la succession.",
+        "reverseTransaction": "J'ai annulé la transaction dans le Système de Gestion",
+        "reviewFunds": "Chèques bloqués par les services financiers – Révision requise",
+        "reviewFundsRadio": "J'ai revu les chèques et pris l'action nécessaire",
+        "preFundTransactionsInstruction": "Emitir manuellement des chèques pour les transactions prédécédentes en fonction des besoins.",
+        "postFundTransactionsInstruction": "Revertir les transactions post-décès dans le Système de Gestion. ",
+        "reviewFundsInstruction": "La date de décès n'a pas été fournie par le notificateur, donc les chèques ne peuvent pas être classifiés comme des fonds prédécédents ou post-décédents. Veuillez les revérifier et prendre les mesures appropriées."
+    },
+    "nbCostBasisReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Se envió la revisión de la base de costos.",
+            "cta": "Ir a transferencia entrante",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "nbDuplicateReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Se inició una nueva transacción.",
+            "cta": "Ir a transferencia entrante",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+
     }
 }

@@ -75,6 +75,7 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.TOA_Review]: ApiVersion.v2,
     [TaskType.Prenote_Review]: ApiVersion.v2,
     [TaskType.Payment_Processing_Review]: ApiVersion.v2,
+    [TaskType.Duplicate_Review]: ApiVersion.v2,
     [TaskType.Payment_Follow_Up]: ApiVersion.v2,
     [TaskType.Suitaibility_DataEntry_Nigo_Review]: ApiVersion.v2,
     [TaskType.Claims_Identify_Uncashed_Transactions]: ApiVersion.v2,
@@ -91,4 +92,5 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.Ops_Nigo]: ApiVersion.v2,
     [TaskType.Ops_Review]: ApiVersion.v2,
     [TaskType.Default_Case_DataEntry]: ApiVersion.v2,
+    [TaskType.Cost_Basis_Review]: ApiVersion.v2,
 };

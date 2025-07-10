@@ -1,9 +1,9 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
+import { MetadataSearchResponse } from '@xd/api-types/dist/generated-types/documents-v3';
 import { toTitleCase } from '@xd/utils/dist';
 import { Icon, IconType, Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { MetadataSearchResponse } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/MetadataSearchResponse';
 import React from 'react';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';

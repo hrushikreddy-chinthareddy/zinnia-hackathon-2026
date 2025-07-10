@@ -1,7 +1,6 @@
 {
     "formId": "004c97a1-d97c-4faa-9b7f-8ff9105b4c29",
     "process": "New Business",
-    "carrier": "WELB",
     "taskType": "SUITABILITY_REVIEW",
     "formSchema": {
         "type": "object"
@@ -64,15 +63,15 @@
                                 "properties": {
                                     "issue": {
                                         "type": "string",
-                                        "title": "Issues"
+                                        "title": "Issue"
                                     },
                                     "rule": {
                                         "type": "string",
-                                        "title": "Processing Instructions"
+                                        "title": "Rule"
                                     },
                                     "applicationValue": {
                                         "type": "string",
-                                        "title": "Application Information"
+                                        "title": "Additional Info"
                                     },
                                     "nmid": {
                                         "type": "string",
@@ -211,7 +210,8 @@
                         "ui:options": {
                             "help": "Select suitability review decision",
                             "enumNames": ["Accept", "Decline"]
-                        }
+                        },
+                        "ui:hideError": true
                     },
                     "declineReason": {
                         "ui:options": {

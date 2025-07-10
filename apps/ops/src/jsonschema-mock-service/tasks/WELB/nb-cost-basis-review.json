@@ -1,0 +1,431 @@
+{
+    "formId": "56e92aa7-28a4-4bc8-be01-8e38ae2edf88",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_COST_BASIS_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Cost basis Review",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "issuesList": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Processing Instructions"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
+                                    }
+                                }
+                            },
+                            "default": [
+                                {
+                                    "processingInstruction": "Original cost basis is not set for this payment. Please review the record and provide the correct cost basis.",
+                                    "resolved": false
+                                }
+                            ]
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentTypeDescription": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                },
+                                "paymentRecord": {
+                                    "type": "object",
+                                    "properties": {
+                                        "companyNameDisplay": {
+                                            "type": ["string", "number"],
+                                            "title": "Surrendering carrier name",
+                                            "ui:field": "title",
+                                            "default": "{{payment.exchangeReplace.companyName}}"
+                                        },
+                                        "sourcePolicyNumberDisplay": {
+                                            "type": "string",
+                                            "title": "Surrendering carrier contract number",
+                                            "default": "{{payment.exchangeReplace.sourcePolicyNumber}}"
+                                        },
+                                        "grossAmountDisplay": {
+                                            "type": ["string", "number"],
+                                            "title": "Gross Amount",
+                                            "default": "{{payment.grossAmount}}",
+                                            "dataType": "amount"
+                                        },
+                                        "netAmountDisplay": {
+                                            "type": ["string", "number"],
+                                            "title": "Net Amount",
+                                            "default": "{{payment.netAmount}}",
+                                            "dataType": "amount"
+                                        },
+                                        "transferAmountDisplay": {
+                                            "type": ["string", "number"],
+                                            "title": "Expected transfer amount",
+                                            "default": "{{payment.exchangeReplace.amountRequested}}",
+                                            "ui:field": "subTitle",
+                                            "dataType": "amount"
+                                        },
+                                        "addressDisplay": {
+                                            "title": "Address of the Surrendering Carrier",
+                                            "default": "{{payment.exchangeReplace.address}}",
+                                            "dataType": "dirtyAddress"
+                                        },
+                                        "paymentRecordStatusDisplay": {
+                                            "type": "string",
+                                            "title": "Payment Status",
+                                            "default": "{{paymentRecordStatus}}"
+                                        },
+                                        "originalCostBasisDisplay": {
+                                            "type": "string",
+                                            "title": "Original cost basis",
+                                            "default": "{{payment.exchangeReplace.originalCostBasis}}"
+                                        },
+                                        "pretefraBasisDisplay": {
+                                            "type": ["string", "number"],
+                                            "title": "Pre Tefra",
+                                            "default": "{{payment.taxInfo.pretefraBasis}}"
+                                        },
+                                        "totalBasisDisplay": {
+                                            "type": ["string", "number"],
+                                            "title": "Post Tefra",
+                                            "default": "{{payment.taxInfo.totalBasis}}"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enumNames": [
+                                "Yes",
+                                "Send cost basis letter manually"
+                            ],
+                            "enum": [true, false],
+                            "title": "Can you proceed?"
+                        },
+                        "uploadDocuments": {
+                            "type": "object",
+                            "title": "Link or upload document",
+                            "properties": {
+                                "upload": {
+                                    "type": "string"
+                                },
+                                "or": {
+                                    "type": "string",
+                                    "title": "or"
+                                },
+                                "attachment": {
+                                    "type": "array",
+                                    "title": "upload",
+                                    "items": {
+                                        "title": "upload",
+                                        "type": "string",
+                                        "format": "data-url"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "items": {
+                                "documentName": {
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "documentId": {
+                                    "title": "Document Id",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "required": ["issueResolved"],
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        },
+                                        "costBasisAmount": {
+                                            "type": "object",
+                                            "title": "Cost basis amount",
+                                            "properties": {
+                                                "originalCost": {
+                                                    "type": "number",
+                                                    "title": "Original cost basis",
+                                                    "minimum": 0
+                                                },
+                                                "preTefra": {
+                                                    "type": "number",
+                                                    "title": "Pre tefra",
+                                                    "minimum": 0
+                                                },
+                                                "postTefra": {
+                                                    "type": "number",
+                                                    "title": "Post tefra",
+                                                    "minimum": 0
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": ["costBasisAmount"],
+                                    "dependencies": {
+                                        "costBasisAmount": {
+                                            "properties": {
+                                                "costBasisAmount": {
+                                                    "required": ["originalCost"]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "issueResolved",
+                        "costBasisAmount",
+                        "uploadDocuments",
+                        "attachments"
+                    ],
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "issuesList": {
+                        "ui:readonly": true,
+                        "ui:options": {
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingInstruction": {
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false,
+                                    "inline": true
+                                }
+                            },
+                            "resolved": {
+                                "ui:readonly": false,
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "documents": {
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "label": false,
+                                "addable": false
+                            }
+                        },
+                        "paymentRecord": {
+                            "ui:options": {
+                                "cardType": "Detailed",
+                                "icon": "BANK",
+                                "label": true,
+                                "ObjectFieldTemplate": "CardTemplate",
+                                "sectionTitle": "Details",
+                                "nobackground": true
+                            },
+                            "companyNameDisplay": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
+                            },
+                            "sourcePolicyNumberDisplay": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
+                            },
+                            "grossAmountDisplay": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
+                            },
+                            "addressDisplay": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
+                            },
+                            "paymentRecordStatusDisplay": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
+                            },
+                            "originalCostBasisDisplay": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
+                            },
+                            "pretefraBasisDisplay": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
+                            },
+                            "totalBasisDisplay": {
+                                "ui:options": {
+                                    "omitValue": true
+                                }
+                            }
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "inline": true
+                        },
+                        "ui:hideError": true
+                    },
+                    "uploadDocuments": {
+                        "inline": true,
+                        "ui:options": {
+                            "label": true,
+                            "omitValue": true
+                        },
+                        "upload": {
+                            "ui:widget": "AutoCompleteWidget",
+                            "ui:placeholder": "Find existing documents...",
+                            "ui:options": {
+                                "label": false,
+                                "icon": "Search"
+                            }
+                        },
+                        "or": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "attachment": {
+                            "ui:options": {
+                                "label": false,
+                                "showFiles": false
+                            },
+                            "ui:props": {
+                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                "apiMethod": "get"
+                            }
+                        }
+                    },
+                    "attachments": {
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true,
+                            "ArrayFieldTemplate": "FileInfoTemplate"
+                        }
+                    },
+                    "costBasisAmount": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "originalCost": {
+                            "ui:options": {
+                                "label": true,
+                                "inline": true,
+                                "widget": "ValueWidget",
+                                "dataType": "amount"
+                            },
+                            "ui:hideError": true
+                        },
+                        "preTefra": {
+                            "ui:options": {
+                                "label": true,
+                                "inline": true,
+                                "widget": "ValueWidget",
+                                "dataType": "amount"
+                            }
+                        },
+                        "postTefra": {
+                            "ui:options": {
+                                "label": true,
+                                "inline": true,
+                                "widget": "ValueWidget",
+                                "dataType": "amount"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

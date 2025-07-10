@@ -1,3 +1,5 @@
+import { FormMetadata } from '@deps/models/case/task';
+import { ManagementTask } from '@deps/models/case/task-instance';
 import { LoggingContext } from '@deps/utils/server-logging';
 
 export interface ApiFunction<RequestPayload, ResponseData> {
@@ -11,7 +13,11 @@ export interface ApiFunction<RequestPayload, ResponseData> {
 export interface TaskHandler<RequestPayload, ResponseData> {
     api: ApiFunction<RequestPayload, ResponseData>;
     getPayload: (task: any) => RequestPayload;
-    transformResponse: (response: ResponseData, metadata: any) => void;
+    transformResponse: (
+        response: ResponseData,
+        metadata: FormMetadata[],
+        task?: ManagementTask
+    ) => void;
 }
 
 export interface ReviewPayload {

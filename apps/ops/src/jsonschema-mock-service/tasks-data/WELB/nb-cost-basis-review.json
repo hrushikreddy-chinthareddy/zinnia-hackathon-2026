@@ -1,0 +1,115 @@
+{
+    "id": "TA000000034807",
+    "caseId": "CA0000432609",
+    "source": "BPM.PaymentProcessing",
+    "templateId": "984d1f36-3c17-49aa-8b0f-c7f5266cda61",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_COST_BASIS_REVIEW",
+    "taskName": "Cost basis Review",
+    "taskDetails": "As part of the process, a review is required to ensure accuracy and completeness before proceeding with the next steps due to the inability to complete systematic validation and processing",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "paymentRecord": {
+                "entityId": "entity.1",
+                "paymentRecordId": "7722fe18-e717-4109-9269-10b4031188f4",
+                "surrenderContractNumber": "SF0078078",
+                "surrenderCompanyName": "Brighthouse Life Insurance Company",
+                "exchangeType": 0,
+                "netAmount": 20000,
+                "grossAmount": 20000,
+                "paymentMethod": null,
+                "amountRequested": 20000,
+                "originalCostBasis": "0",
+                "address": {
+                    "addressType": null,
+                    "addressTypeDesc": null,
+                    "city": "Clinton",
+                    "state": "IA",
+                    "zip": "52732",
+                    "country": "USA",
+                    "addressLines": ["1315 19th Ave Nw"],
+                    "zipSuffix": "2752"
+                }
+            },
+            "onwerDetails": {
+                "ssn": "123452299",
+                "firstName": "ROB",
+                "lastName": "WILSON"
+            },
+            "documents": [
+                {
+                    "documentId": "685a8f15605dee7068b01d6b",
+                    "documentName": "WELLANI041120272027542199_001_Deferred Annuity Application_1.pdf",
+                    "documentSource": "EDS",
+                    "documentExt": "pdf",
+                    "documentType": "NB Application",
+                    "docClassification": "INBOUND",
+                    "docCategory": "New Business",
+                    "formNumber": "01 00617 0724 US",
+                    "documentTypeDescription": "Deferred Annuity Application",
+                    "fileType": "pdf",
+                    "displayName": "Deferred Annuity Application"
+                }
+            ]
+        },
+        "uploadRequired": false
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [
+        {
+            "documentId": "685a8f15605dee7068b01d6b",
+            "documentName": "WELLANI041120272027542199_001_Deferred Annuity Application_1.pdf",
+            "documentSource": "EDS",
+            "createdDate": null
+        }
+    ],
+    "queue": "new_business",
+    "etcDate": "2025-06-27",
+    "priority": "MEDIUM",
+    "escalated": false,
+    "assigneeFirstName": "Vijayalaxmi",
+    "assigneeLastName": "Sambhane",
+    "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+    "assigneePartyId": "fa49a69c3939412d87b315cb39459497",
+    "assignedAt": "2025-07-06T14:03:08Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-06-27T13:01:58Z",
+    "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
+    "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
+    "updatedAt": "2025-07-06T14:04:03Z",
+    "identifiers": [
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2505097"
+        },
+        {
+            "identifier": "correlationId",
+            "value": "3e422f20-f24c-4b85-8a8c-4a9cae59d746"
+        },
+        {
+            "identifier": "documentID",
+            "value": "685a8f15605dee7068b01d6b"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "429260"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000432609"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI041120272027542199"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2505097"
+        }
+    ],
+    "linkedTasks": [],
+    "externalId": "371a98f6-6de5-4e92-93d9-b5cf5f215ec2"
+}

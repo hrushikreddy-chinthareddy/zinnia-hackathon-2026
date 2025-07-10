@@ -6488,6 +6488,24 @@
             "submitTask": "Submit"
         }
     },
+    "nbCostBasisReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Cost Basis Review was submitted.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "nbDuplicateReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: A new transaction is initiated.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "reverseTransaction": {
         "postFunds": "Post Death Funds",
         "preFunds": "Pre Death Funds",

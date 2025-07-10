@@ -1,0 +1,46 @@
+{
+    "id": "TA000000031102",
+    "caseId": "CA0000427242",
+    "source": "BPM.AppProcessing",
+    "templateId": "d689f150-83c6-4f64-be56-a9077ece2ba1",
+    "process": "Qualification",
+    "carrier": "WELB",
+    "taskType": "NB_DUPLICATE_REVIEW",
+    "taskName": "Duplicate Review",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "documentDetails": [
+                {
+                    "documentId": "68498a38fffe3f214a501f64",
+                    "documentSource": "EDS",
+                    "documentName": "Application Data Document"
+                }
+            ],
+            "caseIds": ["CA0000427170", "CA0000427232"]
+        }
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "qualification",
+    "priority": "",
+    "escalated": false,
+    "assigneeFirstName": "Vijayalaxmi",
+    "assigneeLastName": "Sambhane",
+    "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+    "assigneePartyId": "fa49a69c3939412d87b315cb39459497",
+    "assignedAt": "2025-06-11T13:55:32Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-06-11T13:52:56Z",
+    "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
+    "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
+    "updatedAt": "2025-06-11T13:55:36Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000427242"
+        }
+    ],
+    "externalId": "e523d6bf-c177-4a52-aa64-736d47edfdf8"
+}

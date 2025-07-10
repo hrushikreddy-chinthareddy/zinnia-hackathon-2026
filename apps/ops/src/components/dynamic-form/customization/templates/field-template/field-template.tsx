@@ -85,7 +85,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                             <Divider direction="horizontal" color="subtle" />
                         </div>
                     )}
-                    <div className={styles.children}>
+                    <div className={styles.children} key={id}>
                         {displayLabel && (
                             <div className="mb-2 ">
                                 <Label

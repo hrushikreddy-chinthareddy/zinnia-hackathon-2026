@@ -6412,6 +6412,24 @@
             "submitTask": "Soumettre"
         }
     },
+    "nbCostBasisReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Un examen de la base des coûts a été soumis.",
+            "cta": "Go to incoming transfer ",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "nbDuplicateReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Une nouvelle transaction est initiée.",
+            "cta": "Aller au transfert entrant",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "reverseTransaction": {
         "postFunds": "Fonds Post-Muerte",
         "preFunds": "Fonds Pre-Muerte",
