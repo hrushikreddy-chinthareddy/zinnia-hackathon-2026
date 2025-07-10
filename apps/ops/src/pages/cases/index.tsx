@@ -426,20 +426,26 @@ const CaseManagementDashboard = ({
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                     <Typography
                         variant={TypographyVariant.BodySm}
-                        className={`mb-6 lg:mb-0 ${
-                            (caseSearchData?.total || 0) < 1 ? 'hidden' : ''
-                        }`}
+                        className={`mb-6 lg:mb-0`}
+                        role="status"
+                        aria-live="polite"
+                        aria-atomic="true"
                     >
-                        {t('policy.documents.xToYOfZ', {
-                            x: caseManagementFilters.offset + 1,
-                            y: Math.min(
-                                caseManagementFilters.offset + limit,
-                                caseSearchData?.total || 0
-                            ),
-                            z: `${
-                                caseSearchData?.total?.toLocaleString() ?? '0'
-                            }${caseSearchData?.total === 10000 ? '+' : ''}`,
-                        })}
+                        {caseSearchData && caseSearchData?.total > 0
+                            ? t('policy.documents.xToYOfZ', {
+                                  x: caseManagementFilters.offset + 1,
+                                  y: Math.min(
+                                      caseManagementFilters.offset + limit,
+                                      caseSearchData?.total || 0
+                                  ),
+                                  z: `${
+                                      caseSearchData?.total?.toLocaleString() ??
+                                      '0'
+                                  }${
+                                      caseSearchData?.total === 10000 ? '+' : ''
+                                  }`,
+                              })
+                            : ''}
                     </Typography>
                     {paginationControls}
                 </div>
