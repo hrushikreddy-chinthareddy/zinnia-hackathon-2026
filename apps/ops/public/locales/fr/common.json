@@ -965,7 +965,9 @@
                 "ownerName": "Nom du propriétaire",
                 "agentName": "Nom de l'agent",
                 "firmName": "Nom de l'entreprise",
-                "documentNumber": "Numéro de document"
+                "documentNumber": "Numéro de document",
+                "agentSsn": "SSN de l'agent",
+                "agentNpn": "NPN de l'agent"
             }
         },
         "quickSearch": {
@@ -4443,14 +4445,17 @@
             "caseDetails": "Détails du Dossier",
             "deliveryMethod": "Type de livraison",
             "correspondence": "Correspondence",
-            "activity": "Activité"
+            "activity": "Activité",
+            "agentDetails": "Détails de l'agent"
         },
         "type": "Type",
         "submissionType": "Type de soumission",
         "electronic": "Électronique",
         "paper": "Papier",
         "email": "E-mail",
-        "fax": "Fax"
+        "fax": "Fax",
+        "socialSecurityNumber": "Numéro de sécurité sociale",
+        "nationalProducerNumber": "Numéro national de producteur"
     },
     "bannerAlert": {
         "close": "Fermer"

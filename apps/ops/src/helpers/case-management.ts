@@ -4,6 +4,7 @@ import { TFunction } from 'next-i18next';
 import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
 import { Case, Metadata, StatCount, Statuses } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
+import { PartyInstance } from '@deps/models/case/party-instance';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
@@ -367,4 +368,23 @@ export const getCaseIdentifierValue = (
             (identifier) => identifier.identifier === identifierToSearch
         )?.value || ''
     );
+};
+
+type FullName = {
+    fullName?: string;
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+};
+
+export const getValidFullName = (owner: PartyInstance | FullName) => {
+    let fullName = owner?.fullName;
+
+    if (owner && !fullName) {
+        fullName = `${owner?.firstName || ''} ${owner?.middleName || ''} ${
+            owner?.lastName || ''
+        }`;
+    }
+
+    return fullName;
 };

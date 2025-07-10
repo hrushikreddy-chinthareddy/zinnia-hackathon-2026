@@ -16,7 +16,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
-import { Case, Statuses } from '@deps/models/case/case';
+import { Case, Processes, Statuses } from '@deps/models/case/case';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as TimeIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
@@ -304,7 +304,12 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                     )}
                     <Transactions caseDetails={caseDetails} />
                 </div>
-                <CaseSideNavTabs caseDetails={caseDetails} sideNavData={data} />
+                {caseDetails.process !== Processes.AgentOnboarding && (
+                    <CaseSideNavTabs
+                        caseDetails={caseDetails}
+                        sideNavData={data}
+                    />
+                )}
             </div>
         </div>
     );

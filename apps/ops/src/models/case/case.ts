@@ -104,6 +104,7 @@ export enum Processes {
     QCD = 'Qualified Charitable Distribution',
     FundTransfer = 'Fund Management',
     CancelAutoPay = 'CancelAutoPay',
+    AgentOnboarding = 'Agent Onboarding',
 }
 
 export enum Actions {

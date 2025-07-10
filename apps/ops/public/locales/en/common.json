@@ -899,7 +899,9 @@
                 "ownerName": "Owner name",
                 "agentName": "Agent name",
                 "firmName": "Firm name",
-                "documentNumber": "Document number"
+                "documentNumber": "Document number",
+                "agentSsn": "Agent SSN",
+                "agentNpn": "Agent NPN"
             }
         },
         "quickSearch": {
@@ -4498,14 +4500,18 @@
             "caseDetails": "Case Details",
             "deliveryType": "Delivery type",
             "correspondence": "Correspondence",
-            "activity": "Activity"
+            "activity": "Activity",
+            "agentDetails": "Agent Details"
         },
         "type": "Type",
         "submissionType": "Submission Type",
         "electronic": "Electronic",
         "paper": "Paper",
         "email": "Email",
-        "fax": "Fax"
+        "fax": "Fax",
+        "name": "Name",
+        "socialSecurityNumber": "Social Security Number",
+        "nationalProducerNumber": "National Producer Number"
     },
     "bannerAlert": {
         "close": "Close"

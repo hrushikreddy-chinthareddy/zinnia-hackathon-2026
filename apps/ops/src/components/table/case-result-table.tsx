@@ -25,12 +25,12 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { getValidFullName } from '@deps/helpers/case-management';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
-import { Case } from '@deps/models/case/case';
-import { PartyInstance } from '@deps/models/case/party-instance';
+import { Case, Processes } from '@deps/models/case/case';
 import {
     CaseDetailsTabValues,
     DEFAULT_ERROR_STRING,
@@ -113,17 +113,6 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
     const { sessionId, partyId } = usePermissionsContext();
-    const getValidFullName = (owner: PartyInstance) => {
-        let fullName = owner?.fullName;
-
-        if (owner && !fullName) {
-            fullName = `${owner?.firstName || ''} ${owner?.middleName || ''} ${
-                owner?.lastName || ''
-            }`;
-        }
-
-        return fullName;
-    };
 
     const policyOwners = singleCase.parties
         ? getPolicyOwners(singleCase.parties)
@@ -153,12 +142,13 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         name: toTitleCase(getValidFullName(owner)),
         ssn: formatSSN(owner.ssn),
     }));
+    const highlights = [
+        searchValues?.agentFirstName,
+        searchValues?.agentLastName,
+    ].filter(Boolean) as string[];
     const agentComponentProps = {
         text: toTitleCase(getValidFullName(agents?.[0])),
-        highlights: [
-            searchValues?.agentFirstName,
-            searchValues?.agentLastName,
-        ].filter(Boolean) as string[],
+        highlights,
         entities: otherAgents,
         truncate: true,
     };
@@ -197,6 +187,57 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         );
 
         router.push(href);
+    };
+
+    const renderAgentDetails = () => {
+        if (singleCase.process === Processes.AgentOnboarding) {
+            const {
+                agentFirstName: onboardingAgentFirstName,
+                agentLastName: onboardingAgentLastName,
+                agentSSN: onboardingAgentSSN,
+            } = singleCase?.additionalData || {};
+            return (
+                <>
+                    <CaseDetailField
+                        pii={true}
+                        text={toTitleCase(
+                            getValidFullName({
+                                firstName: onboardingAgentFirstName,
+                                lastName: onboardingAgentLastName,
+                            }) || '--'
+                        )}
+                        highlights={highlights}
+                        truncate={true}
+                        triggerClassName="!z-10"
+                        popoverClassName="!w-auto"
+                    />
+                    <CaseDetailField
+                        pii={true}
+                        text={formatSSN(onboardingAgentSSN)}
+                        className={styles.detail}
+                    />
+                </>
+            );
+        }
+        return (
+            <>
+                {agents.length > 1 ? (
+                    <PartyWithOthers {...agentComponentProps} />
+                ) : (
+                    <CaseDetailField
+                        pii={true}
+                        {...agentComponentProps}
+                        triggerClassName="!z-10"
+                        popoverClassName="!w-auto"
+                    />
+                )}
+                <CaseDetailField
+                    pii={true}
+                    text={formatSSN(agentSsn)}
+                    className={styles.detail}
+                />
+            </>
+        );
     };
 
     return (
@@ -317,23 +358,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                 </div>
             </TableCell>
             <TableCell>
-                <div className="flex flex-col">
-                    {agents.length > 1 ? (
-                        <PartyWithOthers {...agentComponentProps} />
-                    ) : (
-                        <CaseDetailField
-                            pii={true}
-                            {...agentComponentProps}
-                            triggerClassName="!z-10"
-                            popoverClassName="!w-auto"
-                        />
-                    )}
-                    <CaseDetailField
-                        pii={true}
-                        text={formatSSN(agentSsn)}
-                        className={styles.detail}
-                    />
-                </div>
+                <div className="flex flex-col">{renderAgentDetails()}</div>
             </TableCell>
             <TableCell className="text-right whitespace-nowrap">
                 <div className="flex justify-end">
