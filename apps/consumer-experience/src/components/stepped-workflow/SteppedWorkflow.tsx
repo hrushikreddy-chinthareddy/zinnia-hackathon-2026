@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@zinnia/bloom/components';
+import { ButtonProps } from '@zinnia/bloom/components';
 import { RefAttributes } from 'react';
 
 import { CancelDialogLink } from './common/CancelDialogLink';
@@ -7,6 +7,7 @@ import styles from './SteppedWorkflow.module.css';
 import { useSteppedWorkflowContext } from './SteppedWorkflowContext';
 import { SteppedWorkflowProvider } from './SteppedWorkflowProvider';
 import { StepInfo } from './types';
+import { Button } from '../button/Button';
 
 export type SteppedWorkflowStep = {
   pageTitle: string;

@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import {
   paymentFrequencyEnum,
   SPPaymentFrequency,
@@ -16,22 +18,25 @@ const frequencyLabels: Record<SPPaymentFrequency, string> = {
 
 export const SubmissionPage = () => {
   const { state } = useSystematicPremiums();
+  const router = useRouter();
   const { paymentFrequency, paymentAmount, effectiveDate } =
     state.systematicPremiumAmountStep;
 
+  if (!state.caseId) {
+    router.push('error');
+  }
+
   return (
-    <>
-      <div>
-        <p className="typography-content-body">
-          We received a request to process a payment for&nbsp;
-          <b>{formatUSDollars(paymentAmount)}</b> every{' '}
-          <b>{frequencyLabels[paymentFrequency]}</b> starting{' '}
-          <b>{effectiveDate}</b>
-        </p>
-        <p className="typography-content-body-sm">
-          There will be a confirmation sent to your email shortly.
-        </p>
-      </div>
-    </>
+    <div>
+      <p className="typography-content-body">
+        We received a request to process a payment for&nbsp;
+        <b>{formatUSDollars(paymentAmount)}</b> every{' '}
+        <b>{frequencyLabels[paymentFrequency]}</b> starting{' '}
+        <b>{effectiveDate}</b>
+      </p>
+      <p className="typography-content-body-sm">
+        There will be a confirmation sent to your email shortly.
+      </p>
+    </div>
   );
 };

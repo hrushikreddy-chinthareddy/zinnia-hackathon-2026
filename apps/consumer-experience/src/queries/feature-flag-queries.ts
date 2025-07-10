@@ -1,28 +1,15 @@
-import { NextRequest } from 'next/server';
+import { ApiResponse } from '@/services';
+import { ClientApi } from '@/services/client-http';
+import { FeatureFlags } from '@/utils/optimizely/optimizely';
 
-import { logInfo } from '@/utils/logging/log-fns';
+export const getFeatureFlags = async () => {
+  const response: ApiResponse<FeatureFlags> = await (
+    await ClientApi.get(`/api/feature-flags`)
+  ).json();
 
-export const getFeatureFlagQuery = async (req?: NextRequest) => {
-  const headers = req?.headers;
-  const reqUrl = req?.url || '';
-  const protocol = new URL(reqUrl).protocol || '';
-  const host = headers?.get('x-forwarded-host') || '';
-  const envValue = process.env.AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW;
-  const envValueNextPublic =
-    process.env.NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW;
+  if (response.error || !response) {
+    throw response.error;
+  }
 
-  // TODO: Remove this log
-  logInfo('getFeatureFlagQuery', {
-    headers,
-    reqUrl,
-    protocol,
-    host,
-    envValue,
-    envValueNextPublic,
-  });
-  const fetchUrl = `${protocol ? protocol + '//' : ''}${host}/api/feature-flags`;
-
-  const featureFlagDecisions = await fetch(fetchUrl);
-  const { featureFlags } = await featureFlagDecisions.json();
-  return featureFlags;
+  return response.data;
 };

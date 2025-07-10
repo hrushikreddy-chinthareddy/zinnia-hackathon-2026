@@ -10,10 +10,15 @@ import {
 import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import dayjs from 'dayjs';
 
-import { paymentFrequencyEnum, SPPaymentFrequency } from '@/components/providers/systematic-premiums/types';
+import {
+  paymentFrequencyEnum,
+  SPPaymentFrequency,
+} from '@/components/providers/systematic-premiums/types';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
-export const getPaymentFrequency = (frequency?: BPMFrequency): SPPaymentFrequency => {
+export const getPaymentFrequency = (
+  frequency?: BPMFrequency
+): SPPaymentFrequency => {
   switch (frequency) {
     case BPMFrequency.MONTHLY: {
       return paymentFrequencyEnum.Enum.MONTHLY;
@@ -56,7 +61,10 @@ export const PaymentFrequencyMap: Record<
   },
 };
 
-export const getPaymentByFrequency = (frequency: SPPaymentFrequency, amount: number) => {
+export const getPaymentByFrequency = (
+  frequency: SPPaymentFrequency,
+  amount: number
+) => {
   const { divisor } = PaymentFrequencyMap[frequency];
   return amount / divisor;
 };
@@ -91,12 +99,12 @@ export const getSystematicProgramAmounts = ({
   effectiveDate?: string;
   parties?: SystematicProgram['party'];
 }): {
-  paymentFrequency: SPPaymentFrequency;
-  monthlyAmount: number;
-  totalAmount: number;
-  effectiveDate: string;
   bankId?: string;
+  effectiveDate: string;
+  monthlyAmount: number;
+  paymentFrequency: SPPaymentFrequency;
   partyId?: string;
+  totalAmount: number;
 } => {
   const paymentFrequency = getPaymentFrequency(bpmFrequency);
   const totalAmount = getSystematicProgramTotalAmount(
@@ -104,7 +112,11 @@ export const getSystematicProgramAmounts = ({
     monthlyAmount
   );
   let currentDate = dayjs(effectiveDate, ZAHARA_DATE_FORMAT);
-  if (!currentDate.isValid()) currentDate = dayjs();
+
+  // don't let people set a date in the past
+  if (!currentDate.isValid() || currentDate.isBefore(dayjs())) {
+    currentDate = dayjs();
+  }
 
   const payor = parties?.find(party => party.partyRole === PartyRole.PAYOR);
   return {

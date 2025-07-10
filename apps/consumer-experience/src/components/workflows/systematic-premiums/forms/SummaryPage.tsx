@@ -1,6 +1,15 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
+import { TransactionFailureResponse } from '@xd/api-types/dist/generated-types/bpm';
 import { toSentenceCase } from '@xd/utils/dist';
-import { Button, Icon, IconType, Label } from '@zinnia/bloom/components';
+import {
+  AssistiveText,
+  AssistiveTextVariant,
+  Button,
+  Icon,
+  IconType,
+  Label,
+} from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { CSSProperties } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,7 +21,11 @@ import { BankName } from '@/components/pii/BankName';
 import { Payee } from '@/components/pii/Payee';
 import { SystematicPremiumSteps } from '@/components/providers/systematic-premiums/types';
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
+import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
+import { QueryKeys } from '@/queries/query-keys';
+import { getSystematicPremiumValidation } from '@/queries/transaction-queries';
 
 import { stepsInfo } from '../steps';
 
@@ -20,6 +33,7 @@ export const SummaryPage = () => {
   const router = useRouter();
   const { state } = useSystematicPremiums();
   const { stepInfo } = useSteppedWorkflowContext();
+  const { planCode, policyNumber } = usePolicyUrlInputs();
   const form = useForm();
 
   const onSubmit = () => {
@@ -31,20 +45,28 @@ export const SummaryPage = () => {
     router.push(url);
   };
 
-  // const {
-  //   data: validationResponse,
-  //   isLoading: validationLoading,
-  //   isError: validationError,
-  // } = useQuery({
-  //   queryKey: ['getPartialSystematicPremiumOneTimeValidation', state],
-  //   queryFn: () => {
-  //     return getSystematicPremiumValidation({
-  //       planCode,
-  //       policyNumber,
-  //       body: state,
-  //     });
-  //   },
-  // });
+  const {
+    data: validationResponse,
+    isError: validationError,
+    isLoading,
+  } = useQuery({
+    queryKey: [QueryKeys.SYSTEMATIC_PREMIUMS_VALIDATION, state],
+    queryFn: () => {
+      return getSystematicPremiumValidation({
+        planCode,
+        policyNumber,
+        body: state,
+      });
+    },
+  });
+
+  if (!validationResponse || isLoading) return <PaymentLoading />;
+
+  const { data, error } = validationResponse;
+
+  if (validationError || error) {
+    router.push('error');
+  }
 
   return (
     <>
@@ -59,7 +81,24 @@ export const SummaryPage = () => {
         className={styles.paymentSummaryContainer}
       >
         <div className={styles.paymentSummaryDetails}>
-          <FieldData Label={<Label>Effective date</Label>}>
+          <FieldData
+            Label={
+              <Label
+                interactiveElements={[
+                  <Button
+                    onClick={() => handleEdit(SystematicPremiumSteps.AMOUNT)}
+                    mode="link"
+                    key="systematic-premium-type"
+                    size="small"
+                  >
+                    <Icon small type={IconType.EDIT_ALT} />
+                  </Button>,
+                ]}
+              >
+                Effective date
+              </Label>
+            }
+          >
             {state.systematicPremiumAmountStep.effectiveDate}
           </FieldData>
           <FieldData
@@ -135,7 +174,7 @@ export const SummaryPage = () => {
           </FieldData>
         </div>
       </form>
-      {/* {data?.status === TransactionFailureResponse.status.FAILURE && (
+      {data?.status === TransactionFailureResponse.status.FAILURE && (
         <div>
           {data.validationResult?.map(
             (result, index) =>
@@ -144,12 +183,12 @@ export const SummaryPage = () => {
                   className="mb-md"
                   key={index}
                   variant={AssistiveTextVariant.Error}
-                  text={result.resolution}
+                  text={result.error + ' ' + result.resolution}
                 />
               )
           )}
         </div>
-      )} */}
+      )}
     </>
   );
 };

@@ -6,10 +6,13 @@ import {
   Loader,
   LoaderVariant,
 } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { forwardRef, useRef } from 'react';
 
 import { useUser } from '@/hooks/use-user';
 import { analytics } from '@/utils/segment';
+
+import styles from './Button.module.css';
 
 interface AdditionalProps {
   correlationId?: string;
@@ -65,16 +68,14 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         {...props}
         data-testid={testId || 'bloom-button'}
         disabled={loading}
-        className="flex items-center"
+        className={clsx(styles.content, props.className)}
         onClick={trackAndClick}
         ref={forwardRef || buttonRef}
       >
         <>
           {children}
           {loading && (
-            <span className="ml-sm">
-              <Loader variant={LoaderVariant.CTA} />
-            </span>
+            <Loader variant={LoaderVariant.CTA} />
           )}
         </>
       </BloomButton>

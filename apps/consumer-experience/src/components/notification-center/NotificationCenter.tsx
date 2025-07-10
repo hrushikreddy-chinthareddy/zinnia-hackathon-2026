@@ -27,8 +27,6 @@ import {
   transformNotifications,
 } from './utils';
 
-
-
 export const NotificationCenter = ({
   initialAcknowledgedNotifications,
   initialNotifications,
@@ -36,7 +34,7 @@ export const NotificationCenter = ({
   planCode,
 }: NotificationCenterProps) => {
   const queryClient = useQueryClient();
-  const isClient = useIsClient()
+  const isClient = useIsClient();
   const { data: featureFlags } = useFeatureFlags();
   const fetchNotificationsFlag =
     featureFlags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
@@ -54,7 +52,10 @@ export const NotificationCenter = ({
       return getAcknowledgedCases({ policyNumber, planCode });
     },
     initialData: initialAcknowledgedNotifications,
-    enabled: shouldFetchClientSideNotifications,
+    enabled:
+      shouldFetchClientSideNotifications &&
+      !!policyNumber.length &&
+      !!planCode.length,
   });
 
   const {

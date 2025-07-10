@@ -13,7 +13,6 @@ import {
   lineOfBusinessPath,
 } from './utils';
 import { AnalyticsPageHeader } from '../analytics/AnalyticsPageHeader';
-import { ClientOnly } from '../client-only/ClientOnly';
 
 export const PolicyDetailPageHeader = () => {
   const params = useParams<{
@@ -32,24 +31,22 @@ export const PolicyDetailPageHeader = () => {
   }, [params.beneficiary, params.policyNumber, pathname]);
 
   return (
-    <ClientOnly>
-      <div>
-        <Breadcrumbs />
-        <div className={styles.headerContainer}>
-          <AnalyticsPageHeader
-            pageTitle={pageTitle}
-            analyticsProps={{
-              policyNumber: params.policyNumber,
-            }}
-          />
-          <HeaderPolicyDetails
-            className={styles.policyDetails}
-            planCode={params.planCode}
-            policyNumber={params.policyNumber}
-            lineOfBusiness={lineOfBusinessFromPathname(pathname)}
-          />
-        </div>
+    <div>
+      <Breadcrumbs />
+      <div className={styles.headerContainer}>
+        <AnalyticsPageHeader
+          pageTitle={pageTitle}
+          analyticsProps={{
+            policyNumber: params.policyNumber,
+          }}
+        />
+        <HeaderPolicyDetails
+          className={styles.policyDetails}
+          planCode={params.planCode}
+          policyNumber={params.policyNumber}
+          lineOfBusiness={lineOfBusinessFromPathname(pathname)}
+        />
       </div>
-    </ClientOnly>
+    </div>
   );
 };

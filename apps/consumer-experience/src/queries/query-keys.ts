@@ -1,5 +1,6 @@
 export enum QueryKeys {
   NOTIFICATIONS = 'notifications',
+  FEATURE_FLAGS = 'featureFlags',
   NOTIFICATION_ACKNOWLEDGMENT = 'notificationsAcknowledgment',
   POLICY = 'policy',
   POLICY_PROFILE = 'policyProfile',
@@ -12,4 +13,5 @@ export enum QueryKeys {
   CARRIER_CONFIG = 'carrierConfig',
   PAYMENT_METHODS = 'paymentMethods',
   SYSTEMATIC_PREMIUMS = 'systematicPremiums',
+  SYSTEMATIC_PREMIUMS_VALIDATION = 'systematicPremiumsValidation',
 }

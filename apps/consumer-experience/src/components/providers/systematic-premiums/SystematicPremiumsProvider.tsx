@@ -3,14 +3,16 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { PropsWithChildren, useReducer } from 'react';
 
-import {
-  getSystematicProgramAmounts,
-} from '@/components/workflows/systematic-premiums/utils';
+import { getSystematicProgramAmounts } from '@/components/workflows/systematic-premiums/utils';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { getAllSystematicPrograms } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 
-import { Action, SystematicPremiumsState, SystematicPremiumSteps } from './types';
+import {
+  Action,
+  SystematicPremiumsState,
+  SystematicPremiumSteps,
+} from './types';
 import { SystematicPremiumsContext } from './useSystematicPremiums';
 
 interface SystematicPremiumsProviderProps extends PropsWithChildren { }
@@ -33,11 +35,18 @@ const SystematicPremiumsProvider = ({
   const arrangementId = search.get('arrangementId');
 
   const { data: systematicPremium } = useQuery({
-    queryKey: [QueryKeys.SYSTEMATIC_PREMIUMS, planCode, policyNumber, arrangementId],
+    queryKey: [
+      QueryKeys.SYSTEMATIC_PREMIUMS,
+      planCode,
+      policyNumber,
+      arrangementId,
+    ],
     queryFn: () => getAllSystematicPrograms({ planCode, policyNumber }),
     select: data => data.find(sp => sp.arrangementId === arrangementId),
     enabled:
-      !!planCode?.length && !!policyNumber?.length && search.has('arrangementId')
+      !!planCode?.length &&
+      !!policyNumber?.length &&
+      search.has('arrangementId'),
   });
 
   const {
@@ -46,13 +55,20 @@ const SystematicPremiumsProvider = ({
     totalAmount,
     effectiveDate,
     bankId,
-    partyId
+    partyId,
   } = getSystematicProgramAmounts({
     monthlyAmount: systematicPremium?.amount,
     bpmFrequency: systematicPremium?.frequency,
     effectiveDate: systematicPremium?.nextProgramDate,
-    parties: systematicPremium?.party ?? systematicPremium?.parties
-  })
+    parties: systematicPremium?.party ?? systematicPremium?.parties,
+  });
+
+  const previousProgramDate = arrangementId
+    ? systematicPremium?.previousProgramDate
+    : undefined;
+  const nextProgramDate = arrangementId
+    ? systematicPremium?.nextProgramDate
+    : undefined;
 
   const [state, dispatch] = useReducer<
     React.Reducer<SystematicPremiumsState, Action>
@@ -60,6 +76,8 @@ const SystematicPremiumsProvider = ({
     activeArrangementId: systematicPremium?.arrangementId,
     currentPage: SystematicPremiumSteps.AMOUNT,
     yearlyPremiumAmount: totalAmount,
+    previousProgramDate,
+    nextProgramDate,
     systematicPremiumAmountStep: {
       effectiveDate: effectiveDate,
       // TODO: GET PAYMENT AMOUNT
@@ -71,10 +89,10 @@ const SystematicPremiumsProvider = ({
     selectBankStep: {
       payor: {
         payorPartyId: partyId ?? '',
-        payorName: ''
+        payorName: '',
       },
       bank: {
-        bankId
+        bankId,
       },
     },
   });

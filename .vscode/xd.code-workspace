@@ -5,6 +5,10 @@
       "path": "..",
     },
     {
+      "name": "api-types",
+      "path": "../packages/api-types",
+    },
+    {
       "name": "ops",
       "path": "../apps/ops",
     },
@@ -21,4 +25,7 @@
       "path": "../packages/xd-components",
     },
   ],
+  "settings": {
+    "editor.formatOnSave": true,
+  },
 }

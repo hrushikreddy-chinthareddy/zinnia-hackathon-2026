@@ -1,37 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { FeatureFlags } from '@/utils/optimizely/optimizely';
+import { getFeatureFlags } from '@/queries/feature-flag-queries';
+import { QueryKeys } from '@/queries/query-keys';
 
 /**
  * A hook to get feature flags from optimizely.
  *
- * Currently a custom call, but we should replace this method with tanstack if we implement it.
- * TODO: Replace with the tanstack implementation
  * @returns Feature Flags object
  */
 export const useFeatureFlags = () => {
-  const [data, setData] = useState<FeatureFlags>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<unknown>();
+  const { data, error, isLoading } = useQuery({
+    queryKey: [QueryKeys.FEATURE_FLAGS],
+    queryFn: () => getFeatureFlags(),
+    staleTime: 15 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    const getFlags = async () => {
-      try {
-        setLoading(true);
-        const featureFlagDecisions = await fetch('/api/feature-flags');
-
-        const { featureFlags } = await featureFlagDecisions.json();
-
-        setData(featureFlags);
-        setLoading(false);
-        setError('');
-      } catch (e) {
-        setError(e);
-      }
-    };
-
-    getFlags();
-  }, []);
-
-  return { data, loading, error };
+  return { data, loading: isLoading, error };
 };

@@ -12,6 +12,7 @@ export enum SystematicPremiumSteps {
 export enum SystematicPremiumsAction {
   SET_ACTIVE_SYSTEMATIC_PROGRAM = 'setActiveSystematicProgram',
   SET_CURRENT_PAGE = 'setCurrentPage',
+  SET_SYSTEMATIC_PREMIUM_CASE_ID = 'setSystematicPremiumCaseId',
   SET_SYSTEMATIC_PREMIUM_AMOUNT_STEP = 'setSystematicPremiumAmountStep',
   SET_SYSTEMATIC_PREMIUM_METHOD_STEP = 'setSystematicPremiumMethodStep',
   SET_SYSTEMATIC_PREMIUM_TAX_WITHHOLDING_STEP = 'setSystematicPremiumTaxWithholdingStep',
@@ -70,6 +71,11 @@ export const systematicPremiumStepsSchema = z.nativeEnum(
 export const systematicPremiumsStateSchema = z.object({
   currentPage: systematicPremiumStepsSchema,
   activeArrangementId: z.string().optional(),
+  // this only gets set after successful submission
+  // and comes from bpm response
+  caseId: z.string().optional(),
+  previousProgramDate: z.string().optional(),
+  nextProgramDate: z.string().optional(),
   yearlyPremiumAmount: z.number().min(0, 'Amount must be a positive number'),
   selectBankStep: selectBankStepSchema,
   systematicPremiumAmountStep: systematicPremiumAmountStepSchema,
@@ -106,6 +112,12 @@ export const actionSchema = z.discriminatedUnion('type', [
     ),
     payload: systematicPremiumsStateSchema.pick({
       selectBankStep: true,
+    }),
+  }),
+  z.object({
+    type: z.literal(SystematicPremiumsAction.SET_SYSTEMATIC_PREMIUM_CASE_ID),
+    payload: systematicPremiumsStateSchema.pick({
+      caseId: true,
     }),
   }),
 ]);

@@ -42,28 +42,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OneTimePremiumRequest'
+              $ref: "#/components/schemas/OneTimePremiumRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OneTime Premium Success Response.yaml
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: OneTime Premium Failure Response.yaml
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -89,16 +89,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OneTimePremiumRequest'
+              $ref: "#/components/schemas/OneTimePremiumRequest"
         required: true
       responses:
-        '202':
+        "202":
           description: Submit Transaction Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -121,25 +121,25 @@ paths:
           required: true
           description: Policy Number
       responses:
-        '200':
+        "200":
           description: OneTime Premium Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: OneTime Premium Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -174,27 +174,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SystematicProgramUpdateRequest'
+              $ref: "#/components/schemas/SystematicProgramUpdateRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: OneTime Premium Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -229,15 +229,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SystematicProgramUpdateRequest'
+              $ref: "#/components/schemas/SystematicProgramUpdateRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -268,25 +268,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Eligibility Check Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Eligibility Check Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -330,24 +330,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddressChangeRequest'
+              $ref: "#/components/schemas/AddressChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -378,24 +378,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddressChangeRequest'
+              $ref: "#/components/schemas/AddressChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -426,24 +426,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EmailChangeRequest'
+              $ref: "#/components/schemas/EmailChangeRequest"
       responses:
-        '202':
+        "202":
           description: Request accepted successfully and is being processed.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Request failed due to rules failure.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -483,24 +483,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EmailChangeRequest'
+              $ref: "#/components/schemas/EmailChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -531,24 +531,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PhoneChangeRequest'
+              $ref: "#/components/schemas/PhoneChangeRequest"
       responses:
-        '202':
+        "202":
           description: Request accepted successfully and is being processed.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Request failed due to rules failure.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -588,24 +588,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PhoneChangeRequest'
+              $ref: "#/components/schemas/PhoneChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -636,24 +636,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankAccountChangeRequest'
+              $ref: "#/components/schemas/BankAccountChangeRequest"
       responses:
-        '202':
+        "202":
           description: Request accepted successfully and is being processed.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Request failed due to rules failure.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -693,24 +693,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankAccountChangeRequest'
+              $ref: "#/components/schemas/BankAccountChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -745,24 +745,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CommunicationPreferenceChangeRequest'
+              $ref: "#/components/schemas/CommunicationPreferenceChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -797,24 +797,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartyNameChangeRequest'
+              $ref: "#/components/schemas/PartyNameChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -861,24 +861,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartyChangeRequest'
+              $ref: "#/components/schemas/PartyChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -930,24 +930,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartyChangeRequest'
+              $ref: "#/components/schemas/PartyChangeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
   /bpm/v1/policies/{planCode}/{policyNumber}/parties/{partyRole}/eligibilitycheck:
     post:
@@ -972,25 +972,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Rules and Transaction Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1015,27 +1015,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartialWithdrawalOneTimeRequest'
+              $ref: "#/components/schemas/PartialWithdrawalOneTimeRequest"
       responses:
-        '200':
+        "200":
           description: Parital Withdrawal Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Parital Withdrawal Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -1060,28 +1060,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartialWithdrawalOneTimeRequest'
+              $ref: "#/components/schemas/PartialWithdrawalOneTimeRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: Partial Withdrawal Success Response.yaml
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Partial Withdrawal Failure Response.yaml
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -1106,16 +1106,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartialWithdrawalOneTimeRequest'
+              $ref: "#/components/schemas/PartialWithdrawalOneTimeRequest"
         required: true
       responses:
-        '202':
+        "202":
           description: Submit Transaction Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -1140,28 +1140,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FullSurrenderRequest'
+              $ref: "#/components/schemas/FullSurrenderRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: Full Surrender Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Full Surrender Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -1186,28 +1186,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FullSurrenderRequest'
+              $ref: "#/components/schemas/FullSurrenderRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: Full Surrender Success Response.yaml
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Full Surrender Failure Response.yaml
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -1232,16 +1232,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FullSurrenderRequest'
+              $ref: "#/components/schemas/FullSurrenderRequest"
         required: true
       responses:
-        '202':
+        "202":
           description: Submit Transaction Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -1263,25 +1263,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: New Loan Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Parital Withdrawal Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -1306,28 +1306,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewLoanRequest'
+              $ref: "#/components/schemas/NewLoanRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: Partial Withdrawal Success Response.yaml
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Partial Withdrawal Failure Response.yaml
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -1352,16 +1352,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewLoanRequest'
+              $ref: "#/components/schemas/NewLoanRequest"
         required: true
       responses:
-        '202':
+        "202":
           description: Submit Transaction Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -1387,27 +1387,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SystematicProgramUpdateRequest'
+              $ref: "#/components/schemas/SystematicProgramUpdateRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: OneTime Premium Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1433,15 +1433,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SystematicProgramUpdateRequest'
+              $ref: "#/components/schemas/SystematicProgramUpdateRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1463,25 +1463,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Eligibility Check Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Eligibility Check Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1507,27 +1507,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoanRepaymentOneTimeRequest'
+              $ref: "#/components/schemas/LoanRepaymentOneTimeRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: OneTime Premium Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1553,15 +1553,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoanRepaymentOneTimeRequest'
+              $ref: "#/components/schemas/LoanRepaymentOneTimeRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1583,25 +1583,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Eligibility Check Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponse'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponse"
+        "400":
           description: Eligibility Check Failure Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1626,16 +1626,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CancelTransactionRequest'
+              $ref: "#/components/schemas/CancelTransactionRequest"
         required: true
       responses:
-        '202':
+        "202":
           description: Submit Transaction Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Internal server error. Please check server logs for more details.
       security:
         - Auth0: []
@@ -1665,15 +1665,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FreeLookCancellationRequest'
+              $ref: "#/components/schemas/FreeLookCancellationRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1700,15 +1700,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ReverseRecreateRequest'
+              $ref: "#/components/schemas/ReverseRecreateRequest"
       responses:
-        '202':
+        "202":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '500':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "500":
           description: Unexpected error occured, please check server logs
       security:
         - Auth0: []
@@ -1734,27 +1734,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetDeliveryDateEligibilityRequest'
+              $ref: "#/components/schemas/SetDeliveryDateEligibilityRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -1780,24 +1780,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetDeliveryDateRequest'
+              $ref: "#/components/schemas/SetDeliveryDateRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -1825,33 +1825,33 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/EDeliveryEnrollmentRequest'
+                $ref: "#/components/schemas/EDeliveryEnrollmentRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionAcceptedResponse'
-        '400':
+                $ref: "#/components/schemas/TransactionAcceptedResponse"
+        "400":
           description: BadRequest
           content:
             application/json:
               schema:
                 anyOf:
-                  - $ref: '#/components/schemas/TransactionFailureResponse'
-                  - $ref: '#/components/schemas/ValidationResponse'
+                  - $ref: "#/components/schemas/TransactionFailureResponse"
+                  - $ref: "#/components/schemas/ValidationResponse"
               examples:
                 businessRuleFailure:
-                  $ref: '#/components/examples/failureTransactionResponse'
+                  $ref: "#/components/examples/failureTransactionResponse"
                 valdiationFailure:
-                  $ref: '#/components/examples/validationFailureResponse'
-        '500':
+                  $ref: "#/components/examples/validationFailureResponse"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServerErrorResponse'
+                $ref: "#/components/schemas/ServerErrorResponse"
       security:
         - Auth0: []
   /bpm/v1/policies/{planCode}/{policyNumber}/initialpremium/eligibilitycheck:
@@ -1872,25 +1872,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -1916,27 +1916,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InitialPremiumRequest'
+              $ref: "#/components/schemas/InitialPremiumRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -1962,27 +1962,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InitialPremiumRequest'
+              $ref: "#/components/schemas/InitialPremiumRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -2004,25 +2004,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -2048,27 +2048,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FundAllocationChangeRequest'
+              $ref: "#/components/schemas/FundAllocationChangeRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -2094,27 +2094,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FundAllocationChangeRequest'
+              $ref: "#/components/schemas/FundAllocationChangeRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -2136,25 +2136,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -2180,27 +2180,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FundTransferRequest'
+              $ref: "#/components/schemas/FundTransferRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -2226,27 +2226,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FundTransferRequest'
+              $ref: "#/components/schemas/FundTransferRequest"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 success:
-                  $ref: '#/components/examples/successTransactionResponsewithoutQuote'
-        '400':
+                  $ref: "#/components/examples/successTransactionResponsewithoutQuote"
+        "400":
           description: Failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'
+                $ref: "#/components/schemas/TransactionResponse"
               examples:
                 failure:
-                  $ref: '#/components/examples/failureTransactionResponse'
-        '500':
+                  $ref: "#/components/examples/failureTransactionResponse"
+        "500":
           description: Unexpected error occured, please check server log
       security:
         - Auth0: []
@@ -2255,7 +2255,7 @@ components:
     LoanRepaymentOneTimeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/LoanRepaymentOneTime'
+        - $ref: "#/components/schemas/LoanRepaymentOneTime"
       properties:
         caseId:
           type: string
@@ -2263,7 +2263,7 @@ components:
     NewLoanRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/NewLoan'
+        - $ref: "#/components/schemas/NewLoan"
       properties:
         caseId:
           type: string
@@ -2272,7 +2272,7 @@ components:
     FullSurrenderRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/FullSurrender'
+        - $ref: "#/components/schemas/FullSurrender"
       properties:
         caseId:
           type: string
@@ -2286,7 +2286,7 @@ components:
     PartialWithdrawalOneTimeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/PartialWithdrawalOneTime'
+        - $ref: "#/components/schemas/PartialWithdrawalOneTime"
       properties:
         caseId:
           type: string
@@ -2300,7 +2300,7 @@ components:
     OneTimePremiumRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/OneTimePremiumTransaction'
+        - $ref: "#/components/schemas/OneTimePremiumTransaction"
       properties:
         caseId:
           type: string
@@ -2314,7 +2314,7 @@ components:
     SystematicProgramUpdateRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/SystematicProgramUpdate'
+        - $ref: "#/components/schemas/SystematicProgramUpdate"
       properties:
         caseId:
           type: string
@@ -2323,7 +2323,7 @@ components:
     AddressChangeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/AddressChange'
+        - $ref: "#/components/schemas/AddressChange"
       properties:
         caseId:
           type: string
@@ -2339,13 +2339,13 @@ components:
       type: object
       properties:
         partyRole:
-          $ref: '#/components/schemas/PartyRole'
+          $ref: "#/components/schemas/PartyRole"
         partyId:
           type: string
           description: Pending Review by Product Team
           example: Party_PI_1
         paymentForm:
-          $ref: '#/components/schemas/PaymentForm'
+          $ref: "#/components/schemas/PaymentForm"
         allocationPercentage:
           type: number
           format: double
@@ -2359,7 +2359,7 @@ components:
           description: Comes in Acord 103
         addressId:
           type: string
-          example: '1'
+          example: "1"
           description: Address Id
         forBenefitOfOrForFurtherCredit:
           type: string
@@ -2376,14 +2376,14 @@ components:
           example: 864e43a0-2c2f-4a11-9d7f-69ed40115066
         taxId:
           type: string
-          example: '666911019'
+          example: "666911019"
         documentType:
           type: string
           example: POLPG
     SetDeliveryDateRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/SetDeliveryDateEligibilityRequest'
+        - $ref: "#/components/schemas/SetDeliveryDateEligibilityRequest"
       properties:
         acknowledgementDate:
           type: string
@@ -2470,7 +2470,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          example: '2023-01-01T00:00:00.000Z'
+          example: "2023-01-01T00:00:00.000Z"
           description: >-
             Date when the transaction was originally scheduled or expected to
             happen. It can be a non-business day
@@ -2484,13 +2484,13 @@ components:
           type: string
           description: Optional Reason for this transaction
         transactionAmounts:
-          $ref: '#/components/schemas/TransactionAmounts'
+          $ref: "#/components/schemas/TransactionAmounts"
         fundAllocation:
-          $ref: '#/components/schemas/FundAllocation'
+          $ref: "#/components/schemas/FundAllocation"
         exchange:
-          $ref: '#/components/schemas/TransactionExchange'
+          $ref: "#/components/schemas/TransactionExchange"
         taxBasis:
-          $ref: '#/components/schemas/TransactionTaxBasis'
+          $ref: "#/components/schemas/TransactionTaxBasis"
         payor:
           type: object
           properties:
@@ -2499,7 +2499,7 @@ components:
               example: Party_PI_1
               description: Impacted Party in the event of financial transaction
             paymentForm:
-              $ref: '#/components/schemas/PaymentForm'
+              $ref: "#/components/schemas/PaymentForm"
             bankId:
               type: string
               example: Bank_1
@@ -2520,7 +2520,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          example: '2023-01-01T00:00:00.000Z'
+          example: "2023-01-01T00:00:00.000Z"
           description: >-
             Date when the transaction was originally scheduled or expected to
             happen. It can be a non-business day
@@ -2530,7 +2530,7 @@ components:
             Property to isolate source transaction(s) that initiated the
             reversal
         allocation:
-          $ref: '#/components/schemas/FundAllocation'
+          $ref: "#/components/schemas/FundAllocation"
     InvestmentType:
       type: string
       enum:
@@ -2545,21 +2545,21 @@ components:
           description: Unique number given to an exchange/transfer.
           example: EX0000001
         exchangeDescription:
-          $ref: '#/components/schemas/ExchangeDescription'
+          $ref: "#/components/schemas/ExchangeDescription"
         exchangeDate:
           type: string
           format: date
           description: The date on which 1035 Exchange occurs
-          example: '2023-01-01T00:00:00.000Z'
+          example: "2023-01-01T00:00:00.000Z"
         lineOfBusiness:
-          $ref: '#/components/schemas/LineOfBusiness'
+          $ref: "#/components/schemas/LineOfBusiness"
         exchangeAmount:
           type: number
           format: double
           description: Total Dollar received in 1035 Exchange
           example: 161.81698
         qualificationType:
-          $ref: '#/components/schemas/QualificationType'
+          $ref: "#/components/schemas/QualificationType"
         costBasis:
           type: number
           format: double
@@ -2634,7 +2634,7 @@ components:
       type: object
       properties:
         investmentType:
-          $ref: '#/components/schemas/InvestmentType'
+          $ref: "#/components/schemas/InvestmentType"
         modelId:
           type: string
           description: The corresponding Model Id of the elected model
@@ -2659,9 +2659,9 @@ components:
                 type: string
                 format: date
                 description: TBD
-                example: '2024-01-01T00:00:00.000Z'
+                example: "2024-01-01T00:00:00.000Z"
         allocationOption:
-          $ref: '#/components/schemas/AllocationOption'
+          $ref: "#/components/schemas/AllocationOption"
     ExchangeDescription:
       type: string
       enum:
@@ -2737,7 +2737,7 @@ components:
         validationResult:
           type: array
           items:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
     TransactionResponse:
       type: object
       properties:
@@ -2749,7 +2749,7 @@ components:
         error:
           type: array
           items:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
         quoteResponse:
           type: object
     Error:
@@ -2770,7 +2770,7 @@ components:
     EmailChangeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/EmailChange'
+        - $ref: "#/components/schemas/EmailChange"
       properties:
         caseId:
           type: string
@@ -2785,7 +2785,7 @@ components:
     PhoneChangeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/PhoneChange'
+        - $ref: "#/components/schemas/PhoneChange"
       properties:
         caseId:
           type: string
@@ -2800,7 +2800,7 @@ components:
     BankAccountChangeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/BankAccountChange'
+        - $ref: "#/components/schemas/BankAccountChange"
       properties:
         caseId:
           type: string
@@ -2815,7 +2815,7 @@ components:
     CommunicationPreferenceChangeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/CommunicationPreferenceChange'
+        - $ref: "#/components/schemas/CommunicationPreferenceChange"
       properties:
         caseId:
           type: string
@@ -2824,7 +2824,7 @@ components:
     PartyNameChangeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/PartyNameChange'
+        - $ref: "#/components/schemas/PartyNameChange"
       properties:
         caseId:
           type: string
@@ -2833,7 +2833,7 @@ components:
     PartyChangeRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/PartyChange'
+        - $ref: "#/components/schemas/PartyChange"
       properties:
         caseId:
           type: string
@@ -2848,7 +2848,7 @@ components:
     CancelTransactionRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/CancelTransaction'
+        - $ref: "#/components/schemas/CancelTransaction"
       properties:
         caseId:
           type: string
@@ -2857,7 +2857,7 @@ components:
     FreeLookCancellationRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/FreeLookCancellation'
+        - $ref: "#/components/schemas/FreeLookCancellation"
       properties:
         caseId:
           type: string
@@ -2866,7 +2866,7 @@ components:
     ReverseRecreateRequest:
       type: object
       allOf:
-        - $ref: '#/components/schemas/ReverseRecreate'
+        - $ref: "#/components/schemas/ReverseRecreate"
       properties:
         caseId:
           type: string
@@ -2880,7 +2880,7 @@ components:
           example: 657b717b7dcf554abf9ef067
         transactionId:
           type: string
-          example: '377'
+          example: "377"
         reason:
           type: string
           description: Reason for cancellation
@@ -2895,7 +2895,7 @@ components:
         effectiveDate:
           type: string
           format: date
-          example: '2023-01-01T00:00:00.000Z'
+          example: "2023-01-01T00:00:00.000Z"
           description: >-
             Date when the transaction was originally scheduled or expected to
             happen. It can be a non-business day
@@ -2956,9 +2956,9 @@ components:
           type: object
           properties:
             allocationOption:
-              $ref: '#/components/schemas/AllocationOption'
+              $ref: "#/components/schemas/AllocationOption"
         payor:
-          $ref: '#/components/schemas/AdhocParty'
+          $ref: "#/components/schemas/AdhocParty"
     NewLoan:
       type: object
       properties:
@@ -2978,18 +2978,18 @@ components:
             Property to isolate source transaction(s) that initiated the
             reversal
         transactionAmounts:
-          $ref: '#/components/schemas/AdhocTransactionAmount'
+          $ref: "#/components/schemas/AdhocTransactionAmount"
         fundAllocation:
-          $ref: '#/components/schemas/AdhocFundAllocation'
+          $ref: "#/components/schemas/AdhocFundAllocation"
         taxWithholdingInstructions:
           type: array
           items:
             allOf:
-              - $ref: '#/components/schemas/TaxWithholdingInstructions'
+              - $ref: "#/components/schemas/TaxWithholdingInstructions"
               - type: object
                 properties:
                   partyRole:
-                    $ref: '#/components/schemas/PartyRole'
+                    $ref: "#/components/schemas/PartyRole"
     FullSurrender:
       type: object
       properties:
@@ -3016,30 +3016,30 @@ components:
         taxWithholdingInstructions:
           type: array
           items:
-            $ref: '#/components/schemas/TaxWithholdingInstructions'
+            $ref: "#/components/schemas/TaxWithholdingInstructions"
         payeeOrBeneficiary:
           type: array
           items:
-            $ref: '#/components/schemas/PayeeOrBeneficiary'
+            $ref: "#/components/schemas/PayeeOrBeneficiary"
         parties:
           type: array
           items:
-            $ref: '#/components/schemas/AdhocDisbursementParty'
+            $ref: "#/components/schemas/AdhocDisbursementParty"
         transactionAmounts:
-          $ref: '#/components/schemas/FullSurrenderActualTransactionAmounts'
+          $ref: "#/components/schemas/FullSurrenderActualTransactionAmounts"
         charges:
           type: array
           items:
-            $ref: '#/components/schemas/Charge'
+            $ref: "#/components/schemas/Charge"
     FullSurrenderActualTransactionAmounts:
       type: object
       properties:
         amountType:
-          $ref: '#/components/schemas/AmountType'
+          $ref: "#/components/schemas/AmountType"
         disbursementType:
-          $ref: '#/components/schemas/DisbursementType'
+          $ref: "#/components/schemas/DisbursementType"
         disbursementPaymentForm:
-          $ref: '#/components/schemas/DisbursementPaymentForm'
+          $ref: "#/components/schemas/DisbursementPaymentForm"
     PartialWithdrawalOneTime:
       type: object
       properties:
@@ -3052,17 +3052,17 @@ components:
           type: boolean
           default: false
         transactionAmounts:
-          $ref: '#/components/schemas/TransactionAmounts'
+          $ref: "#/components/schemas/TransactionAmounts"
         fundAllocation:
-          $ref: '#/components/schemas/AdhocFundAllocation'
+          $ref: "#/components/schemas/AdhocFundAllocation"
         taxWithholdingInstructions:
           type: array
           items:
-            $ref: '#/components/schemas/TaxWithholdingInstructions'
+            $ref: "#/components/schemas/TaxWithholdingInstructions"
         fundDistributions:
           type: array
           items:
-            $ref: '#/components/schemas/AdhocFundDistributions'
+            $ref: "#/components/schemas/AdhocFundDistributions"
         payeeOrBeneficiary:
           type: array
           items:
@@ -3071,7 +3071,7 @@ components:
               partyId:
                 type: string
               paymentForm:
-                $ref: '#/components/schemas/PaymentFrom'
+                $ref: "#/components/schemas/PaymentFrom"
               allocationPercent:
                 type: number
               bankId:
@@ -3079,11 +3079,11 @@ components:
         parties:
           type: array
           items:
-            $ref: '#/components/schemas/AdhocDisbursementParty'
+            $ref: "#/components/schemas/AdhocDisbursementParty"
         charges:
           type: array
           items:
-            $ref: '#/components/schemas/Charge'
+            $ref: "#/components/schemas/Charge"
     PartyRole:
       type: string
       enum:
@@ -3104,7 +3104,7 @@ components:
           description: Pending Review by Product Team
           example: Party_PI_1
         paymentForm:
-          $ref: '#/components/schemas/PaymentForm'
+          $ref: "#/components/schemas/PaymentForm"
         allocationPercentage:
           type: number
           format: double
@@ -3120,7 +3120,7 @@ components:
       type: object
       properties:
         allocationOption:
-          $ref: '#/components/schemas/AllocationOption'
+          $ref: "#/components/schemas/AllocationOption"
     AllocationOption:
       type: string
       enum:
@@ -3139,18 +3139,18 @@ components:
       type: object
       properties:
         chargeType:
-          $ref: '#/components/schemas/ChargeType'
+          $ref: "#/components/schemas/ChargeType"
         chargeWaiverIndicator:
-          $ref: '#/components/schemas/ChargeWaiverIndicator'
+          $ref: "#/components/schemas/ChargeWaiverIndicator"
         chargeWaiverReason:
           type: string
           description: Set by System based on policy data if Waive Indicator is yes.
-          example: '100'
+          example: "100"
     ChargeWaiverIndicator:
       type: string
       enum:
-        - 'Yes'
-        - 'No'
+        - "Yes"
+        - "No"
       description: Charge Waiver Indicator
     ChargeType:
       type: string
@@ -3192,7 +3192,7 @@ components:
                 type: number
     TransactionAmounts:
       allOf:
-        - $ref: '#/components/schemas/AdhocTransactionAmount'
+        - $ref: "#/components/schemas/AdhocTransactionAmount"
         - type: object
           properties:
             requestedAmount:
@@ -3201,15 +3201,15 @@ components:
               description: The initial premium amount (deposit amount) paid by the party.
               example: 100
             amountType:
-              $ref: '#/components/schemas/AmountType'
+              $ref: "#/components/schemas/AmountType"
             disbursementType:
-              $ref: '#/components/schemas/DisbursementType'
+              $ref: "#/components/schemas/DisbursementType"
             disbursementPaymentForm:
-              $ref: '#/components/schemas/DisbursementPaymentForm'
+              $ref: "#/components/schemas/DisbursementPaymentForm"
             loanType:
-              $ref: '#/components/schemas/LoanType'
+              $ref: "#/components/schemas/LoanType"
             loanInterestType:
-              $ref: '#/components/schemas/loanInterestType'
+              $ref: "#/components/schemas/loanInterestType"
             paymentAmount:
               type: number
               format: double
@@ -3272,13 +3272,13 @@ components:
           description: The initial premium amount (deposit amount) paid by the party.
           example: 100
         amountType:
-          $ref: '#/components/schemas/AmountType'
+          $ref: "#/components/schemas/AmountType"
         disbursementType:
-          $ref: '#/components/schemas/DisbursementType'
+          $ref: "#/components/schemas/DisbursementType"
         disbursementPaymentForm:
-          $ref: '#/components/schemas/DisbursementPaymentForm'
+          $ref: "#/components/schemas/DisbursementPaymentForm"
         loanType:
-          $ref: '#/components/schemas/LoanType'
+          $ref: "#/components/schemas/LoanType"
         loanInterestType:
           type: string
           enum:
@@ -3291,11 +3291,11 @@ components:
             to Fixed
     AdhocParty:
       allOf:
-        - $ref: '#/components/schemas/BaseAdhocParty'
+        - $ref: "#/components/schemas/BaseAdhocParty"
         - type: object
           properties:
             paymentForm:
-              $ref: '#/components/schemas/PaymentForm'
+              $ref: "#/components/schemas/PaymentForm"
     AmountType:
       type: string
       enum:
@@ -3351,11 +3351,11 @@ components:
           example: Party_PI_1
           description: Impacted Party in the event of financial transaction
         taxWithholdingType:
-          $ref: '#/components/schemas/TaxWithholdingType'
+          $ref: "#/components/schemas/TaxWithholdingType"
         taxRateToUse:
-          $ref: '#/components/schemas/TaxRateToUse'
+          $ref: "#/components/schemas/TaxRateToUse"
         filingStatus:
-          $ref: '#/components/schemas/FilingStatus'
+          $ref: "#/components/schemas/FilingStatus"
         dollar:
           type: number
           format: double
@@ -3420,23 +3420,23 @@ components:
             Property to isolate source transaction(s) that initiated the
             reversal
         systematicProgram:
-          $ref: '#/components/schemas/AdhocSystematicProgram'
+          $ref: "#/components/schemas/AdhocSystematicProgram"
     AdhocSystematicProgram:
       type: object
       properties:
         paymentForm:
-          $ref: '#/components/schemas/PaymentForm'
+          $ref: "#/components/schemas/PaymentForm"
         arrangementType:
-          $ref: '#/components/schemas/ArrangementType'
+          $ref: "#/components/schemas/ArrangementType"
         amountType:
-          $ref: '#/components/schemas/AmountType'
+          $ref: "#/components/schemas/AmountType"
         amount:
           type: integer
           format: int64
           example: 5
           description: Requested amount value
         frequency:
-          $ref: '#/components/schemas/Frequency'
+          $ref: "#/components/schemas/Frequency"
         startDate:
           type: string
           format: date
@@ -3454,11 +3454,11 @@ components:
           format: date
           description: Date (with pattern "yyyy-mm-dd")
         party:
-          $ref: '#/components/schemas/BaseAdhocParty'
+          $ref: "#/components/schemas/BaseAdhocParty"
         parties:
           type: array
           items:
-            $ref: '#/components/schemas/AdhocDisbursementParty'
+            $ref: "#/components/schemas/AdhocDisbursementParty"
     PaymentForm:
       type: string
       enum:
@@ -3488,6 +3488,7 @@ components:
         - QUARTERLY
         - ANNUAL
         - SINGLEPAYMENT
+        - BIANNUAL
       description: frequency
     BaseAdhocParty:
       type: object
@@ -3510,8 +3511,8 @@ components:
         preferredAddressIndicator:
           type: string
           enum:
-            - 'YES'
-            - 'NO'
+            - "YES"
+            - "NO"
           description: >-
             Indicates whether the address being added should be set as default
             or not. Yes - address being entered is default.
@@ -3624,11 +3625,11 @@ components:
               description: Abbreviated names for states
             zipCode:
               type: string
-              example: '66636'
+              example: "66636"
               description: zip code
             zipCodeExtension:
               type: string
-              example: '1232'
+              example: "1232"
               description: zip code extension
             country:
               type: string
@@ -3651,7 +3652,7 @@ components:
                 - GB
                 - DK
                 - SE
-                - 'NO'
+                - "NO"
                 - PL
                 - DE
                 - PE
@@ -3898,7 +3899,7 @@ components:
           pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2})
           description: Date (with pattern "yyyy-mm-dd")
         email:
-          $ref: '#/components/schemas/Email'
+          $ref: "#/components/schemas/Email"
     Email:
       type: object
       properties:
@@ -3972,27 +3973,27 @@ components:
               description: Phone type
             countryCode:
               type: string
-              example: '011'
+              example: "011"
               description: Country code
             areaCode:
               type: string
-              example: '973'
+              example: "973"
               description: Area code
             dialNumber:
               type: string
-              example: '765789'
+              example: "765789"
               description: Dial number
             extension:
               type: string
-              example: 'null'
+              example: "null"
               description: Extension
             bestTime:
               type: string
-              example: 'null'
+              example: "null"
               description: Best time
             timezone:
               type: string
-              example: 'null'
+              example: "null"
               description: Timezone for the entered phone details
     BankAccountChange:
       type: object
@@ -4041,7 +4042,7 @@ components:
               description: Account Type
             accountNumber:
               type: string
-              example: '34567777745678'
+              example: "34567777745678"
               description: Account Number
             routingNumber:
               type: string
@@ -4057,10 +4058,10 @@ components:
               description: branch name
             branchPhoneNumber:
               type: string
-              example: '7766667777'
+              example: "7766667777"
               description: Branch Phone Number
             branchAddress:
-              $ref: '#/components/schemas/BranchAddress'
+              $ref: "#/components/schemas/BranchAddress"
     BranchAddress:
       type: object
       properties:
@@ -4146,11 +4147,11 @@ components:
           description: State
         zipCode:
           type: string
-          example: '66636'
+          example: "66636"
           description: Preferred address indicator
         zipCodeExtension:
           type: string
-          example: '1232'
+          example: "1232"
           description: zip code extension
         country:
           type: string
@@ -4173,7 +4174,7 @@ components:
             - GB
             - DK
             - SE
-            - 'NO'
+            - "NO"
             - PL
             - DE
             - PE
@@ -4453,7 +4454,7 @@ components:
           description: Date (with pattern "yyyy-mm-dd")
         partyName:
           allOf:
-            - $ref: '#/components/schemas/PartyName'
+            - $ref: "#/components/schemas/PartyName"
     PartyName:
       type: object
       properties:
@@ -4541,7 +4542,7 @@ components:
             - OTHER
           description: Option available for Owner, Payor, TPD and Beneficiary
         party:
-          $ref: '#/components/schemas/Party'
+          $ref: "#/components/schemas/Party"
     Party:
       type: object
       properties:
@@ -4622,9 +4623,9 @@ components:
           description: Party age calculated by Date of Birth
           example: 55
         birthCountry:
-          $ref: '#/components/schemas/Country'
+          $ref: "#/components/schemas/Country"
         birthState:
-          $ref: '#/components/schemas/State'
+          $ref: "#/components/schemas/State"
         doingBusinessAs:
           type: string
           description: The name the organization is commonly known as
@@ -4682,41 +4683,41 @@ components:
         preferredAddressIndicator:
           type: string
           enum:
-            - 'YES'
-            - 'NO'
+            - "YES"
+            - "NO"
           description: >-
             Indicates whether the address being added should be set as default
             or not. Yes - address being entered is default.
         formerName:
-          $ref: '#/components/schemas/FormerName'
+          $ref: "#/components/schemas/FormerName"
         identifications:
           type: array
           items:
-            $ref: '#/components/schemas/Identification'
+            $ref: "#/components/schemas/Identification"
         addresses:
           type: array
           items:
-            $ref: '#/components/schemas/Address'
+            $ref: "#/components/schemas/Address"
         phones:
           type: array
           items:
-            $ref: '#/components/schemas/Phone'
+            $ref: "#/components/schemas/Phone"
         emails:
           type: array
           items:
-            $ref: '#/components/schemas/Email'
+            $ref: "#/components/schemas/Email"
         bankDetails:
           type: array
           items:
-            $ref: '#/components/schemas/BankAccount'
+            $ref: "#/components/schemas/BankAccount"
         beneficiaryAllocations:
           type: array
           items:
-            $ref: '#/components/schemas/BeneficiaryAllocation'
+            $ref: "#/components/schemas/BeneficiaryAllocation"
         taxWithholdings:
           type: array
           items:
-            $ref: '#/components/schemas/TaxWithholding'
+            $ref: "#/components/schemas/TaxWithholding"
     Country:
       type: string
       enum:
@@ -4738,7 +4739,7 @@ components:
         - GB
         - DK
         - SE
-        - 'NO'
+        - "NO"
         - PL
         - DE
         - PE
@@ -5029,7 +5030,7 @@ components:
       description: Abbreviated names for states
     FormerName:
       allOf:
-        - $ref: '#/components/schemas/PartyName'
+        - $ref: "#/components/schemas/PartyName"
     Identification:
       type: object
       properties:
@@ -5046,9 +5047,9 @@ components:
         identificationValue:
           type: string
         issueState:
-          $ref: '#/components/schemas/State'
+          $ref: "#/components/schemas/State"
         issueCountry:
-          $ref: '#/components/schemas/Country'
+          $ref: "#/components/schemas/Country"
     Address:
       type: object
       properties:
@@ -5088,17 +5089,17 @@ components:
           example: Houston
           description: Name of the city
         state:
-          $ref: '#/components/schemas/State'
+          $ref: "#/components/schemas/State"
         zipCode:
           type: string
-          example: '66636'
+          example: "66636"
           description: zip code
         zipCodeExtension:
           type: string
-          example: '1232'
+          example: "1232"
           description: zip code extension
         country:
-          $ref: '#/components/schemas/Country'
+          $ref: "#/components/schemas/Country"
     Phone:
       type: object
       properties:
@@ -5126,27 +5127,27 @@ components:
           description: Phone type
         countryCode:
           type: string
-          example: '011'
+          example: "011"
           description: Country code
         areaCode:
           type: string
-          example: '973'
+          example: "973"
           description: Area code
         dialNumber:
           type: string
-          example: '765789'
+          example: "765789"
           description: Dial number
         extension:
           type: string
-          example: '131312'
+          example: "131312"
           description: Extension
         bestTime:
           type: string
-          example: '131312'
+          example: "131312"
           description: Best time
         timezone:
           type: string
-          example: '131312'
+          example: "131312"
           description: Timezone for the entered phone details
     BankAccount:
       type: object
@@ -5183,7 +5184,7 @@ components:
           description: Account Type
         accountNumber:
           type: string
-          example: '34567777745678'
+          example: "34567777745678"
           description: Account Number
         routingNumber:
           type: string
@@ -5199,10 +5200,10 @@ components:
           description: branch name
         branchPhoneNumber:
           type: string
-          example: '7766667777'
+          example: "7766667777"
           description: Branch Phone Number
         branchAddress:
-          $ref: '#/components/schemas/BranchAddress'
+          $ref: "#/components/schemas/BranchAddress"
     BeneficiaryAllocation:
       type: object
       properties:
@@ -5279,9 +5280,9 @@ components:
           type: object
           properties:
             disbursementType:
-              $ref: '#/components/schemas/DisbursementType'
+              $ref: "#/components/schemas/DisbursementType"
             disbursementPaymentForm:
-              $ref: '#/components/schemas/DisbursementPaymentForm'
+              $ref: "#/components/schemas/DisbursementPaymentForm"
         payeeOrBeneficiary:
           type: object
           properties:
@@ -5290,7 +5291,7 @@ components:
               description: Pending Review by Product Team
               example: Party_PI_1
             paymentForm:
-              $ref: '#/components/schemas/PaymentForm'
+              $ref: "#/components/schemas/PaymentForm"
             allocationPercentage:
               type: number
               format: double
@@ -5305,7 +5306,7 @@ components:
         parties:
           type: array
           items:
-            $ref: '#/components/schemas/AdhocDisbursementParty'
+            $ref: "#/components/schemas/AdhocDisbursementParty"
         reverseInitiator:
           type: boolean
           description: >-
@@ -5321,7 +5322,7 @@ components:
         corrections:
           type: array
           items:
-            $ref: '#/components/schemas/Correction'
+            $ref: "#/components/schemas/Correction"
         noRecreateTransactions:
           type: boolean
           description: To recreate trnsaction again or not
@@ -5331,7 +5332,7 @@ components:
       properties:
         transactionId:
           type: string
-          example: '377'
+          example: "377"
         amount:
           type: number
           format: double
@@ -5422,7 +5423,7 @@ components:
           example: 0286d47a-7ad9-499c-8ca0-8f6634d236a3
         message:
           type: string
-          example: 'User is not authorized for the carrier : CarrierName_1'
+          example: "User is not authorized for the carrier : CarrierName_1"
     ServerErrorResponse:
       type: object
       properties:
@@ -5459,23 +5460,23 @@ components:
           type: object
           properties:
             amountType:
-              $ref: '#/components/schemas/AmountType'
+              $ref: "#/components/schemas/AmountType"
         fundAllocation:
           type: object
           properties:
             allocationOption:
-              $ref: '#/components/schemas/AllocationOption'
+              $ref: "#/components/schemas/AllocationOption"
         funds:
           type: object
           properties:
             transferFrom:
               type: array
               items:
-                $ref: '#/components/schemas/AdhocFundTransferFromFund'
+                $ref: "#/components/schemas/AdhocFundTransferFromFund"
             transferTo:
               type: array
               items:
-                $ref: '#/components/schemas/AdhocFundTransferToFund'
+                $ref: "#/components/schemas/AdhocFundTransferToFund"
     AdhocFundTransferFromFund:
       type: object
       properties:
@@ -5493,7 +5494,7 @@ components:
                 properties:
                   segmentId:
                     type: string
-              - $ref: '#/components/schemas/AdhocFundTransferFundSegment'
+              - $ref: "#/components/schemas/AdhocFundTransferFundSegment"
     AdhocFundTransferFundSegment:
       type: object
       properties:
@@ -5515,7 +5516,7 @@ components:
         fundSegments:
           type: array
           items:
-            $ref: '#/components/schemas/AdhocFundTransferFundSegment'
+            $ref: "#/components/schemas/AdhocFundTransferFundSegment"
   examples:
     successTransactionResponse:
       value:
@@ -5557,23 +5558,23 @@ components:
               issueState: VT
               premiumFrequency: MONTHLY
               currency: USD
-              policyStartDate: '2023-12-27T00:00:00.000Z'
-              applicationDate: '2023-12-27T00:00:00.000Z'
-              issueDate: '2023-12-27T00:00:00.000Z'
-              effectiveDate: '2024-01-11T00:00:00.000Z'
-              contestabilityStartDate: '2023-12-27T00:00:00.000Z'
-              contestabilityEndDate: '2025-12-26T00:00:00.000Z'
-              policyDeliveryDate: '2023-12-27T00:00:00.000Z'
-              previousPolicyAnniversaryDate: '2023-12-27T00:00:00.000Z'
-              previousPolicyMonthiversaryDate: '2023-12-27T00:00:00.000Z'
-              nextAnniversaryDate: '2024-12-27T00:00:00.000Z'
-              maturityDate: '2125-12-26T00:00:00.000Z'
+              policyStartDate: "2023-12-27T00:00:00.000Z"
+              applicationDate: "2023-12-27T00:00:00.000Z"
+              issueDate: "2023-12-27T00:00:00.000Z"
+              effectiveDate: "2024-01-11T00:00:00.000Z"
+              contestabilityStartDate: "2023-12-27T00:00:00.000Z"
+              contestabilityEndDate: "2025-12-26T00:00:00.000Z"
+              policyDeliveryDate: "2023-12-27T00:00:00.000Z"
+              previousPolicyAnniversaryDate: "2023-12-27T00:00:00.000Z"
+              previousPolicyMonthiversaryDate: "2023-12-27T00:00:00.000Z"
+              nextAnniversaryDate: "2024-12-27T00:00:00.000Z"
+              maturityDate: "2125-12-26T00:00:00.000Z"
               policyTerminationDate: null
               dateOfDeath: null
-              initialPaymentExpiryDate: '2024-01-10T00:00:00.000Z'
-              nextMonthivesaryDate: '2024-01-27T00:00:00.000Z'
+              initialPaymentExpiryDate: "2024-01-10T00:00:00.000Z"
+              nextMonthivesaryDate: "2024-01-27T00:00:00.000Z"
               costBasis: 105
-              costBasisDate: '2024-11-04T00:00:00.000Z'
+              costBasisDate: "2024-11-04T00:00:00.000Z"
               conversionDate: null
               policyValues:
                 beginningAcctValue: 35.759837
@@ -5586,7 +5587,7 @@ components:
                 netAmountAtRisk: 499920
                 initialPremiumRequestAmount: 80
                 initialPremiumAppliedAmount: 80
-                initialPaymentAmountReceivedDate: '2023-12-27T00:00:00.000Z'
+                initialPaymentAmountReceivedDate: "2023-12-27T00:00:00.000Z"
                 cumulativePremSinceIssue: 105
                 totalYTDPremiumAmount: 105
                 mecAuthorization: false
@@ -5615,40 +5616,40 @@ components:
                 maxWithdrawalRequestAfterVestingPeriod: 12
                 totalYTDWithdrawalTaken: 0
                 numberOfWithdrawal: 0
-                withdrawalAllowedStartDate: '2023-12-27T00:00:00.000Z'
+                withdrawalAllowedStartDate: "2023-12-27T00:00:00.000Z"
               testValues:
-                guidelinePremiumTestDate: '2024-11-04T00:00:00.000Z'
+                guidelinePremiumTestDate: "2024-11-04T00:00:00.000Z"
                 definitionOfLifeInsurance: GPT
                 guidelineSinglePremium: 68933.997746
                 guidelineLevelPremium: 5122.813261
                 amountExcessToGuideline: 0
                 totalGuidelineLevelPremiumSinceIssue: 5122.813261
-                mecTestDate: '2024-11-04T00:00:00.000Z'
+                mecTestDate: "2024-11-04T00:00:00.000Z"
                 amountExcessToMEC: 0
                 mecStatusDate: null
                 mecStatus: false
                 sevenPayTestBasis: 185
                 sevenPayPremium: 25074.702628
-                sevenPayStartDate: '2023-12-27T00:00:00.000Z'
-                sevenPayPeriod: '2030-12-26T00:00:00.000Z'
+                sevenPayStartDate: "2023-12-27T00:00:00.000Z"
+                sevenPayPeriod: "2030-12-26T00:00:00.000Z"
                 sevenPayLimit: 25074.702628
                 yearInPeriod: 1
-              timestamp: '2024-01-11T12:11:40.723Z'
+              timestamp: "2024-01-11T12:11:40.723Z"
               deathBenefit:
                 deathBenefitOption: LEVEL
-                dboEffectiveDate: '2023-12-27T00:00:00.000Z'
+                dboEffectiveDate: "2023-12-27T00:00:00.000Z"
                 dboChangedEffectiveDate: null
                 deathBenefitAgeGuarantee: 38
               coverage:
                 id: null
                 policyDetailsId: null
                 ledgerDocId: null
-                timestamp: '2024-01-11T12:11:40.731Z'
+                timestamp: "2024-01-11T12:11:40.731Z"
                 totalCoverageAmount: 500000
                 cumGrossDeathBenefitAmount: 500000
                 minCoverageAmount: 10000
                 maxCoverageAmount: 10000000
-                coverageChangeEffectiveDate: '2024-12-27T00:00:00.000Z'
+                coverageChangeEffectiveDate: "2024-12-27T00:00:00.000Z"
                 coverageBand: BAND3
                 maxAnnualCoverageChangeAllowedPerPolicy: 1
                 minCoverageDecreaseAmount: 10000
@@ -5671,7 +5672,7 @@ components:
                     grossDeathBenefitAmount: 500000
                     lowDeathBenefitAmount: 500000
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageEffectiveDate: "2023-12-27T00:00:00.000Z"
                     coverageChangeEffectiveDate: null
                     coverageTerminationDate: null
                     unitOfCoverage: 500
@@ -5701,9 +5702,9 @@ components:
                     grossDeathBenefitAmount: null
                     lowDeathBenefitAmount: null
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageEffectiveDate: "2023-12-27T00:00:00.000Z"
                     coverageChangeEffectiveDate: null
-                    coverageTerminationDate: '2125-12-26T00:00:00.000Z'
+                    coverageTerminationDate: "2125-12-26T00:00:00.000Z"
                     unitOfCoverage: null
                     valuePerUnitOfCoverage: null
                     premiumFrequency: null
@@ -5727,9 +5728,9 @@ components:
                     grossDeathBenefitAmount: null
                     lowDeathBenefitAmount: null
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageEffectiveDate: "2023-12-27T00:00:00.000Z"
                     coverageChangeEffectiveDate: null
-                    coverageTerminationDate: '2125-12-26T00:00:00.000Z'
+                    coverageTerminationDate: "2125-12-26T00:00:00.000Z"
                     unitOfCoverage: null
                     valuePerUnitOfCoverage: null
                     premiumFrequency: null
@@ -5753,9 +5754,9 @@ components:
                     grossDeathBenefitAmount: null
                     lowDeathBenefitAmount: null
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageEffectiveDate: "2023-12-27T00:00:00.000Z"
                     coverageChangeEffectiveDate: null
-                    coverageTerminationDate: '2125-12-26T00:00:00.000Z'
+                    coverageTerminationDate: "2125-12-26T00:00:00.000Z"
                     unitOfCoverage: null
                     valuePerUnitOfCoverage: null
                     premiumFrequency: null
@@ -5779,9 +5780,9 @@ components:
                     grossDeathBenefitAmount: null
                     lowDeathBenefitAmount: null
                     coverageChangeAmount: 0
-                    coverageEffectiveDate: '2023-12-27T00:00:00.000Z'
+                    coverageEffectiveDate: "2023-12-27T00:00:00.000Z"
                     coverageChangeEffectiveDate: null
-                    coverageTerminationDate: '2125-12-26T00:00:00.000Z'
+                    coverageTerminationDate: "2125-12-26T00:00:00.000Z"
                     unitOfCoverage: null
                     valuePerUnitOfCoverage: null
                     premiumFrequency: null
@@ -5799,13 +5800,13 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.729Z'
+                  timestamp: "2024-01-11T12:11:40.729Z"
                   type: RIDER
                   riderName: Chronic Illness Accelerated Death Benefit Rider
                   riderElected: ELECTED
                   riderCode: SBLCHR
-                  effectiveDate: '2023-12-27T00:00:00.000Z'
-                  terminationDate: '2125-12-26T00:00:00.000Z'
+                  effectiveDate: "2023-12-27T00:00:00.000Z"
+                  terminationDate: "2125-12-26T00:00:00.000Z"
                   status: ACTIVE
                   coverageID: Rider_SBLCHR
                   amount: null
@@ -5841,13 +5842,13 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.729Z'
+                  timestamp: "2024-01-11T12:11:40.729Z"
                   type: RIDER
                   riderName: Critical Illness Accelerated Death Benefit Rider
                   riderElected: ELECTED
                   riderCode: SBLCRI
-                  effectiveDate: '2023-12-27T00:00:00.000Z'
-                  terminationDate: '2125-12-26T00:00:00.000Z'
+                  effectiveDate: "2023-12-27T00:00:00.000Z"
+                  terminationDate: "2125-12-26T00:00:00.000Z"
                   status: ACTIVE
                   coverageID: Rider_SBLCRI
                   amount: null
@@ -5883,13 +5884,13 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.729Z'
+                  timestamp: "2024-01-11T12:11:40.729Z"
                   type: RIDER
                   riderName: Overloan Protection Rider
                   riderElected: ELECTED
                   riderCode: SBLOPR
-                  effectiveDate: '2023-12-27T00:00:00.000Z'
-                  terminationDate: '2125-12-26T00:00:00.000Z'
+                  effectiveDate: "2023-12-27T00:00:00.000Z"
+                  terminationDate: "2125-12-26T00:00:00.000Z"
                   status: ACTIVE
                   coverageID: Rider_SBLOPR
                   amount: null
@@ -5925,13 +5926,13 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.729Z'
+                  timestamp: "2024-01-11T12:11:40.729Z"
                   type: RIDER
                   riderName: Terminal Illness Accelerated Death Benefit Rider
                   riderElected: ELECTED
                   riderCode: SBLTRM
-                  effectiveDate: '2023-12-27T00:00:00.000Z'
-                  terminationDate: '2125-12-26T00:00:00.000Z'
+                  effectiveDate: "2023-12-27T00:00:00.000Z"
+                  terminationDate: "2125-12-26T00:00:00.000Z"
                   status: ACTIVE
                   coverageID: Rider_SBLTRM
                   amount: null
@@ -5968,7 +5969,7 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.730Z'
+                  timestamp: "2024-01-11T12:11:40.730Z"
                   arrType: PAYMENT
                   arrangementID: Arr_1
                   allocationOptionType: DOLLAR
@@ -5979,11 +5980,11 @@ components:
                   status: ACTIVE
                   paymentForm: EFT
                   frequency: MONTHLY
-                  requestedDate: '2023-12-27T00:00:00.000Z'
-                  startDate: '2024-01-27T00:00:00.000Z'
-                  endDate: '2043-11-27T00:00:00.000Z'
-                  lastActivityDate: '2023-12-27T00:00:00.000Z'
-                  nextActivityDate: '2024-01-27T00:00:00.000Z'
+                  requestedDate: "2023-12-27T00:00:00.000Z"
+                  startDate: "2024-01-27T00:00:00.000Z"
+                  endDate: "2043-11-27T00:00:00.000Z"
+                  lastActivityDate: "2023-12-27T00:00:00.000Z"
+                  nextActivityDate: "2024-01-27T00:00:00.000Z"
                   amountType: AMOUNT
                   amount: 80
                   payors:
@@ -5997,10 +5998,10 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.733Z'
+                  timestamp: "2024-01-11T12:11:40.733Z"
                   featureType: freeLook
                   startDate: null
-                  endDate: '2024-01-26T00:00:00.000Z'
+                  endDate: "2024-01-26T00:00:00.000Z"
                   status: null
                   period: 30
                   effectiveDate: null
@@ -6014,7 +6015,7 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.733Z'
+                  timestamp: "2024-01-11T12:11:40.733Z"
                   featureType: lapseAssessment
                   startDate: null
                   endDate: null
@@ -6031,10 +6032,10 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.733Z'
+                  timestamp: "2024-01-11T12:11:40.733Z"
                   featureType: lapseProtection
-                  startDate: '2023-12-27T00:00:00.000Z'
-                  endDate: '2043-12-26T00:00:00.000Z'
+                  startDate: "2023-12-27T00:00:00.000Z"
+                  endDate: "2043-12-26T00:00:00.000Z"
                   status: null
                   period: 20
                   effectiveDate: null
@@ -6048,7 +6049,7 @@ components:
                 - id: null
                   policyDetailsId: null
                   ledgerDocId: null
-                  timestamp: '2024-01-11T12:11:40.733Z'
+                  timestamp: "2024-01-11T12:11:40.733Z"
                   featureType: reinstatement
                   startDate: null
                   endDate: null
@@ -6066,7 +6067,7 @@ components:
                 id: null
                 policyDetailsId: null
                 ledgerDocId: null
-                timestamp: '2024-01-11T12:11:40.732Z'
+                timestamp: "2024-01-11T12:11:40.732Z"
                 investmentType: INVESTMENTFUND
                 modelName: null
                 modelID: null
@@ -6075,7 +6076,7 @@ components:
                     fundName: Everly Fixed Fund UL2
                     fundAccountType: null
                     allocPercent: 100
-                    startDate: '2023-12-27T00:00:00.000Z'
+                    startDate: "2023-12-27T00:00:00.000Z"
                     endDate: null
                 funds:
                   - fundAccountType: null
@@ -6084,17 +6085,17 @@ components:
                     glFundCode: V2201
                     totalFundValue: 60.759837
                     fundSegments:
-                      - segmentID: '1'
+                      - segmentID: "1"
                         fundID: null
                         originalDepositAmount: 80
-                        originalDepositDate: '2023-12-27T00:00:00.000Z'
-                        depositDate: '2024-11-04T00:00:00.000Z'
+                        originalDepositDate: "2023-12-27T00:00:00.000Z"
+                        depositDate: "2024-11-04T00:00:00.000Z"
                         depositAmount: 25
                         currentAmount: 60.759837
                         renewalDate: null
                         numberOfUnits: null
                         sweepAccountID: null
-                        startDate: '2023-12-27T00:00:00.000Z'
+                        startDate: "2023-12-27T00:00:00.000Z"
                         endDate: null
                 matchSegment:
                   segmentID: Match1
@@ -6104,7 +6105,7 @@ components:
                   maxLifeTimeVestingAmount: 500
                   maxAnnVestingAmount: 500
                   minPaymentsForMatch: 0
-                  matchVestingDate: '2034-12-26T00:00:00.000Z'
+                  matchVestingDate: "2034-12-26T00:00:00.000Z"
                   glFundCode: V2201
                   vestingPeriod: 10
                 loanSegments: []
@@ -6132,7 +6133,7 @@ components:
     validationFailureResponse:
       value:
         statusCode: 400
-        timestamp: '2024-10-08T13:23:10.124Z'
+        timestamp: "2024-10-08T13:23:10.124Z"
         errorId: a4a57ed0-2c1b-4922-9959-3b85dd8a96d3
         message: JSON Valdiation fails with error
         error:

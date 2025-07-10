@@ -3,7 +3,7 @@ import { FC, ReactNode } from 'react';
 
 import { Button } from '@/components/button/Button';
 
-import styles from './Error.module.css';
+import styles from '../transaction-steps.module.css';
 interface ErrorProps {
   errorTitle: string;
   errorMessage: ReactNode;
@@ -18,16 +18,17 @@ export const Error: FC<ErrorProps> = ({
 }) => {
   return (
     <div className={styles.wrapper}>
-      <Icon
-        className={styles.errorIcon}
-        width={50}
-        height={50}
-        type={isServerError ? IconType.COG : IconType.ALERT_EXCLAMATION}
-      />
-      <h3 className="typography-desktop-headline-3-d">{errorTitle}</h3>
-
-      <p className="typography-content-body"> {errorMessage}</p>
-      <Button onClick={closeCallback} className={styles.close}>
+      <div className={styles.header}>
+        <Icon
+          className={styles.error}
+          width={50}
+          height={50}
+          type={isServerError ? IconType.COG : IconType.ALERT_EXCLAMATION}
+        />
+        <h3 className="typography-desktop-headline-3-d">{errorTitle}</h3>
+      </div>
+      <p className={styles.message}> {errorMessage}</p>
+      <Button expand onClick={closeCallback} className={styles.close}>
         Close
       </Button>
     </div>

@@ -1,7 +1,6 @@
 import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
 
 import { ApiResponse } from '@/services';
-import { TransactionEligbilityResponse } from '@/services/bpm/systematic-programs';
 import { ClientApi } from '@/services/client-http';
 import { Fund } from '@/services/funds/types';
 import {
@@ -9,6 +8,7 @@ import {
   PolicyRequestInputs,
   PolicyStatusDetail,
   PolicyWithAgent,
+  UpcomingPremium,
 } from '@/types/policy';
 
 /**
@@ -39,9 +39,11 @@ export const getPolicyProfile = async (
   const response: ApiResponse<PolicyProfile> = await (
     await ClientApi.get(`/api/policies/${planCode}/${policyNumber}/profile`)
   ).json();
+
   if (response.error || !response) {
     throw response.error;
   }
+
   return response.data;
 };
 
@@ -65,9 +67,11 @@ export const getPolicyStatusDetails = async (
   const response: ApiResponse<PolicyStatusDetail> = await (
     await ClientApi.get(`/api/policies/${planCode}/${policyNumber}/status`)
   ).json();
+
   if (response.error || !response) {
     throw response.error;
   }
+
   return response.data;
 };
 
@@ -88,6 +92,7 @@ export const checkIfPolicyRequiresAcknowledgement = async (
   if (response.error || !response) {
     throw response.error;
   }
+
   return response.data;
 };
 
@@ -100,20 +105,20 @@ export const getAllSystematicPrograms = async ({
       `/api/policies/${planCode}/${policyNumber}/systematic-programs`
     )
   ).json();
+
   if (response.error || !response) {
     throw response.error;
   }
+
   return response.data;
 };
 
-export const getSystematicProgramsEligibility = async ({
+export const getUpcomingPremium = async ({
   planCode,
   policyNumber,
 }: PolicyRequestInputs) => {
-  const response: ApiResponse<TransactionEligbilityResponse> = await (
-    await ClientApi.get(
-      `/api/policies/${planCode}/${policyNumber}/systematic-programs/eligibility`
-    )
+  const response: ApiResponse<UpcomingPremium> = await (
+    await ClientApi.get(`/api/policies/${planCode}/${policyNumber}/premiums`)
   ).json();
 
   if (response.error || !response) {

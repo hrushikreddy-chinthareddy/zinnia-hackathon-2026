@@ -3,12 +3,13 @@ import { FC } from 'react';
 
 import { Button } from '@/components/button/Button';
 
-import styles from './Success.module.css';
+import styles from '../transaction-steps.module.css';
 interface SuccessProps {
   successTitle: string;
   successMessage: string;
   closeCallback: () => void;
 }
+
 export const Success: FC<SuccessProps> = ({
   successTitle,
   successMessage,
@@ -17,18 +18,22 @@ export const Success: FC<SuccessProps> = ({
   const successHtml = { __html: `${successMessage}` };
   return (
     <div className={styles.wrapper}>
-      <Icon
-        width={50}
-        height={50}
-        className={styles.successIcon}
-        type={IconType.CIRCLE_CHECKMARK}
-      />
-      <h3 className="typography-desktop-headline-3-d">{successTitle}</h3>
+      <div className={styles.header}>
+        <div className={styles.icon}>
+          <Icon
+            width={50}
+            height={50}
+            className={styles.success}
+            type={IconType.CIRCLE_CHECKMARK}
+          />
+        </div>
+        <h3 className="typography-desktop-headline-3-d">{successTitle}</h3>
+      </div>
       <p
-        className="typography-content-body"
+        className={styles.message}
         dangerouslySetInnerHTML={successHtml}
       />
-      <Button onClick={closeCallback} className={styles.close}>
+      <Button expand onClick={closeCallback} className={styles.close}>
         Close
       </Button>
     </div>

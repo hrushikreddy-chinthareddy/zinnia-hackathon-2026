@@ -1,10 +1,12 @@
-import { SystematicProgramSetupRequest } from '@xd/api-types/dist/generated-types/sor';
 import {
+  AmountType,
+  ArrangementType,
   DisbursementPaymentForm,
   FilingStatus,
   PartialWithdrawalOneTimeRequest,
   PartyRole,
   PaymentForm,
+  SystematicProgramUpdateRequest,
   TaxWithholdingType,
   TransactionResponse,
 } from '@zinnia/api-types/types/bpm';
@@ -106,11 +108,37 @@ export const withdrawalStateToPolicyRequestInput = (
 export const systematicPremiumsStateToPolicyRequestInput = (
   state: SystematicPremiumsState,
   correlationId: string
-): SystematicProgramSetupRequest => {
-  const effectiveDate = dayjs(state.systematicPremiumAmountStep.effectiveDate).format(ZAHARA_DATE_FORMAT);
-  return {
-    correlationId,
-    effectiveDate,
-    reverseInitiator: false
-  }
-}
+): SystematicProgramUpdateRequest => {
+  const effectiveDate = dayjs(
+    state.systematicPremiumAmountStep.effectiveDate
+  ).format(ZAHARA_DATE_FORMAT);
+
+  const result: SystematicProgramUpdateRequest = {
+    correlationId: correlationId,
+    effectiveDate: effectiveDate,
+    reverseInitiator: false,
+    systematicProgram: {
+      previousProgramDate: state.previousProgramDate,
+      nextProgramDate: effectiveDate,
+      arrangementType: ArrangementType.PAYMENT,
+      amount: state.systematicPremiumAmountStep.paymentAmount,
+      amountType: AmountType.AMOUNT,
+      paymentForm: PaymentForm.ACH,
+      frequency: state.systematicPremiumAmountStep.paymentFrequency,
+      party: {
+        bankId: state.selectBankStep.bank?.bankId,
+        partyId: state.selectBankStep.payor?.payorPartyId,
+      },
+      parties: [
+        {
+          allocationPercentage: 100,
+          bankId: state.selectBankStep.bank?.bankId,
+          partyId: state.selectBankStep.payor?.payorPartyId,
+          paymentForm: PaymentForm.ACH,
+        },
+      ],
+    },
+  };
+
+  return result;
+};

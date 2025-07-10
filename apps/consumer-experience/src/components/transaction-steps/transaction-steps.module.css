@@ -1,0 +1,43 @@
+.close {
+  width: 100%;
+}
+
+.header,
+.wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex: 50px 0 0;
+  aspect-ratio: 1;
+}
+
+.wrapper {
+  gap: var(--measure-dimension-gap-lg);
+}
+
+.header {
+  gap: var(--measure-dimension-gap-sm);
+}
+
+.message {
+  font: var(--typography-content-body);
+  margin-bottom: var(--measure-dimension-gap-xl);
+}
+
+.info {
+  color: var(--color-semantics-color-semantic-information);
+}
+
+.success {
+  color: var(--color-semantics-color-semantic-success);
+}
+
+.error {
+  color: var(--color-semantics-color-semantic-error);
+}

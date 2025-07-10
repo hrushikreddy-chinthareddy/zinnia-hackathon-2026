@@ -2,12 +2,13 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { useParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import { Link } from '@/components/link/Link';
 import styles from '@/components/nav/Nav.module.css';
 import { parseNotifications } from '@/components/notification-center/utils';
 import { useFeatureFlags } from '@/hooks/use-feature-flags';
+import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import {
   getAcknowledgedCases,
   searchCasesByPolicyNumber,
@@ -24,7 +25,7 @@ export const NotificationIcon = () => {
   const fetchNotificationsFlag =
     featureFlags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
 
-  const { policyNumber, planCode } = useParams();
+  const { policyNumber, planCode } = usePolicyUrlInputs();
   const lineOfBusinessPath = usePathname().includes(
     LineOfBusinessPath.ANNUITIES
   )
@@ -45,17 +46,23 @@ export const NotificationIcon = () => {
           .map(parseNotifications)
           .filter(notification => !!notification && !notification.completed);
       },
+      enabled: !!policyNumber?.length && !!planCode?.length,
     });
 
   const {
     data: showNotificationAlert = false,
     isLoading: acknowledgedNotificationsLoading,
   } = useQuery({
-    queryKey: [QueryKeys.NOTIFICATIONS, casesInException],
+    queryKey: [
+      QueryKeys.NOTIFICATIONS,
+      casesInException,
+      policyNumber,
+      planCode,
+    ],
     queryFn: () => {
       return getAcknowledgedCases({
-        policyNumber: String(policyNumber),
-        planCode: String(planCode),
+        policyNumber,
+        planCode,
       });
     },
     select: data => {
@@ -89,7 +96,8 @@ export const NotificationIcon = () => {
       // if there are any cases with unacknowledged steps, show the icon
       return casesWithUnacknowledgedSteps.length > 0;
     },
-    enabled: !!fetchNotificationsFlag,
+    enabled:
+      !!fetchNotificationsFlag && !!planCode?.length && !!policyNumber?.length,
   });
 
   if (!policyNumber || !planCode || !fetchNotificationsFlag) return null;

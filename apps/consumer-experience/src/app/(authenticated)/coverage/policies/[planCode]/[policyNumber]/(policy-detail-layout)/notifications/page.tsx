@@ -38,7 +38,10 @@ export default async function NotificationsPage({ params }: Props) {
     policyNumber: params.policyNumber,
   });
 
-  if (cases && cases.length > 0) {
+  if (
+    cases &&
+    [cases, params.planCode, params.policyNumber].every(arr => arr.length > 0)
+  ) {
     initialNotifications = cases;
     const { data: acknowledgedCases, error: acknowledgedCasesError } =
       await fetchAcknowledgedCases({

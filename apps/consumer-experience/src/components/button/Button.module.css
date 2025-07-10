@@ -1,0 +1,7 @@
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  gap: var(--measure-dimension-gap-md);
+}
