@@ -28,7 +28,10 @@ export type NigoEntryFormState = {
     formErrors: FormValidationErrors;
     submitFailed: boolean;
     formComment?: FormComment;
+    initRelatedDocCount: number;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
+    areAttachmentsViewed: boolean;
+    setAreAttachmentsViewed: React.Dispatch<React.SetStateAction<boolean>>;
     setSectionOption: React.Dispatch<React.SetStateAction<SelOptionType>>;
     setDocumentIndexingInfo: React.Dispatch<
         React.SetStateAction<DocumentIndexingInfo>
@@ -64,6 +67,9 @@ export const nigoEntryDefaultValues = {
     formErrors: {} as FormValidationErrors,
     formComment: {} as FormComment,
     submitFailed: false,
+    initRelatedDocCount: 0,
+    areAttachmentsViewed: false,
+    setAreAttachmentsViewed: noop,
     setSectionOption: noop,
     setDocumentIndexingInfo: noop,
     setExceptions: noop,

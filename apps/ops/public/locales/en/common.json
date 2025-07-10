@@ -2412,6 +2412,7 @@
                 "zipShouldNotBeEmpty": "Zip should not be empty",
                 "formValidationWarning": "Form submission was prevented due to validation warnings. Address the warnings above or check the ignore warning checkbox to submit the form.",
                 "diaryNotesViewWarning": "Form submission is restricted due to presence of diary notes. View diary notes and submit",
+                "attachmentsViewWarning": "Form submission is restricted due to presence of new attachments. Please review before proceeding.",
                 "fboDetails": "FBO detail is required",
                 "accountTypeMustBeSelected": "Please choose an account type to proceed with your request."
             },

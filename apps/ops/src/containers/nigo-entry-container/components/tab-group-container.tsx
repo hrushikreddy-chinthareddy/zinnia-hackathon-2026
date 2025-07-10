@@ -34,6 +34,7 @@ import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/ic
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 import { ReactComponent as MenuIcon } from '@deps/styles/elements/icons/navigation/menu.svg';
 
+import { useNigoEntry } from './nigo-entry-provider';
 import DocumentPortalPanel from './side-panel/document-portal-panel';
 
 type TabGroupContainerProps = {
@@ -68,6 +69,8 @@ const TabGroupContent = ({
     const [error, setError] = useState<ErrorMessagePart[] | null>(null);
     const { t } = useTranslation(TranslationFiles.COMMON);
     const limit = 25;
+
+    const { setAreAttachmentsViewed } = useNigoEntry();
 
     const fetchCases = useCallback(async () => {
         try {
@@ -181,6 +184,7 @@ const TabGroupContent = ({
 
     const showDocumentPanel = () => {
         openSideSheet();
+        setAreAttachmentsViewed(true);
     };
 
     const { diaryNotes } = useDiaryNotes(policyNumber, clientCode, 0, 10);
@@ -304,7 +308,6 @@ const TabGroupContent = ({
                     {t('site.navLinks.caseDetails.text')}
                 </NavElement>
             </div>
-
             <ProgressBarSteps
                 currentStepIndex={Number(currentStepIndex)}
                 onClick={handleClick}

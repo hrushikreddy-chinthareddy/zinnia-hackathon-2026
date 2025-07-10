@@ -2371,6 +2371,7 @@
                 "zipShouldNotBeEmpty": "El código postal no debe estar vacío",
                 "formValidationWarning": "La presentación del formulario se impidió debido a advertencias de validación. Aborde las advertencias anteriores o marque la casilla de ignorar advertencias para enviar el formulario.",
                 "diaryNotesViewWarning": "La presentación del formulario está restringida debido a la presencia de notas en el diario. Vea las notas del diario y envíe",
+                "attachmentsViewWarning": "El envío del formulario está restringido debido a la presencia de nuevos archivos adjuntos. Por favor, revise antes de continuar.",
                 "fboDetails": "Se requieren detalles del FBO",
                 "accountTypeMustBeSelected": "Por favor, elija un tipo de cuenta para proceder con su solicitud."
             },

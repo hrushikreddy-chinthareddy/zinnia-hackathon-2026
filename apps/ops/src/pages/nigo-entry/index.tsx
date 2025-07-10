@@ -23,7 +23,7 @@ import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { CaseType, Processes } from '@deps/models/case/case';
-import { DocumentData } from '@deps/models/case/document';
+import { DocumentData, PolicyDocument } from '@deps/models/case/document';
 import { docTypes } from '@deps/models/case/helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SystematicSpecialPrograms } from '@deps/models/case/withdrawal/case';
@@ -33,7 +33,10 @@ import {
     mapTaskToActiveWithdrawalCaseTask,
 } from '@deps/operations/tasks/v2/helpers';
 import { searchCasesSSR } from '@deps/queries/api/cases';
-import { getDocumentV2SSR } from '@deps/queries/api/documents';
+import {
+    getDocumentV2SSR,
+    getPolicyTypeDocsSSRV2,
+} from '@deps/queries/api/documents';
 import {
     getPolicyDetailsSsr,
     getPolicyPartiesSSR,
@@ -81,6 +84,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     prevTransactionDetails: TransactionDetails | null;
     isNigoCase?: boolean;
     partyRoles?: PolicyPartyRoles[];
+    relatedDoc: PolicyDocument[];
     systematicPrograms: SystematicSpecialPrograms[] | [];
 }
 
@@ -116,6 +120,7 @@ const NigoEntry = ({
     user,
     caseType,
     partyRoles,
+    relatedDoc,
     systematicPrograms,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
@@ -128,7 +133,7 @@ const NigoEntry = ({
         nigoSubExceptions,
     });
 
-    const isLC = !isFastFeatureEnabled(form.taskType, featureFlagDecisions);
+    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
     const accountInfo = useAccountInfo(document.contract, clientCode as string);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
@@ -153,7 +158,7 @@ const NigoEntry = ({
                     planCode={planCode}
                     featureFlagDecisions={featureFlagDecisions as FeatureFlags}
                 >
-                    <NigoEntryProvider>
+                    <NigoEntryProvider relatedDocCount={relatedDoc?.length}>
                         <NigoEntryContainer
                             documentNumber={documentNumber}
                             policyNumber={document?.contract}
@@ -179,7 +184,7 @@ const NigoEntry = ({
                     partyRoles={partyRoles}
                     systematicPrograms={systematicPrograms}
                 >
-                    <NigoEntryProvider>
+                    <NigoEntryProvider relatedDocCount={relatedDoc?.length}>
                         <NigoEntryContainer
                             documentNumber={documentNumber}
                             policyNumber={policyNumber}
@@ -503,6 +508,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                             item?.additionalData?.requestSubType?.toUpperCase() ===
                             docType.toUpperCase()
                     );
+                // Define types
+                const policyTypeDocumentsData: any =
+                    await getPolicyTypeDocsSSRV2(
+                        contractNum,
+                        clientCode,
+                        accessToken,
+                        docType,
+                        loggingContext
+                    );
+
+                const relatedDoc: PolicyDocument[] =
+                    policyTypeDocumentsData?.items?.filter(
+                        (item: PolicyDocument) =>
+                            item?.documentNumber !== documentNumber
+                    );
 
                 const isLC = !isFastFeatureEnabled(
                     form?.taskType,
@@ -557,6 +577,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                                 ? latestForm?.additionalData || null
                                 : null,
                             isNigoCase: false,
+                            relatedDoc,
                             systematicPrograms,
                         },
                     };
@@ -583,6 +604,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                                 ? latestForm?.additionalData || null
                                 : null,
                             isNigoCase: false,
+                            relatedDoc,
                         },
                     };
                 }

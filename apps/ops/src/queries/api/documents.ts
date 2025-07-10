@@ -205,3 +205,48 @@ export const getPolicyTypeDocsV2 = async (
         return error.response;
     }
 };
+
+export const getPolicyTypeDocsSSRV2 = async (
+    id: string,
+    clientCode: string,
+    accessToken: string | undefined,
+    docType = '',
+    logCtx: LoggingContext
+): Promise<PolicyDocumentApiRequest | DocumentErrorResponse> => {
+    const loggingContext = {
+        ...logCtx,
+        file: 'queries/api/documents',
+        function: 'getPolicyTypeDocsSSRV2',
+        inputs: { id, clientCode },
+    };
+
+    try {
+        let url = `${ssrBaseUrl}?source=Policy&contractNumber=${id}&clientCode=${clientCode?.toUpperCase()}`;
+
+        if (!isNullEmptyOrUndefined(docType)) {
+            url += `&documentType=${docType}`;
+        }
+
+        const { data } = await serverApi.get<any, AxiosResponse>(
+            url,
+            {
+                authorization: `Bearer ${accessToken}`,
+                headers: {
+                    Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            },
+            loggingContext
+        );
+
+        return data;
+    } catch (error: any) {
+        console.error(
+            'getPolicyTypeDocsSSRV2::An error occurred while getting policy type document results',
+            error
+        );
+        return error.response;
+    }
+};

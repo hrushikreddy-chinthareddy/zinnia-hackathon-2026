@@ -2385,6 +2385,7 @@
                 "zipShouldNotBeEmpty": "Le code postal ne doit pas être vide",
                 "formValidationWarning": "L'envoi du formulaire a été empêché en raison d'avertissements de validation. Répondez aux avertissements ci-dessus ou cochez la case Ignorer l’avertissement pour soumettre le formulaire.",
                 "diaryNotesViewWarning": "La soumission du formulaire est limitée en raison de la présence de notes de journal. Afficher les notes de journal et soumettre",
+                "attachmentsViewWarning": "La soumission du formulaire est restreinte en raison de la présence de nouvelles pièces jointes. Veuillez vérifier avant de continuer.",
                 "fboDetails": "Les détail du FBO sont obligatoires",
                 "accountTypeMustBeSelected": "Veuillez choisir un type de compte pour procéder à votre demande."
             },

@@ -29,7 +29,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { CaseType } from '@deps/models/case/case';
-import { DocumentData } from '@deps/models/case/document';
+import { DocumentData, PolicyDocument } from '@deps/models/case/document';
 import { ApiVersion } from '@deps/models/case/enums';
 import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
@@ -49,6 +49,7 @@ import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import { getCaseType, getFormParts } from './form-entry-step.helpers';
 import { useNigoEntry } from '../../nigo-entry-provider';
+import { useGetPolicyTypeDocs } from '../service-form-review/service-form-review.helpers';
 
 type FormEntryStepProps = {
     document: DocumentData;
@@ -96,7 +97,8 @@ function FormEntryStep({
         : false;
     const [timer] = useState(performance.now());
 
-    const { setSubmitFailed } = useNigoEntry();
+    const { setSubmitFailed, initRelatedDocCount, areAttachmentsViewed } =
+        useNigoEntry();
     const isLC = !isFastFeatureEnabled(
         formState?.initialForm?.taskType,
         formState.featureFlagDecisions
@@ -272,6 +274,18 @@ function FormEntryStep({
         };
     };*/
 
+    const [, getPolicyDocs, , relatedDocument] = useGetPolicyTypeDocs(
+        document.contract,
+        clientCode,
+        docType,
+        document
+    );
+
+    const filteredRelatedDocument: PolicyDocument[] = relatedDocument?.filter(
+        (item: PolicyDocument) =>
+            item.documentNumber !== document?.documentNumber
+    );
+
     const submit = useCallback(async () => {
         setIsLoading(true);
         if (caseType === CaseType.Renewal) {
@@ -343,9 +357,13 @@ function FormEntryStep({
     ]);
 
     const handleFormSubmit = async () => {
+        getPolicyDocs();
         setIsLoading(true);
         setTaskApiError('');
-        if (validateForm() && areDiaryNotesViewed) {
+        const checkAttachmentsViewed =
+            filteredRelatedDocument?.length === initRelatedDocCount ||
+            areAttachmentsViewed;
+        if (validateForm() && areDiaryNotesViewed && checkAttachmentsViewed) {
             setIsLoading(false);
             await submit();
             goToNext();
@@ -391,6 +409,17 @@ function FormEntryStep({
                             className="mt-2"
                         />
                     )}
+                    {filteredRelatedDocument &&
+                        filteredRelatedDocument?.length !==
+                            initRelatedDocCount && (
+                            <AssistiveText
+                                text={withdrawalTxt(
+                                    'formValidation.attachmentsViewWarning'
+                                )}
+                                variant={AssistiveTextVariant.Error}
+                                className="mt-2"
+                            />
+                        )}
                 </div>
             </>
         </WorkflowCard>

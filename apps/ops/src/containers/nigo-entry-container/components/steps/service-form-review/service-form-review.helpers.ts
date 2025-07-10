@@ -2,7 +2,11 @@ import { useCallback, useState } from 'react';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { CaseType } from '@deps/models/case/case';
-import { PolicyDocuments, PolicyDocument } from '@deps/models/case/document';
+import {
+    PolicyDocuments,
+    PolicyDocument,
+    DocumentData,
+} from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { getPolicyTypeDocsV2 } from '@deps/queries/api/documents';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
@@ -12,7 +16,7 @@ export const useGetPolicyTypeDocs = (
     id: string,
     clientCode: string,
     docType: string,
-    documentNumber: string
+    documentNumber: string | DocumentData
 ): [boolean, () => void, any, any] => {
     const [loading, setLoading] = useState(false);
     const [workingDocument, setWorkingDocument] = useState<PolicyDocument>();

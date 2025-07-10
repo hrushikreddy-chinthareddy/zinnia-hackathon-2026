@@ -15,11 +15,15 @@ import { SelOptionType } from './steps/service-form-review/service-form-review';
 
 type NigoEntryProviderProps = {
     children: React.ReactNode;
+    relatedDocCount: number;
 };
 
 const INITIAL_FORM_DATA: any = {};
 
-export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
+export const NigoEntryProvider = ({
+    children,
+    relatedDocCount,
+}: NigoEntryProviderProps) => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [sectionOption, setSectionOption] = useState<SelOptionType>(
         SelOptionType.DATA_ENTRY
@@ -39,6 +43,8 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [submitFailed, setSubmitFailed] = useState(false);
     const [formComment, setFormComment] = useState({} as FormComment);
+    const [initRelatedDocCount, _] = useState(relatedDocCount);
+    const [areAttachmentsViewed, setAreAttachmentsViewed] = useState(false);
 
     return (
         <NigoEntryContext.Provider
@@ -54,6 +60,9 @@ export const NigoEntryProvider = ({ children }: NigoEntryProviderProps) => {
                 formErrors,
                 submitFailed,
                 formComment,
+                initRelatedDocCount,
+                areAttachmentsViewed,
+                setAreAttachmentsViewed,
                 setFormData,
                 setSectionOption,
                 setDocumentIndexingInfo,
