@@ -63,9 +63,17 @@ export default function DocumentsTab({
                 {t('caseOverview.sidesheet.documents')}
             </Typography>
             <ul className="mt-4">
-                {step.documents?.map((document) => (
-                    <SideSheetDocument key={document.id} document={document} />
-                ))}
+                {step.documents?.map((document) => {
+                    if (!document) {
+                        return null;
+                    }
+                    return (
+                        <SideSheetDocument
+                            key={document.id}
+                            document={document}
+                        />
+                    );
+                })}
             </ul>
         </div>
     );
