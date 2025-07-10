@@ -217,7 +217,7 @@ const Amount = ({ policy }: AmountProps) => {
     const items: RadioItem[] = [
         { label: t('monthly'), value: Frequency.MONTHLY },
         { label: t('quarterly'), value: Frequency.QUARTERLY },
-        { label: t('biAnnually'), value: Frequency.EVERYTWOWEEKS },
+        { label: t('biAnnually'), value: Frequency.BIANNUAL },
         { label: t('annually'), value: Frequency.ANNUAL },
     ];
 

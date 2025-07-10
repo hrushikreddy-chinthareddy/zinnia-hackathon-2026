@@ -612,14 +612,18 @@ export const submitSystematicProgramUpdate = async (
     arrangementId: string,
     query: SystematicProgramUpdateRequestQuery
 ): Promise<SystematicProgramUpdateResponse> => {
+    const POST = 'post';
+    const PUT = 'put';
+    const method = arrangementId ? PUT : POST;
+    const url = `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${
+        arrangementId ? arrangementId : ''
+    }`;
+
     try {
-        const response = await client.post<
+        const response = await client[method]<
             SystematicProgramUpdateRequestQuery,
             AxiosResponse
-        >(
-            `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}`,
-            query
-        );
+        >(url, query);
 
         return { status: response.status, data: response.data };
     } catch (error: any) {

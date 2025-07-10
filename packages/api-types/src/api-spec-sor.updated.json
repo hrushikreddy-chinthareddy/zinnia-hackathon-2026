@@ -11383,7 +11383,8 @@
           "SEMIANNUAL",
           "QUARTERLY",
           "ANNUAL",
-          "SINGLEPAYMENT"
+          "SINGLEPAYMENT",
+          "BIANNUAL"
         ],
         "description": "Indicates how often the  program runs.  The most common modes used are monthly, quarterly, semi-annually, and annually."
       },
@@ -17825,6 +17826,9 @@
           "reverseInitiator": {
             "type": "boolean",
             "description": "A boolean flag that applies only to financial transactions. When set to true, it allows a backdated transaction to be processed. This triggers a reversal on the policy to the earliest transaction on the specified effective date, applies the new transaction, and then reprocesses all subsequent transactions (similar to (R&R) process). This ensures that the policy's financial history remains accurate and aligned with the backdated change."
+          },
+          "externalTransactionId": {
+            "type": "string"
           },
           "systematicProgram": {
             "$ref": "#/components/schemas/AdhocSystematicProgram"
