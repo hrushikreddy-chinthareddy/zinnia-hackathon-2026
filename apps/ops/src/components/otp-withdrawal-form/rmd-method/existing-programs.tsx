@@ -42,8 +42,8 @@ export default function ExistingPrograms({
     });
     const { initialForm, policySystematicPrograms } =
         useContext(FormDataContext);
-    const [sswprograms, setsswprograms] = useState<Program[]>([]);
-    const [rmdPrograms, setrmdPrograms] = useState<Program[]>([]);
+    const [sswPrograms, setSswPrograms] = useState<Program[]>([]);
+    const [rmdPrograms, setRmdPrograms] = useState<Program[]>([]);
 
     const rmdProgramStatus = [
         {
@@ -57,6 +57,8 @@ export default function ExistingPrograms({
     ];
 
     const { activePrograms, isLoading } = useSpecialProgram(initialForm, isLC);
+
+    // Note: this will be a different object on every render, so don't use it as a dependency
     const activeSystematicPrograms = policySystematicPrograms?.filter(
         (item) => item.status === 'ACTIVE'
     );
@@ -85,8 +87,8 @@ export default function ExistingPrograms({
             allocationId: isLC ? program?.allocationId : 0,
         });
 
-        const sswPrograms: Program[] = [];
-        const rmdPrograms: Program[] = [];
+        const newSswPrograms: Program[] = [];
+        const newRmdPrograms: Program[] = [];
 
         if (isLC) {
             activePrograms?.forEach((program) => {
@@ -95,34 +97,34 @@ export default function ExistingPrograms({
                         program.typeOfAlloc
                     )
                 ) {
-                    sswPrograms.push(mapProgramToSSW(program));
+                    newSswPrograms.push(mapProgramToSSW(program));
                 }
                 if (program.typeOfAlloc === ProgramType.RMD) {
-                    rmdPrograms.push(mapProgramToRMD(program));
+                    newRmdPrograms.push(mapProgramToRMD(program));
                 }
             });
         } else {
             activeSystematicPrograms?.forEach((program) => {
                 if (program.disbursementType === CaseType.Rmd) {
-                    rmdPrograms.push(mapProgramToRMD(program));
+                    newRmdPrograms.push(mapProgramToRMD(program));
                 }
                 if (program.disbursementType === 'Gross') {
-                    sswPrograms.push(mapProgramToSSW(program));
+                    newSswPrograms.push(mapProgramToSSW(program));
                 }
             });
         }
 
-        setsswprograms(sswPrograms);
-        setrmdPrograms(rmdPrograms);
-    }, [activePrograms, activeSystematicPrograms, isLC]);
+        setSswPrograms(newSswPrograms);
+        setRmdPrograms(newRmdPrograms);
+    }, [activePrograms, policySystematicPrograms, isLC]);
     // ...existing code...
 
-    const addtoTerminatedprograms = (
+    const addToTerminatedPrograms = (
         status: RMDProgramType,
         program: Program
     ) => {
         program.programType === CaseType.Rmd &&
-            setrmdPrograms(
+            setRmdPrograms(
                 rmdPrograms.map((item) => ({
                     ...item,
                     status:
@@ -132,8 +134,8 @@ export default function ExistingPrograms({
                 }))
             );
         program.programType === CaseType.SSW &&
-            setsswprograms(
-                sswprograms.map((item) => ({
+            setSswPrograms(
+                sswPrograms.map((item) => ({
                     ...item,
                     status:
                         item.allocationId === program.allocationId
@@ -164,9 +166,9 @@ export default function ExistingPrograms({
     };
 
     const allPrograms =
-        rmdPrograms.length || sswprograms.length ? (
+        rmdPrograms.length || sswPrograms.length ? (
             <div className="border-b-2 border-gray-100 p-2">
-                {sswprograms.length > 0 && (
+                {sswPrograms.length > 0 && (
                     <Typography
                         variant={TypographyVariant.BodyBold}
                         className="my-2"
@@ -174,7 +176,7 @@ export default function ExistingPrograms({
                         {t('transactions.sswPrograms')}
                     </Typography>
                 )}
-                {sswprograms.map((item, i) => {
+                {sswPrograms.map((item, i) => {
                     return (
                         <div
                             className="my-2 grid grid-cols-auto-2 gap-2"
@@ -190,7 +192,7 @@ export default function ExistingPrograms({
                                 label={t('action') as string}
                                 options={rmdProgramStatus}
                                 onChange={(val) =>
-                                    addtoTerminatedprograms(
+                                    addToTerminatedPrograms(
                                         val as RMDProgramType,
                                         item
                                     )
@@ -231,7 +233,7 @@ export default function ExistingPrograms({
                                 label={t('action') as string}
                                 options={rmdProgramStatus}
                                 onChange={(val) =>
-                                    addtoTerminatedprograms(
+                                    addToTerminatedPrograms(
                                         val as RMDProgramType,
                                         item
                                     )

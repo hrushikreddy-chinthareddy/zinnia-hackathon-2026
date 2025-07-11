@@ -33,7 +33,7 @@ afterEach(() => {
 
 jest.mock('@deps/utils/server-logging');
 
-describe.skip('FlicSSWForm', () => {
+describe('FlicSSWForm', () => {
     window.HTMLElement.prototype.hasPointerCapture = jest.fn();
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
