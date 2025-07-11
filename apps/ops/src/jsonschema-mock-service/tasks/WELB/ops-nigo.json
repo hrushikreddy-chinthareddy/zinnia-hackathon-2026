@@ -161,13 +161,13 @@
                                         "issueResolved": {
                                             "const": false
                                         },
-                                        "notes": {
+                                        "additionalTaskNote": {
                                             "type": "string",
                                             "title": "Please provide details explaining why the issue(s) cannot be resolved",
                                             "minLength": 1
                                         }
                                     },
-                                    "required": ["notes"]
+                                    "required": ["additionalTaskNote"]
                                 }
                             ]
                         }
@@ -185,7 +185,7 @@
                         "details",
                         "issueResolved",
                         "issueResolvedWarning",
-                        "notes",
+                        "additionalTaskNote",
                         "uploadDocuments",
                         "attachments"
                     ],
@@ -254,7 +254,7 @@
                         "ui:hideError": true
                     },
 
-                    "notes": {
+                    "additionalTaskNote": {
                         "ui:widget": "textarea",
                         "ui:options": {
                             "label": true
