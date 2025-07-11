@@ -210,7 +210,8 @@ function FormEntryStep({
         contractVal: string | number | null,
         transactionOption: string | null,
         email: string,
-        renewalDoc: DocumentData
+        renewalDoc: DocumentData,
+        obPendTaskId: string | null
     ) => {
         const updatedOwnerInformation = ownerInfo?.map((owner) => {
             if (OWNER_TYPES.includes(owner.type)) {
@@ -251,6 +252,7 @@ function FormEntryStep({
             goodOrderDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
             lob: renewalDoc?.lob,
             onbaseCaseId: renewalDoc?.caseId,
+            obPendTaskId: obPendTaskId || null,
             ownerInformation: updatedOwnerInformation,
             productName: renewalDoc?.productName,
             renewalRequestSignDate, // need to handle it for FormType
@@ -262,17 +264,6 @@ function FormEntryStep({
             userId: email ?? '',
         };
     };
-
-    /*const buildRenewalFormV2 = (
-        status: TaskStatus,
-    ): CreateTaskBody<TaskStatus, RenewalsFormData> => {
-        return {
-            source: TaskSource.ZinniaTaskManagement,
-            taskType: renewalInitialForm.taskType,
-            status,
-            data: getRenewalFormDataPayload(ownerInformation, contractValue, transOption, user?.email ?? '', renewalDocument),
-        };
-    };*/
 
     const [, getPolicyDocs, , relatedDocument] = useGetPolicyTypeDocs(
         document.contract,
@@ -299,7 +290,8 @@ function FormEntryStep({
                         contractValue,
                         transOption,
                         user?.email ?? '',
-                        renewalDocument
+                        renewalDocument,
+                        renewalInitialForm?.data?.obPendTaskId || null
                     ),
                 };
                 const successfulCaseUpdate = await updateTask(
@@ -340,21 +332,7 @@ function FormEntryStep({
         }
 
         setIsLoading(false);
-    }, [
-        caseType,
-        renewalInitialForm.status,
-        renewalInitialForm.taskType,
-        getRenewalFormDataPayload,
-        ownerInformation,
-        contractValue,
-        transOption,
-        user?.email,
-        renewalDocument,
-        setSubmitFailed,
-        formState,
-        document,
-        timer,
-    ]);
+    }, [caseType, renewalInitialForm.status, renewalInitialForm.taskType, renewalInitialForm?.data?.obPendTaskId, getRenewalFormDataPayload, ownerInformation, contractValue, transOption, user?.email, renewalDocument, timer, setSubmitFailed, formState, document]);
 
     const handleFormSubmit = async () => {
         getPolicyDocs();
@@ -382,7 +360,7 @@ function FormEntryStep({
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
                     disableContinue={
-                        formState.initialForm?.status === TaskStatus.Completed
+                        formState.initialForm?.status === TaskStatus.Completed || renewalInitialForm.status === TaskStatus.Completed
                     }
                 />
             }

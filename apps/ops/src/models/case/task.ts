@@ -122,6 +122,7 @@ export interface RenewalsFormData {
     userId: string;
     lob: string;
     onbaseCaseId: string;
+    obPendTaskId?: string | null;
     productName: string;
     clientCode: string;
     taskType: string;

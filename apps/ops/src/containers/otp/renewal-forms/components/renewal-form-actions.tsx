@@ -112,6 +112,7 @@ const RenewalFormActions = ({
             goodOrderDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
             lob: document?.lob,
             onbaseCaseId: document?.caseId,
+            obPendTaskId: initialForm?.data?.obPendTaskId || null,
             ownerInformation: updatedOwnerInformation,
             productName: document?.productName,
             renewalRequestSignDate, // need to handle it for FormType
