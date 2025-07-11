@@ -1,10 +1,4 @@
-import {
-    FormContextType,
-    getUiOptions,
-    RJSFSchema,
-    StrictRJSFSchema,
-    WidgetProps,
-} from '@rjsf/utils';
+import { getUiOptions, WidgetProps } from '@rjsf/utils';
 import {
     MetadataSearchResponse,
     SearchRequest,
@@ -29,11 +23,9 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helpers';
 
 import style from './file-widget.module.css';
-export default function AutoCompleteWidget<
-    T = any,
-    S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = any
->(props: WidgetProps<T, S, F>) {
+import { FileInfoComponent } from '../../templates/object-field-template/file-info-template';
+
+export default function AutoCompleteWidget(props: WidgetProps) {
     const {
         id,
         disabled,
@@ -43,9 +35,12 @@ export default function AutoCompleteWidget<
         value,
         formContext,
         Placeholder,
+        multiple,
+        onChange,
+        schema: { type },
     } = props;
 
-    const { icon } = getUiOptions(uiSchema);
+    const { icon, displayAttachments } = getUiOptions(uiSchema);
 
     const [documents, setDocuments] = useState<MetadataSearchResponse[]>([]);
     const [filteredDocuments, setFilteredDocuments] = useState<
@@ -165,45 +160,49 @@ export default function AutoCompleteWidget<
     ) => {
         setError(false);
 
-        const attachments = [...(formContext?.customData?.attachments || [])];
-        const isAlreadySelected = attachments.some(
-            (attachment) => attachment.documentId === document.documentId
-        );
+        const attachments = displayAttachments
+            ? value
+            : [...(formContext?.customData?.attachments || [])];
 
-        if (!isAlreadySelected) {
-            const attachment = {
-                documentId: document?.documentId || '',
-                docCategory: document?.documentCategory,
-                documentType: document?.documentType,
-                documentExt: document?.fileType,
-                documentName: document?.displayName || '',
-            };
-            attachments.push(attachment);
+        const attachment = {
+            documentId: document?.documentId || '',
+            docCategory: document?.documentCategory,
+            documentType: document?.documentType,
+            documentExt: document?.fileType,
+            documentName: document?.displayName || '',
+        };
 
-            if (
-                Array.isArray(attachments) &&
-                attachments.length >= 1 &&
-                uiSchema?.['ui:options']?.singleDocument == true
-            ) {
-                formContext?.setCustomData &&
-                    formContext.setCustomData({
-                        attachments: attachments.slice(-1),
-                    });
+        if (displayAttachments) {
+            if (type === 'string') {
+                onChange(JSON.stringify(attachment));
             } else {
+                onChange(JSON.stringify(attachments));
+            }
+            setFilteredDocuments([]);
+        } else {
+            const isAlreadySelected = attachments.some(
+                (attachment: MetadataSearchResponse) =>
+                    attachment.documentId === document.documentId
+            );
+
+            if (!isAlreadySelected) {
+                attachments.push(attachment);
+
                 formContext?.setCustomData &&
                     formContext.setCustomData({ attachments: attachments });
-            }
 
-            const task = formContext?.customData?.task;
-            return await attachFilesToMappedDocuments(
-                attachment,
-                task,
-                formContext?.correlationId || ''
-            );
-        } else {
-            setError(true);
+                const task = formContext?.customData?.task;
+                setFilteredDocuments([]);
+                return await attachFilesToMappedDocuments(
+                    attachment,
+                    task,
+                    formContext?.correlationId || ''
+                );
+            } else {
+                setError(true);
+                setFilteredDocuments([]);
+            }
         }
-        setFilteredDocuments([]);
     };
 
     const readonlyClass = readonly ? '!cursor-not-allowed opacity-50' : '';
@@ -293,6 +292,14 @@ export default function AutoCompleteWidget<
                     <div className="mt-2">{t('fetchingDocuments')}</div>
                 )}
             </div>
+            {value && displayAttachments && type === 'string' && (
+                <FileInfoComponent
+                    files={[JSON.parse(value)]}
+                    readonly={readonly || false}
+                    formContext={props.formContext}
+                    showDelete={false}
+                />
+            )}
         </>
     );
 }

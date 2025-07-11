@@ -1,5 +1,9 @@
-import { ArrayFieldTemplateProps, UiSchema } from '@rjsf/utils';
-import { MetadataSearchResponse } from '@xd/api-types/dist/generated-types/documents-v3';
+import {
+    ArrayFieldTemplateProps,
+    FormContextType,
+    UiSchema,
+} from '@rjsf/utils';
+import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import { Icon, IconType, ToastVariant, Toast } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
@@ -17,13 +21,7 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'general',
     });
-    let { formData, formContext } = props;
-    const [toastMessage, setToastMessage] = useState<string | undefined>(
-        undefined
-    );
-    const [toastVariant, setToastVariant] = useState<ToastVariant | undefined>(
-        undefined
-    );
+    let { formData } = props;
     if (formData.length === 0) {
         const formContextOptions: any =
             (uiSchema as UiSchema)?.['ui:options']?.formContext ?? {};
@@ -40,6 +38,40 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
             formData = data;
         }
     }
+
+    return (
+        <FileInfoComponent
+            files={formData}
+            readonly={readonly || false}
+            formContext={props.formContext}
+        />
+    );
+}
+
+export default FileInfoTemplate;
+
+export type FileInfoComponentProps = {
+    files: ({ documentName: string } & MetadataSearchResponse)[];
+    readonly: boolean;
+    formContext: FormContextType;
+    showDelete?: boolean;
+};
+
+export const FileInfoComponent = ({
+    files,
+    readonly,
+    formContext,
+    showDelete = true,
+}: FileInfoComponentProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'general',
+    });
+    const [toastMessage, setToastMessage] = useState<string | undefined>(
+        undefined
+    );
+    const [toastVariant, setToastVariant] = useState<ToastVariant | undefined>(
+        undefined
+    );
     const removeAttachment = async (fileInfo: MetadataSearchResponse) => {
         if (readonly) {
             return;
@@ -98,6 +130,7 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
             });
         }
     };
+
     useEffect(() => {
         if (toastMessage && toastVariant) {
             const timer = setTimeout(() => {
@@ -111,10 +144,11 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
         'cursor-pointer': !readonly,
         '!border-gray-300 !text-gray-100': readonly,
     });
+
     return (
         <div className={clsx('flex ')}>
             <ul className="file-info">
-                {formData.map((fileInfo: any, index: number) => {
+                {files?.map((fileInfo: any, index: number) => {
                     const { documentId, documentName } = fileInfo;
                     return (
                         <li
@@ -128,16 +162,20 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
                                         {documentName || documentId || ''}
                                     </div>
                                 </div>
-                                <span
-                                    onClick={() => removeAttachment(fileInfo)}
-                                    className={`ml-4 ${className}`}
-                                >
-                                    <Icon
-                                        type={IconType.CLOSE}
-                                        height={25}
-                                        width={25}
-                                    />
-                                </span>
+                                {showDelete && (
+                                    <span
+                                        onClick={() =>
+                                            removeAttachment(fileInfo)
+                                        }
+                                        className={`ml-4 ${className}`}
+                                    >
+                                        <Icon
+                                            type={IconType.CLOSE}
+                                            height={25}
+                                            width={25}
+                                        />
+                                    </span>
+                                )}
                             </div>
                         </li>
                     );
@@ -150,5 +188,4 @@ function FileInfoTemplate(props: ArrayFieldTemplateProps) {
             )}
         </div>
     );
-}
-export default FileInfoTemplate;
+};

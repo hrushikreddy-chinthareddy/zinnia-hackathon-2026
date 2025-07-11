@@ -1,10 +1,11 @@
 import { getUiOptions, WidgetProps } from '@rjsf/utils';
+import clsx from 'clsx';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
+import cardStyle from '@deps/components/dynamic-form/customization/templates/card-templates/card-template.module.css';
 
 import style from './text-widget.module.css';
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
-
 export const TextWidget = function (props: WidgetProps) {
     const {
         id,
@@ -18,12 +19,16 @@ export const TextWidget = function (props: WidgetProps) {
         placeholder,
         readonly,
     } = props;
-    const { inline, prefix, inlinetext, dataType, hideError } =
+    const { inline, prefix, inlinetext, dataType, hideError, type } =
         getUiOptions(uiSchema);
     if (inline) {
         return (
             <div className="grid grid-cols-2 text-md  max-w-screen-sm">
-                <div className="text-gray-500">{label}</div>
+                <div
+                    className={clsx('text-gray-500', cardStyle[type as string])}
+                >
+                    {label}
+                </div>
                 <div>
                     {formatValueByDataType(
                         (dataType as string) || 'text',
@@ -37,7 +42,9 @@ export const TextWidget = function (props: WidgetProps) {
     if (inlinetext) {
         return (
             <div className="text-md ">
-                <div className="text-500">{label}</div>
+                <div className={clsx('text-gray-500', style[type as string])}>
+                    {label}
+                </div>
                 <div>
                     {prefix ? prefix : ''}
                     {formatValueByDataType(

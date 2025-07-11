@@ -255,6 +255,9 @@ export const formatValueByDataType = (dataType: string, value: any) => {
                 return null;
             }
         }
+        case DataFormattingTypes.Button: {
+            return <button className="bg-gray-100 text-gray-300">Edit</button>;
+        }
         case DataFormattingTypes.Date:
             return formatDate(value);
         case DataFormattingTypes.Phone: {
@@ -288,8 +291,9 @@ export const SingleCard = ({
 }: SingleCardProps) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
-    const title = extractField(properties, data, 'title');
-    const subtitle = extractField(properties, data, 'subTitle');
+
+    const title = extractField(properties, data, TaskFieldTypes.Title);
+    const subtitle = extractField(properties, data, TaskFieldTypes.Subtitle);
 
     if (
         (!title?.value &&

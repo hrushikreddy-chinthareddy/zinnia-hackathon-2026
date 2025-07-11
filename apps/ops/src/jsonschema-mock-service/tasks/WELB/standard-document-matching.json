@@ -1,6 +1,7 @@
 {
-    "formId": "be958e06-9279-4c4e-a4dd-4cd4d7b90f85",
+    "formId": "f62f34ec-dcf2-4539-937e-5246b4f2a068",
     "process": "Qualification",
+    "carrier": "WELB",
     "taskType": "STANDARD_DOCUMENT_MATCHING",
     "formSchema": {
         "type": "object"
@@ -116,9 +117,7 @@
                                             "caseId": {
                                                 "type": "string",
                                                 "title": "Case ID",
-                                                "minLength": 12,
-                                                "maxLength": 15,
-                                                "pattern": "^[a-zA-Z0-9]*$"
+                                                "minLength": 12
                                             }
                                         },
                                         "required": ["caseId"]
@@ -207,7 +206,7 @@
                         "ui:options": {
                             "label": true
                         },
-                        "ui:hideError": false
+                        "ui:hideError": true
                     },
                     "caseTitle": {
                         "ui:options": {
@@ -247,11 +246,19 @@
                 "formSchema": {
                     "$schema": "http://json-schema.org/draft-07/schema#",
                     "type": "object",
-                    "required": ["matchedDocumentData"],
                     "properties": {
+                        "matchCaseIdTitle": {
+                            "type": "string",
+                            "title": "Match case ID"
+                        },
+                        "matchCaseId": {
+                            "type": "string",
+                            "title": "{{customData.matchedCaseId}}",
+                            "default": "/cases/{{customData.matchedCaseId}}/progress",
+                            "ui:field": "form"
+                        },
                         "details": {
                             "type": "object",
-                            "title": "Supporting information",
                             "properties": {
                                 "documents": {
                                     "title": "Supporting Information",
@@ -268,100 +275,206 @@
                                                 "ui:field": "subTitle",
                                                 "ui:placeholder": "Document ID: "
                                             },
+                                            "docType": {
+                                                "type": "string"
+                                            },
                                             "documentSource": {
                                                 "type": "string"
                                             },
                                             "carrier": {
                                                 "type": "string",
                                                 "default": "{{carrier}}"
+                                            },
+                                            "editDocument": {
+                                                "type": "boolean",
+                                                "default": true,
+                                                "title": "Edit",
+                                                "ui:field": "additionInfo"
+                                            }
+                                        },
+                                        "allOf": [
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "matchedDocumentData": {
+                                                            "properties": {
+                                                                "matchType": {
+                                                                    "const": ""
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "notMatched": {
+                                                            "type": "string",
+                                                            "title": "Not matched",
+                                                            "ui:field": "additionInfo"
+                                                        }
+                                                    }
+                                                },
+                                                "else": {
+                                                    "if": {
+                                                        "properties": {
+                                                            "matchedDocumentData": {
+                                                                "properties": {
+                                                                    "matchType": {
+                                                                        "const": "NEW"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "matchedDocumentData"
+                                                        ]
+                                                    },
+                                                    "then": {
+                                                        "properties": {
+                                                            "added": {
+                                                                "type": "string",
+                                                                "title": "Added",
+                                                                "ui:field": "additionInfo"
+                                                            }
+                                                        }
+                                                    },
+                                                    "else": {
+                                                        "if": {
+                                                            "properties": {
+                                                                "matchedDocumentData": {
+                                                                    "properties": {
+                                                                        "matchType": {
+                                                                            "const": "EXISTING"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "matchedDocumentData"
+                                                            ]
+                                                        },
+                                                        "then": {
+                                                            "properties": {
+                                                                "replaced": {
+                                                                    "type": "string",
+                                                                    "title": "Replaced",
+                                                                    "ui:field": "additionInfo"
+                                                                }
+                                                            }
+                                                        },
+                                                        "else": {
+                                                            "if": {
+                                                                "properties": {
+                                                                    "matchedDocumentData": {
+                                                                        "properties": {
+                                                                            "matchType": {
+                                                                                "const": "DUPLICATE"
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "matchedDocumentData"
+                                                                ]
+                                                            },
+                                                            "then": {
+                                                                "properties": {
+                                                                    "duplicate": {
+                                                                        "type": "string",
+                                                                        "title": "Discarded",
+                                                                        "ui:field": "additionInfo"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "dependencies": {
+                                            "editDocument": {
+                                                "if": {
+                                                    "properties": {
+                                                        "editDocument": {
+                                                            "const": true
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "matchedDocumentData": {
+                                                            "type": "object",
+                                                            "ui:field": "form",
+                                                            "properties": {
+                                                                "matchType": {
+                                                                    "title": "What do you want to do with this document?",
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "NEW",
+                                                                        "EXISTING",
+                                                                        "DUPLICATE"
+                                                                    ],
+                                                                    "enumNames": [
+                                                                        "Add as a new document",
+                                                                        "Replace the existing document with this version",
+                                                                        "Discard because it is a duplicate document"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "matchType"
+                                                            ],
+                                                            "dependencies": {
+                                                                "matchType": {
+                                                                    "if": {
+                                                                        "properties": {
+                                                                            "matchType": {
+                                                                                "enum": [
+                                                                                    "",
+                                                                                    "NEW"
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "then": {
+                                                                        "properties": {}
+                                                                    },
+                                                                    "else": {
+                                                                        "if": {
+                                                                            "properties": {
+                                                                                "matchType": {
+                                                                                    "enum": [
+                                                                                        "EXISTING",
+                                                                                        "DUPLICATE"
+                                                                                    ]
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "then": {
+                                                                            "properties": {
+                                                                                "existingDocument": {
+                                                                                    "type": "string",
+                                                                                    "title": "Replace document on Case"
+                                                                                }
+                                                                            },
+                                                                            "required": [
+                                                                                "existingDocument"
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "matchedDocumentData"
+                                                    ]
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                        },
-                        "caseOverview": {
-                            "type": "string",
-                            "title": "Open case search",
-                            "default": "/cases/"
-                        },
-                        "matchCaseIdTitle": {
-                            "type": "object",
-                            "title": "Match case ID"
-                        },
-                        "matchCaseId": {
-                            "type": "string",
-                            "title": "{{customData.matchedCaseId}}",
-                            "default": "/cases/{{customData.matchedCaseId}}/progress"
-                        },
-                        "matchedDocumentData": {
-                            "type": "object",
-                            "title": "What do you want to do with this document?",
-                            "properties": {
-                                "matchType": {
-                                    "type": "string",
-                                    "enum": ["NEW", "EXISTING", "DUPLICATE"],
-                                    "enumNames": [
-                                        "Add as a new document",
-                                        "Replace the existing document with this version",
-                                        "Discard because it is a duplicate document"
-                                    ],
-                                    "title": ""
-                                }
-                            },
-                            "required": ["matchType"],
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "matchType": {
-                                                "enum": ["", "NEW"]
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {}
-                                    },
-                                    "else": {
-                                        "if": {
-                                            "properties": {
-                                                "matchType": {
-                                                    "enum": [
-                                                        "EXISTING",
-                                                        "DUPLICATE"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "documentList": {
-                                                    "type": "object",
-                                                    "title": "Replace document on Case",
-                                                    "properties": {
-                                                        "upload": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                },
-                                                "attachments": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "documentName": {
-                                                            "title": "Name",
-                                                            "type": "string"
-                                                        },
-                                                        "documentId": {
-                                                            "title": "Document Id",
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
                         }
                     }
                 },
@@ -371,7 +484,7 @@
                         "orderable": false,
                         "copyable": false
                     },
-                    "$schema": "http: //json-schema.org/draft-07/schema#",
+                    "$schema": "http://json-schema.org/draft-07/schema#",
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
@@ -386,26 +499,101 @@
                                 "addable": false
                             },
                             "items": {
+                                "carrier": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                },
+                                "ui:hideError": true,
                                 "ui:options": {
                                     "cardType": "Document",
                                     "icon": "DOCUMENT_TEXT",
                                     "ObjectFieldTemplate": "CardTemplate",
                                     "nobackground": true
                                 },
-                                "carrier": {
+                                "editDocument": {
                                     "ui:options": {
                                         "omitValue": true
+                                    }
+                                },
+                                "added": {
+                                    "ui:options": {
+                                        "label": false,
+                                        "inline": true,
+                                        "type": "success",
+                                        "icon": "CIRCLE_CHECKMARK",
+                                        "omitValue": true
+                                    },
+                                    "ui-widget": "ValueWidget"
+                                },
+                                "duplicate": {
+                                    "ui:options": {
+                                        "label": false,
+                                        "inline": true,
+                                        "type": "success",
+                                        "icon": "CIRCLE_CHECKMARK",
+                                        "omitValue": true
+                                    },
+                                    "ui-widget": "ValueWidget"
+                                },
+                                "replaced": {
+                                    "ui:options": {
+                                        "label": false,
+                                        "inline": true,
+                                        "type": "success",
+                                        "icon": "CIRCLE_CHECKMARK",
+                                        "omitValue": true
+                                    },
+                                    "ui-widget": "ValueWidget"
+                                },
+                                "notMatched": {
+                                    "ui:options": {
+                                        "label": false,
+                                        "inline": true,
+                                        "type": "information",
+                                        "icon": "ALERT_EXCLAMATION",
+                                        "omitValue": true
+                                    },
+                                    "ui-widget": "ValueWidget"
+                                },
+                                "matchedDocumentData": {
+                                    "ui:options": {
+                                        "label": false
+                                    },
+                                    "ui:hideError": true,
+                                    "matchType": {
+                                        "ui:widget": "radio",
+                                        "ui:options": {
+                                            "label": true
+                                        },
+                                        "ui:hideError": true,
+                                        "ui:emptyValue": {
+                                            "matchType": ""
+                                        }
+                                    },
+                                    "existingDocument": {
+                                        "ui:widget": "AutoCompleteWidget",
+                                        "ui:hideError": true,
+                                        "ui:options": {
+                                            "label": false,
+                                            "icon": "Search",
+                                            "placeholder": "Find existing documents...",
+                                            "singleDocument": true,
+                                            "default": "{{matchedCaseId}}",
+                                            "displayAttachments": true
+                                        }
                                     }
                                 }
                             }
                         }
                     },
-                    "caseOverview": {
+                    "matchCaseIdTitle": {
                         "ui:options": {
                             "label": false,
-                            "type": "link"
+                            "inline": true,
+                            "type": "primary"
                         },
-                        "ui:widget": "HyperLinkWidget"
+                        "ui-widget": "ValueWidget"
                     },
                     "matchCaseId": {
                         "ui:options": {
@@ -413,54 +601,6 @@
                             "type": "link"
                         },
                         "ui:widget": "HyperLinkWidget"
-                    },
-                    "matchedDocumentData": {
-                        "matchType": {
-                            "ui:widget": "radio",
-                            "ui:options": {
-                                "label": false
-                            },
-                            "ui:hideError": true
-                        },
-                        "documentList": {
-                            "inline": true,
-                            "ui:options": {
-                                "label": true
-                            },
-                            "upload": {
-                                "ui:widget": "AutoCompleteWidget",
-                                "ui:options": {
-                                    "label": false,
-                                    "icon": "Search",
-                                    "placeholder": "Find existing documents...",
-                                    "singleDocument": true,
-                                    "default": "{{matchedCaseId}}"
-                                }
-                            },
-                            "attachment": {
-                                "ui:options": {
-                                    "label": false,
-                                    "showFiles": false
-                                },
-                                "ui:props": {
-                                    "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
-                                    "apiMethod": "get"
-                                }
-                            }
-                        },
-                        "attachments": {
-                            "ui:options": {
-                                "label": false,
-                                "addable": false,
-                                "removable": true,
-                                "ArrayFieldTemplate": "FileInfoTemplate",
-                                "formContext": {
-                                    "keyName": "customData",
-                                    "listName": "attachments"
-                                }
-                            }
-                        },
-                        "ui:hideError": true
                     }
                 }
             }
