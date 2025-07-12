@@ -87,10 +87,11 @@ export abstract class Http {
 
     async patch<T = any, R = AxiosResponse<T>>(
         url: string,
+        data?: T,
         config?: AxiosAuthRequestConfig
     ): Promise<R> {
         const configWithToken = await this.addToken(config);
-        return await this.instance.patch<T, R>(url, configWithToken);
+        return await this.instance.patch<T, R>(url, data, configWithToken);
     }
 
     async delete<T = any, R = AxiosResponse<T>>(

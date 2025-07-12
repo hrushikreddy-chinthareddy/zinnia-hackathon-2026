@@ -8,6 +8,7 @@ export enum FgaRoles {
   POLICY_INDEX_ZL_ENTITY = 'entity:zinnia_live_policy_index',
   WELB_SALES_MATERIALS = 'entity:welb_sales_materials',
   CALL_LOG_ACCESS = 'entity:zinnia_live_call_log_audio',
+  ILLUSTRATIONS_EXPERIENCE = 'entity:zinnia_live_illustrations_experience',
 }
 
 export enum FgaRelation {
@@ -62,6 +63,11 @@ export function createBulkCheckBodyRequest(partyId: string) {
         user,
         relation: FgaRelation.UiAccess,
         object: FgaRoles.POLICY_INDEX_ZL_ENTITY,
+      },
+      {
+        user,
+        relation: FgaRelation.UiAccess,
+        object: FgaRoles.ILLUSTRATIONS_EXPERIENCE,
       },
     ],
   };

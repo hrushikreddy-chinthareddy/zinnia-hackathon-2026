@@ -1,0 +1,57 @@
+.checkboxGroupRoot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-md);
+}
+
+.checkboxWrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--measure-dimension-z-space-2);
+    margin-bottom: var(--measure-spacing-margin-xxs);
+}
+
+.checkbox {
+    position: relative;
+    top: 1px;
+    flex-shrink: 0;
+    cursor: pointer;
+    width: var(--measure-dimension-z-space-6, 1.5rem);
+    height: var(--measure-dimension-z-space-6, 1.5rem);
+    margin-right: var(--measure-dimension-padding-lg, 0.5rem);
+    padding: var(--measure-dimension-padding-xs, 0.125rem);
+    background-color: var(
+        --color-element-radio-checkbox-default-element-background-default-fill,
+        #ffffff
+    );
+    border: var(--measure-dimension-stroke-sm) solid
+        var(
+            --color-element-radio-checkbox-default-border-element-default-border
+        );
+    border-radius: var(--measure-dimension-radius-sm);
+
+    &[aria-checked='true']:not(:disabled) {
+        border-color: var(
+            --color-element-radio-checkbox-default-border-element-selected-border,
+            #00628b
+        );
+    }
+}
+
+.indicator {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(
+        --color-element-radio-checkbox-default-surface-element-indicator-selected-fill,
+        #00628b
+    );
+    border-radius: var(--measure-dimension-radius-xs, 0.125rem);
+
+    &[data-disabled] {
+        background-color: var(
+            --color-element-radio-checkbox-default-surface-element-indicator-selected-inactive-fill,
+            #ffead9
+        );
+    }
+}

@@ -112,3 +112,16 @@ export function getStateCode(input: string) {
         DEFAULT_ERROR_STRING
     );
 }
+
+export function getStateCodesForSelectInput(): Array<{
+    value: string;
+    textValue: string;
+}> {
+    const stateCodes = getStateCodes();
+    const usStateCodeDisplay = stateCodes.map((stateCode) => ({
+        value: stateCode,
+        textValue: stateCode,
+    }));
+
+    return usStateCodeDisplay;
+}

@@ -6,7 +6,8 @@ import {
 } from '@zinnia/api-types/types/sor';
 import { toTitleCase } from '@zinnia/utils';
 
-import { SideSheetContext } from '@deps/contexts/SideSheetContext';
+import { MittEvents, SideSheetContext } from '@deps/contexts/SideSheetContext';
+import useEmitter from '@deps/hooks/useEmitter';
 import {
     mockPolicy,
     mockPremiumSystematicProgram,
@@ -61,6 +62,7 @@ const sample = {
 
 describe.skip('HistoryEventCard Component', () => {
     it('should render all props properly', () => {
+        const emitter = useEmitter<MittEvents>();
         render(
             <SideSheetContext.Provider
                 value={{
@@ -69,6 +71,7 @@ describe.skip('HistoryEventCard Component', () => {
                     handleOpen: () => {},
                     openSecondarySideSheet: () => {},
                     onClose: () => {},
+                    events: emitter,
                 }}
             >
                 <HistoryEventCard

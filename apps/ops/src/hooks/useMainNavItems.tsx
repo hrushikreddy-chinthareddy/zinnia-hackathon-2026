@@ -22,12 +22,15 @@ export const useMainNavItems = (): NavGroup[] => {
         isSuperAdmin,
         hasHomeExperience,
         showToppanMerrill,
+        isAllowReadIllustrations,
     } = usePermissionsContext();
 
     const { user } = useUser();
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
     const showHomeNavBtn = featureFlags?.[FEATURE_FLAGS.SHOW_HOME_NAV_BTN];
+    const showIllustrationsNavBtn =
+        featureFlags?.[FEATURE_FLAGS.ILLUSTRATIONS_EXPERIENCE];
 
     if (!permissionsLoadingComplete) {
         return [];
@@ -48,6 +51,7 @@ export const useMainNavItems = (): NavGroup[] => {
     const marketingStorefrontText = t('site.navLinks.marketingStorefront.text');
     const marketingStorefrontHref =
         t('site.navLinks.marketingStorefront.link') || '';
+    const illustrationsText = t('site.navLinks.illustrations.text');
 
     const handleAnalytics = (linkText: string) => {
         segmentAnalyticsTrackEvent('navigation_clicked', {
@@ -92,6 +96,19 @@ export const useMainNavItems = (): NavGroup[] => {
                 type={NavElementType.Link}
                 href={policySearchHref}
                 onClick={() => handleAnalytics(policySearchText)}
+            />
+        ),
+    };
+
+    const illustrationsLink = {
+        id: '/illustrations',
+        display: 'Illustrations',
+        icon: IconType.DOCUMENT,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={'/illustrations/client-cases'}
+                onClick={() => handleAnalytics(illustrationsText)}
             />
         ),
     };
@@ -163,6 +180,9 @@ export const useMainNavItems = (): NavGroup[] => {
                 ...(isAllowReadCaseManagement ? [caseLink] : []),
                 ...(isAdvisorsExcel || isAllowReadPolicyAdmin
                     ? [policyLink]
+                    : []),
+                ...(isAllowReadIllustrations && showIllustrationsNavBtn
+                    ? [illustrationsLink]
                     : []),
             ],
         },

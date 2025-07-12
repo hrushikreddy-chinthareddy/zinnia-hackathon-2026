@@ -11,12 +11,18 @@ const nextConfig = {
     reactStrictMode: true,
     i18n,
     typescript: {
-        tsconfigPath: process.env.NODE_ENV === 'production' ? './tsconfig.production.json' : './tsconfig.json',
+        tsconfigPath:
+            process.env.NODE_ENV === 'production'
+                ? './tsconfig.production.json'
+                : './tsconfig.json',
     },
     output: 'standalone',
     async rewrites() {
         return [
-            { source: '/storybook-static/:slug*', destination: '/api/storybookstatic' },
+            {
+                source: '/storybook-static/:slug*',
+                destination: '/api/storybookstatic',
+            },
             { source: '/robots.txt', destination: '/api/robots' },
         ];
     },
@@ -41,6 +47,11 @@ const nextConfig = {
             {
                 source: '/policies/:planCode/:id/transactions/:path*',
                 destination: '/policies/:planCode/:id/policy/:path*',
+                permanent: true,
+            },
+            {
+                source: '/illustrations',
+                destination: '/illustrations/client-cases',
                 permanent: true,
             },
         ];

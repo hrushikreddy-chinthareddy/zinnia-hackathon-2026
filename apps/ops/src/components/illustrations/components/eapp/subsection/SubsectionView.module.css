@@ -1,0 +1,7 @@
+.subsectionContainer {
+    margin-bottom: var(--measure-dimension-margin-md);
+}
+
+.subsectionHeaderWrapper {
+    margin-bottom: var(--measure-dimension-margin-xs);
+}

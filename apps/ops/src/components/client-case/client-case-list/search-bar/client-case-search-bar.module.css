@@ -1,0 +1,56 @@
+.searchForm {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.searchParams {
+    flex-shrink: 1;
+    display: flex;
+    justify-content: flex-start;
+
+    .searchType {
+        border-radius: var(--measure-dimension-radius-md, 8px)
+            var(--measure-dimension-radius-none, 0px)
+            var(--measure-dimension-radius-none, 0px)
+            var(--measure-dimension-radius-md, 8px);
+        width: 228px;
+    }
+
+    .searchInputWithIcon {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .searchInput {
+        border-radius: var(--measure-dimension-radius-none, 0px)
+            var(--measure-dimension-radius-md, 8px)
+            var(--measure-dimension-radius-md, 8px)
+            var(--measure-dimension-radius-none, 0px);
+        min-height: 44px;
+        width: 521px;
+        padding-left: 3.25rem;
+
+        &.inputOne {
+            width: 261px;
+            border-radius: var(--measure-dimension-radius-none, 0px);
+        }
+
+        &.inputTwo {
+            width: 260px;
+        }
+    }
+
+    .searchInputIcon {
+        position: absolute;
+        z-index: 1;
+        margin-left: var(--measure-dimension-gap-lg, 16px);
+    }
+}
+
+.searchAction {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    margin-left: var(--measure-dimension-margin-xs, 16px);
+}

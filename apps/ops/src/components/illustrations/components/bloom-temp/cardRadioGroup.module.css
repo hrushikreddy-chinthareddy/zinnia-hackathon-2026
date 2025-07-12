@@ -1,0 +1,45 @@
+.radioGroupOption {
+    border: var(--measure-border-width-stroke-sm) solid
+        var(--color-base-border-border-subtle);
+    border-radius: var(--measure-border-radius-radius-md);
+    padding: var(--measure-dimension-padding-2xl);
+    margin: var(--measure-dimension-margin-xxs);
+    display: grid;
+    gap: var(--measure-dimension-margin-xs);
+    justify-items: center;
+    direction: column;
+    width: 190px;
+}
+
+.radioGroupWrapper {
+    display: flex;
+}
+
+.radixRadioGroup {
+    flex-direction: row;
+    display: flex;
+}
+
+.radixRadioGroupItem {
+    border: var(--measure-border-width-stroke-sm) solid
+        var(--color-base-border-border-subtle);
+    border-radius: var(--measure-border-radius-radius-md);
+    padding: var(--measure-dimension-padding-2xl);
+    margin: var(--measure-dimension-margin-xxs);
+    display: grid;
+    gap: var(--measure-dimension-margin-xs);
+    justify-items: center;
+    direction: column;
+    width: 190px;
+    &[data-state='checked'] {
+        border-color: var(--color-base-border-border-secondary-color);
+    }
+}
+
+.iconWrapper {
+    margin-top: var(--measure-dimension-margin-xs);
+}
+
+.cta {
+    align-self: self-end;
+}

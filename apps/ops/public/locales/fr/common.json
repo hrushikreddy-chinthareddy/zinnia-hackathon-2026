@@ -24,11 +24,17 @@
     "yes": "Oui",
     "no": "Non",
     "cancel": "Annuler",
+    "illustrations": "Illustrations",
     "site": {
         "name": "Zinnia",
         "home": {
             "link": "/cases",
             "imageSrc": "/images/logos/zinnia-logo.svg"
+        },
+        "illustrations": {
+            "text": "Illustrations",
+            "link": "/illustrations",
+            "altText": "Illustrations"
         },
         "pageNotFound": {
             "title": "Page non trouvée",
@@ -6472,5 +6478,109 @@
         "preFundTransactionsInstruction": "Emitir manuellement des chèques pour les transactions prédécédentes en fonction des besoins.",
         "postFundTransactionsInstruction": "Revertir les transactions post-décès dans le Système de Gestion. ",
         "reviewFundsInstruction": "La date de décès n'a pas été fournie par le notificateur, donc les chèques ne peuvent pas être classifiés comme des fonds prédécédents ou post-décédents. Veuillez les revérifier et prendre les mesures appropriées."
+    },
+    "clientCase": {
+        "newClientCase": "+ Nouveau client case",
+        "searchBar": {
+            "clientCase": "Client case",
+            "agentName": "Nom de l'agent",
+            "insuredName": "Nom de l'assuré",
+            "searchByClientCase": "Rechercher par client case",
+            "firstName": "Nom",
+            "lastName": "Nom de famille"
+        },
+        "clientCaseTable": {
+            "clientCase": "Client case",
+            "insured": "assuré",
+            "agent": "Agent",
+            "agentTooltip": "Il s’agit de l’agent enregistré dont le nom apparaîtra dans l’illustration.",
+            "productTypes": "Types de produits",
+            "illustrations": "Illustrations",
+            "lastModified": "Dernière modification",
+            "emptyState": "Il n'y a pas encore de cas clients",
+            "viewClientCaseDetails": "Afficher les détails du dossier client",
+            "viewClientCaseNumber": "Voir les détails du cas client {{clientCaseNumber}}"
+        },
+        "productList": {
+            "selectProduct": "Sélectionnez un produit",
+            "noProductsIconAlt": "Icône d'alerte sans produit",
+            "noProductsAvailable": "Impossible de charger les illustrations. Veuillez réessayer ultérieurement.",
+            "addIllustrationButton": "Add illustration button"
+        },
+        "caseSummary": {
+            "edit": "Modifier",
+            "editClientCaseButton": "Bouton Modifier le dossier client",
+            "insured": "Assuré",
+            "agent": "Agent",
+            "untitledCase": "Sans titre Client Case",
+            "noName": "Sans nom",
+            "noIllustrations": "Sans Illustrations",
+            "selectProduct": "Sélectionnez un produit pour démarrer une illustration",
+            "reportIconalt": "Icône de rapport de document"
+        },
+        "illustrationDetails": {
+            "edit": "Modifier",
+            "viewPdf": "PDF",
+            "pdfError": "Une erreur est survenue lors du chargement du PDF.",
+            "duplicate": "Double",
+            "calculating": "Calculé",
+            "ariaValuePerYear": "{{value}} par an",
+            "coverage": {
+                "title": "Couverture",
+                "faceAmount": "Montant nominal",
+                "termLength": "Durée"
+            },
+            "premium": {
+                "title": "Prime",
+                "initial": "Prime initiale",
+                "target": "Prime cible",
+                "mec": "Prime MEC",
+                "initialBase": "Prime de base initiale",
+                "totalInitial": "Prime initiale totale"
+            },
+            "riders": {
+                "title": "Avenants de politique",
+                "noRiders": "Pas de frais supplémentaires",
+                "acceleratedDeathBenefit": "Accelerated Death Benefit",
+                "accidentalDeathBenefit": "Accidental Death Benefit"
+            },
+            "accountValue": {
+                "atNYears": "À {{years}} ans",
+                "title": "Valeur du compte"
+            },
+            "selectForApplication": "Sélectionnez pour l'application",
+            "expired": "Expiré",
+            "archived": "Archivé",
+            "selected": "Choisi",
+            "unArchive": "Peu archisif",
+            "valuePerYear": "{{value}} / année",
+            "numYears": "{{years}} ans"
+        },
+        "createClientCaseForm": {
+            "clientCaseSideSheetTitle": "Nouveau Client Case",
+            "editClientCaseSideSheetTitle": "Modifier le dossier client",
+            "clientCaseSection": "Détails du dossier client",
+            "titleLabel": "Titre",
+            "insuredDetailsSection": "Détails de l'assuré",
+            "firstNameLabel": "Prénom (optionnel)",
+            "firstNameTooltip": "info-bulle du prénom",
+            "lastNameLabel": "Nom de famille (optionnel)",
+            "lastNameTooltip": "info-bulle du nom de famille",
+            "sexAssignedLabel": "Sexe assigné à la naissance",
+            "maleButton": "Homme",
+            "femaleButton": "Femme",
+            "dateLabel": "Date de naissance",
+            "ageLabel": "Âge actuel",
+            "riskLabel": "Classe de risque",
+            "nicotineUserLabel": "Utilisateur de nicotine",
+            "stateLabel": "État",
+            "continueButton": "Continuer",
+            "cancelButton": "Annuler",
+            "searchAgent": {
+                "selectAgentButton": "Sélectionner un agent",
+                "notFound": "Aucun agent nommé \"{{agentName}}\" trouvé",
+                "current": "Utilisateur actuel"
+            }
+        }
     }
 }

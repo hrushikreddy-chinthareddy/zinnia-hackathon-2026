@@ -1,0 +1,74 @@
+.formContainer {
+    display: flex;
+    padding: var(--measure-dimension-padding-4xl, 32px);
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-3xl, 40px);
+}
+
+.sectionTitle {
+    font-weight: 700;
+}
+
+.formSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg, 16px);
+}
+
+.insuredDetails {
+    .inputItem {
+        width: 328px;
+    }
+
+    .buttonGroup {
+        width: 436px;
+        button {
+            width: 213px;
+        }
+    }
+    .datePickerContainer {
+        display: flex;
+        height: 68px;
+        gap: 20px;
+
+        .datePicker {
+            height: 44px;
+            width: 159px;
+        }
+
+        .ageLabel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--color-base-text-text-secondary, #676767);
+
+            & > *:first-child {
+                padding-top: 20px;
+            }
+        }
+    }
+
+    .riskClass {
+        button {
+            height: 44px;
+        }
+    }
+    .clientState {
+        width: 94px;
+        button {
+            height: 44px;
+        }
+    }
+    .labelWithTooltip {
+        display: flex;
+        gap: var(--measure-dimension-gap-sm, 4px);
+        height: 24px;
+        align-items: center;
+    }
+}
+
+.actionButtons {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-xl, 24px);
+}

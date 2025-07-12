@@ -1,0 +1,13 @@
+.fieldContainer {
+    display: flex;
+    margin-bottom: var(--measure-dimension-margin-xs);
+}
+
+.fieldHeader {
+    margin-bottom: var(--measure-dimension-gap-md);
+    display: block;
+}
+
+.errorMessage {
+    color: var(--color-status-text-status-error-text);
+}

@@ -1,0 +1,45 @@
+.sidebar {
+    container-type: inline-size; /* enables container queries */
+    container-name: sidebar-content; /* optional, but helpful */
+    padding: var(--measure-dimension-padding-3xl)
+        var(--measure-dimension-padding-2xl);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    overflow: auto;
+    width: 200px;
+}
+
+.layoutWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebarContent {
+    flex-grow: 1;
+}
+
+.dataPoint {
+    margin-bottom: var(--measure-dimension-margin-sm);
+    .dataPointTitle {
+        color: var(--color-base-text-text-secondary);
+    }
+}
+
+.error {
+    color: var(--color-semantics-color-semantic-error);
+    margin-bottom: var(--measure-dimension-margin-sm);
+}
+
+.calculateBtn {
+    width: 100px;
+}
+
+@container sidebar-content (min-width: 200px) {
+    .layoutWrapper {
+        display: flex;
+        flex-direction: row;
+        gap: var(--measure-dimension-gap-lg, 16px);
+        width: 100%;
+    }
+}

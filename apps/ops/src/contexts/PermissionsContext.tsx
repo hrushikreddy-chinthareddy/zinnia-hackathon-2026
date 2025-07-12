@@ -50,6 +50,7 @@ export interface PermissionsContextProps {
     permissionsLoadingComplete: boolean;
     hasHomeExperience: boolean;
     hasPolicyIndexPageAccess: boolean;
+    isAllowReadIllustrations: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -176,6 +177,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.CALL_LOG_ACCESS,
                 FgaRelation.UiAccess
             );
+            const isAllowReadIllustrations = !!checkRelation(
+                data,
+                FgaRoles.ILLUSTRATIONS_EXPERIENCE,
+                FgaRelation.UiAccess
+            );
+
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
@@ -184,6 +191,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAdvisorsExcel: !!hasAdvisorsExcel,
                 isCallLogAudioPermitted,
                 hasPolicyIndexPageAccess: !!hasPolicyIndexPageAccess,
+                isAllowReadIllustrations,
             };
         },
         enabled: !!partyId,
@@ -224,6 +232,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 permissionsLoadingComplete,
                 hasPolicyIndexPageAccess:
                     !!fgaRoleData?.hasPolicyIndexPageAccess,
+                isAllowReadIllustrations:
+                    !!fgaRoleData?.isAllowReadIllustrations,
             }}
         >
             {children}

@@ -24,11 +24,17 @@
     "yes": "Sí",
     "no": "No",
     "cancel": "Cancelar",
+    "illustrations": "Ilustraciones",
     "site": {
         "name": "Zinnia Live",
         "home": {
             "link": "/cases",
             "imageSrc": "/images/logos/zinnia-logo.svg"
+        },
+        "illustrations": {
+            "text": "Ilustraciones",
+            "link": "/illustrations",
+            "altText": "Ilustraciones"
         },
         "pageNotFound": {
             "title": "Página No Encontrada",
@@ -6336,6 +6342,111 @@
             "cta": "Ir a transferencia entrante",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
+        }
+    },
+    "clientCase": {
+        "newClientCase": "+  Nuevo client case",
+        "searchBar": {
+            "clientCase": "Client case",
+            "agentName": "Nombre de agente",
+            "insuredName": "Nombre del asegurado",
+            "searchByClientCase": "Buscar por client case",
+            "firstName": "Nombre",
+            "lastName": "Apellido"
+        },
+        "clientCaseTable": {
+            "clientCase": "Client case",
+            "insured": "Asegurado",
+            "agent": "Agente",
+            "agentTooltip": "Este es el agente registrado cuyo nombre aparecerá en la ilustración.",
+            "productTypes": "Tipo de productos",
+            "illustrations": "Ilustraciones",
+            "lastModified": "Última modificación",
+            "emptyState": "Aún no hay casos de clientes",
+            "viewClientCaseDetails": "Ver detalles del client case",
+            "viewClientCaseNumber": "Ver detalles del client case {{clientCaseNumber}}"
+        },
+        "productList": {
+            "selectProduct": "Seleccione un producto",
+            "noProductsIconAlt": "Icon de no hay productos para listar",
+            "noProductsAvailable": "No se han podido cargar ilustraciones. Por favor intente nuevamente despues.",
+            "addIllustrationButton": "Boton de agregar illustracion"
+        },
+        "caseSummary": {
+            "edit": "Editar",
+            "editClientCaseButton": "Boton editar client case",
+            "insured": "Asegurado",
+            "agent": "Agente",
+            "untitledCase": "Client case sin titulo",
+            "noName": "Sin nombre",
+            "noIllustrations": "Sin illustraciones",
+            "selectProduct": "Select un producto para iniciar una illustracion",
+            "reportIconalt": "Icono documento de reporte"
+        },
+        "illustrationDetails": {
+            "edit": "Editar",
+            "viewPdf": "PDF",
+            "pdfError": "Ocurrio un error al cargar el PDF.",
+            "duplicate": "Duplicar",
+            "calculating": "Calculando",
+            "ariaValuePerYear": "{{value}} por año",
+            "coverage": {
+                "title": "Cobertura",
+                "faceAmount": "Valor nominal",
+                "termLength": "Tiempo de término"
+            },
+            "premium": {
+                "title": "Prima",
+                "initial": "Prima inicial",
+                "target": "Prima planeada",
+                "mec": "Prima MEC",
+                "initialBase": "Prima base inicial",
+                "totalInitial": "Prima inicial total"
+            },
+            "riders": {
+                "title": "Adicionales",
+                "includedInPremiumsFootNote": "(incluido en primas)",
+                "noRiders": "Sin adicionales",
+                "acceleratedDeathBenefit": "Accelerated Death Benefit",
+                "accidentalDeathBenefit": "Accidental Death Benefit"
+            },
+            "accountValue": {
+                "title": "Valor de cuenta",
+                "atNYears": "A los {{years}} años"
+            },
+            "selectForApplication": "Seleccione para la aplicación",
+            "expired": "Venció",
+            "archived": "Archivado",
+            "selected": "Seleccionado",
+            "unArchive": "No arquitoso",
+            "valuePerYear": "{{value}} / año",
+            "numYears": "{{years}} años"
+        },
+        "createClientCaseForm": {
+            "clientCaseSideSheetTitle": "Nuevo Client Case",
+            "editClientCaseSideSheetTitle": "Editar caso del cliente",
+            "clientCaseSection": "Detalles del caso del cliente",
+            "titleLabel": "Título",
+            "insuredDetailsSection": "Detalles del asegurado",
+            "firstNameLabel": "Nombre (opcional)",
+            "firstNameTooltip": "tooltip del nombre",
+            "lastNameLabel": "Apellido (opcional)",
+            "lastNameTooltip": "tooltip del apellido",
+            "sexAssignedLabel": "Sexo asignado al nacer",
+            "maleButton": "Masculino",
+            "femaleButton": "Femenino",
+            "dateLabel": "Fecha de nacimiento",
+            "ageLabel": "Edad actual",
+            "riskLabel": "Clase de riesgo",
+            "nicotineUserLabel": "Usuario de nicotina",
+            "stateLabel": "Estado",
+            "continueButton": "Continuar",
+            "cancelButton": "Cancelar",
+            "searchAgent": {
+                "selectAgentButton": "Seleccionar agente",
+                "notFound": "No se encontró ningún agente \"{{agentName}}\"",
+                "current": "Usuario actual"
+            }
         }
     }
 }

@@ -1,0 +1,60 @@
+.radixControl {
+    border: var(--measure-border-width-stroke-sm) solid
+        var(--color-fields-border-field-default-border);
+    border-radius: var(--measure-border-radius-radius-md);
+    padding: var(--measure-dimension-padding-2xl);
+    width: 100%;
+
+    & input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    &.small {
+        padding: var(--measure-dimension-padding-md)
+            var(--measure-dimension-padding-2xl);
+    }
+}
+
+.radixFormRoot {
+    width: 100%;
+}
+
+.radixFormField {
+    &[data-invalid='true'] {
+        .radixControl {
+            border-color: var(--color-status-border-status-error-border);
+        }
+        .prefix {
+            border-color: var(--color-status-border-status-error-border);
+        }
+    }
+}
+
+.prefixAndField {
+    display: flex;
+    &[data-has-prefix='true'] {
+        .radixControl {
+            border-left: none;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+}
+
+.prefix {
+    background-color: var(--color-base-surface-surface-secondary);
+    display: flex;
+    align-items: center;
+    padding: var(--measure-dimension-padding-xl);
+    border: var(--measure-border-width-stroke-sm) solid
+        var(--color-fields-border-field-default-border);
+    border-radius: var(--measure-border-radius-radius-md);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.inputErrorMessage {
+    color: var(--color-semantics-color-semantic-error);
+}

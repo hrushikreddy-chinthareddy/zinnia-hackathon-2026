@@ -1,0 +1,35 @@
+.headerWrapper {
+    border-bottom: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+    padding: var(--measure-dimension-padding-3xl);
+    display: grid;
+    column-gap: var(--measure-dimension-gap-lg);
+    grid-template-columns: 48px 1fr;
+}
+
+.centerLine {
+    display: flex;
+    column-gap: var(--measure-dimension-gap-md);
+}
+
+.topLine {
+    display: flex;
+    justify-content: space-between;
+
+    .centerLine {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.appLink {
+    margin-right: auto;
+}
+
+.goToSureify {
+    &:hover {
+        &:not(:disabled):after {
+            content: none;
+        }
+    }
+}

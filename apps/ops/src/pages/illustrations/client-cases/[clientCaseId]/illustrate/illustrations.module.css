@@ -1,0 +1,31 @@
+.caseIllustrations {
+    display: flex;
+    margin: calc(-1 * var(--measure-dimension-z-space-12));
+    min-height: calc(100% + 96px);
+}
+
+.caseContainer {
+    max-width: 720px;
+    width: 100%;
+}
+
+.illustrationContainer {
+    max-width: 720px;
+    width: 100%;
+    box-shadow: -4px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    border-radius: var(--measure-dimension-radius-md)
+        var(--measure-dimension-radius-md) var(--measure-dimension-radius-none)
+        var(--measure-dimension-radius-none);
+
+    &.noIllustration {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.separator {
+    border-top: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+    margin-left: -48px;
+}

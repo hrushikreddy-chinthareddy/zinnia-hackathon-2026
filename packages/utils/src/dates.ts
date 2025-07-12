@@ -85,7 +85,6 @@ export const yearsLeft = (
   return yearsLeft > 0 ? yearsLeft : 0;
 };
 
-
 const getUserLocale = (): string => {
   const formatter = new Intl.DateTimeFormat();
   const resolvedOptions = formatter.resolvedOptions();
@@ -93,7 +92,7 @@ const getUserLocale = (): string => {
     return ASIA_IN_LOCAL;
   }
   return resolvedOptions.locale;
-}
+};
 
 export const formatTimestamp = (
   timestamp: string,
@@ -114,7 +113,8 @@ export const formatTimestamp = (
   });
 
   const parts = formatter.formatToParts(new Date(localizedTime.format()));
-  const timeZoneAbbr = parts.find(part => part.type === 'timeZoneName')?.value || '';
+  const timeZoneAbbr =
+    parts.find((part) => part.type === 'timeZoneName')?.value || '';
 
   switch (style) {
     case 'standard':
@@ -139,3 +139,28 @@ export const formatTimestamp = (
   }
 };
 
+export const formatRelativeTime = (
+  inputDate: Date | string | number | undefined
+): string => {
+  if (!inputDate) {
+    return DEFAULT_ERROR_STRING;
+  }
+
+  const now = dayjs();
+  const target = dayjs(inputDate);
+
+  const diffInMinutes = now.diff(target, 'minute');
+  const diffInHours = now.diff(target, 'hour');
+  const diffInDays = now.diff(target, 'day');
+
+  if (diffInMinutes < 1) {
+    return 'just now';
+  }
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+  }
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+  }
+  return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+};

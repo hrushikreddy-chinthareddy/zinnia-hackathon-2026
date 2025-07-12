@@ -1,3 +1,4 @@
+import { Emitter } from 'mitt';
 import { useRouter } from 'next/router';
 import {
     createContext,
@@ -10,14 +11,23 @@ import {
 import SideSheet, {
     SideSheetLocation,
 } from '@deps/components/side-sheet/side-sheet';
+import useEmitter from '@deps/hooks/useEmitter';
+
+export type MittEvents = {
+    open: undefined;
+    close: undefined;
+    openSecondary: undefined;
+    closeSecondary: undefined;
+};
 
 export interface SideSheetContextProps {
+    events: Emitter<MittEvents>;
     changeSideSheetContent: (
         header: string | React.ReactNode,
         body?: React.ReactNode
     ) => void;
     handleLocation: (location: SideSheetLocation) => void;
-    handleOpen: (isOpen: boolean) => void;
+    handleOpen: (isOpen: boolean, width?: number | string) => void;
     openSecondarySideSheet: (
         header: string | React.ReactNode,
         body?: React.ReactNode
@@ -38,6 +48,7 @@ interface SideSheetProviderProps {
 }
 
 export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
+    const emitter = useEmitter<MittEvents>();
     const [header, setHeader] = useState<string | undefined>('');
     const [headerComponent, setHeaderComponent] = useState<React.ReactNode>(
         <></>
@@ -49,6 +60,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
         SideSheetLocation.Right
     );
     const [open, setOpen] = useState(false);
+    const [width, setWidth] = useState<number | string>(500);
     const router = useRouter();
     const { taskId, ..._rest } = router.query;
     const [secondarySideSheetOpen, setSecondarySideSheetOpen] = useState(false);
@@ -57,10 +69,30 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
     const [secondarySideSheetContent, setSecondarySideSheetContent] =
         useState<React.ReactNode>(null);
 
+    const onClose = useCallback(() => {
+        if (!open) {
+            return;
+        }
+        setOpen(false);
+        emitter.emit('close');
+    }, [open, emitter]);
+
     const closeAll = useCallback(() => {
-        onClose();
-        setSecondarySideSheetOpen(false);
-    }, []);
+        if (secondarySideSheetOpen) {
+            setSecondarySideSheetOpen(false);
+            emitter.emit('closeSecondary');
+        }
+        if (open) {
+            onClose();
+            emitter.emit('close');
+        }
+    }, [
+        secondarySideSheetOpen,
+        open,
+        emitter,
+        setSecondarySideSheetOpen,
+        onClose,
+    ]);
 
     useEffect(() => {
         router.events.on('routeChangeComplete', closeAll);
@@ -70,19 +102,26 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
         };
     }, [closeAll, router.events]);
 
-    const handleOpen = (isOpen: boolean) => {
+    const handleOpen = (isOpen: boolean, width?: number | string) => {
+        if (width && typeof width === 'number' && width > 0) {
+            setWidth(width);
+        } else if (width) {
+            setWidth(width);
+        }
+
         setOpen(isOpen);
+        emitter.emit(isOpen ? 'open' : 'close');
     };
     const handleLocation = (location: SideSheetLocation) => {
         setLocation(location);
     };
 
-    const onClose = () => {
-        setOpen(false);
-    };
-
     const secondaryOnClose = () => {
+        if (!secondarySideSheetOpen) {
+            return;
+        }
         setSecondarySideSheetOpen(false);
+        emitter.emit('closeSecondary');
     };
 
     const handleComponentChange = (
@@ -108,7 +147,11 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
     ) => {
         setSecondarySideSheetHeader(header);
         setSecondarySideSheetContent(body);
+        if (secondarySideSheetOpen) {
+            return;
+        }
         setSecondarySideSheetOpen(true);
+        emitter.emit('openSecondary');
     };
 
     const ComponentToRender = contentComponent;
@@ -116,6 +159,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
     return (
         <SideSheetContext.Provider
             value={{
+                events: emitter,
                 handleOpen,
                 handleLocation,
                 changeSideSheetContent: handleComponentChange,
@@ -131,6 +175,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
                 headerElement={headerComponent}
                 closeOnEscape={!secondarySideSheetOpen}
                 location={location}
+                width={width}
             >
                 {ComponentToRender || <></>}
             </SideSheet>
@@ -140,6 +185,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
                 headerElement={secondarySideSheetHeader}
                 closeOnEscape={true}
                 location={location}
+                width={width}
             >
                 {secondarySideSheetContent}
             </SideSheet>

@@ -26,7 +26,32 @@ export interface SideSheetProps {
     displayItemCount?: boolean;
     closeOnEscape?: boolean;
     closeOnOutsideClick?: boolean;
+    width?: number | string;
 }
+
+const transformStyle = (
+    isRight: boolean,
+    isLeft: boolean,
+    open: boolean,
+    isDelayedMount: boolean,
+    width: number | string
+) => {
+    if (open && isDelayedMount) return 'translateX(0)';
+
+    // If width is a number, use pixel transforms
+    if (typeof width === 'number') {
+        if (isRight) return `translateX(${width}px)`;
+        if (isLeft) return `translateX(-${width}px)`;
+    }
+
+    // If width is a percentage string
+    if (typeof width === 'string' && width.endsWith('%')) {
+        if (isRight) return `translateX(${width})`;
+        if (isLeft) return `translateX(-${width})`;
+    }
+
+    return '';
+};
 
 export default function SideSheet({
     open = false,
@@ -38,6 +63,7 @@ export default function SideSheet({
     displayItemCount = false,
     closeOnEscape = true,
     closeOnOutsideClick = true,
+    width = 500,
 }: SideSheetProps) {
     const [isDelayedMount, setIsDelayedMount] = useState(false);
     const { t } = useTranslation();
@@ -78,16 +104,22 @@ export default function SideSheet({
         : undefined;
 
     const innerTransitionClasses = clsx(
-        'pointer-events-auto fixed top-0 h-full w-screen transform bg-gradient-to-r from-accent1 to-accent2 pt-2 transition duration-300 ease-in-out sm:w-[500px]',
+        `pointer-events-auto fixed top-0 h-full w-screen transform bg-gradient-to-r from-accent1 to-accent2 pt-2 transition duration-300 ease-in-out sm:w-[500px] !min-w-[500px]`,
         {
             'right-0': isRight,
             'left-0': isLeft,
-            'translate-x-[500px]': isRight && (!open || !isDelayedMount), // from Right
             'translate-x-0': open && isDelayedMount, // to
-            '-translate-x-[500px]': isLeft && (!open || !isDelayedMount), // from Left
         }
     );
 
+    const transform = transformStyle(
+        isRight,
+        isLeft,
+        open,
+        isDelayedMount,
+        width
+    );
+    const widthStyle = typeof width === 'number' ? `${width}px` : width;
     // TODO: the side-sheet needs to accept and accessible name for the modal
     return (
         <div
@@ -113,7 +145,10 @@ export default function SideSheet({
                     </Transition.Child>
 
                     <div className="pointer-events-none fixed inset-0 overflow-hidden">
-                        <div className={innerTransitionClasses}>
+                        <div
+                            className={innerTransitionClasses}
+                            style={{ width: widthStyle, transform }}
+                        >
                             <div className="flex h-full flex-col bg-white">
                                 <div className="z-20 px-8 py-6 shadow-elevation-light-08">
                                     <div className="flex flex-row-reverse items-center justify-between">

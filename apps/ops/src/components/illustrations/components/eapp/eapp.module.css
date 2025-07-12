@@ -1,0 +1,80 @@
+.eApp {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.headerWrapper {
+    border-bottom: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+    padding: var(--measure-dimension-padding-2xl)
+        var(--measure-dimension-padding-3xl) 0
+        var(--measure-dimension-padding-3xl);
+}
+
+.infoHeaderWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.infoHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--measure-dimension-margin-xxs);
+    > * {
+        margin-right: var(--measure-dimension-gap-md);
+    }
+}
+
+.headerTitle {
+    color: var(--color-base-text-text-carrier);
+}
+
+.headerSubtitle {
+    /* color: var(--color-base-text-text-secondary); */
+    color: var(--color-base-text-text-primary, #212121);
+}
+
+.applicationWrapper {
+    container-type: size; /* enables container queries */
+    container-name: application-wrapper; /* optional, but helpful */
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.layoutWrapper {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.applicationBody {
+    flex-grow: 1;
+}
+.applicationSidebar {
+    width: 200px;
+    background-color: var(--color-base-surface-surface-secondary);
+    border-left: 1px solid var(--color-base-border-border-light);
+}
+
+/* Stack sidebar under body at 500px or less */
+@container application-wrapper (max-width: 501px) {
+    .layoutWrapper {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .applicationSidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--color-base-border-border-light);
+    }
+}
+
+/* this css fixes a position issue when the container has the 'container-type: size' property */
+.applicationWrapper [data-radix-popper-content-wrapper] {
+    position: absolute !important;
+}

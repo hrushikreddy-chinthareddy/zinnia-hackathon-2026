@@ -1,0 +1,19 @@
+.illustrationItem {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: var(--measure-dimension-gap-lg) var(--measure-dimension-gap-lg);
+
+    &.selected {
+        background-color: var(--color-states-hover-surface-hover-fill);
+    }
+
+    &:hover {
+        background-color: var(--color-states-hover-surface-hover-fill-alt);
+    }
+
+    .status {
+        margin-left: auto;
+        display: flex;
+    }
+}

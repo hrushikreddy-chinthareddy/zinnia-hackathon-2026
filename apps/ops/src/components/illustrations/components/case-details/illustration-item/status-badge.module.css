@@ -1,0 +1,25 @@
+.iconBadge {
+    position: relative;
+}
+
+.icon {
+    position: absolute;
+    &.submitted,
+    &.archived,
+    &.expired {
+        top: var(--measure-dimension-padding-sm);
+        left: var(--measure-dimension-padding-lg);
+    }
+
+    &.submitted {
+        color: var(--color-status-text-status-success-text);
+    }
+
+    &.archived {
+        color: var(--color-states-inactive-text-inactive-text);
+    }
+
+    &.expired {
+        color: var(--color-status-text-status-error-text);
+    }
+}

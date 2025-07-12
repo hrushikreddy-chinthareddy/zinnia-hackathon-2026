@@ -1,0 +1,7 @@
+.questionContainer {
+    margin-bottom: var(--measure-dimension-margin-md);
+}
+
+.questionHeaderWrapper {
+    margin-bottom: var(--measure-dimension-margin-xs);
+}

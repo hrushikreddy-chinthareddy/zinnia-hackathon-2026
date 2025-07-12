@@ -1,0 +1,3936 @@
+import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
+
+export const farmersTermBlueprintTL0101 = {
+    sectionBlueprints: [
+        {
+            id: '9fd6392a-a71d-41a1-bd6d-215c09de44ab',
+            sectionGroupKey: 'contract',
+            partName: 'custom-b2bdbe28-f776-4cd6-b873-4193475e137e',
+            title: {
+                en: 'Insured',
+            },
+            modules: ['insuranceApplication'],
+            isCustom: true,
+            subsections: [
+                {
+                    id: 'd0ef9652-d120-4d7f-8e99-b86c9522e41e',
+                    partName: 'custom-a6c28eb6-a481-4813-934b-674950c93af1',
+                    text: {},
+                    title: {},
+                    isCustom: true,
+                    fieldGroups: [
+                        {
+                            id: 'a66ca6bc-2ea4-4b0c-9816-2481fa8029c4',
+                            partName:
+                                'custom-96000823-7ada-4474-949d-c60f31b9909e',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: "Farmer's Multiple Policy Owner",
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'multiple-policy-owner',
+                                    outputPath: 'discountIndicator',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '73209330-ce34-4084-bff5-dc40a6d966fc',
+                                    partName:
+                                        'custom-86910a5b-146a-48c0-9185-c8999658c49e',
+                                    selectOptions: [
+                                        {
+                                            partName: 'MULTIPRODUCT',
+                                            text: {
+                                                en: 'Yes',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'NON',
+                                            text: {
+                                                en: 'No',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                                {
+                                    fieldType: 'input',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Insured First Name',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-first-name',
+                                    outputPath: 'insured.firstName',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '21ae1648-1015-4eb3-b266-154ff1b3d3db',
+                                    partName:
+                                        'custom-c80908bb-7926-4e84-ac41-e795a54530c5',
+                                    validateAs: 'string',
+                                    disabled: true,
+                                },
+                                {
+                                    fieldType: 'input',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Insured Middle Name',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-middle-name',
+                                    outputPath: 'insured.middleName',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '0239aee6-1079-4ae0-b392-369fb2ba4442',
+                                    partName:
+                                        'custom-7915ec43-73a9-47b3-abca-8f7a3619222c',
+                                    validateAs: 'string',
+                                    disabled: true,
+                                },
+                                {
+                                    fieldType: 'input',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Insured Last Name',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-last-name',
+                                    outputPath: 'insured.lastName',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'cdac003e-ee4b-42f5-9174-a06ccbdeef62',
+                                    partName:
+                                        'custom-7c7583c9-7561-4e7b-bcf3-2d1a1981ff9e',
+                                    validateAs: 'string',
+                                    disabled: true,
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'State of Issue',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'state-of-issue',
+                                    outputPath: 'jurisdiction',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'b18cf5ed-a5a1-46f1-89f6-5e61711a12d6',
+                                    partName:
+                                        'custom-61be58a0-d044-4107-9e3a-10699d4ad6eb',
+                                    disabled: true,
+                                    selectOptions: [
+                                        {
+                                            text: {
+                                                en: 'Alabama',
+                                                fr: 'Alabama',
+                                            },
+                                            partName: 'AL',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Alaska',
+                                                fr: 'Alaska',
+                                            },
+                                            partName: 'AK',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'American Samoa',
+                                                fr: 'Samoa américaines',
+                                            },
+                                            partName: 'AS',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Arizona',
+                                                fr: 'Arizona',
+                                            },
+                                            partName: 'AZ',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Arkansas',
+                                                fr: 'Arkansas',
+                                            },
+                                            partName: 'AR',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'California',
+                                                fr: 'Californie',
+                                            },
+                                            partName: 'CA',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Colorado',
+                                                fr: 'Colorado',
+                                            },
+                                            partName: 'CO',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Connecticut',
+                                                fr: 'Connecticut',
+                                            },
+                                            partName: 'CT',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'District of Columbia',
+                                                fr: 'District of Columbia',
+                                            },
+                                            partName: 'DC',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Delaware',
+                                                fr: 'Delaware',
+                                            },
+                                            partName: 'DE',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Florida',
+                                                fr: 'Floride',
+                                            },
+                                            partName: 'FL',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Georgia',
+                                                fr: 'Géorgie',
+                                            },
+                                            partName: 'GA',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Guam',
+                                                fr: 'Guam',
+                                            },
+                                            partName: 'GU',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Hawaii',
+                                                fr: 'Hawaï',
+                                            },
+                                            partName: 'HI',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Idaho',
+                                                fr: 'Idaho',
+                                            },
+                                            partName: 'ID',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Illinois',
+                                                fr: 'Illinois',
+                                            },
+                                            partName: 'IL',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Indiana',
+                                                fr: 'Indiana',
+                                            },
+                                            partName: 'IN',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Iowa',
+                                                fr: 'Iowa',
+                                            },
+                                            partName: 'IA',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Kansas',
+                                                fr: 'Kansas',
+                                            },
+                                            partName: 'KS',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Kentucky',
+                                                fr: 'Kentucky',
+                                            },
+                                            partName: 'KY',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Louisiana',
+                                                fr: 'Louisiane',
+                                            },
+                                            partName: 'LA',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Maine',
+                                                fr: 'Maine',
+                                            },
+                                            partName: 'ME',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Maryland',
+                                                fr: 'Maryland',
+                                            },
+                                            partName: 'MD',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Massachusetts',
+                                                fr: 'Massachusetts',
+                                            },
+                                            partName: 'MA',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Michigan',
+                                                fr: 'Michigan',
+                                            },
+                                            partName: 'MI',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Minnesota',
+                                                fr: 'Minnesota',
+                                            },
+                                            partName: 'MN',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Mississippi',
+                                                fr: 'Mississippi',
+                                            },
+                                            partName: 'MS',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Missouri',
+                                                fr: 'Missouri',
+                                            },
+                                            partName: 'MO',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Montana',
+                                                fr: 'Montana',
+                                            },
+                                            partName: 'MT',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Nebraska',
+                                                fr: 'Nebraska',
+                                            },
+                                            partName: 'NE',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Nevada',
+                                                fr: 'Nevada',
+                                            },
+                                            partName: 'NV',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'New Hampshire',
+                                                fr: 'New Hampshire',
+                                            },
+                                            partName: 'NH',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'New Jersey',
+                                                fr: 'New Jersey',
+                                            },
+                                            partName: 'NJ',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'New Mexico',
+                                                fr: 'Nouveau-Mexique',
+                                            },
+                                            partName: 'NM',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'New York',
+                                                fr: 'New York',
+                                            },
+                                            partName: 'NY',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'North Carolina',
+                                                fr: 'Caroline du Nord ',
+                                            },
+                                            partName: 'NC',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'North Dakota',
+                                                fr: 'Dakota du Nord',
+                                            },
+                                            partName: 'ND',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Northern Mariana Islands',
+                                                fr: 'Îles Mariannes du Nord',
+                                            },
+                                            partName: 'MP',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Ohio',
+                                                fr: 'Ohio',
+                                            },
+                                            partName: 'OH',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Oklahoma',
+                                                fr: 'Oklahoma',
+                                            },
+                                            partName: 'OK',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Oregon',
+                                                fr: 'Oregon',
+                                            },
+                                            partName: 'OR',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Pennsylvania',
+                                                fr: 'Pennsylvanie',
+                                            },
+                                            partName: 'PA',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Puerto Rico',
+                                                fr: 'Puerto Rico',
+                                            },
+                                            partName: 'PR',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Rhode Island',
+                                                fr: 'Rhode Island',
+                                            },
+                                            partName: 'RI',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'South Carolina',
+                                                fr: 'Caroline du Sud',
+                                            },
+                                            partName: 'SC',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'South Dakota',
+                                                fr: 'Dakota du Sud',
+                                            },
+                                            partName: 'SD',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Tennessee',
+                                                fr: 'Tennessee',
+                                            },
+                                            partName: 'TN',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Texas',
+                                                fr: 'Texas',
+                                            },
+                                            partName: 'TX',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'U.S. Virgin Islands',
+                                                fr: 'Îles mineures éloignées des États-Unis',
+                                            },
+                                            partName: 'VI',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'U.S. Minor Outlying Islands',
+                                                fr: 'Îles mineures éloignées des États-Unis',
+                                            },
+                                            partName: 'UM',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Utah',
+                                                fr: 'Utah',
+                                            },
+                                            partName: 'UT',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Vermont',
+                                                fr: 'Vermont',
+                                            },
+                                            partName: 'VT',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Virginia',
+                                                fr: 'Virginie',
+                                            },
+                                            partName: 'VA',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Washington',
+                                                fr: 'Washington',
+                                            },
+                                            partName: 'WA',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'West Virginia',
+                                                fr: 'Virginie-Occidentale',
+                                            },
+                                            partName: 'WV',
+                                            orderingIndex: 1,
+                                            hidden: true,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Wisconsin',
+                                                fr: 'Wisconsin',
+                                            },
+                                            partName: 'WI',
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            text: {
+                                                en: 'Wyoming',
+                                                fr: 'Wyoming',
+                                            },
+                                            partName: 'WY',
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Sex at Birth',
+                                        fr: '',
+                                    },
+                                    outputPath: 'insured.gender',
+                                    answerNodeId: 'sex',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'fd4db8c2-e5f4-4cc8-a143-4fe1ebdc39c4',
+                                    partName:
+                                        'custom-b79336d0-71ff-4bac-8df6-4e36aa79651b',
+                                    selectOptions: [
+                                        {
+                                            partName: 'FEMALE',
+                                            text: {
+                                                en: 'Female',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'MALE',
+                                            text: {
+                                                en: 'Male',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    disabled: true,
+                                },
+                                {
+                                    fieldType: 'date',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Date of Birth',
+                                        fr: '',
+                                    },
+                                    outputPath: 'insured.dateOfBirth',
+                                    answerNodeId: 'date-of-birth',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '160d7706-d2da-4869-8e7b-cecd777be910',
+                                    partName:
+                                        'custom-48e9160a-44da-447e-9882-8dd9718a9c13',
+                                    validateAs: 'pastDate',
+                                    valid: [
+                                        {
+                                            id: '6b71ae8b-b8d9-41a9-90c5-0977fca5b505',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            // {
+                                                            //     type: 'equalityCondition',
+                                                            //     value: 'TL0101',
+                                                            //     isEqual: true,
+                                                            //     targetNodeId: 'product',
+                                                            // },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 75,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The age limit are 18-75 for Farmers Term Life, and 18-55 for Farmers Return of Premium.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                    disabled: true,
+                                },
+                                {
+                                    fieldType: 'input',
+                                    id: 'eafbbfee-eb08-46b2-83e4-85b8b484bb27',
+                                    partName:
+                                        'custom-2482f9e9-78ca-46db-b09a-7fae45b5bf42',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Age',
+                                        fr: '',
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    answerNodeId: 'age',
+                                    internal: {
+                                        computedValue: {
+                                            select: ['date-of-birth'],
+                                            operator: 'formula',
+                                            operatorParams: {
+                                                formula:
+                                                    "dateToAge(date_of_birth, 'closestBirthday', '--')",
+                                            },
+                                        },
+                                    },
+                                    outputPath: 'insured.issueAge',
+                                    valid: [
+                                        {
+                                            id: 'f41a1156-7d54-45db-a707-d1ce6f7f9227',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 0,
+                                                            maxAge: 80,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'closestBirthday',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'This property requires a value which is an INTEGER and is >=0 and is <80 and must be entered.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                    optional: false,
+                                    disabled: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                },
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'illustrate-at-older-age',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '4499ea89-4c57-4cf8-8880-d650df344f24',
+                                    partName:
+                                        'custom-b1b55a6a-e49f-4a62-b7b9-7d51e68034e8',
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            partName: 'illustrateAtOlderAge',
+                                            text: {
+                                                en: 'Illustrate at older age',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    fieldType: 'date',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Effective Date',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'effective-date',
+                                    outputPath: 'illustrationRequestDate',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '65098291-cd6f-4358-99f7-9fd2de5ebc2b',
+                                    partName:
+                                        'custom-11faca2d-91a2-4846-913c-d30647d7d321',
+                                    validateAs: 'futureOrCurrentDate',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['illustrateAtOlderAge'],
+                                                targetNodeId:
+                                                    'illustrate-at-older-age',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Premium Class',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'premium-class',
+                                    outputPath: 'premiumClass',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '8547480e-81a4-4778-b71d-870dfc0a3e5b',
+                                    partName:
+                                        'custom-39bf8d14-b635-4116-8f0f-9894409d6af8',
+                                    selectOptions: [
+                                        {
+                                            partName: 'STANDARDNONTOBACCO',
+                                            text: {
+                                                en: 'Platinum',
+                                            },
+                                            isCustom: true,
+                                            visible: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            // {
+                                                            //     type: 'equalityCondition',
+                                                            //     value: 'TL0101',
+                                                            //     isEqual: true,
+                                                            //     targetNodeId: 'product',
+                                                            // },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 75,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: 'TR0101',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'product',
+                                                            },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 55,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'STANDARDPLUSNONTOBACCO',
+                                            text: {
+                                                en: 'Platinum Choice',
+                                            },
+                                            isCustom: true,
+                                            visible: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: 'IU0101',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'product',
+                                                            },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 80,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            // {
+                                                            //     type: 'equalityCondition',
+                                                            //     value: 'TL0101',
+                                                            //     isEqual: true,
+                                                            //     targetNodeId: 'product',
+                                                            // },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 75,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: 'TR0101',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'product',
+                                                            },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 55,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'PREFERREDNONTOBACCO',
+                                            text: {
+                                                en: 'Platinum Plus',
+                                            },
+                                            isCustom: true,
+                                            visible: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            // {
+                                                            //     type: 'equalityCondition',
+                                                            //     value: 'TL0101',
+                                                            //     isEqual: true,
+                                                            //     targetNodeId: 'product',
+                                                            // },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 75,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: 'TR0101',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'product',
+                                                            },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 55,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'ELITENONTOBACCO',
+                                            text: {
+                                                en: 'Platinum Elite',
+                                            },
+                                            isCustom: true,
+                                            visible: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            // {
+                                                            //     type: 'equalityCondition',
+                                                            //     value: 'TL0101',
+                                                            //     isEqual: true,
+                                                            //     targetNodeId: 'product',
+                                                            // },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 75,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: 'TR0101',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'product',
+                                                            },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 55,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'STANDARDTOBACCO',
+                                            text: {
+                                                en: 'Gold',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            // {
+                                                            //     type: 'equalityCondition',
+                                                            //     value: 'TL0101',
+                                                            //     isEqual: true,
+                                                            //     targetNodeId: 'product',
+                                                            // },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 75,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: 'TR0101',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'product',
+                                                            },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 50,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        {
+                                            partName: 'PREFERREDTOBACCO',
+                                            text: {
+                                                en: 'Gold Plus',
+                                            },
+                                            isCustom: true,
+                                            visible: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            // {
+                                                            //     type: 'equalityCondition',
+                                                            //     value: 'TL0101',
+                                                            //     isEqual: true,
+                                                            //     targetNodeId: 'product',
+                                                            // },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 75,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: 'TR0101',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'product',
+                                                            },
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 50,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName:
+                                                'STANDARDCONVERSIONNONTOBACCO',
+                                            text: {
+                                                en: 'Platinum Substandard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName:
+                                                'STANDARDCONVERSIONTOBACCO',
+                                            text: {
+                                                en: 'Gold Substandard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    defaultValue: 'STANDARDNONTOBACCO',
+                                },
+                                {
+                                    fieldType: 'information',
+                                    text: {
+                                        en: 'For Table or Flat Extra Ratings, please select one of the Substandard classes',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'table-flat-ratings-info',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '1533d9cf-87e8-4ebe-b1cf-9c607b2dc6ce',
+                                    partName:
+                                        'custom-8beadcd6-616c-4a31-9ed5-625db38a1927',
+                                    variant: 'info',
+                                    validateAs: 'string',
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                        },
+                        {
+                            id: 'e14e16f6-4196-470f-8ee4-0d7bec08a300',
+                            partName:
+                                'custom-bda1ddd1-5dc1-4e77-b473-42e93aab6333',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Table Rating',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'table-rating',
+                                    outputPath: 'subStandardRating',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '47bc5261-7647-4d16-bee0-4eacfb10e434',
+                                    partName:
+                                        'custom-58f1c54d-284d-4650-86c3-6e6274e7f4f5',
+                                    selectOptions: [
+                                        {
+                                            partName: 'TABLEA',
+                                            text: {
+                                                en: 'A',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEB',
+                                            text: {
+                                                en: 'B',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEC',
+                                            text: {
+                                                en: 'C',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLED',
+                                            text: {
+                                                en: 'D',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEE',
+                                            text: {
+                                                en: 'E',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEF',
+                                            text: {
+                                                en: 'F',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEG',
+                                            text: {
+                                                en: 'G',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEH',
+                                            text: {
+                                                en: 'H',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEI',
+                                            text: {
+                                                en: 'I',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEJ',
+                                            text: {
+                                                en: 'J',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEK',
+                                            text: {
+                                                en: 'K',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEL',
+                                            text: {
+                                                en: 'L',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEM',
+                                            text: {
+                                                en: 'M',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEN',
+                                            text: {
+                                                en: 'N',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEO',
+                                            text: {
+                                                en: 'O',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEP',
+                                            text: {
+                                                en: 'P',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                },
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Temporary Flat Extra',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'temporary-flat-extra',
+                                    outputPath: 'temporaryFlatExtra.amount',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '75b52f5f-5c10-4f2e-97ec-592dc9acfa8b',
+                                    partName:
+                                        'custom-242542b0-1cb1-417d-b276-44e0aa006b52',
+                                    validateAs: 'decimal',
+                                    valid: [
+                                        {
+                                            id: 'ddf60c38-eb5e-439c-8a16-1412c8f72bd7',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 15,
+                                                        targetNodeId:
+                                                            'temporary-flat-extra',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 0,
+                                                        targetNodeId:
+                                                            'temporary-flat-extra',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 0.5,
+                                                        targetNodeId:
+                                                            'temporary-flat-extra',
+                                                        operator: 'multipleOf',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The temporary flat extra must be less than or equal to $15.00 and a multiple of $0.50.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                    isCustom: true,
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: [
+                                                    'STANDARDCONVERSIONNONTOBACCO',
+                                                    'STANDARDCONVERSIONTOBACCO',
+                                                ],
+                                                targetNodeId: 'premium-class',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                            visible: {
+                                booleanOperator: 'and',
+                                conditions: [
+                                    {
+                                        type: 'matchesCondition',
+                                        value: [
+                                            'STANDARDCONVERSIONNONTOBACCO',
+                                            'STANDARDCONVERSIONTOBACCO',
+                                        ],
+                                        targetNodeId: 'premium-class',
+                                        quantifier: 'any',
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            id: 'cec5bf91-116c-42c0-a03e-92b69ffd7cdd',
+                            partName:
+                                'custom-8cb0b7a2-c892-401d-aecd-f41b0c97a24b',
+                            text: {},
+                            title: {
+                                en: 'Temporary Flat Extra Schedule',
+                            },
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'date',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Start Date',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'schedule-from',
+                                    outputPath: 'temporaryFlatExtra.startDate',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'a076c49f-92c0-433b-9544-2c617fafac33',
+                                    partName:
+                                        'custom-0374a377-1217-4529-b031-8539f98cd208',
+                                    validateAs: 'futureOrCurrentDate',
+                                    isCustom: true,
+                                },
+                                {
+                                    fieldType: 'number',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Duration',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'schedule-duration',
+                                    outputPath: 'temporaryFlatExtra.duration',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                        forceNewLine: true,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '2ff66fed-483c-459d-9c5f-fb64ff59131d',
+                                    partName:
+                                        'custom-02e07017-570f-4ffb-ab7b-edee1174b021',
+                                    validateAs: 'integer',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Duration Unit',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'schedule-duration-unit',
+                                    outputPath:
+                                        'temporaryFlatExtra.durationType',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'ae6b4e38-3982-49bb-b4b1-e0688ed12bba',
+                                    partName:
+                                        'custom-2137dbfd-b52d-4ca1-92f3-e8b8f59e10ee',
+                                    selectOptions: [
+                                        {
+                                            partName: 'YEARS',
+                                            text: {
+                                                en: 'Years',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'MONTHS',
+                                            text: {
+                                                en: 'Months',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                            ],
+                            displayAsCard: true,
+                            copyable: 'none',
+                            visible: {
+                                booleanOperator: 'and',
+                                conditions: [
+                                    {
+                                        type: 'matchesCondition',
+                                        value: [
+                                            'STANDARDCONVERSIONTOBACCO',
+                                            'STANDARDCONVERSIONNONTOBACCO',
+                                        ],
+                                        targetNodeId: 'premium-class',
+                                        quantifier: 'any',
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            id: '10e41f1d-3a9d-4bb4-9d3a-c8efcfa2da4b',
+                            partName:
+                                'custom-cf8774cd-af80-4589-87bc-626d9c2b4193',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Permanent Flat Extra',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'permanent-flat-extra',
+                                    outputPath: 'permanentFlatExtra.amount',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '4ba0c468-06b7-4ac5-94c0-efbe34d8d101',
+                                    partName:
+                                        'custom-858d837e-8edf-4cb8-8367-6186b65d48cf',
+                                    validateAs: 'decimal',
+                                    valid: [
+                                        {
+                                            id: 'ddf60c38-eb5e-439c-8a16-1412c8f72bd7',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 15,
+                                                        targetNodeId:
+                                                            'permanent-flat-extra',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 0,
+                                                        targetNodeId:
+                                                            'permanent-flat-extra',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 0.5,
+                                                        targetNodeId:
+                                                            'permanent-flat-extra',
+                                                        operator: 'multipleOf',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The temporary flat extra must be less than or equal to $15.00 and a multiple of $0.50.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                    isCustom: true,
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                            visible: {
+                                booleanOperator: 'and',
+                                conditions: [
+                                    {
+                                        type: 'matchesCondition',
+                                        value: [
+                                            'STANDARDCONVERSIONTOBACCO',
+                                            'STANDARDCONVERSIONNONTOBACCO',
+                                        ],
+                                        targetNodeId: 'premium-class',
+                                        quantifier: 'any',
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                    showInNavigation: false,
+                    copyable: 'none',
+                },
+            ],
+            copyable: 'none',
+        },
+        {
+            id: '0defa8b5-f08b-47be-86b4-96234f271b31',
+            sectionGroupKey: 'contract',
+            partName: 'custom-d9198ce5-c58d-4f35-8824-59ce953474f2',
+            title: {
+                en: 'Coverage',
+            },
+            modules: ['insuranceApplication'],
+            isCustom: true,
+            subsections: [
+                {
+                    id: '87cb6064-4260-4aa5-8cff-0d4fbcc6f6c6',
+                    partName: 'custom-0b4f7c5d-0a06-455a-91e1-f556199df632',
+                    text: {},
+                    title: {},
+                    isCustom: true,
+                    fieldGroups: [
+                        {
+                            id: '388f6f4b-2278-444f-8df3-b2a043f0c905',
+                            partName:
+                                'custom-8c249907-96bf-46a1-871c-3b32ddc59ca6',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Solve For',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'solve-for',
+                                    outputPath: 'solveFor',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '87eeddca-274c-44dd-b0b5-f91902917cf8',
+                                    partName:
+                                        'custom-5182d038-db4b-4bd6-a675-59133b5b53c8',
+                                    selectOptions: [
+                                        {
+                                            partName: 'PREMIUM',
+                                            text: {
+                                                en: 'Premium',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'FACE',
+                                            text: {
+                                                en: 'Face Amount',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Level Term Period',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'level-term-period',
+                                    outputPath: 'fixedCostPeriod',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '5aa6d477-e97a-480a-b570-e277ebb4e0da',
+                                    partName:
+                                        'custom-19d339fc-8143-4ba5-91c3-0f03597c57e6',
+                                    selectOptions: [
+                                        {
+                                            partName: '10',
+                                            text: {
+                                                en: 'Term 10',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 75,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        {
+                                            partName: '20',
+                                            text: {
+                                                en: 'Term 20',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 65,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        {
+                                            partName: '15',
+                                            text: {
+                                                en: 'Term 15',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 70,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        {
+                                            partName: '30',
+                                            text: {
+                                                en: 'Term 30',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 50,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    // visible: {
+                                    //     booleanOperator: 'and',
+                                    //     conditions: [
+                                    //         {
+                                    //             type: 'equalityCondition',
+                                    //             value: 'TL0101',
+                                    //             isEqual: true,
+                                    //             targetNodeId: 'product',
+                                    //         },
+                                    //     ],
+                                    // },
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Level Term Period',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'level-term-period',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '24f50a03-0e26-4933-89ad-3262e51dcff0',
+                                    partName:
+                                        'custom-7b8ae045-6501-4370-a6b9-9696500be4fe',
+                                    selectOptions: [
+                                        {
+                                            partName: '20',
+                                            text: {
+                                                en: 'Term ROP 20',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'or',
+                                                        conditions: [
+                                                            {
+                                                                booleanOperator:
+                                                                    'and',
+                                                                conditions: [
+                                                                    {
+                                                                        type: 'matchesCondition',
+                                                                        value: [
+                                                                            'PREFERREDTOBACCO',
+                                                                            'STANDARDTOBACCO',
+                                                                        ],
+                                                                        targetNodeId:
+                                                                            'premium-class',
+                                                                        quantifier:
+                                                                            'any',
+                                                                    },
+                                                                    {
+                                                                        type: 'ageRangeCondition',
+                                                                        value: {
+                                                                            minAge: 18,
+                                                                            maxAge: 50,
+                                                                            unit: 'year',
+                                                                        },
+                                                                        targetBirthdateNodeId:
+                                                                            'date-of-birth',
+                                                                        roundingType:
+                                                                            'lastBirthday',
+                                                                    },
+                                                                ],
+                                                            },
+                                                            {
+                                                                booleanOperator:
+                                                                    'and',
+                                                                conditions: [
+                                                                    {
+                                                                        type: 'matchesCondition',
+                                                                        value: [
+                                                                            'STANDARDPLUSNONTOBACCO',
+                                                                            'STANDARDNONTOBACCO',
+                                                                            'PREFERREDNONTOBACCO',
+                                                                            'ELITENONTOBACCO',
+                                                                        ],
+                                                                        targetNodeId:
+                                                                            'premium-class',
+                                                                        quantifier:
+                                                                            'any',
+                                                                    },
+                                                                    {
+                                                                        type: 'ageRangeCondition',
+                                                                        value: {
+                                                                            minAge: 18,
+                                                                            maxAge: 55,
+                                                                            unit: 'year',
+                                                                        },
+                                                                        targetBirthdateNodeId:
+                                                                            'date-of-birth',
+                                                                        roundingType:
+                                                                            'lastBirthday',
+                                                                    },
+                                                                ],
+                                                            },
+                                                            {
+                                                                type: 'matchesCondition',
+                                                                value: [
+                                                                    'STANDARDCONVERSIONNONTOBACCO',
+                                                                    'STANDARDCONVERSIONTOBACCO',
+                                                                ],
+                                                                targetNodeId:
+                                                                    'premium-class',
+                                                                quantifier:
+                                                                    'any',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        {
+                                            partName: '30',
+                                            text: {
+                                                en: 'Term ROP 30',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 45,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'TR0101',
+                                                isEqual: true,
+                                                targetNodeId: 'product',
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                        },
+                        {
+                            id: '9bb00c0d-2e4e-4688-b0e9-5aa03b187867',
+                            partName:
+                                'custom-d7d0aff4-61aa-487e-90c7-30d04cb057f3',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Face Amount',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'face-amount',
+                                    outputPath: 'baseCoverage.currentAmount',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '55ebb606-92ee-4ddc-a0b4-ecc7e9acd5d8',
+                                    partName:
+                                        'custom-6b0d4bee-65ad-4156-91ec-4c19f480f275',
+                                    validateAs: 'integer',
+                                    valid: [
+                                        {
+                                            id: '6d18b6e2-a9e2-4c00-bdd0-14d07174ef6d',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 50000,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The minimum is $50,000',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '286a577c-8494-4f20-a13e-c2c967e2cd28',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 10000000,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The maximum is $10,000,000',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Premium Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'premium-mode',
+                                    outputPath: 'paymentMode',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '5829b2a4-edde-4a51-bf4a-73637fd6ddb2',
+                                    partName:
+                                        'custom-6ba00b34-9327-4f8f-beb8-72692621c37a',
+                                    selectOptions: [
+                                        {
+                                            partName: 'MONTHLY',
+                                            text: {
+                                                en: 'Monthly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'QUARTERLY',
+                                            text: {
+                                                en: 'Quarterly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'SEMIANNUAL',
+                                            text: {
+                                                en: 'Semi-Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'ANNUAL',
+                                            text: {
+                                                en: 'Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Payment Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'payment-mode',
+                                    outputPath: 'paymentMethod',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '5f3b6863-5845-4a2d-9cd7-ad0160ec5fbd',
+                                    partName:
+                                        'custom-89613af1-6b8e-4673-848b-9f890c0e6e4a',
+                                    selectOptions: [
+                                        {
+                                            partName: 'ACH',
+                                            text: {
+                                                en: 'Electronic Funds Transfer (EFT)',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'CREDITCARD',
+                                            text: {
+                                                en: 'Credit Card',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                            visible: {
+                                booleanOperator: 'and',
+                                conditions: [
+                                    {
+                                        type: 'equalityCondition',
+                                        value: 'PREMIUM',
+                                        isEqual: true,
+                                        targetNodeId: 'solve-for',
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            id: '1f2e964b-ca6e-4436-9c3a-07a6f8791746',
+                            partName:
+                                'custom-d4bc2b17-9fb8-43af-b4d2-1e1c8a085503',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Modal Premium',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'modal-premium',
+                                    outputPath: 'modalPremiumValue',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'b1a3682f-2b2a-435c-9b60-7434631bd358',
+                                    partName:
+                                        'custom-928186e2-d4cc-4a7d-be74-06d6487c68b6',
+                                    validateAs: 'integer',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Premium Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'premium-mode',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '84475678-a6f5-4cad-a113-2aa9f174caec',
+                                    partName:
+                                        'custom-b728185d-a776-4ea6-b5cf-ad2cfd41e800',
+                                    selectOptions: [
+                                        {
+                                            partName: 'MONTHLY',
+                                            text: {
+                                                en: 'Monthly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'QUARTERLY',
+                                            text: {
+                                                en: 'Quarterly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'ANNUAL',
+                                            text: {
+                                                en: 'Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                        },
+                                        {
+                                            partName: 'SEMIANNUAL',
+                                            text: {
+                                                en: 'Semi-Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Payment Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'payment-mode',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'e74b86f1-997f-40cf-8a9a-6551d3f1b156',
+                                    partName:
+                                        'custom-31e82f04-d0a3-4614-a84f-8f6f4088246e',
+                                    selectOptions: [
+                                        {
+                                            partName: 'ACH',
+                                            text: {
+                                                en: 'Electronic Funds Transfer (EFT)',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'CREDITCARD',
+                                            text: {
+                                                en: 'Credit Card',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                            visible: {
+                                booleanOperator: 'and',
+                                conditions: [
+                                    {
+                                        type: 'equalityCondition',
+                                        value: 'FACE',
+                                        isEqual: true,
+                                        targetNodeId: 'solve-for',
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                    showInNavigation: false,
+                    copyable: 'none',
+                },
+            ],
+            copyable: 'none',
+        },
+        {
+            id: '90e31710-b95e-48a1-90e0-e320cd4426cd',
+            sectionGroupKey: 'contract',
+            partName: 'custom-445b598e-5a90-4fc6-a92d-b5aacdf5a728',
+            title: {
+                en: 'Riders',
+            },
+            modules: ['insuranceApplication'],
+            isCustom: true,
+            subsections: [
+                {
+                    id: '8312dbd3-a86f-4822-89f2-5b2a8ae254d0',
+                    partName: 'custom-9ff4a82f-e298-4c2b-b775-68e697095a40',
+                    text: {},
+                    title: {},
+                    isCustom: true,
+                    fieldGroups: [
+                        {
+                            id: 'e9672bf7-4b1d-4aa5-b1c7-ed97ff594d6c',
+                            partName:
+                                'custom-0f6122f3-3d98-456a-9ef5-e49ad70ad7a8',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    answerNodeId:
+                                        'accelerated-death-benefit-rider-for-terminal-illness',
+                                    outputPath:
+                                        'riders.acceleratedDeathBenefitRiderForTerminalIllness.values',
+                                    fieldType: 'checkboxGroup',
+                                    id: '0e42cc99-3e99-4cf0-87b0-1d514c9ae453',
+                                    partName:
+                                        'custom-32a53850-8f98-4e0a-9778-7c0449d47bab',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'or',
+                                        conditions: [
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 75,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '10',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 70,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '15',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 65,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '20',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 60,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'closestBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'term30',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 55,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '20',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 45,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'closestBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '30',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            partName: 'Rider_ABRTRM',
+                                            text: {
+                                                en: 'Accelerated Death Benefit Rider for Terminal Illness',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    answerNodeId:
+                                        'accidental-death-benefit-rider',
+                                    outputPath:
+                                        'riders.accidentalDeathBenefitRider.values',
+                                    fieldType: 'checkboxGroup',
+                                    id: '2ae303f9-3282-4207-85e1-7bd97a99a016',
+                                    partName:
+                                        'custom-82b7a540-c743-4494-85c2-bd4f57ca424e',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'or',
+                                        conditions: [
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 60,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'matchesCondition',
+                                                        value: [
+                                                            '10',
+                                                            '15',
+                                                            '20',
+                                                        ],
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                        quantifier: 'any',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 50,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'term30',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 55,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'closestBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '20',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 45,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'closestBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '30',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            partName: 'Rider_ADR',
+                                            text: {
+                                                en: 'Accidental Death Benefit Rider',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    answerNodeId:
+                                        'accidental-death-benefit-rider-benefit',
+                                    outputPath:
+                                        'riders.accidentalDeathBenefitRider.benefit',
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Benefit',
+                                        fr: '',
+                                    },
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '35f713f1-e857-4a91-ac32-9e75ffe9fdb9',
+                                    partName:
+                                        'custom-73695d64-bff2-41eb-a581-bebebb2b0001',
+                                    validateAs: 'integer',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ADR'],
+                                                targetNodeId:
+                                                    'accidental-death-benefit-rider',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    answerNodeId:
+                                        'accidental-death-benefit-rider-table-rating',
+                                    outputPath:
+                                        'riders.accidentalDeathBenefitRider.tableRating',
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Table Rating',
+                                        fr: '',
+                                    },
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '2f1ecfcb-2aca-46c3-a691-ae2377c77363',
+                                    partName:
+                                        'custom-1c1c6151-41e3-4a7f-8f2c-cc55c6b077f0',
+                                    selectOptions: [
+                                        {
+                                            partName: 'standard',
+                                            text: {
+                                                en: 'Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'B',
+                                            text: {
+                                                en: '1.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'C',
+                                            text: {
+                                                en: '2.0 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'D',
+                                            text: {
+                                                en: '2.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'E',
+                                            text: {
+                                                en: '3.0 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    defaultValue: 'standard',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ADR'],
+                                                targetNodeId:
+                                                    'accidental-death-benefit-rider',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    answerNodeId: 'charitable-giving-rider',
+                                    outputPath:
+                                        'riders.charitableGivingRider.values',
+                                    fieldType: 'checkboxGroup',
+                                    id: '6d3f588a-46c6-401c-90e7-a3638296b5e7',
+                                    partName:
+                                        'custom-f84b65d6-cdb9-491c-a458-0324c797f534',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'or',
+                                        conditions: [
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 0,
+                                                            maxAge: 75,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '10',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 75,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '15',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 65,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '20',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 50,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'term30',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 55,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '20',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 45,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '30',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            partName: 'Rider_CGR',
+                                            text: {
+                                                en: 'Charitable Giving Rider',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    answerNodeId:
+                                        'children-term-insurance-rider',
+                                    outputPath:
+                                        'riders.childrenTermInsuranceRider.values',
+                                    fieldType: 'checkboxGroup',
+                                    id: 'ac44bd3a-7077-429d-92d0-b04d4a14ed0a',
+                                    partName:
+                                        'custom-0ecc2535-caf6-469b-af91-47a9dc24d9d4',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'ageRangeCondition',
+                                                value: {
+                                                    minAge: 18,
+                                                    maxAge: 55,
+                                                    unit: 'year',
+                                                },
+                                                targetBirthdateNodeId:
+                                                    'date-of-birth',
+                                                roundingType: 'lastBirthday',
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            partName: 'Rider_CTR',
+                                            text: {
+                                                en: "Children's Term Insurance Rider",
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    answerNodeId:
+                                        'children-term-insurance-rider-face-amount',
+                                    outputPath:
+                                        'riders.childrenTermInsuranceRider.faceAmount',
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Face Amount',
+                                        fr: '',
+                                    },
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '5e080533-1769-489e-ba38-7b7dfc9c509a',
+                                    partName:
+                                        'custom-da961adc-7b66-4d12-8022-b6973b5a102c',
+                                    validateAs: 'integer',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_CTR'],
+                                                targetNodeId:
+                                                    'children-term-insurance-rider',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                    valid: [
+                                        {
+                                            id: '46dbf562-418c-4c05-913d-3cf6931eea98',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 5000,
+                                                        targetNodeId:
+                                                            'children-term-insurance-rider-face-amount',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 25000,
+                                                        targetNodeId:
+                                                            'children-term-insurance-rider-face-amount',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The minimum is $5,000 and the maximum is $25,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                },
+                                {
+                                    answerNodeId:
+                                        'chronic-illness-accelerated-death-benefit-rider',
+                                    outputPath:
+                                        'riders.chronicIllnessAcceleratedDeathBenefitRider.values',
+                                    fieldType: 'checkboxGroup',
+                                    id: '80af6907-476e-43e4-a452-4fc6017a3805',
+                                    partName:
+                                        'custom-6e1ec913-a3ce-43ba-8195-7c9f046811e9',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 70,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                            {
+                                                                type: 'matchesCondition',
+                                                                value: [
+                                                                    '10',
+                                                                    '15',
+                                                                ],
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                                quantifier:
+                                                                    'any',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 65,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: '20',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 50,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: 'term30',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 55,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: '20',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'ageRangeCondition',
+                                                                value: {
+                                                                    minAge: 18,
+                                                                    maxAge: 45,
+                                                                    unit: 'year',
+                                                                },
+                                                                targetBirthdateNodeId:
+                                                                    'date-of-birth',
+                                                                roundingType:
+                                                                    'lastBirthday',
+                                                            },
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: '30',
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ABRTRM'],
+                                                targetNodeId:
+                                                    'accelerated-death-benefit-rider-for-terminal-illness',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            partName: 'Rider_ABRCHR',
+                                            text: {
+                                                en: 'Chronic Illness Accelerated Death Benefit Rider',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    answerNodeId: 'waiver-of-premium-rider',
+                                    outputPath:
+                                        'riders.waiverOfPremiumRider.values',
+                                    fieldType: 'checkboxGroup',
+                                    id: 'ddf1e1f8-9e8d-44ec-bf42-ad91d34d5bdd',
+                                    partName:
+                                        'custom-26c26d0e-0178-44a9-a224-ca853e7fcaea',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'or',
+                                        conditions: [
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 55,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'matchesCondition',
+                                                        value: [
+                                                            '10',
+                                                            '20',
+                                                            '15',
+                                                            '20',
+                                                        ],
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                        quantifier: 'any',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 50,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'term30',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'ageRangeCondition',
+                                                        value: {
+                                                            minAge: 18,
+                                                            maxAge: 45,
+                                                            unit: 'year',
+                                                        },
+                                                        targetBirthdateNodeId:
+                                                            'date-of-birth',
+                                                        roundingType:
+                                                            'lastBirthday',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: '30',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'level-term-period',
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            partName: 'Rider_WPR',
+                                            text: {
+                                                en: 'Waiver of Premium Rider',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    answerNodeId:
+                                        'waiver-of-premium-rider-table-rating',
+                                    outputPath:
+                                        'riders.waiverOfPremiumRider.tableRating',
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Table Rating',
+                                        fr: '',
+                                    },
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '3c0c7a04-f0f4-414e-b640-dcc6b94959da',
+                                    partName:
+                                        'custom-bf30a8b8-b3d2-4f48-aac8-2668633f170e',
+                                    selectOptions: [
+                                        {
+                                            partName: 'standard',
+                                            text: {
+                                                en: 'Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            partName: 'B',
+                                            text: {
+                                                en: '1.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'D',
+                                            text: {
+                                                en: '2.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'C',
+                                            text: {
+                                                en: '2.0 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'E',
+                                            text: {
+                                                en: '3.0 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    defaultValue: 'standard',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_WPR'],
+                                                targetNodeId:
+                                                    'waiver-of-premium-rider',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                        },
+                    ],
+                    showInNavigation: false,
+                    copyable: 'none',
+                },
+            ],
+            copyable: 'none',
+        },
+    ],
+    sectionGroupBlueprints: {
+        insuredPeople: {
+            id: 'insuredPeople',
+            partName: 'insuredPeople',
+        },
+        contract: {
+            id: 'contract',
+            partName: 'contract',
+        },
+    },
+} as QuestionnaireBlueprint;

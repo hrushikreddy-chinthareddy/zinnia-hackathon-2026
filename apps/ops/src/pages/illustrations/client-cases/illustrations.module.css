@@ -1,0 +1,47 @@
+.eAppContainer {
+    height: calc(100vh - 130px);
+    overflow: hidden;
+    padding: var(--measure-dimension-gap-md);
+    position: relative;
+    top: 100px;
+    bottom: 0px;
+    margin: 0 auto;
+}
+
+.eAppSurface {
+    width: 100%;
+    height: 100%;
+    width: 800px;
+    box-shadow: var(--shadow-elevation-elevation-light-md);
+    background: var(--color-base-surface-surface-primary);
+    border-radius: var(--measure-dimension-radius-md);
+    overflow: hidden;
+}
+
+.pageContainer {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+    background: var(--color-base-surface-surface-secondary);
+}
+
+.bannerWrapper {
+    position: fixed;
+    top: var(--measure-dimension-z-space-4);
+    right: 0;
+    width: 265px;
+    z-index: 50;
+}
+
+.bannerText {
+    display: flex;
+    gap: var(--measure-dimension-gap-sm);
+
+    .reloadButton {
+        color: var(--color-semantics-color-semantic-error);
+        &:hover {
+            color: var(--color-semantics-color-semantic-error);
+        }
+    }
+}

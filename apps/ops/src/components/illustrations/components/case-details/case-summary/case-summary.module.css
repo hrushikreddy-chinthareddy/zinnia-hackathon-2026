@@ -1,0 +1,45 @@
+.header {
+    padding: var(--measure-dimension-gap-2xl);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--measure-dimension-gap-md);
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--measure-dimension-margin-xxs);
+}
+
+.summary {
+    display: flex;
+    flex-direction: row;
+    margin-top: var(--measure-dimension-margin-lg);
+    gap: var(--measure-dimension-gap-2xl);
+
+    .label {
+        color: var(--color-base-text-text-primary);
+        font-feature-settings: 'liga' off, 'clig' off;
+    }
+
+    .value {
+        color: var(--color-base-text-text-primary);
+        display: block;
+    }
+
+    .caption {
+        color: var(--color-base-text-text-secondary);
+        font-feature-settings: 'liga' off, 'clig' off;
+    }
+}
+
+.linkButton {
+    &:hover {
+        &:not(:disabled):after {
+            content: none;
+        }
+    }
+}
