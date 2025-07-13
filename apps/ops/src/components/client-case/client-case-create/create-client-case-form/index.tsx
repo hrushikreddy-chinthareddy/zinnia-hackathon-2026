@@ -1,3 +1,4 @@
+import { capitalize } from '@xd/utils/src/strings';
 import {
     Button,
     ButtonGroup,
@@ -35,7 +36,7 @@ interface CreateClientCaseFormProps {
 }
 
 const clientCaseInitialState: Partial<IllustrationsClientCase> = {
-    title: '',
+    title: 'Untitled Client Case',
     caseManagementCaseId: '',
     eAppId: '',
     agentDetails: {
@@ -49,7 +50,7 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
     insuredDetails: {
         firstName: '',
         lastName: '',
-        sexAtBirth: 'Male',
+        sexAtBirth: 'MALE',
         dateOfBirth: undefined,
         nicotineUser: false,
         state: '',
@@ -276,7 +277,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                             )}
                         </Label>
                     }
-                    defaultValue={clientCaseData.insuredDetails?.sexAtBirth}
+                    defaultValue={capitalize(
+                        clientCaseData.insuredDetails?.sexAtBirth
+                    )}
                 />
                 <div className={styles.datePickerContainer}>
                     <div className={styles.datePicker}>

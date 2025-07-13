@@ -1,4 +1,5 @@
 import { formatRelativeTime } from '@xd/utils/src/dates';
+import { capitalize } from '@xd/utils/src/strings';
 import {
     Icon,
     IconType,
@@ -52,7 +53,7 @@ const generateTableContent = (
                     insuredDetails?.lastName || ''
                 }`.trim() || DEFAULT_ERROR_STRING;
             const insuredDetailsLine = [
-                insuredDetails?.sexAtBirth,
+                capitalize(insuredDetails?.sexAtBirth),
                 calculateAge(insuredDetails?.dateOfBirth?.toString(), ''),
                 insuredDetails?.state,
             ]

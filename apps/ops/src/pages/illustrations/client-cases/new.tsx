@@ -36,7 +36,7 @@ export default function NewClientCase(
         onSuccess: () => {
             // Refetch clientCaseData to include new entry
             queryClient.invalidateQueries({
-                queryKey: ['clientCaseData'],
+                queryKey: ['clientCaseSearch'],
             });
         },
 

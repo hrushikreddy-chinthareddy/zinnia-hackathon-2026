@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { capitalize } from '@xd/utils/src/strings';
 import {
     BodyVariant,
     Breadcrumb,
@@ -39,9 +40,9 @@ const IllustrationCaseSumary = ({
 }: IllustrationCaseSumaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
-    const insuranceDetails = `${
+    const insuranceDetails = `${capitalize(
         clientCase?.insuredDetails?.sexAtBirth
-    }, Age ${calculateAge(
+    )}, Age ${calculateAge(
         clientCase?.insuredDetails?.dateOfBirth?.toString(),
         ''
     )}, ${getStateName(clientCase?.insuredDetails?.state)}`;
@@ -123,12 +124,13 @@ const IllustrationCaseSumary = ({
 
     const { mutate } = useMutation({
         mutationKey: ['clientCase', clientCase?.id],
-        mutationFn: (data: Partial<IllustrationsClientCase>) =>
-            patchIllustrationsClientCase(data),
+        mutationFn: (data: Partial<IllustrationsClientCase>) => {
+            return patchIllustrationsClientCase(data);
+        },
         onSuccess: (d) => {
             // Refetch clientCaseData to include new entry
             queryClient.invalidateQueries({
-                queryKey: ['clientCaseSearch'],
+                queryKey: ['clientCaseData', clientCase.id],
             });
         },
         onMutate: () => {

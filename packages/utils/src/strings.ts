@@ -32,6 +32,11 @@ export function convertToCamelCase(val: string, splitter = '_') {
   return uncapitalizeFirstLetter(tempArray.join(''));
 }
 
+export function capitalize(str: string | undefined): string {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 // Format SSN return 1234
 export const formatSsn = (ssn?: string): string => {
   if (!ssn) {

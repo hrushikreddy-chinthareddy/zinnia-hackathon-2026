@@ -93,16 +93,18 @@ export default function ClientCaseIllustrations({
     return (
         <div className={clsx(styles.caseIllustrations)}>
             {((!clientCase && !isFetching) || isError) && (
-                <CardInfo
-                    icon={
-                        <ErrorIcon
-                            className="text-semantic-warning"
-                            height={50}
-                            width={50}
-                        />
-                    }
-                    title="Client Case not found"
-                />
+                <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-semantic-warning bg-white shadow-sm">
+                    <CardInfo
+                        icon={
+                            <ErrorIcon
+                                className="text-semantic-warning"
+                                height={50}
+                                width={50}
+                            />
+                        }
+                        title="Client Case not found"
+                    />
+                </div>
             )}
             {clientCase && (
                 <>

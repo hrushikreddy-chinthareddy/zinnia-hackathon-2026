@@ -181,6 +181,7 @@ export abstract class ServerApiClient {
         }
     }
 
+    // TODO: needs reviewed and refactored if it's used as a GET. cc Alex W.
     async patch(
         url: string,
         config: AxiosAuthRequestConfig,
@@ -203,6 +204,54 @@ export abstract class ServerApiClient {
         logTrace('serverApiClient::patch', loggingContext);
         try {
             const result = await fetch(url, loggingContext);
+            logTrace('serverApiClient::patch::success', {
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
+            return result;
+        } catch (ex: any) {
+            logWarn('serverApiClient::patch::error', {
+                ...loggingContext,
+                ...parseErrorInformation(ex),
+                duration: performance.now() - now,
+            });
+            throw ex?.response ?? ex;
+        }
+    }
+
+    async realPatch<T = any, R = AxiosResponse<T>>(
+        url: string,
+        data: T,
+        config: AxiosAuthRequestConfig,
+        logCtx: LoggingContext
+    ): Promise<R> {
+        const now = performance.now();
+        const configWithToken = await this.addToken(
+            config,
+            logCtx?.correlationId
+        );
+        const correlationId = configWithToken.headers?.['x-correlation-id'];
+        const loggingContext = {
+            ...logCtx,
+            file: 'serverApiClient',
+            function: 'patch',
+            method: 'PATCH',
+            url,
+            correlationId,
+        };
+        logTrace('serverApiClient::patch', loggingContext);
+        logInfo('serverApiClient::patch::authorization', {
+            ...loggingContext,
+            isAuthorized: configWithToken?.headers?.Authorization
+                ? true
+                : false,
+        });
+        try {
+            const result = await this.instance.patch<T, R>(
+                url,
+                data,
+                configWithToken
+            );
             logTrace('serverApiClient::patch::success', {
                 ...loggingContext,
                 duration: performance.now() - now,

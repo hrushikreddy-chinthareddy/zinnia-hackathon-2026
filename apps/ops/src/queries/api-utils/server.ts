@@ -127,6 +127,27 @@ const putRequest = async (
     }
 };
 
+const patchRequest = async (
+    url: string,
+    req: NextApiRequest,
+    res: NextApiResponse,
+    accessToken: string | undefined,
+    loggingContext: LoggingContext
+) => {
+    try {
+        const data = getBodyParams(req);
+        const result = await serverApi.realPatch(
+            url,
+            data,
+            { authorization: 'Bearer ' + accessToken },
+            loggingContext
+        );
+        sendRequest(req, res, result, loggingContext);
+    } catch (ex: any) {
+        sendError(res, ex, loggingContext);
+    }
+};
+
 const deleteRequest = async (
     url: string,
     req: NextApiRequest,
@@ -188,6 +209,14 @@ export const requestHandler = async <T>(
                     accessToken,
                     loggingContext,
                     sanitizer
+                );
+            if (req.method === 'PATCH')
+                return await patchRequest(
+                    url,
+                    req,
+                    res,
+                    accessToken,
+                    loggingContext
                 );
             if (req.method === 'DELETE')
                 return await deleteRequest(
