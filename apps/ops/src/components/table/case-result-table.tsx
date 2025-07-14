@@ -368,6 +368,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                             <Typography
                                 variant={TypographyVariant.BodySm}
                                 className={styles.detail}
+                                aria-label={`${getTimeText()}, Date`}
                             >
                                 {getTimeText()}
                             </Typography>
