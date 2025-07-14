@@ -7,7 +7,12 @@ module.exports = createJestConfig({
     setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
     testEnvironment: 'jsdom',
     modulePaths: ['<rootDir>/src'],
-    testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/.storybook', '<rootDir>/lib/', '<rootDir>/node_modules/'],
+    testPathIgnorePatterns: [
+        '<rootDir>/.next/',
+        '<rootDir>/.storybook',
+        '<rootDir>/lib/',
+        '<rootDir>/node_modules/',
+    ],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     moduleDirectories: ['node_modules', '<rootDir>/src'],
     moduleNameMapper: {
@@ -18,7 +23,7 @@ module.exports = createJestConfig({
     },
     testRegex: '/.*(\\.test\\.tsx?$)',
     collectCoverage: true,
-    coverageReporters: ['json', 'html'],
+    coverageReporters: ['text', 'json', 'html'],
     coverageDirectory: '<rootDir>/src/jest/coverage',
     coverageThreshold: {
         global: {

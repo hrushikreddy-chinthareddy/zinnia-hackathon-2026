@@ -332,7 +332,22 @@ function FormEntryStep({
         }
 
         setIsLoading(false);
-    }, [caseType, renewalInitialForm.status, renewalInitialForm.taskType, renewalInitialForm?.data?.obPendTaskId, getRenewalFormDataPayload, ownerInformation, contractValue, transOption, user?.email, renewalDocument, timer, setSubmitFailed, formState, document]);
+    }, [
+        caseType,
+        renewalInitialForm.status,
+        renewalInitialForm.taskType,
+        renewalInitialForm?.data?.obPendTaskId,
+        getRenewalFormDataPayload,
+        ownerInformation,
+        contractValue,
+        transOption,
+        user?.email,
+        renewalDocument,
+        timer,
+        setSubmitFailed,
+        formState,
+        document,
+    ]);
 
     const handleFormSubmit = async () => {
         getPolicyDocs();
@@ -360,7 +375,9 @@ function FormEntryStep({
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
                     disableContinue={
-                        formState.initialForm?.status === TaskStatus.Completed || renewalInitialForm.status === TaskStatus.Completed
+                        formState.initialForm?.status ===
+                            TaskStatus.Completed ||
+                        renewalInitialForm.status === TaskStatus.Completed
                     }
                 />
             }
