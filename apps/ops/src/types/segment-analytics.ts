@@ -75,6 +75,7 @@ export type PolicyClickedEvent = BaseSegmentEventProperties & {
     contractNumber?: string;
     linkName: string;
     linkUrl: string;
+    planCode?: string;
 };
 
 export type CaseClickedEvent = BaseSegmentEventProperties & {

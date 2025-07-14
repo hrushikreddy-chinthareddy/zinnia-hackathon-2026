@@ -124,6 +124,7 @@ export const MenuContextualContent = ({
                 linkUrl,
                 session_id: sessionId,
                 userId: userPartyId,
+                planCode: policy.planCode,
             }
         );
     };

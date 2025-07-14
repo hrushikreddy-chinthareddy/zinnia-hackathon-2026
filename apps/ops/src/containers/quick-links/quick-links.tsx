@@ -40,7 +40,8 @@ const trackClick = (
     linkUrl: string,
     policyNumber: string | undefined,
     sessionId: string | undefined,
-    userPartyId: string | undefined
+    userPartyId: string | undefined,
+    planCode: string | undefined
 ) => {
     if (!segmentTrackingName || !userPartyId || !sessionId) {
         return;
@@ -52,6 +53,7 @@ const trackClick = (
         linkUrl,
         session_id: sessionId,
         userId: userPartyId,
+        planCode,
     });
 };
 
@@ -107,7 +109,8 @@ const QuickLinks = ({
                                                     subLink.href,
                                                     policy.policyNumber,
                                                     sessionId,
-                                                    userPartyId
+                                                    userPartyId,
+                                                    policy.planCode
                                                 )
                                             }
                                         />
@@ -130,7 +133,8 @@ const QuickLinks = ({
                                     href,
                                     policy.policyNumber,
                                     sessionId,
-                                    userPartyId
+                                    userPartyId,
+                                    policy.planCode
                                 )
                             }
                             type={NavElementType.Link}
