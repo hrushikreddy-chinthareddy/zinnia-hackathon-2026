@@ -6,6 +6,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Radio from '@deps/components/radio/radio';
 import { TranslationFiles } from '@deps/config/translations';
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { DocumentType } from '@deps/models/case/document';
 
 import { DocumentIndexingInfo } from './document-indexing-info';
 import { NigoOptionDetails } from './nigo-option-details';
@@ -49,7 +50,7 @@ export const ServiceFormReview = ({
     const { displayName } = workingDocument || {};
 
     const sectionOptions =
-        docType === 'Exchange'
+        docType === DocumentType.Exchange
             ? [
                   {
                       label: t('options.allSectionsAreComplete'),
@@ -71,7 +72,7 @@ export const ServiceFormReview = ({
                   },
               ];
 
-    if (nigoExpection) {
+    if (docType !== DocumentType.Exchange && nigoExpection) {
         sectionOptions.push({
             label: nigoExpection.label,
             value: nigoExpection.value,
