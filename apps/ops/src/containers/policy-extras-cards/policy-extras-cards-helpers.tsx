@@ -329,26 +329,6 @@ const getRiderSubheader = (
             ];
 
         case BenefitId.TerminalIllness:
-            return [
-                riderBenefitData
-                    ? toSentenceCase(
-                          t('riders.terminalIllnessBenefit', {
-                              percent: numberFormatify(
-                                  riderBenefitData[
-                                      ConfiguredSettingId.MaxBenefitPercentage
-                                  ],
-                                  integerFormat
-                              ),
-                              amount: numberFormatify(
-                                  riderBenefitData[
-                                      ConfiguredSettingId.MaxAmount
-                                  ],
-                                  currencyFormat
-                              ),
-                          }) as string
-                      )
-                    : null,
-            ];
         case BenefitId.OverloanProtection:
         default:
             return [];
@@ -550,14 +530,11 @@ const mapRiderFields = (
     */
     if (
         benefitId !== BenefitId.OverloanProtection &&
-        benefitId !== BenefitId.Child
+        benefitId !== BenefitId.Child &&
+        riderBenefit?.[ConfiguredSettingId.MaxNumberOfClaims]
     ) {
         fields.push({
-            details: riderBenefit
-                ? riderBenefit[
-                      ConfiguredSettingId.MaxNumberOfClaims
-                  ]?.toString()
-                : undefined,
+            details: riderBenefit[ConfiguredSettingId.MaxNumberOfClaims].toString(),
             key: `rider-extras-card-${rider.riderName}-field-maxClaims`,
             label: t('riders.maxClaims'),
             testId: `${RidersCardsTest.MaxClaims}-${rider.riderName}`,
