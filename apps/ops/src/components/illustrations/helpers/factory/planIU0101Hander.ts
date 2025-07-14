@@ -469,8 +469,12 @@ function createIllustrationPayload(
                 },
                 targetCashValueOption: 'SPECIFY_AMOUNT',
                 targetCashValueAtOption: values.targetCashValueAtOption,
-                targetCashValueAge: values.targetCashValueAge,
-                targetCashValueYear: values.targetCashValueYear,
+                ...(values.targetCashValueAge && {
+                    targetCashValueAge: values.targetCashValueAge,
+                }),
+                ...(values.targetCashValueYear && {
+                    targetCashValueYear: values.targetCashValueYear,
+                }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
                 preventModifiedEndowment: values.preventMec,

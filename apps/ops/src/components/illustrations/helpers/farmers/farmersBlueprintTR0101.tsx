@@ -2601,7 +2601,7 @@ export const farmersBlueprintTR0101 = {
                                         'custom-1c1c6151-41e3-4a7f-8f2c-cc55c6b077f0',
                                     selectOptions: [
                                         {
-                                            partName: 'standard',
+                                            partName: 'NONETABLE',
                                             text: {
                                                 en: 'Standard',
                                             },
@@ -2609,7 +2609,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'B',
+                                            partName: 'TABLEB',
                                             text: {
                                                 en: '1.5 x Standard',
                                             },
@@ -2617,7 +2617,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'C',
+                                            partName: 'TABLEC',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -2625,7 +2625,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'D',
+                                            partName: 'TABLED',
                                             text: {
                                                 en: '2.5 x Standard',
                                             },
@@ -2633,7 +2633,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'E',
+                                            partName: 'TABLEE',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },
@@ -2642,7 +2642,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
-                                    defaultValue: 'standard',
+                                    defaultValue: 'NONETABLE',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
@@ -3121,7 +3121,7 @@ export const farmersBlueprintTR0101 = {
                                         'custom-bf30a8b8-b3d2-4f48-aac8-2668633f170e',
                                     selectOptions: [
                                         {
-                                            partName: 'standard',
+                                            partName: 'NONETABLE',
                                             text: {
                                                 en: 'Standard',
                                             },
@@ -3129,7 +3129,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'B',
+                                            partName: 'TABLEB',
                                             text: {
                                                 en: '1.5 x Standard',
                                             },
@@ -3137,15 +3137,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'D',
-                                            text: {
-                                                en: '2.5 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'C',
+                                            partName: 'TABLEC',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -3153,7 +3145,15 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'E',
+                                            partName: 'TABLED',
+                                            text: {
+                                                en: '2.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'TABLEE',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },
@@ -3162,7 +3162,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
-                                    defaultValue: 'standard',
+                                    defaultValue: 'NONETABLE',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
