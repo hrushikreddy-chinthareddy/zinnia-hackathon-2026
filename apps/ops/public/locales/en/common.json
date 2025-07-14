@@ -862,6 +862,7 @@
                     "custodialira-sep": "Custodial IRA - Simplified Employee Pension (SEP)",
                     "custinhira": "Custodial Inherited IRA",
                     "custspousalira": "Custodial Spousal IRA",
+                    "q401a": "Qualified 401(a) Plan",
                     "q401k": "Qualified 401(k) Plan",
                     "q403b": "Qualified 403(b) Plan",
                     "q457deferredcomp": "Qualified 457 Deferred Compensation Plan",

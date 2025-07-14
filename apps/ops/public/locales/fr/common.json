@@ -932,7 +932,11 @@
                     "unableToProceedWithDeathClaimPolicyWithdrawn": "Impossible de procéder à la réclamation en cas de décès car la police est retirée.",
                     "deathClaimNotApplicable": "Le traitement des demandes de remboursement en cas de décès n’est pas applicable au statut actuel de la police.",
                     "errorTitle": "Oh non ! Nous avons rencontré un problème technique...",
-                    "errorSubtitle": "Nous n'avons pas pu récupérer les données pour la police {{policyNumber}}. Essayez de rafraîchir votre navigateur."
+                    "errorSubtitle": "Nous n'avons pas pu récupérer les données pour la police {{policyNumber}}. Essayez de rafraîchir votre navigateur.",
+                    "q401a": "Plan 401(a) qualifié",
+                    "q401k": "Plan 401(k) qualifié",
+                    "q403b": "Plan 401(b) qualifié",
+                    "q457deferredcomp": "Régime de rémunération différée qualifié 457"
                 },
                 "notFound": "We couldn't find a contract or policy that matches your search.",
                 "tryAgain": "Check your input and try again.",

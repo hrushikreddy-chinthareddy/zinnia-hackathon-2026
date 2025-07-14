@@ -829,7 +829,11 @@
                     "unableToProceedWithDeathClaimPolicyWithdrawn": "No se puede proceder con el reclamo por muerte porque la póliza está retirada.",
                     "deathClaimNotApplicable": "El procesamiento de reclamos por muerte no es aplicable al estado actual de la póliza.",
                     "errorTitle": "¡Ups! Nos encontramos con un problema técnico...",
-                    "errorSubtitle": "No pudimos recuperar los datos para la póliza {{policyNumber}}. Intenta refrescar tu navegador."
+                    "errorSubtitle": "No pudimos recuperar los datos para la póliza {{policyNumber}}. Intenta refrescar tu navegador.",
+                    "q401a": "Plan 401(a) calificado",
+                    "q401k": "Plan 401(k) calificado",
+                    "q403b": "Plan 401(b) calificado",
+                    "q457deferredcomp": "Plan de Compensación Diferida 457 Calificado"
                 },
                 "notFound": "No pudimos encontrar un contrato o póliza que coincida con su búsqueda.",
                 "tryAgain": "Verifique su entrada e intente nuevamente.",

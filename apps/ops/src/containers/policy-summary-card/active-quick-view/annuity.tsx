@@ -24,6 +24,8 @@ export default function AnnuityQuickView({ policy }: BasePolicyComponentArgs) {
         TranslationFiles.COMMON,
         TranslationFiles.COLDEFS,
     ]);
+    const qualificationTypeTranslationKey = `dashboard.search.results.policySummaryCard.${policy?.qualificationType?.toLowerCase()}`;
+    const qualificationTypeTranslatedText = t(qualificationTypeTranslationKey);
 
     const Fields: AnnuityQuickViewFields = {
         AccountValue: {
@@ -53,9 +55,10 @@ export default function AnnuityQuickView({ policy }: BasePolicyComponentArgs) {
         qualificationType: {
             label: t('colDefs:policySummary.qualificationType'),
             details:
-                t(
-                    `dashboard.search.results.policySummaryCard.${policy?.qualificationType?.toLowerCase()}`
-                ) ?? '',
+                qualificationTypeTranslatedText ===
+                qualificationTypeTranslationKey
+                    ? policy?.qualificationType?.toLowerCase() ?? ''
+                    : qualificationTypeTranslatedText,
         },
     };
 
