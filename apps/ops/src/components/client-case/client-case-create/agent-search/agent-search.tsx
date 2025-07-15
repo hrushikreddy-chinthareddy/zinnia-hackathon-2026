@@ -17,7 +17,6 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
 import { IllustrationAgentDetails } from '@deps/types/illustrations';
 
 import styles from './agent-search.module.css';
@@ -271,13 +270,14 @@ export const AgentSearch = ({
                             ) */}
                         </Typography>
                     </div>
-                    <EditIcon
+                    {/* leave commented until the search api is ready */}
+                    {/* <EditIcon
                         color="blue"
                         height={'20px'}
                         width={'20px'}
                         className={styles.editIcon}
                         onClick={() => setIsEditing(!isEditing)}
-                    />
+                    />  */}
                 </div>
             )}
         </div>

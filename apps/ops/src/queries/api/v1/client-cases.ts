@@ -22,10 +22,8 @@ export const createClientCase = async (
     clientCaseData: Partial<IllustrationsClientCase>
 ): Promise<ApiResponse<IllustrationsClientCase>> => {
     try {
-        const response = (await client.post(
-            BASE_URL,
-            clientCaseData
-        )) as IllustrationsClientCase;
+        const response = (await client.post(BASE_URL, clientCaseData))
+            .data as IllustrationsClientCase;
         return { data: response, error: null };
     } catch (error: any) {
         return error;

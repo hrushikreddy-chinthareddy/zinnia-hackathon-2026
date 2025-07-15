@@ -59,6 +59,8 @@ export interface ClientCaseSearchInputs {
     insuredLastName?: string;
     limit?: number;
     offset?: number;
+    sortBy?: string;
+    sortDir?: string;
 }
 
 export type SexAtBirth = 'Male' | 'Female'; /// this willchange to a a full upper case on enum for BE.

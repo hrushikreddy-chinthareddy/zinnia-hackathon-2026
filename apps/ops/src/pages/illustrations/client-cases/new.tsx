@@ -33,11 +33,14 @@ export default function NewClientCase(
     const { mutate } = useMutation({
         mutationFn: (data: Partial<IllustrationsClientCase>) =>
             postIllustrationsClientCase(data),
-        onSuccess: () => {
-            // Refetch clientCaseData to include new entry
-            queryClient.invalidateQueries({
-                queryKey: ['clientCaseSearch'],
-            });
+        onSuccess: (data) => {
+            if (data?.id) {
+                router.push(
+                    `/illustrations/client-cases/${data?.id}/illustrate`
+                );
+            } else {
+                console.log('ID not found after client case creation');
+            }
         },
 
         onMutate: () => {

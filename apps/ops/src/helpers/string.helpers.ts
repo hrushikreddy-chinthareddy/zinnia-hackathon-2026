@@ -15,6 +15,9 @@ export const isNullEmptyOrUndefined = (value?: any) => {
     return value === null || value === undefined || value === '';
 };
 
+export const isNullEmptyUndefinedOrDefault = <T>(value: T): boolean =>
+    isNullEmptyOrUndefined(value) || value === DEFAULT_ERROR_STRING;
+
 export const cleanCurrency = (value: string) => {
     if (!value) return value;
 

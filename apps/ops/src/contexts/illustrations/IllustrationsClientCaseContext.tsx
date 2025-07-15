@@ -38,6 +38,8 @@ const defaultFilters: ClientCaseSearchInputs = {
     insuredLastName: '',
     limit: DEFAULT_LIMIT,
     offset: 0,
+    sortBy: 'lastModified',
+    sortDir: 'desc',
 };
 
 export function IllustrationsClientCaseProvider({
@@ -62,6 +64,8 @@ export function IllustrationsClientCaseProvider({
             insuredLastName: searchParams.get('insuredLastName') || '',
             limit: safeLimit,
             offset: safeOffset,
+            sortBy: searchParams.get('sortBy') || 'lastModified',
+            sortDir: searchParams.get('sortDir') || 'desc',
         };
     }, [searchParams]);
 

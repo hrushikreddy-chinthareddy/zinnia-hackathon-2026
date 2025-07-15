@@ -24,9 +24,9 @@ export const ClientCasePaginator = () => {
 
     const goToPage = useCallback(
         (pageNumber: number) => {
-            setFilters({ offset: (pageNumber - 1) * limit });
+            setFilters({ ...filters, offset: (pageNumber - 1) * limit });
         },
-        [setFilters, limit]
+        [setFilters, filters, limit]
     );
 
     return (

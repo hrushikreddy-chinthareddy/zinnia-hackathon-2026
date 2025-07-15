@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { capitalize } from '@xd/utils/src/strings';
 import {
     Button,
@@ -19,7 +20,11 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-import { formatDateDescriptionList } from '@deps/helpers/string.helpers';
+import {
+    formatDateDescriptionList,
+    isNullEmptyUndefinedOrDefault,
+} from '@deps/helpers/string.helpers';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     IllustrationAgentDetails,
     IllustrationInsuredDetails,
@@ -70,7 +75,33 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     onCancel,
     clientCase,
 }: CreateClientCaseFormProps) => {
-    const mergedCase = { ...clientCaseInitialState, ...clientCase };
+    const { user } = useUser();
+
+    // TODO: review once agent search is ready for implementation
+    const currentAgent: IllustrationAgentDetails =
+        clientCase?.agentDetails &&
+        !isNullEmptyUndefinedOrDefault(clientCase?.agentDetails?.firstName) &&
+        !isNullEmptyUndefinedOrDefault(clientCase?.agentDetails?.lastName)
+            ? {
+                  firstName: clientCase.agentDetails.firstName || '',
+                  lastName: clientCase.agentDetails.lastName || '',
+                  agencyId: clientCase.agentDetails.agencyId || '',
+                  npn: clientCase.agentDetails.npn || '',
+                  email: clientCase.agentDetails.email || '',
+              }
+            : {
+                  firstName: (user?.given_name as string) || '',
+                  lastName: (user?.family_name as string) || '',
+                  agencyId: (user?.agencyId as string) || DEFAULT_ERROR_STRING,
+                  npn: (user?.npn as string) || DEFAULT_ERROR_STRING,
+                  email: (user?.email as string) || '',
+              };
+
+    const mergedCase = {
+        ...clientCaseInitialState,
+        ...clientCase,
+        ...{ agentDetails: currentAgent },
+    };
 
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [clientCaseData, setClientCaseData] =
@@ -208,10 +239,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     value={clientCaseData.title}
                 />
                 <AgentSearch
-                    currentAgentData={
-                        clientCaseData?.agentDetails ||
-                        ({} as IllustrationAgentDetails)
-                    }
+                    currentAgentData={currentAgent}
                     onSelectAgent={updateClientCaseData}
                 />
             </section>

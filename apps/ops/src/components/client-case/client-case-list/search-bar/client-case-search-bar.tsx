@@ -60,6 +60,8 @@ const ClientCaseSearchBar: React.FC<{}> = () => {
     const [caseTitle, setCaseTitle] = useState(filters.title);
     const [limit, setLimit] = useState(filters.limit);
     const [offset, setOffset] = useState(filters.offset);
+    const [sortBy, setSortBy] = useState(filters.sortBy);
+    const [sortDir, setSortDir] = useState(filters.sortDir);
 
     useEffect(() => {
         setInsuredFirstName(filters.insuredFirstName);
@@ -72,6 +74,8 @@ const ClientCaseSearchBar: React.FC<{}> = () => {
         setCaseTitle(filters.title);
         setLimit(filters.limit);
         setOffset(filters.offset);
+        setSortBy(filters.sortBy);
+        setSortDir(filters.sortDir);
     }, [filters]);
 
     const handleSearch = (e: any) => {
