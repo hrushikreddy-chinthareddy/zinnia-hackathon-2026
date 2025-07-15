@@ -15,9 +15,10 @@ import PolicyLayout from '@deps/components/policy-layout';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import AnnuitizationSubPage from '@deps/containers/annuitization-sub-page';
+import BeneChangeContainer from '@deps/containers/bene-change/bene-change-container';
+import { BeneChangeProvider } from '@deps/containers/bene-change/bene-change-provider';
 import CoverageSubPage from '@deps/containers/coverage-sub-page';
 import LoansSubPage from '@deps/containers/loans-sub-page/loans-sub-page';
-import PeopleSubPage from '@deps/containers/people-sub-page';
 import PersonSubPage from '@deps/containers/person-sub-page';
 import PolicyDetailsContainer from '@deps/containers/policy-details/policy-details';
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
@@ -145,12 +146,23 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         // policies/id/slug
         switch (slug[0]) {
             case 'people':
-                // policies/id/people/personId or policies/id/people
-                subPageContent = slug[1] ? (
-                    <PersonSubPage editable={canEditPolicy} partyId={slug[1]} />
-                ) : (
-                    <PeopleSubPage />
-                );
+                subPageContent =
+                    slug[1] && slug[1] != 'benechange' ? (
+                        <PersonSubPage
+                            editable={canEditPolicy}
+                            partyId={slug[1]}
+                        />
+                    ) : (
+                        (subPageContent = (
+                            <BeneChangeProvider>
+                                <BeneChangeContainer
+                                    policy={policy}
+                                    planCode={planCode as any}
+                                    isReReg={false}
+                                />
+                            </BeneChangeProvider>
+                        ))
+                    );
                 subPageTitleKey = slug[1] ? 'partyDetails' : 'people';
                 break;
             case 'transactions':

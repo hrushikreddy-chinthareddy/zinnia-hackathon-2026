@@ -70,7 +70,7 @@ export default function Radio({
 
                 const disabledClass =
                     item?.disabled ?? disabled
-                        ? 'cursor-not-allowed !border-gray-300 !bg-gray-100'
+                        ? 'cursor-not-allowed opacity-50'
                         : 'cursor-pointer';
 
                 const readonlyClass = readonly

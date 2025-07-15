@@ -93,5 +93,6 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.Ops_Nigo]: ApiVersion.v2,
     [TaskType.Ops_Review]: ApiVersion.v2,
     [TaskType.Default_Case_DataEntry]: ApiVersion.v2,
+    [TaskType.Policyupdate_Partydetails_Review]: ApiVersion.v2,
     [TaskType.Cost_Basis_Review]: ApiVersion.v2,
 };

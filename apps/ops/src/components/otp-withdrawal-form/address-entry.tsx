@@ -23,6 +23,7 @@ type AddressProps = {
     isOL4753?: boolean;
     combinedAddress?: string;
     className?: string;
+    capitalize?: boolean;
 };
 
 export const DEFAULT_ADDRESS = {
@@ -50,6 +51,7 @@ export default function AddressEntry({
     isOL4753 = false,
     combinedAddress = '',
     className = '',
+    capitalize = true,
 }: AddressProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.addressDetails',
@@ -100,6 +102,10 @@ export default function AddressEntry({
         zipPlusFour,
     ]);
 
+    const format = (value: string) => {
+        return capitalize ? xss(value?.toUpperCase()) : xss(value);
+    };
+
     return (
         <div className={className}>
             <div className="max-w-lg">
@@ -107,7 +113,7 @@ export default function AddressEntry({
                     label={t(`mailingAddress`) as string}
                     message={errors.addressLine1}
                     onChange={(e) =>
-                        setAddressLine1(xss(e.target.value?.toUpperCase()))
+                        setAddressLine1(format(e.target.value ?? ''))
                     }
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
@@ -128,7 +134,7 @@ export default function AddressEntry({
                         label={t(`mailingAddressLine2`) as string}
                         message={errors.addressLine2}
                         onChange={(e) =>
-                            setAddressLine2(xss(e.target.value?.toUpperCase()))
+                            setAddressLine2(format(e.target.value ?? ''))
                         }
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
@@ -166,9 +172,7 @@ export default function AddressEntry({
                 <Field
                     label={t(`city`) as string}
                     message={errors.city}
-                    onChange={(e) =>
-                        setCity(xss(e.target.value?.toUpperCase()))
-                    }
+                    onChange={(e) => setCity(format(e.target.value ?? ''))}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={city}

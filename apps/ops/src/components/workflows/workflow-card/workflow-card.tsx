@@ -10,6 +10,7 @@ interface WorkflowCardProps extends PropsWithChildren {
     title: string;
     subtitle?: string;
     footerContent?: JSX.Element;
+    footerClassName?: string;
 }
 
 const WorkflowCard = ({
@@ -18,6 +19,7 @@ const WorkflowCard = ({
     subtitle,
     footerContent,
     className,
+    footerClassName,
 }: WorkflowCardProps) => (
     <div
         className={clsx(
@@ -41,7 +43,11 @@ const WorkflowCard = ({
         </div>
         <div>{children}</div>
         {/* TODO MG: remove this padding top */}
-        {!!footerContent && <div className="pt-4">{footerContent}</div>}
+        {!!footerContent && (
+            <div className={footerClassName ? footerClassName : 'pt-4'}>
+                {footerContent}
+            </div>
+        )}
     </div>
 );
 

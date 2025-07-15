@@ -22,7 +22,8 @@ import { baseAppUrl } from '@deps/queries/api-config';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { browserLogInfo } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
 
@@ -56,6 +57,13 @@ export interface NonFinancialTransactionBody {
     deleteRequest?: boolean;
     preferredAddressIndicator?: PreferredAddressIndicator;
     reverseInitiator?: boolean;
+}
+
+export interface NonFinancialTransactionResponse {
+    status: string | number;
+    quoteResponse?: any;
+    sor?: string;
+    error?: any;
 }
 
 interface AddressBody extends NonFinancialTransactionBody {
@@ -216,6 +224,31 @@ export const updateEDeliveryPreferenceByPlanCode = async ({
             error
         );
         return error;
+    }
+};
+
+export const checkEligibilityBeneficiary = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<NonFinancialTransactionResponse> => {
+    try {
+        const { data } = await client.post<
+            NonFinancialTransactionResponse,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/beneficiary/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'checkEligibilityBeneficiary::an error occurred during eligibility check',
+            {
+                ...parseErrorInformation(error),
+                payload: { planCode, policyNumber },
+                function: 'webnonfinancial.checkEligibilityBeneficiary',
+            }
+        );
+        return error?.data;
     }
 };
 

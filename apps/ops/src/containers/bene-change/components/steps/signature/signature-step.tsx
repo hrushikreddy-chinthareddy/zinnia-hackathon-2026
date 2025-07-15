@@ -1,19 +1,14 @@
 import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useState, useCallback, useEffect, ChangeEvent } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import SignatureValidationContainer from '@deps/components/otp-signature-container/component/otp-signature-conatiner';
-import Radio, {
-    RadioOrientation,
-    RadioVariant,
-} from '@deps/components/radio/radio';
-import TransactionNavigationButtons, {
-    ParentPage,
-} from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
+import Radio, { RadioOrientation, RadioVariant } from '@deps/components/radio/radio';
+import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
+import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, { TypographyVariant } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
@@ -24,6 +19,7 @@ import {
     SignPresent,
 } from '@deps/models/case/renewal/signature-validation';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
+import { TransactionResponse } from '@deps/queries/api/bpm';
 
 import { useReRegSignatureStepConfig } from './signature-step-helpers';
 import { useBeneChange } from '../../../bene-change-provider';
@@ -31,11 +27,12 @@ import { ENTERPRISE_ADDRESS_TYPE } from '../../beneficiary-details/address-detai
 
 interface SignatureStepProps {
     policy: Policy;
+    parentPage: ParentPage;
+    leaveTransactionLink: string;
+    validateTransaction?: () => Promise<TransactionResponse>;
 }
-const SignatureStep = ({ policy }: SignatureStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'beneChange.signature',
-    });
+const SignatureStep = ({ policy, parentPage, leaveTransactionLink, validateTransaction }: SignatureStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.signature' });
 
     const jointOwnerId = policy?.partyRoles?.find(
         (pr) => pr.partyRole === PartyRole.JOINTOWNER
@@ -53,6 +50,8 @@ const SignatureStep = ({ policy }: SignatureStepProps) => {
     )?.state;
 
     const { goToNext } = useWorkflow();
+    const router = useRouter();
+
     const {
         formValidation,
         isIrrevocableBene,
@@ -67,8 +66,9 @@ const SignatureStep = ({ policy }: SignatureStepProps) => {
         policy.carrierId as string
     );
 
-    const { signatureData, setSignatureData, formErrors, setFormErrors } =
+    const { signatureData, setSignatureData, formErrors, setFormErrors, setValidationResponse, validationResponse, ownerInfo } =
         useBeneChange();
+
     const [spousalConsent, setSpousalConsent] = useState(
         signatureData?.isSpousePresent ||
             (!!ownerState &&
@@ -77,7 +77,7 @@ const SignatureStep = ({ policy }: SignatureStepProps) => {
             : null
     );
 
-    const handleStepContinue = useCallback(() => {
+    const handleStepContinue = useCallback(async () => {
         if (signatureData) {
             const formErrors = formValidation(signatureData.signatures);
 
@@ -85,6 +85,15 @@ const SignatureStep = ({ policy }: SignatureStepProps) => {
                 setFormErrors(formErrors);
             } else {
                 setFormErrors({});
+
+                if (!validateTransaction) {
+                    goToNext();
+                    return;
+                }
+
+                const response = await validateTransaction();
+
+                setValidationResponse(response);
                 goToNext();
             }
         }
@@ -124,7 +133,6 @@ const SignatureStep = ({ policy }: SignatureStepProps) => {
                     SignatureValidationTypeWithdrawal.Owner &&
                 item.signTitle.text === SignatureDesignation.AttorneyInFact
         );
-
         setIsOwnerSignGuaranteeStamp(isOwnerHasPOA ? true : false);
     }, [signatureData.signatures, setIsOwnerSignGuaranteeStamp]);
 
@@ -142,16 +150,27 @@ const SignatureStep = ({ policy }: SignatureStepProps) => {
         }));
     }, [setSignatureData, isIrrevocableBene]);
 
+    const mainCta = {
+        text: t('continue'),
+        onClick: handleStepContinue,
+    };
+
+    const secondaryCta = {
+        text: t('leaveTransaction'),
+        onClick: () => {
+            router.push(leaveTransactionLink);
+        },
+    };
+
     return (
         <WorkflowCard
             title={t('header')}
             footerContent={
-                <TransactionNavigationButtons
-                    className="mt-10"
-                    disableContinue={false}
-                    handleContinue={handleStepContinue}
-                    parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink="/create-case"
+                <TransactionCta
+                    className="mt-60"
+                    mainCta={mainCta}
+                    secondaryCta={secondaryCta}
+                    stopLoading={Object.keys(formErrors).length > 0}
                 />
             }
         >
@@ -173,6 +192,7 @@ const SignatureStep = ({ policy }: SignatureStepProps) => {
                 disabled={false}
                 name={'bene.signature.selectOptions'}
                 variant={RadioVariant.Default}
+                className="mb-2"
             />
             <SignatureValidationContainer
                 config={signaturesConfig}

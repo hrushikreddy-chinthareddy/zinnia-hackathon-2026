@@ -24,6 +24,7 @@ export interface BeneficiaryListingItemProps {
     policy: Policy;
     isBeneInfoOnFile?: boolean;
     partyRoleId: any;
+    partyId?: string;
 }
 
 export default function BeneficiaryListingItem({
@@ -35,6 +36,7 @@ export default function BeneficiaryListingItem({
     setBeneData,
     isBeneInfoOnFile,
     partyRoleId,
+    partyId
 }: BeneficiaryListingItemProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.beneDetails.beneficiaryListing',
@@ -42,27 +44,14 @@ export default function BeneficiaryListingItem({
     const [showBeneficiary, setShowBeneficiary] = useState(false);
     const { deletedBene, setDeletedBene, beneData } = useBeneChange();
 
-    const relationshipToInsured =
-        partyRoleId &&
-        policy?.partyRoles?.find((role) => role?.partyRoleId === partyRoleId)
-            ?.relationshipToInsured;
-    const position = beneData
-        .map((element: any) => element.index)
-        .indexOf(index);
-    const [currentBene, setCurrentBene] = useState(
-        position > -1
-            ? beneData[position]
-            : getInitialBene(
-                  partyRole,
-                  index,
-                  selectedParty,
-                  relationshipToInsured,
-                  selectedParty?.partyId,
-                  true,
-                  'NONE',
-                  partyRoleId
-              )
-    );
+    const relationshipToParty = partyId && policy?.partyRoles?.find(role => role?.partyId === partyId)?.relationshipToParty;
+    const currentBene = useMemo(() => {
+        const pos = beneData.map((e: any) => e.index).indexOf(index);
+        return pos > -1
+            ? beneData[pos]
+            : getInitialBene(partyRole, index, selectedParty, relationshipToParty, selectedParty?.partyId, true, 'NONE', partyRoleId);
+    }, [beneData, index, partyRole, relationshipToParty, selectedParty, partyRoleId]);
+
     const [isNonEditable, setIsNonEditable] = useState<boolean>(true);
 
     const isCurrentRemoved = useMemo(() => {
@@ -84,16 +73,21 @@ export default function BeneficiaryListingItem({
     }, [currentBene, index, setBeneData]);
 
     const handleChange = (id: any, isChecked: boolean) => {
-        setDeletedBene((prevState: any) => {
-            if (prevState.includes(id)) {
-                return prevState.filter((value: any) => value !== id);
-            } else {
-                return [...prevState, id];
-            }
-        });
-
-        setCurrentBene((prevState: any) => {
-            return { ...prevState, action: isChecked ? 'DELETE' : 'NONE' };
+        setDeletedBene((prevState: any) =>
+            prevState.includes(id)
+                ? prevState.filter((value: any) => value !== id)
+                : [...prevState, id]
+        );
+        setBeneData((prevState: any[]) => {
+            return prevState.map((bene) => {
+                if (bene.index === id) {
+                    return {
+                        ...bene,
+                        action: isChecked ? 'DELETE' : 'NONE',
+                    };
+                }
+                return bene;
+            });
         });
     };
 
@@ -116,9 +110,12 @@ export default function BeneficiaryListingItem({
                         <span
                             className={isCurrentRemoved ? 'text-gray-200' : ''}
                         >
-                            {getName(selectedParty)}{' '}
+                            {getName(currentBene?.party?.info)}{' '}
                             {!isCurrentRemoved
-                                ? ` (${selectedParty?.beneficiaryPercentage}) %`
+                                ? ` (${
+                                      currentBene?.party?.allocation
+                                          ?.beneficiaryPercentage ?? '--'
+                                  }) %`
                                 : '(--)%'}
                         </span>
                     </div>

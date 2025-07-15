@@ -188,19 +188,7 @@ export const getPhones = ({ phones }: EnterprisePhones): EnterprisePhone[] => {
             (phone) => phone.dialNumber !== null && !isEndDated(phone.endDate)
         ) ?? [];
 
-    const filteredPhones: EnterprisePhone[] = [];
-
-    validPhones.forEach((validPhone) => {
-        switch (validPhone.phoneType) {
-            case ENTERPRISE_PHONE_TYPE.BUSINESS:
-            case ENTERPRISE_PHONE_TYPE.MOBILE:
-            case ENTERPRISE_PHONE_TYPE.MODEM:
-            case ENTERPRISE_PHONE_TYPE.OTHER:
-                filteredPhones.push(validPhone);
-                break;
-        }
-    });
-    return filteredPhones;
+    return validPhones;
 };
 
 export function formatPhoneNumber(phone: EnterprisePhone): string {

@@ -391,43 +391,44 @@
                 "title": "Allocation",
                 "labels": {
                     "allocation": "Allocation",
-                    "relationshipToInsured": "Relationship to insured"
+                    "relationshipToParty": "Relationship to party"
                 },
                 "relationshipToInsured": {
-                    "associate": "Associate",
-                    "aunt": "Aunt",
+                    "trustee": "Trustee",
+                    "trusteeOfMinor": "Trustee of Minor",
+                    "trusteeOfIncompetent": "Trustee of Incompetent",
+                    "powerOfAttorney": "Power of Attorney",
+                    "controllingPersonOfEntity": "Controlling Person of Entity",
                     "brother": "Brother",
+                    "child": "Child",
                     "daughter": "Daughter",
+                    "domesticPartner": "Domestic Partner",
+                    "executor": "Executor",
                     "father": "Father",
-                    "fiance": "Fiance",
-                    "grandfather": "Grandfather",
-                    "grandmother": "Grandmother",
+                    "fiance": "Fiancé",
                     "grandchild": "Grandchild",
-                    "husband": "Husband",
+                    "lifePartner": "Life Partner",
                     "mother": "Mother",
-                    "partner": "Partner",
                     "sister": "Sister",
                     "son": "Son",
-                    "trustee": "Trustee",
-                    "wife": "Wife",
-                    "uncle": "Uncle",
-                    "niece": "Niece",
-                    "nephew": "Nephew",
-                    "self": "Self",
-                    "estate": "Estate",
-                    "trust": "Trust",
                     "spouse": "Spouse",
-                    "grandson": "Grandson",
-                    "granddaughter": "Granddaughter",
+                    "stepfather": "Stepfather",
+                    "stepmother": "Stepmother",
+                    "self": "Self",
+                    "business": "Business",
+                    "businessAssociate": "Business Associate",
+                    "partner": "Partner",
+                    "employer": "Employer",
+                    "formerSpouse": "Former Spouse",
+                    "grandparent": "Grandparent",
                     "parent": "Parent",
-                    "child": "Child",
-                    "nonSpouse": "Non Spouse",
-                    "childrenEqually": "Children Equally",
-                    "childrenPerStirpes": "Children per Stirpes",
-                    "perStirpes": "Per Stirpes",
-                    "survivingSpouse": "Surviving Spouse",
+                    "owner": "Owner",
+                    "sibling": "Sibling",
+                    "stepchild": "Stepchild",
+                    "stepparent": "Stepparent",
                     "other": "Other"
-                }
+                },
+                "allocationRequired": "Allocation is required"
             },
             "identification": {
                 "title": "Identification",
@@ -443,6 +444,13 @@
                     "mrs": "Mrs.",
                     "ms": "Ms."
                 },
+                 "suffixOptions": {
+                     "jr": "JR",
+                     "sn": "SN",
+                     "i": "I",
+                     "ii": "II",
+                     "iii": "III"
+                 },
                 "prefix": "Prefix",
                 "suffix": "Suffix",
                 "firstName": "First name",
@@ -555,19 +563,26 @@
                 "firstNames": "Please make sure first or company or trustee name is updated while adding / updating beneficiaries",
                 "primaryBeneficiaryAllocationsSum": "The sum of all primary beneficiary allocations should be 100%",
                 "contingentBeneficiaryAllocationsSum": "The sum of all contingent beneficiary allocations should be 100%",
-                "addressDetails": "Please make sure address details are filled properly while adding / updating beneficiary"
+                "addressDetails": "Please make sure address details are filled properly while adding / updating beneficiary",
+                "allocationRequired": "Please make sure allocation is greater than 0% while adding / updating beneficiary"
             }
         },
         "signature": {
             "header": "Signature Validation",
             "isIrrevocableBene": "Is there an irrevocable beneficiary ?",
             "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",
-            "signatureShouldBePresent": "Signature present option must be selected"
+            "signatureShouldBePresent": "Signature present option must be selected",
+            "continue": "Continue",
+            "leaveTransaction": "Leave this transaction"
         },
         "summary": {
             "header": "Summary",
             "overview": "Overview",
             "reviewMessage": "Looking good! Be sure to review your entries before submitting",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "bpm500Error": "BPM 500 error",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "primaryBeneficiary": "Primary beneficiary",
             "contingentBeneficiary": "Contingent beneficiary",
             "current": "Current",
@@ -578,7 +593,7 @@
             },
             "allocation": {
                 "title": "Allocation",
-                "relationshipToInsured": "Relationship to insured"
+                "relationshipToParty": "Relationship to party"
             },
             "contact": {
                 "title": "Contact Info",
@@ -598,7 +613,10 @@
             "close": "Close",
             "title": "Success!",
             "viewAllPeople": "View all people",
-            "submitAddress": "Update beneficiary"
+            "submitAddress": "Update beneficiary",
+            "goToCase": "Go to case",
+            "submit": "Submitted!",
+            "nigo": "Beneficiary updates were submitted for NIGO processing."
         }
     },
     "addressChange": {
@@ -6525,6 +6543,15 @@
             "title": "Got It!",
             "subTitle": "Task: Claim Match Bene Document was submitted.",
             "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "policyupdatePartydetailsReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Send Nigo Communication was submitted.",
+            "cta": "Go to case ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }

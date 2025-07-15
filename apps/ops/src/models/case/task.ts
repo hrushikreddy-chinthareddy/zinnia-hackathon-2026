@@ -62,6 +62,7 @@ export enum TaskType {
     Ops_Nigo = 'OPS_NIGO',
     Ops_Review = 'OPS_REVIEW',
     Default_Case_DataEntry = 'DEFAULT_CASE_DATA_ENTRY',
+    Policyupdate_Partydetails_Review = 'POLICYUPDATE_PARTYDETAILS_REVIEW',
 }
 
 export enum EarlyTaskType {

@@ -19,8 +19,10 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import {
     Errors,
+    formatPrefix,
     genderOption,
     prefixOption,
+    suffixOptions,
     trustOption,
     TrustType,
 } from './bene-identification.helpers';
@@ -44,12 +46,14 @@ export interface BeneficiaryIdentificationProps {
     setCurrentParty: Dispatch<SetStateAction<any>>;
     updateParty?: any;
     isReadOnly?: boolean;
+    existingBene?: boolean;
 }
 
 const BeneficiaryIdentification = ({
     setCurrentParty,
     updateParty,
     isReadOnly,
+    existingBene = false,
 }: BeneficiaryIdentificationProps) => {
     const containerClasses = clsx(
         'flex flex-col',
@@ -79,7 +83,6 @@ const BeneficiaryIdentification = ({
             setParty((prevState: any) => ({
                 ...prevState,
                 partyType: partyIdentification,
-                lastName: '',
             }));
         } else if (partyIdentification === PartyType.INDIVIDUAL) {
             setParty((prevState: any) => ({
@@ -140,11 +143,10 @@ const BeneficiaryIdentification = ({
                     <PartyTypes
                         partyIdentification={partyIdentification}
                         onPartyChange={setPartyIdentification}
-                        isReadOnly={isReadOnly}
+                        isReadOnly={isReadOnly || existingBene}
                     />
                 </div>
             </div>
-
             <div className={containerClasses}>
                 <div className={sectionClasses}>
                     {partyIdentification === PartyType.INDIVIDUAL && (
@@ -159,7 +161,7 @@ const BeneficiaryIdentification = ({
                                     }))
                                 }
                                 size={FieldSize.Small}
-                                value={party?.prefix || ''}
+                                value={formatPrefix(party?.prefix) || ''}
                                 variant={FieldVariant.Default}
                                 disabled={isReadOnly}
                             />
@@ -226,23 +228,23 @@ const BeneficiaryIdentification = ({
                                         : FieldVariant.Default
                                 }
                             />
-                            <Field
-                                label={t(`suffix`) as string}
-                                onChange={(event) => {
-                                    setParty((prevState: any) => ({
+                               <SelectSimple
+                                label={t('suffix') as string}
+                                options={suffixOptions(t)}
+                                onChange={(value) =>
+                                     setParty((prevState: any) => ({
                                         ...prevState,
-                                        suffix: event.target.value,
-                                    }));
-                                }}
+                                        suffix: value,
+                                    }))
+                                }
                                 size={FieldSize.Small}
-                                type={FieldType.BaseActive}
                                 value={party?.suffix || ''}
-                                maxLength={4}
                                 variant={
                                     isReadOnly
                                         ? FieldVariant.Inactive
                                         : FieldVariant.Default
                                 }
+                                disabled={isReadOnly}
                             />
                         </div>
                     )}

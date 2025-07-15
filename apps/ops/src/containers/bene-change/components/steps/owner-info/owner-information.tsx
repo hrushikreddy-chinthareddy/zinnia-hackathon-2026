@@ -78,6 +78,7 @@ const formatAddress = (address: EnterpriseAddress) => {
         zipPlusFour: address?.zipCodeExtension || null,
         startDate: address?.startDate || null,
         endDate: address?.endDate || null,
+        addressId: address?.addressId || null,
     };
 };
 
@@ -105,6 +106,9 @@ const getFormattedAddresses = (policyParty: any) => {
         .filter((item: any) => item !== undefined);
 
     homeAddresses = homeAddresses?.sort((a: any, b: any) => {
+        if (a.addressId === policyParty?.preferredAddressIndicator) return -1;
+        if (b.addressId === policyParty?.preferredAddressIndicator) return 1;
+
         return dayjs(a?.startDate, ZAHARA_API_DATE_FORMAT).isBefore(
             dayjs(b?.startDate, ZAHARA_API_DATE_FORMAT)
         )
@@ -115,10 +119,10 @@ const getFormattedAddresses = (policyParty: any) => {
     if (homeAddresses && homeAddresses.length > 0) {
         addresses.push(homeAddresses[0]);
     }
-    let defaultAddresses = policyParty?.addresses
+    let mailingAddresses = policyParty?.addresses
         ?.map((address: any) => {
             if (
-                address.addressType === ENTERPRISE_ADDRESS_TYPE.DEFAULT &&
+                address.addressType === ENTERPRISE_ADDRESS_TYPE.MAILING &&
                 !isEndDated(address.endDate)
             ) {
                 return address;
@@ -126,7 +130,9 @@ const getFormattedAddresses = (policyParty: any) => {
         })
         .filter((item: any) => item !== undefined);
 
-    defaultAddresses = defaultAddresses?.sort((a: any, b: any) => {
+    mailingAddresses = mailingAddresses?.sort((a: any, b: any) => {
+        if (a.addressId === policyParty?.preferredAddressIndicator) return -1;
+        if (b.addressId === policyParty?.preferredAddressIndicator) return 1;
         return dayjs(a?.startDate, ZAHARA_API_DATE_FORMAT).isBefore(
             dayjs(b?.startDate, ZAHARA_API_DATE_FORMAT)
         )
@@ -134,8 +140,8 @@ const getFormattedAddresses = (policyParty: any) => {
             : -1;
     });
 
-    if (defaultAddresses && defaultAddresses.length > 0) {
-        addresses.push(defaultAddresses[0]);
+    if (mailingAddresses && mailingAddresses.length > 0) {
+        addresses.push(mailingAddresses[0]);
     }
 
     const formattedAddresses: any = [];
@@ -158,7 +164,8 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
     const phones = policyParty?.phones
         ?.map((phone) => {
             if (
-                phone.phoneType === ENTERPRISE_PHONE_TYPE.HOME &&
+                (phone.phoneType === ENTERPRISE_PHONE_TYPE.MOBILE ||
+                    phone.phoneType === ENTERPRISE_PHONE_TYPE.HOME) &&
                 !isEndDated(phone.endDate)
             ) {
                 return formatPhone(phone);
@@ -167,6 +174,9 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
         .filter((item: any) => item !== undefined);
 
     const formattedAddresses: any = getFormattedAddresses(policyParty);
+    const validemails =
+        policyParty?.emails?.filter((email) => !isEndDated(email.endDate)) ||
+        [];
 
     return {
         partyRoleType: role,
@@ -183,10 +193,12 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
                 (identification) =>
                     identification.identificationType === IdentificationType.SSN
             )?.identificationValue || undefined,
-        email: '',
+        email: validemails?.length > 0 ? validemails[0].emailAddress : '',
         addresses: formattedAddresses ?? [],
         phones: phones ?? [],
         id: id,
+        preferredAddressIndicator:
+            policyParty?.preferredAddressIndicator || null,
     };
 };
 const getInitialParty = (policy: Policy, configs: any) => {
@@ -285,7 +297,7 @@ export default function OwnerInformation({
 
     return (
         <CardContainer
-            classNames={'w-full'}
+            classNames={'w-full !p-2'}
             containerClassNames="w-full content-divider"
         >
             {configs?.map((config, index) => {
@@ -433,6 +445,7 @@ export default function OwnerInformation({
                                                             isPayeeAddress={
                                                                 true
                                                             }
+                                                            capitalize={false}
                                                         />
                                                     </div>
                                                 }

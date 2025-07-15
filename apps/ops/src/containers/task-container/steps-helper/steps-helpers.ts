@@ -55,6 +55,7 @@ export const getFormSteps = (
         case TaskType.Cost_Basis_Review:
         case TaskType.Claims_Match_Bene_Document:
         case TaskType.Claims_Fi_Escheatment_Task:
+        case TaskType.Policyupdate_Partydetails_Review:
             steps = getAgentNigoSteps(props);
             break;
 

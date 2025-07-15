@@ -72,6 +72,7 @@ export const ENTERPRISE_ADDRESS_TYPE = {
     BUSINESS: 'BUSINESS',
     DEFAULT: 'DEFAULT',
     SECONDARY: 'SECONDARYADDRESS',
+    MAILING: 'MAILING',
 };
 
 export type EnterpriseAddressType =

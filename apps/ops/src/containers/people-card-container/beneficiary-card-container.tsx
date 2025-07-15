@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import AllocationColorBar, {
@@ -9,11 +10,7 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, {
-    isStillInactive,
-} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
-import { ReactComponent as SettingsIcon } from '@deps/styles/elements/icons/actions/settings.svg';
 
 import PeopleCardContainer from './people-card-container';
 import {
@@ -24,6 +21,7 @@ import {
     BeneficiaryType,
     PeopleCardContainerProps,
 } from './people-card-container.types';
+import { useBeneChange } from '../bene-change/bene-change-provider';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
 
 interface BeneficiaryCardContainerProps extends PeopleCardContainerProps {
@@ -32,6 +30,9 @@ interface BeneficiaryCardContainerProps extends PeopleCardContainerProps {
     type?: BeneficiaryType;
     showAllocationBar?: boolean;
     isRereg?: boolean;
+    manageBeneficiary?: () => void;
+    showManageBeneficiary?: boolean;
+    enableManageBeneficiary?: boolean;
 }
 
 const peopleDataToColors = (
@@ -52,12 +53,11 @@ const BeneficiaryCardContainer = ({
     type = BeneficiaryType.PRIMARY,
     filteredData,
     classNames,
-    openAllocationSideSheet = () => {
-        return;
-    },
     peopleCardData,
     showAllocationBar = true,
     isRereg = false,
+    showManageBeneficiary = false,
+    enableManageBeneficiary = false,
 }: BeneficiaryCardContainerProps) => {
     const { t } = useTranslation();
     const colors: AllocationColor[] = showAllocationBar
@@ -69,32 +69,36 @@ const BeneficiaryCardContainer = ({
         labelMapping[LabelVariant.FieldLabel].styles
     );
 
+    const { setIsPeopleView } = useBeneChange();
+    const router = useRouter();
+
     return (
         <div className={classNames}>
-            <div className="flex items-start justify-between">
+            <div className="flex items-center justify-between">
                 <span className={classes}>{toSentenceCase(title)}</span>
-                {isStillInactive.beneficiaryCardContainer ? (
-                    // https://zinnia.atlassian.net/browse/DEPU-1936
-                    !isRereg && (
-                        <TempNavInactive
-                            tooltipBody={
-                                isStillInactive.beneficiaryCardContainer
-                            }
-                            navElementClassName="mb-2"
+                {!isRereg && showManageBeneficiary && (
+                    <span className="bg-gray-50 p-2 mb-1 text-center">
+                        <NavElement
+                            type={NavElementType.Button}
+                            size={NavElementSize.Small}
+                            startIcon={null}
+                            className="flex items-start"
+                            onClick={() => {
+                                setIsPeopleView(false);
+                                router.push(
+                                    {
+                                        pathname: `${router.pathname}/benechange`,
+                                        query: router.query,
+                                    },
+                                    undefined,
+                                    { shallow: true }
+                                );
+                            }}
+                            disabled={!enableManageBeneficiary}
                         >
-                            {t('beneficiary-card.modifyAllocations')}
-                        </TempNavInactive>
-                    )
-                ) : (
-                    <NavElement
-                        type={NavElementType.Button}
-                        size={NavElementSize.Small}
-                        startIcon={<SettingsIcon width={20} height={20} />}
-                        className="flex items-start"
-                        onClick={openAllocationSideSheet}
-                    >
-                        {t('beneficiary-card.modifyAllocations')}
-                    </NavElement>
+                            {t('quickActions.people.manageBeneficiaries')}
+                        </NavElement>
+                    </span>
                 )}
             </div>
             {showAllocationBar && <AllocationColorBar colors={colors} />}

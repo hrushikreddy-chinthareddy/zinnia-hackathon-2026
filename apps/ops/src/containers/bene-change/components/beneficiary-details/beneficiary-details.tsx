@@ -84,10 +84,10 @@ export default function BeneficiaryDetails({
     const position = beneData
         .map((element: any) => element.index)
         .indexOf(index);
-    const relationshipToInsured =
+    const relationshipToParty =
         partyRoleId &&
         policy?.partyRoles?.find((role) => role.partyRoleId === partyRoleId)
-            ?.relationshipToInsured;
+            ?.relationshipToParty;
     const [currentBene, setCurrentBene] = useState(
         position > -1
             ? beneData[position]
@@ -95,7 +95,7 @@ export default function BeneficiaryDetails({
                   partyRole,
                   index,
                   selectedParty,
-                  relationshipToInsured,
+                  relationshipToParty,
                   partyId,
                   !isReadOnly,
                   action,
@@ -134,63 +134,72 @@ export default function BeneficiaryDetails({
     }, [currentBene, index, setBeneData]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) => {
-            const newState = prevState;
-            if (action !== 'ADD') {
-                newState.action = isReadOnly ? 'NONE' : 'UPDATE';
-                return { ...newState };
-            } else {
-                return { ...prevState };
-            }
-        });
+        setCurrentBene((prevState: any) => ({
+            ...prevState,
+            action:
+                action !== 'ADD'
+                    ? isReadOnly
+                        ? 'NONE'
+                        : 'UPDATE'
+                    : prevState.action,
+        }));
     }, [action, isNonEditable, isReadOnly]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) => {
-            const newState = prevState;
-            newState.party.addresses = currentAddresses;
-            return newState;
-        });
+        setCurrentBene((prevState: any) => ({
+            ...prevState,
+            party: {
+                ...prevState.party,
+                addresses: currentAddresses,
+            },
+        }));
     }, [currentAddresses]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) => {
-            const newState = prevState;
-            newState.party.phones = currentPhones;
-            return newState;
-        });
+        setCurrentBene((prevState: any) => ({
+            ...prevState,
+            party: {
+                ...prevState.party,
+                phones: currentPhones,
+            },
+        }));
     }, [currentPhones]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) => {
-            const newState = prevState;
-            newState.party.emails = currentEmails;
-            return newState;
-        });
+        setCurrentBene((prevState: any) => ({
+            ...prevState,
+            party: {
+                ...prevState.party,
+                emails: currentEmails,
+            },
+        }));
     }, [currentEmails]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) => {
-            const newState = prevState;
-            newState.party.info = currentParty;
-            return newState;
-        });
+        setCurrentBene((prevState: any) => ({
+            ...prevState,
+            party: {
+                ...prevState.party,
+                info: currentParty,
+            },
+        }));
     }, [currentParty]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) => {
-            const newState = prevState;
-            newState.beneInfo = beneInfo;
-            return newState;
-        });
+        setCurrentBene((prevState: any) => ({
+            ...prevState,
+            beneInfo,
+        }));
     }, [beneInfo]);
 
     useEffect(() => {
-        setCurrentBene((prevState: any) => {
-            const newState = prevState;
-            newState.party.allocation = allocationDetails;
-            return newState;
-        });
+        setCurrentBene((prevState: any) => ({
+            ...prevState,
+            party: {
+                ...prevState.party,
+                allocation: allocationDetails,
+            },
+        }));
     }, [allocationDetails]);
 
     return (
@@ -219,6 +228,7 @@ export default function BeneficiaryDetails({
                     updateParty={currentParty}
                     setCurrentParty={setCurrentParty}
                     isReadOnly={isReadOnly}
+                    existingBene={partyId ? true : false}
                 />
             </div>
 

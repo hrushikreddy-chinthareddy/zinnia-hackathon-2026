@@ -12,23 +12,35 @@ import { useBeneChange } from '../../../bene-change-provider';
 
 interface DocSelectionStepProps {
     policy: Policy;
+    parentPage: ParentPage;
+    leaveTransactionLink: string;
 }
 
-const DocSelectionStep = ({ policy }: DocSelectionStepProps) => {
+const DocSelectionStep = ({
+    policy,
+    parentPage,
+    leaveTransactionLink,
+}: DocSelectionStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange',
     });
     const { formData, setFormData } = useBeneChange();
+
     return (
         <>
             <StartStep
-                parentPage={ParentPage.CreateCase}
+                parentPage={parentPage}
                 policy={policy}
                 setState={setFormData as StartStepSetState}
                 state={formData}
                 title={t('start.title')}
                 subtitle={t('start.subtitle') as string}
-                processType={Processes.BeneficiaryChange}
+                processType={Processes.PolicyUpdate}
+                processSubType={[
+                    Processes.BeneficiaryChange,
+                    Processes.BeneficiaryUpdate,
+                ]}
+                leaveTransactionLink={leaveTransactionLink}
             />
         </>
     );

@@ -29,6 +29,7 @@ export enum ParentPage {
     Premiums = 'premiums',
     Withdrawals = 'withdrawals',
     Funds = 'funds',
+    People = 'people',
     None = '',
 }
 

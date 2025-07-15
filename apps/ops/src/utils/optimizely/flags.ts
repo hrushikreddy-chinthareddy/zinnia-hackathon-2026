@@ -140,6 +140,7 @@ export enum FEATURE_FLAGS {
     CALL_AUDIO_FEATURE = 'call-audio-feature',
     NEW_DEATH_CLAIM = 'new_death_claim',
     DASHBOARD_NIGO_TAB = 'dashboard_nigo_tab',
+    BENEFICIARY_CHANGE_TRANSACTION = 'beneficiary_change_transaction',
     SERVICE_REQUEST_FORM_ENABLED = 'service_request_default_case',
     PARTY_NAME_CHANGE_TRANSACTION = 'party_name_change_transaction',
     SEND_CORRESPONDENCE = 'send_correspondence',

@@ -2,6 +2,7 @@ import {
     Email,
     IdentificationType,
     PartyRole,
+    PartyType,
 } from '@zinnia/api-types/types/sor';
 
 import {
@@ -18,7 +19,7 @@ export const getInitialBene = (
     partyRole: PartyRole,
     index: string,
     selectedParty?: any,
-    relationshipToInsured?: any,
+    relationshipToParty?: any,
     partyId?: string,
     isReadOnly?: boolean,
     action?: string,
@@ -29,20 +30,29 @@ export const getInitialBene = (
     const currentEmails: Email[] = getPersonalEmails({ emails });
     const currentPhones: EnterprisePhone[] = getPhones({ phones });
     const currentAddresses: EnterpriseAddress[] = getAddresses({ addresses });
+    let lastName: string | null = null;
+
+    if (selectedParty?.lastName) {
+        lastName = selectedParty.lastName;
+    } else if (selectedParty?.partyType !== PartyType.INDIVIDUAL) {
+        lastName = selectedParty?.fullName ?? null;
+    }
+
     const beneInfo: any = {
-        isPerStirpes: false,
-        isIrrevocable: false,
-        isRestrictedBeneficiary: false,
+        isPerStirpes: selectedParty?.isPerStirpes || false,
+        isIrrevocable: selectedParty?.isIrrevocable || false,
+        isRestrictedBeneficiary:
+            selectedParty?.isRestrictedBeneficiary || false,
     };
     const allocationDetails = {
         beneficiaryPercentage: beneficiaryPercentage,
-        relationshipToInsured: relationshipToInsured,
+        relationshipToParty: relationshipToParty,
     };
 
     const currentParty = {
         firstName: selectedParty?.firstName,
         middleName: selectedParty?.middleName,
-        lastName: selectedParty?.lastName,
+        lastName: lastName,
         fullName: selectedParty?.fullName,
         prefix: selectedParty?.prefix,
         suffix: selectedParty?.suffix,

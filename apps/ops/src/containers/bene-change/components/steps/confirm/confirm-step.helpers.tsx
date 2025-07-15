@@ -25,6 +25,7 @@ import {
     Carrier,
     SignatureWithdrawal,
 } from '@deps/models/case/withdrawal/case';
+import { SorSystem } from '@deps/models/policy/enums';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import {
@@ -32,7 +33,10 @@ import {
     EnterpriseAddress,
     getAddresses,
 } from '../../beneficiary-details/address-details/address-details.helpers';
-import { TrustType } from '../../beneficiary-details/bene-identification/bene-identification.helpers';
+import {
+    formatPrefix,
+    TrustType,
+} from '../../beneficiary-details/bene-identification/bene-identification.helpers';
 import { getPersonalEmails } from '../../beneficiary-details/email-details/email-details.helpers';
 import {
     ENTERPRISE_PHONE_TYPE,
@@ -44,7 +48,6 @@ const DEFAULT_PAYLOAD = {
     businessKey: null,
     correlationid: null,
     onbaseCaseId: null,
-    sorSystem: 'LifeCad',
     sourceSystem: 'ONBASE',
     channel: 'MAIL',
     carrierId: null,
@@ -247,323 +250,154 @@ export const getContractInfo = (ownerInfo: any, policy: Policy) => {
 };
 
 const formatActionRecord = (policy: Policy, item: any, parties: any) => {
-    let record;
     const partyId = item?.party?.partyId;
     const party = policy?.parties?.find(
         (partyItem) => partyItem.partyId === partyId
     );
 
-    if (item.action === 'NONE') {
-        const identifications = party?.identifications?.find(
-            (ids) => ids.identificationType === IdentificationType.SSN
-        );
-        const selectedParty = parties?.find((selectedItem: any) =>
-            selectedItem?.partyRoleIds?.includes(item?.partyRole?.partyRoleId)
-        );
-        const { emails, addresses, phones, partyType } = selectedParty;
-        const currentEmails: Email[] = getPersonalEmails({ emails });
-        const currentPhones: EnterprisePhone[] = getPhones({ phones });
-        const currentAddresses: EnterpriseAddress[] = getAddresses({
-            addresses,
-        });
-
-        const selectedPartyType = !isNullEmptyOrUndefined(
-            item?.party?.info?.partyType
-        )
-            ? item?.party?.info?.partyType
-            : partyType;
-        const { prefix, firstName, middleName, lastName, suffix } =
-            item?.party?.info || {};
-        const fullName =
-            selectedPartyType === PartyType.INDIVIDUAL
-                ? toTitleCase(
-                      [prefix, firstName, middleName, lastName, suffix]
-                          .filter(Boolean)
-                          .join(' ')
-                  )
-                : item?.party?.info?.lastName;
-
-        record = {
-            actionType: item.actionType,
-            action: item.action,
-            partyRole: {
-                partyId: item?.partyRole?.partyId || null,
-                partyRole: item?.partyRole?.partyRole || null,
-                partyRoleId: item?.partyRole?.partyRoleId || null,
-                relationshipToInsured:
-                    item?.party?.allocation?.relationshipToInsured || null,
-            },
-            party: {
-                partyId: item?.party?.partyId || null,
-                partyType: selectedPartyType,
-                firstName: item?.party?.info?.firstName || null,
-                middleName: item?.party?.info?.middleName || null,
-                lastName: item?.party?.info?.lastName || null,
-                trustType:
-                    selectedPartyType == PartyType.TRUST
-                        ? item?.party?.info?.trustType
-                        : 'NONE',
-                fullName: fullName || null,
-                prefix: item?.party?.info?.prefix || null,
-                suffix: item?.party?.info?.suffix || null,
-                gender: item?.party?.info?.gender || null,
-                dateOfBirth: !isNullEmptyOrUndefined(
-                    item?.party?.info?.dateOfBirth
-                )
-                    ? dayjs(item?.party?.info?.dateOfBirth).format(
-                          ZAHARA_API_DATE_FORMAT
-                      )
-                    : null,
-                beneficiaryPercentage:
-                    item?.party?.allocation?.beneficiaryPercentage || 0,
-                identifications: identifications
-                    ? [{ ...identifications }]
-                    : [],
-                addresses: currentAddresses,
-                phones: currentPhones,
-                emails: currentEmails,
-            },
-            isPerStirpes: item?.beneInfo?.isPerStirpes || false,
-            isIrrevocable: item?.beneInfo?.isIrrevocable || false,
-            isRestrictedBeneficiary:
-                item?.beneInfo?.isRestrictedBeneficiary || false,
+    const identifications = party?.identifications?.find(
+        (ids) => ids.identificationType === IdentificationType.SSN
+    );
+    const selectedParty = parties?.find((selectedItem: any) =>
+        selectedItem?.partyRoleIds?.includes(item?.partyRole?.partyRoleId)
+    );
+    let {
+        emails = [],
+        addresses = [],
+        phones = [],
+        partyType,
+    } = selectedParty || {};
+    const currentEmails: Email[] = getPersonalEmails({ emails });
+    const currentPhones: EnterprisePhone[] = getPhones({ phones });
+    const currentAddresses: EnterpriseAddress[] = getAddresses({ addresses });
+    const formattedAddresses = item?.party?.addresses.map((address: any) => {
+        return {
+            ...address,
+            country: address?.country === 'US' ? 'USA' : address?.country,
         };
-    } else if (item.action === 'DELETE') {
-        const identifications = party?.identifications?.find(
-            (ids) => ids.identificationType === IdentificationType.SSN
-        );
-        const selectedParty = parties?.find((selectedItem: any) =>
-            selectedItem?.partyRoleIds?.includes(item?.partyRole?.partyRoleId)
-        );
-        const { emails, addresses, phones, partyType } = selectedParty;
-        const currentEmails: Email[] = getPersonalEmails({ emails });
-        const currentPhones: EnterprisePhone[] = getPhones({ phones });
-        const currentAddresses: EnterpriseAddress[] = getAddresses({
-            addresses,
-        });
+    });
+    const partyRoleInfo = policy?.partyRoles?.find(
+        (partyItem) => partyItem?.partyRole === item?.partyRole?.partyRole
+    );
+    const formattedPhones = item?.party?.phones;
 
-        const { prefix, firstName, middleName, lastName, suffix } =
-            item?.party?.info || {};
-        const selectedPartyType = !isNullEmptyOrUndefined(
-            item?.party?.info?.partyType
-        )
-            ? item?.party?.info?.partyType
-            : partyType;
-        const fullName =
-            selectedPartyType === PartyType.INDIVIDUAL
-                ? toTitleCase(
-                      [prefix, firstName, middleName, lastName, suffix]
-                          .filter(Boolean)
-                          .join(' ')
-                  )
-                : item?.party?.info?.lastName;
+    partyType =
+        item.action == 'NONE' || item.action == 'DELETE' ? partyType : null;
 
-        record = {
-            actionType: item.actionType,
-            action: item.action,
-            partyRole: {
-                partyId: item?.partyRole?.partyId || null,
-                partyRole: item?.partyRole?.partyRole || null,
-                partyRoleId: item?.partyRole?.partyRoleId || null,
-                relationshipToInsured:
-                    item?.partyRole?.relationshipToInsured || null,
-            },
-            party: {
-                partyId: item?.party?.partyId || null,
-                partyType: selectedPartyType,
-                firstName: item?.party?.info?.firstName || null,
-                middleName: item?.party?.info?.middleName || null,
-                lastName: item?.party?.info?.lastName || null,
-                trustType:
-                    selectedPartyType == PartyType.TRUST
-                        ? item?.party?.info?.trustType
-                        : 'NONE',
-                fullName: fullName || null,
-                prefix: item?.party?.info?.prefix || null,
-                suffix: item?.party?.info?.suffix || null,
-                gender: item?.party?.info?.gender || null,
-                dateOfBirth: !isNullEmptyOrUndefined(
-                    item?.party?.info?.dateOfBirth
-                )
-                    ? dayjs(item?.party?.info?.dateOfBirth).format(
-                          ZAHARA_API_DATE_FORMAT
-                      )
+    const selectedPartyType = !isNullEmptyOrUndefined(
+        item?.party?.info?.partyType
+    )
+        ? item?.party?.info?.partyType
+        : partyType;
+    const { prefix, firstName, middleName, lastName, suffix } =
+        item?.party?.info || {};
+    const fullName =
+        selectedPartyType === PartyType.INDIVIDUAL
+            ? [
+                  formatPrefix(prefix),
+                  ...[firstName, middleName, lastName]
+                      .filter(Boolean)
+                      .map((part) => toTitleCase(part)),
+                  suffix,
+              ]
+                  .filter(Boolean)
+                  .join(' ')
+            : item?.party?.info?.lastName;
+
+    const record = {
+        actionType: item.actionType,
+        action: item.action,
+        partyRole: {
+            partyId:
+                item.action == 'ADD' ? null : item?.partyRole?.partyId || null,
+            partyRole:
+                item.action == 'ADD'
+                    ? partyRoleInfo?.partyRole || item?.partyRole?.partyRole
+                    : item?.partyRole?.partyRole || null,
+            partyRoleId:
+                item.action == 'ADD'
+                    ? null
+                    : item?.partyRole?.partyRoleId || null,
+            relationshipToParty:
+                item?.party?.allocation?.relationshipToParty || null,
+        },
+        party: {
+            partyId: item.action == 'ADD' ? null : item?.party?.partyId || null,
+            partyType: selectedPartyType,
+            firstName:
+                selectedPartyType == PartyType.INDIVIDUAL
+                    ? item?.party?.info?.firstName || null
                     : null,
-                beneficiaryPercentage:
-                    item?.party?.allocation?.beneficiaryPercentage || 0,
-                identifications: identifications
-                    ? [{ ...identifications }]
-                    : [],
-                addresses: currentAddresses,
-                phones: currentPhones,
-                emails: currentEmails,
-            },
-            isPerStirpes: item?.beneInfo?.isPerStirpes || false,
-            isIrrevocable: item?.beneInfo?.isIrrevocable || false,
-            isRestrictedBeneficiary:
-                item?.beneInfo?.isRestrictedBeneficiary || false,
-        };
-    } else if (item.action === 'UPDATE') {
-        // at the time of add it will be null
-        const identifications = party?.identifications?.find(
-            (ids) => ids?.identificationType === IdentificationType?.SSN
-        );
-        const formattedAddresses = item?.party?.addresses.map(
-            (address: any) => {
-                return {
-                    ...address,
-                    country:
-                        address?.country === 'US' ? 'USA' : address?.country,
-                };
-            }
-        );
-        const formattedPhones = item?.party?.phones;
-        /*const formattedPhones = item?.party?.phones.map((phone: any) => {
-            return { ...phone, phoneType: 'HP' };
-        });*/
-
-        const selectedPartyType = !isNullEmptyOrUndefined(
-            item?.party?.info?.partyType
-        )
-            ? item?.party?.info?.partyType
-            : null;
-        const { prefix, firstName, middleName, lastName, suffix } =
-            item?.party.info || {};
-        const fullName =
-            selectedPartyType === PartyType.INDIVIDUAL
-                ? toTitleCase(
-                      [prefix, firstName, middleName, lastName, suffix]
-                          .filter(Boolean)
-                          .join(' ')
-                  )
-                : item?.party?.info?.lastName;
-
-        record = {
-            actionType: item.actionType,
-            action: item.action,
-            partyRole: {
-                partyId: item?.partyRole?.partyId || null,
-                partyRole: item?.partyRole?.partyRole || null,
-                partyRoleId: item?.partyRole?.partyRoleId || null,
-                relationshipToInsured:
-                    item?.party?.allocation?.relationshipToInsured || null,
-            },
-            party: {
-                partyId: item?.party?.partyId,
-                partyType: selectedPartyType || null,
-                firstName: item?.party?.info?.firstName || null,
-                middleName: item?.party?.info?.middleName || null,
-                lastName: item?.party?.info?.lastName || null,
-                trustType:
-                    selectedPartyType == PartyType.TRUST
-                        ? item?.party?.info?.trustType
-                        : 'NONE',
-                fullName: fullName || '',
-                prefix: item?.party?.info?.prefix || null,
-                suffix: item?.party?.info?.suffix || null,
-                gender: item?.party?.info?.gender || null,
-                dateOfBirth: !isNullEmptyOrUndefined(
-                    item?.party?.info?.dateOfBirth
-                )
-                    ? dayjs(item?.party?.info?.dateOfBirth).format(
-                          ZAHARA_API_DATE_FORMAT
-                      )
+            middleName:
+                selectedPartyType == PartyType.INDIVIDUAL
+                    ? item?.party?.info?.middleName || null
                     : null,
-                beneficiaryPercentage:
-                    item?.party?.allocation?.beneficiaryPercentage || 0,
-                identifications: [
-                    {
-                        ...identifications,
-                        identificationValue: item?.party?.info?.ssn || '',
-                        identificationType: 'SSN',
-                    },
-                ],
-                addresses: formattedAddresses || [],
-                emails: item?.party?.emails || [],
-                phones: formattedPhones || [],
-            },
-            isPerStirpes: item?.beneInfo?.isPerStirpes || false,
-            isIrrevocable: item?.beneInfo?.isIrrevocable || false,
-            isRestrictedBeneficiary:
-                item?.beneInfo?.isRestrictedBeneficiary || false,
-        };
-    } else if (item.action === 'ADD') {
-        const partyRoleInfo = policy?.partyRoles?.find(
-            (partyItem) => partyItem?.partyRole === item?.partyRole?.partyRole
-        );
-        const formattedAddresses = item?.party?.addresses.map(
-            (address: any) => {
-                return {
-                    ...address,
-                    country:
-                        address?.country === 'US' ? 'USA' : address?.country,
-                };
-            }
-        );
-        const formattedPhones = item?.party?.phones;
-        /*const formattedPhones = item?.party?.phones.map((phone: any) => {
-            return { ...phone, phoneType: 'HP' };
-        });*/
-
-        const { prefix, firstName, middleName, lastName, suffix } =
-            item?.party.info || {};
-        const fullName =
-            item?.party?.info?.partyType == PartyType.INDIVIDUAL
-                ? toTitleCase(
-                      [prefix, firstName, middleName, lastName, suffix]
-                          .filter(Boolean)
-                          .join(' ')
-                  )
-                : item?.party?.info?.lastName;
-
-        // for add action party id party role id should be null
-        record = {
-            actionType: item?.actionType,
-            action: item?.action,
-            partyRole: {
-                partyId: null,
-                partyRole:
-                    partyRoleInfo?.partyRole || item?.partyRole?.partyRole,
-                partyRoleId: null,
-                relationshipToInsured:
-                    item?.party?.allocation?.relationshipToInsured || null,
-            },
-            party: {
-                partyId: null,
-                partyType: item?.party?.info?.partyType || null,
-                firstName: item?.party?.info?.firstName || null,
-                middleName: item?.party?.info?.middleName || null,
-                lastName: item?.party?.info?.lastName || null,
-                trustType: item?.party?.info?.trustType ?? TrustType.Individual,
-                fullName: fullName || '',
-                prefix: item?.party?.info?.prefix || null,
-                suffix: item?.party?.info?.suffix || null,
-                gender: item?.party?.info?.gender || null,
-                dateOfBirth: !isNullEmptyOrUndefined(
-                    item?.party?.info?.dateOfBirth
-                )
-                    ? dayjs(item?.party?.info?.dateOfBirth).format(
-                          ZAHARA_API_DATE_FORMAT
-                      )
+            lastName: item?.party?.info?.lastName || null,
+            trustType:
+                item.action === 'ADD'
+                    ? item?.party?.info?.trustType ?? TrustType.Individual
+                    : selectedPartyType === PartyType.TRUST
+                    ? item?.party?.info?.trustType
+                    : 'NONE',
+            fullName: fullName || null,
+            prefix:
+                selectedPartyType == PartyType.INDIVIDUAL
+                    ? formatPrefix(item?.party?.info?.prefix) || null
                     : null,
-                beneficiaryPercentage:
-                    item?.party?.allocation?.beneficiaryPercentage || 0,
-                identifications: [
-                    {
-                        identificationValue: item?.party?.info?.ssn || '',
-                        identificationType: 'SSN',
-                    },
-                ],
-                addresses: formattedAddresses || [],
-                emails: item?.party?.emails || [],
-                phones: formattedPhones || [],
-            },
-            isPerStirpes: item?.beneInfo?.isPerStirpes || false,
-            isIrrevocable: item?.beneInfo?.isIrrevocable || false,
-            isRestrictedBeneficiary:
-                item?.beneInfo?.isRestrictedBeneficiary || false,
-        };
-    }
+            suffix:
+                selectedPartyType == PartyType.INDIVIDUAL
+                    ? item?.party?.info?.suffix || null
+                    : null,
+            gender: item?.party?.info?.gender || null,
+            dateOfBirth: !isNullEmptyOrUndefined(item?.party?.info?.dateOfBirth)
+                ? dayjs(item?.party?.info?.dateOfBirth).format(
+                      ZAHARA_API_DATE_FORMAT
+                  )
+                : null,
+            beneficiaryPercentage:
+                item?.party?.allocation?.beneficiaryPercentage || 0,
+            identifications:
+                item.action == 'NONE' || item.action == 'DELETE'
+                    ? identifications
+                        ? [{ ...identifications }]
+                        : []
+                    : item.action == 'UPDATE'
+                    ? [
+                          {
+                              ...identifications,
+                              identificationValue: item?.party?.info?.ssn || '',
+                              identificationType: 'SSN',
+                          },
+                      ]
+                    : [
+                          {
+                              identificationValue: item?.party?.info?.ssn || '',
+                              identificationType: 'SSN',
+                          },
+                      ],
+            addresses:
+                item.action == 'NONE' || item.action == 'DELETE'
+                    ? currentAddresses
+                    : formattedAddresses || [],
+            phones:
+                item.action == 'NONE' || item.action == 'DELETE'
+                    ? currentPhones
+                    : formattedPhones || [],
+            emails:
+                item.action == 'NONE' || item.action == 'DELETE'
+                    ? currentEmails
+                    : item?.party?.emails || [],
+            endDate:
+                item.action === 'DELETE'
+                    ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                    : null,
+        },
+        isPerStirpes: item?.beneInfo?.isPerStirpes || false,
+        isIrrevocable: item?.beneInfo?.isIrrevocable || false,
+        isRestrictedBeneficiary:
+            item?.beneInfo?.isRestrictedBeneficiary || false,
+    };
+
     return record;
 };
 
@@ -576,6 +410,7 @@ export const buildReRegRequestBody = ({
     policy,
     selectedDocument,
     parties,
+    sorSystem = SorSystem.LifeCad,
 }: any) => {
     const { policyNumber, policyStatus, product, carrierId } = policy;
 
@@ -608,6 +443,7 @@ export const buildReRegRequestBody = ({
             signatureData: transformSignatureStateToPayload(signatureData),
             isPrimaryBeneInfoOnFile: formData.isPrimaryBeneInfoOnFile,
             isContingentBeneInfoOnFile: formData.isContingentBeneInfoOnFile,
+            sorSystem: sorSystem,
         };
     } else {
         data = {
@@ -615,7 +451,7 @@ export const buildReRegRequestBody = ({
             businessKey: document?.documentNumber,
             correlationid: uuid4(),
             onbaseCaseId: document?.caseId,
-            caseId: null,
+            caseId: formData?.caseId ?? null,
             documentDate: document
                 ? dayjs(document?.documentDate).format(ZAHARA_API_DATE_FORMAT)
                 : null,
@@ -631,6 +467,7 @@ export const buildReRegRequestBody = ({
             signatureData: transformSignatureStateToPayload(signatureData),
             isPrimaryBeneInfoOnFile: formData.isPrimaryBeneInfoOnFile,
             isContingentBeneInfoOnFile: formData.isContingentBeneInfoOnFile,
+            sorSystem: sorSystem,
         };
     }
 

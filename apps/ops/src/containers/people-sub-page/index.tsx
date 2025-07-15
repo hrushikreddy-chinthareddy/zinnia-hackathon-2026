@@ -14,6 +14,7 @@ import {
     PeopleCardData,
 } from '@deps/containers/people-card-container/people-card-container.types';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PeopleRolesFilterContext } from '@deps/contexts/PeopleRolesFilter';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -25,6 +26,7 @@ import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { AgentData } from '@deps/types/agents';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import {
     NameTag,
@@ -59,8 +61,11 @@ const initialPeopleState: PeopleState = {
     selectedTagList: ['All'],
 };
 
-export const PeopleSubPage: React.FC = () => {
+export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
+    isEligibleBeneficiary,
+}) => {
     const { policy, refreshPolicy } = useContext(PolicyData);
+
     const { t } = useTranslation();
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
     const router = useRouter();
@@ -81,6 +86,11 @@ export const PeopleSubPage: React.FC = () => {
         () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
         [extractedParties, extractedPartyRoles, t]
     );
+
+    const { featureFlags } = useOptimizely();
+
+    const beneChangeEnabled =
+        featureFlags[FEATURE_FLAGS.BENEFICIARY_CHANGE_TRANSACTION];
 
     const { peopleRolesFilter, setPeopleRolesFilter, clearPeopleRolesFilter } =
         useContext(PeopleRolesFilterContext);
@@ -152,16 +162,6 @@ export const PeopleSubPage: React.FC = () => {
         },
     });
 
-    const handleRadioClick = (value: string) => {
-        const selectedTagList = convertToTagText(value, t);
-
-        setPeopleRolesFilter({
-            filterValue: value,
-            filterTagList: selectedTagList,
-        });
-    };
-
-    // If `ALL` is selected, do not filter
     let filteredNameTags =
         peopleRolesFilter.filterValue === 'All'
             ? nameTags
@@ -177,7 +177,14 @@ export const PeopleSubPage: React.FC = () => {
                   'fullName'
               );
 
-    // Add agent data if there is any
+    const handleRadioClick = (value: string) => {
+        const selectedTagList = convertToTagText(value, t);
+        setPeopleRolesFilter({
+            filterValue: value,
+            filterTagList: selectedTagList,
+        });
+    };
+
     if (agentData && agentData.length > 0) {
         filteredNameTags = filteredNameTags.map((tag) => {
             const isAgent = agentData.some(
@@ -193,6 +200,7 @@ export const PeopleSubPage: React.FC = () => {
             }
         });
     }
+
     const isAgentSelected = peopleRolesFilter.filterValue === 'agent';
     const isBeneficiarySelected =
         peopleRolesFilter.filterValue === 'beneficiary';
@@ -251,6 +259,10 @@ export const PeopleSubPage: React.FC = () => {
                                 classNames="mb-10"
                                 openAllocationSideSheet={openSidesheet}
                                 type={BeneficiaryType.PRIMARY}
+                                showManageBeneficiary={true}
+                                enableManageBeneficiary={
+                                    isEligibleBeneficiary && beneChangeEnabled
+                                }
                             />
                             {beneficiaryDataByType(
                                 filteredNameTags,
@@ -265,6 +277,10 @@ export const PeopleSubPage: React.FC = () => {
                                     )}
                                     type={BeneficiaryType.CONTIGENT}
                                     openAllocationSideSheet={openSidesheet}
+                                    showManageBeneficiary={false}
+                                    enableManageBeneficiary={
+                                        isEligibleBeneficiary
+                                    }
                                 />
                             ) : null}
                         </div>
@@ -281,6 +297,7 @@ export const PeopleSubPage: React.FC = () => {
                                 )}
                                 classNames="mb-10"
                                 type={BeneficiaryType.PRIMARY}
+                                showManageBeneficiary={false}
                             />
 
                             <BeneficiaryCardContainer
@@ -292,6 +309,7 @@ export const PeopleSubPage: React.FC = () => {
                                     )
                                 )}
                                 showAllocationBar={false}
+                                showManageBeneficiary={false}
                             />
                         </div>
                     )}

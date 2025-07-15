@@ -1,0 +1,68 @@
+{
+    "id": "TA000000014453",
+    "correlationId": "bf161c60-8ca9-440c-a157-377f40a26731-2",
+    "caseId": "CA0000007923",
+    "source": "Zinnia.BPMTransactions",
+    "externalTaskId": "1b67d55b-be8e-4192-a74c-4d94e442b882",
+    "templateId": "9943bb1d-7966-4443-bd80-198573b6c20e",
+    "process": "Policy Update",
+    "processSubType": "Policy Update",
+    "carrier": "WELB",
+    "taskType": "POLICYUPDATE_PARTYDETAILS_REVIEW",
+    "taskDetails": "One or more Not in Good Order (NIGO) issues were identified during the review of the  application. These issues must be reviewed and resolved to ensure the application meets all requirements before proceeding with contract issuance.",
+    "taskName": "Review Party Detail",
+    "status": "NEW",
+    "data": {
+        "details": {},
+        "issuesList": [
+            {
+                "id": "c5f2a057-6bc6-41b3-a8c4-246707e5c84e",
+                "externalId": "c5f2a057-6bc6-41b3-a8c4-246707e5c84e",
+                "nmid": "RR.EM.030",
+                "type": "NIGO",
+                "category": "SIGNATURE/DATE",
+                "reason": "OWNER SIGNATURE MISSING / INCOMPLETE",
+                "detailedReason": "OWNER SIGNATURE MISSING",
+                "processingInstruction": "Reason: Owner Signature Missing. Resolution: Updated form to include Owner signature/ new sign date.",
+                "processingReason": "Owner Signature Missing.",
+                "processingResolution": "Updated form to include Owner signature/ new sign date."
+            }
+        ]
+    },
+    "queue": "policy_update",
+    "priority": "",
+    "escalated": false,
+    "createdByPartyId": "SYSTEM",
+    "createdDate": "2025-05-22T13:33:01.290Z",
+    "updatedByPartyId": "SYSTEM",
+    "updatedDate": "2025-05-22T13:33:01.290Z",
+    "mappedExceptions": [],
+    "taskCreatedOn": "2025-05-22T13:03:14.240Z",
+    "taskUpdatedOn": "2025-05-22T13:03:14.240Z",
+    "events": [
+        {
+            "_id": "2edb77d3-2402-4e51-9f39-a2e9ddd659e6",
+            "source": "Zinnia.BPMTransactions",
+            "eventName": "task.reviewpartydetail.createdforwarded",
+            "eventTs": "2025-05-22T13:03:14.240Z",
+            "correlationId": "bf161c60-8ca9-440c-a157-377f40a26731-2"
+        }
+    ],
+    "identifiers": [
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2500030-2"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000007923"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2500030-2"
+        }
+    ],
+    "fixedScore": 0,
+    "changeLog": [],
+    "version": "1"
+}

@@ -1,4 +1,4 @@
-import { Gender, PartyRole } from '@zinnia/api-types/types/sor';
+import { Gender, PartyRole, PartyType } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
@@ -12,7 +12,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { percentFormatify } from '@deps/helpers/numbers.helpers';
-import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
+import { safeString, toTitleCase, isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 
 import {
     DEFAULT_BENE_ADDRESS,
@@ -85,23 +85,14 @@ const BeneficiarySummary = () => {
         <>
             {updatedBenes.map((item: any) => {
                 const { tagVariant, tagText } = getTagVariant(item.action, t);
-                const allocation =
-                    item?.party?.allocation?.beneficiaryPercentage ?? 0;
-                const existingParty = currentData?.find(
-                    (element: any) =>
-                        element.partyId === item?.partyRole?.partyId
-                );
-                const { phones, addresses } = existingParty ?? {};
+                const allocation = item?.party?.allocation?.beneficiaryPercentage ?? 0;
+                const existingParty = currentData?.find((element: any) => element.partyId === item?.partyRole?.partyId);
+                const { phones, addresses, partyType } = existingParty ?? {};
                 const currentAddresses: any[] = getAddresses({ addresses });
                 const currentPhones: EnterprisePhone[] = getPhones({ phones });
-                const { firstName, middleName, lastName, gender } =
-                    item.party.info;
-                const updatedAddress = item?.party?.addresses?.[0]
-                    ? getFormattedAddress(item?.party?.addresses?.[0])
-                    : {};
-                const updatedPhone = item?.party?.phones?.[0]
-                    ? getFormattedPhone(item.party?.phones?.[0])
-                    : {};
+                const { firstName, middleName, lastName, gender, partyType: partyTypeInfo } = item.party.info;
+                const updatedAddress = item?.party?.addresses?.[0] ? getFormattedAddress(item?.party?.addresses?.[0]) : {};
+                const updatedPhone = item?.party?.phones?.[0] ? getFormattedPhone(item.party?.phones?.[0]) : {};
                 const currAddress = {
                     ...currentAddresses?.[0],
                     country:
@@ -110,6 +101,13 @@ const BeneficiarySummary = () => {
                             : currentAddresses?.[0]?.country,
                 };
 
+                const selectedPartyType = !isNullEmptyOrUndefined(partyTypeInfo) ? partyTypeInfo : partyType;
+
+                const name =
+                    selectedPartyType === PartyType.INDIVIDUAL
+                        ? toTitleCase([firstName, middleName, lastName].filter(Boolean).join(' '))
+                        : toTitleCase(lastName);
+
                 return (
                     <div
                         className="my-4 w-full rounded-sm border-2 border-gray-100 p-8"
@@ -117,18 +115,8 @@ const BeneficiarySummary = () => {
                     >
                         <div className="mb-5">
                             <div className="flex">
-                                <Typography variant={TypographyVariant.H2}>
-                                    {toTitleCase(
-                                        [firstName, middleName, lastName]
-                                            .filter(Boolean)
-                                            .join(' ')
-                                    )}
-                                </Typography>
-                                <Tag
-                                    text={tagText}
-                                    className="m-1 mx-3 h-6"
-                                    variant={tagVariant as TagVariant}
-                                />
+                                <Typography variant={TypographyVariant.H2}>{name}</Typography>
+                                <Tag text={tagText} className="m-1 mx-3 h-6" variant={tagVariant as TagVariant} />
                             </div>
                             <Tag
                                 text={
@@ -173,19 +161,9 @@ const BeneficiarySummary = () => {
                                     </Typography>
                                 </div>
                                 <div className="mx-4">
-                                    <Label
-                                        variant={LabelVariant.FieldLabel}
-                                        label={t(
-                                            'allocation.relationshipToInsured'
-                                        )}
-                                    />
-                                    <Typography
-                                        variant={TypographyVariant.BodySm}
-                                    >
-                                        {safeString(
-                                            item?.party?.allocation
-                                                ?.relationshipToInsured
-                                        )}
+                                    <Label variant={LabelVariant.FieldLabel} label={t('allocation.relationshipToParty')} />
+                                    <Typography variant={TypographyVariant.BodySm}>
+                                        {safeString(item?.party?.allocation?.relationshipToParty)}
                                     </Typography>
                                 </div>
                             </div>

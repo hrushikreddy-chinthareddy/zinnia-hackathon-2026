@@ -9,7 +9,8 @@ export const useDiaryNotes = (
     policyNumber: string,
     clientCode: string,
     offset: number,
-    limit: number
+    limit: number,
+    showDiaryNotes: boolean = true
 ) => {
     const [diaryNotes, setDiaryNotes] = useState<PolicyNotesInfoItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -33,7 +34,7 @@ export const useDiaryNotes = (
     }, [policyNumber, clientCode, offset, limit]);
 
     useEffect(() => {
-        getDiaryNotes();
+        if (showDiaryNotes) getDiaryNotes();
     }, [getDiaryNotes]);
 
     return { diaryNotes, setDiaryNotes, isLoading, setIsLoading, totalLogs };

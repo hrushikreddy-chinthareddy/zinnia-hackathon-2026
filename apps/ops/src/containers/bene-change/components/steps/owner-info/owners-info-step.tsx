@@ -20,9 +20,15 @@ import { useBeneChange } from '../../../bene-change-provider';
 
 interface OwnersInfoStepProps {
     policy: Policy;
+    parentPage: ParentPage;
+    leaveTransactionLink: string;
 }
 
-const OwnersInfoStep = ({ policy }: OwnersInfoStepProps) => {
+const OwnersInfoStep = ({
+    policy,
+    parentPage,
+    leaveTransactionLink,
+}: OwnersInfoStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.ownerInfo',
     });
@@ -53,10 +59,11 @@ const OwnersInfoStep = ({ policy }: OwnersInfoStepProps) => {
                     className="mt-10"
                     disableContinue={false}
                     handleContinue={handleStepContinue}
-                    parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink="/create-case"
+                    parentPage={parentPage}
+                    leaveTransactionLink={leaveTransactionLink}
                 />
             }
+            footerClassName={'pt-0'}
         >
             <OwnerInformation
                 isFormStateReadOnly={false}

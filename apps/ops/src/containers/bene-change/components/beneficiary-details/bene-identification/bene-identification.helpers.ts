@@ -56,3 +56,42 @@ export const trustOption = (t: TFunction) => [
         value: TrustType.LookThrough,
     },
 ];
+
+export const suffixOptions = (t: TFunction) => [
+    {
+        label: t('suffixOptions.jr'),
+        value: 'JR',
+    },
+    {
+        label: t('suffixOptions.sn'),
+        value: 'SN',
+    },
+    {
+        label: t('suffixOptions.i'),
+        value: 'I',
+    },
+    {
+        label: t('suffixOptions.ii'),
+        value: 'II',
+    },
+    {
+        label: t('suffixOptions.iii'),
+        value: 'III',
+    },
+];
+
+export const formatPrefix = (prefix: string | undefined | null): string => {
+  if (!prefix) return '';
+
+  const trimmedPrefix = prefix.trim().toUpperCase();
+
+  const prefixMap: Record<string, string> = {
+    'MR': 'Mr.',
+    'MRS': 'Mrs.',
+    'DR': 'Dr.',
+    'MS': 'Ms.',
+  };
+
+  return prefixMap[trimmedPrefix] || prefix;
+  
+};

@@ -22,6 +22,7 @@ const INITIAL_ALLOCATION = {
     beneficiaryPercentage: '',
     relationshipToInsured: '',
 };
+
 export default function AllocationDetails({
     updateAllocation,
     setAllocationDetails,
@@ -31,22 +32,46 @@ export default function AllocationDetails({
         keyPrefix: 'beneChange.beneDetails.allocation',
     });
 
-    const relationshipToInsuredOptions = [
+    const relationshipToPartyOptions = [
         {
-            label: t('relationshipToInsured.associate'),
-            value: BeneRelationshipToInsured.ASSOCIATE,
+            label: t('relationshipToInsured.trustee'),
+            value: BeneRelationshipToInsured.TRUSTEE,
         },
         {
-            label: t('relationshipToInsured.aunt'),
-            value: BeneRelationshipToInsured.AUNT,
+            label: t('relationshipToInsured.trusteeOfMinor'),
+            value: BeneRelationshipToInsured.TRUSTEEOFMINOR,
+        },
+        {
+            label: t('relationshipToInsured.trusteeOfIncompetent'),
+            value: BeneRelationshipToInsured.TRUSTEEOFINCOMPETENT,
+        },
+        {
+            label: t('relationshipToInsured.powerOfAttorney'),
+            value: BeneRelationshipToInsured.POWEROFATTORNEY,
+        },
+        {
+            label: t('relationshipToInsured.controllingPersonOfEntity'),
+            value: BeneRelationshipToInsured.CONTROLLINGPERSONOFENTITY,
         },
         {
             label: t('relationshipToInsured.brother'),
             value: BeneRelationshipToInsured.BROTHER,
         },
         {
+            label: t('relationshipToInsured.child'),
+            value: BeneRelationshipToInsured.CHILD,
+        },
+        {
             label: t('relationshipToInsured.daughter'),
             value: BeneRelationshipToInsured.DAUGHTER,
+        },
+        {
+            label: t('relationshipToInsured.domesticPartner'),
+            value: BeneRelationshipToInsured.DOMESTICPARTNER,
+        },
+        {
+            label: t('relationshipToInsured.executor'),
+            value: BeneRelationshipToInsured.EXECUTOR,
         },
         {
             label: t('relationshipToInsured.father'),
@@ -57,28 +82,16 @@ export default function AllocationDetails({
             value: BeneRelationshipToInsured.FIANCE,
         },
         {
-            label: t('relationshipToInsured.grandfather'),
-            value: BeneRelationshipToInsured.GRANDFATHER,
-        },
-        {
-            label: t('relationshipToInsured.grandmother'),
-            value: BeneRelationshipToInsured.GRANDMOTHER,
-        },
-        {
             label: t('relationshipToInsured.grandchild'),
             value: BeneRelationshipToInsured.GRANDCHILD,
         },
         {
-            label: t('relationshipToInsured.husband'),
-            value: BeneRelationshipToInsured.HUSBAND,
+            label: t('relationshipToInsured.lifePartner'),
+            value: BeneRelationshipToInsured.LIFEPARTNER,
         },
         {
             label: t('relationshipToInsured.mother'),
             value: BeneRelationshipToInsured.MOTHER,
-        },
-        {
-            label: t('relationshipToInsured.partner'),
-            value: BeneRelationshipToInsured.PARTNER,
         },
         {
             label: t('relationshipToInsured.sister'),
@@ -89,76 +102,64 @@ export default function AllocationDetails({
             value: BeneRelationshipToInsured.SON,
         },
         {
-            label: t('relationshipToInsured.trustee'),
-            value: BeneRelationshipToInsured.TRUSTEE,
+            label: t('relationshipToInsured.spouse'),
+            value: BeneRelationshipToInsured.SPOUSE,
         },
         {
-            label: t('relationshipToInsured.wife'),
-            value: BeneRelationshipToInsured.WIFE,
+            label: t('relationshipToInsured.stepfather'),
+            value: BeneRelationshipToInsured.STEPFATHER,
         },
         {
-            label: t('relationshipToInsured.uncle'),
-            value: BeneRelationshipToInsured.UNCLE,
-        },
-        {
-            label: t('relationshipToInsured.niece'),
-            value: BeneRelationshipToInsured.NIECE,
-        },
-        {
-            label: t('relationshipToInsured.nephew'),
-            value: BeneRelationshipToInsured.NEPHEW,
+            label: t('relationshipToInsured.stepmother'),
+            value: BeneRelationshipToInsured.STEPMOTHER,
         },
         {
             label: t('relationshipToInsured.self'),
             value: BeneRelationshipToInsured.SELF,
         },
         {
-            label: t('relationshipToInsured.estate'),
-            value: BeneRelationshipToInsured.ESTATE,
+            label: t('relationshipToInsured.business'),
+            value: BeneRelationshipToInsured.BUSINESS,
         },
         {
-            label: t('relationshipToInsured.trust'),
-            value: BeneRelationshipToInsured.TRUST,
+            label: t('relationshipToInsured.businessAssociate'),
+            value: BeneRelationshipToInsured.BUSINESSASSOCIATE,
         },
         {
-            label: t('relationshipToInsured.spouse'),
-            value: BeneRelationshipToInsured.SPOUSE,
+            label: t('relationshipToInsured.partner'),
+            value: BeneRelationshipToInsured.PARTNER,
         },
         {
-            label: t('relationshipToInsured.grandson'),
-            value: BeneRelationshipToInsured.GRANDSON,
+            label: t('relationshipToInsured.employer'),
+            value: BeneRelationshipToInsured.EMPLOYER,
         },
         {
-            label: t('relationshipToInsured.granddaughter'),
-            value: BeneRelationshipToInsured.GRANDDAUGHTER,
+            label: t('relationshipToInsured.formerSpouse'),
+            value: BeneRelationshipToInsured.FORMERSPOUSE,
+        },
+        {
+            label: t('relationshipToInsured.grandparent'),
+            value: BeneRelationshipToInsured.GRANDPARENT,
         },
         {
             label: t('relationshipToInsured.parent'),
             value: BeneRelationshipToInsured.PARENT,
         },
         {
-            label: t('relationshipToInsured.child'),
-            value: BeneRelationshipToInsured.CHILD,
+            label: t('relationshipToInsured.owner'),
+            value: BeneRelationshipToInsured.OWNER,
         },
         {
-            label: t('relationshipToInsured.nonSpouse'),
-            value: BeneRelationshipToInsured.NONSPOUSE,
+            label: t('relationshipToInsured.sibling'),
+            value: BeneRelationshipToInsured.SIBLING,
         },
         {
-            label: t('relationshipToInsured.childrenEqually'),
-            value: BeneRelationshipToInsured.CHILDRENEQUALLY,
+            label: t('relationshipToInsured.stepchild'),
+            value: BeneRelationshipToInsured.STEPCHILD,
         },
         {
-            label: t('relationshipToInsured.childrenPerStirpes'),
-            value: BeneRelationshipToInsured.CHILDRENPERSTIRPES,
-        },
-        {
-            label: t('relationshipToInsured.perStirpes'),
-            value: BeneRelationshipToInsured.PERSTIRPES,
-        },
-        {
-            label: t('relationshipToInsured.survivingSpouse'),
-            value: BeneRelationshipToInsured.SURVIVINGSPOUSE,
+            label: t('relationshipToInsured.stepparent'),
+            value: BeneRelationshipToInsured.STEPPARENT,
         },
         {
             label: t('relationshipToInsured.other'),
@@ -169,6 +170,7 @@ export default function AllocationDetails({
     const [allocation, setAllocation] = useState(
         updateAllocation ?? INITIAL_ALLOCATION
     );
+    const [currentErrors, setCurrentErrors] = useState<any>();
 
     const setBeneficiaryPercentage = (e: any) => {
         let currentValue = Number(xss(e?.target?.value));
@@ -178,6 +180,15 @@ export default function AllocationDetails({
             }
             return { ...prevState, beneficiaryPercentage: currentValue };
         });
+
+        if (!(Number(currentValue) > 0)) {
+            setCurrentErrors((prevState: any) => ({
+                ...prevState,
+                beneficiaryPercentage: t('allocationRequired'),
+            }));
+        } else {
+            setCurrentErrors({});
+        }
     };
 
     useEffect(() => {
@@ -209,22 +220,25 @@ export default function AllocationDetails({
                     variant={
                         isReadOnly
                             ? FieldVariant.Inactive
+                            : currentErrors?.beneficiaryPercentage
+                            ? FieldVariant.Error
                             : FieldVariant.Default
                     }
+                    message={currentErrors?.beneficiaryPercentage}
                 />
             </div>
 
             <div className="mb-3 grid w-full grid-cols-4">
                 <SelectSimple
-                    label={t('labels.relationshipToInsured') as string}
+                    label={t('labels.relationshipToParty') as string}
                     onChange={(value) =>
                         setAllocation((prevState: any) => ({
                             ...prevState,
-                            relationshipToInsured: value,
+                            relationshipToParty: value,
                         }))
                     }
-                    options={relationshipToInsuredOptions}
-                    value={allocation.relationshipToInsured}
+                    options={relationshipToPartyOptions}
+                    value={allocation.relationshipToParty}
                     disabled={isReadOnly}
                 />
             </div>

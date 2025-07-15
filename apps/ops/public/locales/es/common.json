@@ -351,6 +351,49 @@
             "phoneDetails": {
                 "title": "Detalles del Teléfono",
                 "telephoneNumber": "Número de Teléfono"
+            },
+            "summary": {
+                "header": "Resumen",
+                "overview": "Resumen",
+                "reviewMessage": "Todo bien! Asegúrese de revisar sus entradas antes de enviar",
+                "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
+                "bpm500Error": "Error BPM 500",
+                "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente la siga.",
+                "missingCheckToConfirm": "Para enviar, confirme que desea enviar con errores y crear una tarea NIGO.",
+                "primaryBeneficiary": "Beneficiario Principal",
+                "contingentBeneficiary": "Beneficiario Contingente",
+                "current": "Actual",
+                "updated": "Actualizado",
+                "identification": {
+                    "title": "Identificación",
+                    "gender": "Género"
+                },
+                "allocation": {
+                    "title": "Asignación",
+                    "relationshipToInsured": "Relación con el asegurado"
+                },
+                "contact": {
+                    "title": "Información de Contacto",
+                    "address": "Dirección",
+                    "phone": "Teléfono"
+                },
+                "tag": {
+                    "none": "Ninguno",
+                    "updated": "Actualizado",
+                    "removed": "Eliminado",
+                    "new": "Nuevo"
+                }
+            },
+            "confirm": {
+                "header": "Confirmar",
+                "successMessage": "Las actualizaciones del beneficiario se enviaron correctamente.",
+                "close": "Cerrar",
+                "title": "¡Exito!",
+                "viewAllPeople": "Ver a todas las personas",
+                "submitAddress": "Actualizar beneficiario",
+                "goToCase": "Ir al caso",
+                "submit": "¡Enviado!",
+                "nigo": "Las actualizaciones del beneficiario se enviaron para el procesamiento de NIGO."
             }
         },
         "beneDetails": {
@@ -382,214 +425,225 @@
                 "title": "Asignación",
                 "labels": {
                     "allocation": "Asignación",
-                    "relationshipToInsured": "Relación con el asegurado"
+                    "relationshipToParty": "Relación con la parte"
                 },
                 "relationshipToInsured": {
-                    "associate": "Asociado",
-                    "aunt": "Tía",
+                    "trustee": "Fiduciario",
+                    "trusteeOfMinor": "Fiduciario de Menor",
+                    "trusteeOfIncompetent": "Fiduciario de Incompetente",
+                    "powerOfAttorney": "Poder del Abogado",
+                    "controllingPersonOfEntity": "Persona Controladora de la Entidad",
                     "brother": "Hermano",
+                    "child": "Hijo",
                     "daughter": "Hija",
+                    "domesticPartner": "Compañero doméstico",
+                    "executor": "Ejecutor",
                     "father": "Padre",
                     "fiance": "Prometido",
-                    "grandfather": "Abuelo",
-                    "grandmother": "Abuela",
                     "grandchild": "Nieto",
-                    "husband": "Esposo",
+                    "lifePartner": "Compañero de Vida",
                     "mother": "Madre",
-                    "partner": "Pareja",
                     "sister": "Hermana",
                     "son": "Hijo",
-                    "trustee": "Fideicomisario",
-                    "wife": "Esposa",
-                    "uncle": "Tío",
-                    "niece": "Sobrina",
-                    "nephew": "Sobrino",
-                    "self": "Yo",
-                    "estate": "Patrimonio",
-                    "trust": "Fideicomiso",
                     "spouse": "Cónyuge",
-                    "grandson": "Nieto",
-                    "granddaughter": "Nieta",
-                    "parent": "Padre/Madre",
-                    "child": "Hijo/Hija",
-                    "nonSpouse": "No Cónyuge",
-                    "childrenEqually": "Hijos Igualmente",
-                    "childrenPerStirpes": "Hijos por Stirpes",
-                    "perStirpes": "Por Stirpes",
-                    "survivingSpouse": "Cónyuge Superviviente",
+                    "stepfather": "Padrastro",
+                    "stepmother": "Madrastra",
+                    "self": "Yo mismo",
+                    "business": "Negocio",
+                    "businessAssociate": "Asociado Comercial",
+                    "partner": "Socio",
+                    "employer": "Empleador",
+                    "formerSpouse": "Ex Cónyuge",
+                    "grandparent": "Abuelo",
+                    "parent": "Padre",
+                    "owner": "Dueño",
+                    "sibling": "Hermano",
+                    "stepchild": "Hijastro",
+                    "stepparent": "Padrastro/Madrastra",
                     "other": "Otro"
-                }
-            },
-            "identification": {
-                "title": "Identificación",
-                "partyType": {
-                    "individual": "Individual",
-                    "trust": "Fideicomiso",
-                    "estate/Organisation": "Patrimonio/Organización"
                 },
-                "trustType": "Tipo de Fideicomiso",
-                "prefixOptions": {
-                    "dr": "Dr.",
-                    "mr": "Sr.",
-                    "mrs": "Sra.",
-                    "ms": "Srta."
+                "allocationRequired": "La asignación es obligatoria",
+                "identification": {
+                    "title": "Identificación",
+                    "partyType": {
+                        "individual": "Individual",
+                        "trust": "Fideicomiso",
+                        "estate/Organisation": "Patrimonio/Organización"
+                    },
+                    "trustType": "Tipo de Fideicomiso",
+                    "prefixOptions": {
+                        "dr": "Dr.",
+                        "mr": "Sr.",
+                        "mrs": "Sra.",
+                        "ms": "Srta."
+                    },
+                    "suffixOptions": {
+                        "jr": "Jr.",
+                        "sn": "S/N",
+                        "i": "I",
+                        "ii": "II",
+                        "iii": "III"
+                    },
+                    "prefix": "Prefijo",
+                    "suffix": "Sufijo",
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "middleName": "Segundo Nombre",
+                    "trustName": "Nombre del Fideicomiso",
+                    "individualTrust": "Fideicomiso Individual",
+                    "corporateTrust": "Fideicomiso Corporativo",
+                    "lookThrough": "Fideicomiso Look Through",
+                    "companyName": "Nombre de la Empresa",
+                    "ssn": "SSN",
+                    "gender": "Género",
+                    "dateOfBirth": "Fecha de Nacimiento",
+                    "male": "Masculino",
+                    "female": "Femenino",
+                    "formValidations": {
+                        "firstName": "El nombre es obligatorio",
+                        "lastName": "El apellido es obligatorio"
+                    }
                 },
-                "prefix": "Prefijo",
-                "suffix": "Sufijo",
-                "firstName": "Nombre",
-                "lastName": "Apellido",
-                "middleName": "Segundo Nombre",
-                "trustName": "Nombre del Fideicomiso",
-                "individualTrust": "Fideicomiso Individual",
-                "corporateTrust": "Fideicomiso Corporativo",
-                "lookThrough": "Fideicomiso Look Through",
-                "companyName": "Nombre de la Empresa",
-                "ssn": "SSN",
-                "gender": "Género",
-                "dateOfBirth": "Fecha de Nacimiento",
-                "male": "Masculino",
-                "female": "Femenino",
-                "formValidations": {
-                    "firstName": "El nombre es obligatorio",
-                    "lastName": "El apellido es obligatorio"
-                }
-            },
-            "contactInfo": {
-                "title": "Información de Contacto",
-                "labels": {
-                    "preferredContactMethod": "Método de contacto preferido",
-                    "options": {
+                "contactInfo": {
+                    "title": "Información de Contacto",
+                    "labels": {
+                        "preferredContactMethod": "Método de contacto preferido",
+                        "options": {
+                            "email": "Correo Electrónico",
+                            "phone": "Teléfono",
+                            "fax": "Fax"
+                        }
+                    }
+                },
+                "address": {
+                    "title": "Dirección",
+                    "general": {
+                        "addLine": "Agregar línea de dirección (por ejemplo, piso, suite, etc.)"
+                    },
+                    "addressType": {
+                        "home": "Dirección de casa",
+                        "business": "Dirección de negocios",
+                        "default": "Predeterminada",
+                        "secondary": "Dirección secundaria"
+                    },
+                    "labels": {
+                        "type": "Tipo",
+                        "addressType": "Tipo de dirección",
+                        "addressLine1": "Línea de dirección 1",
+                        "addressLine2": "Línea de dirección 2",
+                        "addressLine3": "Línea de dirección 3",
+                        "zip": "Código Postal",
+                        "zipPlusFour": "Código Postal+4",
+                        "state": "Estado",
+                        "city": "Ciudad",
+                        "trusteeName": "Nombre del fiduciario"
+                    },
+                    "formValidations": {
+                        "city": "La ciudad es obligatoria",
+                        "state": "El estado es obligatorio",
+                        "zipCode": "El código postal es obligatorio"
+                    }
+                },
+                "phone": {
+                    "title": "Teléfono",
+                    "labels": {
+                        "type": "Tipo",
+                        "phoneType": "Tipo de teléfono",
+                        "number": "Número",
+                        "extension": "Extensión",
+                        "bestTime": "Mejor Momento",
+                        "timeZone": "Zona Horaria",
+                        "bestTimesOptions": {
+                            "morning": "Mañana",
+                            "afternoon": "Tarde",
+                            "anytime": "Cualquier Momento",
+                            "evening": "Noche"
+                        },
+                        "phoneOptions": {
+                            "businessFax": "Fax de negocios",
+                            "businessPhone": "Teléfono de negocios",
+                            "mobilePhone": "Teléfono móvil",
+                            "homeFax": "Fax de casa",
+                            "modem": "Módem",
+                            "homePhone": "Teléfono de casa",
+                            "secondaryHomePhone": "Teléfono de casa secundario",
+                            "other": "Predeterminado"
+                        },
+                        "timeZoneOptions": {
+                            "AKT": "Hora de Alaska ({{abbreviation}})",
+                            "CT": "Hora Central ({{abbreviation}})",
+                            "ET": "Hora del Este ({{abbreviation}})",
+                            "HT": "Hora de Hawái ({{abbreviation}})",
+                            "MT": "Hora de la Montaña ({{abbreviation}})",
+                            "PT": "Hora del Pacífico ({{abbreviation}})"
+                        }
+                    }
+                },
+                "email": {
+                    "title": "Correo Electrónico",
+                    "labels": {
+                        "type": "Tipo",
                         "email": "Correo Electrónico",
-                        "phone": "Teléfono",
-                        "fax": "Fax"
+                        "emailOptions": {
+                            "business": "Negocios",
+                            "other": "Otro",
+                            "personal": "Personal"
+                        }
                     }
-                }
-            },
-            "address": {
-                "title": "Dirección",
-                "general": {
-                    "addLine": "Agregar línea de dirección (por ejemplo, piso, suite, etc.)"
                 },
-                "addressType": {
-                    "home": "Dirección de casa",
-                    "business": "Dirección de negocios",
-                    "default": "Predeterminada",
-                    "secondary": "Dirección secundaria"
-                },
-                "labels": {
-                    "type": "Tipo",
-                    "addressType": "Tipo de dirección",
-                    "addressLine1": "Línea de dirección 1",
-                    "addressLine2": "Línea de dirección 2",
-                    "addressLine3": "Línea de dirección 3",
-                    "zip": "Código Postal",
-                    "zipPlusFour": "Código Postal+4",
-                    "state": "Estado",
-                    "city": "Ciudad",
-                    "trusteeName": "Nombre del fiduciario"
-                },
+                "close": "Cerrar sección",
                 "formValidations": {
-                    "city": "La ciudad es obligatoria",
-                    "state": "El estado es obligatorio",
-                    "zipCode": "El código postal es obligatorio"
+                    "firstNames": "Asegúrese de que el nombre, nombre de la empresa o nombre del fiduciario esté actualizado al agregar/actualizar beneficiarios",
+                    "primaryBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios primarios debe ser del 100%",
+                    "contingentBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios contingentes debe ser del 100%",
+                    "addressDetails": "Asegúrese de que los detalles de la dirección estén correctamente llenados al agregar/actualizar beneficiarios",
+                    "allocationRequired": "Asegúrese de que la asignación sea mayor a 0% al agregar/actualizar beneficiarios"
                 }
             },
-            "phone": {
-                "title": "Teléfono",
-                "labels": {
-                    "type": "Tipo",
-                    "phoneType": "Tipo de teléfono",
-                    "number": "Número",
-                    "extension": "Extensión",
-                    "bestTime": "Mejor Momento",
-                    "timeZone": "Zona Horaria",
-                    "bestTimesOptions": {
-                        "morning": "Mañana",
-                        "afternoon": "Tarde",
-                        "anytime": "Cualquier Momento",
-                        "evening": "Noche"
-                    },
-                    "phoneOptions": {
-                        "businessFax": "Fax de negocios",
-                        "businessPhone": "Teléfono de negocios",
-                        "mobilePhone": "Teléfono móvil",
-                        "homeFax": "Fax de casa",
-                        "modem": "Módem",
-                        "homePhone": "Teléfono de casa",
-                        "secondaryHomePhone": "Teléfono de casa secundario",
-                        "other": "Predeterminado"
-                    },
-                    "timeZoneOptions": {
-                        "AKT": "Hora de Alaska ({{abbreviation}})",
-                        "CT": "Hora Central ({{abbreviation}})",
-                        "ET": "Hora del Este ({{abbreviation}})",
-                        "HT": "Hora de Hawái ({{abbreviation}})",
-                        "MT": "Hora de la Montaña ({{abbreviation}})",
-                        "PT": "Hora del Pacífico ({{abbreviation}})"
-                    }
-                }
+            "signature": {
+                "header": "Validación de Firma",
+                "isIrrevocableBene": "¿Hay un beneficiario irrevocable?",
+                "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
+                "signatureShouldBePresent": "Debe seleccionarse la opción de firma presente",
+                "continue": "Continuar",
+                "leaveTransaction": "Dejar esta transacción"
             },
-            "email": {
-                "title": "Correo Electrónico",
-                "labels": {
-                    "type": "Tipo",
-                    "email": "Correo Electrónico",
-                    "emailOptions": {
-                        "business": "Negocios",
-                        "other": "Otro",
-                        "personal": "Personal"
-                    }
-                }
-            },
-            "close": "Cerrar sección",
-            "formValidations": {
-                "firstNames": "Asegúrese de que el nombre, nombre de la empresa o nombre del fiduciario esté actualizado al agregar/actualizar beneficiarios",
-                "primaryBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios primarios debe ser del 100%",
-                "contingentBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios contingentes debe ser del 100%",
-                "addressDetails": "Asegúrese de que los detalles de la dirección estén correctamente llenados al agregar/actualizar beneficiarios"
-            }
-        },
-        "signature": {
-            "header": "Validación de Firma",
-            "isIrrevocableBene": "¿Hay un beneficiario irrevocable?",
-            "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
-            "signatureShouldBePresent": "Debe seleccionarse la opción de firma presente"
-        },
-        "summary": {
-            "header": "Resumen",
-            "overview": "Resumen",
-            "reviewMessage": "¡Se ve bien! Asegúrese de revisar sus entradas antes de enviar",
-            "primaryBeneficiary": "Beneficiario primario",
-            "contingentBeneficiary": "Beneficiario contingente",
-            "current": "Actual",
-            "updated": "Actualizado",
-            "identification": {
-                "title": "Identificación",
-                "gender": "Género"
-            },
-            "allocation": {
-                "title": "Asignación",
-                "relationshipToInsured": "Relación con el asegurado"
-            },
-            "contact": {
-                "title": "Información de Contacto",
-                "address": "Dirección",
-                "phone": "Teléfono"
-            },
-            "tag": {
-                "none": "Ninguno",
+            "summary": {
+                "header": "Resumen",
+                "overview": "Resumen",
+                "reviewMessage": "¡Se ve bien! Asegúrese de revisar sus entradas antes de enviar",
+                "primaryBeneficiary": "Beneficiario primario",
+                "contingentBeneficiary": "Beneficiario contingente",
+                "current": "Actual",
                 "updated": "Actualizado",
-                "removed": "Eliminado",
-                "new": "Nuevo"
+                "identification": {
+                    "title": "Identificación",
+                    "gender": "Género"
+                },
+                "allocation": {
+                    "title": "Asignación",
+                    "relationshipToParty": "Relación con la parte"
+                },
+                "contact": {
+                    "title": "Información de Contacto",
+                    "address": "Dirección",
+                    "phone": "Teléfono"
+                },
+                "tag": {
+                    "none": "Ninguno",
+                    "updated": "Actualizado",
+                    "removed": "Eliminado",
+                    "new": "Nuevo"
+                }
+            },
+            "confirm": {
+                "header": "Confirmar",
+                "successMessage": "Las actualizaciones de los beneficiarios fueron enviadas.",
+                "close": "Cerrar",
+                "title": "¡Éxito!",
+                "viewAllPeople": "Ver todas las personas",
+                "submitAddress": "Actualizar beneficiario"
             }
-        },
-        "confirm": {
-            "header": "Confirmar",
-            "successMessage": "Las actualizaciones de los beneficiarios fueron enviadas.",
-            "close": "Cerrar",
-            "title": "¡Éxito!",
-            "viewAllPeople": "Ver todas las personas",
-            "submitAddress": "Actualizar beneficiario"
         }
     },
     "addressChange": {
@@ -6315,6 +6369,15 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se envió el documento Claim Match Bene.",
             "cta": "Ir al reclamo de muerte",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "policyupdatePartydetailsReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Enviar Comunicación NIGO fue enviada.",
+            "cta": "Ir al caso",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
         }

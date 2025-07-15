@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
 import { BeneChangeContext } from '@deps/contexts/BeneChangeContext';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { TransactionResponse } from '@deps/queries/api/bpm';
 
 import { PeopleState } from '../people-sub-page';
 
@@ -50,6 +51,12 @@ export const BeneChangeProvider = ({ children }: BeneChangeProviderProps) => {
         isSpousePresent: null,
     });
     const [isPeopleView, setIsPeopleView] = useState<boolean>(true);
+    const [SOR, setSOR] = useState<string | null>(null);
+    const [eligibility, setEligibility] = useState<boolean>(false);
+    const [validationResponse, setValidationResponse] = useState<
+        TransactionResponse | undefined
+    >(undefined);
+
     const [ownerInfo, setOwnerInfo] = useState({});
 
     return (
@@ -63,6 +70,9 @@ export const BeneChangeProvider = ({ children }: BeneChangeProviderProps) => {
                 formErrors,
                 signatureData,
                 ownerInfo,
+                SOR,
+                eligibility,
+                validationResponse,
                 setPeopleSelection,
                 setFormData,
                 setFormErrors,
@@ -71,6 +81,9 @@ export const BeneChangeProvider = ({ children }: BeneChangeProviderProps) => {
                 setIsPeopleView,
                 setOwnerInfo,
                 setDeletedBene,
+                setSOR,
+                setEligibility,
+                setValidationResponse,
             }}
         >
             {children}

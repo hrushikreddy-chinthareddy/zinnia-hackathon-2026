@@ -24,6 +24,7 @@ import {
     normalizePartyRole,
 } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 
@@ -32,21 +33,26 @@ import { useBeneChange } from '../../bene-change/bene-change-provider';
 interface ReRegPeopleViewProps {
     policy: Policy;
     onManageBeneficiaryClick?: () => void;
+    isEligibleBeneficiary?: boolean;
 }
 
 export const ReRegPeopleView = ({
     policy,
     onManageBeneficiaryClick,
+    isEligibleBeneficiary,
 }: ReRegPeopleViewProps) => {
     const { t } = useTranslation();
-    const { peopleSelection, setPeopleSelection } = useBeneChange();
+    const { peopleSelection, setPeopleSelection, setSOR } = useBeneChange();
     const { breadcrumb } = useBreadcrumb();
     const router = useRouter();
 
     const [chipEntered, setChipEntered] = useState(false);
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
     const extractedPartyRoles = useMemo(
-        () => policy?.partyRoles || [],
+        () =>
+            policy?.partyRoles?.filter(
+                (role) => !role.endDate || !isEndDated(role.endDate)
+            ) || [],
         [policy]
     );
     const countedRoles = useMemo(
@@ -135,7 +141,6 @@ export const ReRegPeopleView = ({
                     breadcrumbUrl={breadcrumb?.url}
                 />
                 <hr className="h-0.5 border-none bg-gray-100" />
-
                 {filteredRoles.length === 0 && (
                     <div className="w-full mb-5">
                         <div className="mb-5 mt-7 bg-gray-50 p-3 text-center">
@@ -187,6 +192,7 @@ export const ReRegPeopleView = ({
                                         size={NavElementSize.Small}
                                         tabIndex={0}
                                         className="flex h-[21px] items-center self-center whitespace-nowrap leading-[21px] [&_svg]:mr-1"
+                                        disabled={!isEligibleBeneficiary}
                                     >
                                         {t(
                                             'quickActions.people.manageBeneficiaries'

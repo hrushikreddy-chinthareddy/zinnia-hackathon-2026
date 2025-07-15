@@ -484,43 +484,44 @@
                 "title": "Allocation",
                 "labels": {
                     "allocation": "Allocation",
-                    "relationshipToInsured": "Lien de parenté avec l'assuré"
+                    "relationshipToParty": "Relation avec la partie"
                 },
                 "relationshipToInsured": {
-                    "associate": "Associée",
-                    "aunt": "Tante",
+                    "trustee": "Curateur",
+                    "trusteeOfMinor": "Curateur de Mineur",
+                    "trusteeOfIncompetent": "Curateur d'Incapable",
+                    "powerOfAttorney": "Procuration",
+                    "controllingPersonOfEntity": "Personne Contrôlant l'Entité",
                     "brother": "Frère",
+                    "child": "Enfant",
                     "daughter": "Fille",
+                    "domesticPartner": "Partenaire Domestique",
+                    "executor": "Exécuteur",
                     "father": "Père",
                     "fiance": "Fiancé",
-                    "grandfather": "Grandfather",
-                    "grandmother": "Grand-père",
                     "grandchild": "Petit-enfant",
-                    "husband": "Mari",
+                    "lifePartner": "Partenaire de Vie",
                     "mother": "Mère",
-                    "partner": "Partenaire",
                     "sister": "Sœur",
                     "son": "Fils",
-                    "trustee": "Fiduciaire",
-                    "wife": "Épouse",
-                    "uncle": "Oncle",
-                    "niece": "Nièce",
-                    "nephew": "Neveu",
-                    "self": "Soi-même",
-                    "estate": "Succession",
-                    "trust": "Fiducie",
                     "spouse": "Conjoint",
-                    "grandson": "Petit-fils",
-                    "granddaughter": "Petite-fille",
+                    "stepfather": "Beau-père",
+                    "stepmother": "Belle-mère",
+                    "self": "Soi-même",
+                    "business": "Entreprise",
+                    "businessAssociate": "Collègue d'Affaires",
+                    "partner": "Partenaire",
+                    "employer": "Employeur",
+                    "formerSpouse": "Ancien Conjoint",
+                    "grandparent": "Grand-parent",
                     "parent": "Parent",
-                    "child": "Enfant",
-                    "nonSpouse": "Non conjoint",
-                    "childrenEqually": "Enfants à parts égales",
-                    "childrenPerStirpes": "Enfants par souche",
-                    "perStirpes": "Par souche",
-                    "survivingSpouse": "Conjoint survivant",
+                    "owner": "Propriétaire",
+                    "sibling": "Frère ou Sœur",
+                    "stepchild": "Enfant de la Famille Recomposée",
+                    "stepparent": "Beau-parent",
                     "other": "Autre"
-                }
+                },
+                "allocationRequired": "L'allocation est requise"
             },
             "identification": {
                 "title": "Identification",
@@ -535,6 +536,13 @@
                     "mr": "r.",
                     "mrs": "Mme.",
                     "ms": "Mlle."
+                },
+                "suffixOptions": {
+                    "jr": "fils",
+                    "sn": "père",
+                    "i": "Ier",
+                    "ii": "IIe",
+                    "iii": "IIIe"
                 },
                 "prefix": "Préfixe",
                 "suffix": "Suffixe",
@@ -648,19 +656,26 @@
                 "firstNames": "Veuillez vous assurer que le prénom, le nom de l'entreprise ou le nom du fiduciaire est mis à jour lors de l'ajout/mise à jour des bénéficiaires.",
                 "primaryBeneficiaryAllocationsSum": "La somme de toutes les allocations des principaux bénéficiaires doit être de 100 %",
                 "contingentBeneficiaryAllocationsSum": "La somme de toutes les allocations de bénéficiaires conditionnels doit être de 100 %",
-                "addressDetails": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du bénéficiaire"
+                "addressDetails": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du bénéficiaire",
+                "allocationRequired": "Veuillez vous assurer que l'allocation est supérieure à 0 % lors de l'ajout/mise à jour d'un bénéficiaire"
             }
         },
         "signature": {
             "header": "Validation de la signature",
             "isIrrevocableBene": "Y a-t-il un bénéficiaire irrévocable ?",
             "spouseConsentText": "Si vous n'avez pas de conjoint, ou si votre conjoint est décédé, cochez cette case.",
-            "signatureShouldBePresent": "L'option 'Signature présente' doit être sélectionnée"
+            "signatureShouldBePresent": "L'option 'Signature présente' doit être sélectionnée",
+            "continue": "Continuer",
+            "leaveTransaction": "Quitter cette transaction"
         },
         "summary": {
             "header": "Résumé",
             "overview": "Aperçu",
             "reviewMessage": "Tout semble en ordre ! Assurez-vous de revoir vos saisies avant de soumettre",
+            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Veuillez examiner l'erreur ci-dessous.",
+            "bpm500Error": "Erreur BPM 500",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée suive",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO.",
             "primaryBeneficiary": "Bénéficiaire principal",
             "contingentBeneficiary": "Bénéficiaire contingent",
             "current": "Actuel",
@@ -671,8 +686,8 @@
             },
             "allocation": {
                 "title": "Allocation",
-                "relationshipToInsured": "Relation avec l'assuré"
-            },
+                "relationshipToParty": "Relation avec la partie"
+           },
             "contact": {
                 "title": "Informations de contact",
                 "address": "Adresse",
@@ -689,9 +704,12 @@
             "header": "Confirmer",
             "successMessage": "Les mises à jour des bénéficiaires ont été soumises.",
             "close": "Fermer",
-            "title": "Succès !",
-            "viewAllPeople": "Voir toutes les personnes",
-            "submitAddress": "Mettre à jour le bénéficiaire"
+            "title": "Succès!",
+            "viewAllPeople": "Voir tous les gens",
+            "submitAddress": "Mettre à jour le bénéficiaire",
+            "goToCase": "Aller au dossier",
+            "submit": "Soumis!",
+            "nigo": "Les mises à jour des bénéficiaires ont été soumises pour le traitement NIGO."
         }
     },
     "addressChange": {
@@ -6450,6 +6468,15 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le document Claim Match Bene a été soumis.",
             "cta": "Aller à la demande de décès",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "policyupdatePartydetailsReview": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : Envoyer la communication NIGO a été soumise.",
+            "cta": "Aller au cas",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }

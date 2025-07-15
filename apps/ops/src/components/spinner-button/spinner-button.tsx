@@ -1,4 +1,3 @@
-import { Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -8,6 +7,8 @@ import Button, {
     ButtonType,
     ButtonVariant,
 } from '@deps/components/button/button';
+
+import CustomLoader from '../loader/customLoader';
 
 export interface SpinnerButtonProps {
     size?: ButtonSize;
@@ -59,7 +60,7 @@ const SpinnerButton = ({
                 <div data-testid="test-loader">
                     {/* to do - add optional alt text? */}
                     {/* alt={t('site.loader')} */}
-                    <Loader />
+                    <CustomLoader />
                 </div>
             )}
         </Button>

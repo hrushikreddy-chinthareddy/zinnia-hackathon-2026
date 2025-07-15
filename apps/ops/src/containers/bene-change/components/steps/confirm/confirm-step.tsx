@@ -1,7 +1,7 @@
 import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, {
@@ -11,10 +11,13 @@ import NavElement, {
 import PageLoader, {
     PageLoaderVariant,
 } from '@deps/components/page-loader/page-loader';
+import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
+import { SorSystem } from '@deps/models/policy/enums';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { addTransaction } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
@@ -23,9 +26,11 @@ import { useBeneChange } from '../../../bene-change-provider';
 
 interface ConfirmStepProps {
     policy: Policy;
-    document: DocumentData;
+    document?: DocumentData;
     planCode: string;
     clientId: string;
+    parentPage: ParentPage;
+    leaveTransactionLink: string;
 }
 
 const ConfirmStep = ({
@@ -33,6 +38,8 @@ const ConfirmStep = ({
     document,
     planCode,
     clientId,
+    leaveTransactionLink,
+    parentPage,
 }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.confirm',
@@ -45,6 +52,8 @@ const ConfirmStep = ({
         beneData,
         ownerInfo,
         peopleSelection,
+        SOR,
+        validationResponse,
     } = useBeneChange();
 
     const [submitFailed, setSubmitFailed] = useState(false);
@@ -53,10 +62,18 @@ const ConfirmStep = ({
         () => Object.keys(formErrors).length === 0,
         [formErrors]
     );
+    const [newCaseId, setNewCaseId] = useState<string | undefined>(
+        formData.caseId
+    );
+
+    const validationSucceed = useMemo(
+        () => validationResponse?.status === TransactionResponseStatus.Success,
+        [validationResponse]
+    );
 
     const submit = useCallback(async () => {
         let documentResult;
-
+        setIsLoading(true);
         if (
             !document &&
             formData.businessKey &&
@@ -68,19 +85,18 @@ const ConfirmStep = ({
                 DocumentType.ReReg,
                 clientId.toUpperCase()
             );
-
             if (!documentResult.success) {
                 console.error(
-                    'ConfirmStep:: No documentNumber from getDocument',
+                    'Beneficiary Change:: No documentNumber from getDocument for',
                     {
                         documentNumber: formData.businessKey,
                         documentType: DocumentType.ReReg,
                         clientId,
                     }
                 );
-                setSubmitFailed(true);
             }
         }
+
         const parties = peopleSelection?.cardActionData?.filteredData || [];
         const requestBody = buildReRegRequestBody({
             formData,
@@ -93,18 +109,26 @@ const ConfirmStep = ({
                 ? documentResult.value
                 : null,
             parties,
+            sorSystem: SOR || SorSystem.LifeCad,
         });
 
         const response = await addTransaction(requestBody);
         if (response.status !== 'ACCEPTED') {
             setSubmitFailed(true);
+        } else {
+            setNewCaseId(response?.caseId);
         }
 
         setIsLoading(false);
     }, [document, formData, clientId, signatureData, planCode, policy]);
 
+    const hasAutoSubmittedRef = useRef(false);
+
     useEffect(() => {
-        submit();
+        if (!hasAutoSubmittedRef.current) {
+            hasAutoSubmittedRef.current = true;
+            submit();
+        }
     }, [submit]);
 
     if (isLoading) {
@@ -118,7 +142,7 @@ const ConfirmStep = ({
     if (submitFailed) {
         return (
             <ApiErrorCard
-                leaveRoute={'/create-case'}
+                leaveRoute={leaveTransactionLink}
                 submit={{
                     action: submit,
                     text: t('submitAddress'),
@@ -127,28 +151,37 @@ const ConfirmStep = ({
         );
     }
 
+    const isSuccess = validationSucceed;
+
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             {validationSucceeded ? (
                 <CardInfo
                     icon={
-                        <CircleCheckIcon
-                            className="text-semantic-success"
-                            height={50}
-                            width={50}
-                        />
+                        isSuccess ? (
+                            <CircleCheckIcon
+                                className="text-semantic-success"
+                                height={50}
+                                width={50}
+                            />
+                        ) : null
                     }
-                    cta={{
-                        action: () => {
-                            router.push(router.asPath);
-                            router.reload();
-                        },
-                        text: t('viewAllPeople'),
-                    }}
+                    cta={
+                        newCaseId
+                            ? {
+                                  action: () => {
+                                      router.push(
+                                          `/cases/${newCaseId}/progress`
+                                      );
+                                  },
+                                  text: t('goToCase'),
+                              }
+                            : undefined
+                    }
                     secondaryCta={
                         <NavElement
                             aria-label={t('close') as string}
-                            onClick={() => router.push('/create-case')}
+                            onClick={() => router.push(leaveTransactionLink)}
                             type={NavElementType.Button}
                             variant={NavElementVariant.Default}
                             className="font-semibold text-secondary"
@@ -156,8 +189,14 @@ const ConfirmStep = ({
                             {t('close')}
                         </NavElement>
                     }
-                    subtitle={<span>{t('successMessage')}</span>}
-                    title={t('title')}
+                    subtitle={
+                        isSuccess ? (
+                            <span>{t('successMessage')}</span>
+                        ) : (
+                            <span>{t('nigo')}</span>
+                        )
+                    }
+                    title={isSuccess ? t('title') : t('submit')}
                 />
             ) : null}
         </div>

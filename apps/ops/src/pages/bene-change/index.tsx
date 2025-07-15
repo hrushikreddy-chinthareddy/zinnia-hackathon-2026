@@ -30,7 +30,7 @@ import { ERROR_CODES } from '../create-case/error';
 
 interface AddressChangeProps {
     policy: Policy;
-    document: DocumentData;
+    document?: DocumentData;
     planCode: string;
     featureFlagDecisions: FeatureFlags;
 }

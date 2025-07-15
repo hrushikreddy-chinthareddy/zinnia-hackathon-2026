@@ -44,6 +44,30 @@ export const addTransaction = async (body: any): Promise<any> => {
     }
 };
 
+export const validateTransaction = async (body: any): Promise<any> => {
+    const { businessKey, correlationid, carrierId, policyNumber } = body || {};
+    try {
+        browserLogInfo('BeneficiaryChange::Validating a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: `${baseUrl}/transactions/bene/validation`,
+            function: 'webnonfinancial.validateTransaction',
+        });
+        const { data } = await client.post<any, AxiosResponse>(
+            `${baseUrl}/transactions/bene/validation`,
+            body
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError('BeneficiaryChange::Failed to validate transaction', {
+            ...parseErrorInformation(error),
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: `${baseUrl}/transactions/bene/validation`,
+            function: 'webnonfinancial.validateTransaction',
+        });
+        return error;
+    }
+};
+
 export const initialDeathClaimExists = async (
     contractNumber: string | undefined,
     clientId: string | undefined

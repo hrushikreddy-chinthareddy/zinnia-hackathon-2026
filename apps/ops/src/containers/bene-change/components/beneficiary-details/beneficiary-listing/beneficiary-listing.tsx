@@ -14,6 +14,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
+import { SorSystem } from '@deps/models/policy/enums';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 
@@ -34,8 +35,14 @@ export default function BeneficiaryListing({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.beneDetails.beneficiaryListing',
     });
-    const { formData, setFormData, setBeneData, beneData, setDeletedBene } =
-        useBeneChange();
+    const {
+        formData,
+        setFormData,
+        setBeneData,
+        beneData,
+        setDeletedBene,
+        SOR,
+    } = useBeneChange();
 
     const primary: string[] = useMemo(() => {
         const primaryArr: string[] = [];
@@ -290,25 +297,28 @@ export default function BeneficiaryListing({
                         {t('primaryBeneficiaries')}
                     </Typography>
                 </div>
-                <div className="border-2 border-gray-100 p-4 font-primary">
-                    <p className="mb-2 text-base">
-                        {t('requestAddPrimaryBeneficiaryLabel') as string}
-                    </p>
-                    <Radio
-                        items={options.selectOptions}
-                        onChange={(event) =>
-                            toggleSelection(
-                                PartyRole.PRIMARYBENEFICIARY,
-                                event.target.value
-                            )
-                        }
-                        value={
-                            formData.isPrimaryBeneInfoOnFile ? 'true' : 'false'
-                        }
-                        variant={RadioVariant.Default}
-                    />
-                </div>
-
+                {SOR != SorSystem.Zahara && (
+                    <div className="border-2 border-gray-100 p-4 font-primary">
+                        <p className="mb-2 text-base">
+                            {t('requestAddPrimaryBeneficiaryLabel') as string}
+                        </p>
+                        <Radio
+                            items={options.selectOptions}
+                            onChange={(event) =>
+                                toggleSelection(
+                                    PartyRole.PRIMARYBENEFICIARY,
+                                    event.target.value
+                                )
+                            }
+                            value={
+                                formData.isPrimaryBeneInfoOnFile
+                                    ? 'true'
+                                    : 'false'
+                            }
+                            variant={RadioVariant.Default}
+                        />
+                    </div>
+                )}
                 {parties?.map((item, index) => {
                     if (
                         item?.partyRoles?.includes(PartyRole.PRIMARYBENEFICIARY)
@@ -326,9 +336,8 @@ export default function BeneficiaryListing({
                                 key={`listing-item-${index}`}
                                 setBeneData={setBeneData}
                                 policy={policy}
-                                isBeneInfoOnFile={
-                                    formData.isPrimaryBeneInfoOnFile
-                                }
+                                isBeneInfoOnFile={formData.isPrimaryBeneInfoOnFile}
+                                partyId = {item.partyId}
                             />
                         );
                     }
@@ -395,26 +404,28 @@ export default function BeneficiaryListing({
             </div>
 
             <div className="my-6">
-                <div className="my-3 border-2 border-gray-100 p-4 font-primary">
-                    <p className="mb-2 text-base">
-                        {t('requestAddContingentBeneficiaryLabel')}
-                    </p>
-                    <Radio
-                        items={options.selectOptions}
-                        onChange={(event) =>
-                            toggleSelection(
-                                PartyRole.CONTINGENTBENEFICIARY,
-                                event.target.value
-                            )
-                        }
-                        value={
-                            formData.isContingentBeneInfoOnFile
-                                ? 'true'
-                                : 'false'
-                        }
-                        variant={RadioVariant.Default}
-                    />
-                </div>
+                {SOR != SorSystem.Zahara && (
+                    <div className="my-3 border-2 border-gray-100 p-4 font-primary">
+                        <p className="mb-2 text-base">
+                            {t('requestAddContingentBeneficiaryLabel')}
+                        </p>
+                        <Radio
+                            items={options.selectOptions}
+                            onChange={(event) =>
+                                toggleSelection(
+                                    PartyRole.CONTINGENTBENEFICIARY,
+                                    event.target.value
+                                )
+                            }
+                            value={
+                                formData.isContingentBeneInfoOnFile
+                                    ? 'true'
+                                    : 'false'
+                            }
+                            variant={RadioVariant.Default}
+                        />
+                    </div>
+                )}
 
                 <div>
                     <Typography variant={TypographyVariant.H2}>
@@ -441,9 +452,8 @@ export default function BeneficiaryListing({
                                 key={`listing-item-${index}`}
                                 setBeneData={setBeneData}
                                 policy={policy}
-                                isBeneInfoOnFile={
-                                    formData.isContingentBeneInfoOnFile
-                                }
+                                isBeneInfoOnFile={formData.isContingentBeneInfoOnFile}
+                                partyId = {item.partyId}
                             />
                         );
                     }

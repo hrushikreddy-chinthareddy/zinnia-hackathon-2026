@@ -8,6 +8,7 @@ import {
     SystematicProgramRequestQuery,
     checkEligibilityFullSurrender,
 } from '@deps/queries/api/bpm';
+import { checkEligibilityBeneficiary } from '@deps/queries/api/bpm-non-financial';
 import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
 
 export const checkOneTimePremiumEligibilityQuery = async (
@@ -59,10 +60,10 @@ export const checkPartialWithdrawalOneTimeEligibilityQuery = async (
     );
 };
 
-export const checkFullSurrenderWithdrawal = async (
-    planCode: string,
-    policyNumber: string
-) => {
+export const checkBeneficiaryEligibilityQuery = async (planCode: string, policyNumber: string) => {
+    return await checkEligibilityBeneficiary(planCode, policyNumber);
+}
+export const checkFullSurrenderWithdrawal = async (planCode: string, policyNumber: string) => {
     return await checkEligibilityFullSurrender(planCode, policyNumber);
 };
 

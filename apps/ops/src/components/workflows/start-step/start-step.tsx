@@ -41,6 +41,8 @@ interface StartStepProps extends TransactionClickProps {
     subtitle?: string;
     isOnBaseUpdateAssistiveText?: boolean;
     isContinueDisabled?: boolean;
+    leaveTransactionLink?: string;
+    processSubType?: string[];
 }
 
 const StartStep = ({
@@ -54,6 +56,8 @@ const StartStep = ({
     trackEventProps,
     isOnBaseUpdateAssistiveText = false,
     isContinueDisabled = false,
+    leaveTransactionLink,
+    processSubType,
 }: StartStepProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -74,15 +78,23 @@ const StartStep = ({
                 caseId: '',
                 value: PROCESS_WITHOUT_CASE_DOCUMENT,
             };
-            const response = await getCases(
-                {
-                    limit: 25,
-                    notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
-                    policyNumber: policyNumber,
-                    process: [processType],
-                },
-                featureFlags
-            );
+
+            const basePayload = {
+                limit: 25,
+                notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
+                policyNumber: policyNumber,
+                process: [processType],
+            };
+
+            const payload =
+                processSubType && processSubType.length
+                    ? {
+                          ...basePayload,
+                          requestSubType: processSubType,
+                      }
+                    : basePayload;
+
+            const response = await getCases(payload, featureFlags);
 
             if (response && 'total' in response) {
                 const mappedCaseOptions: CaseDocumentOption[] =
@@ -160,6 +172,7 @@ const StartStep = ({
                     parentPage={parentPage}
                     disableContinue={isContinueDisabled}
                     trackEventProps={trackEventProps}
+                    leaveTransactionLink={leaveTransactionLink}
                 />
             }
         >
