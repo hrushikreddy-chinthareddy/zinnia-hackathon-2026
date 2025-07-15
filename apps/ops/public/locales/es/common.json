@@ -1552,6 +1552,10 @@
             "unknown": {
                 "badgeText": "Desconocido",
                 "tooltip": "El estado es desconocido."
+            },
+            "issued": {
+                "badgeText": "Emitido",
+                "tooltip": "Este nuevo negocio se procesó correctamente. Se completó el {{date}} y la póliza o contrato se emitió el {{issueDate}}."
             }
         },
         "tasks": {

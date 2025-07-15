@@ -1552,6 +1552,10 @@
             "unknown": {
                 "badgeText": "Unknown",
                 "tooltip": "Status is unknown."
+            },
+            "issued": {
+                "badgeText": "Issued",
+                "tooltip": "This New Business was successfully processed. It completed on {{date}} and the policy or contract was issued on {{issueDate}}."
             }
         },
         "tasks": {

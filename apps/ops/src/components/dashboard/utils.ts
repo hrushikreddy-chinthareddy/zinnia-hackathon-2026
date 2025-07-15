@@ -34,6 +34,7 @@ export const caseStatusMap = {
     [Statuses.Pending]: 'Pending',
     [Statuses.Unresolved]: 'Unresolved',
     [Statuses.Resolved]: 'Resolved',
+    [Statuses.Issued]: 'Issued',
 };
 
 export const defaultDateFormat = 'YYYY-MM-DD';

@@ -16,6 +16,7 @@ import { Case, Statuses } from '@deps/models/case/case';
 interface GetStatusDetailsProps {
     singleCase: Case;
     t: TFunction;
+    issueDate?: string;
 }
 
 interface CaseStatusTooltipProps {
@@ -26,9 +27,14 @@ interface CaseStatusTooltipProps {
 const generateTooltipId = (caseId: string | number) =>
     `case-status-tooltip-${caseId}`;
 
-export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
+export const getStatusDetails = ({
+    singleCase,
+    t,
+    issueDate,
+}: GetStatusDetailsProps) => {
     const {
         caseStatus,
+        caseResult,
         processSubType,
         process,
         createdAt,
@@ -97,13 +103,25 @@ export const getStatusDetails = ({ singleCase, t }: GetStatusDetailsProps) => {
             break;
 
         case Statuses.Completed:
-            statusVariant = BadgeVariant.SUCCESS;
-            statusTooltip = `${t('caseOverview.caseStatus.completed.tooltip', {
-                processSubType: processSubType
-                    ? toTitleCase(processSubType)
-                    : toTitleCase(process),
-            })}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
-            statusText = t('caseOverview.caseStatus.completed.badgeText');
+            if (caseResult === Statuses.Issued && issueDate) {
+                statusVariant = BadgeVariant.DEFAULT;
+                statusTooltip = t('caseOverview.caseStatus.issued.tooltip', {
+                    date: dayjs(updatedAt).format('MM/DD/YYYY'),
+                    issueDate: dayjs(issueDate).format('MM/DD/YYYY'),
+                });
+                statusText = t('caseOverview.caseStatus.issued.badgeText');
+            } else {
+                statusVariant = BadgeVariant.SUCCESS;
+                statusTooltip = `${t(
+                    'caseOverview.caseStatus.completed.tooltip',
+                    {
+                        processSubType: processSubType
+                            ? toTitleCase(processSubType)
+                            : toTitleCase(process),
+                    }
+                )}${dayjs(updatedAt).format('MM/DD/YYYY')}.`;
+                statusText = t('caseOverview.caseStatus.completed.badgeText');
+            }
             break;
         case Statuses.NotStarted:
             statusVariant = BadgeVariant.DEFAULT;

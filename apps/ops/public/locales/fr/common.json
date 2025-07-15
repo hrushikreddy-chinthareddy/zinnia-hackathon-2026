@@ -1534,6 +1534,10 @@
             "unknown": {
                 "badgeText": "Inconnu",
                 "tooltip": "Le statut est inconnu."
+            },
+            "issued": {
+                "badgeText": "Émis",
+                "tooltip": "Cette nouvelle affaire a été traitée avec succès. Elle a été finalisée le {{date}} et la police ou le contrat a été émis le {{issueDate}}."
             }
         },
         "tasks": {

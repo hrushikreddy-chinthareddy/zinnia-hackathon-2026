@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 import CaseSubPage from '@deps/components/case-sub-page/case-sub-page';
 import { TranslationFiles } from '@deps/config/translations';
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Case } from '@deps/models/case/case';
 import { baseAppUrl } from '@deps/queries/api-config';
@@ -26,6 +27,7 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const [tabVal, setTabVal] = useState(tab);
     const { featureFlags } = useOptimizely();
+    const { policy } = useCaseActivityContext();
 
     const { data: caseDetailsModel } = useQuery({
         queryKey: ['caseDetails', caseDetails?.id],
@@ -48,7 +50,11 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         setTabVal(val);
     };
 
-    const statusDetails = getStatusDetails({ singleCase: caseDetailsModel, t });
+    const statusDetails = getStatusDetails({
+        singleCase: caseDetailsModel,
+        t,
+        issueDate: policy?.issueDate,
+    });
 
     return (
         <div className={styles.container}>

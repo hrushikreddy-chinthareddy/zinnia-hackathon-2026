@@ -127,6 +127,7 @@ export enum Statuses {
     Pending = 'IMPEDED',
     Resolved = 'RESOLVED',
     Unresolved = 'UNRESOLVED',
+    Issued = 'ISSUED',
 }
 
 export interface StatCount {
