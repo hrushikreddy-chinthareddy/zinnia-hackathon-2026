@@ -42,7 +42,7 @@
     align-items: center;
 }
 
-.agentInfo {
+.agentContainer {
     display: flex;
     height: 44px;
     padding: var(--measure-dimension-padding-lg, 8px)
@@ -51,7 +51,14 @@
     justify-content: space-between;
     background-color: var(--color-grayscale-color-50-gray);
     border-radius: var(--measure-dimension-radius-md, 8px);
-    justify-content: space-between;
+
+    .agentInfo {
+        display: flex;
+        gap: var(--measure-dimension-gap-lg);
+    }
+    .editIcon {
+        cursor: pointer;
+    }
 }
 
 .agentEmail {

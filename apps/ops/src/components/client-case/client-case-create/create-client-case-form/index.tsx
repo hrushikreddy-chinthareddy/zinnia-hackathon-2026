@@ -10,7 +10,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FieldDate } from '@deps/components/field/date/FieldDate';
@@ -76,6 +76,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const [clientCaseData, setClientCaseData] =
         useState<Partial<IllustrationsClientCase>>(mergedCase);
     const [currentAge, setCurrentAge] = useState(0);
+
     const insuredDetailsClassname = clsx(
         styles.formSection,
         styles.insuredDetails
@@ -177,6 +178,13 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             onCancel();
         }
     };
+
+    useEffect(() => {
+        setCurrentAge(
+            calculateIssueAge(mergedCase.insuredDetails?.dateOfBirth || null)
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <form className={styles.formContainer}>
@@ -350,7 +358,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 >
                     {t('clientCase.createClientCaseForm.continueButton')}
                 </Button>
-                <Button onClick={onCancelForm} mode="link">
+                <Button onClick={onCancelForm} mode="link" size="small">
                     {t('clientCase.createClientCaseForm.cancelButton')}
                 </Button>
             </div>

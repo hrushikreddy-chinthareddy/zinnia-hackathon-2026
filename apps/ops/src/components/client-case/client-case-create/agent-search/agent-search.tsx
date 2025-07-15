@@ -70,7 +70,7 @@ export const AgentSearch = ({
     const [selectedAgent, setCurrentAgent] =
         useState<IllustrationAgentDetails>(currentAgentData);
     const agentInfoResultClassname = clsx(
-        styles.agentInfo,
+        styles.agentContainer,
         styles.agentInfoResult
     );
     const agentEmailResultClassname = clsx(
@@ -254,20 +254,23 @@ export const AgentSearch = ({
                     {determineRender()}
                 </div>
             ) : (
-                <div className={styles.agentInfo}>
-                    <Typography variant={TypographyVariant.BodySm}>
-                        {selectedAgent.firstName} {selectedAgent.lastName}
-                    </Typography>
-                    <Typography
-                        variant={TypographyVariant.BodySm}
-                        className={styles.agentEmail}
-                    >
-                        {selectedAgent.email} (
-                        {t(
-                            'clientCase.createClientCaseForm.searchAgent.current'
-                        )}
-                        )
-                    </Typography>
+                <div className={styles.agentContainer}>
+                    <div className={styles.agentInfo}>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {selectedAgent.firstName} {selectedAgent.lastName}
+                        </Typography>
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className={styles.agentEmail}
+                        >
+                            {selectedAgent.email}
+                            {/* (
+                            {t(
+                                'clientCase.createClientCaseForm.searchAgent.current'
+                            )}
+                            ) */}
+                        </Typography>
+                    </div>
                     <EditIcon
                         color="blue"
                         height={'20px'}
