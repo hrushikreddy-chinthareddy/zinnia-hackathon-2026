@@ -95,6 +95,12 @@ export default function Illustrations({
     );
 
     useEffect(() => {
+        if (fetchingErrorMessage) {
+            console.log(
+                '🚀 ~ useEffect ~ fetchingErrorMessage:',
+                fetchingErrorMessage
+            );
+        }
         switch (fetchingErrorOrigin) {
             case ErrorOrigin.NewBusiness:
                 setBannerText(EXTERNAL_ERROR_LABEL);
@@ -209,8 +215,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
 
-            const { eAppId } = context.query as ParsedUrlQuery;
-            const _eAppId = typeof eAppId === 'string' ? eAppId : '';
+            const { eappid } = context.query as ParsedUrlQuery;
+            const _eAppId = typeof eappid === 'string' ? eappid : '';
 
             if (_eAppId) {
                 // Step 1: Search existing client cases if and eAppId is on the query string

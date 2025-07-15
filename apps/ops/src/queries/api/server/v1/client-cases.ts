@@ -154,6 +154,11 @@ export const createClientCaseFromNewBusiness = async (
 
     if (isEmptyObject(newBusinessResponseObject)) {
         throwTypedError('New Business not found', NEW_BUSINESS_API_ORIGIN);
+    } else if (newBusinessResponseObject.message) {
+        throwTypedError(
+            newBusinessResponseObject.message,
+            NEW_BUSINESS_API_ORIGIN
+        );
     }
 
     const newClientCasePayload = buildClientCaseFromNewBusiness(
