@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { CSSProperties, ElementType, PropsWithChildren } from 'react';
+import { CSSProperties, ElementType, PropsWithChildren } from 'react';
 
 import { JestProps } from '@deps/types/props';
 

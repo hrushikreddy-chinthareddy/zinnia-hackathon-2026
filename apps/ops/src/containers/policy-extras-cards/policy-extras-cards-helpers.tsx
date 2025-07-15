@@ -534,7 +534,8 @@ const mapRiderFields = (
         riderBenefit?.[ConfiguredSettingId.MaxNumberOfClaims]
     ) {
         fields.push({
-            details: riderBenefit[ConfiguredSettingId.MaxNumberOfClaims].toString(),
+            details:
+                riderBenefit[ConfiguredSettingId.MaxNumberOfClaims].toString(),
             key: `rider-extras-card-${rider.riderName}-field-maxClaims`,
             label: t('riders.maxClaims'),
             testId: `${RidersCardsTest.MaxClaims}-${rider.riderName}`,

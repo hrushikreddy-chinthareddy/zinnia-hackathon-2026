@@ -9,6 +9,7 @@ import Typography, {
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getPolicyVisibility } from '@deps/helpers/policy-visibility/policy-visibility-helper';
+import { translateYearOrYears } from '@deps/helpers/string.helpers';
 
 import TransactionCard from './transaction-card';
 import CardContainer from '../../card-container/card-container';
@@ -18,13 +19,20 @@ export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.detailCards.policyDetails',
     });
+    const { t: tRaw } = useTranslation();
+
     const currencyFormat: Intl.NumberFormatOptions = {
         currency: policy.currency ?? 'USD',
         style: 'currency',
     };
 
-    const { accountValue, costBasis, baseDeathBenefit, surrenderValue } =
-        policy;
+    const {
+        accountValue,
+        costBasis,
+        baseDeathBenefit,
+        surrenderValue,
+        fixedCostPeriod,
+    } = policy;
 
     const { data: transactionCards } = useQuery({
         queryKey: ['policyVisibility', policy],
@@ -53,51 +61,73 @@ export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
                         variant={ContentVariant.Value}
                     />
                 </div>
-                <div>
-                    <Label
-                        label={t(`accountValue`)}
-                        tooltipBody={t(`accountValueTooltip`)}
-                        tooltipTitle={t(`accountValue`)}
-                        variant={LabelVariant.FieldLabel}
-                    />
-                    <Content
-                        details={numberFormatify(
-                            accountValue as number,
-                            currencyFormat
-                        )}
-                        variant={ContentVariant.Value}
-                    />
-                </div>
-                <div>
-                    <Label
-                        label={t(`netSurrenderValue`)}
-                        tooltipBody={t(`netSurrenderValueTooltip`)}
-                        tooltipTitle={t(`netSurrenderValue`)}
-                        variant={LabelVariant.FieldLabel}
-                    />
-                    <Content
-                        details={numberFormatify(
-                            surrenderValue as number,
-                            currencyFormat
-                        )}
-                        variant={ContentVariant.Value}
-                    />
-                </div>
-                <div>
-                    <Label
-                        label={t(`costBasis`)}
-                        tooltipBody={t(`costBasisTooltip`)}
-                        tooltipTitle={t(`costBasis`)}
-                        variant={LabelVariant.FieldLabel}
-                    />
-                    <Content
-                        details={numberFormatify(
-                            costBasis as number,
-                            currencyFormat
-                        )}
-                        variant={ContentVariant.Value}
-                    />
-                </div>
+                {!policy.isTerm && (
+                    <>
+                        <div>
+                            <Label
+                                label={t(`accountValue`)}
+                                tooltipBody={t(`accountValueTooltip`)}
+                                tooltipTitle={t(`accountValue`)}
+                                variant={LabelVariant.FieldLabel}
+                            />
+                            <Content
+                                details={numberFormatify(
+                                    accountValue as number,
+                                    currencyFormat
+                                )}
+                                variant={ContentVariant.Value}
+                            />
+                        </div>
+                        <div>
+                            <Label
+                                label={t(`netSurrenderValue`)}
+                                tooltipBody={t(`netSurrenderValueTooltip`)}
+                                tooltipTitle={t(`netSurrenderValue`)}
+                                variant={LabelVariant.FieldLabel}
+                            />
+                            <Content
+                                details={numberFormatify(
+                                    surrenderValue as number,
+                                    currencyFormat
+                                )}
+                                variant={ContentVariant.Value}
+                            />
+                        </div>
+                        <div>
+                            <Label
+                                label={t(`costBasis`)}
+                                tooltipBody={t(`costBasisTooltip`)}
+                                tooltipTitle={t(`costBasis`)}
+                                variant={LabelVariant.FieldLabel}
+                            />
+                            <Content
+                                details={numberFormatify(
+                                    costBasis as number,
+                                    currencyFormat
+                                )}
+                                variant={ContentVariant.Value}
+                            />
+                        </div>
+                    </>
+                )}
+
+                {policy.isTerm && (
+                    <div>
+                        <Label
+                            label={t(`policyTerm`)}
+                            tooltipBody={t(`policyTermTooltip`)}
+                            tooltipTitle={t(`policyTerm`)}
+                            variant={LabelVariant.FieldLabel}
+                        />
+                        <Content
+                            details={translateYearOrYears(
+                                fixedCostPeriod,
+                                tRaw
+                            )}
+                            variant={ContentVariant.Value}
+                        />
+                    </div>
+                )}
             </div>
             <div
                 className="mt-4 flex gap-4 flex-wrap"

@@ -79,7 +79,11 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const payorBankDetails = getBankDetails(payorParty, upcomingLoanRepayment);
 
     const flatExtra = getFlatExtra(coverage);
-    const addCharges = getAddCharges({ flatExtra, t });
+    const addCharges = getAddCharges({
+        flatExtra,
+        keyPrefix: 'premium.upcoming',
+        t,
+    });
 
     const { data: loanRepaymentOneTimeEligibility } = useQuery({
         queryKey: [

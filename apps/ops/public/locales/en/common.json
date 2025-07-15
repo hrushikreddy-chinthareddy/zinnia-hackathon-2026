@@ -2955,6 +2955,8 @@
                 "netSurrenderValue": "Net surrender value",
                 "netSurrenderValueTooltip": "This is how much the owner or their payees can expect if the policy is surrendered. It's the current account value minus surrender charges, outstanding loans, and other fees.",
                 "policyDetails": "$t(pageHeader.policyDetails.headerText)",
+                "policyTerm": "Policy term",
+                "policyTermTooltip": "Policy term is just what it sounds like: it's how long the policy lasts. Some policies have a set term (shown in number of years) and end date, while others last until death of the insured.",
                 "premiums": "Premiums",
                 "total": "Total",
                 "totalFundValue": "Total fund value",
@@ -3012,7 +3014,8 @@
                 "policyLength": "Policy length",
                 "policyLengthTooltip": "Policy length is just what it sounds like: it's how long the policy lasts. Some policies have a set term (shown in number of years) and end date, while others last until death of the insured.",
                 "policyTimeline": "Policy Timeline",
-                "freeLookExpiration": "Free look expiration"
+                "freeLookExpiration": "Free look expiration",
+                "freeLookEndDate": "Free look end date"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Agent email address",
@@ -3928,11 +3931,14 @@
                     "ytdPremium": "YTD premium",
                     "allTimePremium": "All-time premium",
                     "costBasis": "Cost basis",
+                    "unearnedPremium": "Unearned premium",
+                    "annualizedPremium": "Annualized Premium",
                     "gracePeriodBeforeLapse": "Grace period before lapse",
                     "gracePeriodMinPayment": "Grace period min payment"
                 }
             },
             "popOver": {
+                "annualizedPremium": "Annualized premium is the projected total premium for the policy over a one-year period.",
                 "costBasis": "The cost basis is how much of the account value comes from paid premiums. Account value grows as premiums are paid and earn interest. Withdrawals up to the cost basis amount are tax-free; owners only pay taxes on interest gains. (Note: Cost basis can differ from the all-time premium amount if the owner has made withdrawals.)",
                 "gracePeriodBeforeLapse": "These dates tell you how long the owner has to make the required grace payment to keep the policy active. The first date is when the policy went into pending lapse status, and the second is the deadline to make the required grace payment.",
                 "gracePeriodMinPayment": "This is the minimum amount the owner must pay in premium before the grace period ends to keep their policy active (and their coverage and account value intact.)"
@@ -4821,10 +4827,12 @@
         "eligible": "Eligible",
         "eligibleForWithdrawal": "Eligible for withdrawal",
         "eligibleForWithdrawalTooltip": "Withdrawals from the account value are allowed right now. Withdrawals may reduce the death benefit.",
+        "eligibleForRmdsTooltip": "This contract is eligible for Required Minimum Distributions (RMDs). RMDs ensure the owner is in compliance with IRS regulations by requiring annual withdrawals once the applicable age is reached.",
         "requiredRmdsTooltip": "This contract meets requirements for Required Minimum Distributions (RMDs). RMDs ensure the owner is in compliance with IRS regulations by requiring annual withdrawals once the applicable age is reached.",
         "freeWithdrawalRemaining": "Free withdrawal remaining",
         "freeLookCancel": "Free look cancel",
         "ineligible": "Ineligible",
+        "ineligibleForRmdsTooltip": "This contract is not currently eligible for Required Minimum Distributions (RMDs). ",
         "notRequiredRmdsTooltip": "This contract is not currently required to take Required Minimum Distributions (RMDs).",
         "maximumWithdrawalAmount": "Maximum withdrawal amount",
         "notAvailable": "Not Available",
@@ -6514,7 +6522,7 @@
             "newInformation": "New Information",
             "relationshipToDeceased": "Relationship to Deceased",
             "relationshipToOwner": "Relationship to Owner",
-            "didYouMakeAnyChanges": "Did you make any changes to the Admin System?",
+            "didYouMakeAnyChanges": "Did you make any changes to the Admin System   ?",
             "addAnotherCall": "Add Another Call",
             "contactRoles": {
                 "agent": "Agent",

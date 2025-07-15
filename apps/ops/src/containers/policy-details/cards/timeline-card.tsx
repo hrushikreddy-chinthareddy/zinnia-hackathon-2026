@@ -13,6 +13,7 @@ import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { mapPolicyTimelineValues } from '../policy-details.helpers';
 import EverlyIul from './policy-timeline-details/everly-iul';
 import EverlyUl from './policy-timeline-details/everly-ul';
+import TermTimelineDetails from './policy-timeline-details/term';
 
 const BASE_KEY = 'policy.detailCards.policyTimeline.';
 
@@ -20,22 +21,37 @@ export function LifeTimelineCard({ policy }: BasePolicyComponentArgs) {
     const { t } = useTranslation();
     const policyTimelineCardData = mapPolicyTimelineValues(policy, t);
 
+    const getTimelineCard = () => {
+        switch (policy.productType) {
+            case ProductType.INDEXEDUNIVERSALLIFE:
+                return (
+                    <EverlyIul
+                        policyTimelineCardData={policyTimelineCardData}
+                        productType={policy.productType}
+                    />
+                );
+            case ProductType.TERM:
+                return (
+                    <TermTimelineDetails
+                        policyTimelineCardData={policyTimelineCardData}
+                    />
+                );
+            default:
+                return (
+                    <EverlyUl
+                        policyTimelineCardData={policyTimelineCardData}
+                        productType={policy.productType}
+                    />
+                );
+        }
+    };
+
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
             <Typography variant={TypographyVariant.H2}>
                 {t('policy.detailCards.policyTimeline.policyTimeline')}
             </Typography>
-            {policy.productType === ProductType.INDEXEDUNIVERSALLIFE ? (
-                <EverlyIul
-                    policyTimelineCardData={policyTimelineCardData}
-                    productType={policy.productType}
-                />
-            ) : (
-                <EverlyUl
-                    policyTimelineCardData={policyTimelineCardData}
-                    productType={policy.productType}
-                />
-            )}
+            {getTimelineCard()}
         </CardContainer>
     );
 }

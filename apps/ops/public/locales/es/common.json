@@ -2931,6 +2931,10 @@
                 "netSurrenderValue": "Valor neto de rescate",
                 "netSurrenderValueTooltip": "Esto es lo que el propietario o sus beneficiarios pueden esperar si se rescinde la póliza. Es el valor actual de la cuenta menos los cargos por rescate, los préstamos pendientes y otras tarifas.",
                 "policyDetails": "$t(pageHeader.policyDetails.headerText)",
+                "policyLength": "Duración de la póliza",
+                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado.",
+                "policyTerm": "Término de la póliza",
+                "policyTermTooltip": "El plazo de la póliza es exactamente lo que parece: su duración. Algunas pólizas tienen un plazo fijo (expresado en años) y una fecha de vencimiento, mientras que otras duran hasta el fallecimiento del asegurado.",
                 "premiums": "Primas",
                 "total": "Total",
                 "totalFundValue": "Valor total del fondo",
@@ -2985,9 +2989,10 @@
                 "nYearsLeft": "{{n}} años restantes",
                 "oneYear": "1 año",
                 "oneYearLeft": "1 año restante",
+                "policyTimeline": "Cronología de la póliza",
+                "freeLookEndDate": "Fecha de finalización del look gratuito",
                 "policyLength": "Duración de la póliza",
-                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado.",
-                "policyTimeline": "Cronología de la póliza"
+                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado."
             },
             "applicationDetails": {
                 "agentEmailAddress": "Correo electrónico del agente",
@@ -3866,12 +3871,15 @@
                     "ytdPremium": "Prima YTD",
                     "allTimePremium": "Prima de todos los tiempos",
                     "costBasis": "Base del costo",
+                    "unearnedPremium": "Prima no devengada",
+                    "annualizedPremium": "Prima anualizada",
                     "gracePeriodBeforeLapse": "Período de gracia antes de la caducidad",
                     "gracePeriodMinPayment": "Pago mínimo del período de gracia"
                 }
             },
             "popOver": {
                 "costBasis": "La base del costo es cuánto del valor de la cuenta proviene de las primas pagadas. El valor de la cuenta crece a medida que se pagan las primas y ganan intereses. Los retiros hasta el monto de la base del costo están libres de impuestos; los propietarios solo pagan impuestos sobre las ganancias de intereses. (Nota: La base del costo puede diferir del monto de la prima de todos los tiempos si el propietario ha hecho retiros.)",
+                "annualizedPremium": "La prima anualizada es la prima total proyectada para la póliza durante un período de un año.",
                 "gracePeriodBeforeLapse": "Estas fechas te dicen cuánto tiempo tiene el propietario para hacer el pago de gracia requerido para mantener la póliza activa. La primera fecha es cuando la póliza entró en estado de caducidad pendiente, y la segunda es la fecha límite para hacer el pago de gracia requerido.",
                 "gracePeriodMinPayment": "Este es el monto mínimo que el propietario debe pagar en prima antes de que termine el período de gracia para mantener su póliza activa (y su cobertura y valor de cuenta intactos)."
             }

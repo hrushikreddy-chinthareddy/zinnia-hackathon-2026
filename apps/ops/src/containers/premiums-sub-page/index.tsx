@@ -21,6 +21,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
+import { isTermProduct } from '@deps/helpers/is-term-product.helpers';
 import {
     getBankDetails,
     getFlatExtra,
@@ -75,12 +76,16 @@ export const PremiumsSubPage = () => {
     );
 
     const flatExtra = getFlatExtra(coverage);
-    const addCharges = getAddCharges({ flatExtra, t });
+    const addCharges = getAddCharges({
+        flatExtra,
+        keyPrefix: 'premium.upcoming',
+        t,
+    });
 
     const payorParty = getParty(parties, upcomingPayment);
     const payorBankDetails = getBankDetails(payorParty, upcomingPayment);
 
-    const isTerm = policy?.product?.productType === ('TERMLIFE' as ProductType);
+    const isTerm = policy?.product?.productType === ('TERM' as ProductType);
 
     const { data: oneTimePremiumEligibility } = useQuery({
         queryKey: ['checkOneTimePremiumEligibility', planCode, policyNumber],
@@ -185,6 +190,9 @@ export const PremiumsSubPage = () => {
                 policyValues={accountValues}
                 policyStatus={policyStatus}
                 pendingLapse={pendingLapse}
+                annualizedPremium={policy.accountValues?.annualizedPremium}
+                unearnedPremium={policy.accountValues?.unearnedPremium}
+                isTerm={isTermProduct(policy?.product?.productType)}
             />
 
             <hr className="border-t-2 border-t-background" />

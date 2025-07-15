@@ -2915,6 +2915,10 @@
                 "netSurrenderValue": "Valeur de rachat nette",
                 "netSurrenderValueTooltip": "Il s'agit du montant que le propriétaire ou ses bénéficiaires peuvent espérer en cas de rachat de la police. C'est la valeur actuelle du compte moins les frais de rachat, les prêts impayés et autres frais.",
                 "policyDetails": "$t(pageHeader.policyDetails.headerText)",
+                "policyLength": "Durée de la police",
+                "policyLengthTooltip": "La durée de la police correspond à sa durée de validité. Certaines polices ont une durée déterminée (exprimée en nombre d'années) et une date de fin, tandis que d'autres durent jusqu'au décès de l'assuré.",
+                "policyTerm": "Durée de la police",
+                "policyTermTooltip": "La durée d'une police est exactement ce que son nom indique : elle correspond à sa durée. Certaines polices ont une durée fixe (exprimée en nombre d'années) et une date d'expiration, tandis que d'autres sont valables jusqu'au décès de l'assuré.",
                 "premiums": "Primes",
                 "total": "Total",
                 "totalFundValue": "Valeur totale du fonds",
@@ -2969,9 +2973,9 @@
                 "nYearsLeft": "Il reste {{n}} ans",
                 "oneYear": "1 an",
                 "oneYearLeft": "Il reste 1 an",
-                "policyLength": "Durée de la police",
                 "policyLengthTooltip": "La durée de la police correspond à sa durée de validité. Certaines polices ont une durée déterminée (exprimée en nombre d'années) et une date de fin, tandis que d'autres durent jusqu'au décès de l'assuré.",
-                "policyTimeline": "Chronologie de la police"
+                "policyTimeline": "Chronologie de la police",
+                "freeLookEndDate": "Date de fin de la consultation gratuite"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Adresse e-mail de l'agent",
@@ -3877,12 +3881,15 @@
                     "ytdPremium": "Prime cumulée depuis le début de l'année",
                     "allTimePremium": "Prime de tous les temps",
                     "costBasis": "Base de coût",
+                    "unearnedPremium": "Prime non acquise",
+                    "annualizedPremium": "Prime annualisée",
                     "gracePeriodBeforeLapse": "Délai de grâce avant déchéance",
                     "gracePeriodMinPayment": "Paiement minimum du délai de grâce"
                 }
             },
             "popOver": {
                 "costBasis": "La base de coût est la portion de la valeur du compte provenant des primes payées. La valeur du compte augmente à mesure que les primes sont payées et génèrent des intérêts. Les retraits jusqu'à concurrence du montant de la base de coût sont exempts d'impôts ; les propriétaires ne paient des impôts que sur les gains d'intérêts. (Remarque : La base de coût peut différer du montant total des primes si le propriétaire a effectué des retraits.)",
+                "annualizedPremium": "La prime annualisée est la prime totale projetée pour la police sur une période d’un an.",
                 "gracePeriodBeforeLapse": "Ces dates vous indiquent combien de temps le propriétaire doit effectuer le paiement différé requis pour maintenir la police active. La première date est celle à laquelle la police est passée au statut de déchéance en attente, et la seconde est la date limite pour effectuer le paiement différé requis.",
                 "gracePeriodMinPayment": "Il s'agit du montant minimum que le propriétaire doit payer en prime avant la fin de la période de grâce pour maintenir sa police active (et sa couverture et la valeur de son compte intactes)."
             }

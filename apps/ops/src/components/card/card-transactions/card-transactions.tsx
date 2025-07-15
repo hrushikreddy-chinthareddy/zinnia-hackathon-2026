@@ -98,6 +98,7 @@ const CardTransactions = ({
                     displayCardWithZeroAmount={displayCardWithZeroAmount}
                 />
             </TopContent>
+
             {!!additionalCharges?.length && (
                 <>
                     <hr className="w-full border-1 border-gray-100" />

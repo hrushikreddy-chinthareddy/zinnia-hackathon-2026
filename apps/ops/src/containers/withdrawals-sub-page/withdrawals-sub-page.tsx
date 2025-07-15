@@ -1,6 +1,11 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { ArrangementType, Policy, Reason } from '@zinnia/api-types/types/sor';
-import { useTranslation } from 'next-i18next';
+import {
+    ArrangementType,
+    FlatExtra,
+    Policy,
+    Reason,
+} from '@zinnia/api-types/types/sor';
+import { I18n, useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
@@ -29,6 +34,12 @@ import { BPMErrorContent } from './bpm-error-content';
 
 interface WithdrawalsSubPageProps {
     policy: Policy;
+}
+
+export interface AddChargesProps {
+    flatExtra?: FlatExtra[];
+    keyPrefix: string;
+    t: I18n['t'];
 }
 
 const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
@@ -188,6 +199,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                         additionalCharges={getAddCharges({
                             flatExtra: getFlatExtra(policy.coverage),
                             t,
+                            keyPrefix: 'withdrawals.upcoming',
                         })}
                         footerLinks={[
                             {
@@ -238,6 +250,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                     additionalCharges={getAddCharges({
                         flatExtra: getFlatExtra(policy.coverage),
                         t,
+                        keyPrefix: 'withdrawals.upcoming',
                     })}
                     titleCase={false}
                     footerLinks={[
