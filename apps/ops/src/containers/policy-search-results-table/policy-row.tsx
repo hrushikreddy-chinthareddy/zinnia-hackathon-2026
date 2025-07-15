@@ -189,6 +189,7 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                         href={`/cases${convertToQueryString({
                             policyNumber: item.policyNumber || '',
                         })}`}
+                        target="_blank"
                     >
                         <Icon
                             type={IconType.ALERT_EXCLAMATION}
