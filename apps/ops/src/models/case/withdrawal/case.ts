@@ -1278,10 +1278,6 @@ export const ParticipantCompanies = [
         companyName: 'BRIGHTHOUSE LIFE INSURANCE COMPANY (4602)',
     },
     {
-        code: '4609',
-        companyName: 'SYMETRA LIFE INSURANCE COMPANY (4609)',
-    },
-    {
         code: '4621',
         companyName: 'FIRST SYMETRA NATIONAL LIFE INSURANCE CO. O (4621)',
     },
@@ -1290,16 +1286,8 @@ export const ParticipantCompanies = [
         companyName: 'EVERLAKE LIFE INSURANCE COMPANY/ADMINISTERE (4687)',
     },
     {
-        code: '4701',
-        companyName: 'STANDARD INSURANCE COMPANY (4701)',
-    },
-    {
         code: '4749',
         companyName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY/ A (4749)',
-    },
-    {
-        code: '5949',
-        companyName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY (5949)',
     },
     {
         code: '7012',
