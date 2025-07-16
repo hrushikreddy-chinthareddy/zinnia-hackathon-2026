@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import { Result } from 'typegate';
 
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
@@ -52,11 +51,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
         return this.clientCase;
     }
 
-    public generateTitle(data: any): string {
-        return `${numberFormatify(
-            data.assumed.initial.totalFaceAmount
-        )} - ${this.getPlanCode()}`;
-    }
+    abstract generateTitle(data: any): string;
 
     public mapClientCaseInsuredData() {
         const clientCase = this.clientCase;

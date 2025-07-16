@@ -2,6 +2,7 @@ import { CarrierName } from '@zinnia/bloom/components';
 import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
 import { Result } from 'typegate';
 
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 
@@ -72,5 +73,28 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
 
     getIllustrationApiPath(): string {
         return '/api/illustration/v3/term-life/new-business';
+    }
+
+    public generateTitle(data: any): string {
+        const assumed = data.assumed;
+        const guaranteed = data.guaranteed;
+
+        const getRidersText = () => {
+            const hasRiders = Object.keys(assumed.coverages).length > 1;
+            if (!hasRiders) {
+                return '';
+            }
+
+            const riders = Object.keys(assumed.coverages)
+                .filter((coverage) => coverage !== 'base')
+                .map((riderName) => riderName)
+                .join(', ');
+
+            return `, ${riders}`;
+        };
+
+        return `${numberFormatify(assumed.initial.totalFaceAmount)}, ${
+            guaranteed.lapse.year
+        } years ${getRidersText()}`;
     }
 }

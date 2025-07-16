@@ -3,6 +3,7 @@ import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
 import { Result, t, failure, success, Infer } from 'typegate';
 import { v4 as uuid } from 'uuid';
 
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 
@@ -682,5 +683,45 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
 
     getIllustrationApiPath(): string {
         return '/api/illustration/v3/indexed-universal-life/new-business';
+    }
+
+    public generateTitle(data: any): string {
+        const assumed = data.assumed;
+        const guaranteed = data.guaranteed;
+
+        const getRidersText = () => {
+            const hasRiders = Object.keys(assumed.coverages).length > 1;
+            if (!hasRiders) {
+                return '';
+            }
+
+            const riders = Object.keys(assumed.coverages)
+                .filter((coverage) => coverage !== 'base')
+                .map((riderName) => riderName)
+                .join(', ');
+
+            return `, ${riders}`;
+        };
+
+        const getDeathBenefits = () => {
+            const deathBenefitsMount =
+                assumed.annualTimeSeriesData[0].deathBenefitsMount;
+
+            if (deathBenefitsMount) {
+                return `Death Benefits ${numberFormatify(
+                    deathBenefitsMount
+                )}, `;
+            }
+
+            return '';
+        };
+
+        return `Initial Premium ${numberFormatify(
+            assumed.initial.minimumPremiumAmount
+        )}, ${numberFormatify(
+            assumed.initial.totalFaceAmount
+        )}, ${getDeathBenefits()}${
+            guaranteed.lapse.year
+        }years ${getRidersText()}`;
     }
 }
