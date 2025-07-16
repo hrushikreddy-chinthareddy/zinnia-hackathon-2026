@@ -16,4 +16,10 @@
         margin-left: auto;
         display: flex;
     }
+    .rotateLeft {
+        transform: rotate(-90deg);
+    }
+    .menu {
+        margin-left: var(--measure-dimension-gap-lg);
+    }
 }

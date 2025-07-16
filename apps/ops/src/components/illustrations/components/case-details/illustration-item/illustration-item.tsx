@@ -40,49 +40,41 @@ const IllustrationItem = ({
             <span>{illustration.title}</span>
             <div className={clsx(styles.status)}>
                 <StatusBadge status={illustration.status} />
-                <span>
+                <span className={clsx(styles.menu)}>
                     <MenuContextual
-                        triggerLabel={<Icon type={IconType.MENU_VERTICAL} />}
+                        triggerLabel={<Icon type={IconType.MENU_HORIZONTAL} />}
                     >
                         <MenuContextualItem
+                            disabled
                             content="Edit"
                             href="/"
                             icon={
                                 <Icon
-                                    type={IconType.EDIT_ALT}
+                                    type={IconType.EDIT}
                                     height={20}
                                     width={20}
                                 />
                             }
                         />
                         <MenuContextualItem
+                            disabled
                             content="Duplicate"
                             href="/"
                             icon={
                                 <Icon
-                                    type={IconType.DOCUMENT_DUPLICATE}
+                                    type={IconType.DUPLICATE}
                                     height={20}
                                     width={20}
                                 />
                             }
                         />
                         <MenuContextualItem
-                            content="Move"
-                            href="/"
-                            icon={
-                                <Icon
-                                    type={IconType.CHEVRON_DOUBLE}
-                                    height={20}
-                                    width={20}
-                                />
-                            }
-                        />
-                        <MenuContextualItem
+                            disabled
                             content="Archive"
                             href="/"
                             icon={
                                 <Icon
-                                    type={IconType.FOLDER}
+                                    type={IconType.ARCHIVE}
                                     height={20}
                                     width={20}
                                 />

@@ -33,3 +33,7 @@
         }
     }
 }
+
+.rotateLeft {
+    transform: rotate(-90deg);
+}

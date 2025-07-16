@@ -96,6 +96,7 @@ export default function IllustrationDetails({
                         clientCaseId={clientCaseId}
                         illustrationId={illustration.id}
                         productType={product?.productType}
+                        eAppId={eAppId}
                     />
                 </Skeleton>
                 <IllustrationDetailsContent isLoading={true} />

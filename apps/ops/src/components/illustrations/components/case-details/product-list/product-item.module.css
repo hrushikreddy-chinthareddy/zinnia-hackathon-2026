@@ -1,0 +1,28 @@
+.productWrapper {
+    .illustrationsList {
+        border-radius: var(--measure-dimension-radius-md, 8px);
+        border: var(--measure-dimension-stroke-xs) solid
+            var(--color-base-border-border-light);
+        margin-inline: var(--measure-dimension-gap-lg);
+    }
+
+    .addIllustration {
+        margin-left: auto;
+
+        &:hover {
+            &:after {
+                content: none;
+            }
+        }
+    }
+}
+.product {
+    display: flex;
+    align-items: center;
+    padding: var(--measure-dimension-gap-lg);
+    gap: var(--measure-dimension-gap-md);
+}
+
+.cursorPointer {
+    cursor: pointer;
+}

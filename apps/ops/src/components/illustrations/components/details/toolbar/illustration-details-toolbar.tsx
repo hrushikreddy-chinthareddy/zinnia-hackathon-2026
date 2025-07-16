@@ -32,6 +32,7 @@ type IllustrationDetailsToolbarProps = {
     clientCaseId: string;
     illustrationId: string;
     productType?: string;
+    eAppId?: string;
 };
 
 export default function IllustrationDetailsToolbar({
@@ -40,6 +41,7 @@ export default function IllustrationDetailsToolbar({
     clientCaseId,
     illustrationId,
     productType = '',
+    eAppId,
 }: IllustrationDetailsToolbarProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const queryClient = useQueryClient();
@@ -137,7 +139,7 @@ export default function IllustrationDetailsToolbar({
                         </ToolbarButton>
                     )}
                 <ToolbarButton
-                    disabled={isLoading}
+                    disabled={true}
                     icon={IconType.DOCUMENT_DUPLICATE}
                     className={styles.linkButton}
                 >
@@ -146,7 +148,7 @@ export default function IllustrationDetailsToolbar({
 
                 {status === IllustrationStatuses.ARCHIVED ? (
                     <ToolbarButton
-                        disabled={isLoading}
+                        disabled={true}
                         icon={IconType.REFRESH}
                         className={styles.linkButton}
                     >
@@ -154,8 +156,8 @@ export default function IllustrationDetailsToolbar({
                     </ToolbarButton>
                 ) : status !== IllustrationStatuses.EXPIRED ? (
                     <ToolbarButton
-                        disabled={isLoading}
-                        icon={IconType.EDIT_ALT}
+                        disabled={true}
+                        icon={IconType.EDIT}
                         className={styles.linkButton}
                     >
                         {t('clientCase.illustrationDetails.edit')}
@@ -177,15 +179,17 @@ export default function IllustrationDetailsToolbar({
                             <Loader />
                         </>
                     ) : status === IllustrationStatuses.ACTIVE ? (
-                        <Button
-                            mode="primary"
-                            size="small"
-                            onClick={handleSelectIllustration}
-                        >
-                            {t(
-                                'clientCase.illustrationDetails.selectForApplication'
-                            )}
-                        </Button>
+                        !!eAppId && (
+                            <Button
+                                mode="primary"
+                                size="small"
+                                onClick={handleSelectIllustration}
+                            >
+                                {t(
+                                    'clientCase.illustrationDetails.selectForApplication'
+                                )}
+                            </Button>
+                        )
                     ) : (
                         <span className="relative">
                             <StatusBadge status={status} />

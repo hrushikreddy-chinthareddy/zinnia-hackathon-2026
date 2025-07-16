@@ -3,29 +3,28 @@ import { useQuery } from '@tanstack/react-query';
 import {
     BodyVariant,
     Button,
-    Divider,
     Icon,
     IconType,
     Text,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { getProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     IllustrationsClientCase,
     IllustrationSummary,
 } from '@deps/types/illustrations';
-import { Product, ProductTypeLabel } from '@deps/types/product';
+import { Product } from '@deps/types/product';
 
-import CarrierIcon from './carrier-icon';
+import IllustrationProductItem from './product-item';
 import styles from './product-list.module.css';
-import IllustrationItem from '../illustration-item/illustration-item';
+
+type ProductWithIllustration = Product & {
+    illustrations: IllustrationSummary[];
+};
 
 interface IllustrationProductListProps {
     clientCase: IllustrationsClientCase;
@@ -46,6 +45,7 @@ const IllustrationProductList = ({
 }: IllustrationProductListProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const clientCaseId = clientCase.id;
+    const [showEmptyProducts, setShowEmptyProducts] = useState(false);
 
     const {
         data: products = [],
@@ -104,6 +104,22 @@ const IllustrationProductList = ({
         (product) => product.availableToSell
     );
 
+    const productsWithIllustrations: ProductWithIllustration[] =
+        availableProducts.map((product) => {
+            const associatedIllustrations = illustrations.filter(
+                (illustration) =>
+                    illustration.productId === product.carrierProductId
+            );
+            return { ...product, illustrations: associatedIllustrations };
+        });
+
+    const productsWithIllustrationsCount = productsWithIllustrations.filter(
+        (product) => !!product.illustrations.length
+    ).length;
+    const productsWithoutIllustrationsCount = productsWithIllustrations.filter(
+        (product) => !product.illustrations.length
+    ).length;
+
     return (
         <article className={styles.productSelection}>
             {!illustrations.length && (
@@ -117,122 +133,105 @@ const IllustrationProductList = ({
                 </header>
             )}
             <Skeleton loading={isLoading || isFetching}>
+                {productsWithIllustrationsCount === 0 && (
+                    <ul className={styles.productList}>
+                        {!isError &&
+                            availableProducts.map(
+                                (product: Product, idx: number) => {
+                                    return (
+                                        <IllustrationProductItem
+                                            key={idx}
+                                            product={product}
+                                            onNewIllustration={
+                                                handleNewIllustration
+                                            }
+                                        />
+                                    );
+                                }
+                            )}
+                    </ul>
+                )}
+
                 <ul className={styles.productList}>
                     {!isError &&
-                        availableProducts.map(
-                            (product: Product, idx: number) => {
-                                const illustrationsCount = illustrations.filter(
-                                    (ill) =>
-                                        ill.productId ===
-                                        product.carrierProductId
-                                ).length;
-                                const productIllustrations =
-                                    illustrations.filter(
-                                        (ill) =>
-                                            ill.productId ===
-                                            product.carrierProductId
+                        productsWithIllustrations
+                            .filter((product) => !!product.illustrations.length)
+                            .map(
+                                (
+                                    product: ProductWithIllustration,
+                                    idx: number
+                                ) => {
+                                    return (
+                                        <IllustrationProductItem
+                                            key={idx}
+                                            product={product}
+                                            illustrations={
+                                                product.illustrations
+                                            }
+                                            onNewIllustration={
+                                                handleNewIllustration
+                                            }
+                                            onSelectIllustration={
+                                                onSelectIllustration
+                                            }
+                                        />
                                     );
-
-                                return (
-                                    <li
-                                        key={idx}
-                                        className={styles.productWrapper}
-                                    >
-                                        <div className={styles.product}>
-                                            <CarrierIcon
-                                                carrierCode={product.carrier}
-                                            />
-                                            <Badge
-                                                label={
-                                                    ProductTypeLabel.get(
-                                                        product.productType
-                                                    ) ?? DEFAULT_ERROR_STRING
-                                                }
-                                                variant={BadgeVariant.Brand}
-                                            />
-                                            <span
-                                                className={clsx(
-                                                    !illustrationsCount &&
-                                                        'typography-content-body',
-                                                    !!illustrationsCount &&
-                                                        'typography-titles-subtitle'
-                                                )}
-                                            >
-                                                {product.productMarketingName}
-                                            </span>
-                                            <Button
-                                                mode="link"
-                                                data-testid="add-illustration-btn"
-                                                aria-label={
-                                                    t(
-                                                        'clientCase.productList.addIllustrationButton'
-                                                    ) as string
-                                                }
-                                                type="button"
-                                                size="small"
-                                                onClick={() =>
-                                                    handleNewIllustration(
-                                                        product.planCode
-                                                    )
-                                                }
-                                                className={
-                                                    styles.addIllustration
-                                                }
-                                            >
-                                                <Icon type={IconType.ADD} />
-                                            </Button>
-                                        </div>
-
-                                        {productIllustrations.length ? (
-                                            <ul
-                                                className={
-                                                    styles.illustrationsList
-                                                }
-                                            >
-                                                {productIllustrations.map(
-                                                    (illustration, pIdx) => (
-                                                        <div
-                                                            key={
-                                                                illustration.id
-                                                            }
-                                                        >
-                                                            <IllustrationItem
-                                                                product={
-                                                                    product
-                                                                }
-                                                                illustration={
-                                                                    illustration
-                                                                }
-                                                                onIllustrationSelected={() =>
-                                                                    onSelectIllustration?.(
-                                                                        product,
-                                                                        illustration
-                                                                    )
-                                                                }
-                                                            />
-                                                            {pIdx <
-                                                                productIllustrations.length -
-                                                                    1 && (
-                                                                <Divider
-                                                                    color="default"
-                                                                    direction="horizontal"
-                                                                />
-                                                            )}
-                                                        </div>
-                                                    )
-                                                )}
-                                            </ul>
-                                        ) : (
-                                            <Divider
-                                                color="default"
-                                                direction="horizontal"
-                                            />
-                                        )}
-                                    </li>
-                                );
-                            }
-                        )}
+                                }
+                            )}
                 </ul>
+
+                {!isError &&
+                    productsWithIllustrationsCount > 0 &&
+                    productsWithoutIllustrationsCount > 0 && (
+                        <Button
+                            key={'add-product-btn'}
+                            mode="link"
+                            data-testid="addproduct-link-btn"
+                            aria-label={t('') as string}
+                            type="button"
+                            size="small"
+                            className={clsx(styles.displayProducts)}
+                            onClick={() =>
+                                setShowEmptyProducts(!showEmptyProducts)
+                            }
+                        >
+                            <Icon type={IconType.ADD}></Icon>
+                            <span>
+                                {t('clientCase.productList.seeProducts')}
+                            </span>
+                            <Icon
+                                type={IconType.CHEVRON}
+                                className={clsx(
+                                    'text-semantic-warning',
+                                    styles.chevron,
+                                    showEmptyProducts && styles.arrowDown
+                                )}
+                            ></Icon>
+                        </Button>
+                    )}
+
+                {showEmptyProducts && (
+                    <ul className={styles.productList}>
+                        {productsWithIllustrations
+                            .filter((product) => !product.illustrations.length)
+                            .map(
+                                (
+                                    product: ProductWithIllustration,
+                                    idx: number
+                                ) => {
+                                    return (
+                                        <IllustrationProductItem
+                                            key={idx}
+                                            product={product}
+                                            onNewIllustration={
+                                                handleNewIllustration
+                                            }
+                                        />
+                                    );
+                                }
+                            )}
+                    </ul>
+                )}
             </Skeleton>
             {(isError || !products) && (
                 <div className={styles.noProducts}>

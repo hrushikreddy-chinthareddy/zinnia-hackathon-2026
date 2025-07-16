@@ -181,7 +181,7 @@ const IllustrationCaseSumary = ({
                         className={styles.linkButton}
                         onClick={onEdit}
                     >
-                        <Icon type={IconType.EDIT_ALT} height={24} width={24} />
+                        <Icon type={IconType.EDIT} height={24} width={24} />
                         {t('clientCase.caseSummary.edit')}
                     </Button>
                 </div>
