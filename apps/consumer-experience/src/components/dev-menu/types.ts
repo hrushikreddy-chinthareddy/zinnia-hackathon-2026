@@ -6,4 +6,5 @@ export enum ApiEndpoints {
   WITHDRAWAL_ELIGIBILITY = 'withdrawal_eligibility',
   ONE_TIME_PREMIUM_PAYMENT = 'one_time_premium_payment',
   DOCUMENTS = 'documents',
+  PARTY_REFERENCE = 'party_reference',
 }

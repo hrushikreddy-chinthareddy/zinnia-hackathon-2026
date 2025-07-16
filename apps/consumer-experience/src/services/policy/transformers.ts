@@ -677,3 +677,24 @@ export const sortPoliciesByIssuedDate = (policies: CarrierPolicyDetails[]) => {
     return dayjs(a.policyStartDate).isBefore(dayjs(b.policyStartDate)) ? 1 : -1;
   });
 };
+
+/**
+ *
+ * Generates a list of the partyRoles that apply to a particular partyId on a policy.
+ * Note this partyId is a totally separate thing from the accessToken partyId.
+ * TODO: At some point, CIAM is updating this to match the accessToken partyId
+ * This one is particular to a policy party
+ */
+export const getPartyRolesFromPolicyPartyId = (
+  policyPartyId: string,
+  policy: Policy
+) => {
+  // Find all partyRoles entries matching the partyId
+  const matchingPartyRoles =
+    policy.partyRoles?.filter(p => p.partyId === policyPartyId) || [];
+
+  // generate a list of the partyRoles that applies to the user
+  return matchingPartyRoles
+    .filter(p => p.partyRole !== undefined)
+    .map(p => p.partyRole!);
+};
