@@ -4,7 +4,9 @@ import { Result } from 'typegate';
 
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { calculateAge } from '@deps/helpers/string.helpers';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
+import { ProductTypes } from '@deps/types/product';
 
 import {
     CreateIllustrationPayload,
@@ -40,7 +42,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
 
     abstract getPlanCode(): string;
 
-    abstract getPlanType(): string;
+    abstract getPlanType(): ProductTypes;
 
     abstract getCarrier(): string;
 
@@ -64,8 +66,11 @@ export abstract class IllustrationHandler<TOutputEntities> {
                 jurisdiction: clientCase.insuredDetails.state,
             }),
             insured: {
-                ...(clientCase?.insuredDetails?.issueAge && {
-                    issueAge: clientCase.insuredDetails.issueAge,
+                ...(clientCase?.insuredDetails?.dateOfBirth && {
+                    issueAge: calculateAge(
+                        clientCase.insuredDetails.dateOfBirth.toString(),
+                        ''
+                    ),
                 }),
                 ...(clientCase?.insuredDetails?.sexAtBirth && {
                     gender: clientCase.insuredDetails.sexAtBirth.toUpperCase(),

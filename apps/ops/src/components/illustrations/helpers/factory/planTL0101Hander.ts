@@ -62,7 +62,7 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
         return 'TL0101';
     }
 
-    getPlanType(): string {
+    getPlanType(): ProductTypes {
         return ProductTypes.TERM;
     }
 

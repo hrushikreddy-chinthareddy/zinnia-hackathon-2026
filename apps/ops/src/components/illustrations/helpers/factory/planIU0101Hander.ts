@@ -672,7 +672,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return 'IU0101';
     }
 
-    getPlanType(): string {
+    getPlanType(): ProductTypes {
         return ProductTypes.INDEX_UNIVERSAL_LIFE;
     }
 

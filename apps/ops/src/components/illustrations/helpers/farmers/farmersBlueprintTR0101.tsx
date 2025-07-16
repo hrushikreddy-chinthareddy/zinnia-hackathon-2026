@@ -2085,7 +2085,7 @@ export const farmersBlueprintTR0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: true,
+                                    optional: false,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -2251,7 +2251,7 @@ export const farmersBlueprintTR0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: true,
+                                    optional: false,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,

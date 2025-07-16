@@ -107,6 +107,7 @@ export const farmersBlueprintIU0101 = {
                                     partName:
                                         'custom-f3331c9e-6642-4199-848b-d89312707c64',
                                     validateAs: 'string',
+                                    disabled: true,
                                 },
                                 {
                                     fieldType: 'input',
@@ -138,6 +139,7 @@ export const farmersBlueprintIU0101 = {
                                     partName:
                                         'custom-1490a801-347c-4222-b59d-0bbc4c9be590',
                                     validateAs: 'string',
+                                    disabled: true,
                                 },
                                 {
                                     fieldType: 'input',
@@ -169,6 +171,7 @@ export const farmersBlueprintIU0101 = {
                                     partName:
                                         'custom-18ccde86-e6b5-463b-85ee-5b899fc20ae0',
                                     validateAs: 'string',
+                                    disabled: true,
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -199,6 +202,7 @@ export const farmersBlueprintIU0101 = {
                                     id: 'b18cf5ed-a5a1-46f1-89f6-5e61711a12d6',
                                     partName:
                                         'custom-61be58a0-d044-4107-9e3a-10699d4ad6eb',
+                                    disabled: true,
                                     selectOptions: [
                                         {
                                             text: {
@@ -720,6 +724,7 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    disabled: true,
                                 },
                                 {
                                     fieldType: 'date',
@@ -788,6 +793,7 @@ export const farmersBlueprintIU0101 = {
                                             },
                                         },
                                     ],
+                                    disabled: true,
                                 },
                                 {
                                     fieldType: 'input',

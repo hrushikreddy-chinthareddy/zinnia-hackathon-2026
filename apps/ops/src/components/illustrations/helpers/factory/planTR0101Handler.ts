@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
+import { ProductTypes } from '@deps/types/product';
 
 import {
     IllustrationHandler,
@@ -416,8 +417,8 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
         return 'TR0101';
     }
 
-    getPlanType(): string {
-        return 'TERM';
+    getPlanType(): ProductTypes {
+        return ProductTypes.TERM;
     }
 
     getCarrier(): string {

@@ -1,5 +1,5 @@
 import { Button } from '@zinnia/bloom/components';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import style from './sidebar.module.css';
 import {
@@ -21,13 +21,24 @@ const dataToTitleMap: Record<
 
 export function Sidebar() {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
-    const { onSubmit, isError } = useSubmit();
+    const { onSubmit, onQuickQuote, isError } = useSubmit();
     const { data } = useIllustration();
     const isCompleted = useMemo(() => {
         return !renderingQuestionnaire.some((renderingSectionGroup) => {
             return !renderingSectionGroup.completed;
         });
     }, [renderingQuestionnaire]);
+
+    useEffect(() => {
+        if (!isCompleted) return;
+
+        const debounceTimeout = setTimeout(() => {
+            onQuickQuote();
+        }, 200);
+
+        return () => clearTimeout(debounceTimeout);
+    }, [renderingQuestionnaire, isCompleted]);
+
     return (
         <div className={style.sidebar}>
             <div className={style.sidebarContent}>

@@ -12,7 +12,8 @@ import { IllustrationHandler } from '../helpers/factory/illustrationsHandlerAbst
 import { FarmersEntities } from '../helpers/farmers/famersBlueprintToIllustrationPayloadTL0101';
 
 type SubmitContextValue = {
-    onSubmit?: () => void;
+    onSubmit: () => void;
+    onQuickQuote: () => void;
     isError?: boolean;
 };
 
@@ -96,11 +97,67 @@ export function SubmitProvider({
         },
     });
 
+    const quickQuoteIllustrationMutation = useMutation({
+        mutationKey: ['saveOrderEntryAnswers'],
+        mutationFn: async (engine: QuestionnaireEngine): Promise<any> => {
+            // Use this next line to debug only. Never access the dump to grab values in the engine.
+            // You can use this log in oder to prefil answers in the e-app container
+            console.log(
+                'Quick Quoteengine dump',
+                engine.getAnswerResolverInstance().dump()
+            );
+            const mappedAnswersResult = engine.getSimpleMappingOutput();
+            if (!mappedAnswersResult.success) {
+                console.log(
+                    'Mapped Answers Result error',
+                    mappedAnswersResult.error
+                );
+                return Promise.reject();
+            }
+            const answers = mappedAnswersResult.value;
+            console.log('answers', answers);
+            answers.illustrationType = 'QUICK_QUOTE';
+            if (!answers.illustrationRequestDate) {
+                answers.illustrationRequestDate = new Date()
+                    .toISOString()
+                    .slice(0, 10);
+            }
+
+            const createIllustrationPayload =
+                factoryHandler.createIllustrationPayloadFromAnswerOutput(
+                    mappedAnswersResult.value
+                ); //getFarmersCreateIllustrationPayload(mappedAnswersResult.value);
+
+            if (!createIllustrationPayload.success) {
+                console.log(
+                    'SubmitProvider QUICK_QUOTE illustration payload error',
+                    createIllustrationPayload
+                );
+                return Promise.reject();
+            }
+            return createIllustration({
+                bodyData: createIllustrationPayload.value,
+                path: factoryHandler.getIllustrationApiPath(),
+            });
+        },
+        onSuccess: ({ data }) => {
+            const illustrationData =
+                factoryHandler.getIllustrationDataFromResponse(data);
+
+            onIllustrationDataChange(illustrationData);
+        },
+    });
+
     return (
         <SubmitContext.Provider
             value={{
                 onSubmit: () =>
                     createIllustrationMutation.mutateAsync(
+                        questionnaireEngine,
+                        {}
+                    ),
+                onQuickQuote: () =>
+                    quickQuoteIllustrationMutation.mutateAsync(
                         questionnaireEngine,
                         {}
                     ),

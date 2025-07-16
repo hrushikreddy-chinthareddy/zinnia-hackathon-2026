@@ -4,6 +4,7 @@ import { ReactElement } from 'react';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
+import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
 
 import style from './eapp.module.css';
 import { Menu } from './menu/menu';
@@ -15,7 +16,7 @@ export interface EappProps {
     carrier: string;
     label: string;
     planCode: string;
-    planType: string;
+    planType: ProductTypes;
 }
 export function Eapp(props: EappProps): ReactElement | null {
     const { activeSection } = useActiveSection();
@@ -23,6 +24,10 @@ export function Eapp(props: EappProps): ReactElement | null {
     if (!activeSection) {
         return null;
     }
+
+    const productTypeLabel = props.planType
+        ? ProductTypeLabel.get(props.planType)
+        : '';
 
     return (
         <div className={style.eApp}>
@@ -35,10 +40,12 @@ export function Eapp(props: EappProps): ReactElement | null {
                             width={48}
                             // className={styles.carrierLogo}
                         />
-                        <Badge
-                            variant={BadgeVariant.Brand}
-                            label={props.planType}
-                        />
+                        {productTypeLabel && (
+                            <Badge
+                                variant={BadgeVariant.Brand}
+                                label={productTypeLabel}
+                            />
+                        )}
                         <div
                             className={`--typography-labels-label-lg-alt ${style.headerSubtitle}`}
                         >
