@@ -1,12 +1,9 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
 import styles from '@/app/(authenticated)/coverage/policies.module.css';
 import { getRedirectUrl, RouteKey, routeMap } from '@/route-map';
-import {
-  CarrierPolicyDetails,
-  ExtendedPolicyProductType,
-} from '@/types/policy';
+import { CarrierPolicyDetails } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 
@@ -53,7 +50,7 @@ export const CoverageOverviewCard = ({
           />
           <div className={styles.policyCardPolicyValues}>
             {/* Hide Account value for term products */}
-            {policy.product?.productType !== ExtendedPolicyProductType.TERM && (
+            {policy.product?.productType !== ProductType.TERM && (
               <FieldData
                 className="mr-3xl typography-content-body-sm-bold"
                 Label={

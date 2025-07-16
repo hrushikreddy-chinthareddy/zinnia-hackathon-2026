@@ -69,7 +69,7 @@ export default async function Page({
       <>
         <div className="card-container">
           <p className="typography-content-body-sm">
-            Select a policy below to get started.
+            Select a carrier below to get started.
           </p>
           {isVercelEnvironment() ? (
             <CarrierPickerCookieOnly policies={policyReferenceData} />

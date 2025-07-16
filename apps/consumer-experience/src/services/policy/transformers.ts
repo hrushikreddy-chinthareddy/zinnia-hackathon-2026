@@ -37,7 +37,6 @@ import {
   PolicyFeatureDetail,
   CarrierPolicyDetails,
   PolicyWithAgent,
-  PolicyDetailsProduct,
   PolicyParty,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
@@ -174,7 +173,7 @@ export const transformPolicyForHeaderDetails = (
     // Note: the api returns a term product type, but the api spec does not reflect that
     // that is why we are using the ExtendedPolicyProductType type here
     // @TODO: remove typecast once api spec is updated with the term product type
-    product: policy?.product as PolicyDetailsProduct,
+    product: policy?.product,
   };
 };
 

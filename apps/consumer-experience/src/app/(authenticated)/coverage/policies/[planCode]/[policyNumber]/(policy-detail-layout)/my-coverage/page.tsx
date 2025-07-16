@@ -9,10 +9,10 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getCoverage } from '@/services/policy';
-import { ExtendedPolicyProductType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { ProductType } from '@xd/api-types/dist/generated-types/sor';
 
 const pageTitle = getPageTitle(RouteKey.MY_COVERAGE);
 // disable because NextJS needs this to be exported from this file
@@ -64,8 +64,7 @@ export default async function Coverage({
       ? `${standardDateMonthDayYear(policyStartDate)} - ${standardDateMonthDayYear(maturityDate)} `
       : '';
 
-  const caption = `${dateInterval}(${elapsedYears} years left)`
-
+  const caption = `${dateInterval}(${elapsedYears} years left)`;
 
   const coverageContent = (amount: number | null | undefined) => {
     if (amount && typeof amount === 'number') {
@@ -93,26 +92,20 @@ export default async function Coverage({
         <div className={styles.coverageValues}>
           <FieldData
             Label={<Label>{CURRENT_COVERAGE}</Label>}
-            caption={
-              policyProductType === ExtendedPolicyProductType.TERM && caption
-            }
+            caption={policyProductType === ProductType.TERM && caption}
           >
             {coverageContent(totalCoverageAmount)}
           </FieldData>
 
-          {policyProductType === ExtendedPolicyProductType.TERM && (
+          {policyProductType === ProductType.TERM && (
             <FieldData caption={caption} Label={<Label>{'Term length'}</Label>}>
               {!Number.isNaN(policyTerm) ? (
-                <p className='typography-content-value'>
-                  {policyTerm} years
-                </p>
-
+                <p className="typography-content-value">{policyTerm} years</p>
               ) : (
                 <p className="typography-content-body-sm">
                   {DEFAULT_UNAVAILABLE_STRING}
                 </p>
               )}
-
             </FieldData>
           )}
 

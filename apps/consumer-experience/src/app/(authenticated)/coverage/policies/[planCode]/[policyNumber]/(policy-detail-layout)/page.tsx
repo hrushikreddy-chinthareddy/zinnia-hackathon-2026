@@ -1,4 +1,8 @@
-import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
+import {
+  LineOfBusiness,
+  PolicyStatus,
+  ProductType,
+} from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -15,7 +19,6 @@ import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statu
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
 import { LineOfBusinessPath } from '@/types';
-import { ExtendedPolicyProductType } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -87,7 +90,7 @@ export default async function Page({
     return (
       <div className="card-container">
         <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
-        {data?.product?.productType !== ExtendedPolicyProductType.TERM && (
+        {data?.product?.productType !== ProductType.TERM && (
           <ClickableCardContainer>
             <ClickableCardContainer.LinkContent
               linkTo={{

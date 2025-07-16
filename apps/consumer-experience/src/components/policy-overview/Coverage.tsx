@@ -1,12 +1,11 @@
 import { yearsLeft } from '@xd/utils/dist';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getCoverage } from '@/services';
-import { ExtendedPolicyProductType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
@@ -65,9 +64,7 @@ export const Coverage = async ({
   const timeLeft = `${policyTerm} year term length (${elapsedYears} years left)`;
 
   const caption =
-    policyProductType === ExtendedPolicyProductType.TERM
-      ? timeLeft
-      : dateInterval;
+    policyProductType === ProductType.TERM ? timeLeft : dateInterval;
 
   return (
     <ClickableCardContainer>

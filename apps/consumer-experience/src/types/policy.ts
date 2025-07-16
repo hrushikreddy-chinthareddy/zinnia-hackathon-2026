@@ -24,21 +24,10 @@ import {
 
 import { BankDetail } from '@/components/person-data/types';
 
-// -- @TODO remove this once the TermProductType is added to the ProductType enum from the API spec --
-export enum TermProductType {
-  TERM = 'TERM',
-}
-export type ExtendedPolicyProductType = TermProductType | ProductType;
-export const ExtendedPolicyProductType = { ...TermProductType, ...ProductType };
-
 export interface PolicyWithAgent extends Partial<Policy> {
   primaryAgentExternalId?: string | null;
 }
 
-// @TODO: remove this once the term product type is added to the api spec
-export interface PolicyDetailsProduct extends Omit<Product, 'productType'> {
-  productType: ExtendedPolicyProductType;
-}
 export interface PolicyDetails {
   marketingName: string;
   planName: string;
@@ -47,8 +36,7 @@ export interface PolicyDetails {
   firstName: string;
   lastName: string;
   carrierId?: string;
-  // @TODO: import the product type from the api spec once the term product type is added
-  product?: PolicyDetailsProduct;
+  product?: Product;
 }
 
 export interface UpcomingPremium {
@@ -86,8 +74,7 @@ export interface PolicyCoverage {
   policyStartDate?: string | null;
   maturityDate?: string | null;
   policyTerm?: number | null;
-  // @TODO: change this to use the ProductType enum from the API spec once the term product type is added to the spec
-  policyProductType?: ExtendedPolicyProductType;
+  policyProductType?: ProductType;
   // This one is calculated, so will either be a number or 0
   beneficiaryCount?: number;
   riderCount: number;
