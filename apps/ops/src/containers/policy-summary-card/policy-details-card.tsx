@@ -26,10 +26,12 @@ export const PolicyDetailsCard = ({
     isLoading,
     policyDetails,
     caseData,
+    showKeyValues = false,
 }: {
     policyDetails: PolicyDetails;
     isLoading: boolean;
     caseData?: CaseSearchResponse | CaseSearchErrorResponse | undefined;
+    showKeyValues?: boolean;
 }) => {
     const { featureFlags } = useOptimizely();
     const { data: caseInfo } = useQuery({
@@ -38,6 +40,7 @@ export const PolicyDetailsCard = ({
         placeholderData: (previousData) => previousData,
         initialData: caseData,
     });
+
     return (
         <div>
             {!isLoading && (
@@ -63,18 +66,20 @@ export const PolicyDetailsCard = ({
                     <QuickViewModule policy={policyDetails} />
                 )}
             </div>
-            <div>
-                {isLoading ? (
-                    <div className="flex justify-start">
-                        <ButtonSkeleton />
-                    </div>
-                ) : (
-                    <FindKeyValuesSidesheet
-                        policyNumber={policyDetails?.policyNumber}
-                        planCode={policyDetails?.planCode}
-                    />
-                )}
-            </div>
+            {showKeyValues && (
+                <div>
+                    {isLoading ? (
+                        <div className="flex justify-start">
+                            <ButtonSkeleton />
+                        </div>
+                    ) : (
+                        <FindKeyValuesSidesheet
+                            policyNumber={policyDetails?.policyNumber}
+                            planCode={policyDetails?.planCode}
+                        />
+                    )}
+                </div>
+            )}
         </div>
     );
 };

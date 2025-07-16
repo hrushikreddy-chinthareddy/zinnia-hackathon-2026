@@ -133,6 +133,7 @@ import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header
 
 interface SummaryCardProps extends PropsWithChildren {
     policySearchResult: PolicySearchResult;
+    showKeyValues?: boolean;
 }
 
 interface KeyValuesBarProps {
@@ -791,10 +792,12 @@ export function PolicyQuickView({
     policyDetails,
     caseData,
     isLoading = false,
+    showKeyValues = false,
 }: {
     policyDetails: PolicyDetails;
     caseData: CaseSearchResponse | CaseSearchErrorResponse | undefined;
     isLoading: boolean;
+    showKeyValues?: boolean;
 }) {
     return (
         <section
@@ -809,6 +812,7 @@ export function PolicyQuickView({
                 isLoading={isLoading}
                 policyDetails={policyDetails}
                 caseData={caseData}
+                showKeyValues={showKeyValues}
             />
         </section>
     );
@@ -816,6 +820,7 @@ export function PolicyQuickView({
 
 export default function PolicySummaryCard({
     policySearchResult,
+    showKeyValues = false,
 }: SummaryCardProps) {
     const { t } = useTranslation();
     const {
@@ -903,6 +908,7 @@ export default function PolicySummaryCard({
             policyDetails={currentPolicyDetails}
             caseData={caseData}
             isLoading={isLoadingPolicyDetails}
+            showKeyValues={showKeyValues}
         />
     );
 }

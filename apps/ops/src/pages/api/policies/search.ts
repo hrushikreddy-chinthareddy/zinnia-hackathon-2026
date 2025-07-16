@@ -39,13 +39,20 @@ export default withAuthAndLogging(
                     loggingContext
                 );
 
+            const searchQueryParams = `offset=${offset}&limit=${limit}${
+                sortBy ? `&sortBy=${sortBy}` : ''
+            }${sortOrder ? `&sortOrder=${sortOrder}` : ''}`;
+
+            const enterpriseSearchUrl = `${enterpriseSearchApiServerUrl}?searchEntity=policy&${searchQueryParams}`;
+
+            const oldPolicySearchUrl = `${policyApiBaseUrl}/search?${searchQueryParams}`;
+
+            //TODO: We will need to add an additional check that the user is NOT an AE user
             const searchUrl = featureFlagDecisions?.[
                 FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
             ]
-                ? `${enterpriseSearchApiServerUrl}?searchEntity=policy&offset=${offset}&limit=${limit}${
-                      sortBy ? `&sortBy=${sortBy}` : ''
-                  }${sortOrder ? `&sortOrder=${sortOrder}` : ''}`
-                : `${policyApiBaseUrl}/search?offset=${offset}&limit=${limit}`;
+                ? enterpriseSearchUrl
+                : oldPolicySearchUrl;
 
             logTrace('policySearch::start', {
                 ...loggingContext,

@@ -267,6 +267,7 @@ export const PolicyIndexCardView = ({
                                       policyDetails={new PolicyDetails()}
                                       caseData={undefined}
                                       isLoading={true}
+                                      showKeyValues={true}
                                   />
                               ))
                             : policyData?.results
@@ -276,6 +277,7 @@ export const PolicyIndexCardView = ({
                                           <PolicySummaryCard
                                               key={'policy_' + p.policyNumber}
                                               policySearchResult={p}
+                                              showKeyValues={true}
                                           />
                                       );
                                   })}
