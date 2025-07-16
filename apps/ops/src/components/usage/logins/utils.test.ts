@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 
-import { generateSeries, colors } from './utils';
+import { generateSeries } from './utils';
 
 describe('Utils Functions', () => {
     beforeEach(() => {
@@ -18,6 +18,7 @@ describe('Utils Functions', () => {
                     from: '2025-03-01',
                     to: '2025-03-31',
                 };
+                const colors = ['#0B7EAE', '#072838', '#6CC2F6', '#D47ACC'];
                 const data: DashboardResponseData[] = [
                     {
                         key: 'carrier',
@@ -32,7 +33,7 @@ describe('Utils Functions', () => {
                         ],
                     },
                 ];
-                const result = generateSeries(data, timerange);
+                const result = generateSeries(data, timerange, colors);
                 const groupedData = groupDataByWeek(data[0].values || []);
 
                 expect(result).toEqual([

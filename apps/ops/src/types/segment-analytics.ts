@@ -32,6 +32,7 @@ export enum SegmentPageName {
     WithdrawalCase = 'Withdrawal Case',
     Dashboard = 'Dashboard',
     CommissionsStatements = 'Commissions Statements',
+    Usage = 'Usage',
 }
 
 export enum SegmentTrackedEventName {

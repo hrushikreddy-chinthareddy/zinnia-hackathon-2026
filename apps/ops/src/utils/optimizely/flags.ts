@@ -145,4 +145,5 @@ export enum FEATURE_FLAGS {
     PARTY_NAME_CHANGE_TRANSACTION = 'party_name_change_transaction',
     SEND_CORRESPONDENCE = 'send_correspondence',
     POLICY_INDEX_TABLE_VIEW = 'policy_index_table_view',
+    USAGE_STATS_DASHBOARD = 'usage_stats_dashboard',
 }

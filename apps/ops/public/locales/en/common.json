@@ -20,6 +20,7 @@
     "selectProcessType": "Select Process Type",
     "trend": "Trend",
     "unapproved": "Unapproved",
+    "usageTitle": "Usage",
     "excluded": "Excluded",
     "yes": "Yes",
     "no": "No",
@@ -91,6 +92,7 @@
             "sendStatement": "Send Statement",
             "sendTaxForm": "Send Tax Form",
             "updatePremium": "Update Premium Autopay",
+            "usage": "Usage",
             "viewDocument": "View Document",
             "withdrawals": "Withdrawals",
             "defaultCase": "Service Request Form"
@@ -275,6 +277,10 @@
                     "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
                     "text": "Start a withdrawal"
                 }
+            },
+            "usage": {
+                "text": "Usage",
+                "link": "/usage"
             },
             "viewDetails": {
                 "text": "View Details",
@@ -6596,6 +6602,22 @@
         "preFundTransactionsInstruction": "Manually issue checks for pre-fund transactions as needed. ",
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
+    },
+    "usage":{
+        "tabs": {
+            "logins": "Logins"
+        },
+        "logins":{
+            "zinniaLive":{
+                "title": "Zinnia Live Unique Logins by Role"
+            },
+            "myPolicyView":{
+                "title": "MyPolicyView Unique Logins"
+            },
+            "uniqueUsers": "Unique users",
+            "date": "Date",
+            "exportToCSV": "Export to CSV"
+        }
     },
     "clientCase": {
         "newClientCase": "+ New client case",

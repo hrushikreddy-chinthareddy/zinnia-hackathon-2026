@@ -4,16 +4,17 @@ import Highcharts from 'highcharts';
 import { useContext } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
+import {
+    calculateTickInterval,
+    calculateTooltipRanges,
+    getTooltipData,
+} from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
+import { LabelComponent } from '@deps/components/dashboard/charts/date-time-chart/label-for-chart-for-time/label';
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
 import { TransactionTrendsContext } from '@deps/components/dashboard/sections/transaction-trends/context/transaction-trends-context';
 import { TransactionTrendsFilters } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-filters';
 import { TransactionTrendsHeader } from '@deps/components/dashboard/sections/transaction-trends/tab-content/shared/transaction-trends-header';
-import {
-    calculateTickInterval,
-    calculateTooltipRanges,
-    generateSeries,
-    getTooltipData,
-} from '@deps/components/dashboard/sections/transaction-trends/utils';
+import { generateSeries } from '@deps/components/dashboard/sections/transaction-trends/utils';
 import { friendlyGroupByName } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, {
@@ -22,7 +23,6 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import { LabelComponent } from './label';
 import { Legend } from './legend';
 
 dayjs.extend(relativeTime);

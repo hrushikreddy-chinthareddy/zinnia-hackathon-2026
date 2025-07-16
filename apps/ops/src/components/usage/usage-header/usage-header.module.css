@@ -1,0 +1,15 @@
+.usageHeader {
+    display: flex;
+    gap: var(--measure-dimension-gap-lg);
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid transparent;
+    border-left-width: 0;
+    border-right-width: 0;
+
+    &.pinned {
+        border-bottom-color: var(--color-base-border-border-bold);
+        padding: var(--measure-dimension-padding-2xl);
+        box-shadow: var(--shadow-elevation-elevation-light-sm);
+    }
+}

@@ -1,0 +1,23 @@
+.legendContainer {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.itemsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--measure-dimension-gap-lg);
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-sm);
+}
+
+.color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}

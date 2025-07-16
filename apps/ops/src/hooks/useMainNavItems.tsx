@@ -23,6 +23,7 @@ export const useMainNavItems = (): NavGroup[] => {
         hasHomeExperience,
         showToppanMerrill,
         isAllowReadIllustrations,
+        hasUsagePermission,
     } = usePermissionsContext();
 
     const { user } = useUser();
@@ -47,6 +48,8 @@ export const useMainNavItems = (): NavGroup[] => {
         t('site.navLinks.transactionOpsSuite.link') || '';
     const dashboardText = t('site.navLinks.dashboard.text') || '';
     const dashboardHref = t('site.navLinks.dashboard.link') || '';
+    const usageText = t('site.navLinks.usage.text') || '';
+    const usageHref = t('site.navLinks.usage.link') || '';
     const accessManagement = t('site.navLinks.accessManagement.text');
     const marketingStorefrontText = t('site.navLinks.marketingStorefront.text');
     const marketingStorefrontHref =
@@ -173,6 +176,15 @@ export const useMainNavItems = (): NavGroup[] => {
         renderComponent: <UserContextMenu name={user?.name || ''} />,
     };
 
+    const usageLink = {
+        id: usageHref,
+        display: usageText,
+        icon: IconType.CHAT_SQUARE_BAR,
+        renderComponent: (
+            <NavLink type={NavElementType.Link} href={usageHref} />
+        ),
+    };
+
     const navGroups: NavGroup[] = [
         {
             items: [
@@ -194,6 +206,7 @@ export const useMainNavItems = (): NavGroup[] => {
         },
         {
             items: [
+                ...(hasUsagePermission ? [usageLink] : []),
                 ...(isSuperAdmin ? [accessManagementLink] : []),
                 ...(showToppanMerrill ? [toppanMerrillLink] : []),
                 userContextMenu,

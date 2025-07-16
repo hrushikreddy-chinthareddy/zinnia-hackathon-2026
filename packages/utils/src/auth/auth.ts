@@ -9,6 +9,7 @@ export enum FgaRoles {
   WELB_SALES_MATERIALS = 'entity:welb_sales_materials',
   CALL_LOG_ACCESS = 'entity:zinnia_live_call_log_audio',
   ILLUSTRATIONS_EXPERIENCE = 'entity:zinnia_live_illustrations_experience',
+  USAGE_DASHBOARD_ENTITY = "entity:zinnia_live_usage_dashboard",
 }
 
 export enum FgaRelation {
@@ -68,6 +69,11 @@ export function createBulkCheckBodyRequest(partyId: string) {
         user,
         relation: FgaRelation.UiAccess,
         object: FgaRoles.ILLUSTRATIONS_EXPERIENCE,
+      },
+       {
+        user,
+        relation: FgaRelation.UiAccess,
+        object: FgaRoles.USAGE_DASHBOARD_ENTITY,
       },
     ],
   };
@@ -162,6 +168,22 @@ export function checkRelation(
     (tuple) =>
       tuple.object === objToCheck &&
       tuple.relation === relationToCheck &&
+      tuple.allowed
+  );
+}
+
+export function checkIfUserHasUsageAccess(
+  bulkCheckTuples: Array<BulkCheckTuple>
+) {
+  const roleVals = {
+    object: FgaRoles.USAGE_DASHBOARD_ENTITY,
+    relation: FgaRelation.UiAccess,
+  };
+
+  return bulkCheckTuples.find(
+    (tuple) =>
+      tuple.object === roleVals.object &&
+      tuple.relation === roleVals.relation &&
       tuple.allowed
   );
 }

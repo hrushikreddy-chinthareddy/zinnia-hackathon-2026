@@ -20,6 +20,7 @@
     "selectProcessType": "Sélectionner un type de dossier",
     "trend": "Tendance",
     "unapproved": "Non approuvé",
+    "usageTitle": "Usage",
     "excluded": "Exclus",
     "yes": "Oui",
     "no": "Non",
@@ -91,6 +92,7 @@
             "sendStatement": "Envoyer un extrait de compte",
             "sendTaxForm": "Formulaire de taxes envoyé",
             "updatePremium": "Gérer Paiement Automatique",
+            "usage": "Usage",
             "viewDocument": "Voir le document",
             "withdrawals": "Retraits",
             "defaultCase": "Formulaire de demande de service"
@@ -274,6 +276,10 @@
                     "link": "/fr/policies/{{planCode}}/{{id}}/policy/withdrawals",
                     "text": "$t(pageHeader.withdrawals.headerText)"
                 }
+            },
+            "usage": {
+                "text": "Usage",
+                "link": "/usage"
             },
             "viewDetails": {
                 "contractValue": "Valeur du contrat",
@@ -6624,6 +6630,22 @@
                 "notFound": "Aucun agent nommé \"{{agentName}}\" trouvé",
                 "current": "Utilisateur actuel"
             }
+        }
+    },
+      "usage":{
+         "tabs": {
+            "logins": "Connexions"
+        },
+        "logins":{
+            "zinniaLive":{
+                "title": "Connexions uniques à Zinnia Live par rôle"
+            },
+            "myPolicyView":{
+                "title": "MyPolicyView Connexions uniques"
+            },
+            "uniqueUsers": "Utilisateurs uniques",
+            "date": "Date",
+            "exportToCSV": "Exporter au format CSV"
         }
     }
 }

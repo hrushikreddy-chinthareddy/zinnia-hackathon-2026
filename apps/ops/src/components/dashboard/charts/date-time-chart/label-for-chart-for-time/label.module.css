@@ -1,0 +1,31 @@
+/* LabelComponent.css */
+.labelWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 5;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.color {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.date {
+    justify-self: end;
+    align-self: end;
+    font-style: italic;
+}
+
+.total {
+    justify-self: end;
+    align-self: end;
+    margin-top: 4px;
+}

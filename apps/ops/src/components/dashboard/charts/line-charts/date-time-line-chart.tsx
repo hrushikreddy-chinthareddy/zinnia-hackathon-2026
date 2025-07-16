@@ -12,6 +12,7 @@ interface DateTimeLineChartProps {
         | Highcharts.AxisLabelsFormatterCallbackFunction
         | undefined;
     colors?: string[];
+    yAxisOpposite?: boolean;
 }
 
 export const DateTimeLineChart: FC<DateTimeLineChartProps> = ({
@@ -22,6 +23,7 @@ export const DateTimeLineChart: FC<DateTimeLineChartProps> = ({
     tooltipFormatter,
     xAxisLabelFormatter,
     colors,
+    yAxisOpposite = true,
 }) => {
     const chartConfig = {
         legend: {
@@ -59,21 +61,32 @@ export const DateTimeLineChart: FC<DateTimeLineChartProps> = ({
             tickInterval,
             labels: {
                 formatter: xAxisLabelFormatter,
+                style: {
+                    color: '#212121',
+                },
             },
             title: {
                 text: xAxisTitle,
+                style: {
+                    color: '#212121',
+                },
             },
         },
         yAxis: {
-            opposite: true,
+            opposite: yAxisOpposite,
+            labels: {
+                style: {
+                    color: '#212121',
+                },
+            },
             title: {
                 text: yAxisTitle,
                 rotation: -90,
-                x: 10,
+                x: yAxisOpposite ? 10 : -10,
                 style: {
                     fontWeight: 700,
                     fontSize: '12px',
-                    color: '#000',
+                    color: '#212121',
                 },
             },
         },

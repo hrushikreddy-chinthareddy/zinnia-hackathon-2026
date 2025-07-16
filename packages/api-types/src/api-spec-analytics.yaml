@@ -86,6 +86,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /analytics/v1/dashboard/user_activity_count:
+    post:
+      summary: User Activity Count
+      description: Get the quantity of users matching filters grouped by selected
+        dimensions
+      operationId: user_activity_count_analytics_v1_dashboard_user_activity_count_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserActivityInput'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserActivityOutput'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
     CaseCountGroupByEnum:
@@ -702,6 +727,15 @@ components:
           title: Exceptionstatus
           example:
           - Resolved
+        exceptionCategory:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Exceptioncategory
+          example:
+          - Form
       type: object
       title: ExceptionCountInputFilter
     ExceptionCountOutput:
@@ -823,6 +857,176 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    UserActivityGroupByEnum:
+      type: string
+      enum:
+      - userRole
+      - userStatus
+      - systemSource
+      - activityDay
+      title: UserActivityGroupByEnum
+    UserActivityInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/UserActivityInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/UserActivityGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+          - userRole
+      type: object
+      required:
+      - filter
+      - groupBy
+      title: UserActivityInput
+    UserActivityInputFilter:
+      properties:
+        userRole:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Userrole
+          example:
+          - Customer
+        userStatus:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Userstatus
+          example:
+          - active
+        systemSource:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Systemsource
+          example:
+          - MyPolicyView
+        userEligibleCarrier:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Usereligiblecarrier
+          example:
+          - MASS
+        dateStart:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Datestart
+          example: '2025-05-13T00:00:00.000Z'
+        dateEnd:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Dateend
+          example: '2025-05-20T00:00:00.000Z'
+      type: object
+      title: UserActivityInputFilter
+    UserActivityOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/UserActivityOutputLevel1'
+          type: array
+          title: Data
+        totalElements:
+          type: integer
+          title: Totalelements
+          example: 123
+      type: object
+      required:
+      - data
+      - totalElements
+      title: UserActivityOutput
+    UserActivityOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: userRole
+        name:
+          type: string
+          title: Name
+          example: Customer
+        count:
+          type: integer
+          title: Count
+          example: 18
+        values:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/UserActivityOutputLevel2'
+            type: array
+          - type: 'null'
+          title: Values
+      type: object
+      required:
+      - key
+      - name
+      - count
+      title: UserActivityOutputLevel1
+    UserActivityOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: systemSource
+        name:
+          type: string
+          title: Name
+          example: MyPolicyView
+        count:
+          type: integer
+          title: Count
+          example: 24
+        values:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/UserActivityOutputLevel3'
+            type: array
+          - type: 'null'
+          title: Values
+      type: object
+      required:
+      - key
+      - name
+      - count
+      title: UserActivityOutputLevel2
+    UserActivityOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: userStatus
+        name:
+          type: string
+          title: Name
+          example: active
+        count:
+          type: integer
+          title: Count
+          example: 35
+      type: object
+      required:
+      - key
+      - name
+      - count
+      title: UserActivityOutputLevel3
     ValidationError:
       properties:
         loc:

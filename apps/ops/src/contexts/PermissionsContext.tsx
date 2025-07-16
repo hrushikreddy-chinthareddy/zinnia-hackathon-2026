@@ -7,6 +7,7 @@ import {
     checkIfUserHasCaseInsightsAccess,
     checkIfUserHasDashboardAccess,
     checkIfUserHasPolicyIndexAccess,
+    checkIfUserHasUsageAccess,
     checkIfUserIsSuperAdmin,
     checkRelation,
     createBulkCheckBodyRequest,
@@ -51,6 +52,7 @@ export interface PermissionsContextProps {
     hasHomeExperience: boolean;
     hasPolicyIndexPageAccess: boolean;
     isAllowReadIllustrations: boolean;
+    hasUsagePermission: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -169,6 +171,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             const superAdmin = checkIfUserIsSuperAdmin(data);
             const hasDashboard = checkIfUserHasDashboardAccess(data);
             const hasCaseInsight = checkIfUserHasCaseInsightsAccess(data);
+            const hasUsage = checkIfUserHasUsageAccess(data);
             const hasAdvisorsExcel = checkIfUserHasAdvisorsExcel(data);
             const hasPolicyIndexPageAccess =
                 checkIfUserHasPolicyIndexAccess(data);
@@ -192,6 +195,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isCallLogAudioPermitted,
                 hasPolicyIndexPageAccess: !!hasPolicyIndexPageAccess,
                 isAllowReadIllustrations,
+                hasUsagePermission: !!hasUsage,
             };
         },
         enabled: !!partyId,
@@ -234,6 +238,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     !!fgaRoleData?.hasPolicyIndexPageAccess,
                 isAllowReadIllustrations:
                     !!fgaRoleData?.isAllowReadIllustrations,
+                hasUsagePermission: !!fgaRoleData?.hasUsagePermission,
             }}
         >
             {children}

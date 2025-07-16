@@ -20,6 +20,7 @@
     "selectProcessType": "Seleccionar Tipo de Proceso",
     "trend": "Tendencia",
     "unapproved": "No aprobado",
+    "usageTitle": "Uso",
     "excluded": "Excluido",
     "yes": "Sí",
     "no": "No",
@@ -91,6 +92,7 @@
             "sendStatement": "Enviar Estado de Cuenta",
             "sendTaxForm": "Enviar Formulario de Impuestos",
             "updatePremium": "Actualizar Pago Automático de Prima",
+            "usage": "Uso",
             "viewDocument": "Ver Documento",
             "withdrawals": "Retiros",
             "defaultCase": "Formulario de Solicitud de Servicio"
@@ -267,6 +269,10 @@
                     "href": "/policies/{{planCode}}/{{id}}/policy/withdrawals/new-withdrawal",
                     "text": "Iniciar un retiro"
                 }
+            },
+               "usage": {
+                "text": "Uso",
+                "link": "/usage"
             },
             "viewDetails": {
                 "text": "Ver Detalles",
@@ -6392,6 +6398,22 @@
             "cta": "Ir al caso",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
+        }
+    },
+      "usage":{
+          "tabs": {
+            "logins": "Inicios de sesión"
+        },
+        "logins":{
+            "zinniaLive":{
+                "title": "Inicios de sesión únicos de Zinnia Live por rol"
+            },
+            "myPolicyView":{
+                "title": "Inicios de sesión únicos de MyPolicyView"
+            },
+            "uniqueUsers": "Usuarios únicos",
+            "date": "Fecha",
+            "exportToCSV": "Exportar a CSV"
         }
     },
     "reverseTransaction": {
