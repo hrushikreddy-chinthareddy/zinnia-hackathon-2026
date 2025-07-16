@@ -4,7 +4,7 @@ import { PolicyRequestInputsParams } from '@/types/policy';
 const ErrorPage = ({ params }: PolicyRequestInputsParams) => {
   const goToUrl = `/coverage/policies/${params.planCode}/${params.policyNumber}/`;
   return (
-    <TransactionError transactionType="systematic-premium" goToUrl={goToUrl} />
+    <TransactionError transactionType="one-time-premium" goToUrl={goToUrl} />
   );
 };
 

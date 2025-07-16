@@ -1,6 +1,7 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { SelectBankWrapper } from '@/components/one-time-premium-payment/select-bank/SelectBankWrapper';
+import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { getPaymentMethods } from '@/services/payment-methods';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -25,12 +26,18 @@ export default async function SelectBankPage({
   );
 
   return (
-    <SelectBankWrapper
-      policyNumber={policyNumber}
+    <OneTimePremium
+      currentStepOverride={1}
       planCode={planCode}
-      initialPaymentMethods={initialPaymentMethods || []}
-      lineOfBusiness={LineOfBusiness.ANNUITY}
-      paymentProvider={payment.provider}
-    />
+      policyNumber={policyNumber}
+    >
+      <SelectBankWrapper
+        policyNumber={policyNumber}
+        planCode={planCode}
+        initialPaymentMethods={initialPaymentMethods || []}
+        lineOfBusiness={LineOfBusiness.ANNUITY}
+        paymentProvider={payment.provider}
+      />
+    </OneTimePremium>
   );
 }

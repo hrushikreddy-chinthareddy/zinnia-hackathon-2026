@@ -41,7 +41,7 @@ export const SteppedWorkflowProvider = ({
   workflowSteps,
   returnUrl,
 }: SteppedWorkflowProviderProps) => {
-  const router = useRouter()
+  const router = useRouter();
   const { planCode, policyNumber } = usePolicyUrlInputs();
   const [currentStepIndex, setCurrentStepIndex] = useState(initialStepIndex);
   const [primaryButtonDisabled, setPrimaryButtonDisabled] = useState(false);
@@ -63,8 +63,8 @@ export const SteppedWorkflowProvider = ({
 
   useEffect(() => {
     // prefetch next step
-    router.prefetch(stepInfo.nextStepUrl)
-  }, [router, stepInfo.nextStepUrl])
+    router.prefetch(stepInfo.nextStepUrl);
+  }, [router, stepInfo.nextStepUrl]);
 
   return (
     <SteppedWorkflowContext.Provider

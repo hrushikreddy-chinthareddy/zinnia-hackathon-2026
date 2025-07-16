@@ -1,6 +1,5 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -14,7 +13,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Button } from '@/components/button/Button';
 import { FieldDate } from '@/components/field/date/FieldDate';
 import { FieldStatus } from '@/components/field/types';
 import { FieldValue } from '@/components/field/value/FieldValue';
@@ -23,10 +21,8 @@ import { OttpAction } from '@/components/providers/one-time-premium-payment/type
 import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
-import { CancelDialogLink } from './CancelDialogLink';
-import { FormStepWrapper } from './FormStepWrapper';
 import premiumStyles from './OneTimePremiumPayment.module.css';
-import { getStepInfo, Steps } from './steps';
+import { useSteppedWorkflowContext } from '../stepped-workflow/SteppedWorkflowContext';
 
 export const dateInvalidMessage = 'Please enter a valid date';
 export const dateOutOfRangeMessage =
@@ -45,16 +41,10 @@ const dateWithinSixtyDayRange = (date: string) => {
 };
 
 export const SelectAmount = ({
-  planCode,
-  policyNumber,
   paymentFee,
-  lineOfBusiness,
   minimumPaymentDue,
 }: {
-  planCode: string;
-  policyNumber: string;
   paymentFee: number;
-  lineOfBusiness: LineOfBusiness;
   minimumPaymentDue: number;
 }) => {
   const router = useRouter();
@@ -74,11 +64,7 @@ export const SelectAmount = ({
         : undefined,
     },
   });
-  const stepInfo = getStepInfo({
-    planCode,
-    policyNumber,
-    step: Steps.AMOUNT,
-  });
+  const { stepInfo } = useSteppedWorkflowContext();
 
   useEffect(() => {
     dispatch({
@@ -100,90 +86,85 @@ export const SelectAmount = ({
   };
 
   return (
-    <FormStepWrapper
-      currentStep={Steps.AMOUNT}
-      planCode={planCode}
-      policyNumber={policyNumber}
-    >
-      <form onSubmit={handleSubmit(saveAndMove)}>
-        <div className="mb-xl field-container">
-          <Controller
-            control={control}
-            name="effectiveDate"
-            rules={{
-              required: dateInvalidMessage,
-              validate: {
-                dateInRange: v =>
-                  dateWithinSixtyDayRange(v) || dateOutOfRangeMessage,
-                dateIsValid: v => dayjs(v).isValid() || dateInvalidMessage,
-              },
-            }}
-            render={({ field }) => (
-              <FieldDate
-                label={
-                  <Label labelFor="one-time-premium-payment-date">
-                    Effective date
-                  </Label>
-                }
-                name="one-time-premium-payment"
-                onDateSelect={date =>
-                  field.onChange(dayjs(date).format(DEFAULT_DATE_FORMAT))
-                }
-                defaultDate={formState.defaultValues?.effectiveDate || ''}
-                disableAfterDate={new Date(sixtyDaysInFutureDay)}
-                disableBeforeDate={new Date()}
-                fieldStatus={
-                  formState.errors.effectiveDate
-                    ? FieldStatus.ERROR
-                    : FieldStatus.DEFAULT
-                }
-                errorMessage={formState.errors.effectiveDate?.message}
-              />
-            )}
-          />
-        </div>
-        <div className="mb-xl field-container">
-          <Controller
-            control={control}
-            name="paymentAmount"
-            rules={{
-              required: 'Please enter a valid payment amount',
-              min: {
-                value: 1,
-                message: 'Please enter an amount greater than zero',
-              },
-            }}
-            render={({ field }) => (
-              <FieldValue
-                {...field}
-                fieldStatus={
-                  formState.errors.paymentAmount
-                    ? FieldStatus.ERROR
-                    : FieldStatus.DEFAULT
-                }
-                errorMessage={formState.errors.paymentAmount?.message}
-                label={
-                  <Label
-                    interactiveElements={[
-                      <Popover
-                        key={PREMIUM_PAYMENT_AMOUNT}
-                        title={PREMIUM_PAYMENT_AMOUNT}
-                        trigger={
-                          <Icon
-                            type={IconType.CIRCLE_INFO}
-                            color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                            small
-                          />
-                        }
-                      >
-                        <p>
-                          Enter the amount you would like to pay into your
-                          policy. Keep in mind there are limits (set by federal
-                          laws) to the amount you can pay without impacting your
-                          coverage or losing tax advantages.
-                        </p>
-                        {/* // TODO: where does this value come from? */}
-                        {/* <p>
+    <form id="submit-form" onSubmit={handleSubmit(saveAndMove)}>
+      <div className="mb-xl field-container">
+        <Controller
+          control={control}
+          name="effectiveDate"
+          rules={{
+            required: dateInvalidMessage,
+            validate: {
+              dateInRange: v =>
+                dateWithinSixtyDayRange(v) || dateOutOfRangeMessage,
+              dateIsValid: v => dayjs(v).isValid() || dateInvalidMessage,
+            },
+          }}
+          render={({ field }) => (
+            <FieldDate
+              label={
+                <Label labelFor="one-time-premium-payment-date">
+                  Effective date
+                </Label>
+              }
+              name="one-time-premium-payment"
+              onDateSelect={date =>
+                field.onChange(dayjs(date).format(DEFAULT_DATE_FORMAT))
+              }
+              defaultDate={formState.defaultValues?.effectiveDate || ''}
+              disableAfterDate={new Date(sixtyDaysInFutureDay)}
+              disableBeforeDate={new Date()}
+              fieldStatus={
+                formState.errors.effectiveDate
+                  ? FieldStatus.ERROR
+                  : FieldStatus.DEFAULT
+              }
+              errorMessage={formState.errors.effectiveDate?.message}
+            />
+          )}
+        />
+      </div>
+      <div className="mb-xl field-container">
+        <Controller
+          control={control}
+          name="paymentAmount"
+          rules={{
+            required: 'Please enter a valid payment amount',
+            min: {
+              value: 1,
+              message: 'Please enter an amount greater than zero',
+            },
+          }}
+          render={({ field }) => (
+            <FieldValue
+              {...field}
+              fieldStatus={
+                formState.errors.paymentAmount
+                  ? FieldStatus.ERROR
+                  : FieldStatus.DEFAULT
+              }
+              errorMessage={formState.errors.paymentAmount?.message}
+              label={
+                <Label
+                  interactiveElements={[
+                    <Popover
+                      key={PREMIUM_PAYMENT_AMOUNT}
+                      title={PREMIUM_PAYMENT_AMOUNT}
+                      trigger={
+                        <Icon
+                          type={IconType.CIRCLE_INFO}
+                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                          small
+                        />
+                      }
+                    >
+                      <p>
+                        Enter the amount you would like to pay into your policy.
+                        Keep in mind there are limits (set by federal laws) to
+                        the amount you can pay without impacting your coverage
+                        or losing tax advantages.
+                      </p>
+                      {/* // TODO: where does this value come from? */}
+                      {/* <p>
                           Currently, you may pay up to [MEC limit value, CVAT
                           value, Guideline premium value, whichever is the
                           lesser of] without changing the nature of your policy
@@ -192,50 +173,38 @@ export const SelectAmount = ({
                           professional (like a tax advisor) who can help walk
                           you through the consequences first.
                         </p> */}
-                      </Popover>,
-                    ]}
-                  >
-                    {PREMIUM_PAYMENT_AMOUNT}
-                  </Label>
-                }
-                placeholder=""
-                // TODO: what should this be?
-                name="one-time-premium-payment"
-                inputMode="numeric"
-              />
-            )}
-          />
-          {minimumPaymentDue > 0 && (
-            <AssistiveText
-              text={`A minimum payment of ${formatUSDollars(minimumPaymentDue)} is required`}
-              variant={AssistiveTextVariant.Info}
-              className="mt-md"
+                    </Popover>,
+                  ]}
+                >
+                  {PREMIUM_PAYMENT_AMOUNT}
+                </Label>
+              }
+              placeholder=""
+              // TODO: what should this be?
+              name="one-time-premium-payment"
+              inputMode="numeric"
             />
           )}
-        </div>
-        {paymentFee > 0 && (
-          <p className={`${premiumStyles.note} typography-content-body-sm`}>
-            Note: Your policy has a {paymentFee}% charge for every premium
-            payment. See your policy documents for more details.
-          </p>
-        )}
-        {!paymentFee && (
-          <p className={`${premiumStyles.note} typography-content-body-sm`}>
-            Note: Your policy doesn’t charge for premium payments.
-          </p>
-        )}
-
-        <div className={premiumStyles.buttonGroup}>
-          <Button mode="primary" type="submit">
-            Continue
-          </Button>
-          <CancelDialogLink
-            planCode={planCode}
-            policyNumber={policyNumber}
-            lineOfBusiness={lineOfBusiness}
+        />
+        {minimumPaymentDue > 0 && (
+          <AssistiveText
+            text={`A minimum payment of ${formatUSDollars(minimumPaymentDue)} is required`}
+            variant={AssistiveTextVariant.Info}
+            className="mt-md"
           />
-        </div>
-      </form>
-    </FormStepWrapper>
+        )}
+      </div>
+      {paymentFee > 0 && (
+        <p className={`${premiumStyles.note} typography-content-body-sm`}>
+          Note: Your policy has a {paymentFee}% charge for every premium
+          payment. See your policy documents for more details.
+        </p>
+      )}
+      {!paymentFee && (
+        <p className={`${premiumStyles.note} typography-content-body-sm`}>
+          Note: Your policy doesn’t charge for premium payments.
+        </p>
+      )}
+    </form>
   );
 };

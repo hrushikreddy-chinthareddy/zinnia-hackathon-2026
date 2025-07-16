@@ -21,9 +21,7 @@ import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { logError } from '@/utils/logging/log-fns';
-import {
-  buildCommonLogContext,
-} from '@/utils/logging/server-logging';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
@@ -79,12 +77,12 @@ export const UpcomingPremium = async ({
     upcomingResult?.status === 'fulfilled'
       ? upcomingResult.value
       : {
-        data: null,
-        error: {
-          message: 'Error fetching upcoming premium',
-          ...loggingContext,
-        },
-      };
+          data: null,
+          error: {
+            message: 'Error fetching upcoming premium',
+            ...loggingContext,
+          },
+        };
 
   if (ottpResult?.status === 'rejected') {
     logError('Error fetching upcoming premium', ottpResult.reason);
@@ -98,7 +96,7 @@ export const UpcomingPremium = async ({
   const systematicPremiumEligible =
     systematicProgramsEligibilityResult.status === 'fulfilled' &&
     systematicProgramsEligibilityResult.value.data?.status ===
-    TransactionResponse.status.SUCCESS;
+      TransactionResponse.status.SUCCESS;
 
   const showSetUpAutopay =
     systematicPremiumFeatureFlag && systematicPremiumEligible;

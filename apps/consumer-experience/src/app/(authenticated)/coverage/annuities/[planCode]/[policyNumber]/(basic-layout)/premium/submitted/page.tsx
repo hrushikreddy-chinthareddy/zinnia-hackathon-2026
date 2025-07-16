@@ -1,6 +1,5 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-
 import { PaymentSubmitted } from '@/components/one-time-premium-payment/PaymentSubmitted';
+import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
 import { PolicyRequestInputs } from '@/types/policy';
 
 export default async function SubmittedPayment({
@@ -11,12 +10,12 @@ export default async function SubmittedPayment({
   const { planCode, policyNumber } = params;
 
   return (
-    <>
-      <PaymentSubmitted
-        policyNumber={policyNumber}
-        planCode={planCode}
-        lineOfBusiness={LineOfBusiness.ANNUITY}
-      />
-    </>
+    <OneTimePremium
+      currentStepOverride={3}
+      planCode={planCode}
+      policyNumber={policyNumber}
+    >
+      <PaymentSubmitted />
+    </OneTimePremium>
   );
 }

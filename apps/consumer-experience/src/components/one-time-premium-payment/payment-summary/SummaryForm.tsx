@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { Button } from '@/components/button/Button';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { Payor } from '@/components/pii/Payor';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
@@ -17,10 +16,7 @@ import { AccountNumber } from '../../pii/AccountNumber';
 import { AccountType } from '../../pii/AccountType';
 import { BankName } from '../../pii/BankName';
 import { OttpState } from '../../providers/one-time-premium-payment/types';
-import { CancelDialogLink } from '../CancelDialogLink';
-import { FormHeader } from '../FormHeader';
 import styles from '../OneTimePremiumPayment.module.css';
-import { Steps } from '../steps';
 
 // TODO: UPDATE COPY!!!!
 const loadingStrings = [
@@ -146,11 +142,6 @@ export const SummaryForm = ({
 
   return (
     <>
-      <FormHeader
-        currentStep={Steps.SUMMARY}
-        planCode={planCode}
-        policyNumber={policyNumber}
-      />
       <div className={styles.paymentSummaryContainer}>
         <div className={styles.paymentSummaryDetails}>
           <FieldData Label={<Label>Payor</Label>}>
@@ -209,16 +200,6 @@ export const SummaryForm = ({
             ),
             deposit: paymentAmount.plain,
           }}
-        />
-      </div>
-      <div className={styles.buttonGroup}>
-        <Button mode="primary" type="submit">
-          Submit payment
-        </Button>
-        <CancelDialogLink
-          planCode={planCode}
-          policyNumber={policyNumber}
-          lineOfBusiness={lineOfBusiness}
         />
       </div>
     </>

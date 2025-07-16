@@ -114,7 +114,11 @@ const WorkflowContainer = ({
           <Button {...nextButtonProps} />
         )}
         {currentStep && currentStep?.actions?.secondary && (
-          <Button onClick={currentStep.actions.secondary?.onClick}>
+          <Button
+            onClick={currentStep.actions.secondary?.onClick}
+            mode="link"
+            size="small"
+          >
             {currentStep.actions.secondary?.text}
           </Button>
         )}

@@ -1,16 +1,15 @@
 'use client';
+import { useMutation } from '@tanstack/react-query';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { ClientApi } from '@/services/client-http';
+import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
+import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { submitOttp } from '@/queries/premium-queries';
 
-import { PaymentError } from './PaymentError';
-import { PaymentInvalid } from './PaymentInvalid';
 import { SummaryForm } from './SummaryForm';
 import { useOttp } from '../../providers/one-time-premium-payment/OttpContext';
-import { FormStepWrapper } from '../FormStepWrapper';
-import { getStepInfo, paymentUrl, Steps } from '../steps';
 
 export interface OTTPPaymentDetails {
   effectiveDate: string;
@@ -32,68 +31,57 @@ export const PaymentSummary = ({
 }) => {
   const router = useRouter();
   const { state } = useOttp();
-  const [error, setError] = useState<number>();
-  const currentStepInfo = getStepInfo({
-    step: Steps.SUMMARY,
-    planCode,
-    policyNumber,
+  const form = useForm();
+  const { stepInfo: currentStepInfo } = useSteppedWorkflowContext();
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const ottpRequest = {
+        paymentAmount: state.paymentAmount.plain,
+        effectiveDate: state.effectiveDate,
+        partyId: state.payorBank?.appliesToPartyId,
+        bankId: state.payorBank?.bankId,
+      };
+      return await submitOttp(policyNumber, planCode, ottpRequest);
+    },
+    onSuccess: () => {
+      router.push(currentStepInfo?.nextStepUrl);
+    },
+    onError: () => {
+      // if (error) {
+      //   if (error === 400) {
+      //     return (
+      //       <PaymentInvalid goToUrl={paymentUrl({ planCode, policyNumber })} />
+      //     );
+      //   }
+      //   return (
+      //     <PaymentError goToUrl={paymentUrl({ planCode, policyNumber })} />
+      //   );
+      // }
+      router.push('error');
+    },
   });
 
-  if (error) {
-    if (error === 400) {
-      return (
-        <PaymentInvalid goToUrl={paymentUrl({ planCode, policyNumber })} />
-      );
+  const submitPayment = () => {
+    if (mutation.isPending) {
+      return;
     }
-
-    return <PaymentError goToUrl={paymentUrl({ planCode, policyNumber })} />;
-  }
-
-  const submitPayment = async () => {
-    const ottpRequest = {
-      paymentAmount: state.paymentAmount.plain,
-      effectiveDate: state.effectiveDate,
-      partyId: state.payorBank?.appliesToPartyId,
-      bankId: state.payorBank?.bankId,
-    };
-
-    // TODO: this should go somewhere else, use patterns from
-    // non financial profile transactions
-    const response = await ClientApi.post(
-      `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
-      JSON.stringify(ottpRequest),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
-
-    const parsedResponse = await response.json();
-
-    // TODO: IF a user presses back (in browser) from here, they go back to step 2
-    // not the end of the world but should probably have something else happen
-    if (parsedResponse.error) {
-      setError(parsedResponse.error.status || 500);
-    } else {
-      router.push(currentStepInfo?.nextStepUrl);
-    }
+    mutation.mutate();
   };
 
+  if (mutation.isPending) {
+    return <PaymentLoading />;
+  }
+
   return (
-    <FormStepWrapper
-      currentStep={Steps.SUMMARY}
-      planCode={planCode}
-      policyNumber={policyNumber}
-      hideHeader
-    >
-      <form action={submitPayment}>
-        <SummaryForm
-          ottpPaymentData={state}
-          planCode={planCode}
-          policyNumber={policyNumber}
-          lineOfBusiness={lineOfBusiness}
-          uncollectedCharges={uncollectedCharges}
-        />
-      </form>
-    </FormStepWrapper>
+    <form id="submit-form" onSubmit={form.handleSubmit(submitPayment)}>
+      <SummaryForm
+        ottpPaymentData={state}
+        planCode={planCode}
+        policyNumber={policyNumber}
+        lineOfBusiness={lineOfBusiness}
+        uncollectedCharges={uncollectedCharges}
+      />
+    </form>
   );
 };

@@ -11,6 +11,16 @@
   display: flex;
   gap: var(--measure-dimension-gap-2xl);
   margin-top: var(--measure-dimension-margin-xs);
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+
+    button {
+      width: 100%;
+    }
+  }
 }
 
 .form {

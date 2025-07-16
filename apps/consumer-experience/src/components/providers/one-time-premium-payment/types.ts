@@ -2,6 +2,13 @@ import { z } from 'zod';
 
 import { PaymentMethod } from '@/types/payment';
 
+export enum OttpSteps {
+  AMOUNT = 'amount',
+  BANK = 'bank',
+  SUMMARY = 'summary',
+  SUBMITTED = 'submitted',
+}
+
 export enum OttpAction {
   SET_EFFECTIVE_DATE = 'setEffectiveDate',
   SET_PAYMENT_AMOUNT = 'setPaymentAmount',
@@ -15,7 +22,7 @@ const payorBankSchema = z.object({
   appliesToPartyId: z.string(),
 }) satisfies z.ZodType<Partial<PaymentMethod>>;
 
-const paymentAmountSchema = z.object({
+export const paymentAmountSchema = z.object({
   plain: z
     .number()
     .min(1)

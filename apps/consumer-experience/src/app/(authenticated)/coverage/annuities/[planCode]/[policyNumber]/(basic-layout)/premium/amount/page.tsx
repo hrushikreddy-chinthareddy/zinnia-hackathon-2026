@@ -1,6 +1,7 @@
-import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { SelectAmount } from '@/components/one-time-premium-payment/SelectAmount';
+import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
 import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import {
   ConfiguredSettingId,
@@ -68,18 +69,21 @@ export default async function SelectAmountPage({
       ottpFeeRes.status === 'fulfilled' ? ottpFeeRes.value.data : null;
 
     return (
-      <SelectAmount
-        policyNumber={policyNumber}
+      <OneTimePremium
+        currentStepOverride={0}
         planCode={planCode}
-        paymentFee={data?.fee || 0}
-        lineOfBusiness={LineOfBusiness.ANNUITY}
-        minimumPaymentDue={
-          policyStatusDetails?.policyStatus === PolicyStatus.PENDINGLAPSE &&
+        policyNumber={policyNumber}
+      >
+        <SelectAmount
+          paymentFee={data?.fee || 0}
+          minimumPaymentDue={
+            policyStatusDetails?.policyStatus === PolicyStatus.PENDINGLAPSE &&
             policyStatusDetails?.minimumPaymentDue
-            ? policyStatusDetails?.minimumPaymentDue
-            : 0
-        }
-      />
+              ? policyStatusDetails?.minimumPaymentDue
+              : 0
+          }
+        />
+      </OneTimePremium>
     );
   } catch (error) {
     logTrace('SelectAmountPage error', {
