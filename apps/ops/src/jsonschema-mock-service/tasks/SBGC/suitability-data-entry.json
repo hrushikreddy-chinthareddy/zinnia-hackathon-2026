@@ -1269,65 +1269,6 @@
                                     "type": "object",
                                     "title": "Agent Acknowledgment",
                                     "properties": {
-                                        "maApplicationQuestionnaire": {
-                                            "type": "object",
-                                            "title": "MA Application Questionnaire",
-                                            "properties": {
-                                                "soldPoliciesToApplicant": {
-                                                    "type": "string",
-                                                    "title": "Sold policies to applicant",
-                                                    "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicant"
-                                                }
-                                            },
-                                            "allOf": [
-                                                {
-                                                    "if": {
-                                                        "properties": {
-                                                            "soldPoliciesToApplicant": {
-                                                                "const": "YES"
-                                                            }
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "properties": {
-                                                            "saleInLast5Years": {
-                                                                "type": "string",
-                                                                "title": "Sale in last 5 years",
-                                                                "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_saleInLast5Years"
-                                                            }
-                                                        },
-                                                        "dependencies": {
-                                                            "saleInLast5Years": {
-                                                                "if": {
-                                                                    "properties": {
-                                                                        "saleInLast5Years": {
-                                                                            "const": "YES"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "then": {
-                                                                    "properties": {
-                                                                        "saleDetails": {
-                                                                            "type": "string",
-                                                                            "title": "Sale details"
-                                                                        }
-                                                                    },
-                                                                    "required": [
-                                                                        "saleDetails"
-                                                                    ]
-                                                                }
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "saleInLast5Years"
-                                                        ]
-                                                    }
-                                                }
-                                            ],
-                                            "required": [
-                                                "soldPoliciesToApplicant"
-                                            ]
-                                        },
                                         "financialAcknowledgement": {
                                             "type": "object",
                                             "title": "Financial Acknowledgement",
@@ -1474,6 +1415,101 @@
                                 }
                             },
                             "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "parties": {
+                                                "type": "array",
+                                                "contains": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "addresses": {
+                                                            "type": "array",
+                                                            "contains": {
+                                                                "type": "object",
+                                                                "required": [
+                                                                    "state"
+                                                                ],
+                                                                "properties": {
+                                                                    "state": {
+                                                                        "const": "MA"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "agentAcknowledgment": {
+                                                "properties": {
+                                                    "maApplicationQuestionnaire": {
+                                                        "type": "object",
+                                                        "title": "MA Application Questionnaire",
+                                                        "properties": {
+                                                            "soldPoliciesToApplicant": {
+                                                                "type": "string",
+                                                                "title": "Sold policies to applicant",
+                                                                "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_soldPoliciesToApplicant"
+                                                            }
+                                                        },
+                                                        "allOf": [
+                                                            {
+                                                                "if": {
+                                                                    "properties": {
+                                                                        "soldPoliciesToApplicant": {
+                                                                            "const": "YES"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "then": {
+                                                                    "properties": {
+                                                                        "saleInLast5Years": {
+                                                                            "type": "string",
+                                                                            "title": "Sale in last 5 years",
+                                                                            "$ref": "#/definitions/agentAcknowledgment_maApplicationQuestionnaire_saleInLast5Years"
+                                                                        }
+                                                                    },
+                                                                    "dependencies": {
+                                                                        "saleInLast5Years": {
+                                                                            "if": {
+                                                                                "properties": {
+                                                                                    "saleInLast5Years": {
+                                                                                        "const": "YES"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "then": {
+                                                                                "properties": {
+                                                                                    "saleDetails": {
+                                                                                        "type": "string",
+                                                                                        "title": "Sale details"
+                                                                                    }
+                                                                                },
+                                                                                "required": [
+                                                                                    "saleDetails"
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "saleInLast5Years"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ],
+                                                        "required": [
+                                                            "soldPoliciesToApplicant"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
                                 {
                                     "if": {
                                         "properties": {
@@ -1771,7 +1807,7 @@
                                     "label": true,
                                     "enumNames": [
                                         "Fixed annuity",
-                                        "Life insurence",
+                                        "Life insurance",
                                         "Checking saving account",
                                         "Salary",
                                         "Variable annuity",
@@ -1914,7 +1950,7 @@
                                                     "Life insurance",
                                                     "Business equity",
                                                     "Reverse mortgage",
-                                                    "Real state",
+                                                    "Real estate",
                                                     "Others"
                                                 ]
                                             }
@@ -2133,6 +2169,11 @@
                                 "classNames": "divider",
                                 "expandable": true
                             },
+                            "ui:order": [
+                                "maApplicationQuestionnaire",
+                                "financialAcknowledgement",
+                                "disclosureAcknowledgement"
+                            ],
                             "maApplicationQuestionnaire": {
                                 "soldPoliciesToApplicant": {
                                     "ui:widget": "select",
