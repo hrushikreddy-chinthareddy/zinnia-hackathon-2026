@@ -1,31 +1,35 @@
-import { SelectBank } from '@/components/workflows/systematic-premiums/forms/SelectBank';
+import { LineOfBusiness } from '@xd/api-types/dist/generated-types/bpm';
+
+import { SelectBankWrapper } from '@/components/workflows/systematic-premiums/forms/SelectBankWrapper';
 import { SystematicPremiums } from '@/components/workflows/systematic-premiums/SystematicPremiums';
-import { getPaymentDetails, getPolicyProfileData } from '@/services';
+import { getCarrierConfig } from '@/services/carrier-config';
+import { getPaymentMethods } from '@/services/payment-methods';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 const BankPage = async ({ params }: PolicyRequestInputsParams) => {
+  const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
+  const { payment } = await getCarrierConfig();
 
-  const { data } = await getPaymentDetails(
+  const { data: initialPaymentMethods } = await getPaymentMethods(
     {
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
-    },
-    loggingContext
-  );
-
-  const { data: policyData } = await getPolicyProfileData(
-    {
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
+      policyNumber,
+      planCode,
+      paymentProvider: payment.provider,
     },
     loggingContext
   );
 
   return (
     <SystematicPremiums currentStepOverride={1}>
-      <SelectBank activeBanks={data || []} parties={policyData?.parties} />
+      <SelectBankWrapper
+        policyNumber={policyNumber}
+        planCode={planCode}
+        initialPaymentMethods={initialPaymentMethods || []}
+        lineOfBusiness={LineOfBusiness.LIFE}
+        paymentProvider={payment.provider}
+      />
     </SystematicPremiums>
   );
 };

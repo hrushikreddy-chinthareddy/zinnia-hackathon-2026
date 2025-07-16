@@ -1,20 +1,20 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PartyRole } from '@xd/api-types/dist/generated-types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
   IconType,
-  Label,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
-import { Link } from '@/components/link/Link';
+import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
+import { EditBankSidesheet } from '@/components/edit-bank/EditBankSidesheet';
+import { FeatureFlagComponent } from '@/components/FeatureFlagComponent';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
-import { BankDetail } from '@/components/person-data/types';
+import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPaymentMethod';
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { AccountType } from '@/components/pii/AccountType';
 import { BankName } from '@/components/pii/BankName';
@@ -26,16 +26,21 @@ import {
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
-import { PolicyParty } from '@/types/policy';
+import { PaymentMethod } from '@/types/payment';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { default as styles } from '../SystematicPremiums.module.css';
 
 export const SelectBank = ({
   activeBanks,
-  parties,
+  addBankEnabled = false,
+  editBankEnabled = false,
+  onAddPaymentMethod,
 }: {
-  parties?: PolicyParty[];
-  activeBanks: BankDetail[];
+  activeBanks: PaymentMethod[];
+  addBankEnabled?: boolean;
+  editBankEnabled?: boolean;
+  onAddPaymentMethod: () => void;
 }) => {
   const { state, dispatch } = useSystematicPremiums();
   const { stepInfo } = useSteppedWorkflowContext();
@@ -52,25 +57,19 @@ export const SelectBank = ({
   });
 
   const addBankUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile#addBankSection`;
-  const payorParty = parties?.find(p =>
-    p.partyRoles?.includes(PartyRole.PAYOR)
-  );
 
   const onSubmit: SubmitHandler<SPSelectBankStepSchema> = data => {
-    let payorName = '';
     const selectedBank =
       activeBanks.find(
         bank => bank.accountNumber === data.bank?.accountNumber
       ) || defaultBank;
 
-    if (!payorParty) return;
+    if (!selectedBank?.appliesToPartyId) {
+      return;
+    }
 
-    const { fullName, firstName, lastName, partyId } = payorParty;
-
-    if (!partyId) return;
-
-    if (!fullName) {
-      payorName = `${firstName} ${lastName}`;
+    if (!selectedBank?.nameOnAccount) {
+      return;
     }
 
     dispatch({
@@ -85,8 +84,8 @@ export const SelectBank = ({
             autopayEnabled: selectedBank?.autopayEnabled,
           },
           payor: {
-            payorName: payorName,
-            payorPartyId: partyId,
+            payorName: selectedBank?.nameOnAccount,
+            payorPartyId: selectedBank?.appliesToPartyId,
           },
         },
       },
@@ -109,9 +108,6 @@ export const SelectBank = ({
       )}
 
       <div className={styles.banks}>
-        <Label labelFor="active-banks">
-          <span className="typography-titles-subtitle">Bank Accounts</span>
-        </Label>
         {!activeBanks ||
           (activeBanks.length === 0 && (
             <div className={noDataStyles.noBankDetails}>
@@ -189,6 +185,7 @@ export const SelectBank = ({
                         );
                       }}
                     />
+                    {editBankEnabled && <EditBankSidesheet />}
                   </label>
                 );
               })}
@@ -201,16 +198,37 @@ export const SelectBank = ({
             )}
           </div>
         )}
-        <div className={`my-lg mb-none ${styles.disclaimer}`}>
-          <p className="typography-content-body-sm">
-            Want to pay with another bank account? Go to to{' '}
-            <Link href={addBankUrl} isInternal>
-              banking details
-            </Link>{' '}
-            to add. If you're not seeing the account you want to pay with, give
-            us a call at <CarrierPhoneNumber />.
-          </p>
-        </div>
+
+        {addBankEnabled ? (
+          <div className={styles.addBank}>
+            <PaymentusAddPaymentMethod
+              policyNumber={policyNumber}
+              onAddPaymentMethod={onAddPaymentMethod}
+            />
+          </div>
+        ) : (
+          <FeatureFlagComponent
+            flagKey={FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT}
+            enabledComponent={
+              <div className={`my-lg mb-none ${styles.disclaimer}`}>
+                <p className="typography-content-body-sm">
+                  Want to pay with another bank account? Go to{' '}
+                  <ConfirmDialog
+                    confirmCallback={() => router.push(addBankUrl)}
+                    linkText="banking details"
+                    linkClassName={styles.linkClassname}
+                    confirmDescription="Navigate to the profile page and open the add bank sidesheet"
+                    message="If you leave now, your payment won't be submitted and you will have to start over."
+                    cancelDescription="Stay on the premium payment page"
+                    title="Leave payment?"
+                  />{' '}
+                  to add. If you're not seeing the account you want to pay with,
+                  give us a call at <CarrierPhoneNumber />.
+                </p>
+              </div>
+            }
+          />
+        )}
       </div>
     </form>
   );
