@@ -29,6 +29,7 @@ import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductType, ProductTypeLabel } from '@deps/types/product';
 
 import styles from './client-case-table.module.css';
+import TableHeaderSortWrapper from './table-header-sort-wrapper.tsx/table-header-sort-wrapper';
 
 const generateTableContent = (
     clientCases: IllustrationsClientCase[],
@@ -179,33 +180,35 @@ export const ClientCaseTable = () => {
                             {t('clientCase.clientCaseTable.clientCase')}
                         </Typography>
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderSortWrapper collumnId="insuredFirstName">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('clientCase.clientCaseTable.insured')}
                         </Typography>
-                    </TableHeaderCell>
-                    <TableHeaderCell>
-                        <Label
-                            interactiveElements={[
-                                <Tooltip
-                                    key="agentTooltip"
-                                    trigger={
-                                        <CircleInfoIcon
-                                            height={'16px'}
-                                            width={'16px'}
-                                            className="text-primary"
-                                        />
-                                    }
-                                >
-                                    {t(
-                                        'clientCase.clientCaseTable.agentTooltip'
-                                    )}
-                                </Tooltip>,
-                            ]}
-                        >
-                            {t('clientCase.clientCaseTable.agent')}
-                        </Label>
-                    </TableHeaderCell>
+                    </TableHeaderSortWrapper>
+                    <TableHeaderSortWrapper collumnId="agentFirstName">
+                        <div className={styles.agentHeader}>
+                            <Label
+                                interactiveElements={[
+                                    <Tooltip
+                                        key="agentTooltip"
+                                        trigger={
+                                            <CircleInfoIcon
+                                                height={'16px'}
+                                                width={'16px'}
+                                                className="text-primary"
+                                            />
+                                        }
+                                    >
+                                        {t(
+                                            'clientCase.clientCaseTable.agentTooltip'
+                                        )}
+                                    </Tooltip>,
+                                ]}
+                            >
+                                {t('clientCase.clientCaseTable.agent')}
+                            </Label>
+                        </div>
+                    </TableHeaderSortWrapper>
                     <TableHeaderCell>
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('clientCase.clientCaseTable.productTypes')}
@@ -216,11 +219,11 @@ export const ClientCaseTable = () => {
                             {t('clientCase.clientCaseTable.illustrations')}
                         </Typography>
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderSortWrapper collumnId="lastModified">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('clientCase.clientCaseTable.lastModified')}
                         </Typography>
-                    </TableHeaderCell>
+                    </TableHeaderSortWrapper>
                 </TableRow>
             </TableHeader>
             <TableBody>

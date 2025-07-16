@@ -1,0 +1,6 @@
+.tableHeader > *:first-child {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--measure-dimension-gap-md);
+    align-items: center;
+}

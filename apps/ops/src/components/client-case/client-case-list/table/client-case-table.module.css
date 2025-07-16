@@ -43,3 +43,9 @@
         }
     }
 }
+
+.agentHeader {
+    & button {
+        z-index: 1 !important;
+    }
+}

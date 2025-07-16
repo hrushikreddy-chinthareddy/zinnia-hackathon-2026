@@ -65,7 +65,7 @@ export function IllustrationsClientCaseProvider({
             limit: safeLimit,
             offset: safeOffset,
             sortBy: searchParams.get('sortBy') || 'lastModified',
-            sortDir: searchParams.get('sortDir') || 'desc',
+            sortDir: searchParams.get('sortDir') || 'descending',
         };
     }, [searchParams]);
 
