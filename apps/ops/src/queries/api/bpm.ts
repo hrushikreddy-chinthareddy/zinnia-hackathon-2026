@@ -19,6 +19,8 @@ import { v4 as uuidV4 } from 'uuid';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
 
@@ -267,6 +269,12 @@ export const checkEligibilitySystematicProgram = async (
     query: SystematicProgramRequestQuery
 ): Promise<TransactionResponse> => {
     try {
+        browserLogInfo('SystematicProgram::Initiating eligibility check', {
+            payload: { planCode, policyNumber, arrangementId, query },
+            url: `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/eligibilitycheck`,
+            function: 'checkEligibilitySystematicProgram',
+        });
+
         const { data } = await client.post<
             SystematicProgramRequestQuery,
             AxiosResponse
@@ -274,12 +282,16 @@ export const checkEligibilitySystematicProgram = async (
             `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/eligibilitycheck`,
             query
         );
+
         return data;
     } catch (error: any) {
-        console.error(
-            'checkEligibilitySystematicPrograms::an error occurred during eligibility check',
-            error
-        );
+        browserLogError('SystematicProgram::Eligibility check failed', {
+            ...parseErrorInformation(error),
+            payload: { planCode, policyNumber, arrangementId, query },
+            url: `${baseUrl}/policies/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/eligibilitycheck`,
+            function: 'checkEligibilitySystematicProgram',
+        });
+
         return error?.data;
     }
 };

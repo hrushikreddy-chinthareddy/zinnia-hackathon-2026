@@ -60,10 +60,16 @@ export const checkPartialWithdrawalOneTimeEligibilityQuery = async (
     );
 };
 
-export const checkBeneficiaryEligibilityQuery = async (planCode: string, policyNumber: string) => {
+export const checkBeneficiaryEligibilityQuery = async (
+    planCode: string,
+    policyNumber: string
+) => {
     return await checkEligibilityBeneficiary(planCode, policyNumber);
-}
-export const checkFullSurrenderWithdrawal = async (planCode: string, policyNumber: string) => {
+};
+export const checkFullSurrenderWithdrawal = async (
+    planCode: string,
+    policyNumber: string
+) => {
     return await checkEligibilityFullSurrender(planCode, policyNumber);
 };
 

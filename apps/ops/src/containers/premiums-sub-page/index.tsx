@@ -31,6 +31,7 @@ import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkOneTimePremiumEligibilityQuery,
     checkSystematicProgramsEligibilityQuery,
+    checkSystematicProgramEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -129,6 +130,35 @@ export const PremiumsSubPage = () => {
         },
     });
 
+    const { data: setUpAutopayProgramsEligibility } = useQuery({
+        queryKey: [
+            'checkSetUpAutopayProgramsEligibility',
+            planCode,
+            policyNumber,
+            upcomingPayment?.arrangementId,
+        ],
+        queryFn: () =>
+            checkSystematicProgramEligibilityQuery(
+                planCode as string,
+                policyNumber as string,
+                upcomingPayment?.arrangementId ?? '',
+
+                {
+                    systematicProgram: {
+                        arrangementType: ArrangementType.PAYMENT,
+                    },
+                }
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleSetUpAutopay:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
+
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
@@ -149,8 +179,12 @@ export const PremiumsSubPage = () => {
             text: t('startAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/add-premium-autopay`,
             isDisabled:
+                !setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay ||
                 !premiumSetOrCancelAutopayEnabled ||
                 upcomingPayment?.nextProgramDate,
+            tooltip: formatValidationResult(
+                setUpAutopayProgramsEligibility?.validationResult
+            ),
         },
         {
             text: t('manageAutopay'),
