@@ -104,10 +104,13 @@ export const getStatusDetails = ({
 
         case Statuses.Completed:
             if (caseResult === Statuses.Issued && issueDate) {
-                statusVariant = BadgeVariant.DEFAULT;
+                statusVariant = BadgeVariant.SUCCESS;
                 statusTooltip = t('caseOverview.caseStatus.issued.tooltip', {
                     date: dayjs(updatedAt).format('MM/DD/YYYY'),
                     issueDate: dayjs(issueDate).format('MM/DD/YYYY'),
+                    processSubType: processSubType
+                        ? toTitleCase(processSubType)
+                        : toTitleCase(process),
                 });
                 statusText = t('caseOverview.caseStatus.issued.badgeText');
             } else {

@@ -127,7 +127,7 @@ export enum Statuses {
     Pending = 'IMPEDED',
     Resolved = 'RESOLVED',
     Unresolved = 'UNRESOLVED',
-    Issued = 'ISSUED',
+    Issued = 'Issued', // NOTE: API response current returns Titlecase instead of ALLCAPS - MR
 }
 
 export interface StatCount {
