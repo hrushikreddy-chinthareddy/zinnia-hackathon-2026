@@ -13,12 +13,14 @@ import {
 } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
+import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { combineSubmissionTypes } from '@deps/components/dashboard/sections/submission-type/utils';
 import {
     TimeframeFilterOptions,
     startDates,
     formatProcessFilter,
     createBaseQuery,
+    defaultDateFormat,
 } from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
@@ -73,13 +75,15 @@ export const SubmissionTypeContext =
     createContext<SubmissionTypeContextTypes>(defaultState);
 
 export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [timeframeRadio, setTimeframeRadio] = useState<
-        TimeframeFilterOptions | undefined
-    >(TimeframeFilterOptions.Trailing12Months);
-
-    const [timerange, setTimerange] = useState({
-        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
-        to: '',
+    const {
+        timeframeRadio,
+        timerange,
+        handleTimeframeRadioChange,
+        handleRangeChange,
+    } = useTimeRangeFilter<TimeframeFilterOptions>({
+        startDates,
+        defaultOption: TimeframeFilterOptions.Trailing12Months,
+        dateFormat: defaultDateFormat,
     });
 
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
@@ -104,19 +108,6 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         createdDateStart: timerange.from,
         createdDateEnd: timerange.to || undefined,
         process: formatProcessFilter(selectedProcess),
-    };
-
-    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
-        setTimeframeRadio(value);
-        setTimerange({
-            from: startDates[value],
-            to: '',
-        });
-    };
-
-    const handleRangeChange = (value: { from: string; to: string }) => {
-        setTimerange(value);
-        setTimeframeRadio(undefined);
     };
 
     const {

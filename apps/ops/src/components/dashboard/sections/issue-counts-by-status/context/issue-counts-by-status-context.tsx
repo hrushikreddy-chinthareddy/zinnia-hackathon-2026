@@ -7,8 +7,10 @@ import {
 import { createContext, FC, PropsWithChildren, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
+import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import {
     TimeframeFilterOptions,
+    defaultDateFormat,
     formatProcessFilter,
     startDates,
 } from '@deps/components/dashboard/utils';
@@ -99,26 +101,16 @@ export const IssueCountsByStatusProvider: FC<PropsWithChildren> = ({
     >(ExtendedProcesses.ALL);
 
     // Time range
-    const [timeframeRadio, setTimeframeRadio] = useState<
-        TimeframeFilterOptions | undefined
-    >(TimeframeFilterOptions.Trailing12Months);
-    const [timerange, setTimerange] = useState({
-        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
-        to: '',
+    const {
+        timeframeRadio,
+        timerange,
+        handleTimeframeRadioChange,
+        handleRangeChange,
+    } = useTimeRangeFilter<TimeframeFilterOptions>({
+        startDates,
+        defaultOption: TimeframeFilterOptions.Trailing12Months,
+        dateFormat: defaultDateFormat,
     });
-
-    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
-        setTimeframeRadio(value);
-        setTimerange({
-            from: startDates[value],
-            to: '',
-        });
-    };
-
-    const handleRangeChange = (value: { from: string; to: string }) => {
-        setTimerange(value);
-        setTimeframeRadio(undefined);
-    };
 
     const filter = {
         exceptionCategory: category,

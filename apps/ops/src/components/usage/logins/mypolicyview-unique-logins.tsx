@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { UserActivityGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
-import { useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +14,7 @@ import { LabelComponent } from '@deps/components/dashboard/charts/date-time-char
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
+import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Typography, {
@@ -29,26 +28,17 @@ import { generateSeries, startDates, TimeframeFilterOptions } from './utils';
 
 export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
     const { t } = useTranslation();
-    const [timeframeRadio, setTimeframeRadio] = useState<
-        TimeframeFilterOptions | undefined
-    >(TimeframeFilterOptions.Last1Month);
 
-    const [timerange, setTimerange] = useState({
-        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
-        to: dayjs().format(defaultDateFormat),
+    const {
+        timeframeRadio,
+        timerange,
+        handleTimeframeRadioChange,
+        handleRangeChange,
+    } = useTimeRangeFilter<TimeframeFilterOptions>({
+        startDates,
+        defaultOption: TimeframeFilterOptions.Last1Month,
+        dateFormat: defaultDateFormat,
     });
-
-    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
-        setTimeframeRadio(value);
-        setTimerange({
-            from: startDates[value],
-            to: dayjs().format(defaultDateFormat),
-        });
-    };
-    const handleRangeChange = (value: { from: string; to: string }) => {
-        setTimerange(value);
-        setTimeframeRadio(undefined);
-    };
 
     const tooltipFormatter: Highcharts.TooltipFormatterCallbackFunction =
         function (this) {

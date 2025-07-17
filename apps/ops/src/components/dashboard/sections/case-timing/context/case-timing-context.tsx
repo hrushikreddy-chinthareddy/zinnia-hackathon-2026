@@ -7,10 +7,12 @@ import {
 import { createContext, FC, PropsWithChildren, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
+import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import {
     TimeframeFilterOptions,
     startDates,
     formatProcessFilter,
+    defaultDateFormat,
 } from '@deps/components/dashboard/utils';
 import { Processes } from '@deps/models/case/case';
 import { getCaseDashboardTimingQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
@@ -53,15 +55,6 @@ export const CaseTimingContext =
     createContext<CaseTimingContextTypes>(defaultState);
 
 export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [timeframeRadio, setTimeframeRadio] = useState<
-        TimeframeFilterOptions | undefined
-    >(TimeframeFilterOptions.Trailing12Months);
-
-    const [timerange, setTimerange] = useState({
-        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
-        to: '',
-    });
-
     const [selectedProcess, setSelectedProcess] = useState<
         Processes | ExtendedProcesses
     >(Processes.NewBusiness);
@@ -69,21 +62,20 @@ export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
         (state) => state
     );
 
-    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
-        setTimeframeRadio(value);
-        setTimerange({
-            from: startDates[value],
-            to: '',
-        });
-    };
-
-    const handleRangeChange = (value: { from: string; to: string }) => {
-        setTimerange(value);
-        setTimeframeRadio(undefined);
-    };
+    const {
+        timeframeRadio,
+        timerange,
+        handleTimeframeRadioChange,
+        handleRangeChange,
+    } = useTimeRangeFilter<TimeframeFilterOptions>({
+        startDates,
+        defaultOption: TimeframeFilterOptions.Trailing12Months,
+        dateFormat: defaultDateFormat,
+    });
 
     const filter = {
         updatedDateStart: timerange.from,
+        updatedDateEnd: timerange.to,
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         process: formatProcessFilter(selectedProcess),

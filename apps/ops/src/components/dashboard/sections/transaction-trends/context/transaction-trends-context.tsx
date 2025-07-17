@@ -4,7 +4,6 @@ import {
     CaseCountInputFilter,
     CaseCountOutput,
 } from '@zinnia/api-types/types/analytics';
-import dayjs from 'dayjs';
 import {
     createContext,
     FC,
@@ -14,6 +13,7 @@ import {
 } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
+import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import {
     createBaseQuery,
     defaultDateFormat,
@@ -82,30 +82,20 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
             : CaseCountGroupByEnum.CARRIER
     );
 
-    const [timeframeRadio, setTimeframeRadio] = useState<
-        TimeframeFilterOptions | undefined
-    >(TimeframeFilterOptions.Trailing12Months);
-
-    const [timerange, setTimerange] = useState({
-        from: timeframeRadio !== undefined ? startDates[timeframeRadio] : '',
-        to: dayjs().format(defaultDateFormat),
+    const {
+        timeframeRadio,
+        timerange,
+        handleTimeframeRadioChange,
+        handleRangeChange,
+    } = useTimeRangeFilter<TimeframeFilterOptions>({
+        startDates,
+        defaultOption: TimeframeFilterOptions.Trailing12Months,
+        dateFormat: defaultDateFormat,
     });
-
-    const handleTimeframeRadioChange = (value: TimeframeFilterOptions) => {
-        setTimeframeRadio(value);
-        setTimerange({
-            from: startDates[value],
-            to: dayjs().format(defaultDateFormat),
-        });
-    };
-
-    const handleRangeChange = (value: { from: string; to: string }) => {
-        setTimerange(value);
-        setTimeframeRadio(undefined);
-    };
 
     const filter = {
         updatedDateStart: timerange.from,
+        updatedDateEnd: timerange.to,
         process: formatProcessFilter(selectedProcess),
         caseStatus: [Statuses.Completed],
         carrier: Object.keys(selectedCarriers),
