@@ -21,6 +21,7 @@ interface ButtonGroupProps {
     groupLabel?: string | null;
     hideLabel?: boolean;
     isFullWidth?: boolean;
+    overrideWrapperClassName?: string;
 }
 
 const ButtonGrp = ({
@@ -34,6 +35,7 @@ const ButtonGrp = ({
     groupLabel = '',
     hideLabel,
     isFullWidth,
+    overrideWrapperClassName,
 }: ButtonGroupProps) => {
     const baseClassnames = clsx(
         'relative box-border h-[42px] justify-center px-6 font-secondary text-md leading-5.5'
@@ -85,7 +87,9 @@ const ButtonGrp = ({
                 <RadioGroup.Label className={labelClassNames}>
                     {groupLabel}
                 </RadioGroup.Label>
-                <div className={gridLayoutClassNames}>
+                <div
+                    className={overrideWrapperClassName || gridLayoutClassNames}
+                >
                     {labels.map(
                         (
                             {

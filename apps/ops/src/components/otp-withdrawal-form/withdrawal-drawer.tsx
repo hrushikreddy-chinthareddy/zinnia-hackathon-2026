@@ -157,6 +157,8 @@ const OpenStatusRow = ({
                             <Content
                                 details={qualType}
                                 variant={ContentVariant.Value}
+                                truncate={true}
+                                className="break-words"
                             />
                             <ClickWrapper
                                 ariaLabel={t(

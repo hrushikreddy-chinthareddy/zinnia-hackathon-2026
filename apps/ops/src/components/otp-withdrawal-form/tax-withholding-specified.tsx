@@ -69,7 +69,7 @@ const TaxWithholdingSpecified: React.FC<TaxWithholdingRowProp> = ({
     return (
         <div className={className} data-testid={`${place}-tax-withholding-row`}>
             <FieldLabel label={label} />
-            <div className="md:grid-cols-auto-5 grid w-full grid-cols-5 grid-rows-2 gap-2 md:grid-rows-1">
+            <div className="grid w-full grid-rows-2 gap-2 md:grid-rows-1 md:grid-cols-[auto_auto_auto_auto_auto]">
                 <ButtonGroupItem
                     className={getClasses(dontWithhold)}
                     checked={dontWithhold}

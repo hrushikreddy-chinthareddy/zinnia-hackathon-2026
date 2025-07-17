@@ -296,6 +296,7 @@ export default function FormDisbursement({
                     }}
                     labels={options}
                     disabled={isFormStateReadOnly}
+                    overrideWrapperClassName="flex overflow-x-auto no-scrollbar"
                 />
                 {renderDisbursementInformation()}
                 {formDisbursement?.disbursmentConsent?.isConsent?.text &&

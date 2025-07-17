@@ -212,6 +212,7 @@ export default function TaxWithholdings({
 }: TaxWithholdingsProps) {
     const { formTaxWithholding, setFormTaxWithholding } =
         useContext(FormDataContext);
+
     const maritalAllowancesTax = formTaxWithholding.taxWithholding?.find(
         (tw) =>
             tw.place.text === TaxWithholdingPlace.State &&
