@@ -106,13 +106,16 @@ const Confirm = ({ policy }: ConfirmProps) => {
         );
     }
 
+    const freelookAmount =
+        policy?.accountValues?.cumulativePremiumSinceIssue || 0;
+
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
             <ConfirmCard
                 caseId={newCaseId}
                 isNigo={submitNigo}
                 parentPage={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/withdrawals`}
-                amount={withdrawal.amount}
+                amount={freelookAmount}
                 payorPayeeName={withdrawal.payeeFullName}
                 type={t('type')}
             />
