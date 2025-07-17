@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
-type Timerange = { from: string; to: string };
+export type Timerange = { from: string; to: string };
 
 /**
  * useTimeRangeFilter is a custom hook that manages time-based filtering:

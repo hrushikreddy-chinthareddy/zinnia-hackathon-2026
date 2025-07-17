@@ -69,9 +69,8 @@ export const downloadUserActivityCSV = (
         const userGroup = entry.name;
 
         for (const activity of entry.values) {
-            const formattedDate = new Date(activity.name).toLocaleDateString(
-                'en-US'
-            );
+            const [year, month, day] = activity.name.split('-');
+            const formattedDate = `${parseInt(month)}/${parseInt(day)}/${year}`;
             rows.push(`${formattedDate},${userGroup},${activity.count}`);
         }
     }

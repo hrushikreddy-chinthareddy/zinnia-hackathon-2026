@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { UserActivityGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
+import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
@@ -81,12 +82,17 @@ export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
         '#C0C64F',
     ]);
     const tickInterval = calculateTickInterval(timerange);
+    const csvFileName = `MyPolicyView Unique Logins ${dayjs(
+        timerange.from
+    ).format(defaultDateFormat)} to ${dayjs(timerange.to).format(
+        defaultDateFormat
+    )}`;
     return (
         <div className="flex w-1/2 flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h justify-between">
             <LoginsHeaderLayout
                 title={title}
                 data={myPolicyViewLoginsData?.data ?? []}
-                csvFileName={`MyPolicyView Unique Logins - ${timeframeRadio}onth`}
+                csvFileName={csvFileName}
             />
             <div className="flex items-center justify-end gap-4">
                 {myPolicyViewDataFetching ? (
