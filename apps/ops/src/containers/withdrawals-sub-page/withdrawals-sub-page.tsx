@@ -53,13 +53,14 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     };
 
     const { parties } = policy;
-    const { planCode, policyNumber } = policyDetails;
+    const { planCode, policyNumber, isAnnuity } = policyDetails;
 
     const { featureFlags } = useOptimizely();
 
     const withdrawalEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_WITHDRAWAL_TRANSACTION];
-    const rmdEnabled = featureFlags[FEATURE_FLAGS.SYSTEMATIC_RMD_TRANSACTION];
+    const rmdEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_RMD_TRANSACTION] && isAnnuity; // NOTE: Only annuities should display the RMD Withdrawal feature - MR
 
     const rmdPrograms = policyDetails.systematicPrograms.getProgramsByType(
         ArrangementType.REQUIREDMINIMUMDISTRIBUTION
@@ -235,56 +236,58 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                         ]}
                         displayCardWithZeroAmount={true}
                     />
-                    <hr className="h-0.5 border-none bg-gray-200" />
                 </>
             )}
             {rmdEnabled && (
-                <UpcomingPaymentCard
-                    autopayAmount={rmdProgram?.amount}
-                    title={`${t('rmdAutopay')}`}
-                    paymentDate={rmdProgram?.nextProgramDate}
-                    bankDetails={getBankDetails(
-                        getParty(parties, rmdProgram),
-                        rmdProgram
-                    )}
-                    additionalCharges={getAddCharges({
-                        flatExtra: getFlatExtra(policy.coverage),
-                        t,
-                        keyPrefix: 'withdrawals.upcoming',
-                    })}
-                    titleCase={false}
-                    footerLinks={[
-                        {
-                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=RMD`,
-                            text: t('manageAutopay'),
-                            isDisabled:
-                                !rmdEligibility?.isEligibleRmd ||
-                                !rmdProgram?.nextProgramDate,
-                            tooltip: rmdEligibility?.ineligibleRmdReason,
-                        },
-                        {
-                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
-                            text: t('setUpAutopay'),
-                            isDisabled:
-                                !rmdEligibility?.isEligibleRmd ||
-                                !!rmdProgram?.nextProgramDate,
-                            tooltip: rmdEligibility?.ineligibleRmdReason,
-                        },
-                        {
-                            href: '#',
-                            text: t('cancelAutopay'),
-                            onClick: () => {
-                                openCancelSideSheet(
-                                    ArrangementType.REQUIREDMINIMUMDISTRIBUTION
-                                );
+                <>
+                    <hr className="h-0.5 border-none bg-gray-200" />
+                    <UpcomingPaymentCard
+                        autopayAmount={rmdProgram?.amount}
+                        title={`${t('rmdAutopay')}`}
+                        paymentDate={rmdProgram?.nextProgramDate}
+                        bankDetails={getBankDetails(
+                            getParty(parties, rmdProgram),
+                            rmdProgram
+                        )}
+                        additionalCharges={getAddCharges({
+                            flatExtra: getFlatExtra(policy.coverage),
+                            t,
+                            keyPrefix: 'withdrawals.upcoming',
+                        })}
+                        titleCase={false}
+                        footerLinks={[
+                            {
+                                href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=RMD`,
+                                text: t('manageAutopay'),
+                                isDisabled:
+                                    !rmdEligibility?.isEligibleRmd ||
+                                    !rmdProgram?.nextProgramDate,
+                                tooltip: rmdEligibility?.ineligibleRmdReason,
                             },
-                            isDisabled:
-                                !rmdEligibility?.isEligibleRmd ||
-                                !rmdProgram?.nextProgramDate,
-                        },
-                    ]}
-                    displayCardWithZeroAmount={false}
-                />
+                            {
+                                href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
+                                text: t('setUpAutopay'),
+                                isDisabled:
+                                    !rmdEligibility?.isEligibleRmd ||
+                                    !!rmdProgram?.nextProgramDate,
+                                tooltip: rmdEligibility?.ineligibleRmdReason,
+                            },
+                            {
+                                href: '#',
+                                text: t('cancelAutopay'),
+                                onClick: () => {
+                                    openCancelSideSheet(
+                                        ArrangementType.REQUIREDMINIMUMDISTRIBUTION
+                                    );
+                                },
+                                isDisabled:
+                                    !rmdEligibility?.isEligibleRmd ||
+                                    !rmdProgram?.nextProgramDate,
+                            },
+                        ]}
+                        displayCardWithZeroAmount={false}
+                    />
+                </>
             )}
         </>
     );
