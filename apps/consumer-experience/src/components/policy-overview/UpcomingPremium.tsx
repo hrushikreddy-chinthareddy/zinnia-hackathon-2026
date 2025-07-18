@@ -47,27 +47,19 @@ export const UpcomingPremium = async ({
   const systematicPremiumFeatureFlag =
     featureFlags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM];
 
-  const [upcomingResult, ottpResult, systematicProgramsEligibilityResult] =
-    await Promise.allSettled([
-      getUpcomingPremium(
-        {
-          planCode,
-          policyNumber,
-        },
-        loggingContext
-      ),
-      getPremiumEligibility({
+  const [upcomingResult, ottpResult] = await Promise.allSettled([
+    getUpcomingPremium(
+      {
         planCode,
         policyNumber,
-      }),
-      getSystematicProgramsEligibility(
-        {
-          planCode,
-          policyNumber,
-        },
-        loggingContext
-      ),
-    ]);
+      },
+      loggingContext
+    ),
+    getPremiumEligibility({
+      planCode,
+      policyNumber,
+    }),
+  ]);
 
   if (upcomingResult?.status === 'rejected') {
     logError('Error fetching upcoming premium', upcomingResult.reason);
@@ -77,12 +69,12 @@ export const UpcomingPremium = async ({
     upcomingResult?.status === 'fulfilled'
       ? upcomingResult.value
       : {
-          data: null,
-          error: {
-            message: 'Error fetching upcoming premium',
-            ...loggingContext,
-          },
-        };
+        data: null,
+        error: {
+          message: 'Error fetching upcoming premium',
+          ...loggingContext,
+        },
+      };
 
   if (ottpResult?.status === 'rejected') {
     logError('Error fetching upcoming premium', ottpResult.reason);
@@ -93,10 +85,23 @@ export const UpcomingPremium = async ({
     !!ottpResult?.value?.data?.reason ||
     !!ottpResult?.value?.error;
 
-  const systematicPremiumEligible =
-    systematicProgramsEligibilityResult.status === 'fulfilled' &&
-    systematicProgramsEligibilityResult.value.data?.status ===
+  let systematicPremiumEligible = false;
+  if (systematicPremiumFeatureFlag) {
+    // TODO: Move call back to allSettled promises array
+    // after feature flag is turned off
+    const systematicPremiumEligibilityResult =
+      await getSystematicProgramsEligibility(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      );
+
+    systematicPremiumEligible =
+      systematicPremiumEligibilityResult.data?.status ===
       TransactionResponse.status.SUCCESS;
+  }
 
   const showSetUpAutopay =
     systematicPremiumFeatureFlag && systematicPremiumEligible;
