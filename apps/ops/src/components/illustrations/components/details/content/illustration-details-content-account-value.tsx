@@ -4,13 +4,13 @@ import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { ProductTypes } from '@deps/types/product';
 
-import { useIllustrationData } from '../illustration-data-provider';
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
+import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export function useIllustrationAccountValueData() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const illustration = useIllustrationData();
+    const illustration = useIllustrationDetail();
 
     if (!illustration || illustration.productType === ProductTypes.TERM) {
         return [];

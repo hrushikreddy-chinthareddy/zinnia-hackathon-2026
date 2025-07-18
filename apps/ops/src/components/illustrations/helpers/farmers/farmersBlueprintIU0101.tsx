@@ -959,7 +959,7 @@ export const farmersBlueprintIU0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,

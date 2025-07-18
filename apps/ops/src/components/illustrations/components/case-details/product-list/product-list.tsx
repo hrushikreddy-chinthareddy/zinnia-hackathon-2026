@@ -8,10 +8,13 @@ import {
     Text,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
 import {
     IllustrationsClientCase,
@@ -21,6 +24,7 @@ import { Product } from '@deps/types/product';
 
 import IllustrationProductItem from './product-item';
 import styles from './product-list.module.css';
+import EappContainer from '../../eapp/eapp-container';
 
 type ProductWithIllustration = Product & {
     illustrations: IllustrationSummary[];
@@ -31,21 +35,18 @@ interface IllustrationProductListProps {
     illustrations?: IllustrationSummary[];
     carrierProductId?: string;
     onNewIllustration?: (planCode: string) => void;
-    onSelectIllustration?: (
-        product: Product,
-        illustration: IllustrationSummary
-    ) => void;
 }
 const IllustrationProductList = ({
     clientCase,
     illustrations = [],
     carrierProductId = '',
-    onNewIllustration,
-    onSelectIllustration,
 }: IllustrationProductListProps) => {
+    const { handleSelectIllustration } = useSelectedIllustration();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const clientCaseId = clientCase.id;
     const [showEmptyProducts, setShowEmptyProducts] = useState(false);
+    const sideSheet = useSideSheetContext();
+    const searchParams = useSearchParams();
 
     const {
         data: products = [],
@@ -62,8 +63,12 @@ const IllustrationProductList = ({
     });
 
     const handleNewIllustration = (planCode: string) => {
-        if (planCode) {
-            onNewIllustration?.(planCode);
+        if (planCode && clientCase) {
+            sideSheet.changeSideSheetContent(
+                'Add Illustration',
+                <EappContainer planCode={planCode} clientCase={clientCase} />
+            );
+            sideSheet.handleOpen(true, '50%');
         } else {
             console.log('PlanCode is missing.');
         }
@@ -83,14 +88,24 @@ const IllustrationProductList = ({
 
     useEffect(() => {
         if (illustrations.length > 0) {
-            const firstAvailableIllustration = illustrations[0];
+            let firstAvailableIllustration;
+            const newIllustrationId = searchParams.get('illustration');
+
+            if (newIllustrationId) {
+                firstAvailableIllustration = illustrations.find(
+                    (illustration) => illustration.id === newIllustrationId
+                );
+            } else {
+                firstAvailableIllustration = illustrations[0];
+            }
             const associatedProduct = products.find(
                 (product) =>
                     product.carrierProductId ===
-                    firstAvailableIllustration.productId
+                    firstAvailableIllustration?.productId
             );
-            if (associatedProduct) {
-                onSelectIllustration?.(
+
+            if (associatedProduct && firstAvailableIllustration) {
+                handleSelectIllustration(
                     associatedProduct,
                     firstAvailableIllustration
                 );
@@ -98,7 +113,7 @@ const IllustrationProductList = ({
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [illustrations, products]);
+    }, [illustrations, products, searchParams]);
 
     const availableProducts = products.filter(
         (product) => product.availableToSell
@@ -170,9 +185,6 @@ const IllustrationProductList = ({
                                             }
                                             onNewIllustration={
                                                 handleNewIllustration
-                                            }
-                                            onSelectIllustration={
-                                                onSelectIllustration
                                             }
                                         />
                                     );

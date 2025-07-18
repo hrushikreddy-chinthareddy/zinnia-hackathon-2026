@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QuestionnaireEngine } from '@zinnia/form-engine-sdk';
+import Router from 'next/router';
 import { createContext, PropsWithChildren, useContext } from 'react';
 
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { createIllustration } from '@deps/queries/api/client/documents/v3/illustrations';
 import { saveIllustrationToClientCase } from '@deps/queries/api/v1/client-cases';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 
-import { useIllustration } from './IllustrationProvider';
+import { useEapp } from './EAppProvider';
 import { useQuestionnaireEngine } from './QuestionnaireEngineProvider';
 import { IllustrationHandler } from '../helpers/factory/illustrationsHandlerAbstractClass';
 import { FarmersEntities } from '../helpers/farmers/famersBlueprintToIllustrationPayloadTL0101';
@@ -31,9 +33,10 @@ export function SubmitProvider({
     children,
     factoryHandler,
 }: SubmitProviderProps) {
-    const { onIllustrationDataChange } = useIllustration();
+    const { onEAppDataChange: onIllustrationDataChange } = useEapp();
     const { questionnaireEngine } = useQuestionnaireEngine();
     const queryClient = useQueryClient();
+    const sideSheet = useSideSheetContext();
 
     const createIllustrationMutation = useMutation({
         mutationKey: ['saveOrderEntryAnswers'],
@@ -78,8 +81,6 @@ export function SubmitProvider({
             });
         },
         onSuccess: ({ data }) => {
-            const illustrationData =
-                factoryHandler.getIllustrationDataFromResponse(data); //getIllustrationDataFromResponse(data);
             const clientCase = factoryHandler.getClientCase();
 
             saveIllustrationToClientCase(
@@ -89,11 +90,19 @@ export function SubmitProvider({
                 factoryHandler.getPlanType(), // product type
                 factoryHandler.getPlanCode() // carrierProductId
             );
-            onIllustrationDataChange(illustrationData);
 
             queryClient.invalidateQueries({
-                queryKey: ['clientCaseData'],
+                queryKey: ['clientCaseData', clientCase.id],
             });
+            queryClient.invalidateQueries({
+                queryKey: ['productList', clientCase.id],
+            });
+
+            sideSheet.onClose();
+
+            Router.push(
+                `/illustrations/client-cases/${clientCase.id}/illustrate?illustration=${data.id}`
+            );
         },
     });
 
@@ -103,7 +112,7 @@ export function SubmitProvider({
             // Use this next line to debug only. Never access the dump to grab values in the engine.
             // You can use this log in oder to prefil answers in the e-app container
             console.log(
-                'Quick Quoteengine dump',
+                'Quick Quote engine dump',
                 engine.getAnswerResolverInstance().dump()
             );
             const mappedAnswersResult = engine.getSimpleMappingOutput();

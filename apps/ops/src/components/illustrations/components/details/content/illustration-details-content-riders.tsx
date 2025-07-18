@@ -7,12 +7,12 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
-import { useIllustrationData } from '../illustration-data-provider';
 import { ridersLabelMap } from './riders-label-map';
+import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export function useIllustrationRidersData() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const illustration = useIllustrationData();
+    const illustration = useIllustrationDetail();
 
     if (!illustration) {
         return [];

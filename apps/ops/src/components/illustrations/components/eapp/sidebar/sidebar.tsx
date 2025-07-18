@@ -2,15 +2,12 @@ import { Button } from '@zinnia/bloom/components';
 import { useEffect, useMemo } from 'react';
 
 import style from './sidebar.module.css';
-import {
-    IllustrationData,
-    useIllustration,
-} from '../../../providers/IllustrationProvider';
+import { EAppData, useEapp } from '../../../providers/EAppProvider';
 import { useQuestionnaireEngine } from '../../../providers/QuestionnaireEngineProvider';
 import { useSubmit } from '../../../providers/SubmitProvider';
 
 const dataToTitleMap: Record<
-    keyof IllustrationData,
+    keyof EAppData,
     { label: string; type: 'money' | 'string' }
 > = {
     solveFor: { label: 'Solve for', type: 'string' },
@@ -22,7 +19,7 @@ const dataToTitleMap: Record<
 export function Sidebar() {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
     const { onSubmit, onQuickQuote, isError } = useSubmit();
-    const { data } = useIllustration();
+    const { data } = useEapp();
     const isCompleted = useMemo(() => {
         return !renderingQuestionnaire.some((renderingSectionGroup) => {
             return !renderingSectionGroup.completed;
@@ -48,17 +45,14 @@ export function Sidebar() {
                             <p
                                 className={`typography-labels-field-label ${style.dataPointTitle}`}
                             >
-                                {
-                                    dataToTitleMap[d as keyof IllustrationData]
-                                        .label
-                                }
+                                {dataToTitleMap[d as keyof EAppData].label}
                             </p>
                             <p className="typography-content-body-sm-bold">
-                                {dataToTitleMap[d as keyof IllustrationData]
-                                    .type === 'money'
+                                {dataToTitleMap[d as keyof EAppData].type ===
+                                'money'
                                     ? '$'
                                     : ''}
-                                {data[d as keyof IllustrationData]}
+                                {data[d as keyof EAppData]}
                             </p>
                         </div>
                     ))}

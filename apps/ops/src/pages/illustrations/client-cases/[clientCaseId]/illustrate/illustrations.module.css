@@ -16,12 +16,6 @@
     border-radius: var(--measure-dimension-radius-md)
         var(--measure-dimension-radius-md) var(--measure-dimension-radius-none)
         var(--measure-dimension-radius-none);
-
-    &.noIllustration {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 }
 
 .separator {

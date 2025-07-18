@@ -6,14 +6,14 @@ import { OutputCoverageValues } from '@deps/queries/api/client/documents/v3/illu
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypes } from '@deps/types/product';
 
-import { useIllustrationData } from '../illustration-data-provider';
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
 import { ridersLabelMap } from './riders-label-map';
+import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export function useIllustrationCoverageData() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const illustration = useIllustrationData();
+    const illustration = useIllustrationDetail();
     const baseCoverageLabel = t(
         `clientCase.illustrationDetails.coverage.faceAmount`
     );
@@ -59,7 +59,7 @@ export function useIllustrationCoverageData() {
 
 export default function IllustrationDetailsContentCoverage() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const illustration = useIllustrationData();
+    const illustration = useIllustrationDetail();
 
     const faceAmount =
         illustration?.response.assumed.coverages.base.faceAmount ?? null;

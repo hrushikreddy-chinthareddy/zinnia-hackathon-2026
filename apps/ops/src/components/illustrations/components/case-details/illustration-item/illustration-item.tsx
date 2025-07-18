@@ -6,6 +6,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
+import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { IllustrationSummary } from '@deps/types/illustrations';
 import { Product } from '@deps/types/product';
 
@@ -16,25 +17,21 @@ interface IllustrationItemProps {
     illustration: IllustrationSummary;
     product: Product;
     isSelected?: boolean;
-    onIllustrationSelected?: (
-        product: Product,
-        illustration: IllustrationSummary
-    ) => void;
 }
 
 const IllustrationItem = ({
     illustration,
     product,
     isSelected,
-    onIllustrationSelected,
 }: IllustrationItemProps) => {
+    const { handleSelectIllustration } = useSelectedIllustration();
     return (
         <li
             className={clsx(
                 styles.illustrationItem,
                 isSelected && styles.selected
             )}
-            onClick={() => onIllustrationSelected?.(product, illustration)}
+            onClick={() => handleSelectIllustration(product, illustration)}
         >
             <Icon type={IconType.DOCUMENT_REPORT} />
             <span>{illustration.title}</span>

@@ -7,11 +7,11 @@ import { ProductTypes } from '@deps/types/product';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
-import { useIllustrationData } from '../illustration-data-provider';
+import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export function useIllustrationPremiumData() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const illustration = useIllustrationData();
+    const illustration = useIllustrationDetail();
 
     if (!illustration) {
         return [

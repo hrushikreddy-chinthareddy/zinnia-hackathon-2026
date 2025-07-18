@@ -7,7 +7,7 @@ import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { Eapp } from './Eapp';
 import { IllustrationHandlerFactory } from '../../helpers/factory/illustrationsHandlerFactory';
 import { ActiveSectionProvider } from '../../providers/ActiveSectionProvider';
-import { IllustrationProvider } from '../../providers/IllustrationProvider';
+import { EAppProvider } from '../../providers/EAppProvider';
 import { QuestionnaireEngineProvider } from '../../providers/QuestionnaireEngineProvider';
 import { SubmitProvider } from '../../providers/SubmitProvider';
 // TODO: timezone needs to be taken from the user
@@ -69,7 +69,7 @@ const EappContainer = (props: EappContainerProps) => {
                     timezone={timezoneResult.value}
                     prePopulateData={illustrationHandlerFactory?.mapClientCaseInsuredData()}
                 >
-                    <IllustrationProvider>
+                    <EAppProvider>
                         <SubmitProvider
                             factoryHandler={illustrationHandlerFactory}
                         >
@@ -84,7 +84,7 @@ const EappContainer = (props: EappContainerProps) => {
                                 />
                             </ActiveSectionProvider>
                         </SubmitProvider>
-                    </IllustrationProvider>
+                    </EAppProvider>
                 </QuestionnaireEngineProvider>
             )}
         </>

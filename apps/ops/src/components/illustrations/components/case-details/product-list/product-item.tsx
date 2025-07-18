@@ -17,17 +17,12 @@ interface IllustrationProductItemProps {
     product: Product;
     illustrations?: IllustrationSummary[];
     onNewIllustration?: (planCode: string) => void;
-    onSelectIllustration?: (
-        product: Product,
-        illustration: IllustrationSummary
-    ) => void;
 }
 
 const IllustrationProductItem = ({
     product,
     illustrations,
     onNewIllustration,
-    onSelectIllustration,
 }: IllustrationProductItemProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustrationsCount = (illustrations ?? []).length;
@@ -75,12 +70,6 @@ const IllustrationProductItem = ({
                             <IllustrationItem
                                 product={product}
                                 illustration={illustration}
-                                onIllustrationSelected={() =>
-                                    onSelectIllustration?.(
-                                        product,
-                                        illustration
-                                    )
-                                }
                             />
                             {pIdx < illustrations.length - 1 && (
                                 <Divider

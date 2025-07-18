@@ -5,28 +5,28 @@ import { CarrierName } from '@zinnia/bloom/components';
 import { getIllustrationQueryOptions } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { IllustrationSummary } from '@deps/types/illustrations';
-import { Product, ProductTypeLabel, ProductTypes } from '@deps/types/product';
+import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
 
 import IllustrationDetailsContent from './content/illustration-details-content';
 import IllustrationDetailsHeader from './header/illustration-details-header';
-import { IllustrationDataProvider } from './illustration-data-provider';
 import NoIllustration from './no-illustration';
 import IllustrationDetailsToolbar from './toolbar/illustration-details-toolbar';
+import { IllustrationDetailProvider } from '../../providers/IllustrationDetailProvider';
+import { useSelectedIllustration } from '../../providers/SelectedIllustrationProvider';
 
 type IllustrationDetailsProps = {
     clientCaseId: string;
-    illustration: IllustrationSummary | null;
-    product: Product | null;
     eAppId?: string;
 };
 
 export default function IllustrationDetails({
     clientCaseId,
-    illustration,
-    product,
     eAppId,
 }: IllustrationDetailsProps) {
+    const { selectedIllustration } = useSelectedIllustration();
+    const illustration = selectedIllustration?.illustration;
+    const product = selectedIllustration?.product;
+
     const { isLoading, data: fullIllustration } = useQuery(
         getIllustrationQueryOptions(
             illustration?.id ?? null,
@@ -70,7 +70,7 @@ export default function IllustrationDetails({
     };
 
     return (
-        <IllustrationDataProvider value={fullIllustration ?? null}>
+        <IllustrationDetailProvider value={fullIllustration ?? null}>
             <div>
                 <Skeleton loading={isLoading}>
                     <IllustrationDetailsHeader
@@ -101,6 +101,6 @@ export default function IllustrationDetails({
                 </Skeleton>
                 <IllustrationDetailsContent isLoading={true} />
             </div>
-        </IllustrationDataProvider>
+        </IllustrationDetailProvider>
     );
 }

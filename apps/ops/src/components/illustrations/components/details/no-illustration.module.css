@@ -1,7 +1,9 @@
 .noIllustrations {
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
     .icon {
         color: var(--color-base-icon-icon-default);
