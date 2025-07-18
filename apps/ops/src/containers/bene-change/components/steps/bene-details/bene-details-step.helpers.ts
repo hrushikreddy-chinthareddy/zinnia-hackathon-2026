@@ -9,6 +9,7 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
     let firstNameErrors: number = 0;
     let addressErrors: number = 0;
     let allocationErrors: number = 0;
+    let relationshipErrors: number = 0;
 
     beneData.map((item: any) => {
         if (['ADD', 'UPDATE'].includes(item.action)) {
@@ -16,6 +17,9 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
             const address = item.party.addresses?.[0] || {};
             const allocationPercentage =
                 item?.party?.allocation?.beneficiaryPercentage ?? 0;
+
+            const relationshipToParty =
+                item?.party?.allocation?.relationshipToParty ?? '';
 
             if (partyType === PartyType.INDIVIDUAL) {
                 if (!item?.party?.info?.firstName) {
@@ -34,6 +38,14 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
                 if (!item?.party?.info?.lastName) {
                     firstNameErrors++;
                 }
+            }
+
+            if (!relationshipToParty) {
+                relationshipErrors++;
+            }
+
+            if (!address.addressLine1 || !address.addressLine1.trim()) {
+                addressErrors++;
             }
 
             if (address.addressLine1 || address.addressLine2) {
@@ -58,6 +70,11 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
     }
     if (allocationErrors > 0) {
         errors['allocationRequired'] = t('formValidations.allocationRequired');
+    }
+    if (relationshipErrors > 0) {
+        errors['relationshipRequired'] = t(
+            'formValidations.relationshipToParty'
+        );
     }
 
     const result = validateBeneficiaryPercentages(beneData);

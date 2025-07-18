@@ -55,10 +55,7 @@ export default function AddressDetails({
             value: ENTERPRISE_ADDRESS_TYPE.DEFAULT,
         },
     ];
-    const addressLine1Label =
-        partyType === PartyType.TRUST
-            ? t('labels.trusteeName')
-            : t('labels.addressLine1');
+    const addressLine1Label = t('labels.addressLine1');
     const addressLine1MaxLength = partyType === PartyType.TRUST ? 31 : 35;
     const [address, setAddress] = useState<EnterpriseAddress>(
         updateAddress ?? INITIAL_ADDRESS
@@ -100,6 +97,12 @@ export default function AddressDetails({
             }));
         }
     }, [address, index, setCurrentAddresses, t]);
+
+    const addressError =
+        !isReadOnly &&
+        (!address.addressLine1 || address.addressLine1.trim() === '')
+            ? t('formValidations.addressLine')
+            : '';
 
     return (
         <>
@@ -143,8 +146,12 @@ export default function AddressDetails({
                             variant={
                                 isReadOnly
                                     ? FieldVariant.Inactive
+                                    : addressError
+                                    ? FieldVariant.Error
                                     : FieldVariant.Default
                             }
+                            message={addressError}
+                            required={true}
                         />
                     </div>
                     <div>

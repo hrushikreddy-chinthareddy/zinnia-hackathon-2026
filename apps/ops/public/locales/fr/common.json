@@ -527,7 +527,8 @@
                     "stepparent": "Beau-parent",
                     "other": "Autre"
                 },
-                "allocationRequired": "L'allocation est requise"
+                "allocationRequired": "L'allocation est requise",
+                "relationshipToParty": "La relation avec la partie est requise"
             },
             "identification": {
                 "title": "Identification",
@@ -605,9 +606,10 @@
                     "trusteeName": "Nom du fiduciaire"
                 },
                 "formValidations": {
-                    "city": "City is required",
-                    "state": "State is required",
-                    "zipCode": "Zip is required"
+                    "city": "La ville est obligatoire",
+                    "state": "L'état est obligatoire",
+                    "zipCode": "Le code postal est obligatoire",
+                    "addressLine": "La ligne d'adresse est obligatoire"
                 }
             },
             "phone": {
@@ -663,7 +665,8 @@
                 "primaryBeneficiaryAllocationsSum": "La somme de toutes les allocations des principaux bénéficiaires doit être de 100 %",
                 "contingentBeneficiaryAllocationsSum": "La somme de toutes les allocations de bénéficiaires conditionnels doit être de 100 %",
                 "addressDetails": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du bénéficiaire",
-                "allocationRequired": "Veuillez vous assurer que l'allocation est supérieure à 0 % lors de l'ajout/mise à jour d'un bénéficiaire"
+                "allocationRequired": "Veuillez vous assurer que l'allocation est supérieure à 0 % lors de l'ajout/mise à jour d'un bénéficiaire",
+                "relationshipToParty": "Please make sure relationship to party is selected while adding / updating beneficiary"
             }
         },
         "signature": {

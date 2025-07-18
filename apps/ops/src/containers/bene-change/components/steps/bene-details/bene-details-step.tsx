@@ -47,6 +47,15 @@ const BeneDetailsStep = ({
         setPeopleSelection,
     } = useBeneChange();
 
+    const errorKeys = [
+        'firstNamesRequired',
+        'addressesRequired',
+        'allocationRequired',
+        'relationshipRequired',
+        'primaryBeneficiaryAllocationsSum',
+        'contingentBeneficiaryAllocationsSum',
+    ];
+
     const handleStepContinue = useCallback(() => {
         const formErrors = validateBeneData(beneData, t);
         if (Object.keys(formErrors).length > 0) {
@@ -111,43 +120,17 @@ const BeneDetailsStep = ({
                 carrierId={carrierId as string}
                 policy={policy}
             />
-            {formErrors.firstNamesRequired ? (
-                <AssistiveText
-                    text={formErrors.firstNamesRequired}
-                    variant={AssistiveTextVariant.Error}
-                    className="mt-2"
-                />
-            ) : null}
-            {formErrors.addressesRequired ? (
-                <AssistiveText
-                    text={formErrors.addressesRequired}
-                    variant={AssistiveTextVariant.Error}
-                    className="mt-2"
-                />
-            ) : null}
-            {formErrors.allocationRequired ? (
-                <AssistiveText
-                    text={formErrors.allocationRequired}
-                    variant={AssistiveTextVariant.Error}
-                    className="mt-2"
-                />
-            ) : null}
 
-            {formErrors.primaryBeneficiaryAllocationsSum ? (
-                <AssistiveText
-                    text={formErrors.primaryBeneficiaryAllocationsSum}
-                    variant={AssistiveTextVariant.Error}
-                    className="mt-2"
-                />
-            ) : null}
-
-            {formErrors.contingentBeneficiaryAllocationsSum ? (
-                <AssistiveText
-                    text={formErrors.contingentBeneficiaryAllocationsSum}
-                    variant={AssistiveTextVariant.Error}
-                    className="mt-2"
-                />
-            ) : null}
+            {errorKeys.map((key) =>
+                formErrors[key] ? (
+                    <AssistiveText
+                        key={key}
+                        text={formErrors[key]}
+                        variant={AssistiveTextVariant.Error}
+                        className="mt-2"
+                    />
+                ) : null
+            )}
         </WorkflowCard>
     );
 };

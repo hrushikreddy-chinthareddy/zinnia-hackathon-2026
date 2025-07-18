@@ -270,7 +270,7 @@
                     "text": "Iniciar un retiro"
                 }
             },
-               "usage": {
+            "usage": {
                 "text": "Uso",
                 "link": "/usage"
             },
@@ -469,187 +469,190 @@
                     "other": "Otro"
                 },
                 "allocationRequired": "La asignación es obligatoria",
-                "identification": {
-                    "title": "Identificación",
-                    "partyType": {
-                        "individual": "Individual",
-                        "trust": "Fideicomiso",
-                        "estate/Organisation": "Patrimonio/Organización"
-                    },
-                    "trustType": "Tipo de Fideicomiso",
-                    "prefixOptions": {
-                        "dr": "Dr.",
-                        "mr": "Sr.",
-                        "mrs": "Sra.",
-                        "ms": "Srta."
-                    },
-                    "suffixOptions": {
-                        "jr": "Jr.",
-                        "sn": "S/N",
-                        "i": "I",
-                        "ii": "II",
-                        "iii": "III"
-                    },
-                    "prefix": "Prefijo",
-                    "suffix": "Sufijo",
-                    "firstName": "Nombre",
-                    "lastName": "Apellido",
-                    "middleName": "Segundo Nombre",
-                    "trustName": "Nombre del Fideicomiso",
-                    "individualTrust": "Fideicomiso Individual",
-                    "corporateTrust": "Fideicomiso Corporativo",
-                    "lookThrough": "Fideicomiso Look Through",
-                    "companyName": "Nombre de la Empresa",
-                    "ssn": "SSN",
-                    "gender": "Género",
-                    "dateOfBirth": "Fecha de Nacimiento",
-                    "male": "Masculino",
-                    "female": "Femenino",
-                    "formValidations": {
-                        "firstName": "El nombre es obligatorio",
-                        "lastName": "El apellido es obligatorio"
-                    }
+                "relationshipToParty": "La relación con la parte es obligatoria"
+            },
+            "identification": {
+                "title": "Identificación",
+                "partyType": {
+                    "individual": "Individual",
+                    "trust": "Fideicomiso",
+                    "estate/Organisation": "Patrimonio/Organización"
                 },
-                "contactInfo": {
-                    "title": "Información de Contacto",
-                    "labels": {
-                        "preferredContactMethod": "Método de contacto preferido",
-                        "options": {
-                            "email": "Correo Electrónico",
-                            "phone": "Teléfono",
-                            "fax": "Fax"
-                        }
-                    }
+                "trustType": "Tipo de Fideicomiso",
+                "prefixOptions": {
+                    "dr": "Dr.",
+                    "mr": "Sr.",
+                    "mrs": "Sra.",
+                    "ms": "Srta."
                 },
-                "address": {
-                    "title": "Dirección",
-                    "general": {
-                        "addLine": "Agregar línea de dirección (por ejemplo, piso, suite, etc.)"
-                    },
-                    "addressType": {
-                        "home": "Dirección de casa",
-                        "business": "Dirección de negocios",
-                        "default": "Predeterminada",
-                        "secondary": "Dirección secundaria"
-                    },
-                    "labels": {
-                        "type": "Tipo",
-                        "addressType": "Tipo de dirección",
-                        "addressLine1": "Línea de dirección 1",
-                        "addressLine2": "Línea de dirección 2",
-                        "addressLine3": "Línea de dirección 3",
-                        "zip": "Código Postal",
-                        "zipPlusFour": "Código Postal+4",
-                        "state": "Estado",
-                        "city": "Ciudad",
-                        "trusteeName": "Nombre del fiduciario"
-                    },
-                    "formValidations": {
-                        "city": "La ciudad es obligatoria",
-                        "state": "El estado es obligatorio",
-                        "zipCode": "El código postal es obligatorio"
-                    }
+                "suffixOptions": {
+                    "jr": "Jr.",
+                    "sn": "S/N",
+                    "i": "I",
+                    "ii": "II",
+                    "iii": "III"
                 },
-                "phone": {
-                    "title": "Teléfono",
-                    "labels": {
-                        "type": "Tipo",
-                        "phoneType": "Tipo de teléfono",
-                        "number": "Número",
-                        "extension": "Extensión",
-                        "bestTime": "Mejor Momento",
-                        "timeZone": "Zona Horaria",
-                        "bestTimesOptions": {
-                            "morning": "Mañana",
-                            "afternoon": "Tarde",
-                            "anytime": "Cualquier Momento",
-                            "evening": "Noche"
-                        },
-                        "phoneOptions": {
-                            "businessFax": "Fax de negocios",
-                            "businessPhone": "Teléfono de negocios",
-                            "mobilePhone": "Teléfono móvil",
-                            "homeFax": "Fax de casa",
-                            "modem": "Módem",
-                            "homePhone": "Teléfono de casa",
-                            "secondaryHomePhone": "Teléfono de casa secundario",
-                            "other": "Predeterminado"
-                        },
-                        "timeZoneOptions": {
-                            "AKT": "Hora de Alaska ({{abbreviation}})",
-                            "CT": "Hora Central ({{abbreviation}})",
-                            "ET": "Hora del Este ({{abbreviation}})",
-                            "HT": "Hora de Hawái ({{abbreviation}})",
-                            "MT": "Hora de la Montaña ({{abbreviation}})",
-                            "PT": "Hora del Pacífico ({{abbreviation}})"
-                        }
-                    }
-                },
-                "email": {
-                    "title": "Correo Electrónico",
-                    "labels": {
-                        "type": "Tipo",
-                        "email": "Correo Electrónico",
-                        "emailOptions": {
-                            "business": "Negocios",
-                            "other": "Otro",
-                            "personal": "Personal"
-                        }
-                    }
-                },
-                "close": "Cerrar sección",
+                "prefix": "Prefijo",
+                "suffix": "Sufijo",
+                "firstName": "Nombre",
+                "lastName": "Apellido",
+                "middleName": "Segundo Nombre",
+                "trustName": "Nombre del Fideicomiso",
+                "individualTrust": "Fideicomiso Individual",
+                "corporateTrust": "Fideicomiso Corporativo",
+                "lookThrough": "Fideicomiso Look Through",
+                "companyName": "Nombre de la Empresa",
+                "ssn": "SSN",
+                "gender": "Género",
+                "dateOfBirth": "Fecha de Nacimiento",
+                "male": "Masculino",
+                "female": "Femenino",
                 "formValidations": {
-                    "firstNames": "Asegúrese de que el nombre, nombre de la empresa o nombre del fiduciario esté actualizado al agregar/actualizar beneficiarios",
-                    "primaryBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios primarios debe ser del 100%",
-                    "contingentBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios contingentes debe ser del 100%",
-                    "addressDetails": "Asegúrese de que los detalles de la dirección estén correctamente llenados al agregar/actualizar beneficiarios",
-                    "allocationRequired": "Asegúrese de que la asignación sea mayor a 0% al agregar/actualizar beneficiarios"
+                    "firstName": "El nombre es obligatorio",
+                    "lastName": "El apellido es obligatorio"
                 }
             },
-            "signature": {
-                "header": "Validación de Firma",
-                "isIrrevocableBene": "¿Hay un beneficiario irrevocable?",
-                "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
-                "signatureShouldBePresent": "Debe seleccionarse la opción de firma presente",
-                "continue": "Continuar",
-                "leaveTransaction": "Dejar esta transacción"
-            },
-            "summary": {
-                "header": "Resumen",
-                "overview": "Resumen",
-                "reviewMessage": "¡Se ve bien! Asegúrese de revisar sus entradas antes de enviar",
-                "primaryBeneficiary": "Beneficiario primario",
-                "contingentBeneficiary": "Beneficiario contingente",
-                "current": "Actual",
-                "updated": "Actualizado",
-                "identification": {
-                    "title": "Identificación",
-                    "gender": "Género"
-                },
-                "allocation": {
-                    "title": "Asignación",
-                    "relationshipToParty": "Relación con la parte"
-                },
-                "contact": {
-                    "title": "Información de Contacto",
-                    "address": "Dirección",
-                    "phone": "Teléfono"
-                },
-                "tag": {
-                    "none": "Ninguno",
-                    "updated": "Actualizado",
-                    "removed": "Eliminado",
-                    "new": "Nuevo"
+            "contactInfo": {
+                "title": "Información de Contacto",
+                "labels": {
+                    "preferredContactMethod": "Método de contacto preferido",
+                    "options": {
+                        "email": "Correo Electrónico",
+                        "phone": "Teléfono",
+                        "fax": "Fax"
+                    }
                 }
             },
-            "confirm": {
-                "header": "Confirmar",
-                "successMessage": "Las actualizaciones de los beneficiarios fueron enviadas.",
-                "close": "Cerrar",
-                "title": "¡Éxito!",
-                "viewAllPeople": "Ver todas las personas",
-                "submitAddress": "Actualizar beneficiario"
+            "address": {
+                "title": "Dirección",
+                "general": {
+                    "addLine": "Agregar línea de dirección (por ejemplo, piso, suite, etc.)"
+                },
+                "addressType": {
+                    "home": "Dirección de casa",
+                    "business": "Dirección de negocios",
+                    "default": "Predeterminada",
+                    "secondary": "Dirección secundaria"
+                },
+                "labels": {
+                    "type": "Tipo",
+                    "addressType": "Tipo de dirección",
+                    "addressLine1": "Línea de dirección 1",
+                    "addressLine2": "Línea de dirección 2",
+                    "addressLine3": "Línea de dirección 3",
+                    "zip": "Código Postal",
+                    "zipPlusFour": "Código Postal+4",
+                    "state": "Estado",
+                    "city": "Ciudad",
+                    "trusteeName": "Nombre del fiduciario"
+                },
+                "formValidations": {
+                    "city": "La ciudad es obligatoria",
+                    "state": "El estado es obligatorio",
+                    "zipCode": "El código postal es obligatorio",
+                    "addressLine": "La línea de dirección es obligatoria"
+                }
+            },
+            "phone": {
+                "title": "Teléfono",
+                "labels": {
+                    "type": "Tipo",
+                    "phoneType": "Tipo de teléfono",
+                    "number": "Número",
+                    "extension": "Extensión",
+                    "bestTime": "Mejor Momento",
+                    "timeZone": "Zona Horaria",
+                    "bestTimesOptions": {
+                        "morning": "Mañana",
+                        "afternoon": "Tarde",
+                        "anytime": "Cualquier Momento",
+                        "evening": "Noche"
+                    },
+                    "phoneOptions": {
+                        "businessFax": "Fax de negocios",
+                        "businessPhone": "Teléfono de negocios",
+                        "mobilePhone": "Teléfono móvil",
+                        "homeFax": "Fax de casa",
+                        "modem": "Módem",
+                        "homePhone": "Teléfono de casa",
+                        "secondaryHomePhone": "Teléfono de casa secundario",
+                        "other": "Predeterminado"
+                    },
+                    "timeZoneOptions": {
+                        "AKT": "Hora de Alaska ({{abbreviation}})",
+                        "CT": "Hora Central ({{abbreviation}})",
+                        "ET": "Hora del Este ({{abbreviation}})",
+                        "HT": "Hora de Hawái ({{abbreviation}})",
+                        "MT": "Hora de la Montaña ({{abbreviation}})",
+                        "PT": "Hora del Pacífico ({{abbreviation}})"
+                    }
+                }
+            },
+            "email": {
+                "title": "Correo Electrónico",
+                "labels": {
+                    "type": "Tipo",
+                    "email": "Correo Electrónico",
+                    "emailOptions": {
+                        "business": "Negocios",
+                        "other": "Otro",
+                        "personal": "Personal"
+                    }
+                }
+            },
+            "close": "Cerrar sección",
+            "formValidations": {
+                "firstNames": "Asegúrese de que el nombre, nombre de la empresa o nombre del fiduciario esté actualizado al agregar/actualizar beneficiarios",
+                "primaryBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios primarios debe ser del 100%",
+                "contingentBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios contingentes debe ser del 100%",
+                "addressDetails": "Asegúrese de que los detalles de la dirección estén correctamente llenados al agregar/actualizar beneficiarios",
+                "allocationRequired": "Asegúrese de que la asignación sea mayor a 0% al agregar/actualizar beneficiarios",
+                "relationshipToParty": "Asegúrese de que la relación con la parte esté seleccionada al agregar/actualizar beneficiarios"
             }
+        },
+        "signature": {
+            "header": "Validación de Firma",
+            "isIrrevocableBene": "¿Hay un beneficiario irrevocable?",
+            "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
+            "signatureShouldBePresent": "Debe seleccionarse la opción de firma presente",
+            "continue": "Continuar",
+            "leaveTransaction": "Dejar esta transacción"
+        },
+        "summary": {
+            "header": "Resumen",
+            "overview": "Resumen",
+            "reviewMessage": "¡Se ve bien! Asegúrese de revisar sus entradas antes de enviar",
+            "primaryBeneficiary": "Beneficiario primario",
+            "contingentBeneficiary": "Beneficiario contingente",
+            "current": "Actual",
+            "updated": "Actualizado",
+            "identification": {
+                "title": "Identificación",
+                "gender": "Género"
+            },
+            "allocation": {
+                "title": "Asignación",
+                "relationshipToParty": "Relación con la parte"
+            },
+            "contact": {
+                "title": "Información de Contacto",
+                "address": "Dirección",
+                "phone": "Teléfono"
+            },
+            "tag": {
+                "none": "Ninguno",
+                "updated": "Actualizado",
+                "removed": "Eliminado",
+                "new": "Nuevo"
+            }
+        },
+        "confirm": {
+            "header": "Confirmar",
+            "successMessage": "Las actualizaciones de los beneficiarios fueron enviadas.",
+            "close": "Cerrar",
+            "title": "¡Éxito!",
+            "viewAllPeople": "Ver todas las personas",
+            "submitAddress": "Actualizar beneficiario"
         }
     },
     "addressChange": {
@@ -6400,15 +6403,15 @@
             "submitTask": "Enviar"
         }
     },
-      "usage":{
-          "tabs": {
+    "usage": {
+        "tabs": {
             "logins": "Inicios de sesión"
         },
-        "logins":{
-            "zinniaLive":{
+        "logins": {
+            "zinniaLive": {
                 "title": "Inicios de sesión únicos de Zinnia Live por rol"
             },
-            "myPolicyView":{
+            "myPolicyView": {
                 "title": "Inicios de sesión únicos de MyPolicyView"
             },
             "uniqueUsers": "Usuarios únicos",

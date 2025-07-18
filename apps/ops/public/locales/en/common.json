@@ -434,7 +434,8 @@
                     "stepparent": "Stepparent",
                     "other": "Other"
                 },
-                "allocationRequired": "Allocation is required"
+                "allocationRequired": "Allocation is required",
+                "relationshipToParty": "Relationship to party is required"
             },
             "identification": {
                 "title": "Identification",
@@ -514,7 +515,8 @@
                 "formValidations": {
                     "city": "City is required",
                     "state": "State is required",
-                    "zipCode": "Zip is required"
+                    "zipCode": "Zip is required",
+                    "addressLine": "Address line is required"
                 }
             },
             "phone": {
@@ -570,7 +572,8 @@
                 "primaryBeneficiaryAllocationsSum": "The sum of all primary beneficiary allocations should be 100%",
                 "contingentBeneficiaryAllocationsSum": "The sum of all contingent beneficiary allocations should be 100%",
                 "addressDetails": "Please make sure address details are filled properly while adding / updating beneficiary",
-                "allocationRequired": "Please make sure allocation is greater than 0% while adding / updating beneficiary"
+                "allocationRequired": "Please make sure allocation is greater than 0% while adding / updating beneficiary",
+                "relationshipToParty": "Please make sure relationship to party is selected while adding / updating beneficiary"
             }
         },
         "signature": {

@@ -198,6 +198,11 @@ export default function AllocationDetails({
         }));
     }, [allocation, setAllocationDetails]);
 
+    const relationshipError =
+        !allocation.relationshipToParty && !isReadOnly
+            ? t('relationshipToParty')
+            : '';
+
     return (
         <>
             <div className="mb-3 grid w-full grid-cols-6">
@@ -225,6 +230,7 @@ export default function AllocationDetails({
                             : FieldVariant.Default
                     }
                     message={currentErrors?.beneficiaryPercentage}
+                    required={true}
                 />
             </div>
 
@@ -240,6 +246,15 @@ export default function AllocationDetails({
                     options={relationshipToPartyOptions}
                     value={allocation.relationshipToParty}
                     disabled={isReadOnly}
+                    required={true}
+                    message={relationshipError}
+                    variant={
+                        isReadOnly
+                            ? FieldVariant.Inactive
+                            : relationshipError
+                            ? FieldVariant.Error
+                            : FieldVariant.Default
+                    }
                 />
             </div>
         </>
