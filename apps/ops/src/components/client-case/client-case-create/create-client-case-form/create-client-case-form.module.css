@@ -26,25 +26,22 @@
             width: 213px;
         }
     }
+
     .datePickerContainer {
         display: flex;
-        height: 68px;
+        align-items: center;
         gap: 20px;
 
         .datePicker {
-            height: 44px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
             width: 159px;
         }
 
         .ageLabel {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             color: var(--color-base-text-text-secondary, #676767);
-
-            & > *:first-child {
-                padding-top: 20px;
-            }
+            padding-top: 20px;
         }
     }
 

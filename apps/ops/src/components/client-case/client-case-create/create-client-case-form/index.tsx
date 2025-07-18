@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FieldDate } from '@deps/components/field/date/FieldDate';
+import DateTextInput from '@deps/components/date-text-input/date-text-input';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -69,6 +69,9 @@ function calculateIssueAge(dateOfBirth: Date | null): number {
     const today = dayjs();
     return today.diff(dateOfBirth, 'year');
 }
+
+const isValidDate = (date: Date | undefined) =>
+    dayjs(date, 'MM/DD/YYYY', true).isValid();
 
 const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     onSubmit,
@@ -188,12 +191,14 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
     const canSubmitForm = () => {
         const { title, insuredDetails } = clientCaseData;
+        const ValidDate = isValidDate(insuredDetails?.dateOfBirth);
 
         return !(
             somethingChanged &&
             title &&
             insuredDetails?.sexAtBirth &&
             insuredDetails?.dateOfBirth &&
+            ValidDate &&
             insuredDetails?.state
         );
     };
@@ -322,12 +327,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         <Typography variant={TypographyVariant.FieldLabel}>
                             {t('clientCase.createClientCaseForm.dateLabel')}
                         </Typography>
-                        <FieldDate
-                            name="dateOfBirth"
-                            onDateSelect={(v) => {
-                                if (v) {
-                                    calculateCurrentAge(v);
-                                }
+                        <DateTextInput
+                            onChange={(v) => {
+                                calculateCurrentAge(v);
                                 updateClientCaseData({ dateOfBirth: v });
                             }}
                             {...(clientCaseData.insuredDetails?.dateOfBirth && {
