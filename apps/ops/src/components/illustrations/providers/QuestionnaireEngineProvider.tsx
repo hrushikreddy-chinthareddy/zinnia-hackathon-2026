@@ -119,10 +119,14 @@ export function QuestionnaireEngineProvider(
             },
         });
 
-        if (props.prePopulateData) {
-            engine.populateSimpleMappingAnswers(props.prePopulateData);
+        const blueprintOutput = engine.getSimpleMappingOutput();
+
+        if (blueprintOutput.success) {
+            const blueprintDefaults = blueprintOutput.value;
+            engine.populateSimpleMappingAnswers(
+                Object.assign(blueprintDefaults, props.prePopulateData)
+            );
         }
-        // engine.populateSimpleMappingAnswers(illustrationHandlerFactory?.mapClientCaseInsuredData());
 
         setRenderingQuestionnaire(engine.renderingQuestionnaire);
 

@@ -20,6 +20,7 @@ import {
     IllustrationFlatExtraTypes,
     IllustrationPartyTypeCode,
     InsuredRoleCodes,
+    NonInsuredRoleCodes,
     SubStandardRating,
 } from '../illustrationApiSchemas';
 
@@ -30,10 +31,15 @@ const baseCoverageSchema = t.object(
 
 const insuredSchema = t.object(
     t.property('issueAge', t.number), // age
-    t.property('gender', t.string), // sex
+    t.optionalProperty('gender', t.string), // sex
     t.property('dateOfBirth', t.string), // date-of-birth
     t.property('firstName', t.string), // insured-first-name
     t.optionalProperty('middleName', t.union(t.string, t.undefined)), // insured-middle-name
+    t.property('lastName', t.string) // insured-last-name
+);
+
+const agentSchema = t.object(
+    t.property('firstName', t.string), // insured-first-name    t.optionalProperty('middleName', t.union(t.string, t.undefined)), // insured-middle-name
     t.property('lastName', t.string) // insured-last-name
 );
 
@@ -136,6 +142,7 @@ const farmersEntitiesSchema = t.object(
     t.property('premiumClass', t.string), // premium-class
     t.property('baseCoverage', baseCoverageSchema),
     t.property('insured', insuredSchema),
+    t.property('agent', agentSchema),
     t.optionalProperty(
         'subStandardRating',
         t.union(t.enum(SubStandardRating), t.undefined)
@@ -386,6 +393,14 @@ function createIllustrationPayload(
                 lastName: values.insured.lastName,
                 roleCode: FARMERS_HARDCODED_DATA.insuredRoleCode,
             },
+            {
+                partyId: uuid(),
+                partyTypeCode:
+                    FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
+                firstName: values.agent.firstName,
+                lastName: values.agent.lastName,
+                roleCode: NonInsuredRoleCodes.AGENT,
+            },
             // ...(values.riders?.ownerWaiverOfDeductionRider?.values?.length && {
             //     partyId: uuid(),
             //     partyTypeCode: FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
@@ -571,6 +586,7 @@ function createIllustrationPayload(
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
     if (!parseOutputResult.success) {
+        console.log('pre-parsed output', output);
         console.log('parseOutputResult', parseOutputResult.error);
         return failure(
             new CreateIllustrationPayloadParsingError(parseOutputResult.error)
@@ -584,6 +600,10 @@ function mapIllustrationPayloadToEngineInputData(
 ): FarmersIU0101Entities {
     const dataInsuredParticipant = data.coverages?.[0]?.participants?.[0];
     const dataInsuredParty = data.parties[0];
+
+    const dataAgent = data.parties.find(
+        (p) => p.roleCode === NonInsuredRoleCodes.AGENT
+    );
 
     return {
         illustrationType: data.calculationType,
@@ -600,6 +620,10 @@ function mapIllustrationPayloadToEngineInputData(
             firstName: dataInsuredParty.firstName || '',
             middleName: dataInsuredParty.middleName || '',
             lastName: dataInsuredParty.lastName || '',
+        },
+        agent: {
+            firstName: dataAgent?.firstName || '',
+            lastName: dataAgent?.lastName || '',
         },
         subStandardRating: dataInsuredParticipant?.subStandardRating,
         permanentFlatExtra: {

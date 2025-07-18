@@ -28,6 +28,72 @@ export const farmersBlueprintIU0101 = {
                             isCustom: true,
                             fields: [
                                 {
+                                    fieldType: 'input',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Agent First Name',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'agent-first-name',
+                                    outputPath: 'agent.firstName',
+                                    renderOn: [],
+                                    platforms: ['consumer'],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                        forceNewLine: true,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '4b6a010c-d4ec-400a-ad11-8e4c66b4f4cb',
+                                    partName:
+                                        'custom-64b8c476-752e-437d-9e73-e7833a581f33',
+                                    validateAs: 'string',
+                                    disabled: true,
+                                },
+                                {
+                                    fieldType: 'input',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Agent Last Name',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'agent-last-name',
+                                    outputPath: 'agent.lastName',
+                                    renderOn: [],
+                                    platforms: ['consumer'],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                        forceNewLine: true,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'ec2421a8-9df3-45d9-b15a-fbc6c3c10b28',
+                                    partName:
+                                        'custom-1c385a15-d030-48b2-b29b-c640bf7189c3',
+                                    validateAs: 'string',
+                                    disabled: true,
+                                },
+                                {
                                     fieldType: 'dropdown',
                                     text: {
                                         en: '',
@@ -75,6 +141,7 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'NON',
                                 },
                                 {
                                     fieldType: 'input',
@@ -725,6 +792,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     disabled: true,
+                                    defaultValue: 'MALE',
                                 },
                                 {
                                     fieldType: 'date',
@@ -765,12 +833,6 @@ export const farmersBlueprintIU0101 = {
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
-                                                            // {
-                                                            //     type: 'equalityCondition',
-                                                            //     value: 'IU0101',
-                                                            //     isEqual: true,
-                                                            //     targetNodeId: 'product',
-                                                            // },
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
@@ -780,15 +842,15 @@ export const farmersBlueprintIU0101 = {
                                                                 },
                                                                 targetBirthdateNodeId:
                                                                     'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
+                                                                // roundingType:
+                                                                //     'lastBirthday',
                                                             },
                                                         ],
                                                     },
                                                 ],
                                             },
                                             message: {
-                                                en: 'The age limit are 0-80 for Farmers Index Universal Life, 18-75 for Farmers Term Life, and 18-55 for Farmers Return of Premium.',
+                                                en: 'The age must be 0-80.',
                                                 fr: '',
                                             },
                                         },
@@ -1228,7 +1290,7 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
-                                    defaultValue: 'platinum',
+                                    defaultValue: 'STANDARDNONTOBACCO',
                                 },
                                 {
                                     fieldType: 'checkboxGroup',
@@ -2019,6 +2081,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
+                                    defaultValue: 'PREMIUM',
                                 },
                             ],
                             displayAsCard: false,
@@ -2235,6 +2298,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
+                                    defaultValue: 'MONTHLY',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2285,233 +2349,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Illustrate 1035',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'illustrate-1035',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'c0cea165-f33d-4203-917f-38f317996396',
-                                    partName:
-                                        'custom-c4c2538a-ac29-4f15-a270-9d67ad3bf5bc',
-                                    selectOptions: [
-                                        {
-                                            partName: 'yes',
-                                            text: {
-                                                en: 'Yes',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            partName: 'no',
-                                            text: {
-                                                en: 'No',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Non-1035 Lump Sum Amount',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'non-1035-lump-sum-amount',
-                                    outputPath: 'non1035LumpSumAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '7f96885f-59e9-484c-9962-7c84bec5c2be',
-                                    partName:
-                                        'custom-73c4bc3b-2785-4152-bd23-a550f7b334ca',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'External 1035 Exchange Amount ',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'external-1035-exchange-amount',
-                                    outputPath: 'external1035ExchangeAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'aaa533ec-a2e1-4180-8b49-3726642a1cb2',
-                                    partName:
-                                        'custom-6a4461a8-8fae-46ed-8053-e22e962aac9c',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Internal 1035 Exchange Amount ',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'internal-1035-exchange-amount',
-                                    outputPath: 'internal1035ExchangeAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '93452e18-ef31-4576-9786-571fd1c75051',
-                                    partName:
-                                        'custom-7a78e8ba-7195-4092-80fd-d2e59939fd16',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '1035 Exchange Basis',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'exchange-basis-1035',
-                                    outputPath: 'exchangeBasis1035',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'f2d528ef-f4ce-41ee-ab30-38cbe9611c1f',
-                                    partName:
-                                        'custom-c2dc760a-f01e-429e-a29e-7b5658d46ff2',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'radio',
-                                    id: 'b640d8d6-3d9f-49d4-9cc8-7a421e7230b9',
-                                    partName:
-                                        'custom-e648da03-b2ca-437f-85bf-d0ae1660b362',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '1035 MEC',
-                                        fr: '',
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'mec-1035',
-                                    outputPath: 'mec1035',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            partName: 'YES',
-                                            text: {
-                                                en: 'Yes',
-                                            },
-                                            isCustom: true,
-                                        },
-                                        {
-                                            partName: 'NON',
-                                            text: {
-                                                en: 'No',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
+                                    defaultValue: 'ACH',
                                 },
                             ],
                             displayAsCard: false,
@@ -2618,6 +2456,7 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'TARGET_PREMIUM',
                                 },
                                 {
                                     fieldType: 'money',
@@ -2940,6 +2779,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
+                                    defaultValue: 'MONTHLY',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2990,233 +2830,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Illustrate 1035',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'illustrate-1035',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '3709013b-4a5f-4efa-9895-08a5a87219a3',
-                                    partName:
-                                        'custom-b88475b1-d989-445a-8157-a89235fb8e48',
-                                    selectOptions: [
-                                        {
-                                            partName: 'yes',
-                                            text: {
-                                                en: 'Yes',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'no',
-                                            text: {
-                                                en: 'No',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Non-1035 Lump Sum Amount',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'non-1035-lump-sum-amount',
-                                    outputPath: 'non1035LumpSumAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '506d9d23-d7fd-498d-8251-3a3c9f194094',
-                                    partName:
-                                        'custom-86121165-d4f6-4afe-92ee-1d283247cecc',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'External 1035 Exchange Amount ',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'external-1035-exchange-amount',
-                                    outputPath: 'external1035ExchangeAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '0ec96674-1ec3-478b-8c3a-6003ee85d272',
-                                    partName:
-                                        'custom-96569f62-c47e-4010-bc55-fe7ace2a07f6',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Internal 1035 Exchange Amount ',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'internal-1035-exchange-amount',
-                                    outputPath: 'internal1035ExchangeAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '9c443d9b-9a7a-4acd-8574-926281404311',
-                                    partName:
-                                        'custom-9af1d186-dd61-4d5c-976c-d6eee89d13c2',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '1035 Exchange Basis',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'exchange-basis-1035',
-                                    outputPath: 'exchangeBasis1035',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '12b7c808-3db1-42e2-8546-9820068ad5f8',
-                                    partName:
-                                        'custom-bcffe0d4-cbc5-4b9a-a1f9-24270d1fac40',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'radio',
-                                    id: '82959904-b118-43a0-ae7e-7641a8180e4c',
-                                    partName:
-                                        'custom-67288ac4-5bdb-46c1-8fd8-276ee652e1f5',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '1035 MEC',
-                                        fr: '',
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'mec-1035',
-                                    outputPath: 'mec1035',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            partName: 'YES',
-                                            text: {
-                                                en: 'Yes',
-                                            },
-                                            isCustom: true,
-                                        },
-                                        {
-                                            partName: 'NON',
-                                            text: {
-                                                en: 'No',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
+                                    defaultValue: 'ACH',
                                 },
                             ],
                             displayAsCard: false,
@@ -3618,6 +3232,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
+                                    defaultValue: 'MONTHLY',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -3668,184 +3283,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Non-1035 Lump Sum Amount',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'non-1035-lump-sum-amount',
-                                    outputPath: 'non1035LumpSumAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'c30920d0-9f55-4c87-941a-35992374ac39',
-                                    partName:
-                                        'custom-8aab026f-3af6-423c-a6e1-0b35c63f8394',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'External 1035 Exchange Amount ',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'external-1035-exchange-amount',
-                                    outputPath: 'external1035ExchangeAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'b514a411-beeb-4ddc-8822-4dcb20549197',
-                                    partName:
-                                        'custom-f8be8522-cdc1-47f0-ba83-91bd8d7f2265',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Internal 1035 Exchange Amount ',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'internal-1035-exchange-amount',
-                                    outputPath: 'internal1035ExchangeAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '3fe40113-3f6a-44e1-a27c-c9b69baefd1a',
-                                    partName:
-                                        'custom-075564ca-a149-4fea-8f38-d6aa7eba5483',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '1035 Exchange Basis',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'exchange-basis-1035',
-                                    outputPath: 'exchangeBasis1035',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '5b97b62a-11e9-42b8-8197-bd3660b2ea95',
-                                    partName:
-                                        'custom-ca838e96-3dd7-45b0-8ecf-321f67d1b3c2',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'radio',
-                                    id: 'c9e076b5-9385-4307-8a61-7e35364e92db',
-                                    partName:
-                                        'custom-43e51429-ce1b-4c71-8ffc-e8fae0079a40',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '1035 MEC',
-                                        fr: '',
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'mec-1035',
-                                    outputPath: 'mec1035',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            partName: 'YES',
-                                            text: {
-                                                en: 'Yes',
-                                            },
-                                            isCustom: true,
-                                        },
-                                        {
-                                            partName: 'NON',
-                                            text: {
-                                                en: 'No',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
+                                    defaultValue: 'ACH',
                                 },
                             ],
                             displayAsCard: false,
@@ -4161,6 +3599,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
+                                    defaultValue: 'MONTHLY',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -4211,7 +3650,31 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
+                                    defaultValue: 'ACH',
                                 },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                            visible: {
+                                booleanOperator: 'and',
+                                conditions: [
+                                    {
+                                        type: 'equalityCondition',
+                                        value: 'incomeSolve',
+                                        isEqual: true,
+                                        targetNodeId: 'solve-for',
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            id: '67918d23-a023-4def-b857-a3044c2cd2d5',
+                            partName:
+                                'custom-7ea3b94d-2044-4f0f-be89-de5dc84d5c82',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -4237,9 +3700,9 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: '2bf0d6bb-c611-4897-8a84-811b348ed8bc',
+                                    id: 'c0cea165-f33d-4203-917f-38f317996396',
                                     partName:
-                                        'custom-797711a4-bdf2-4e98-80a7-14128b5dd6db',
+                                        'custom-c4c2538a-ac29-4f15-a270-9d67ad3bf5bc',
                                     selectOptions: [
                                         {
                                             partName: 'yes',
@@ -4247,7 +3710,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Yes',
                                             },
                                             isCustom: true,
-                                            orderingIndex: 1,
+                                            orderingIndex: 0,
                                         },
                                         {
                                             partName: 'no',
@@ -4260,18 +3723,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'equalityCondition',
-                                                value: 'premiumAndIncome',
-                                                isEqual: true,
-                                                targetNodeId:
-                                                    'income-solve-type',
-                                            },
-                                        ],
-                                    },
+                                    defaultValue: 'no',
                                 },
                                 {
                                     fieldType: 'money',
@@ -4299,11 +3751,22 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: '403162d6-a32d-4541-9bff-39b69a7770bb',
+                                    id: '7f96885f-59e9-484c-9962-7c84bec5c2be',
                                     partName:
-                                        'custom-e3a19ca6-511f-447e-85fc-6c2ddb700480',
+                                        'custom-73c4bc3b-2785-4152-bd23-a550f7b334ca',
                                     validateAs: 'decimal',
                                     isCustom: true,
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'yes',
+                                                isEqual: true,
+                                                targetNodeId: 'illustrate-1035',
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'money',
@@ -4332,11 +3795,22 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: 'b32eef86-a0c2-4681-9363-53743c991feb',
+                                    id: 'aaa533ec-a2e1-4180-8b49-3726642a1cb2',
                                     partName:
-                                        'custom-45231d31-09db-4e85-a6f0-a0df18cfb9b3',
+                                        'custom-6a4461a8-8fae-46ed-8053-e22e962aac9c',
                                     validateAs: 'decimal',
                                     isCustom: true,
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'yes',
+                                                isEqual: true,
+                                                targetNodeId: 'illustrate-1035',
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'money',
@@ -4365,11 +3839,22 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: '699938b5-6832-414f-bf84-ecc4aafda202',
+                                    id: '93452e18-ef31-4576-9786-571fd1c75051',
                                     partName:
-                                        'custom-f907ccdb-959d-42c1-b7f6-c4a8eca10d18',
+                                        'custom-7a78e8ba-7195-4092-80fd-d2e59939fd16',
                                     validateAs: 'decimal',
                                     isCustom: true,
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'yes',
+                                                isEqual: true,
+                                                targetNodeId: 'illustrate-1035',
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'money',
@@ -4397,17 +3882,28 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: '07549085-5716-493f-8921-72582076021c',
+                                    id: 'f2d528ef-f4ce-41ee-ab30-38cbe9611c1f',
                                     partName:
-                                        'custom-4355f410-51ac-4ea5-a22b-dbfca05006b3',
+                                        'custom-c2dc760a-f01e-429e-a29e-7b5658d46ff2',
                                     validateAs: 'decimal',
                                     isCustom: true,
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'yes',
+                                                isEqual: true,
+                                                targetNodeId: 'illustrate-1035',
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'radio',
-                                    id: '1a9da7c0-fb1d-4dff-ad4d-7e3b6dfc2309',
+                                    id: 'b640d8d6-3d9f-49d4-9cc8-7a421e7230b9',
                                     partName:
-                                        'custom-3c43b907-0430-4e1f-a31c-1ed04cc4cabb',
+                                        'custom-e648da03-b2ca-437f-85bf-d0ae1660b362',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -4450,6 +3946,17 @@ export const farmersBlueprintIU0101 = {
                                             isCustom: true,
                                         },
                                     ],
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'yes',
+                                                isEqual: true,
+                                                targetNodeId: 'illustrate-1035',
+                                            },
+                                        ],
+                                    },
                                 },
                             ],
                             displayAsCard: false,
@@ -4458,9 +3965,8 @@ export const farmersBlueprintIU0101 = {
                                 booleanOperator: 'and',
                                 conditions: [
                                     {
-                                        type: 'equalityCondition',
-                                        value: 'incomeSolve',
-                                        isEqual: true,
+                                        type: 'emptinessCondition',
+                                        isEmpty: false,
                                         targetNodeId: 'solve-for',
                                     },
                                 ],
@@ -4727,20 +4233,21 @@ export const farmersBlueprintIU0101 = {
                                     },
                                 },
                                 {
-                                    fieldType: 'dropdown',
+                                    fieldType: 'number',
                                     text: {
                                         en: '',
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Illustrative Option',
+                                        en: 'Short Term Holding Account Allocation',
                                         fr: '',
                                     },
-                                    answerNodeId: 'illustrative-option',
+                                    answerNodeId:
+                                        'short-term-holding-account-allocation',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: true,
+                                    optional: false,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -4751,36 +4258,12 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: '1c7847ac-7457-4676-876c-790e2d5fc05f',
+                                    id: '3a7d59a3-59e7-438b-9549-ad158d3fc0db',
                                     partName:
-                                        'custom-88b3227b-397e-45b0-b989-6b6a793bd25e',
-                                    selectOptions: [
-                                        {
-                                            partName: 'current',
-                                            text: {
-                                                en: 'Current',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            partName: 'assumed',
-                                            text: {
-                                                en: 'Assumed',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'guaranteed',
-                                            text: {
-                                                en: 'Guaranteed',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
+                                        'custom-8a698fbb-5290-43cd-a4f6-82091188874e',
+                                    numericalDataType: 'float',
+                                    validateAs: 'percentage',
+                                    defaultValue: 0,
                                 },
                                 {
                                     fieldType: 'number',
@@ -4789,7 +4272,7 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Long Term Fixed Account',
+                                        en: 'Long Term Fixed Account Allocation',
                                         fr: '',
                                     },
                                     answerNodeId: 'long-term-fixed-account',
@@ -4812,6 +4295,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-b28c2c95-299f-4223-9475-acaeb3d4565a',
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
+                                    defaultValue: 0,
                                 },
                                 {
                                     fieldType: 'number',
@@ -4820,41 +4304,7 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Current Rate (%)',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'long-term-fixed-account-current-rate',
-                                    outputPath:
-                                        'longTermFixedAccountCurrentRate',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '42a96a21-ab7a-45e8-9c35-a9343ca7b05f',
-                                    partName:
-                                        'custom-ed7073a0-9c54-4029-ae4c-5a9d7bb9c15c',
-                                    numericalDataType: 'float',
-                                    validateAs: 'percentage',
-                                },
-                                {
-                                    fieldType: 'number',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'S&P 500 Indexed Account',
+                                        en: 'S&P 500 Indexed Account Allocation',
                                         fr: '',
                                     },
                                     answerNodeId: 'sp500-indexed-account',
@@ -4886,41 +4336,7 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Current Rate (%)',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'sp500-indexed-account-current-rate',
-                                    outputPath:
-                                        'sp500IndexedAccountCurrentRate',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'ad1d2410-bb06-4a46-86fb-87e0ad50872c',
-                                    partName:
-                                        'custom-8bef83b8-56a1-414a-a8de-219b9518c4e8',
-                                    numericalDataType: 'float',
-                                    validateAs: 'percentage',
-                                },
-                                {
-                                    fieldType: 'number',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'S&P MARC 5% ER Indexed Account',
+                                        en: 'S&P MARC 5% ER Indexed Account Allocation',
                                         fr: '',
                                     },
                                     answerNodeId:
@@ -4946,456 +4362,9 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'percentage',
                                     defaultValue: 50,
                                 },
-                                {
-                                    fieldType: 'number',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Current Rate (%)',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'sp-marc-5-percent-er-indexed-account-current-rate',
-                                    outputPath:
-                                        'spMarc5PercentErIndexedAccountCurrentRate',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '213c320c-37c7-466e-a494-17744765ead2',
-                                    partName:
-                                        'custom-59f6ca08-001c-42b0-a238-448aa17ce092',
-                                    numericalDataType: 'float',
-                                    validateAs: 'percentage',
-                                },
                             ],
                             displayAsCard: false,
                             copyable: 'none',
-                        },
-                    ],
-                    showInNavigation: false,
-                    copyable: 'none',
-                },
-            ],
-            copyable: 'none',
-        },
-        {
-            id: 'abfe5bb8-bcf0-4105-8a7b-5ba62b9c1d3a',
-            sectionGroupKey: 'contract',
-            partName: 'custom-9c28a00c-2c79-487d-a8e2-17a9c3fcdc06',
-            title: {
-                en: 'Distributions',
-            },
-            modules: ['insuranceApplication'],
-            isCustom: true,
-            subsections: [
-                {
-                    id: 'f5466115-624c-436a-8e95-198fa1990b4e',
-                    partName: 'custom-e05038ad-7ab0-41df-91fb-55f07b3b0542',
-                    text: {},
-                    title: {},
-                    isCustom: true,
-                    fieldGroups: [
-                        {
-                            id: '94356f46-4841-45a8-bd25-67e81e16e6da',
-                            partName:
-                                'custom-516af7cd-fba7-4679-ba33-2bbde9c9fc60',
-                            text: {},
-                            title: {},
-                            isCustom: true,
-                            fields: [
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Frequency',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'distribution-frequency',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '18cb9837-331b-4587-a0a7-c46b416a2f27',
-                                    partName:
-                                        'custom-c3e2fa2b-50e6-4193-a03e-75112a014217',
-                                    selectOptions: [
-                                        {
-                                            partName: 'daily',
-                                            text: {
-                                                en: 'Daily',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'everyTwoWeeks',
-                                            text: {
-                                                en: 'Every two weeks',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'monthly',
-                                            text: {
-                                                en: 'Monthly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'semi-Annual',
-                                            text: {
-                                                en: 'Semi-annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'quarterly',
-                                            text: {
-                                                en: 'Quarterly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'annual',
-                                            text: {
-                                                en: 'Annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'singlePayment',
-                                            text: {
-                                                en: 'Single Payment',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    defaultValue: 'annual',
-                                    disabled: true,
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Distribution Option',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'distribution-options',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '7db8d6b4-2f15-4e77-95ce-f865feb01b10',
-                                    partName:
-                                        'custom-f0d771ec-7add-431a-b1dd-0fffade91406',
-                                    selectOptions: [
-                                        {
-                                            partName: 'withdrawToBasis',
-                                            text: {
-                                                en: 'Withdraw to basis',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'loan',
-                                            text: {
-                                                en: 'Loan',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'withdraw',
-                                            text: {
-                                                en: 'Withdraw',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Loan Interest Option',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'loan-interest-option',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '51a57d59-5cb3-4e19-b328-4b18976969a1',
-                                    partName:
-                                        'custom-b252ac5d-d727-495d-b4d4-1a687b466626',
-                                    selectOptions: [
-                                        {
-                                            partName: 'borrow',
-                                            text: {
-                                                en: 'Borrow',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'cash',
-                                            text: {
-                                                en: 'Cash',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    referenceLabel: '',
-                                },
-                            ],
-                            displayAsCard: false,
-                            copyable: 'none',
-                        },
-                        {
-                            id: '18bf83bc-2d07-4c49-81ca-34087e19c1f6',
-                            partName:
-                                'custom-21a8b052-6488-40c5-8593-9f681b3b6d50',
-                            text: {},
-                            title: {},
-                            isCustom: true,
-                            fields: [
-                                {
-                                    fieldType: 'number',
-                                    id: 'dfa0de32-d2a3-46af-a5e4-452bd17eee74',
-                                    partName:
-                                        'custom-3d3d509a-91b8-4842-88ce-42c97c2c46dd',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'From',
-                                        fr: '',
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'withdrawals-from',
-                                    optional: false,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 3,
-                                        forceNewLine: false,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'integer',
-                                },
-                                {
-                                    fieldType: 'number',
-                                    id: '19235170-1a3f-41e0-88ff-b5287e369d5d',
-                                    partName:
-                                        'custom-2c63c402-5eb2-420c-85d5-445ebf61d68a',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Thru',
-                                        fr: '',
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'withdrawals-thru',
-                                    optional: false,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 3,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'integer',
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Type',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'distribution-type',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 3,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'b483e323-aa09-4cad-afaf-f9955937f58e',
-                                    partName:
-                                        'custom-e72790d8-fc28-4324-a55b-dd329dff633b',
-                                    selectOptions: [
-                                        {
-                                            partName: 'AMOUNT',
-                                            text: {
-                                                en: 'Specify',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'MAX',
-                                            text: {
-                                                en: 'Maximum',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    defaultValue: 'specify',
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Amount',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'distribution-amount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 3,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '833fd531-e534-456b-97ae-68bd86502293',
-                                    partName:
-                                        'custom-6f908ed5-2577-486d-b39b-8d75c6a6b276',
-                                    validateAs: 'integer',
-                                    isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['AMOUNT'],
-                                                targetNodeId:
-                                                    'distribution-type',
-                                                quantifier: 'any',
-                                                collectionOperators: {
-                                                    'distributions-information':
-                                                        'thisItem',
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                            displayAsCard: false,
-                            copyable: 'none',
-                            // repeatable: { // TODO: this breaks the form
-                            //     repeatableAnswerNodeId: 'distributions-information',
-                            //     addButtonText: {
-                            //         en: 'Add',
-                            //     },
-                            //     removeButtonText: {
-                            //         en: 'Remove',
-                            //     },
-                            //     minRepeatable: 1,
-                            //     maxRepeatable: 50,
-                            // },
                         },
                     ],
                     showInNavigation: false,
@@ -5483,6 +4452,74 @@ export const farmersBlueprintIU0101 = {
                                             partName: 'Rider_ABRTRM',
                                             text: {
                                                 en: 'Accelerated Death Benefit Rider for Terminal Illness',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                    defaultValue: ['Rider_ABRTRM'],
+                                },
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    id: '036a5c6f-641f-4209-b952-3f445b3e71d7',
+                                    partName:
+                                        'custom-8ac04b6c-c088-4575-8344-df0f77cfea09',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ABRTRM'],
+                                                targetNodeId:
+                                                    'accelerated-death-benefit-rider-for-terminal-illness',
+                                                quantifier: 'any',
+                                            },
+                                            {
+                                                type: 'ageRangeCondition',
+                                                value: {
+                                                    minAge: 18,
+                                                    maxAge: 70,
+                                                    unit: 'year',
+                                                },
+                                                targetBirthdateNodeId:
+                                                    'date-of-birth',
+                                                roundingType: 'lastBirthday',
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    isCustom: true,
+                                    copyable: 'none',
+                                    answerNodeId:
+                                        'chronic-illness-accelerated-death-benefit-rider',
+                                    outputPath:
+                                        'riders.chronicIllnessAcceleratedDeathBenefitRider.values',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            partName: 'Rider_ABRCHR',
+                                            text: {
+                                                en: 'Chronic Illness Accelerated Death Benefit Rider',
                                             },
                                             isCustom: true,
                                         },
@@ -5877,73 +4914,6 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     isCustom: true,
-                                },
-                                {
-                                    fieldType: 'checkboxGroup',
-                                    id: '036a5c6f-641f-4209-b952-3f445b3e71d7',
-                                    partName:
-                                        'custom-8ac04b6c-c088-4575-8344-df0f77cfea09',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['Rider_ABRTRM'],
-                                                targetNodeId:
-                                                    'accelerated-death-benefit-rider-for-terminal-illness',
-                                                quantifier: 'any',
-                                            },
-                                            {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 18,
-                                                    maxAge: 70,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
-                                            },
-                                        ],
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId:
-                                        'chronic-illness-accelerated-death-benefit-rider',
-                                    outputPath:
-                                        'riders.chronicIllnessAcceleratedDeathBenefitRider.values',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 12,
-                                        forceNewLine: false,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            partName: 'Rider_ABRCHR',
-                                            text: {
-                                                en: 'Chronic Illness Accelerated Death Benefit Rider',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
                                 },
                                 {
                                     fieldType: 'checkboxGroup',
@@ -6413,10 +5383,412 @@ export const farmersBlueprintIU0101 = {
                                         ],
                                     },
                                     isCustom: true,
+                                    defaultValue: 'NONETABLE',
                                 },
                             ],
                             displayAsCard: false,
                             copyable: 'none',
+                        },
+                    ],
+                    showInNavigation: false,
+                    copyable: 'none',
+                },
+            ],
+            copyable: 'none',
+        },
+        {
+            id: 'abfe5bb8-bcf0-4105-8a7b-5ba62b9c1d3a',
+            sectionGroupKey: 'contract',
+            partName: 'custom-9c28a00c-2c79-487d-a8e2-17a9c3fcdc06',
+            title: {
+                en: 'Distributions',
+            },
+            modules: ['insuranceApplication'],
+            isCustom: true,
+            subsections: [
+                {
+                    id: 'f5466115-624c-436a-8e95-198fa1990b4e',
+                    partName: 'custom-e05038ad-7ab0-41df-91fb-55f07b3b0542',
+                    text: {},
+                    title: {},
+                    isCustom: true,
+                    fieldGroups: [
+                        {
+                            id: '94356f46-4841-45a8-bd25-67e81e16e6da',
+                            partName:
+                                'custom-516af7cd-fba7-4679-ba33-2bbde9c9fc60',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Frequency',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'distribution-frequency',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '18cb9837-331b-4587-a0a7-c46b416a2f27',
+                                    partName:
+                                        'custom-c3e2fa2b-50e6-4193-a03e-75112a014217',
+                                    selectOptions: [
+                                        {
+                                            partName: 'daily',
+                                            text: {
+                                                en: 'Daily',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'everyTwoWeeks',
+                                            text: {
+                                                en: 'Every two weeks',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'monthly',
+                                            text: {
+                                                en: 'Monthly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'semi-Annual',
+                                            text: {
+                                                en: 'Semi-annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'quarterly',
+                                            text: {
+                                                en: 'Quarterly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'annual',
+                                            text: {
+                                                en: 'Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'singlePayment',
+                                            text: {
+                                                en: 'Single Payment',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    defaultValue: 'annual',
+                                    disabled: true,
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Distribution Option',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'distribution-options',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '7db8d6b4-2f15-4e77-95ce-f865feb01b10',
+                                    partName:
+                                        'custom-f0d771ec-7add-431a-b1dd-0fffade91406',
+                                    selectOptions: [
+                                        {
+                                            partName: 'withdrawToBasis',
+                                            text: {
+                                                en: 'Withdraw to basis',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'loan',
+                                            text: {
+                                                en: 'Loan',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'withdraw',
+                                            text: {
+                                                en: 'Withdraw',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Loan Interest Option',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'loan-interest-option',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '51a57d59-5cb3-4e19-b328-4b18976969a1',
+                                    partName:
+                                        'custom-b252ac5d-d727-495d-b4d4-1a687b466626',
+                                    selectOptions: [
+                                        {
+                                            partName: 'borrow',
+                                            text: {
+                                                en: 'Borrow',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'cash',
+                                            text: {
+                                                en: 'Cash',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    referenceLabel: '',
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                        },
+                        {
+                            id: '18bf83bc-2d07-4c49-81ca-34087e19c1f6',
+                            partName:
+                                'custom-21a8b052-6488-40c5-8593-9f681b3b6d50',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'number',
+                                    id: 'dfa0de32-d2a3-46af-a5e4-452bd17eee74',
+                                    partName:
+                                        'custom-3d3d509a-91b8-4842-88ce-42c97c2c46dd',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'From',
+                                        fr: '',
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    isCustom: true,
+                                    copyable: 'none',
+                                    answerNodeId: 'withdrawals-from',
+                                    optional: false,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 3,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'integer',
+                                },
+                                {
+                                    fieldType: 'number',
+                                    id: '19235170-1a3f-41e0-88ff-b5287e369d5d',
+                                    partName:
+                                        'custom-2c63c402-5eb2-420c-85d5-445ebf61d68a',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Thru',
+                                        fr: '',
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    isCustom: true,
+                                    copyable: 'none',
+                                    answerNodeId: 'withdrawals-thru',
+                                    optional: false,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 3,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'integer',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Type',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'distribution-type',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 3,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'b483e323-aa09-4cad-afaf-f9955937f58e',
+                                    partName:
+                                        'custom-e72790d8-fc28-4324-a55b-dd329dff633b',
+                                    selectOptions: [
+                                        {
+                                            partName: 'AMOUNT',
+                                            text: {
+                                                en: 'Specify',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            partName: 'MAX',
+                                            text: {
+                                                en: 'Maximum',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    defaultValue: 'AMOUNT',
+                                },
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Amount',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'distribution-amount',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 3,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '833fd531-e534-456b-97ae-68bd86502293',
+                                    partName:
+                                        'custom-6f908ed5-2577-486d-b39b-8d75c6a6b276',
+                                    validateAs: 'integer',
+                                    isCustom: true,
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['AMOUNT'],
+                                                targetNodeId:
+                                                    'distribution-type',
+                                                quantifier: 'any',
+                                                collectionOperators: {
+                                                    'distributions-information':
+                                                        'thisItem',
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                            displayAsCard: false,
                         },
                     ],
                     showInNavigation: false,

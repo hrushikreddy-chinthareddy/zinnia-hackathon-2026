@@ -2,8 +2,8 @@ import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
 import dayjs from 'dayjs';
 import { Result } from 'typegate';
 
+import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
-import { calculateAge } from '@deps/helpers/string.helpers';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 
@@ -62,9 +62,8 @@ export abstract class IllustrationHandler<TOutputEntities> {
             }),
             insured: {
                 ...(clientCase?.insuredDetails?.dateOfBirth && {
-                    issueAge: calculateAge(
-                        clientCase.insuredDetails.dateOfBirth.toString(),
-                        ''
+                    issueAge: calculateAgeNumber(
+                        clientCase.insuredDetails.dateOfBirth.toString()
                     ),
                 }),
                 ...(clientCase?.insuredDetails?.sexAtBirth && {
@@ -80,6 +79,14 @@ export abstract class IllustrationHandler<TOutputEntities> {
                 }),
                 ...(clientCase?.insuredDetails?.lastName && {
                     lastName: clientCase.insuredDetails.lastName,
+                }),
+            },
+            agent: {
+                ...(clientCase?.agentDetails?.firstName && {
+                    firstName: clientCase.agentDetails.firstName,
+                }),
+                ...(clientCase?.agentDetails?.lastName && {
+                    lastName: clientCase.agentDetails.lastName,
                 }),
             },
         };

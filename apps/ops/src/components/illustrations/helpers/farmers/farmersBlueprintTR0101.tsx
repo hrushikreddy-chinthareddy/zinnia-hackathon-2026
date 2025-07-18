@@ -75,6 +75,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'NON',
                                 },
                                 {
                                     fieldType: 'input',
@@ -724,6 +725,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'MALE',
                                 },
                                 {
                                     fieldType: 'date',
@@ -761,27 +763,6 @@ export const farmersBlueprintTR0101 = {
                                             conditions: {
                                                 booleanOperator: 'or',
                                                 conditions: [
-                                                    // {
-                                                    //     booleanOperator: 'and',
-                                                    //     conditions: [
-                                                    //         {
-                                                    //             type: 'equalityCondition',
-                                                    //             value: 'TL0101',
-                                                    //             isEqual: true,
-                                                    //             targetNodeId: 'product',
-                                                    //         },
-                                                    //         {
-                                                    //             type: 'ageRangeCondition',
-                                                    //             value: {
-                                                    //                 minAge: 18,
-                                                    //                 maxAge: 75,
-                                                    //                 unit: 'year',
-                                                    //             },
-                                                    //             targetBirthdateNodeId: 'date-of-birth',
-                                                    //             roundingType: 'lastBirthday',
-                                                    //         },
-                                                    //     ],
-                                                    // },
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
@@ -794,8 +775,8 @@ export const farmersBlueprintTR0101 = {
                                                                 },
                                                                 targetBirthdateNodeId:
                                                                     'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
+                                                                // roundingType:
+                                                                //     'lastBirthday',
                                                             },
                                                         ],
                                                     },
@@ -1813,6 +1794,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'PREMIUM',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2069,6 +2051,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'MONTHLY',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2118,6 +2101,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'ACH',
                                 },
                             ],
                             displayAsCard: false,
@@ -2236,6 +2220,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'MONTHLY',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2284,6 +2269,7 @@ export const farmersBlueprintTR0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'ACH',
                                 },
                             ],
                             displayAsCard: false,

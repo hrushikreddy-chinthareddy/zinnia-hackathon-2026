@@ -173,7 +173,7 @@ export enum InsuredRoleCodes {
     OWNER = 'OWNER',
 }
 
-enum NonInsuredRoleCodes {
+export enum NonInsuredRoleCodes {
     OWNER = 'OWNER',
     PRIMARYBENEFICIARY = 'PRIMARYBENEFICIARY',
     CONTINGENTBENEFICIARY = 'CONTINGENTBENEFICIARY',
@@ -326,7 +326,7 @@ const illustrationPayloadInsuredPartySchema = t.intersection(
 const illustrationPayloadNonInsuredPartySchema = t.intersection(
     illustrationPayloadBasePartySchema,
     t.object(
-        t.property('gender', t.enum(Gender)),
+        t.optionalProperty('gender', t.enum(Gender)),
         t.property('lastName', t.string),
         t.property('roleCode', t.enum(NonInsuredRoleCodes))
     )

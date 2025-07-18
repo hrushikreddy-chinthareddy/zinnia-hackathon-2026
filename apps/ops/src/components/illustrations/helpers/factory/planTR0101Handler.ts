@@ -31,7 +31,7 @@ const baseCoverageSchema = t.object(
 
 const insuredSchema = t.object(
     t.property('issueAge', t.number), // age
-    t.property('gender', t.string), // sex
+    t.optionalProperty('gender', t.string), // sex
     t.property('dateOfBirth', t.string), // date-of-birth
     t.property('firstName', t.string), // insured-first-name
     t.optionalProperty('middleName', t.union(t.string, t.undefined)), // insured-middle-name

@@ -95,15 +95,39 @@ export default function IllustrationDetailsToolbar({
             setIsSavingChanges(false);
         },
     });
-    const handledownloadPdf = async () => {
-        const tempLink = document.createElement('a');
-        tempLink.href = `/api/illustration/v3/illustration-request/${illustrationId}/results/FORMATTED_ILLUSTRATION_PDF`;
-        tempLink.setAttribute('download', `illustration_${illustrationId}.pdf`);
 
-        document.body.appendChild(tempLink);
-        tempLink.click();
+    const handleDownloadPdf = async () => {
+        try {
+            const response = await fetch(
+                `/api/illustration-pdf/${illustrationId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/pdf',
+                    },
+                }
+            );
 
-        document.body.removeChild(tempLink);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch PDF: ${response.statusText}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `illustration_${illustrationId}.pdf`);
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Optional: Clean up the blob URL
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error downloading PDF:', error);
+        }
     };
 
     const handleSelectIllustration = () => {
@@ -133,7 +157,7 @@ export default function IllustrationDetailsToolbar({
                             disabled={isLoading || !isPdfReportAvailable}
                             icon={IconType.DOCUMENT_REPORT}
                             className={styles.linkButton}
-                            onClick={handledownloadPdf}
+                            onClick={handleDownloadPdf}
                         >
                             {t('clientCase.illustrationDetails.viewPdf')}
                         </ToolbarButton>

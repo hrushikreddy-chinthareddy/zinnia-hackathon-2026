@@ -75,6 +75,7 @@ export const farmersTermBlueprintTL0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'NON',
                                 },
                                 {
                                     fieldType: 'input',
@@ -724,6 +725,7 @@ export const farmersTermBlueprintTL0101 = {
                                     ],
                                     validateAs: 'string',
                                     disabled: true,
+                                    defaultValue: 'MALE',
                                 },
                                 {
                                     fieldType: 'date',
@@ -764,12 +766,6 @@ export const farmersTermBlueprintTL0101 = {
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
-                                                            // {
-                                                            //     type: 'equalityCondition',
-                                                            //     value: 'TL0101',
-                                                            //     isEqual: true,
-                                                            //     targetNodeId: 'product',
-                                                            // },
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
@@ -787,7 +783,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The age limit are 18-75 for Farmers Term Life, and 18-55 for Farmers Return of Premium.',
+                                                en: 'The age must be 18-75.',
                                                 fr: '',
                                             },
                                         },
@@ -837,8 +833,8 @@ export const farmersTermBlueprintTL0101 = {
                                                         },
                                                         targetBirthdateNodeId:
                                                             'date-of-birth',
-                                                        roundingType:
-                                                            'closestBirthday',
+                                                        // roundingType:
+                                                        //     'closestBirthday',
                                                     },
                                                 ],
                                             },
@@ -986,12 +982,6 @@ export const farmersTermBlueprintTL0101 = {
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
-                                                            // {
-                                                            //     type: 'equalityCondition',
-                                                            //     value: 'TL0101',
-                                                            //     isEqual: true,
-                                                            //     targetNodeId: 'product',
-                                                            // },
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
@@ -1070,12 +1060,6 @@ export const farmersTermBlueprintTL0101 = {
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
-                                                            // {
-                                                            //     type: 'equalityCondition',
-                                                            //     value: 'TL0101',
-                                                            //     isEqual: true,
-                                                            //     targetNodeId: 'product',
-                                                            // },
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
@@ -1130,12 +1114,6 @@ export const farmersTermBlueprintTL0101 = {
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
-                                                            // {
-                                                            //     type: 'equalityCondition',
-                                                            //     value: 'TL0101',
-                                                            //     isEqual: true,
-                                                            //     targetNodeId: 'product',
-                                                            // },
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
@@ -1190,12 +1168,6 @@ export const farmersTermBlueprintTL0101 = {
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
-                                                            // {
-                                                            //     type: 'equalityCondition',
-                                                            //     value: 'TL0101',
-                                                            //     isEqual: true,
-                                                            //     targetNodeId: 'product',
-                                                            // },
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
@@ -1251,12 +1223,6 @@ export const farmersTermBlueprintTL0101 = {
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
-                                                            // {
-                                                            //     type: 'equalityCondition',
-                                                            //     value: 'TL0101',
-                                                            //     isEqual: true,
-                                                            //     targetNodeId: 'product',
-                                                            // },
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
@@ -1310,12 +1276,6 @@ export const farmersTermBlueprintTL0101 = {
                                                     {
                                                         booleanOperator: 'and',
                                                         conditions: [
-                                                            // {
-                                                            //     type: 'equalityCondition',
-                                                            //     value: 'TL0101',
-                                                            //     isEqual: true,
-                                                            //     targetNodeId: 'product',
-                                                            // },
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
@@ -2003,9 +1963,11 @@ export const farmersTermBlueprintTL0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'PREMIUM',
                                 },
                                 {
                                     fieldType: 'dropdown',
+                                    defaultValue: '10',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -2136,175 +2098,6 @@ export const farmersTermBlueprintTL0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
-                                    // visible: {
-                                    //     booleanOperator: 'and',
-                                    //     conditions: [
-                                    //         {
-                                    //             type: 'equalityCondition',
-                                    //             value: 'TL0101',
-                                    //             isEqual: true,
-                                    //             targetNodeId: 'product',
-                                    //         },
-                                    //     ],
-                                    // },
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Level Term Period',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'level-term-period',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '24f50a03-0e26-4933-89ad-3262e51dcff0',
-                                    partName:
-                                        'custom-7b8ae045-6501-4370-a6b9-9696500be4fe',
-                                    selectOptions: [
-                                        {
-                                            partName: '20',
-                                            text: {
-                                                en: 'Term ROP 20',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                            visible: {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        booleanOperator: 'or',
-                                                        conditions: [
-                                                            {
-                                                                booleanOperator:
-                                                                    'and',
-                                                                conditions: [
-                                                                    {
-                                                                        type: 'matchesCondition',
-                                                                        value: [
-                                                                            'PREFERREDTOBACCO',
-                                                                            'STANDARDTOBACCO',
-                                                                        ],
-                                                                        targetNodeId:
-                                                                            'premium-class',
-                                                                        quantifier:
-                                                                            'any',
-                                                                    },
-                                                                    {
-                                                                        type: 'ageRangeCondition',
-                                                                        value: {
-                                                                            minAge: 18,
-                                                                            maxAge: 50,
-                                                                            unit: 'year',
-                                                                        },
-                                                                        targetBirthdateNodeId:
-                                                                            'date-of-birth',
-                                                                        roundingType:
-                                                                            'lastBirthday',
-                                                                    },
-                                                                ],
-                                                            },
-                                                            {
-                                                                booleanOperator:
-                                                                    'and',
-                                                                conditions: [
-                                                                    {
-                                                                        type: 'matchesCondition',
-                                                                        value: [
-                                                                            'STANDARDPLUSNONTOBACCO',
-                                                                            'STANDARDNONTOBACCO',
-                                                                            'PREFERREDNONTOBACCO',
-                                                                            'ELITENONTOBACCO',
-                                                                        ],
-                                                                        targetNodeId:
-                                                                            'premium-class',
-                                                                        quantifier:
-                                                                            'any',
-                                                                    },
-                                                                    {
-                                                                        type: 'ageRangeCondition',
-                                                                        value: {
-                                                                            minAge: 18,
-                                                                            maxAge: 55,
-                                                                            unit: 'year',
-                                                                        },
-                                                                        targetBirthdateNodeId:
-                                                                            'date-of-birth',
-                                                                        roundingType:
-                                                                            'lastBirthday',
-                                                                    },
-                                                                ],
-                                                            },
-                                                            {
-                                                                type: 'matchesCondition',
-                                                                value: [
-                                                                    'STANDARDCONVERSIONNONTOBACCO',
-                                                                    'STANDARDCONVERSIONTOBACCO',
-                                                                ],
-                                                                targetNodeId:
-                                                                    'premium-class',
-                                                                quantifier:
-                                                                    'any',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
-                                        },
-                                        {
-                                            partName: '30',
-                                            text: {
-                                                en: 'Term ROP 30',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                            visible: {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 45,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                ],
-                                            },
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'equalityCondition',
-                                                value: 'TR0101',
-                                                isEqual: true,
-                                                targetNodeId: 'product',
-                                            },
-                                        ],
-                                    },
                                 },
                             ],
                             displayAsCard: false,
@@ -2320,6 +2113,7 @@ export const farmersTermBlueprintTL0101 = {
                             fields: [
                                 {
                                     fieldType: 'money',
+                                    defaultValue: 50000,
                                     text: {
                                         en: '',
                                         fr: '',
@@ -2455,6 +2249,7 @@ export const farmersTermBlueprintTL0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'MONTHLY',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2504,6 +2299,7 @@ export const farmersTermBlueprintTL0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'ACH',
                                 },
                             ],
                             displayAsCard: false,
@@ -2622,6 +2418,7 @@ export const farmersTermBlueprintTL0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'MONTHLY',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2670,6 +2467,7 @@ export const farmersTermBlueprintTL0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'ACH',
                                 },
                             ],
                             displayAsCard: false,

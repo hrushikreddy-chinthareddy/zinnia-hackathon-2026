@@ -439,6 +439,11 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         onValueChange={onAnswerChangeForFieldProps}
                         fieldSize={FieldSize.Small}
                         disabled={field.disabled}
+                        fieldStatus={
+                            field.optional
+                                ? FieldStatus.DEFAULT
+                                : FieldStatus.ERROR
+                        }
                     />
                 </FieldContainer>
             );
