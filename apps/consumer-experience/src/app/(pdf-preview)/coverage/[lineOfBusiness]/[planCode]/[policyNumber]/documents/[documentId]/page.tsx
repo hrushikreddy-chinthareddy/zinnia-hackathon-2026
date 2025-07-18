@@ -35,7 +35,7 @@ export default async function DocumentPreview({
 }) {
   const flags = await getFeatureFlags();
   const shouldUseV2 =
-    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || retrieveDocumentsFromV2();
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || (await retrieveDocumentsFromV2());
   const { lineOfBusiness, documentId, ...otherParams } = params;
   const { fileName, ...otherSearchParams } = searchParams;
   let docDownloadUrl;

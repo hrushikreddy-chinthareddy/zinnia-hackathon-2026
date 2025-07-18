@@ -40,26 +40,26 @@ export default async function PolicyAcknowledgementDocumentPreview({
   const { lineOfBusiness, policyNumber, planCode } = params;
   const { clientCode } = searchParams;
   const shouldUseV2 =
-    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || retrieveDocumentsFromV2();
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || (await retrieveDocumentsFromV2());
 
   const policyDocuments = shouldUseV2
     ? await getDocumentsV2({
-      clientCode: searchParams.clientCode,
-      contractNumber: params.policyNumber,
-      recipient: 'Client',
-      // This code is different than the one we use to set preferences and
-      // check delivery date. This code is specifically for viewing the policy
-      // acknowledgement document
-      documentType: 'POLPG',
-    })
+        clientCode: searchParams.clientCode,
+        contractNumber: params.policyNumber,
+        recipient: 'Client',
+        // This code is different than the one we use to set preferences and
+        // check delivery date. This code is specifically for viewing the policy
+        // acknowledgement document
+        documentType: 'POLPG',
+      })
     : await searchDocumentsV3({
-      documentType: 'POLPG',
-      recipient: 'CLIENT',
-      parentCarrierCode: searchParams.clientCode,
-      policyNumber: params.policyNumber,
-      planCode,
-      documentClassification: SearchRequest.documentClassification.OUTBOUND,
-    });
+        documentType: 'POLPG',
+        recipient: 'CLIENT',
+        parentCarrierCode: searchParams.clientCode,
+        policyNumber: params.policyNumber,
+        planCode,
+        documentClassification: SearchRequest.documentClassification.OUTBOUND,
+      });
   const document = policyDocuments?.data?.documents?.[0];
 
   logInfo(

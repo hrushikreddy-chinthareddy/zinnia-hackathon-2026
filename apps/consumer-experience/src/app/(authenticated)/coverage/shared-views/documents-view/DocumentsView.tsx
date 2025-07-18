@@ -61,7 +61,7 @@ export const DocumentsView = async ({
   );
   const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
   const shouldUseV2 =
-    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || retrieveDocumentsFromV2();
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || (await retrieveDocumentsFromV2());
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
     shouldUseV2
       ? getDocumentsV2({
