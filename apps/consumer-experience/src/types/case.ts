@@ -13,3 +13,21 @@ export enum CaseTypes {
 export interface CaseSummary extends CaseInstanceSummary {
   processSubType: string;
 }
+
+export enum CaseStatus {
+  COMPLETED = 'COMPLETED',
+  CANCELED = 'CANCELED',
+  PENDING = 'PENDING',
+  EXCEPTION = 'EXCEPTION',
+  IN_PROGRESS = 'IN_PROGRESS',
+  NOT_STARTED = 'NOT_STARTED',
+}
+
+export enum StageStatus {
+  COMPLETED = 'COMPLETED',
+  CANCELED = 'CANCELED',
+  PENDING = 'PENDING',
+  EXCEPTION = 'EXCEPTION',
+  IN_PROGRESS = 'IN_PROGRESS',
+  NOT_STARTED = 'NOT_STARTED',
+}

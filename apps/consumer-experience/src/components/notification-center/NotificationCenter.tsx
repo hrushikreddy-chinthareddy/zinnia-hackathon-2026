@@ -1,5 +1,4 @@
 'use client';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useIsClient } from '@xd/hooks/useIsClient';
 import {
   AssistiveTextVariant,
@@ -10,115 +9,43 @@ import {
 import clsx from 'clsx';
 
 import { NotificationCenterSection } from '@/components/notification-center/section/NotificationCenterSection';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
-import {
-  acknowledgeCase,
-  getAcknowledgedCases,
-  searchCasesByPolicyNumber,
-} from '@/queries/case-queries';
-import { QueryKeys } from '@/queries/query-keys';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { useAcknowledgeCases } from '@/hooks/use-acknowledge-cases';
 
 import { default as Styles } from './NotificationCenter.module.css';
 import { NotificationCenterProps } from './types';
-import {
-  parseNotifications,
-  sortNotificationsByDate,
-  transformNotifications,
-} from './utils';
+import { sortNotificationsByDate } from './utils';
 
 export const NotificationCenter = ({
-  initialAcknowledgedNotifications,
   initialNotifications,
   policyNumber,
   planCode,
 }: NotificationCenterProps) => {
-  const queryClient = useQueryClient();
   const isClient = useIsClient();
-  const { data: featureFlags } = useFeatureFlags();
-  const fetchNotificationsFlag =
-    featureFlags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
-
-  const shouldFetchClientSideNotifications =
-    !!fetchNotificationsFlag && isClient;
 
   const {
-    data: acknowledgedNotifications = [],
-    isLoading: acknowledgedNotificationsLoading,
-    isError: _acknowledgedNotificationsError,
-  } = useQuery({
-    queryKey: [QueryKeys.NOTIFICATIONS],
-    queryFn: () => {
-      return getAcknowledgedCases({ policyNumber, planCode });
-    },
-    initialData: initialAcknowledgedNotifications,
-    enabled:
-      shouldFetchClientSideNotifications &&
-      !!policyNumber.length &&
-      !!planCode.length,
-  });
-
-  const {
-    data: notifications = [],
-    isLoading,
-    isError,
-    isFetching,
-  } = useQuery({
-    queryKey: [
-      QueryKeys.NOTIFICATIONS,
-      policyNumber,
-      planCode,
-      initialNotifications,
-    ],
-    queryFn: () => {
-      return searchCasesByPolicyNumber(policyNumber, planCode);
-    },
-    select: data => {
-      return (data || [])
-        .map(parseNotifications)
-        .filter(notification => !!notification);
-    },
-    initialData: initialNotifications,
-    enabled: shouldFetchClientSideNotifications,
-  });
-
-  const mutation = useMutation({
-    mutationFn: ({
-      id,
-      stepsToAcknowledge,
-    }: {
-      id: string;
-      stepsToAcknowledge: string[];
-    }) =>
-      acknowledgeCase({
-        acknowledgedIds: stepsToAcknowledge,
-        caseId: id,
-        planCode,
-        policyNumber,
-      }),
-    onSuccess: () => {
-      // refetch the notifications to get the updated list
-      queryClient.invalidateQueries({
-        queryKey: [QueryKeys.NOTIFICATIONS],
-      });
-    },
+    acknowledgedNotifications,
+    acknowledgedNotificationsLoading,
+    acknowledgedCaseMutation,
+    actionNeededNotifications,
+    completedNotifications,
+    notificationsLoading: isLoading,
+    notificationsError: isError,
+    notificationsFetching: isFetching,
+  } = useAcknowledgeCases({
+    planCode,
+    policyNumber,
+    initialNotifications,
   });
 
   const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) =>
-    mutation.mutate({ id, stepsToAcknowledge });
-
-  const { completedNotifications, actionNeededNotifications } =
-    notifications.reduce(transformNotifications, {
-      completedNotifications: [],
-      actionNeededNotifications: [],
-    });
+    acknowledgedCaseMutation.mutate({ id, stepsToAcknowledge });
 
   const showLoader =
     acknowledgedNotificationsLoading ||
+    acknowledgedCaseMutation.isPending ||
     !isClient ||
     isLoading ||
-    isFetching ||
-    mutation.isPending;
+    isFetching;
 
   return (
     <div className={Styles.container}>
@@ -134,7 +61,7 @@ export const NotificationCenter = ({
           acknowledgedNotifications={acknowledgedNotifications}
           isLoading={isLoading}
           isClient={isClient}
-          mutatingId={mutation?.variables?.id}
+          mutatingId={acknowledgedCaseMutation?.variables?.id}
         />
       )}
       {completedNotifications.length > 0 && (

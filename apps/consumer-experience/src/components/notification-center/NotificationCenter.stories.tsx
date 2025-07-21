@@ -1,6 +1,8 @@
 import { Meta, StoryObj } from '@storybook/nextjs';
 import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
+import { CaseStatus } from '@/types/case';
+
 import { NotificationCenter } from './NotificationCenter';
 
 const notifications: CaseInstanceSummary[] = [
@@ -8,7 +10,7 @@ const notifications: CaseInstanceSummary[] = [
     id: '123251-55843',
     process: 'Payment failed',
     updatedAt: new Date().toDateString(),
-    caseStatus: 'FAILED',
+    caseStatus: CaseStatus.EXCEPTION,
     stages: [
       {
         stageStatus: 'EXCEPTION',
@@ -21,7 +23,7 @@ const notifications: CaseInstanceSummary[] = [
     id: '659989-32646',
     process: 'Tax documents available',
     updatedAt: new Date(2025, 0, 14).toDateString(),
-    caseStatus: 'REVERSED',
+    caseStatus: CaseStatus.EXCEPTION,
     stages: [
       {
         stageStatus: 'EXCEPTION',

@@ -1,5 +1,7 @@
 import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
+import { CaseStatus, StageStatus } from '@/types/case';
+
 import { NotificationCenterNotification } from './types';
 
 
@@ -41,14 +43,14 @@ export const parseNotifications = (
   let stepsToAcknowledge;
 
   const completed =
-    caseItem.caseStatus === 'COMPLETED' || caseItem.caseStatus === 'CANCELED';
+    caseItem.caseStatus === CaseStatus.COMPLETED || caseItem.caseStatus === CaseStatus.CANCELED;
 
-  if (!completed) {
+  if (caseItem.caseStatus === CaseStatus.EXCEPTION) {
     stepsToAcknowledge = [];
     // current list of steps to acknowledge
     // why the case is CURRENTLY in NIGO
     stepsToAcknowledge = caseItem.stages?.reduce((acc, stage) => {
-      if (stage.stageStatus === 'EXCEPTION') {
+      if (stage.stageStatus === StageStatus.EXCEPTION) {
         // @ts-expect-error api spec wrong
         acc.push(stage.id);
       }
