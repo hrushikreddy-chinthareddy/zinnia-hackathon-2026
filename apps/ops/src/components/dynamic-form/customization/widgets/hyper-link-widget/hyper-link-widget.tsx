@@ -9,12 +9,16 @@ import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/actions/external-link.svg';
 
 const HyperLinkWidget = (props: WidgetProps) => {
-    const { value, disabled, label, uiSchema, formContext, readonly } = props;
+    const { value, disabled, label, uiSchema, formContext, readonly, schema } =
+        props;
 
-    const defaultValue =
-        replacePlaceholders(value, { ...formContext }) || value;
+    const defaultValue = replacePlaceholders(schema?.default ?? value, {
+        ...formContext,
+        value,
+    });
+
     const defaultLabel =
-        replacePlaceholders(label, { ...formContext }) || label;
+        replacePlaceholders(label, { ...formContext, value }) || label;
 
     const uiOptions = getUiOptions(uiSchema as UiSchema);
 
