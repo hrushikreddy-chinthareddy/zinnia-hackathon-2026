@@ -6,7 +6,6 @@ import { CarrierPicker } from '@/components/carrier-picker/CarrierPicker';
 import { CarrierPickerCookieOnly } from '@/components/carrier-picker/CarrierPickerCookieOnly';
 import { CoverageCard } from '@/components/coverage-card/CoverageCard';
 import { Footer } from '@/components/footer/Footer';
-import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getFeatureFlags } from '@/services/feature-flags';
@@ -52,7 +51,6 @@ export default async function Page({
       <>
         {CoveragePageHeader}
         <div className="card-container">
-          <MockMessage />
           <NoDataAvailable
             iconType={IconType.SHIELD_EXCLAMATION}
             message="There are currently no policies associated with your account."

@@ -10,7 +10,6 @@ dayjs.extend(isSameOrAfter);
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Link } from '@/components/link/Link';
-import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getPremiumEligibility } from '@/services/bpm';
@@ -109,7 +108,6 @@ export const UpcomingPremium = async ({
   if (error) {
     return (
       <div className="space-mb-gap-lg">
-        <MockMessage />
         <NoDataAvailable
           iconType={IconType.AUTOPAY}
           message="There is currently no premium payments data available."

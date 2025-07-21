@@ -11,7 +11,6 @@ import styles from '@/app/(authenticated)/coverage/shared-styles/Beneficiaries.m
 import { BeneficiariesView } from '@/app/(authenticated)/coverage/shared-views/beneficiaries-view/BeneficiariesView';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { FullName } from '@/components/pii/FullName';
 import { RouteKey, getPageTitle } from '@/route-map';
@@ -141,7 +140,6 @@ export default async function Beneficiaries({
     return (
       <div>
         <div className="space-mb-gap-lg">
-          <MockMessage />
           <NoDataAvailable
             iconType={IconType.CIRCLE_USER}
             message="There is currently no beneficiary data available."
@@ -174,14 +172,14 @@ export default async function Beneficiaries({
         <ClickableCardContainer
           listItems={[...beneListItems(groupedBenes.primary)]}
         >
-            <BeneficiariesView.Header type="Primary" >
+          <BeneficiariesView.Header type="Primary">
             <AllocationColorBar
               type="primary"
               allocations={groupedBenes?.primary?.map(
                 primary => primary.beneficiaryPercentage
               )}
             />
-            </BeneficiariesView.Header>
+          </BeneficiariesView.Header>
         </ClickableCardContainer>
       )}
 
@@ -189,14 +187,14 @@ export default async function Beneficiaries({
         <ClickableCardContainer
           listItems={[...beneListItems(groupedBenes.contingent)]}
         >
-            <BeneficiariesView.Header type="Contingent" >
+          <BeneficiariesView.Header type="Contingent">
             <AllocationColorBar
               type="contingent"
               allocations={groupedBenes.contingent.map(
                 contingents => contingents.beneficiaryPercentage
               )}
             />
-            </BeneficiariesView.Header>
+          </BeneficiariesView.Header>
         </ClickableCardContainer>
       )}
       <CallForAssistance

@@ -27,6 +27,7 @@ import {
 } from './services';
 import { checkResetDeliveryDateEligibility } from './services/bpm';
 import { ROOT_URL_PATH } from './types';
+import { COOKIE_DOMAIN } from '../constants';
 import { TermsAndConditionApiResponse } from './types/auth';
 import { Subdomains } from './types/carriers';
 import {
@@ -57,6 +58,13 @@ import {
   prependSubdomain,
 } from './utils/url';
 
+const setResCookie = (
+  res: NextResponse,
+  { name, value }: { name: string; value: string }
+) => {
+  res.cookies.set(name, value, { domain: COOKIE_DOMAIN });
+};
+
 const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
   if (!isMockAllowed()) {
     return;
@@ -70,7 +78,7 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
     if (mockParam === 'off') {
       res.cookies.delete(MOCK_COOKIE_KEY);
     } else {
-      res.cookies.set(MOCK_COOKIE_KEY, mockParam);
+      setResCookie(res, { name: MOCK_COOKIE_KEY, value: mockParam });
     }
   }
 
@@ -78,12 +86,12 @@ const applyMockCookies = (req: NextRequest, res: NextResponse<unknown>) => {
     if (mockErrorParam === 'off') {
       res.cookies.delete(MOCK_ERROR_COOKIE_KEY);
     } else {
-      res.cookies.set(MOCK_ERROR_COOKIE_KEY, mockErrorParam);
+      setResCookie(res, { name: MOCK_ERROR_COOKIE_KEY, value: mockErrorParam });
     }
   }
 
   if (showDevMenu) {
-    res.cookies.set(SHOW_DEV_MENU_COOKIE_KEY, showDevMenu);
+    setResCookie(res, { name: SHOW_DEV_MENU_COOKIE_KEY, value: showDevMenu });
   }
 };
 
@@ -138,6 +146,7 @@ export async function middleware(req: NextRequest) {
       }
     }
     await touchSession(resNext);
+    applyMockCookies(req, resNext);
 
     // This is to handle user coming in after login flow or with just a root url
     if (isLoginLikeOrRoot) {
@@ -247,15 +256,13 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/coverage', req.url));
       } else {
         parsedCookie.push(policyNumber);
-        resNext.cookies.set(
-          ACKNOWLEDGEMENT_COOKIE_KEY,
-          JSON.stringify(parsedCookie)
-        );
+        setResCookie(resNext, {
+          name: ACKNOWLEDGEMENT_COOKIE_KEY,
+          value: JSON.stringify(parsedCookie),
+        });
         return resNext;
       }
     }
-
-    applyMockCookies(req, resNext);
 
     return resNext;
   }

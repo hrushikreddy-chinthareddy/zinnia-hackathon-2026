@@ -6,7 +6,6 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { CardInsertHistory } from '@/components/card-list-history/CardInsertHistory';
 import { CardListHistory } from '@/components/card-list-history/CardListHistory';
 import { RequestedAppliedAmount } from '@/components/card-list-history/RequestedAppliedAmount';
-import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { AccountType } from '@/components/pii/AccountType';
@@ -49,7 +48,6 @@ export default async function PaymentHistory({ params }: Props) {
   ) {
     return (
       <div className="space-mb-gap-lg">
-        <MockMessage />
         <NoDataAvailable
           iconType={IconType.PAYMENT}
           message="No payment history available"

@@ -4,7 +4,6 @@ import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { ProfileView } from '@/app/(authenticated)/coverage/shared-views/ProfileView';
-import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { QueryKeys } from '@/queries/query-keys';
 import { getPageTitle, RouteKey } from '@/route-map';
@@ -47,7 +46,6 @@ export default async function Profile({ params }: Props) {
   if (isError) {
     return (
       <div className="space-mb-gap-lg">
-        <MockMessage />
         <NoDataAvailable
           iconType={IconType.CIRCLE_USER}
           message="There is currently no profile data available."

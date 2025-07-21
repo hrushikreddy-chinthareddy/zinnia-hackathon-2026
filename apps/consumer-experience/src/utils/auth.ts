@@ -36,6 +36,7 @@ import {
   SESSION_TIMEOUT_IN_MILLISECONDS,
   SHOW_DEV_MENU_COOKIE_KEY,
 } from './serverClientUtils';
+import { COOKIE_DOMAIN } from '../../constants';
 const MOCK_FARMERS_ECN = '7657659';
 const notNull = <T>(value: T | null): value is T => value !== null;
 const BYTE_LENGTH = 32;
@@ -118,11 +119,6 @@ const getChunkSize = async (
   return chunkSize;
 };
 
-export const domain =
-  process.env.AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW ||
-  process.env.AUTH0_COOKIE_DOMAIN ||
-  process.env.VERCEL_BRANCH_URL;
-
 /**
  * Sets a cookie with the provided options.
  *
@@ -145,7 +141,7 @@ export const setCookie = async (options: SetCookieOptions) => {
     httpOnly: false,
     transient: false,
     path: '/',
-    domain,
+    domain: COOKIE_DOMAIN,
     ...cookieConfig,
   };
   const existingCookies = new Set(
@@ -314,15 +310,15 @@ export const deleteCookie = async (cookieName: string, res?: NextResponse) => {
   }
 };
 
-export const deleteMockCookies = async () => {
-  await deleteCookie(MOCK_COOKIE_KEY);
-  await deleteCookie(MOCK_ERROR_COOKIE_KEY);
-  await deleteCookie(SHOW_DEV_MENU_COOKIE_KEY);
-  await deleteCookie(MOCK_FARMERS_ECN_COOKIE_KEY);
+export const deleteMockCookies = async (res?: NextResponse) => {
+  await deleteCookie(MOCK_COOKIE_KEY, res);
+  await deleteCookie(MOCK_ERROR_COOKIE_KEY, res);
+  await deleteCookie(SHOW_DEV_MENU_COOKIE_KEY, res);
+  await deleteCookie(MOCK_FARMERS_ECN_COOKIE_KEY, res);
 };
 
 export const deleteSession = async (res?: NextResponse) => {
-  await deleteMockCookies();
+  await deleteMockCookies(res);
 
   await deleteCookie(APP_SESSION_COOKIE_KEY, res);
   await deleteCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY, res);

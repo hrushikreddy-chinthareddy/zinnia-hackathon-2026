@@ -22,7 +22,7 @@ export const AUTH0_SCOPE = process.env.AUTH0_SCOPE;
 // if a user had a session and their session is no longer expired they should be redirected to the session page
 // see middleware
 export const HAD_PREVIOUS_SESSION_COOKIE_KEY = '_ztps';
-export const MOCK_COOKIE_KEY = '..mock..';
+export const MOCK_COOKIE_KEY = '..mock_policy..';
 export const MOCK_ERROR_COOKIE_KEY = '..mock_error..';
 export const MOCK_EMPTY_BANK_DETAILS = '..mock_empty_bank_details..';
 export const SHOW_DEV_MENU_COOKIE_KEY = '..show_dev_menu..';

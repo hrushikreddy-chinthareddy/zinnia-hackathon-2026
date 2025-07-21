@@ -24,6 +24,10 @@ import { zIndexOrder } from '@/utils/zIndexOrder';
 import styles from './DevMenu.module.css';
 import { MockApiErrors } from './MockApiErrors';
 import { Link } from '../link/Link';
+import {
+  removeClientCookie,
+  setClientCookie,
+} from '@/utils/client-side-cookies';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
@@ -64,9 +68,9 @@ export const DevMenu = () => {
   const setTestPoliciesCookie = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (testPoliciesOn) {
-      Cookies.remove(SHOW_TEST_POLICIES_COOKIE_KEY);
+      removeClientCookie(SHOW_TEST_POLICIES_COOKIE_KEY);
     } else {
-      Cookies.set(SHOW_TEST_POLICIES_COOKIE_KEY, 'on');
+      setClientCookie(SHOW_TEST_POLICIES_COOKIE_KEY, 'on');
     }
 
     // const queryParams = new URLSearchParams(location.search);
@@ -77,10 +81,10 @@ export const DevMenu = () => {
 
   const setMockFarmersECNCookie = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      Cookies.set(MOCK_FARMERS_ECN_COOKIE_KEY, 'on');
+      setClientCookie(MOCK_FARMERS_ECN_COOKIE_KEY, 'on');
       setIsMockFarmersECNOn(true);
     } else {
-      Cookies.remove(MOCK_FARMERS_ECN_COOKIE_KEY);
+      removeClientCookie(MOCK_FARMERS_ECN_COOKIE_KEY);
       setIsMockFarmersECNOn(false);
     }
   };

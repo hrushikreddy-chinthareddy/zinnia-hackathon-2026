@@ -3,7 +3,6 @@ import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
-import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Rider } from '@/components/rider/Rider';
 import { getRiders } from '@/services';
@@ -39,7 +38,6 @@ export default async function Riders({
         (!data.riders?.length && !data.additionalBenefits?.length)) && (
         <div className="container">
           <div className="space-mb-gap-lg">
-            <MockMessage />
             <NoDataAvailable
               iconType={IconType.SHIELD_CHECKMARK}
               message="There is currently no riders data available."

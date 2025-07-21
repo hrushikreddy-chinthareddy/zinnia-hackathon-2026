@@ -6,7 +6,6 @@ import { AddEditAddressSidesheet } from '@/components/add-edit-address/AddEditAd
 import { FormActionType } from '@/components/add-edit-address/types';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
-import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Addresses } from '@/components/person-data/Addresses';
 import { Emails } from '@/components/person-data/Emails';
@@ -63,7 +62,6 @@ export default async function Beneficiary({
   if (error || !data) {
     return (
       <div className="container">
-        <MockMessage />
         <NoDataAvailable
           iconType={IconType.CIRCLE_USER}
           message="There is currently no beneficiary data available."

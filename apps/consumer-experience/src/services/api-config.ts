@@ -4,6 +4,7 @@ import { ApiEndpoints } from '@/components/dev-menu/types';
 import { isMockAllowed } from '@/utils';
 import {
   MOCK_ANNUITY_COOKIE_KEY,
+  MOCK_COOKIE_KEY,
   SHOW_TEST_POLICIES_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
@@ -31,7 +32,7 @@ export const enterprisePolicySearchBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_
 
 const getMockParam = () => {
   const cookieStore = cookies();
-  return cookieStore.get('..mock..')?.value;
+  return cookieStore.get(MOCK_COOKIE_KEY)?.value;
 };
 
 const getMockErrorParam = () => {

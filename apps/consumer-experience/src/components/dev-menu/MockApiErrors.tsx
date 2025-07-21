@@ -7,6 +7,10 @@ import { MOCK_ERROR_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 import styles from './DevMenu.module.css';
 import { ApiEndpoints } from './types';
+import {
+  removeClientCookie,
+  setClientCookie,
+} from '@/utils/client-side-cookies';
 
 export const MockApiErrors = () => {
   const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);
@@ -21,9 +25,9 @@ export const MockApiErrors = () => {
   const setAPIErrorCookie = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (apiErrorSet && apiErrorSet.length > 0) {
-      Cookies.set(MOCK_ERROR_COOKIE_KEY, JSON.stringify(apiErrorSet));
+      setClientCookie(MOCK_ERROR_COOKIE_KEY, JSON.stringify(apiErrorSet));
     } else {
-      Cookies.remove(MOCK_ERROR_COOKIE_KEY);
+      removeClientCookie(MOCK_ERROR_COOKIE_KEY);
     }
 
     const queryParams = new URLSearchParams(location.search);

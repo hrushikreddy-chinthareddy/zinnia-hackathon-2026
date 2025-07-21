@@ -2,6 +2,10 @@ import Cookies from 'js-cookie';
 import { MouseEvent, useEffect, useState } from 'react';
 
 import {
+  removeClientCookie,
+  setClientCookie,
+} from '@/utils/client-side-cookies';
+import {
   MOCK_ANNUITY_COOKIE_KEY,
   MOCK_COOKIE_KEY,
   SHOW_DEV_MENU_COOKIE_KEY,
@@ -21,10 +25,10 @@ const useMock = () => {
 
   const setMock = () => {
     if (isMockOn) {
-      Cookies.remove(MOCK_COOKIE_KEY);
-      Cookies.remove(MOCK_ANNUITY_COOKIE_KEY);
+      removeClientCookie(MOCK_COOKIE_KEY);
+      removeClientCookie(MOCK_ANNUITY_COOKIE_KEY);
     } else {
-      Cookies.set(MOCK_COOKIE_KEY, 'on');
+      setClientCookie(MOCK_COOKIE_KEY, 'on');
     }
     const queryParams = new URLSearchParams(location.search);
     queryParams.delete(MOCK_COOKIE_KEY);
@@ -36,9 +40,9 @@ const useMock = () => {
     setIsAnnuityOn(bool);
 
     if (bool) {
-      Cookies.set(MOCK_ANNUITY_COOKIE_KEY, 'on');
+      setClientCookie(MOCK_ANNUITY_COOKIE_KEY, 'on');
     } else {
-      Cookies.remove(MOCK_ANNUITY_COOKIE_KEY);
+      removeClientCookie(MOCK_ANNUITY_COOKIE_KEY);
     }
 
     const queryParams = new URLSearchParams(location.search);
@@ -49,7 +53,7 @@ const useMock = () => {
 
   const removeDevMenu = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    Cookies.remove(SHOW_DEV_MENU_COOKIE_KEY);
+    removeClientCookie(SHOW_DEV_MENU_COOKIE_KEY);
     const queryParams = new URLSearchParams(location.search);
     queryParams.delete(SHOW_DEV_MENU_COOKIE_KEY);
     const params = queryParams.toString() ? `?${queryParams.toString()}` : '';

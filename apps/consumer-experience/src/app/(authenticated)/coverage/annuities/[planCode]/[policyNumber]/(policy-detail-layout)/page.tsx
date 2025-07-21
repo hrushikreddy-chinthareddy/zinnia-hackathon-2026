@@ -5,7 +5,6 @@ import { Metadata } from 'next';
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
-import MockMessage from '@/components/MockMessage';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import AdditionalOverviewLinks from '@/components/policy-overview/AdditionalOverviewLinks';
 import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
@@ -44,7 +43,6 @@ export default async function Page({
     return (
       <>
         <div className="space-mb-gap-md">
-          <MockMessage />
           <NoDataAvailable
             iconType={IconType.SHIELD_EXCLAMATION}
             message="There is currently no contract data available."
