@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
 import Loading from '@/app/loading';
+import { useIsIOS } from '@/hooks/use-is-ios';
 import { analytics } from '@/utils/segment';
 
 import PreviewUnsupported from './PreviewUnsupported';
@@ -21,6 +22,7 @@ export default function PdfPreviewer({
   const [documentData, setDocumentData] = useState<string>('');
   const fetchInProgress = useRef(false);
   const router = useRouter();
+  const isIOS = useIsIOS();
 
   useEffect(() => {
     if (fetchInProgress.current || documentData) {
@@ -68,6 +70,13 @@ export default function PdfPreviewer({
       }
     };
   }, [defaultRedirectUrl, documentData, documentDownloadUrl, router]);
+
+  if (isIOS && documentData.length > 0) {
+    // isIOS itself calls `useIsClient`
+    // so we know that the window object is available
+    window.location.href = documentData;
+    return null;
+  }
 
   return supportsEmbed ? (
     documentData ? (
