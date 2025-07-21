@@ -4707,7 +4707,7 @@
             "fundDisbursementTypeTooltip": "El valor de la cuenta está invertido en uno o más fondos de inversión. Cuando retiramos el dinero, necesitamos saber cómo tomar la cantidad de cada fondo de inversión. Pro rata significa tomar una cantidad igual de cada fondo de inversión. Personalizado permite al propietario elegir una cierta cantidad de cada fondo de inversión.",
             "label": "Resumen",
             "minRequired": "Mínimo requerido",
-            "minRequiredPercent": "Mínimo requerido ({{percent}}%)",
+            "minRequiredPercent": "Mínimo requerido {{percent}}",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO.",
             "payee": "Beneficiario",
             "proRata": "Pro rata",

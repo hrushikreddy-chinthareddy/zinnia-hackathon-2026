@@ -35,7 +35,9 @@ export const getRequestedWithheldTaxesDisplay = (
     if (withholding?.taxRateToUse === TaxRateToUse.USEDEFAULTTABLE) {
         if (withholdingType === TaxWithholdingType.FEDERAL)
             return t('withdrawals.summary.minRequiredPercent', {
-                percent: '10',
+                percent: withholding?.percentage
+                    ? `(${withholding.percentage}%)`
+                    : '',
             });
         else return t('withdrawals.summary.minRequired');
     }

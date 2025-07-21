@@ -4768,7 +4768,7 @@
             "fundDisbursementTypeTooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund. Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund.",
             "label": "Summary",
             "minRequired": "Min required",
-            "minRequiredPercent": "Min required ({{percent}}%)",
+            "minRequiredPercent": "Min required {{percent}}",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "payee": "Payee",
             "proRata": "Pro rata",

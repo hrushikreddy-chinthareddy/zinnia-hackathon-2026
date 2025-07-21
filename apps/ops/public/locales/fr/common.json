@@ -696,7 +696,7 @@
             "allocation": {
                 "title": "Allocation",
                 "relationshipToParty": "Relation avec la partie"
-           },
+            },
             "contact": {
                 "title": "Informations de contact",
                 "address": "Adresse",
@@ -4716,7 +4716,7 @@
             "fundDisbursementTypeTooltip": "La valeur du compte est investie dans un ou plusieurs fonds d'investissement. Lorsque nous retirons de l'argent, nous devons savoir comment répartir le montant prélevé entre chaque fonds d'investissement. Le terme pro rata signifie prélever un montant égal dans chaque fonds d'investissement. L'option personnalisée permet au propriétaire de choisir un montant spécifique à prélever dans chaque fonds d'investissement.",
             "label": "Résumé",
             "minRequired": "Quantité minimale requise",
-            "minRequiredPercent": "Quantité minimale requise ({{percent}}%)",
+            "minRequiredPercent": "Quantité minimale requise {{percent}}",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO.",
             "payee": "Bénéficiaire",
             "proRata": "Pro rata",
