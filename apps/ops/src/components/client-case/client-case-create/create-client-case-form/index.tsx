@@ -1,4 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { isValidDate } from '@xd/utils/dist';
 import { capitalize } from '@xd/utils/src/strings';
 import {
     Button,
@@ -69,9 +70,6 @@ function calculateIssueAge(dateOfBirth: Date | null): number {
     const today = dayjs();
     return today.diff(dateOfBirth, 'year');
 }
-
-const isValidDate = (date: Date | undefined) =>
-    dayjs(date, 'MM/DD/YYYY', true).isValid();
 
 const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     onSubmit,
@@ -191,14 +189,21 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
     const canSubmitForm = () => {
         const { title, insuredDetails } = clientCaseData;
-        const ValidDate = isValidDate(insuredDetails?.dateOfBirth);
+
+        const parsedDate = dayjs(insuredDetails?.dateOfBirth);
+
+        const formattedDate = parsedDate.isValid()
+            ? parsedDate.format('MM/DD/YYYY')
+            : null;
+
+        const validDate = isValidDate(formattedDate);
 
         return !(
             somethingChanged &&
             title &&
             insuredDetails?.sexAtBirth &&
             insuredDetails?.dateOfBirth &&
-            ValidDate &&
+            validDate &&
             insuredDetails?.state
         );
     };
