@@ -301,35 +301,25 @@ export const checkEligibilityFullSurrender = async (
     policyNumber: string | undefined
 ): Promise<TransactionResponse> => {
     try {
-        // to do - DEPU-4981 - this eligibility check requires this huge body, however all the values are ignored
-        // waiting on BPM to make updates to this endpoint so that hopefully no body is required in the future
+        browserLogInfo('FullSurrender::Initiating eligibility check', {
+            payload: { planCode, policyNumber },
+            url: `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`,
+            function: 'checkEligibilityFullSurrender',
+        });
         const { data } = await client.post<
             FullSurrenderEligibilityRequest,
             AxiosResponse
         >(
-            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`,
-            {
-                correlationId: '',
-                effectiveDate: '',
-                reverseInitiator: false,
-                taxWithholdingInstructions: [],
-                payeeOrBeneficiary: null,
-                parties: [],
-                transactionAmounts: {
-                    requestedAmount: null,
-                    amountType: '',
-                    disbursementType: '',
-                    disbursementPaymentForm: '',
-                },
-                charges: null,
-            }
+            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`
         );
         return data;
     } catch (error: any) {
-        console.error(
-            'checkEligibilityFullSurrender::an error occurred during eligibility check',
-            error
-        );
+        browserLogError('FullSurrender::Eligibility check failed', {
+            ...parseErrorInformation(error),
+            payload: { planCode, policyNumber },
+            url: `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`,
+            function: 'checkEligibilityFullSurrender',
+        });
         return error?.data;
     }
 };

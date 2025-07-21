@@ -24,7 +24,10 @@ import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { checkPartialWithdrawalOneTimeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import {
+    checkFullSurrenderWithdrawal,
+    checkPartialWithdrawalOneTimeEligibilityQuery,
+} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -92,6 +95,27 @@ const WithdrawalsPageHeaderContainer = ({
         yearToDateFreeWithdrawalAmount,
         totalYearToDateWithdrawalTaken,
     } = withdrawalsValues ?? {};
+
+    const { data: fullSurrenderEligibility } = useQuery({
+        queryKey: [
+            'checkFullSurrenderEligibility',
+            policyDetails.planCode,
+            policyDetails.policyNumber,
+        ],
+        queryFn: () =>
+            checkFullSurrenderWithdrawal(
+                policyDetails.planCode as string,
+                policyDetails.policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleFullSurrender:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
 
     const headerRowFlexClassNames = clsx('flex-col', 'xs:gap-4 lg:gap-0');
     const groupOneFlexClassNames = 'flex gap-4';
@@ -381,19 +405,45 @@ const WithdrawalsPageHeaderContainer = ({
                         })}
                     </Tooltip>
                 )}
-                <NavElement
-                    href={
-                        t('site.navLinks.transactions.withdrawalStart.href', {
-                            id: policyNumber,
-                            planCode,
-                        }) || ''
-                    }
-                    size={NavElementSize.Small}
-                    type={NavElementType.Link}
-                    data-testid="surrender-policy-link"
-                >
-                    {t('withdrawals.surrenderPolicy')}
-                </NavElement>
+                {fullSurrenderEligibility?.isEligibleFullSurrender ? (
+                    <NavElement
+                        href={
+                            t(
+                                'site.navLinks.transactions.withdrawalStart.href',
+                                {
+                                    id: policyNumber,
+                                    planCode,
+                                }
+                            ) || ''
+                        }
+                        size={NavElementSize.Small}
+                        type={NavElementType.Link}
+                        data-testid="surrender-policy-link"
+                    >
+                        {t('withdrawals.surrenderPolicy')}
+                    </NavElement>
+                ) : (
+                    <Tooltip
+                        placement={TooltipPlacement.TopLeft}
+                        trigger={
+                            <NavElement
+                                href="#"
+                                disabled
+                                size={NavElementSize.Small}
+                                type={NavElementType.Link}
+                                className="text-gray-400 cursor-not-allowed pointer-events-none"
+                                data-testid="surrender-policy-link-disabled"
+                            >
+                                {t('withdrawals.surrenderPolicy')}
+                            </NavElement>
+                        }
+                    >
+                        {t('withdrawals.rules.statusTooltip', {
+                            status: status,
+                        })}
+                    </Tooltip>
+                )}
+
                 {freeLookEnabled &&
                     policyDetails.freeLookPeriodDetails.isInFreeLookPeriod && (
                         <NavElement
