@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import PageLoader, {
@@ -46,45 +46,23 @@ const SswEditSelection = ({ carrier }: { carrier?: string }) => {
     const [sswRequest, setSswRequest] = useState(SswUpdateOption.NEW);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        switch (sswRequest) {
-            case SswUpdateOption.BANK_UPDATE: {
-                setLoading(true);
-                router.push(
-                    `/ssw-edit/bank-update?taskId=${initialForm?.taskId}`
-                );
-                break;
-            }
-            case SswUpdateOption.SSW_UPDATE: {
-                setLoading(true);
-                router.push(
-                    `/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=SSW`
-                );
-                break;
-            }
-            case SswUpdateOption.RMD_UPDATE: {
-                setLoading(true);
-                router.push(
-                    `/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=RMD`
-                );
-                break;
-            }
-            case SswUpdateOption.EFT_DRAW_UPDATE: {
-                setLoading(true);
-                router.push(
-                    `/ssw-edit/ssw-update?taskId=${initialForm?.taskId}&programType=EFT`
-                );
-                break;
-            }
-            case SswUpdateOption.WITHHOLDING_UPDATE: {
-                setLoading(true);
-                router.push(
-                    `/ssw-edit/withholding-update?taskId=${initialForm?.taskId}`
-                );
-                break;
-            }
+    const handleChange = (val: string) => {
+        const routeMap: Record<string, string> = {
+            [SswUpdateOption.BANK_UPDATE]: '/ssw-edit/bank-update',
+            [SswUpdateOption.SSW_UPDATE]: '/ssw-edit/ssw-update',
+            [SswUpdateOption.RMD_UPDATE]: '/ssw-edit/ssw-update',
+            [SswUpdateOption.EFT_DRAW_UPDATE]: '/ssw-edit/ssw-update',
+            [SswUpdateOption.WITHHOLDING_UPDATE]:
+                '/ssw-edit/withholding-update',
+        };
+
+        const route = routeMap[val];
+        if (route) {
+            setSswRequest(val as SswUpdateOption);
+            setLoading(true);
+            router.push(`${route}?taskId=${initialForm?.taskId}`);
         }
-    }, [sswRequest]);
+    };
 
     if (loading)
         return (
@@ -104,10 +82,7 @@ const SswEditSelection = ({ carrier }: { carrier?: string }) => {
                         value: SswUpdateOption;
                     }[]
                 }
-                onChange={(val: string) => {
-                    setSswRequest(val as SswUpdateOption);
-                    setLoading(true);
-                }}
+                onChange={(val) => handleChange(val)}
                 size={FieldSize.Small}
                 value={sswRequest}
                 name="sswRequest"

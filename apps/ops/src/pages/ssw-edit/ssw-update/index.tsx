@@ -189,25 +189,27 @@ export const getServerSideProps = withPageAuthAndLogging(
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
 
             const taskId = (query.taskId as string) || '';
-            const featureFlagDecisions: FeatureFlags =
-                await optimizelyService.getFeatureFlagDecisions(
-                    user.sub,
-                    loggingContext
-                );
 
-            let accessToken;
-            try {
-                accessToken = (await getAccessToken(req, res)).accessToken;
-            } catch (e) {
-                logWarn(
-                    'getServerSidePropsBankUpdatePage::Access token expired',
-                    {
-                        ...parseErrorInformation(e),
-                        ...loggingContext,
-                    }
-                );
+            const [featureFlagDecisions, accessTokenResult] = await Promise.all(
+                [
+                    optimizelyService.getFeatureFlagDecisions(
+                        user.sub,
+                        loggingContext
+                    ),
+                    getAccessToken(req, res).catch((e) => {
+                        logWarn(
+                            'getServerSidePropsBankUpdatePage::Access token expired',
+                            { ...parseErrorInformation(e), ...loggingContext }
+                        );
+                        return null;
+                    }),
+                ]
+            );
+
+            if (!accessTokenResult || !accessTokenResult.accessToken) {
                 return serverSidePropsLogout();
             }
+            const accessToken = accessTokenResult.accessToken;
 
             try {
                 const [translations, activeForm] = await Promise.all([
@@ -275,13 +277,33 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const policy = await getPolicyDetailsSsr(
-                    contractNum,
-                    planCode,
-                    accessToken,
-                    loggingContext,
-                    true
-                );
+                // Fetch policy, document, and special programs in parallel
+                const [policy, document, specialProgramdetails] =
+                    await Promise.all([
+                        getPolicyDetailsSsr(
+                            contractNum,
+                            planCode,
+                            accessToken,
+                            loggingContext,
+                            true
+                        ),
+                        documentNumber
+                            ? getDocumentV2SSR(
+                                  documentNumber,
+                                  DocumentType.SSW,
+                                  clientCode?.toUpperCase(),
+                                  accessToken as string,
+                                  loggingContext
+                              )
+                            : Promise.resolve(null),
+                        getSpecialProgramsSSR(
+                            form.data.contractNum,
+                            form.carrier,
+                            accessToken,
+                            loggingContext
+                        ),
+                    ]);
+
                 if (!policy) {
                     logError('ssw-edit::Policy not found', {
                         taskId,
@@ -298,16 +320,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     };
                 }
 
-                const document = documentNumber
-                    ? await getDocumentV2SSR(
-                          documentNumber,
-                          DocumentType.SSW,
-                          clientCode?.toUpperCase(),
-                          accessToken as string,
-                          loggingContext
-                      )
-                    : null;
-
                 if (!document) {
                     logError('ssw-edit::Error getting document', {
                         documentNumber,
@@ -323,13 +335,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
-
-                const specialProgramdetails = await getSpecialProgramsSSR(
-                    form.data.contractNum,
-                    form.carrier,
-                    accessToken,
-                    loggingContext
-                );
                 if (!specialProgramdetails) {
                     logError(
                         'ssw-edit::Special Program API responded - not found',
@@ -348,6 +353,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         },
                     };
                 }
+
                 return {
                     props: {
                         ...translations,
