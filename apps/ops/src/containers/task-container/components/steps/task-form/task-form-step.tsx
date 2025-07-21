@@ -66,7 +66,7 @@ const TaskFormStep = ({
                 formRef.current.submit();
             }
         }
-        if (readonly) {
+        if (readonly && !isSubmit) {
             goToNext();
         }
     }, [formRef]);
@@ -119,7 +119,7 @@ const TaskFormStep = ({
                             : (t('continue') as string)
                     }
                     cancelLabel={t('cancel') as string}
-                    isSubmit={readonly ? false : true}
+                    isSubmit={isSubmit}
                     handleContinue={handleStepContinue}
                     handleSaveAsDraft={handleSaveAsDraft}
                     isDraft={isSaveAsDraftEnabled}

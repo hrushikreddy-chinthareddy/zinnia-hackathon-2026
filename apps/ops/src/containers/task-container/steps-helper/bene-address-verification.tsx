@@ -12,15 +12,16 @@ export const getBeneAddressVerificationSteps = ({
     isContinueButtonEnabled,
     task,
 }: GetStepsProps) => {
+    const readOnly = task.status === TaskStatus.Completed;
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
         isVisible: () => true,
         component: (
             <TaskFormStep
-                readonly={task.status === TaskStatus.Completed}
+                readonly={readOnly}
                 isContinueButtonEnabled={isContinueButtonEnabled}
                 taskInfoLink={taskInfoLink}
-                isSubmit={true}
+                isSubmit={readOnly ? false : true}
                 taskMetadata={metadata}
                 key={`step_${index}`}
             ></TaskFormStep>

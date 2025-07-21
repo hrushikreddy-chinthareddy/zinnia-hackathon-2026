@@ -63,6 +63,7 @@ type TaskQueueTableRowProps = {
 
 const TaskQueueTableRow = ({
     task,
+    featureFlagDecisions,
     getTasks,
     setErrorMessage,
 }: TaskQueueTableRowProps) => {
@@ -184,6 +185,7 @@ const TaskQueueTableRow = ({
                         : t('sideSheet.task.heading')
                 }`,
                 <GlobalTaskSideSheet
+                    featureFlagDecisions={featureFlagDecisions}
                     taskId={id}
                     taskDescription={task?.taskDetails}
                     onTaskClaimSuccess={handleTaskClaimSuccess}

@@ -39,7 +39,7 @@ export const getSuitabilitySteps = ({
             isVisible: () => isReadyForDataEntry,
             component: (
                 <TaskFormStep
-                    readonly={task.status === TaskStatus.Completed}
+                    readonly={readOnly}
                     taskInfoLink={taskInfoLink}
                     isSubmit={false}
                     taskMetadata={taskMetadata[0]}
@@ -59,8 +59,8 @@ export const getSuitabilitySteps = ({
                 <TaskFormStep
                     isContinueButtonEnabled={isContinueButtonEnabled}
                     taskInfoLink={taskInfoLink}
-                    readonly={readOnly}
-                    isSubmit={!readOnly ? true : false}
+                    readonly={true}
+                    isSubmit={readOnly ? false : true}
                     taskMetadata={taskMetadata[0]}
                 ></TaskFormStep>
             ),

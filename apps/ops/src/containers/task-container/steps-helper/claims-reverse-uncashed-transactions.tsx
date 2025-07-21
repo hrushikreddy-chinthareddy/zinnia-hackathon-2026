@@ -12,6 +12,7 @@ export const getClaimReverseUncashTxnSteps = ({
     task,
     isContinueButtonEnabled,
 }: GetStepsProps) => {
+    const readOnly = task.status === TaskStatus.Completed;
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
         isVisible: () => true,
@@ -19,10 +20,10 @@ export const getClaimReverseUncashTxnSteps = ({
             <div className="bg-white shadow-elevation-light-04">
                 <TaskFormStep
                     taskInfoLink={taskInfoLink}
-                    isSubmit={true}
+                    isSubmit={readOnly ? false : true}
                     taskMetadata={metadata}
                     key={`step_${index}`}
-                    readonly={task.status === TaskStatus.Completed}
+                    readonly={readOnly}
                     isContinueButtonEnabled={isContinueButtonEnabled}
                 ></TaskFormStep>
             </div>

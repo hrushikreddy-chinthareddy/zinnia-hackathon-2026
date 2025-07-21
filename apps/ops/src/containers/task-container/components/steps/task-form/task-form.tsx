@@ -183,7 +183,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     };
 
     const handleSubmit = useCallback(async () => {
-        if (!readonly) {
+        const isSubmitAction = !readonly || (readonly && isSubmit);
+        if (isSubmitAction) {
             if (!isSubmit) {
                 await fetchData();
             } else {

@@ -12,6 +12,7 @@ export enum FEATURE_FLAGS {
     POLICY_MANAGEMENT_ANNUITIES_ENABLED = 'policy-management_feature_policy_mgmt_annuities',
     SHOW_HOME_NAV_BTN = 'show-home-nav-btn',
     ILLUSTRATIONS_EXPERIENCE = 'illustration-experience',
+    READ_ONLY_VIEW_TASK_MANAGEMENT = 'read-only-view-task-management',
     // CMW-14579 - Regulation 60
     REG_60 = 'case-management-otp_feature_regulation-60',
     SSW_MASS = 'case-management-otp_feature_mass_ssw',

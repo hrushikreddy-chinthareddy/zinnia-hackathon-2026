@@ -67,6 +67,7 @@ import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
 import { isProd } from '@deps/utils/environment.helpers';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
@@ -193,10 +194,10 @@ export default function GlobalTaskSideSheet({
     type = 'case',
     taskDescription,
     taskName,
+    featureFlagDecisions,
     onTaskClaimSuccess,
 }: TaskSideSheetProps) {
     const { t } = useTranslation();
-
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<ManagementTask | null>(null);
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
@@ -223,6 +224,8 @@ export default function GlobalTaskSideSheet({
 
     const { user } = useUser();
     const sideSheet = useSideSheetContext();
+
+    const readOnly = task?.status === TaskStatus.Completed || false;
 
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!task?.caseId) {
@@ -436,6 +439,7 @@ export default function GlobalTaskSideSheet({
         TaskStatus.New,
         TaskStatus.InProgress,
         TaskStatus.Pending,
+        TaskStatus.Completed,
     ];
 
     const showStartButton = allowedTaskStatusForStartBtnDisplay.includes(
@@ -583,6 +587,16 @@ export default function GlobalTaskSideSheet({
         CaseIdentifier.DocumentNumber
     );
 
+    const isCaseAndStartAble = type === 'case' && showStartButton && !readOnly;
+
+    const isReadOnlyWithFeatureFlag =
+        readOnly &&
+        featureFlagDecisions?.[FEATURE_FLAGS.READ_ONLY_VIEW_TASK_MANAGEMENT] &&
+        showStartButton;
+
+    const shouldRenderStartButton =
+        isCaseAndStartAble || isReadOnlyWithFeatureFlag;
+
     const renderDetails = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">
@@ -716,13 +730,16 @@ export default function GlobalTaskSideSheet({
                 )}
             </div>
 
-            {type == 'case' && !isUserAssociatedWithTask && showStartButton && (
-                <div className="bg-black text-white text-sm font-normal rounded-lg shadow p-2  whitespace-nowrap z-10  mt-8 max-w-[240px]">
-                    {t('sideSheet.task.noAssignee')}
-                </div>
-            )}
+            {type == 'case' &&
+                !isUserAssociatedWithTask &&
+                showStartButton &&
+                !readOnly && (
+                    <div className="bg-black text-white text-sm font-normal rounded-lg shadow p-2  whitespace-nowrap z-10  mt-8 max-w-[240px]">
+                        {t('sideSheet.task.noAssignee')}
+                    </div>
+                )}
 
-            {type == 'case' && showStartButton && (
+            {shouldRenderStartButton && (
                 <div
                     className={
                         !isUserAssociatedWithTask
@@ -744,7 +761,11 @@ export default function GlobalTaskSideSheet({
                         size={startLoader ? 'large' : 'small'}
                     >
                         {!startLoader ? (
-                            t('sideSheet.task.startTask')
+                            readOnly ? (
+                                t('sideSheet.task.viewTask')
+                            ) : (
+                                t('sideSheet.task.startTask')
+                            )
                         ) : (
                             <CustomLoader />
                         )}

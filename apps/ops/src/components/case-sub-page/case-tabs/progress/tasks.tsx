@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
@@ -52,6 +53,7 @@ export const SupportedTaskMap = [
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
+    const { featureFlags } = useOptimizely();
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
@@ -62,6 +64,7 @@ export function Task({ task }: { task: TaskView }) {
             }`,
 
             <GlobalTaskSideSheet
+                featureFlagDecisions={featureFlags}
                 taskId={task.id}
                 taskDescription={task.description}
             />

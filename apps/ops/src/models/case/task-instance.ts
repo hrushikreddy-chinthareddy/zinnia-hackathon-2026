@@ -1,3 +1,5 @@
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+
 import { AdditionalDataInstance } from './additional-data-instance';
 import { IdentifierInstance } from './identifier-instance';
 
@@ -140,6 +142,7 @@ export type DocumentData = {
 export interface TaskSideSheetProps {
     taskId: string;
     type?: string;
+    featureFlagDecisions?: FeatureFlags;
     taskDescription?: string;
     taskName?: string;
     onTaskClaimSuccess?: () => void;

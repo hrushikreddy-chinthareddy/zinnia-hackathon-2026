@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { TaskStatus } from '@deps/models/case/task-instance';
+
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { Claims150Call } from '../components/steps/claims/claim-150-call';
@@ -26,6 +28,8 @@ export const getDay150ReviewSteps = ({
         }
     );
 
+    const readOnly = task.status === TaskStatus.Completed;
+
     const steps: Step[] = [
         {
             isVisible: () => true,
@@ -44,11 +48,14 @@ export const getDay150ReviewSteps = ({
             isVisible: () => true,
             component: (
                 <MemoizedTaskFormStep
+                    readonly={readOnly}
                     taskInfoLink={taskInfoLink}
                     isSubmit={
-                        task.data.details.benefinalcontactattempt
-                            ?.beneficiaryChangeDetail?.changeType ===
-                        'BENEFICIARY_ADDRESS_CHANGE'
+                        readOnly
+                            ? false
+                            : task.data.details.benefinalcontactattempt
+                                  ?.beneficiaryChangeDetail?.changeType ===
+                              'BENEFICIARY_ADDRESS_CHANGE'
                     }
                     taskMetadata={taskMetadata[0]}
                     key={`step_${0}`}

@@ -1,13 +1,17 @@
+import { TaskStatus } from '@deps/models/case/task-instance';
+
 import { GetStepsProps } from './types';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
 const getDefaultTaskSteps = ({
+    task,
     taskType,
     taskInfoLink,
     t,
     taskMetadata,
 }: GetStepsProps) => {
+    const readOnly = task.status === TaskStatus.Completed;
     const confirmStep = {
         ariaLabel: t('confirm'),
         isVisible: () => Boolean(true),
@@ -29,8 +33,9 @@ const getDefaultTaskSteps = ({
         isVisible: () => Boolean(true),
         component: (
             <TaskFormStep
+                readonly={readOnly}
                 taskInfoLink={taskInfoLink}
-                isSubmit={true}
+                isSubmit={readOnly ? false : true}
                 taskMetadata={metadata}
                 key={`step_${index}`}
             ></TaskFormStep>

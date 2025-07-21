@@ -71,13 +71,14 @@ const TransactionNavigationButtons = ({
     const { sessionId, partyId } = usePermissionsContext();
     const router = useRouter();
 
-    const submitLbl = readonly
-        ? t('general.next')
-        : isSubmit
-        ? submitLabel?.length
-            ? submitLabel
-            : t('general.submitPayment')
-        : t('general.continue');
+    const submitLbl =
+        readonly && !isSubmit
+            ? t('general.next')
+            : isSubmit
+            ? submitLabel?.length
+                ? submitLabel
+                : t('general.submitPayment')
+            : t('general.continue');
     const cancelLbl = cancelLabel?.length
         ? cancelLabel
         : t('general.leaveTransaction');
