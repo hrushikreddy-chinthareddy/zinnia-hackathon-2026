@@ -29,7 +29,9 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
-import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
+import PayeeSummaryCard, {
+    Charges,
+} from '@deps/containers/payee-summary-card/payee-summary-card';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -303,8 +305,11 @@ const Summary = ({ policy }: SummaryProps) => {
                         DEFAULT_ERROR_STRING
                     )}
                     // Hardcoded for MVP but should write a function to default to these values when charges is null
-                    withdrawalChargeDollarAmount="$0.00"
                     fboFfc={fboFfc}
+                    charges={
+                        (validationResponse?.quoteResponse
+                            ?.charges as Charges[]) || []
+                    }
                 />
 
                 {!validationSucceeded && (

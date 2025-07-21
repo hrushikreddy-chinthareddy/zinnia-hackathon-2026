@@ -20,12 +20,20 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { formatAddress } from '@deps/helpers/address.helpers';
+import { negativeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { getPaymentType } from '@deps/helpers/systematic-program.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import PayeeSummaryCardRow from './payee-summary-card-row/payee-summary-card-row';
 import { getBeneficiaryColor } from '../people-card-container/people-card-container.helpers';
+
+export interface Charges {
+    chargeType: string;
+    coverageId: string;
+    chargeAmount: string;
+    chargeAppliedRate?: string;
+}
 
 interface FinancialDataProps {
     beneficiaryColor?: boolean;
@@ -36,10 +44,9 @@ interface FinancialDataProps {
     stateTaxDollarAmount?: string;
     stateTaxPercentage?: string;
     totalAllocationAmount?: string;
-    withdrawalChargeDollarAmount?: string;
-    withdrawalChargePercentage?: string;
     disbursementType?: DisbursementType;
     ownerTaxState?: string;
+    charges?: Charges[];
 }
 
 interface PayeeNameProps {
@@ -77,11 +84,10 @@ const FinancialData = ({
     stateTaxDollarAmount,
     stateTaxPercentage,
     totalAllocationAmount,
-    withdrawalChargeDollarAmount,
-    withdrawalChargePercentage,
     disbursementType,
     t,
     ownerTaxState,
+    charges,
 }: FinancialDataProps & TranslationProps) => {
     return (
         <div className="mt-6">
@@ -105,11 +111,13 @@ const FinancialData = ({
                 percentage={requestedAmountPercentage}
             />
             <hr className="my-4 h-0.5 border-none bg-gray-100" />
-            <PayeeSummaryCardRow
-                amount={withdrawalChargeDollarAmount}
-                label={t('payeeSummaryCard.withdrawalCharge') as string}
-                percentage={withdrawalChargePercentage}
-            />
+            {charges?.map((charge, index) => (
+                <PayeeSummaryCardRow
+                    key={index}
+                    amount={negativeNumberFormatify(charge.chargeAmount)}
+                    label={charge.chargeType}
+                />
+            ))}
             <PayeeSummaryCardRow
                 amount={federalTaxDollarAmount}
                 label={t('payeeSummaryCard.federalTax') as string}
@@ -287,11 +295,10 @@ const PayeeSummaryCard = ({
     stateTaxDollarAmount,
     stateTaxPercentage,
     totalAllocationAmount,
-    withdrawalChargeDollarAmount,
-    withdrawalChargePercentage,
     disbursementType,
     ownerTaxState,
     fboFfc,
+    charges,
 }: PayeeSummaryCardProps) => {
     const { t } = useTranslation();
     const containerClasses = clsx(
@@ -326,14 +333,9 @@ const PayeeSummaryCard = ({
                             stateTaxDollarAmount={stateTaxDollarAmount}
                             stateTaxPercentage={stateTaxPercentage}
                             totalAllocationAmount={totalAllocationAmount}
-                            withdrawalChargeDollarAmount={
-                                withdrawalChargeDollarAmount
-                            }
-                            withdrawalChargePercentage={
-                                withdrawalChargePercentage
-                            }
                             disbursementType={disbursementType}
                             ownerTaxState={ownerTaxState}
+                            charges={charges}
                         />
                     )}
                 </div>
