@@ -82,12 +82,12 @@ const getElectedFundsViewModel = async ({
 }: ElectedFundsViewModelProps): Promise<FundViewModel[]> => {
     const electedFunds: FundViewModel[] = [];
 
-    Object.keys(fundAllocationsInvestmentsMap || {}).filter(async (fundId) => {
-        const allocationFund = allocationFundsMap?.[fundId as string];
-        const fundInfo = fundsInfoMap?.[fundId as string];
-        const productFund = productFunds?.[fundId as string];
+    for (const fundId of Object.keys(fundAllocationsInvestmentsMap || {})) {
+        const allocationFund = allocationFundsMap?.[fundId];
+        const fundInfo = fundsInfoMap?.[fundId];
+        const productFund = productFunds?.[fundId];
         const fundAllocationInvestment =
-            fundAllocationsInvestmentsMap?.[fundId as string];
+            fundAllocationsInvestmentsMap?.[fundId];
 
         const electedFund = await getFundViewModel(
             allocationFund,
@@ -98,7 +98,7 @@ const getElectedFundsViewModel = async ({
         );
 
         electedFunds.push(electedFund);
-    });
+    }
 
     return electedFunds;
 };
