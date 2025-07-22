@@ -93,15 +93,6 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const documentType = query.documentType as string;
             const carrierCode = query.carrierCode as string;
-
-            if (!documentType || !carrierCode || !id) {
-                return {
-                    redirect: {
-                        destination: '/406',
-                        permanent: false,
-                    },
-                };
-            }
             const featureFlagVariables =
                 await optimizelyService.getAllFeatureFlagVariables(
                     user.sub,
@@ -114,6 +105,15 @@ export const getServerSideProps = withPageAuthAndLogging(
                 OptimizelyVariableKey.Clients,
                 carrierCode?.toLocaleLowerCase() || ''
             );
+
+            if ((!useV3 && !documentType && !carrierCode) || !id) {
+                return {
+                    redirect: {
+                        destination: '/406',
+                        permanent: false,
+                    },
+                };
+            }
 
             let docDownload;
             if (useV3) {
