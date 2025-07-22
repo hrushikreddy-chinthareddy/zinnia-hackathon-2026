@@ -475,7 +475,8 @@
                 "female": "Female",
                 "formValidations": {
                     "firstName": "First name is required",
-                    "lastName": "Name is required"
+                    "lastName": "Name is required",
+                    "last": "Last name is required"
                 }
             },
             "contactInfo": {
@@ -568,7 +569,7 @@
             },
             "close": "Close section",
             "formValidations": {
-                "firstNames": "Please make sure first or company or trustee name is updated while adding / updating beneficiaries",
+                "firstNames": "Please make sure first and last or company or trustee name is updated while adding / updating beneficiaries",
                 "primaryBeneficiaryAllocationsSum": "The sum of all primary beneficiary allocations should be 100%",
                 "contingentBeneficiaryAllocationsSum": "The sum of all contingent beneficiary allocations should be 100%",
                 "addressDetails": "Please make sure address details are filled properly while adding / updating beneficiary",

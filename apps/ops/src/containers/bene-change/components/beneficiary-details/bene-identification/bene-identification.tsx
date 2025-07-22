@@ -109,7 +109,10 @@ const BeneficiaryIdentification = ({
 
     useEffect(() => {
         setCurrentParty((prevState: any) => ({ ...prevState, ...party }));
-        if (partyIdentification === PartyType.INDIVIDUAL && !party.firstName) {
+        if (
+            partyIdentification === PartyType.INDIVIDUAL &&
+            !party?.firstName?.trim()
+        ) {
             setCurrentErrors((prevState: any) => ({
                 ...prevState,
                 firstName: t('formValidations.firstName'),
@@ -135,6 +138,14 @@ const BeneficiaryIdentification = ({
             : null;
         setParty((prevState: any) => ({ ...prevState, dateOfBirth: dob }));
     }, [dateOfBirth]);
+
+    const getVariant = (key: string) => {
+        return isReadOnly
+            ? FieldVariant.Inactive
+            : !party?.[key]?.trim()
+            ? FieldVariant.Error
+            : FieldVariant.Default;
+    };
 
     return (
         <div>
@@ -183,13 +194,7 @@ const BeneficiaryIdentification = ({
                                 type={FieldType.BaseActive}
                                 value={party?.firstName || ''}
                                 maxLength={15}
-                                variant={
-                                    isReadOnly
-                                        ? FieldVariant.Inactive
-                                        : currentErrors?.firstName
-                                        ? FieldVariant.Error
-                                        : FieldVariant.Default
-                                }
+                                variant={getVariant('firstName')}
                                 required
                             />
                             <Field
@@ -218,21 +223,23 @@ const BeneficiaryIdentification = ({
                                         lastName: event.target.value,
                                     }));
                                 }}
+                                message={
+                                    !isReadOnly && !party?.lastName?.trim()
+                                        ? t('formValidations.last')
+                                        : ''
+                                }
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={party?.lastName || ''}
                                 maxLength={40}
-                                variant={
-                                    isReadOnly
-                                        ? FieldVariant.Inactive
-                                        : FieldVariant.Default
-                                }
+                                variant={getVariant('lastName')}
+                                required={true}
                             />
-                               <SelectSimple
+                            <SelectSimple
                                 label={t('suffix') as string}
                                 options={suffixOptions(t)}
                                 onChange={(value) =>
-                                     setParty((prevState: any) => ({
+                                    setParty((prevState: any) => ({
                                         ...prevState,
                                         suffix: value,
                                     }))

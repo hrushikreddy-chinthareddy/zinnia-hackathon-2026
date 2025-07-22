@@ -568,7 +568,8 @@
                 "female": "Femme",
                 "formValidations": {
                     "firstName": "Le prénom est requis",
-                    "lastName": "Le nom est requis"
+                    "lastName": "Le nom est requis",
+                    "last": "Le nom de famille est requis"
                 }
             },
             "contactInfo": {
@@ -661,7 +662,7 @@
             },
             "close": "Fermer la section",
             "formValidations": {
-                "firstNames": "Veuillez vous assurer que le prénom, le nom de l'entreprise ou le nom du fiduciaire est mis à jour lors de l'ajout/mise à jour des bénéficiaires.",
+                "firstNames": "Veuillez vous assurer que le prénom et le nom de famille ou le nom de l'entreprise ou du fiduciaire sont mis à jour lors de l'ajout/mise à jour des bénéficiaires",
                 "primaryBeneficiaryAllocationsSum": "La somme de toutes les allocations des principaux bénéficiaires doit être de 100 %",
                 "contingentBeneficiaryAllocationsSum": "La somme de toutes les allocations de bénéficiaires conditionnels doit être de 100 %",
                 "addressDetails": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du bénéficiaire",

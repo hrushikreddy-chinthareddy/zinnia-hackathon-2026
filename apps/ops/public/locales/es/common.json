@@ -509,7 +509,8 @@
                 "female": "Femenino",
                 "formValidations": {
                     "firstName": "El nombre es obligatorio",
-                    "lastName": "El apellido es obligatorio"
+                    "lastName": "El apellido es obligatorio",
+                    "last": "El apellido es obligatorio"
                 }
             },
             "contactInfo": {
@@ -602,7 +603,7 @@
             },
             "close": "Cerrar sección",
             "formValidations": {
-                "firstNames": "Asegúrese de que el nombre, nombre de la empresa o nombre del fiduciario esté actualizado al agregar/actualizar beneficiarios",
+                "firstNames": "Por favor, asegúrese de que el nombre y el apellido o el nombre de la empresa o el nombre del fiduciario estén actualizados al agregar/actualizar beneficiarios",
                 "primaryBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios primarios debe ser del 100%",
                 "contingentBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios contingentes debe ser del 100%",
                 "addressDetails": "Asegúrese de que los detalles de la dirección estén correctamente llenados al agregar/actualizar beneficiarios",

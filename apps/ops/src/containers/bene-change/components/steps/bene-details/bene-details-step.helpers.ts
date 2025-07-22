@@ -22,7 +22,10 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
                 item?.party?.allocation?.relationshipToParty ?? '';
 
             if (partyType === PartyType.INDIVIDUAL) {
-                if (!item?.party?.info?.firstName) {
+                if (
+                    !item?.party?.info?.firstName?.trim() ||
+                    !item?.party?.info?.lastName?.trim()
+                ) {
                     firstNameErrors++;
                 }
             }
