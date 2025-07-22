@@ -1,16 +1,13 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { Policy } from '@zinnia/api-types/types/sor';
+import { Policy } from '@xd/api-types/dist/generated-types/sor';
+import dynamic from 'next/dynamic';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useMemo, useState } from 'react';
 
-import ConfirmComponent from '@deps/components/otp-send-document/confirm';
-import Correspondence from '@deps/components/otp-send-document/correspondence';
 import { generateCommunicationRequest } from '@deps/components/otp-send-document/correspondence.helpers';
-import FormSelection, {
-    DefaultFormDetail,
-} from '@deps/components/otp-send-document/form-selection';
+import { DefaultFormDetail } from '@deps/components/otp-send-document/form-selection';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -27,22 +24,25 @@ import {
     CorrespondenceFormParts,
 } from '@deps/models/case/correspondence';
 import {
-    AvailableFormsTransaction,
     CommunicationTypes,
     SearchTransactionRequestBody,
+    SearchTransactionResponseBody,
     SendDocumentFormParts,
     SendDocumentFormType,
 } from '@deps/models/case/send-document';
 import { UserProfile } from '@deps/models/user-profile';
+import Custom404Page from '@deps/pages/404s';
 import {
-    getSearchTransactionsSSR,
+    getSearchTransactions,
     sendCommunication,
 } from '@deps/queries/api/c2web';
-import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import { fetchPolicy } from '@deps/queries/api/policies';
+import { baseAppUrl } from '@deps/queries/api-config';
 import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -52,42 +52,116 @@ import {
     logWarn,
     logError,
     parseErrorInformation,
-    logInfo,
     withPageAuthAndLogging,
+    LoggingContext,
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
+const FormSelection = dynamic(
+    () => import('@deps/components/otp-send-document/form-selection')
+);
+const Correspondence = dynamic(
+    () => import('@deps/components/otp-send-document/correspondence')
+);
+const ConfirmComponent = dynamic(
+    () => import('@deps/components/otp-send-document/confirm')
+);
+
 interface SendDocumentProps extends SegmentTrackedPageProps {
-    policy: Policy;
-    availableFormsTransactions: AvailableFormsTransaction[];
-    shouldShowCaseButton: FeatureFlags;
-    shouldShowMailOption: FeatureFlags;
+    featureFlagDecisions: FeatureFlags;
     user: UserProfile;
 }
 
-const SendDocument = ({
-    policy,
-    availableFormsTransactions,
-    shouldShowCaseButton,
-    shouldShowMailOption,
-    user,
-}: SendDocumentProps) => {
+const SendDocument = ({ featureFlagDecisions, user }: SendDocumentProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+
+    const { ctiCallNumber, correlationId, policyNumber, planCode } =
+        router.query;
 
     const [formDetails, setFormDetails] = useState<SendDocumentFormParts[]>([
         DefaultFormDetail,
     ]);
-    const { ctiCallNumber, correlationId } = router.query;
 
     useSegmentPageTracker(user, SegmentPageName.SendDocument, {
         ctiCallNumber,
         correlationId,
-        policyNumber: policy.policyNumber,
+        policyNumber: policyNumber,
     });
 
     const formSelectionLabel = t('tabs.formSelection');
     const CorrespondenceLabel = t('tabs.correspondence');
     const confirmLabel = t('tabs.confirm');
+
+    const shouldShowCaseButton =
+        featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON] ??
+        false;
+
+    const [policy, setPolicy] = useState<Policy>();
+    const [notFound, setNotFound] = useState<boolean>(false);
+    const [availableFormsTransactions, setAvailableFormsTransactions] =
+        useState<SearchTransactionResponseBody>([]);
+    const [areFormsLoading, setAreFormsLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!policyNumber || !planCode || !correlationId) return;
+            setAreFormsLoading(true);
+
+            try {
+                const fetchedPolicy = await fetchPolicy(
+                    policyNumber as string,
+                    planCode as string
+                );
+                if (!fetchedPolicy) {
+                    browserLogError(
+                        `[Policy Fetch Error] No policy found for planCode: ${planCode}, policyNumber: ${policyNumber}`
+                    );
+                    setNotFound(true);
+                    return;
+                }
+                setPolicy(fetchedPolicy);
+
+                const transactionRequestBody: SearchTransactionRequestBody = {
+                    carrier: fetchedPolicy?.carrierId || '',
+                    issueState: fetchedPolicy?.issueState || '',
+                    planCode: fetchedPolicy?.product?.planCode || '',
+                };
+
+                browserLogInfo('getSearchTransactions::Fetched transactions', {
+                    payload: transactionRequestBody,
+                    url: `${baseAppUrl}/referencedata/transactions/search`,
+                    function: 'c2web.getSearchTransactions',
+                });
+
+                const transactions = await getSearchTransactions(
+                    transactionRequestBody
+                );
+                setAvailableFormsTransactions(transactions ?? []);
+            } catch (error: any) {
+                browserLogError(
+                    'getSearchTransactions:: Failed to fetch transactions',
+                    {
+                        ...parseErrorInformation(error),
+                    } as LoggingContext
+                );
+            } finally {
+                setAreFormsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [policyNumber, planCode, correlationId]);
+
+    const hideMailOptionForSpecifiedCarrier =
+        `SEND_DOCUMENT_HIDE_MAIL_OPTION_${policy?.carrierId}` as keyof typeof FEATURE_FLAGS;
+    const shouldShowMailOption =
+        (featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_MAIL_OPTION] ??
+            false) &&
+        !(
+            featureFlagDecisions?.[
+                FEATURE_FLAGS[hideMailOptionForSpecifiedCarrier]
+            ] ?? false
+        );
 
     const communicationTypes = useMemo(
         () => [
@@ -143,7 +217,7 @@ const SendDocument = ({
         );
 
         const requestBody = generateCommunicationRequest(
-            policy,
+            policy ?? {},
             state?.correspondence?.type as CommunicationTypes,
             state,
             user,
@@ -164,48 +238,67 @@ const SendDocument = ({
         }
     };
 
-    const steps: Step[] = [
-        {
-            component: (
-                <FormSelection
-                    policy={policy}
-                    ctiCallNumber={ctiCallNumber as string}
-                    formDetails={formDetails}
-                    setFormDetails={setFormDetails}
-                    availableFormsTransactions={availableFormsTransactions}
-                />
-            ),
-            screenReaderLabel: formSelectionLabel,
-            index: 0,
-            text: formSelectionLabel,
-        },
-        {
-            component: (
-                <Correspondence
-                    communicationOptions={communicationOptions}
-                    policy={policy}
-                    submitRequest={handleSubmitRequest}
-                />
-            ),
-            screenReaderLabel: CorrespondenceLabel,
-            index: 1,
-            text: CorrespondenceLabel,
-        },
-        {
-            component: (
-                <ConfirmComponent
-                    shouldShowCaseButton={shouldShowCaseButton}
-                    formNames={formDetails.map(
-                        (formDetail) =>
-                            formDetail.document.selected?.formShortName || ''
-                    )}
-                />
-            ),
-            screenReaderLabel: confirmLabel,
-            index: 2,
-            text: confirmLabel,
-        },
-    ];
+    const steps: Step[] = useMemo(
+        () => [
+            {
+                component: (
+                    <FormSelection
+                        policy={policy ?? {}}
+                        ctiCallNumber={ctiCallNumber as string}
+                        formDetails={formDetails}
+                        setFormDetails={setFormDetails}
+                        availableFormsTransactions={
+                            availableFormsTransactions ?? []
+                        }
+                        isLoading={areFormsLoading}
+                    />
+                ),
+                screenReaderLabel: formSelectionLabel,
+                index: 0,
+                text: formSelectionLabel,
+            },
+            {
+                component: (
+                    <Correspondence
+                        communicationOptions={communicationOptions}
+                        policy={policy ?? {}}
+                        submitRequest={handleSubmitRequest}
+                    />
+                ),
+                screenReaderLabel: CorrespondenceLabel,
+                index: 1,
+                text: CorrespondenceLabel,
+            },
+            {
+                component: (
+                    <ConfirmComponent
+                        shouldShowCaseButton={shouldShowCaseButton}
+                        formNames={formDetails.map(
+                            (formDetail) =>
+                                formDetail.document.selected?.formShortName ||
+                                ''
+                        )}
+                    />
+                ),
+                screenReaderLabel: confirmLabel,
+                index: 2,
+                text: confirmLabel,
+            },
+        ],
+        [
+            policy,
+            formSelectionLabel,
+            confirmLabel,
+            CorrespondenceLabel,
+            communicationOptions,
+            formDetails,
+            availableFormsTransactions,
+        ]
+    );
+
+    if (notFound) {
+        return <Custom404Page />;
+    }
 
     return (
         <>
@@ -214,6 +307,7 @@ const SendDocument = ({
                 <TabGroupContainer
                     steps={steps}
                     policy={new PolicyDetails(policy)}
+                    showLoader={true}
                 ></TabGroupContainer>
             </CorrespondenceProvider>
         </>
@@ -224,10 +318,7 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const { locale = DEFAULT_LOCALE, query, req, res } = context;
-            const planCode = (query.planCode as string) || '';
-            const policyNumber = (query?.policyNumber as string) || '';
-            const correlationId = (query?.correlationId as string) || '';
+            const { locale = DEFAULT_LOCALE, req, res } = context;
 
             let accessToken;
             try {
@@ -242,6 +333,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
                 return serverSidePropsLogout();
             }
+
             // Create a permissions object to pass to the page, strongly typed using the enum.
             const featureFlagDecisions: FeatureFlags =
                 await optimizelyService.getFeatureFlagDecisions(
@@ -250,10 +342,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
             const shouldShowSendDocumentPage =
                 featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT];
-            const shouldShowCaseButton =
-                featureFlagDecisions?.[
-                    FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON
-                ];
 
             if (!shouldShowSendDocumentPage) {
                 return {
@@ -271,58 +359,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
             try {
-                const policy = await getPolicyDetailsSsr(
-                    policyNumber,
-                    planCode,
-                    accessToken,
-                    loggingContext,
-                    true
-                );
-                if (!policy) {
-                    logInfo(
-                        'contact-center/send-document/policy-not-found',
-                        loggingContext
-                    );
-                    return {
-                        redirect: {
-                            destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
-                            permanent: false,
-                        },
-                    };
-                }
-                const transactionRequestBody: SearchTransactionRequestBody = {
-                    carrier: policy.carrierId || '',
-                    issueState: policy.issueState || '',
-                    planCode: policy.product?.planCode || '',
-                };
-
-                const transactionTypeSubTypes = await getSearchTransactionsSSR(
-                    transactionRequestBody,
-                    accessToken,
-                    {
-                        ...loggingContext,
-                        correlationId,
-                    }
-                );
-                const hideMailOptionForSpecifiedCarrier =
-                    `SEND_DOCUMENT_HIDE_MAIL_OPTION_${policy.carrierId}` as keyof typeof FEATURE_FLAGS;
-
-                const shouldShowMailOption =
-                    featureFlagDecisions?.[
-                        FEATURE_FLAGS.SEND_DOCUMENT_SHOW_MAIL_OPTION
-                    ] &&
-                    !featureFlagDecisions?.[
-                        FEATURE_FLAGS[hideMailOptionForSpecifiedCarrier]
-                    ];
-
                 return {
                     props: {
                         ...translations,
-                        policy,
-                        availableFormsTransactions:
-                            transactionTypeSubTypes || [],
-                        shouldShowCaseButton: shouldShowCaseButton ?? false,
-                        shouldShowMailOption: shouldShowMailOption ?? false,
+                        featureFlagDecisions,
                         user,
                     },
                 };

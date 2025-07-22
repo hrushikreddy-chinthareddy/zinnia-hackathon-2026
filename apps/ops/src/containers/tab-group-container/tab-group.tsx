@@ -15,8 +15,13 @@ import GlobalValuesBar from '../../components/global-values/global-values-bar/gl
 type TabGroupContainerProps = {
     steps: Step[];
     policy: PolicyDetails;
+    showLoader?: boolean;
 };
-const TabGroupContent = ({ steps, policy }: TabGroupContainerProps) => {
+const TabGroupContent = ({
+    steps,
+    policy,
+    showLoader,
+}: TabGroupContainerProps) => {
     const { t } = useTranslation();
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const globalValuesData = useMemo(
@@ -51,6 +56,7 @@ const TabGroupContent = ({ steps, policy }: TabGroupContainerProps) => {
                 status={status}
                 tooltip={tooltip}
                 variant={variant}
+                showLoader={showLoader}
             />
             <ProgressBarSteps
                 currentStepIndex={Number(currentStepIndex)}
@@ -64,10 +70,18 @@ const TabGroupContent = ({ steps, policy }: TabGroupContainerProps) => {
     );
 };
 
-const TabGroupContainer = ({ steps, policy }: TabGroupContainerProps) => {
+const TabGroupContainer = ({
+    steps,
+    policy,
+    showLoader,
+}: TabGroupContainerProps) => {
     return (
         <WorkflowProvider>
-            <TabGroupContent steps={steps} policy={policy} />
+            <TabGroupContent
+                steps={steps}
+                policy={policy}
+                showLoader={showLoader}
+            />
         </WorkflowProvider>
     );
 };

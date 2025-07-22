@@ -11,6 +11,7 @@ import {
     PolicyOwner,
     PolicyOwnerProps,
 } from '@deps/components/global-values/policy-owner/policy-owner';
+import { LabelContentSkeleton } from '@deps/containers/policy-summary-card/skeletons';
 
 import { DocumentInfo } from '../document-info';
 
@@ -24,6 +25,7 @@ export interface GlobalValuesBarProps
     showLink?: boolean;
     showDocument?: boolean;
     documentNumber?: string;
+    showLoader?: boolean;
     className?: string;
 }
 
@@ -49,8 +51,23 @@ const GlobalValuesBar = ({
     showLink = true,
     showDocument = false,
     documentNumber,
+    showLoader,
     className,
 }: GlobalValuesBarProps) => {
+    const renderWithSkeleton = (
+        condition: boolean,
+        children: React.ReactNode
+    ) => {
+        return condition ? (
+            <div className="flex flex-col mx-8 ml-0">
+                <LabelContentSkeleton />
+                <LabelContentSkeleton />
+            </div>
+        ) : (
+            children
+        );
+    };
+
     return (
         <div
             className={clsx(
@@ -59,30 +76,36 @@ const GlobalValuesBar = ({
             )}
         >
             <div className="mr-0 flex flex-col md:flex-row">
-                <PolicyInfo
-                    carrierId={carrierId}
-                    highlight={highlight}
-                    marketingName={marketingName}
-                    openSideSheet={openSideSheet}
-                    policyNumber={policyNumber}
-                    planName={planName}
-                    productType={productType}
-                    status={status}
-                    tooltip={tooltip}
-                    tooltipAmount={tooltipAmount}
-                    tooltipPlacements={tooltipPlacements}
-                    variant={variant}
-                />
+                {renderWithSkeleton(
+                    !!showLoader && !carrierId,
+                    <PolicyInfo
+                        carrierId={carrierId}
+                        highlight={highlight}
+                        marketingName={marketingName}
+                        openSideSheet={openSideSheet}
+                        policyNumber={policyNumber}
+                        planName={planName}
+                        productType={productType}
+                        status={status}
+                        tooltip={tooltip}
+                        tooltipAmount={tooltipAmount}
+                        tooltipPlacements={tooltipPlacements}
+                        variant={variant}
+                    />
+                )}
                 {policyNumber && divider && (
                     <div className="mx-8 flex w-0.5 border-l-2 border-l-gray-200" />
                 )}
-                <PolicyOwner
-                    owner={owner}
-                    planCode={planCode}
-                    policyNumber={policyNumber}
-                    displaySSN={showJointOwner}
-                    showLink={showLink}
-                />
+                {renderWithSkeleton(
+                    !!showLoader && !owner,
+                    <PolicyOwner
+                        owner={owner}
+                        planCode={planCode}
+                        policyNumber={policyNumber}
+                        displaySSN={showJointOwner}
+                        showLink={showLink}
+                    />
+                )}
                 {showJointOwner && (
                     <>
                         {jointOwner && <div className="mx-4 flex w-0.5" />}

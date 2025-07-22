@@ -10,7 +10,7 @@ import CardInfo from '../card/card-info/card-info';
 import { PiiWrapper } from '../pii/PiiWrapper';
 
 type ConfirmProps = {
-    shouldShowCaseButton: FeatureFlags;
+    shouldShowCaseButton: FeatureFlags | boolean;
     formNames?: string[];
 };
 

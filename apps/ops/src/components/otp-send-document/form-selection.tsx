@@ -4,6 +4,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import { v4 as uuidv4 } from 'uuid';
 
 import TransactionDocumentSelection from '@deps/containers/nigo-entry-container/components/steps/form-selection.tsx/transaction-document-selection';
+import { QuickViewSkeleton } from '@deps/containers/policy-summary-card/skeletons';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import {
     AvailableFormsTransaction,
@@ -54,6 +55,7 @@ type FormSelectionProps = {
     setFormDetails: React.Dispatch<
         React.SetStateAction<SendDocumentFormParts[]>
     >;
+    isLoading?: boolean;
 };
 
 function FormSelection({
@@ -63,6 +65,7 @@ function FormSelection({
     formDetails,
     setFormDetails,
     correlationId,
+    isLoading,
 }: FormSelectionProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
     const [forms, setForms] = useState(mapIdToFormDetails(formDetails));
@@ -126,37 +129,44 @@ function FormSelection({
                 />
             }
         >
-            {forms?.map((form, index) => (
-                <div className=" bg-gray-50 p-5 flex my-4" key={form.id}>
-                    <div className="grow">
-                        <TransactionDocumentSelection
-                            formDetails={form}
-                            setFormDetails={(val) =>
-                                updateFormDetails({ ...val, id: form.id })
-                            }
-                            policy={policy}
-                            ctiCallNumber={ctiCallNumber}
-                            availableFormsTransactions={
-                                availableFormsTransactions
-                            }
-                            key={form.id}
-                            correlationId={correlationId}
-                        />
-                    </div>
-                    {index > 0 && (
-                        <div>
-                            <NavElement
-                                size={NavElementSize.Small}
-                                type={NavElementType.Button}
-                                startIcon={
-                                    <TrashDocumentIcon width={20} height={20} />
+            {isLoading ? (
+                <QuickViewSkeleton />
+            ) : (
+                forms?.map((form, index) => (
+                    <div className=" bg-gray-50 p-5 flex my-4" key={form.id}>
+                        <div className="grow">
+                            <TransactionDocumentSelection
+                                formDetails={form}
+                                setFormDetails={(val) =>
+                                    updateFormDetails({ ...val, id: form.id })
                                 }
-                                onClick={() => removeFilter(form.id)}
-                            ></NavElement>
+                                policy={policy}
+                                ctiCallNumber={ctiCallNumber}
+                                availableFormsTransactions={
+                                    availableFormsTransactions
+                                }
+                                key={form.id}
+                                correlationId={correlationId}
+                            />
                         </div>
-                    )}
-                </div>
-            ))}
+                        {index > 0 && (
+                            <div>
+                                <NavElement
+                                    size={NavElementSize.Small}
+                                    type={NavElementType.Button}
+                                    startIcon={
+                                        <TrashDocumentIcon
+                                            width={20}
+                                            height={20}
+                                        />
+                                    }
+                                    onClick={() => removeFilter(form.id)}
+                                ></NavElement>
+                            </div>
+                        )}
+                    </div>
+                ))
+            )}
             <div>
                 <NavElement
                     className={'my-4'}
