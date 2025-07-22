@@ -6,12 +6,8 @@ import { TranslationFiles } from '@deps/config/translations';
 import DeathClaimContainer from '@deps/containers/death-claim-container/death-claim-container';
 import { DeathClaimProvider } from '@deps/contexts/DeathClaimContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import {
-    doesUserHavePagePermissions,
-    getUserData,
-} from '@deps/helpers/query-data.helpers';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { UserPermission } from '@deps/models/user-profile';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { initialDeathClaimExistsSsr } from '@deps/queries/api/web-non-financial';
@@ -58,22 +54,6 @@ export const getServerSideProps = withPageAuthAndLogging(
             } catch (e) {
                 logWarn('d-notification::Access token expired', { ...logCtx });
                 return serverSidePropsLogout();
-            }
-
-            const doesUserHasPagePermissions =
-                await doesUserHavePagePermissions(
-                    context,
-                    UserPermission.AllowReadOtpRenewals,
-                    loggingContext
-                );
-
-            if (!doesUserHasPagePermissions) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
             }
 
             try {

@@ -5,9 +5,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import CardInfo from '@deps/components/card/card-info/card-info';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { UserPermission } from '@deps/models/user-profile';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import {
     logWarn,
@@ -49,25 +47,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
                 return serverSidePropsLogout();
             }
-            // Create a permissions object to pass to the page, strongly typed using the enum.
-            const permissions = {
-                [UserPermission.AllowReadCaseManagement]: false,
-                [UserPermission.AllowReadPolicyAdmin]: false,
-            };
-
-            // We can use the enum to access the permissions object.
-            permissions[UserPermission.AllowReadCaseManagement] =
-                await doesUserHavePagePermissions(
-                    context,
-                    UserPermission.AllowReadCaseManagement,
-                    loggingContext
-                );
-            permissions[UserPermission.AllowReadPolicyAdmin] =
-                await doesUserHavePagePermissions(
-                    context,
-                    UserPermission.AllowReadPolicyAdmin,
-                    loggingContext
-                );
 
             const translations = await serverSideTranslations(
                 locale,
@@ -76,7 +55,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
 
-            return { props: { locale, ...translations, permissions } };
+            return { props: { locale, ...translations } };
         },
     },
     { file: '403', function: 'getServerSideProps', page: '403' }

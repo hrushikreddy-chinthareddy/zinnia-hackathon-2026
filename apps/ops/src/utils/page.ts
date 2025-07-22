@@ -5,7 +5,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getSelectedPolicyParty } from '@deps/helpers/party-info-helpers';
-import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helpers';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
@@ -43,12 +43,13 @@ export const getServerSidePropsPolicyDetailsPage: GetServerSidePropsWithLoggingC
         };
 
         // We can use the enum to access the permissions object.
-        permissions[UserPermission.AllowReadPolicyAdmin] =
-            await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowReadPolicyAdmin,
-                loggingContext
-            );
+        permissions[UserPermission.AllowReadPolicyAdmin] = await checkTuplePage(
+            context,
+            UserPermission.AllowReadPolicyAdmin,
+            `role_template:${UserPermission.AllowReadPolicyAdmin}`,
+            loggingContext
+        );
+
         const isAdvisorsExcel = await checkTuplePage(
             context,
             FgaRelation.Party,
@@ -61,6 +62,14 @@ export const getServerSidePropsPolicyDetailsPage: GetServerSidePropsWithLoggingC
             !isAdvisorsExcel &&
             !permissions[UserPermission.AllowReadPolicyAdmin]
         ) {
+            const user = await getUserData(context);
+            logError('getServerSidePropsPolicyDetailsPage::403 redirect', {
+                partyId: user?.partyId,
+                requestStatus: 403,
+                requestPath: context.resolvedUrl,
+                ...loggingContext,
+            });
+
             return {
                 redirect: {
                     destination: '/403',
@@ -70,12 +79,12 @@ export const getServerSidePropsPolicyDetailsPage: GetServerSidePropsWithLoggingC
         }
 
         // We can use the enum to access the permissions object.
-        permissions[UserPermission.AllowEditPolicy] =
-            await doesUserHavePagePermissions(
-                context,
-                UserPermission.AllowEditPolicy,
-                loggingContext
-            );
+        permissions[UserPermission.AllowEditPolicy] = await checkTuplePage(
+            context,
+            UserPermission.AllowEditPolicy,
+            `role_template:${UserPermission.AllowEditPolicy}`,
+            loggingContext
+        );
 
         try {
             const translations = await serverSideTranslations(

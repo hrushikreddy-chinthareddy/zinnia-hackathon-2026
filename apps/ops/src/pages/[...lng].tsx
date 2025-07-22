@@ -4,9 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
-import { UserPermission } from '@deps/models/user-profile';
 import Error from '@deps/pages/404s';
 import {
     logWarn,
@@ -42,25 +40,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 originalPath: fullPath,
                 ...loggingContext,
             });
-            // Create a permissions object to pass to the page, strongly typed using the enum.
-            const permissions = {
-                [UserPermission.AllowReadCaseManagement]: false,
-                [UserPermission.AllowReadPolicyAdmin]: false,
-            };
-
-            // We can use the enum to access the permissions object.
-            permissions[UserPermission.AllowReadCaseManagement] =
-                await doesUserHavePagePermissions(
-                    context,
-                    UserPermission.AllowReadCaseManagement,
-                    loggingContext
-                );
-            permissions[UserPermission.AllowReadPolicyAdmin] =
-                await doesUserHavePagePermissions(
-                    context,
-                    UserPermission.AllowReadPolicyAdmin,
-                    loggingContext
-                );
 
             const translations = await serverSideTranslations(
                 locale,
@@ -68,7 +47,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 nextI18nextConfig,
                 ALL_LOCALES
             );
-            return { props: { locale, ...translations, permissions } };
+            return { props: { locale, ...translations } };
         },
     },
     { file: '[...lng]', function: 'getServerSideProps', page: '404' }

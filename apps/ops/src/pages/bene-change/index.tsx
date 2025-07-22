@@ -6,11 +6,9 @@ import { TranslationFiles } from '@deps/config/translations';
 import BeneChangeContainer from '@deps/containers/bene-change/bene-change-container';
 import { BeneChangeProvider } from '@deps/containers/bene-change/bene-change-provider';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { doesUserHavePagePermissions } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { Carrier } from '@deps/models/case/withdrawal/case';
-import { UserPermission } from '@deps/models/user-profile';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import {
     getPolicyDetailsSsr,
@@ -70,21 +68,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     }
                 );
                 return serverSidePropsLogout();
-            }
-            // Create a permissions object to pass to the page, strongly typed using the enum.
-            const doesUserHasPagePermissions =
-                await doesUserHavePagePermissions(
-                    context,
-                    UserPermission.AllowReadOtpRenewals,
-                    loggingContext
-                );
-            if (!doesUserHasPagePermissions) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
             }
 
             // If feature flag is not enabled, redirect to error page
