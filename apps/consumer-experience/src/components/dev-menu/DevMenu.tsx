@@ -10,6 +10,7 @@ import {
 import Cookies from 'js-cookie';
 import { ChangeEvent, MouseEvent, useEffect, useMemo, useState } from 'react';
 
+import { removeCookie, setCookie } from '@/actions/cookie-actions';
 import useMock from '@/hooks/use-mock';
 import { ROOT_URL_PATH } from '@/types';
 import { isMockAllowed } from '@/utils';
@@ -24,10 +25,6 @@ import { zIndexOrder } from '@/utils/zIndexOrder';
 import styles from './DevMenu.module.css';
 import { MockApiErrors } from './MockApiErrors';
 import { Link } from '../link/Link';
-import {
-  removeClientCookie,
-  setClientCookie,
-} from '@/utils/client-side-cookies';
 
 export const DevMenu = () => {
   const [open, setOpen] = useState(false);
@@ -65,12 +62,17 @@ export const DevMenu = () => {
     return null;
   }
 
-  const setTestPoliciesCookie = (event: MouseEvent<HTMLButtonElement>) => {
+  const setTestPoliciesCookie = async (
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     if (testPoliciesOn) {
-      removeClientCookie(SHOW_TEST_POLICIES_COOKIE_KEY);
+      await removeCookie(SHOW_TEST_POLICIES_COOKIE_KEY);
     } else {
-      setClientCookie(SHOW_TEST_POLICIES_COOKIE_KEY, 'on');
+      await setCookie({
+        cookieName: SHOW_TEST_POLICIES_COOKIE_KEY,
+        value: 'on',
+      });
     }
 
     // const queryParams = new URLSearchParams(location.search);
@@ -79,12 +81,14 @@ export const DevMenu = () => {
     window.location.href = `${window.location.origin}/${ROOT_URL_PATH}`;
   };
 
-  const setMockFarmersECNCookie = (event: ChangeEvent<HTMLInputElement>) => {
+  const setMockFarmersECNCookie = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.checked) {
-      setClientCookie(MOCK_FARMERS_ECN_COOKIE_KEY, 'on');
+      await setCookie({ cookieName: MOCK_FARMERS_ECN_COOKIE_KEY, value: 'on' });
       setIsMockFarmersECNOn(true);
     } else {
-      removeClientCookie(MOCK_FARMERS_ECN_COOKIE_KEY);
+      await removeCookie(MOCK_FARMERS_ECN_COOKIE_KEY);
       setIsMockFarmersECNOn(false);
     }
   };

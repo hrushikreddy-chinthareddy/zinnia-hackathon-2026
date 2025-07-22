@@ -2,15 +2,12 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 import Cookies from 'js-cookie';
 import { MouseEvent, useEffect, useState } from 'react';
 
+import { removeCookie, setCookie } from '@/actions/cookie-actions';
 import { ROOT_URL_PATH } from '@/types';
 import { MOCK_ERROR_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 import styles from './DevMenu.module.css';
 import { ApiEndpoints } from './types';
-import {
-  removeClientCookie,
-  setClientCookie,
-} from '@/utils/client-side-cookies';
 
 export const MockApiErrors = () => {
   const [apiErrorSet, setApiErrorSet] = useState<string[] | null>(null);
@@ -22,12 +19,15 @@ export const MockApiErrors = () => {
     }
   }, []);
 
-  const setAPIErrorCookie = (event: MouseEvent<HTMLButtonElement>) => {
+  const setAPIErrorCookie = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (apiErrorSet && apiErrorSet.length > 0) {
-      setClientCookie(MOCK_ERROR_COOKIE_KEY, JSON.stringify(apiErrorSet));
+      await setCookie({
+        cookieName: MOCK_ERROR_COOKIE_KEY,
+        value: JSON.stringify(apiErrorSet),
+      });
     } else {
-      removeClientCookie(MOCK_ERROR_COOKIE_KEY);
+      await removeCookie(MOCK_ERROR_COOKIE_KEY);
     }
 
     const queryParams = new URLSearchParams(location.search);

@@ -318,13 +318,13 @@ export const deleteMockCookies = async (res?: NextResponse) => {
 };
 
 export const deleteSession = async (res?: NextResponse) => {
-  await deleteMockCookies(res);
-
   await deleteCookie(APP_SESSION_COOKIE_KEY, res);
   await deleteCookie(AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY, res);
   await deleteCookie(RETURN_TO_URL_COOKIE_KEY, res);
   await deleteCookie(REFRESH_ROUTER_COOKIE_KEY, res);
   await deleteCookie(CARRIER_COOKIE_KEY, res);
+
+  await deleteMockCookies(res);
 };
 /**
  * Sets a session cookie with the provided token and response object.

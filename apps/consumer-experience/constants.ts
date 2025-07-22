@@ -7,5 +7,4 @@
 // because we haven't set the NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW variable
 // is there a reason we did it in this order
 export const COOKIE_DOMAIN =
-  process.env.NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW ||
-  process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
+  process.env.AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW || process.env.VERCEL_BRANCH_URL;

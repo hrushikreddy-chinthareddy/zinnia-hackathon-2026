@@ -1,10 +1,7 @@
 import Cookies from 'js-cookie';
 import { MouseEvent, useEffect, useState } from 'react';
 
-import {
-  removeClientCookie,
-  setClientCookie,
-} from '@/utils/client-side-cookies';
+import { removeCookie, setCookie } from '@/actions/cookie-actions';
 import {
   MOCK_ANNUITY_COOKIE_KEY,
   MOCK_COOKIE_KEY,
@@ -23,12 +20,12 @@ const useMock = () => {
     setShowDevMenu(Cookies.get(SHOW_DEV_MENU_COOKIE_KEY) === 'true');
   }, []);
 
-  const setMock = () => {
+  const setMock = async () => {
     if (isMockOn) {
-      removeClientCookie(MOCK_COOKIE_KEY);
-      removeClientCookie(MOCK_ANNUITY_COOKIE_KEY);
+      await removeCookie(MOCK_COOKIE_KEY);
+      await removeCookie(MOCK_ANNUITY_COOKIE_KEY);
     } else {
-      setClientCookie(MOCK_COOKIE_KEY, 'on');
+      await setCookie({ cookieName: MOCK_COOKIE_KEY, value: 'on' });
     }
     const queryParams = new URLSearchParams(location.search);
     queryParams.delete(MOCK_COOKIE_KEY);
@@ -36,13 +33,13 @@ const useMock = () => {
     window.location.href = `${window.location.origin}/policies${params}`;
   };
 
-  const setAnnuityProducts = (bool: boolean) => {
+  const setAnnuityProducts = async (bool: boolean) => {
     setIsAnnuityOn(bool);
 
     if (bool) {
-      setClientCookie(MOCK_ANNUITY_COOKIE_KEY, 'on');
+      await setCookie({ cookieName: MOCK_ANNUITY_COOKIE_KEY, value: 'on' });
     } else {
-      removeClientCookie(MOCK_ANNUITY_COOKIE_KEY);
+      await removeCookie(MOCK_ANNUITY_COOKIE_KEY);
     }
 
     const queryParams = new URLSearchParams(location.search);
@@ -51,9 +48,9 @@ const useMock = () => {
     window.location.href = `${window.location.origin}/policies${params}`;
   };
 
-  const removeDevMenu = (event: MouseEvent<HTMLAnchorElement>) => {
+  const removeDevMenu = async (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    removeClientCookie(SHOW_DEV_MENU_COOKIE_KEY);
+    await removeCookie(SHOW_DEV_MENU_COOKIE_KEY);
     const queryParams = new URLSearchParams(location.search);
     queryParams.delete(SHOW_DEV_MENU_COOKIE_KEY);
     const params = queryParams.toString() ? `?${queryParams.toString()}` : '';

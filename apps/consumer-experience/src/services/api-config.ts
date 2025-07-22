@@ -14,21 +14,32 @@ export const baseAppUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export const apiServerBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const apiServerUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}`;
 export const policyApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/${apiVersion}/policies`;
-// TODO: update BPM url to the new one
-// this is the newer version of the BPM API
-export const transactionApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/${apiVersion}/transactions`;
+// Used for notifications and terms and conditions acknowledgement
+export const consumerExperienceAPIBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/consumer-experience/v1`;
+export const enterprisePolicySearchBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/enterprise-search/v1`;
+export const productRateBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/product-rate/v1/carriers`;
+export const caseManagementBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/case/v1/cases`;
 export const documentV2ApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/document/v2`;
 export const documentV3ApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/document/v3`;
-export const carrierApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}/carriers`;
-export const integrationApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/integration/${apiVersion}`;
-export const consumerExperienceAPIBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/consumer-experience/v1`;
+
+/**
+ * BPM returns 400 when a transaction fails the BPM rules. The return should include
+ * the status: failure and a rule and reason that the transaction failed
+ */
+// TODO: update BPM url to the new one
+// this is the newer version of the BPM API -- this will not exist in production until Farmers release
+export const transactionApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/${apiVersion}/transactions`;
 // this is the older version of the transactions API
 export const bpmApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/bpm/v1/policies`;
 
-export const productRateBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/product-rate/v1/carriers`;
-export const caseManagementBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/case/v1/cases`;
+/**
+ * Preference API returns a 404 when a user's preference does not exist
+ * this does not indicicate an api failure, but rather that the preference
+ * is not in the database for that user.
+ * When logging a 404 for this API, we should treat the request as a success
+ * i.e. do not throw a logError
+ */
 export const preferencesBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/preferences/v1`;
-export const enterprisePolicySearchBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/enterprise-search/v1`;
 
 const getMockParam = () => {
   const cookieStore = cookies();
