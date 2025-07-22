@@ -646,14 +646,10 @@ export const getFreeLookCancellationSideSheetValues = (
         transactionType: transaction.transactionType,
         withdrawalDetails: [
             {
-                label: t(
-                    'policy.history.withdrawalSidesheet.totalPayment'
-                ) as string,
-                tooltipTitle: t(
-                    'policy.history.withdrawalSidesheet.totalPayment'
-                ) as string,
+                label: t('withdrawals.summary.totalPayment') as string,
+                tooltipTitle: t('withdrawals.summary.totalPayment') as string,
                 tooltipBody: t(
-                    'policy.history.withdrawalSidesheet.totalPaymentTooltip'
+                    'withdrawals.summary.totalPaymentTooltip'
                 ) as string,
                 value: numberFormatify(totalPayment),
             },
