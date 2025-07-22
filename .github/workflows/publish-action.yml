@@ -26,6 +26,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,6 +39,7 @@ jobs:
           node-version-file: ${{ inputs.node-version-file }}
           registry-url: 'https://npm.pkg.github.com'
           scope: '@zinnia'
+          cache: 'pnpm'
       - uses: pnpm/action-setup@v4
       - run: pnpm install --filter @zinnia/${{ inputs.package-name }}
       - run: pnpm run test
@@ -43,6 +47,9 @@ jobs:
   publish:
     needs: test
     runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     permissions:
       contents: read
       packages: write

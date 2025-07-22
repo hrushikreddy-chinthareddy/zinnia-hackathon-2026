@@ -14,6 +14,9 @@ jobs:
     # This will not run for Vercel production deploys
     if: startsWith(github.ref_name, 'release/ops/') && contains(github.event.deployment.environment, 'Preview') && github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

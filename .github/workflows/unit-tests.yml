@@ -10,6 +10,9 @@ on:
 jobs:
   run-unit-tests:
     runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v4
 
@@ -21,10 +24,10 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          cache: 'pnpm'
           node-version-file: '.nvmrc'
           registry-url: 'https://npm.pkg.github.com/'
           scope: '@zinnia'
+          cache: 'pnpm'
 
       - name: install packages for compiling canvas-node
         run: sudo apt-get update && sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
