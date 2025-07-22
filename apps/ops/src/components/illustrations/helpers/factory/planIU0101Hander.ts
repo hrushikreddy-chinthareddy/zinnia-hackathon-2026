@@ -712,6 +712,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
     public generateTitle(data: any): string {
         const assumed = data.assumed;
         const guaranteed = data.guaranteed;
+        const createDate = new Date().toLocaleDateString();
 
         const getRidersText = () => {
             const hasRiders = Object.keys(assumed.coverages).length > 1;
@@ -740,7 +741,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
             return '';
         };
 
-        return `Initial Premium ${numberFormatify(
+        return `${createDate}, Initial Premium ${numberFormatify(
             assumed.initial.minimumPremiumAmount
         )}, ${numberFormatify(
             assumed.initial.totalFaceAmount

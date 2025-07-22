@@ -78,6 +78,7 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
     public generateTitle(data: any): string {
         const assumed = data.assumed;
         const guaranteed = data.guaranteed;
+        const createDate = new Date().toLocaleDateString();
 
         const getRidersText = () => {
             const hasRiders = Object.keys(assumed.coverages).length > 1;
@@ -93,8 +94,8 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
             return `, ${riders}`;
         };
 
-        return `${numberFormatify(assumed.initial.totalFaceAmount)}, ${
-            guaranteed.lapse.year
-        } years ${getRidersText()}`;
+        return `${createDate}, ${numberFormatify(
+            assumed.initial.totalFaceAmount
+        )}, ${guaranteed.lapse.year} years ${getRidersText()}`;
     }
 }
