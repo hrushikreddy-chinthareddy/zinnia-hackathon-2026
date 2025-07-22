@@ -2833,7 +2833,18 @@
         "reversedOn": "Revertido el {{date}}",
         "pendingReversal": "Pendiente de reversión",
         "pendingReversalOn": "Pendiente de reversión el {{date}}",
-        "withdrawn": "Retirado"
+        "withdrawn": "Retirado",
+        "terminated": "Finalizado",
+        "matured": "Madurado",
+        "payout": "Pago",
+        "surrendered": "Rendido",
+        "livingClaimPending": "Reclamo de vida pendiente",
+        "deathClaimPaid": "Muerte por reclamo pagado",
+        "deathClaimPending": "Reclamación de muerte pendiente",
+        "rescission": "recisión",
+        "canceledFreeLook": "Vista gratuita cancelada",
+        "pndAwaitingFunds": "Esperando fondos",
+        "canceledNoPremium": "Sin prima"
     },
     "placeHolder": {
         "globalSelectSearch": "Empiece a escribir para encontrar valores..."
@@ -3740,7 +3751,18 @@
                 "active": "Esta póliza fue emitida el {{tooltipDate}} y está en buen estado.",
                 "pendingIssued": "En attente d'émission. Le contrat sera actif une fois la prime initiale payée et toutes les conditions de livraison remplies.",
                 "pendingLapse": "Pendiente de caducidad significa que esta póliza está en riesgo. Si no se realiza un pago de prima de {{tooltipAmount}} antes del {{tooltipDate}}, la póliza caducará y el propietario perderá la cobertura.",
-                "lapse": "Caducada significa que la póliza está inactiva; el propietario perdió la cobertura. Esta póliza caducó el {{tooltipDate}} debido a fondos insuficientes."
+                "lapse": "Caducada significa que la póliza está inactiva; el propietario perdió la cobertura. Esta póliza caducó el {{tooltipDate}} debido a fondos insuficientes.",
+                "terminated": "Terminado el {{tooltipDate}} y ya no está activo.",
+                "matured": "Alcanzó la madurez el {{tooltipDate}}.",
+                "payout": "El pago significa que el beneficiario ha comenzado a recibir pagos de ingresos.",
+                "surrendered": "The owner has surrendered their benefits and no coverage remains.",
+                "livingClaimPending": "Se ha realizado una solicitud de reclamo en vida y actualmente se está revisando.",
+                "deathClaimPending": "La notificación de muerte se recibió el {{tooltipDate}} y actualmente está siendo revisada.",
+                "deathClaimPaid": "El reclamo por muerte se recibió el {{dateOfDeathReported}} y se aprobó el {{claimApprovalDate}}.",
+                "rescission": "La compañía aseguradora ha anulado la póliza mediante rescisión, lo que significa que toda la cobertura y los beneficios anteriores han sido revocados como si la póliza nunca hubiera existido.",
+                "canceledFreeLook": "El propietario ha cancelado su cobertura durante el Período de revisión gratuito, por lo que no quedan cobertura ni beneficios.",
+                "pndAwaitingFunds": "La formalización del contrato está en curso, pero aún no se han recibido los fondos. Es posible que sea necesario confirmar la transferencia o hacer seguimiento con la fuente de financiación.",
+                "canceledNoPremium": "El contrato se canceló porque no se recibió la prima. No se aplicaron fondos y la anualidad no está vigente."
             }
         }
     },

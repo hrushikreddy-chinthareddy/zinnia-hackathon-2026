@@ -32,10 +32,14 @@ export const getPolicyBadgeStatusTooltip = (
             return 'globalPolicyInfo.tooltip.status.deathClaimPending';
         case PolicyStatus.DEATHCLAIMPAID:
             return 'globalPolicyInfo.tooltip.status.deathClaimPaid';
-        case 'RECISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
-            return 'globalPolicyInfo.tooltip.status.recission';
+        case 'RESCISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
+            return 'globalPolicyInfo.tooltip.status.rescission';
         case PolicyStatus.CANCELEDFREELOOK:
-            return 'globalPolicyInfo.tooltip.status.canceledFreelook';
+            return 'globalPolicyInfo.tooltip.status.canceledFreeLook';
+        case 'PND-AWAITFUNDS' as PolicyStatus:
+            return 'globalPolicyInfo.tooltip.status.pndAwaitingFunds';
+        case 'CANCELEDNOPREMIUM' as PolicyStatus:
+            return 'globalPolicyInfo.tooltip.status.canceledNoPremium';
         default:
             return status;
     }

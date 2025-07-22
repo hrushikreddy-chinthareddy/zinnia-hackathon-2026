@@ -45,9 +45,13 @@ export const getBadgeStatus = (status: PolicyStatus | undefined) => {
         case PolicyStatus.DEATHCLAIMPAID:
             return 'status.deathClaimPaid';
         case PolicyStatus.CANCELEDFREELOOK:
-            return 'status.canceledFreelook';
-        case 'RECISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
-            return 'status.recission';
+            return 'status.canceledFreeLook';
+        case 'RESCISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
+            return 'status.rescission';
+        case 'PND-AWAITFUNDS' as PolicyStatus:
+            return 'status.pndAwaitingFunds';
+        case 'CANCELEDNOPREMIUM' as PolicyStatus:
+            return 'status.canceledNoPremium';
         default:
             return status;
     }
@@ -75,8 +79,10 @@ export const getBadgeStatusVariant = (
             return BadgeVariant.Urgent;
         case PolicyStatus.LIVINGCLAIMPENDING:
         case PolicyStatus.DEATHCLAIMPENDING:
-        case 'RECISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
+        case 'RESCISSION' as PolicyStatus: // BPB - This policyStatus isn't in the most recent sor spec.  Update when available.
         case PolicyStatus.CANCELEDFREELOOK:
+        case 'PND-AWAITFUNDS' as PolicyStatus:
+        case 'CANCELEDNOPREMIUM' as PolicyStatus:
             return BadgeVariant.Warning;
         case PolicyStatus.DEATHCLAIMPAID:
             return BadgeVariant.Neutral;

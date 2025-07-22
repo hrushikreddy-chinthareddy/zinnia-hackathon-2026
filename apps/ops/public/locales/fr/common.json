@@ -2817,7 +2817,18 @@
         "reversedOn": "Reversé le {{date}}",
         "pendingReversal": "En Attente de Reversal",
         "pendingReversalOn": "En Attente de Reversal le {{date}}",
-        "withdrawn": "Retiré"
+        "withdrawn": "Retiré",
+        "terminated": "Terminé",
+        "matured": "Affiné",
+        "payout": "Paiement",
+        "surrendered": "Rendu",
+        "livingClaimPending": "En attente d'une réclamation pour subsistance",
+        "deathClaimPaid": "Décès payé",
+        "deathClaimPending": "Réclamation en attente de décès",
+        "rescission": "Récision",
+        "canceledFreeLook": "Aperçu gratuit annulé",
+        "pndAwaitingFunds": "En attente de fonds",
+        "canceledNoPremium": "Pas de prime"
     },
     "placeHolder": {
         "globalSelectSearch": "Commencez à taper pour trouver des valeurs..."
@@ -3750,7 +3761,18 @@
                 "active": "Cette police a été émise {{tooltipDate}} et est en bon état.",
                 "pendingIssued": "Actualmente en espera de emisión. Se activará una vez pagada la prima inicial y completados todos los requisitos de entrega.",
                 "pendingLapse": "En attente de déchéance signifie que cette police est en danger. Si un paiement de prime de {{tooltipAmount}} n'est pas effectué avant le {{tooltipDate}}, la police deviendra caduque et le propriétaire perdra sa couverture.",
-                "lapse": "Excédé signifie que la politique est inactive ; le propriétaire a perdu la couverture. Cette politique est devenue caduque le {{tooltipDate}} en raison de fonds insuffisants."
+                "lapse": "Excédé signifie que la politique est inactive ; le propriétaire a perdu la couverture. Cette politique est devenue caduque le {{tooltipDate}} en raison de fonds insuffisants.",
+                "terminated": "Terminé le {{tooltipDate}} et n'est plus actif.",
+                "matured": "A atteint sa maturité le {{tooltipDate}}.",
+                "payout": "Le versement signifie que le rentier a commencé à recevoir des paiements de revenu.",
+                "surrendered": "Le propriétaire a renoncé à ses avantages et aucune couverture ne subsiste.",
+                "livingClaimPending": "Une demande de réclamation de vie a été faite et est actuellement en cours d'examen.",
+                "deathClaimPending": "La notification de décès a été reçue le {{tooltipDate}} et est actuellement en cours d'examen.",
+                "deathClaimPaid": "La demande de décès a été reçue le {{dateOfDeathReported}} et approuvée le {{claimApprovalDate}}.",
+                "rescission": "Le transporteur a annulé la police par résiliation, ce qui signifie que toutes les couvertures et tous les avantages antérieurs ont été révoqués comme si la police n'avait jamais existé.",
+                "canceledFreeLook": "Le propriétaire a annulé sa couverture pendant la période d'essai gratuite, il ne reste donc aucune couverture ni aucun avantage.",
+                "pndAwaitingFunds": "Le contrat est en cours de configuration, mais les fonds n'ont pas encore été reçus. Une action pourrait être nécessaire pour confirmer le transfert ou effectuer un suivi auprès de la source de financement.",
+                "canceledNoPremium": "Le contrat a été annulé, car aucune prime n'a été perçue. Aucun fonds n'a été appliqué et la rente n'est pas en vigueur."
             }
         }
     },

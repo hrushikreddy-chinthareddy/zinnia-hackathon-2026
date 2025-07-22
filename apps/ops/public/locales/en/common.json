@@ -2856,8 +2856,10 @@
         "livingClaimPending": "Pending Living Claim",
         "deathClaimPaid": "Paid Claim Death",
         "deathClaimPending": "Pending Death Claim",
-        "recission": "Recission",
-        "canceledFreelook": "Free Look Canceled"
+        "rescission": "Recission",
+        "canceledFreeLook": "Free Look Canceled",
+        "pndAwaitingFunds": "Awaiting Funds",
+        "canceledNoPremium": "No Premium"
     },
     "placeHolder": {
         "globalSelectSearch": "Start typing to find values..."
@@ -3799,8 +3801,10 @@
                 "livingClaimPending": "A living claim request has been made and is currently being reviewed.",
                 "deathClaimPending": "Notification of death was received on {{tooltipDate}} and is currently being reviewed.",
                 "deathClaimPaid": "The death claim was received on {{dateOfDeathReported}} and approved on {{claimApprovalDate}}.",
-                "recission": "The carrier has voided the policy through rescission, meaning all previous coverage and benefits have been revoked as if the policy never existed.",
-                "canceledFreelook": "The owner has cancelled their coverage during the Free Look Period, so no coverage or benefits remain."
+                "rescission": "The carrier has voided the policy through rescission, meaning all previous coverage and benefits have been revoked as if the policy never existed.",
+                "canceledFreeLook": "The owner has cancelled their coverage during the Free Look Period, so no coverage or benefits remain.",
+                "pndAwaitingFunds": "Contract setup is in progress, but funds haven’t been received yet. Action may be needed to confirm transfer or follow up with the funding source.",
+                "canceledNoPremium": "Contract was cancelled because no premium was received. No funds were applied and the annuity is not in force."
             }
         }
     },
