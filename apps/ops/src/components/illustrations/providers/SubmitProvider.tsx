@@ -98,11 +98,10 @@ export function SubmitProvider({
                 queryKey: ['productList', clientCase.id],
             });
 
-            sideSheet.onClose();
+            const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data.id}`;
+            Router.push(route, undefined, { shallow: true });
 
-            Router.push(
-                `/illustrations/client-cases/${clientCase.id}/illustrate?illustration=${data.id}`
-            );
+            sideSheet.onClose();
         },
     });
 

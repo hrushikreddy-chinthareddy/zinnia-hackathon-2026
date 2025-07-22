@@ -8,7 +8,7 @@ import {
     Text,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -46,7 +46,8 @@ const IllustrationProductList = ({
     const clientCaseId = clientCase.id;
     const [showEmptyProducts, setShowEmptyProducts] = useState(false);
     const sideSheet = useSideSheetContext();
-    const searchParams = useSearchParams();
+    const router = useRouter();
+    const { illustrationId } = router.query;
 
     const {
         data: products = [],
@@ -89,11 +90,10 @@ const IllustrationProductList = ({
     useEffect(() => {
         if (illustrations.length > 0) {
             let firstAvailableIllustration;
-            const newIllustrationId = searchParams.get('illustration');
 
-            if (newIllustrationId) {
+            if (illustrationId) {
                 firstAvailableIllustration = illustrations.find(
-                    (illustration) => illustration.id === newIllustrationId
+                    (illustration) => illustration.id === illustrationId
                 );
             } else {
                 firstAvailableIllustration = illustrations[0];
@@ -111,9 +111,8 @@ const IllustrationProductList = ({
                 );
             }
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [illustrations, products, searchParams]);
+    }, [illustrations, products]);
 
     const availableProducts = products.filter(
         (product) => product.availableToSell

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 
 import { IllustrationSummary } from '@deps/types/illustrations';
@@ -21,6 +22,8 @@ const SelectedIllustrationContext =
     createContext<SelectedIllustrationContextValue | null>(null);
 
 export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
+    const router = useRouter();
+    const { clientCaseId } = router.query;
     const [selectedIllustration, setSelectedIllustration] =
         useState<SelectedIllustrationsState | null>(null);
 
@@ -28,7 +31,14 @@ export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
         product: Product,
         illustration: IllustrationSummary
     ) => {
+        if (!clientCaseId || Array.isArray(clientCaseId)) return;
+
         setSelectedIllustration({ illustration, product });
+        router.push(
+            `/illustrations/client-cases/${clientCaseId}/illustrate/${illustration.id}`,
+            undefined,
+            { shallow: true }
+        );
     };
 
     return (
