@@ -319,7 +319,8 @@ const getWithdrawalDetails = (
                     'policy.history.withdrawalSidesheet.processDateTooltip'
                 ) as string,
                 value:
-                    status === TransactionStatus.COMPLETED
+                    status === TransactionStatus.COMPLETED ||
+                    status === TransactionStatus.REVERSED
                         ? processDate
                         : DEFAULT_ERROR_STRING,
             },
