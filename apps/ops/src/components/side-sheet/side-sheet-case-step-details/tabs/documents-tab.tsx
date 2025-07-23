@@ -6,10 +6,10 @@ import {
     TransformedStep,
 } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
-import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 
 function SideSheetDocument({
     document,
@@ -45,9 +45,17 @@ function SideSheetDocument({
                     />
                 </div>
             </div>
-            <DocumentPreviewer {...document.previewDocProps}>
-                {t('caseOverview.sidesheet.view')}
-            </DocumentPreviewer>
+
+            {createAction(
+                {
+                    ...document?.previewDocProps,
+                    documentSource: document?.previewDocProps?.activeDocType,
+                    fileType: document?.fileType || '',
+                },
+                (document?.previewDocProps?.carrier ?? '').toUpperCase(),
+                t,
+                'View'
+            )}
         </li>
     );
 }
