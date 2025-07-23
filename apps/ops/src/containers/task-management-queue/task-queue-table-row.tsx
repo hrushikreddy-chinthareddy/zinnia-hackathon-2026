@@ -373,7 +373,7 @@ const TaskQueueTableRow = ({
                         : t('sideSheet.task.heading')
                 }`,
                 <GlobalTaskSideSheet
-                    type={isOpsManagerView ? OPS_MANAGER_VIEW_TASK : ''}
+                    type={isOpsManagerView ? OPS_MANAGER_VIEW_TASK : 'case'}
                     featureFlagDecisions={featureFlagDecisions}
                     taskId={id}
                     taskDescription={task?.taskDetails}

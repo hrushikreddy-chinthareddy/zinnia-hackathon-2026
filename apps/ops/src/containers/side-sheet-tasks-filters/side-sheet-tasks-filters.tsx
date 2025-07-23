@@ -20,11 +20,14 @@ import { FILTER_KEYS } from './utils';
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
 
 const TaskStatusValues = Object.keys(TaskLabel)
+    .filter((key) => key !== TaskLabel.Closed)
     .map((key) => TaskStatus[key as keyof typeof TaskStatus])
     .filter(Boolean);
 
 const customLabelMap: Record<string, string> = Object.keys(TaskLabel).reduce(
     (acc, key) => {
+        if (key === TaskLabel.Closed) return acc;
+
         const statusValue = TaskStatus[key as keyof typeof TaskStatus];
         const labelValue = TaskLabel[key as keyof typeof TaskLabel];
 
