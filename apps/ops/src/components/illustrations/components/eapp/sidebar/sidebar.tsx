@@ -14,6 +14,7 @@ const dataToTitleMap: Record<
     targetPremium: { label: 'Target premium', type: 'money' },
     faceAmount: { label: 'Face amount', type: 'money' },
     initialPremium: { label: 'Initial premium', type: 'money' },
+    cashValue: { label: 'Cash value', type: 'money' },
 };
 
 export function Sidebar() {
@@ -60,7 +61,7 @@ export function Sidebar() {
             </div>
             {isError && (
                 <p className={`typography-labels-field-label ${style.error}`}>
-                    There was an error while fetching illustrations.
+                    There was an error while calculating the illustration
                 </p>
             )}
             <div className={style.calculateBtn}>

@@ -163,7 +163,7 @@ const farmersEntitiesSchema = t.object(
     t.optionalProperty('riders', ridersSchema),
     t.property('solveFor', t.string), // solve-for
     t.property('paymentMode', t.string),
-    t.property('discountIndicator', t.string),
+    t.property('discountIndicator', t.union(t.array(t.string), t.undefined)), // multiple-policy-owner
     t.property('paymentMethod', t.string),
     t.property('premiumDuration', t.number),
     t.optionalProperty('premiumDurationOption', t.string),
@@ -189,15 +189,15 @@ const farmersEntitiesSchema = t.object(
     t.optionalProperty('targetCashValueYear', t.union(t.number, t.undefined)),
     t.optionalProperty('targetCashValueAmount', t.union(t.number, t.undefined)),
     t.optionalProperty(
-        'longTermFixedAccountCurrentRate',
+        'longTermFixedAccountAllocation',
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
-        'sp500IndexedAccountCurrentRate',
+        'sp500IndexedAccountAllocation',
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
-        'spMarc5PercentErIndexedAccountCurrentRate',
+        'spMarc5PercentErIndexedAccountAllocation',
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
@@ -414,7 +414,7 @@ function createIllustrationPayload(
             solveFor: values.solveFor,
             ...(values.solveFor === 'NO_SOLVE' && {
                 paymentMode: values.paymentMode,
-                discountIndicator: values.discountIndicator,
+                discountIndicator: values.discountIndicator?.[0] || 'NON',
                 paymentMethod: values.paymentMethod,
                 premiumDuration: values.premiumDuration,
                 premiumDurationOption: 'YEARS', // DEPU-5382
@@ -425,7 +425,7 @@ function createIllustrationPayload(
                         {
                             from: FARMERS_HARDCODED_DATA.premiumFrom,
                             through: FARMERS_HARDCODED_DATA.premiumThrough,
-                            value: values.modalPremiumValue,
+                            value: values.baseCoverage.currentAmount,
                         },
                     ],
                 },
@@ -436,7 +436,7 @@ function createIllustrationPayload(
                         {
                             from: FARMERS_HARDCODED_DATA.premiumFrom,
                             through: values.premiumDuration,
-                            value: values.baseCoverage.currentAmount,
+                            value: values.modalPremiumValue,
                         },
                     ],
                 },
@@ -457,7 +457,7 @@ function createIllustrationPayload(
             }),
             ...(values.solveFor === 'PREMIUM' && {
                 paymentMode: values.paymentMode,
-                discountIndicator: values.discountIndicator,
+                discountIndicator: values.discountIndicator?.[0] || 'NON',
                 paymentMethod: values.paymentMethod,
                 premiumDuration: values.premiumDuration,
                 premiumDurationOption: 'YEARS',
@@ -509,7 +509,7 @@ function createIllustrationPayload(
             }),
             ...(values.solveFor === 'FACE' && {
                 paymentMode: values.paymentMode,
-                discountIndicator: values.discountIndicator,
+                discountIndicator: values.discountIndicator?.[0] || 'NON',
                 paymentMethod: values.paymentMethod,
                 premiumDuration: values.premiumDuration,
                 premiumDurationOption: 'YEARS',
@@ -559,21 +559,6 @@ function createIllustrationPayload(
                     ],
                 },
             }),
-            fundAllocations: [
-                {
-                    allocationPercent: values.longTermFixedAccountCurrentRate,
-                    fundId: 'FLF001',
-                },
-                {
-                    allocationPercent: values.sp500IndexedAccountCurrentRate,
-                    fundId: 'FLI001',
-                },
-                {
-                    allocationPercent:
-                        values.spMarc5PercentErIndexedAccountCurrentRate,
-                    fundId: 'FLI002',
-                },
-            ],
             exchanges: {
                 internalAmount: values.internal1035ExchangeAmount,
                 externalAmount: values.external1035ExchangeAmount,
@@ -582,6 +567,21 @@ function createIllustrationPayload(
                 carryOverLoan: 1,
             },
         },
+        fundAllocations: [
+            {
+                allocationPercent: values.longTermFixedAccountAllocation,
+                fundId: 'FLF001',
+            },
+            {
+                allocationPercent: values.sp500IndexedAccountAllocation,
+                fundId: 'FLI001',
+            },
+            {
+                allocationPercent:
+                    values.spMarc5PercentErIndexedAccountAllocation,
+                fundId: 'FLI002',
+            },
+        ],
     };
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
@@ -644,7 +644,9 @@ function mapIllustrationPayloadToEngineInputData(
         premiumClass: '',
         riders: {},
         paymentMode: data.options?.paymentMode || '',
-        discountIndicator: data.options?.discountIndicator || '',
+        discountIndicator: data.options?.discountIndicator
+            ? [data.options?.discountIndicator]
+            : undefined,
     };
 }
 

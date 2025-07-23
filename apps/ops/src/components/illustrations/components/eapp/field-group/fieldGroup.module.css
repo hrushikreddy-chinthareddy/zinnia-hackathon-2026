@@ -4,4 +4,19 @@
 
 .questionHeaderWrapper {
     margin-bottom: var(--measure-dimension-margin-xs);
+    color: var(--color-base-Text-text-primary, #212121);
+
+    /* DESKTOP/headline-4-d */
+    font-family: var(--font-family-headlines-desktop-h4-font-family, Lato);
+    font-size: var(--measure-font-sizing-headlines-desktop-h4-font-size, 18px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: var(
+        --line-height-headlines-Desktop-H4-font-line-height,
+        24px
+    ); /* 133.333% */
+    letter-spacing: var(
+        --letter-spacing-headlines-desktop-h4-font-letter-spacing,
+        0px
+    );
 }

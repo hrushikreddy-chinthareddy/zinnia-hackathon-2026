@@ -24,25 +24,27 @@ export const farmersTermBlueprintTL0101 = {
                             partName:
                                 'custom-96000823-7ada-4474-949d-c60f31b9909e',
                             text: {},
-                            title: {},
+                            title: {
+                                en: 'Personal Details',
+                            },
                             isCustom: true,
                             fields: [
                                 {
-                                    fieldType: 'dropdown',
+                                    fieldType: 'custom',
+                                    customName: 'insuredFullNameTag',
                                     text: {
                                         en: '',
                                         fr: '',
                                     },
                                     title: {
-                                        en: "Farmer's Multiple Policy Owner",
+                                        en: '',
                                         fr: '',
                                     },
-                                    answerNodeId: 'multiple-policy-owner',
-                                    outputPath: 'discountIndicator',
+                                    answerNodeId: 'insured-full-name-tag',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -53,29 +55,114 @@ export const farmersTermBlueprintTL0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: '73209330-ce34-4084-bff5-dc40a6d966fc',
+                                    id: 'af14ff42-5af7-4c68-97a9-25fb0235238f',
                                     partName:
-                                        'custom-86910a5b-146a-48c0-9185-c8999658c49e',
-                                    selectOptions: [
-                                        {
-                                            partName: 'MULTIPRODUCT',
-                                            text: {
-                                                en: 'Yes',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            partName: 'NON',
-                                            text: {
-                                                en: 'No',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
+                                        'custom-c839d414-0126-466b-9f9f-af3e591b1715',
                                     validateAs: 'string',
-                                    defaultValue: 'NON',
+                                    customProperties: {
+                                        tagNodeIds: [
+                                            'insured-first-name',
+                                            'insured-last-name',
+                                        ],
+                                    },
+                                },
+                                {
+                                    fieldType: 'custom',
+                                    customName: 'insuredAgeTag',
+                                    text: {
+                                        en: 'Age: ',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-age-tag',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '594d0c5d-0d13-4d61-a11c-81c0fdc848b6',
+                                    partName:
+                                        'custom-795fd778-ee97-4e0b-b58d-d7ce2bc0b1e4',
+                                    validateAs: 'string',
+                                    customProperties: {
+                                        tagNodeIds: ['age'],
+                                    },
+                                },
+                                {
+                                    fieldType: 'custom',
+                                    customName: 'insuredSexAtBirthTag',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-sex-tag',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '7ae202f9-d12f-47c0-ae30-19a7d6c27707',
+                                    partName:
+                                        'custom-5e8d3264-9503-41d9-8dc4-87b28d2852cf',
+                                    validateAs: 'string',
+                                    customProperties: {
+                                        tagNodeIds: ['sex'],
+                                    },
+                                },
+                                {
+                                    fieldType: 'number',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Issue Age',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-issue-age',
+                                    outputPath: 'insured.issueAge',
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 3,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '258e9ad2-b65f-4a82-886e-743cdf7dd585',
+                                    partName:
+                                        'custom-4a7beb6f-5685-40e7-bac8-b66457e6ba27',
+                                    validateAs: 'integer',
                                 },
                                 {
                                     fieldType: 'input',
@@ -90,7 +177,7 @@ export const farmersTermBlueprintTL0101 = {
                                     answerNodeId: 'insured-first-name',
                                     outputPath: 'insured.firstName',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -122,7 +209,7 @@ export const farmersTermBlueprintTL0101 = {
                                     answerNodeId: 'insured-middle-name',
                                     outputPath: 'insured.middleName',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: true,
                                     triggerStepNavigation: false,
@@ -154,7 +241,7 @@ export const farmersTermBlueprintTL0101 = {
                                     answerNodeId: 'insured-last-name',
                                     outputPath: 'insured.lastName',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -186,7 +273,7 @@ export const farmersTermBlueprintTL0101 = {
                                     answerNodeId: 'state-of-issue',
                                     outputPath: 'jurisdiction',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -209,7 +296,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Alabama',
                                                 fr: 'Alabama',
                                             },
-                                            partName: 'AL',
+                                            value: 'AL',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -217,7 +304,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Alaska',
                                                 fr: 'Alaska',
                                             },
-                                            partName: 'AK',
+                                            value: 'AK',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -226,7 +313,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'American Samoa',
                                                 fr: 'Samoa américaines',
                                             },
-                                            partName: 'AS',
+                                            value: 'AS',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -235,7 +322,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Arizona',
                                                 fr: 'Arizona',
                                             },
-                                            partName: 'AZ',
+                                            value: 'AZ',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -243,7 +330,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Arkansas',
                                                 fr: 'Arkansas',
                                             },
-                                            partName: 'AR',
+                                            value: 'AR',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -251,7 +338,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'California',
                                                 fr: 'Californie',
                                             },
-                                            partName: 'CA',
+                                            value: 'CA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -259,7 +346,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Colorado',
                                                 fr: 'Colorado',
                                             },
-                                            partName: 'CO',
+                                            value: 'CO',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -267,7 +354,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Connecticut',
                                                 fr: 'Connecticut',
                                             },
-                                            partName: 'CT',
+                                            value: 'CT',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -275,7 +362,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'District of Columbia',
                                                 fr: 'District of Columbia',
                                             },
-                                            partName: 'DC',
+                                            value: 'DC',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -284,7 +371,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Delaware',
                                                 fr: 'Delaware',
                                             },
-                                            partName: 'DE',
+                                            value: 'DE',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -292,7 +379,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Florida',
                                                 fr: 'Floride',
                                             },
-                                            partName: 'FL',
+                                            value: 'FL',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -301,7 +388,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Georgia',
                                                 fr: 'Géorgie',
                                             },
-                                            partName: 'GA',
+                                            value: 'GA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -309,7 +396,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Guam',
                                                 fr: 'Guam',
                                             },
-                                            partName: 'GU',
+                                            value: 'GU',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -318,7 +405,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Hawaii',
                                                 fr: 'Hawaï',
                                             },
-                                            partName: 'HI',
+                                            value: 'HI',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -327,7 +414,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Idaho',
                                                 fr: 'Idaho',
                                             },
-                                            partName: 'ID',
+                                            value: 'ID',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -335,7 +422,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Illinois',
                                                 fr: 'Illinois',
                                             },
-                                            partName: 'IL',
+                                            value: 'IL',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -343,7 +430,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Indiana',
                                                 fr: 'Indiana',
                                             },
-                                            partName: 'IN',
+                                            value: 'IN',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -351,7 +438,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Iowa',
                                                 fr: 'Iowa',
                                             },
-                                            partName: 'IA',
+                                            value: 'IA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -359,7 +446,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Kansas',
                                                 fr: 'Kansas',
                                             },
-                                            partName: 'KS',
+                                            value: 'KS',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -367,7 +454,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Kentucky',
                                                 fr: 'Kentucky',
                                             },
-                                            partName: 'KY',
+                                            value: 'KY',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -375,7 +462,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Louisiana',
                                                 fr: 'Louisiane',
                                             },
-                                            partName: 'LA',
+                                            value: 'LA',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -384,7 +471,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Maine',
                                                 fr: 'Maine',
                                             },
-                                            partName: 'ME',
+                                            value: 'ME',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -392,7 +479,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Maryland',
                                                 fr: 'Maryland',
                                             },
-                                            partName: 'MD',
+                                            value: 'MD',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -400,7 +487,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Massachusetts',
                                                 fr: 'Massachusetts',
                                             },
-                                            partName: 'MA',
+                                            value: 'MA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -408,7 +495,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Michigan',
                                                 fr: 'Michigan',
                                             },
-                                            partName: 'MI',
+                                            value: 'MI',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -416,7 +503,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Minnesota',
                                                 fr: 'Minnesota',
                                             },
-                                            partName: 'MN',
+                                            value: 'MN',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -424,7 +511,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Mississippi',
                                                 fr: 'Mississippi',
                                             },
-                                            partName: 'MS',
+                                            value: 'MS',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -432,7 +519,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Missouri',
                                                 fr: 'Missouri',
                                             },
-                                            partName: 'MO',
+                                            value: 'MO',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -440,7 +527,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Montana',
                                                 fr: 'Montana',
                                             },
-                                            partName: 'MT',
+                                            value: 'MT',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -448,7 +535,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Nebraska',
                                                 fr: 'Nebraska',
                                             },
-                                            partName: 'NE',
+                                            value: 'NE',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -456,7 +543,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Nevada',
                                                 fr: 'Nevada',
                                             },
-                                            partName: 'NV',
+                                            value: 'NV',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -464,7 +551,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'New Hampshire',
                                                 fr: 'New Hampshire',
                                             },
-                                            partName: 'NH',
+                                            value: 'NH',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -472,7 +559,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'New Jersey',
                                                 fr: 'New Jersey',
                                             },
-                                            partName: 'NJ',
+                                            value: 'NJ',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -480,7 +567,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'New Mexico',
                                                 fr: 'Nouveau-Mexique',
                                             },
-                                            partName: 'NM',
+                                            value: 'NM',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -488,7 +575,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'New York',
                                                 fr: 'New York',
                                             },
-                                            partName: 'NY',
+                                            value: 'NY',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -497,7 +584,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'North Carolina',
                                                 fr: 'Caroline du Nord ',
                                             },
-                                            partName: 'NC',
+                                            value: 'NC',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -505,7 +592,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'North Dakota',
                                                 fr: 'Dakota du Nord',
                                             },
-                                            partName: 'ND',
+                                            value: 'ND',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -513,7 +600,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Northern Mariana Islands',
                                                 fr: 'Îles Mariannes du Nord',
                                             },
-                                            partName: 'MP',
+                                            value: 'MP',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -522,7 +609,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Ohio',
                                                 fr: 'Ohio',
                                             },
-                                            partName: 'OH',
+                                            value: 'OH',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -530,7 +617,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Oklahoma',
                                                 fr: 'Oklahoma',
                                             },
-                                            partName: 'OK',
+                                            value: 'OK',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -538,7 +625,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Oregon',
                                                 fr: 'Oregon',
                                             },
-                                            partName: 'OR',
+                                            value: 'OR',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -546,7 +633,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Pennsylvania',
                                                 fr: 'Pennsylvanie',
                                             },
-                                            partName: 'PA',
+                                            value: 'PA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -554,7 +641,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Puerto Rico',
                                                 fr: 'Puerto Rico',
                                             },
-                                            partName: 'PR',
+                                            value: 'PR',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -563,7 +650,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Rhode Island',
                                                 fr: 'Rhode Island',
                                             },
-                                            partName: 'RI',
+                                            value: 'RI',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -571,7 +658,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'South Carolina',
                                                 fr: 'Caroline du Sud',
                                             },
-                                            partName: 'SC',
+                                            value: 'SC',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -579,7 +666,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'South Dakota',
                                                 fr: 'Dakota du Sud',
                                             },
-                                            partName: 'SD',
+                                            value: 'SD',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -587,7 +674,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Tennessee',
                                                 fr: 'Tennessee',
                                             },
-                                            partName: 'TN',
+                                            value: 'TN',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -595,7 +682,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Texas',
                                                 fr: 'Texas',
                                             },
-                                            partName: 'TX',
+                                            value: 'TX',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -603,7 +690,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'U.S. Virgin Islands',
                                                 fr: 'Îles mineures éloignées des États-Unis',
                                             },
-                                            partName: 'VI',
+                                            value: 'VI',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -612,7 +699,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'U.S. Minor Outlying Islands',
                                                 fr: 'Îles mineures éloignées des États-Unis',
                                             },
-                                            partName: 'UM',
+                                            value: 'UM',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -621,7 +708,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Utah',
                                                 fr: 'Utah',
                                             },
-                                            partName: 'UT',
+                                            value: 'UT',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -629,7 +716,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Vermont',
                                                 fr: 'Vermont',
                                             },
-                                            partName: 'VT',
+                                            value: 'VT',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -637,7 +724,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Virginia',
                                                 fr: 'Virginie',
                                             },
-                                            partName: 'VA',
+                                            value: 'VA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -645,7 +732,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Washington',
                                                 fr: 'Washington',
                                             },
-                                            partName: 'WA',
+                                            value: 'WA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -653,7 +740,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'West Virginia',
                                                 fr: 'Virginie-Occidentale',
                                             },
-                                            partName: 'WV',
+                                            value: 'WV',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -662,7 +749,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Wisconsin',
                                                 fr: 'Wisconsin',
                                             },
-                                            partName: 'WI',
+                                            value: 'WI',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -670,7 +757,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 en: 'Wyoming',
                                                 fr: 'Wyoming',
                                             },
-                                            partName: 'WY',
+                                            value: 'WY',
                                             orderingIndex: 1,
                                         },
                                     ],
@@ -689,7 +776,7 @@ export const farmersTermBlueprintTL0101 = {
                                     outputPath: 'insured.gender',
                                     answerNodeId: 'sex',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -707,7 +794,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-b79336d0-71ff-4bac-8df6-4e36aa79651b',
                                     selectOptions: [
                                         {
-                                            partName: 'FEMALE',
+                                            value: 'FEMALE',
                                             text: {
                                                 en: 'Female',
                                             },
@@ -715,7 +802,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'MALE',
+                                            value: 'MALE',
                                             text: {
                                                 en: 'Male',
                                             },
@@ -740,7 +827,7 @@ export const farmersTermBlueprintTL0101 = {
                                     outputPath: 'insured.dateOfBirth',
                                     answerNodeId: 'date-of-birth',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -803,7 +890,7 @@ export const farmersTermBlueprintTL0101 = {
                                         en: 'Age',
                                         fr: '',
                                     },
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     renderOn: [],
                                     copyable: 'none',
                                     answerNodeId: 'age',
@@ -817,7 +904,7 @@ export const farmersTermBlueprintTL0101 = {
                                             },
                                         },
                                     },
-                                    outputPath: 'insured.issueAge',
+                                    outputPath: 'insured.age',
                                     valid: [
                                         {
                                             id: 'f41a1156-7d54-45db-a707-d1ce6f7f9227',
@@ -858,88 +945,88 @@ export const farmersTermBlueprintTL0101 = {
                                     applicationModes: ['digital', 'paper'],
                                     validateAs: 'string',
                                 },
-                                {
-                                    fieldType: 'checkboxGroup',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'illustrate-at-older-age',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '4499ea89-4c57-4cf8-8880-d650df344f24',
-                                    partName:
-                                        'custom-b1b55a6a-e49f-4a62-b7b9-7d51e68034e8',
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            partName: 'illustrateAtOlderAge',
-                                            text: {
-                                                en: 'Illustrate at older age',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
-                                },
-                                {
-                                    fieldType: 'date',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Effective Date',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'effective-date',
-                                    outputPath: 'illustrationRequestDate',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '65098291-cd6f-4358-99f7-9fd2de5ebc2b',
-                                    partName:
-                                        'custom-11faca2d-91a2-4846-913c-d30647d7d321',
-                                    validateAs: 'futureOrCurrentDate',
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['illustrateAtOlderAge'],
-                                                targetNodeId:
-                                                    'illustrate-at-older-age',
-                                                quantifier: 'any',
-                                            },
-                                        ],
-                                    },
-                                },
+                                // {
+                                //     fieldType: 'checkboxGroup',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'illustrate-at-older-age',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: true,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '4499ea89-4c57-4cf8-8880-d650df344f24',
+                                //     partName:
+                                //         'custom-b1b55a6a-e49f-4a62-b7b9-7d51e68034e8',
+                                //     validateAs: 'string',
+                                //     selectOptions: [
+                                //         {
+                                //             value: 'illustrateAtOlderAge',
+                                //             text: {
+                                //                 en: 'Illustrate at older age',
+                                //             },
+                                //             isCustom: true,
+                                //         },
+                                //     ],
+                                // },
+                                // {
+                                //     fieldType: 'date',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Effective Date',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'effective-date',
+                                //     outputPath: 'illustrationRequestDate',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '65098291-cd6f-4358-99f7-9fd2de5ebc2b',
+                                //     partName:
+                                //         'custom-11faca2d-91a2-4846-913c-d30647d7d321',
+                                //     validateAs: 'futureOrCurrentDate',
+                                //     visible: {
+                                //         booleanOperator: 'and',
+                                //         conditions: [
+                                //             {
+                                //                 type: 'matchesCondition',
+                                //                 value: ['illustrateAtOlderAge'],
+                                //                 targetNodeId:
+                                //                     'illustrate-at-older-age',
+                                //                 quantifier: 'any',
+                                //             },
+                                //         ],
+                                //     },
+                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -971,7 +1058,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-39bf8d14-b635-4116-8f0f-9894409d6af8',
                                     selectOptions: [
                                         {
-                                            partName: 'STANDARDNONTOBACCO',
+                                            value: 'STANDARDNONTOBACCO',
                                             text: {
                                                 en: 'Platinum',
                                             },
@@ -1025,7 +1112,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'STANDARDPLUSNONTOBACCO',
+                                            value: 'STANDARDPLUSNONTOBACCO',
                                             text: {
                                                 en: 'Platinum Choice',
                                             },
@@ -1103,7 +1190,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'PREFERREDNONTOBACCO',
+                                            value: 'PREFERREDNONTOBACCO',
                                             text: {
                                                 en: 'Platinum Plus',
                                             },
@@ -1157,7 +1244,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'ELITENONTOBACCO',
+                                            value: 'ELITENONTOBACCO',
                                             text: {
                                                 en: 'Platinum Elite',
                                             },
@@ -1211,7 +1298,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'STANDARDTOBACCO',
+                                            value: 'STANDARDTOBACCO',
                                             text: {
                                                 en: 'Gold',
                                             },
@@ -1265,7 +1352,7 @@ export const farmersTermBlueprintTL0101 = {
                                             },
                                         },
                                         {
-                                            partName: 'PREFERREDTOBACCO',
+                                            value: 'PREFERREDTOBACCO',
                                             text: {
                                                 en: 'Gold Plus',
                                             },
@@ -1319,8 +1406,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName:
-                                                'STANDARDCONVERSIONNONTOBACCO',
+                                            value: 'STANDARDCONVERSIONNONTOBACCO',
                                             text: {
                                                 en: 'Platinum Substandard',
                                             },
@@ -1328,8 +1414,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName:
-                                                'STANDARDCONVERSIONTOBACCO',
+                                            value: 'STANDARDCONVERSIONTOBACCO',
                                             text: {
                                                 en: 'Gold Substandard',
                                             },
@@ -1340,6 +1425,49 @@ export const farmersTermBlueprintTL0101 = {
                                     validateAs: 'string',
                                     defaultValue: 'STANDARDNONTOBACCO',
                                 },
+                                // {
+                                //     fieldType: 'information',
+                                //     text: {
+                                //         en: 'For Table or Flat Extra Ratings, please select one of the Substandard classes',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'table-flat-ratings-info',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: true,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 12,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '1533d9cf-87e8-4ebe-b1cf-9c607b2dc6ce',
+                                //     partName:
+                                //         'custom-8beadcd6-616c-4a31-9ed5-625db38a1927',
+                                //     variant: 'info',
+                                //     validateAs: 'string',
+                                // },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                        },
+                        {
+                            id: 'e14e16f6-4196-470f-8ee4-0d7bec08a300',
+                            partName:
+                                'custom-bda1ddd1-5dc1-4e77-b473-42e93aab6333',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
                                 {
                                     fieldType: 'information',
                                     text: {
@@ -1371,18 +1499,6 @@ export const farmersTermBlueprintTL0101 = {
                                     variant: 'info',
                                     validateAs: 'string',
                                 },
-                            ],
-                            displayAsCard: false,
-                            copyable: 'none',
-                        },
-                        {
-                            id: 'e14e16f6-4196-470f-8ee4-0d7bec08a300',
-                            partName:
-                                'custom-bda1ddd1-5dc1-4e77-b473-42e93aab6333',
-                            text: {},
-                            title: {},
-                            isCustom: true,
-                            fields: [
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -1414,7 +1530,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-58f1c54d-284d-4650-86c3-6e6274e7f4f5',
                                     selectOptions: [
                                         {
-                                            partName: 'TABLEA',
+                                            value: 'TABLEA',
                                             text: {
                                                 en: 'A',
                                             },
@@ -1422,7 +1538,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEB',
+                                            value: 'TABLEB',
                                             text: {
                                                 en: 'B',
                                             },
@@ -1430,7 +1546,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEC',
+                                            value: 'TABLEC',
                                             text: {
                                                 en: 'C',
                                             },
@@ -1438,7 +1554,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLED',
+                                            value: 'TABLED',
                                             text: {
                                                 en: 'D',
                                             },
@@ -1446,7 +1562,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEE',
+                                            value: 'TABLEE',
                                             text: {
                                                 en: 'E',
                                             },
@@ -1454,7 +1570,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEF',
+                                            value: 'TABLEF',
                                             text: {
                                                 en: 'F',
                                             },
@@ -1462,7 +1578,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEG',
+                                            value: 'TABLEG',
                                             text: {
                                                 en: 'G',
                                             },
@@ -1470,7 +1586,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEH',
+                                            value: 'TABLEH',
                                             text: {
                                                 en: 'H',
                                             },
@@ -1478,7 +1594,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEI',
+                                            value: 'TABLEI',
                                             text: {
                                                 en: 'I',
                                             },
@@ -1486,7 +1602,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEJ',
+                                            value: 'TABLEJ',
                                             text: {
                                                 en: 'J',
                                             },
@@ -1494,7 +1610,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEK',
+                                            value: 'TABLEK',
                                             text: {
                                                 en: 'K',
                                             },
@@ -1502,7 +1618,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEL',
+                                            value: 'TABLEL',
                                             text: {
                                                 en: 'L',
                                             },
@@ -1510,7 +1626,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEM',
+                                            value: 'TABLEM',
                                             text: {
                                                 en: 'M',
                                             },
@@ -1518,7 +1634,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEN',
+                                            value: 'TABLEN',
                                             text: {
                                                 en: 'N',
                                             },
@@ -1526,7 +1642,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEO',
+                                            value: 'TABLEO',
                                             text: {
                                                 en: 'O',
                                             },
@@ -1534,7 +1650,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEP',
+                                            value: 'TABLEP',
                                             text: {
                                                 en: 'P',
                                             },
@@ -1752,7 +1868,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-2137dbfd-b52d-4ca1-92f3-e8b8f59e10ee',
                                     selectOptions: [
                                         {
-                                            partName: 'YEARS',
+                                            value: 'YEARS',
                                             text: {
                                                 en: 'Years',
                                             },
@@ -1760,7 +1876,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'MONTHS',
+                                            value: 'MONTHS',
                                             text: {
                                                 en: 'Months',
                                             },
@@ -1883,6 +1999,61 @@ export const farmersTermBlueprintTL0101 = {
                                 ],
                             },
                         },
+                        {
+                            id: '2bb31d72-a6ec-414a-bb67-16fdbfa91ff9',
+                            partName:
+                                'custom-e27fe421-38cc-4979-a1d6-0f22f6200e31',
+                            text: {},
+                            title: {
+                                en: 'Adjustments',
+                            },
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'multiple-policy-owner',
+                                    outputPath: 'discountIndicator',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '73209330-ce34-4084-bff5-dc40a6d966fc',
+                                    partName:
+                                        'custom-86910a5b-146a-48c0-9185-c8999658c49e',
+                                    selectOptions: [
+                                        {
+                                            value: 'MULTIPRODUCT',
+                                            text: {
+                                                en: "Has additional Farmer's policies?",
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                        },
                     ],
                     showInNavigation: false,
                     copyable: 'none',
@@ -1946,7 +2117,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-5182d038-db4b-4bd6-a675-59133b5b53c8',
                                     selectOptions: [
                                         {
-                                            partName: 'PREMIUM',
+                                            value: 'PREMIUM',
                                             text: {
                                                 en: 'Premium',
                                             },
@@ -1954,7 +2125,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'FACE',
+                                            value: 'FACE',
                                             text: {
                                                 en: 'Face Amount',
                                             },
@@ -1997,7 +2168,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-19d339fc-8143-4ba5-91c3-0f03597c57e6',
                                     selectOptions: [
                                         {
-                                            partName: '10',
+                                            value: '10',
                                             text: {
                                                 en: 'Term 10',
                                             },
@@ -2022,7 +2193,7 @@ export const farmersTermBlueprintTL0101 = {
                                             },
                                         },
                                         {
-                                            partName: '20',
+                                            value: '20',
                                             text: {
                                                 en: 'Term 20',
                                             },
@@ -2047,7 +2218,7 @@ export const farmersTermBlueprintTL0101 = {
                                             },
                                         },
                                         {
-                                            partName: '15',
+                                            value: '15',
                                             text: {
                                                 en: 'Term 15',
                                             },
@@ -2072,7 +2243,7 @@ export const farmersTermBlueprintTL0101 = {
                                             },
                                         },
                                         {
-                                            partName: '30',
+                                            value: '30',
                                             text: {
                                                 en: 'Term 30',
                                             },
@@ -2216,7 +2387,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-6ba00b34-9327-4f8f-beb8-72692621c37a',
                                     selectOptions: [
                                         {
-                                            partName: 'MONTHLY',
+                                            value: 'MONTHLY',
                                             text: {
                                                 en: 'Monthly',
                                             },
@@ -2224,7 +2395,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'QUARTERLY',
+                                            value: 'QUARTERLY',
                                             text: {
                                                 en: 'Quarterly',
                                             },
@@ -2232,7 +2403,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'SEMIANNUAL',
+                                            value: 'SEMIANNUAL',
                                             text: {
                                                 en: 'Semi-Annual',
                                             },
@@ -2240,7 +2411,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'ANNUAL',
+                                            value: 'ANNUAL',
                                             text: {
                                                 en: 'Annual',
                                             },
@@ -2282,7 +2453,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-89613af1-6b8e-4673-848b-9f890c0e6e4a',
                                     selectOptions: [
                                         {
-                                            partName: 'ACH',
+                                            value: 'ACH',
                                             text: {
                                                 en: 'Electronic Funds Transfer (EFT)',
                                             },
@@ -2290,7 +2461,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'CREDITCARD',
+                                            value: 'CREDITCARD',
                                             text: {
                                                 en: 'Credit Card',
                                             },
@@ -2385,7 +2556,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-b728185d-a776-4ea6-b5cf-ad2cfd41e800',
                                     selectOptions: [
                                         {
-                                            partName: 'MONTHLY',
+                                            value: 'MONTHLY',
                                             text: {
                                                 en: 'Monthly',
                                             },
@@ -2393,7 +2564,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'QUARTERLY',
+                                            value: 'QUARTERLY',
                                             text: {
                                                 en: 'Quarterly',
                                             },
@@ -2401,7 +2572,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'ANNUAL',
+                                            value: 'ANNUAL',
                                             text: {
                                                 en: 'Annual',
                                             },
@@ -2409,7 +2580,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 2,
                                         },
                                         {
-                                            partName: 'SEMIANNUAL',
+                                            value: 'SEMIANNUAL',
                                             text: {
                                                 en: 'Semi-Annual',
                                             },
@@ -2450,7 +2621,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-31e82f04-d0a3-4614-a84f-8f6f4088246e',
                                     selectOptions: [
                                         {
-                                            partName: 'ACH',
+                                            value: 'ACH',
                                             text: {
                                                 en: 'Electronic Funds Transfer (EFT)',
                                             },
@@ -2458,7 +2629,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'CREDITCARD',
+                                            value: 'CREDITCARD',
                                             text: {
                                                 en: 'Credit Card',
                                             },
@@ -2699,7 +2870,7 @@ export const farmersTermBlueprintTL0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_ABRTRM',
+                                            value: 'Rider_ABRTRM',
                                             text: {
                                                 en: 'Accelerated Death Benefit Rider for Terminal Illness',
                                             },
@@ -2847,7 +3018,7 @@ export const farmersTermBlueprintTL0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_ADR',
+                                            value: 'Rider_ADR',
                                             text: {
                                                 en: 'Accidental Death Benefit Rider',
                                             },
@@ -2933,7 +3104,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-1c1c6151-41e3-4a7f-8f2c-cc55c6b077f0',
                                     selectOptions: [
                                         {
-                                            partName: 'NONETABLE',
+                                            value: 'NONETABLE',
                                             text: {
                                                 en: 'Standard',
                                             },
@@ -2941,7 +3112,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'TABLEB',
+                                            value: 'TABLEB',
                                             text: {
                                                 en: '1.5 x Standard',
                                             },
@@ -2949,7 +3120,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEC',
+                                            value: 'TABLEC',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -2957,7 +3128,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLED',
+                                            value: 'TABLED',
                                             text: {
                                                 en: '2.5 x Standard',
                                             },
@@ -2965,7 +3136,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEE',
+                                            value: 'TABLEE',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },
@@ -3171,7 +3342,7 @@ export const farmersTermBlueprintTL0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_CGR',
+                                            value: 'Rider_CGR',
                                             text: {
                                                 en: 'Charitable Giving Rider',
                                             },
@@ -3230,7 +3401,7 @@ export const farmersTermBlueprintTL0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_CTR',
+                                            value: 'Rider_CTR',
                                             text: {
                                                 en: "Children's Term Insurance Rider",
                                             },
@@ -3489,7 +3660,7 @@ export const farmersTermBlueprintTL0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_ABRCHR',
+                                            value: 'Rider_ABRCHR',
                                             text: {
                                                 en: 'Chronic Illness Accelerated Death Benefit Rider',
                                             },
@@ -3613,7 +3784,7 @@ export const farmersTermBlueprintTL0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_WPR',
+                                            value: 'Rider_WPR',
                                             text: {
                                                 en: 'Waiver of Premium Rider',
                                             },
@@ -3654,7 +3825,7 @@ export const farmersTermBlueprintTL0101 = {
                                         'custom-bf30a8b8-b3d2-4f48-aac8-2668633f170e',
                                     selectOptions: [
                                         {
-                                            partName: 'NONETABLE',
+                                            value: 'NONETABLE',
                                             text: {
                                                 en: 'Standard',
                                             },
@@ -3662,7 +3833,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'TABLEB',
+                                            value: 'TABLEB',
                                             text: {
                                                 en: '1.5 x Standard',
                                             },
@@ -3670,7 +3841,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEC',
+                                            value: 'TABLEC',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -3678,7 +3849,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLED',
+                                            value: 'TABLED',
                                             text: {
                                                 en: '2.5 x Standard',
                                             },
@@ -3686,7 +3857,7 @@ export const farmersTermBlueprintTL0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEE',
+                                            value: 'TABLEE',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },

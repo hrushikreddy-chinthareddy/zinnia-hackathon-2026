@@ -123,7 +123,7 @@ const farmersEntitiesSchema = t.object(
     t.property('solveFor', t.string), // solve-for
     t.optionalProperty('fixedCostPeriod', t.union(t.string, t.undefined)), // level-term-period
     t.property('paymentMode', t.string), // premium-mode
-    t.property('discountIndicator', t.string), // multiple-policy-owner
+    t.property('discountIndicator', t.union(t.array(t.string), t.undefined)), // multiple-policy-owner
     t.property('paymentMethod', t.string), // payment-mode
     t.optionalProperty('modalPremiumValue', t.union(t.number, t.undefined)) // modal-premium
 );
@@ -296,7 +296,7 @@ export function getFarmersCreateIllustrationPayload(
             solveFor: values.solveFor,
             fixedCostPeriod: Number(values.fixedCostPeriod),
             paymentMode: values.paymentMode,
-            discountIndicator: values.discountIndicator,
+            discountIndicator: values.discountIndicator?.[0] || 'NON',
             paymentMethod: values.paymentMethod,
             ...(values.solveFor === 'FACE' && {
                 premium: {
@@ -312,6 +312,9 @@ export function getFarmersCreateIllustrationPayload(
             }),
         },
     };
+
+    console.log('myvalues', values);
+    console.log('handler output', output);
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
     if (!parseOutputResult.success) {
@@ -363,7 +366,9 @@ export function mapIllustrationPayloadToEngineInputData(
         premiumClass: '',
         riders: {},
         paymentMode: data.options?.paymentMode || '',
-        discountIndicator: data.options?.discountIndicator || '',
+        discountIndicator: data.options?.discountIndicator
+            ? [data.options?.discountIndicator]
+            : undefined,
     };
 }
 
@@ -374,6 +379,9 @@ export function getIllustrationDataFromResponse(data: any) {
             data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
         initialPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
+        cashValue:
+            data?.assumed?.annualTimeSeriesData?.accountValue ||
+            DEFAULT_ERROR_STRING,
     };
 }
 

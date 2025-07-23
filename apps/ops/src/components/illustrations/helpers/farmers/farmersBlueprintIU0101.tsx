@@ -24,7 +24,9 @@ export const farmersBlueprintIU0101 = {
                             partName:
                                 'custom-96000823-7ada-4474-949d-c60f31b9909e',
                             text: {},
-                            title: {},
+                            title: {
+                                en: 'Personal Details',
+                            },
                             isCustom: true,
                             fields: [
                                 {
@@ -93,22 +95,72 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     disabled: true,
                                 },
+                                // {
+                                //     fieldType: 'dropdown',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: "Farmer's Multiple Policy Owner",
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'multiple-policy-owner',
+                                //     outputPath: 'discountIndicator',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '73209330-ce34-4084-bff5-dc40a6d966fc',
+                                //     partName:
+                                //         'custom-86910a5b-146a-48c0-9185-c8999658c49e',
+                                //     selectOptions: [
+                                //         {
+                                //             value: 'MULTIPRODUCT',
+                                //             text: {
+                                //                 en: 'Yes',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 0,
+                                //         },
+                                //         {
+                                //             value: 'NON',
+                                //             text: {
+                                //                 en: 'No',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //     ],
+                                //     validateAs: 'string',
+                                //     defaultValue: 'NON',
+                                // },
                                 {
-                                    fieldType: 'dropdown',
+                                    fieldType: 'custom',
+                                    customName: 'insuredFullNameTag',
                                     text: {
                                         en: '',
                                         fr: '',
                                     },
                                     title: {
-                                        en: "Farmer's Multiple Policy Owner",
+                                        en: '',
                                         fr: '',
                                     },
-                                    answerNodeId: 'multiple-policy-owner',
-                                    outputPath: 'discountIndicator',
+                                    answerNodeId: 'insured-full-name-tag',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -119,29 +171,114 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: '73209330-ce34-4084-bff5-dc40a6d966fc',
+                                    id: 'af14ff42-5af7-4c68-97a9-25fb0235238f',
                                     partName:
-                                        'custom-86910a5b-146a-48c0-9185-c8999658c49e',
-                                    selectOptions: [
-                                        {
-                                            partName: 'MULTIPRODUCT',
-                                            text: {
-                                                en: 'Yes',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            partName: 'NON',
-                                            text: {
-                                                en: 'No',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
+                                        'custom-c839d414-0126-466b-9f9f-af3e591b1715',
                                     validateAs: 'string',
-                                    defaultValue: 'NON',
+                                    customProperties: {
+                                        tagNodeIds: [
+                                            'insured-first-name',
+                                            'insured-last-name',
+                                        ],
+                                    },
+                                },
+                                {
+                                    fieldType: 'custom',
+                                    customName: 'insuredAgeTag',
+                                    text: {
+                                        en: 'Age: ',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-age-tag',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '594d0c5d-0d13-4d61-a11c-81c0fdc848b6',
+                                    partName:
+                                        'custom-795fd778-ee97-4e0b-b58d-d7ce2bc0b1e4',
+                                    validateAs: 'string',
+                                    customProperties: {
+                                        tagNodeIds: ['age'],
+                                    },
+                                },
+                                {
+                                    fieldType: 'custom',
+                                    customName: 'insuredSexAtBirthTag',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-sex-tag',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '7ae202f9-d12f-47c0-ae30-19a7d6c27707',
+                                    partName:
+                                        'custom-5e8d3264-9503-41d9-8dc4-87b28d2852cf',
+                                    validateAs: 'string',
+                                    customProperties: {
+                                        tagNodeIds: ['sex'],
+                                    },
+                                },
+                                {
+                                    fieldType: 'number',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Issue Age',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-issue-age',
+                                    outputPath: 'insured.issueAge',
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 3,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '258e9ad2-b65f-4a82-886e-743cdf7dd585',
+                                    partName:
+                                        'custom-4a7beb6f-5685-40e7-bac8-b66457e6ba27',
+                                    validateAs: 'integer',
                                 },
                                 {
                                     fieldType: 'input',
@@ -156,7 +293,7 @@ export const farmersBlueprintIU0101 = {
                                     answerNodeId: 'insured-first-name',
                                     outputPath: 'insured.firstName',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -189,7 +326,7 @@ export const farmersBlueprintIU0101 = {
                                     answerNodeId: 'insured-middle-name',
                                     outputPath: 'insured.middleName',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: true,
                                     triggerStepNavigation: false,
@@ -221,7 +358,7 @@ export const farmersBlueprintIU0101 = {
                                     answerNodeId: 'insured-last-name',
                                     outputPath: 'insured.lastName',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -253,7 +390,7 @@ export const farmersBlueprintIU0101 = {
                                     answerNodeId: 'state-of-issue',
                                     outputPath: 'jurisdiction',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -276,7 +413,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Alabama',
                                                 fr: 'Alabama',
                                             },
-                                            partName: 'AL',
+                                            value: 'AL',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -284,7 +421,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Alaska',
                                                 fr: 'Alaska',
                                             },
-                                            partName: 'AK',
+                                            value: 'AK',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -293,7 +430,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'American Samoa',
                                                 fr: 'Samoa américaines',
                                             },
-                                            partName: 'AS',
+                                            value: 'AS',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -302,7 +439,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Arizona',
                                                 fr: 'Arizona',
                                             },
-                                            partName: 'AZ',
+                                            value: 'AZ',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -310,7 +447,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Arkansas',
                                                 fr: 'Arkansas',
                                             },
-                                            partName: 'AR',
+                                            value: 'AR',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -318,7 +455,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'California',
                                                 fr: 'Californie',
                                             },
-                                            partName: 'CA',
+                                            value: 'CA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -326,7 +463,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Colorado',
                                                 fr: 'Colorado',
                                             },
-                                            partName: 'CO',
+                                            value: 'CO',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -334,7 +471,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Connecticut',
                                                 fr: 'Connecticut',
                                             },
-                                            partName: 'CT',
+                                            value: 'CT',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -342,7 +479,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'District of Columbia',
                                                 fr: 'District of Columbia',
                                             },
-                                            partName: 'DC',
+                                            value: 'DC',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -351,7 +488,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Delaware',
                                                 fr: 'Delaware',
                                             },
-                                            partName: 'DE',
+                                            value: 'DE',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -359,7 +496,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Florida',
                                                 fr: 'Floride',
                                             },
-                                            partName: 'FL',
+                                            value: 'FL',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -368,7 +505,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Georgia',
                                                 fr: 'Géorgie',
                                             },
-                                            partName: 'GA',
+                                            value: 'GA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -376,7 +513,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Guam',
                                                 fr: 'Guam',
                                             },
-                                            partName: 'GU',
+                                            value: 'GU',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -385,7 +522,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Hawaii',
                                                 fr: 'Hawaï',
                                             },
-                                            partName: 'HI',
+                                            value: 'HI',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -394,7 +531,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Idaho',
                                                 fr: 'Idaho',
                                             },
-                                            partName: 'ID',
+                                            value: 'ID',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -402,7 +539,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Illinois',
                                                 fr: 'Illinois',
                                             },
-                                            partName: 'IL',
+                                            value: 'IL',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -410,7 +547,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Indiana',
                                                 fr: 'Indiana',
                                             },
-                                            partName: 'IN',
+                                            value: 'IN',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -418,7 +555,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Iowa',
                                                 fr: 'Iowa',
                                             },
-                                            partName: 'IA',
+                                            value: 'IA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -426,7 +563,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Kansas',
                                                 fr: 'Kansas',
                                             },
-                                            partName: 'KS',
+                                            value: 'KS',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -434,7 +571,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Kentucky',
                                                 fr: 'Kentucky',
                                             },
-                                            partName: 'KY',
+                                            value: 'KY',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -442,7 +579,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Louisiana',
                                                 fr: 'Louisiane',
                                             },
-                                            partName: 'LA',
+                                            value: 'LA',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -451,7 +588,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Maine',
                                                 fr: 'Maine',
                                             },
-                                            partName: 'ME',
+                                            value: 'ME',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -459,7 +596,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Maryland',
                                                 fr: 'Maryland',
                                             },
-                                            partName: 'MD',
+                                            value: 'MD',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -467,7 +604,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Massachusetts',
                                                 fr: 'Massachusetts',
                                             },
-                                            partName: 'MA',
+                                            value: 'MA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -475,7 +612,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Michigan',
                                                 fr: 'Michigan',
                                             },
-                                            partName: 'MI',
+                                            value: 'MI',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -483,7 +620,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Minnesota',
                                                 fr: 'Minnesota',
                                             },
-                                            partName: 'MN',
+                                            value: 'MN',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -491,7 +628,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Mississippi',
                                                 fr: 'Mississippi',
                                             },
-                                            partName: 'MS',
+                                            value: 'MS',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -499,7 +636,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Missouri',
                                                 fr: 'Missouri',
                                             },
-                                            partName: 'MO',
+                                            value: 'MO',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -507,7 +644,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Montana',
                                                 fr: 'Montana',
                                             },
-                                            partName: 'MT',
+                                            value: 'MT',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -515,7 +652,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Nebraska',
                                                 fr: 'Nebraska',
                                             },
-                                            partName: 'NE',
+                                            value: 'NE',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -523,7 +660,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Nevada',
                                                 fr: 'Nevada',
                                             },
-                                            partName: 'NV',
+                                            value: 'NV',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -531,7 +668,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'New Hampshire',
                                                 fr: 'New Hampshire',
                                             },
-                                            partName: 'NH',
+                                            value: 'NH',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -539,7 +676,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'New Jersey',
                                                 fr: 'New Jersey',
                                             },
-                                            partName: 'NJ',
+                                            value: 'NJ',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -547,7 +684,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'New Mexico',
                                                 fr: 'Nouveau-Mexique',
                                             },
-                                            partName: 'NM',
+                                            value: 'NM',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -555,7 +692,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'New York',
                                                 fr: 'New York',
                                             },
-                                            partName: 'NY',
+                                            value: 'NY',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -564,7 +701,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'North Carolina',
                                                 fr: 'Caroline du Nord ',
                                             },
-                                            partName: 'NC',
+                                            value: 'NC',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -572,7 +709,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'North Dakota',
                                                 fr: 'Dakota du Nord',
                                             },
-                                            partName: 'ND',
+                                            value: 'ND',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -580,7 +717,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Northern Mariana Islands',
                                                 fr: 'Îles Mariannes du Nord',
                                             },
-                                            partName: 'MP',
+                                            value: 'MP',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -589,7 +726,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Ohio',
                                                 fr: 'Ohio',
                                             },
-                                            partName: 'OH',
+                                            value: 'OH',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -597,7 +734,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Oklahoma',
                                                 fr: 'Oklahoma',
                                             },
-                                            partName: 'OK',
+                                            value: 'OK',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -605,7 +742,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Oregon',
                                                 fr: 'Oregon',
                                             },
-                                            partName: 'OR',
+                                            value: 'OR',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -613,7 +750,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Pennsylvania',
                                                 fr: 'Pennsylvanie',
                                             },
-                                            partName: 'PA',
+                                            value: 'PA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -621,7 +758,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Puerto Rico',
                                                 fr: 'Puerto Rico',
                                             },
-                                            partName: 'PR',
+                                            value: 'PR',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -630,7 +767,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Rhode Island',
                                                 fr: 'Rhode Island',
                                             },
-                                            partName: 'RI',
+                                            value: 'RI',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -638,7 +775,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'South Carolina',
                                                 fr: 'Caroline du Sud',
                                             },
-                                            partName: 'SC',
+                                            value: 'SC',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -646,7 +783,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'South Dakota',
                                                 fr: 'Dakota du Sud',
                                             },
-                                            partName: 'SD',
+                                            value: 'SD',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -654,7 +791,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Tennessee',
                                                 fr: 'Tennessee',
                                             },
-                                            partName: 'TN',
+                                            value: 'TN',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -662,7 +799,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Texas',
                                                 fr: 'Texas',
                                             },
-                                            partName: 'TX',
+                                            value: 'TX',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -670,7 +807,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'U.S. Virgin Islands',
                                                 fr: 'Îles mineures éloignées des États-Unis',
                                             },
-                                            partName: 'VI',
+                                            value: 'VI',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -679,7 +816,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'U.S. Minor Outlying Islands',
                                                 fr: 'Îles mineures éloignées des États-Unis',
                                             },
-                                            partName: 'UM',
+                                            value: 'UM',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -688,7 +825,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Utah',
                                                 fr: 'Utah',
                                             },
-                                            partName: 'UT',
+                                            value: 'UT',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -696,7 +833,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Vermont',
                                                 fr: 'Vermont',
                                             },
-                                            partName: 'VT',
+                                            value: 'VT',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -704,7 +841,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Virginia',
                                                 fr: 'Virginie',
                                             },
-                                            partName: 'VA',
+                                            value: 'VA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -712,7 +849,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Washington',
                                                 fr: 'Washington',
                                             },
-                                            partName: 'WA',
+                                            value: 'WA',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -720,7 +857,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'West Virginia',
                                                 fr: 'Virginie-Occidentale',
                                             },
-                                            partName: 'WV',
+                                            value: 'WV',
                                             orderingIndex: 1,
                                             hidden: true,
                                         },
@@ -729,7 +866,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Wisconsin',
                                                 fr: 'Wisconsin',
                                             },
-                                            partName: 'WI',
+                                            value: 'WI',
                                             orderingIndex: 1,
                                         },
                                         {
@@ -737,7 +874,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Wyoming',
                                                 fr: 'Wyoming',
                                             },
-                                            partName: 'WY',
+                                            value: 'WY',
                                             orderingIndex: 1,
                                         },
                                     ],
@@ -756,7 +893,7 @@ export const farmersBlueprintIU0101 = {
                                     answerNodeId: 'sex',
                                     outputPath: 'insured.gender',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -774,7 +911,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-b79336d0-71ff-4bac-8df6-4e36aa79651b',
                                     selectOptions: [
                                         {
-                                            partName: 'FEMALE',
+                                            value: 'FEMALE',
                                             text: {
                                                 en: 'Female',
                                             },
@@ -782,7 +919,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'MALE',
+                                            value: 'MALE',
                                             text: {
                                                 en: 'Male',
                                             },
@@ -807,7 +944,7 @@ export const farmersBlueprintIU0101 = {
                                     answerNodeId: 'date-of-birth',
                                     outputPath: 'insured.dateOfBirth',
                                     renderOn: [],
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     copyable: 'none',
                                     optional: false,
                                     triggerStepNavigation: false,
@@ -870,11 +1007,11 @@ export const farmersBlueprintIU0101 = {
                                         en: 'Age',
                                         fr: '',
                                     },
-                                    platforms: [],
+                                    platforms: ['consumer'],
                                     renderOn: [],
                                     copyable: 'none',
                                     answerNodeId: 'age',
-                                    outputPath: 'insured.issueAge',
+                                    outputPath: 'insured.age',
                                     internal: {
                                         computedValue: {
                                             select: ['date-of-birth'],
@@ -925,87 +1062,87 @@ export const farmersBlueprintIU0101 = {
                                     applicationModes: ['digital', 'paper'],
                                     validateAs: 'string',
                                 },
-                                {
-                                    fieldType: 'checkboxGroup',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'illustrate-at-older-age',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '4499ea89-4c57-4cf8-8880-d650df344f24',
-                                    partName:
-                                        'custom-b1b55a6a-e49f-4a62-b7b9-7d51e68034e8',
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            partName: 'illustrateAtOlderAge',
-                                            text: {
-                                                en: 'Illustrate at older age',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
-                                },
-                                {
-                                    fieldType: 'date',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Effective Date',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'effective-date',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '65098291-cd6f-4358-99f7-9fd2de5ebc2b',
-                                    partName:
-                                        'custom-11faca2d-91a2-4846-913c-d30647d7d321',
-                                    validateAs: 'futureOrCurrentDate',
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['illustrateAtOlderAge'],
-                                                targetNodeId:
-                                                    'illustrate-at-older-age',
-                                                quantifier: 'any',
-                                            },
-                                        ],
-                                    },
-                                },
+                                // {
+                                //     fieldType: 'checkboxGroup',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'illustrate-at-older-age',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: true,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '4499ea89-4c57-4cf8-8880-d650df344f24',
+                                //     partName:
+                                //         'custom-b1b55a6a-e49f-4a62-b7b9-7d51e68034e8',
+                                //     validateAs: 'string',
+                                //     selectOptions: [
+                                //         {
+                                //             value: 'illustrateAtOlderAge',
+                                //             text: {
+                                //                 en: 'Illustrate at older age',
+                                //             },
+                                //             isCustom: true,
+                                //         },
+                                //     ],
+                                // },
+                                // {
+                                //     fieldType: 'date',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Effective Date',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'effective-date',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '65098291-cd6f-4358-99f7-9fd2de5ebc2b',
+                                //     partName:
+                                //         'custom-11faca2d-91a2-4846-913c-d30647d7d321',
+                                //     validateAs: 'futureOrCurrentDate',
+                                //     visible: {
+                                //         booleanOperator: 'and',
+                                //         conditions: [
+                                //             {
+                                //                 type: 'matchesCondition',
+                                //                 value: ['illustrateAtOlderAge'],
+                                //                 targetNodeId:
+                                //                     'illustrate-at-older-age',
+                                //                 quantifier: 'any',
+                                //             },
+                                //         ],
+                                //     },
+                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -1037,7 +1174,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-39bf8d14-b635-4116-8f0f-9894409d6af8',
                                     selectOptions: [
                                         {
-                                            partName: 'STANDARDNONTOBACCO',
+                                            value: 'STANDARDNONTOBACCO',
                                             text: {
                                                 en: 'Platinum',
                                             },
@@ -1062,7 +1199,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'STANDARDPLUSNONTOBACCO',
+                                            value: 'STANDARDPLUSNONTOBACCO',
                                             text: {
                                                 en: 'Platinum Choice',
                                             },
@@ -1087,7 +1224,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'PREFERREDNONTOBACCO',
+                                            value: 'PREFERREDNONTOBACCO',
                                             text: {
                                                 en: 'Platinum Plus',
                                             },
@@ -1112,7 +1249,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'ELITENONTOBACCO',
+                                            value: 'ELITENONTOBACCO',
                                             text: {
                                                 en: 'Platinum Elite',
                                             },
@@ -1154,7 +1291,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'STANDARDTOBACCO',
+                                            value: 'STANDARDTOBACCO',
                                             text: {
                                                 en: 'Gold',
                                             },
@@ -1196,7 +1333,7 @@ export const farmersBlueprintIU0101 = {
                                             },
                                         },
                                         {
-                                            partName: 'PREFERREDTOBACCO',
+                                            value: 'PREFERREDTOBACCO',
                                             text: {
                                                 en: 'Gold Plus',
                                             },
@@ -1221,8 +1358,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName:
-                                                'STANDARDCONVERSIONNONTOBACCO',
+                                            value: 'STANDARDCONVERSIONNONTOBACCO',
                                             text: {
                                                 en: 'Platinum Substandard',
                                             },
@@ -1230,8 +1366,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName:
-                                                'STANDARDCONVERSIONTOBACCO',
+                                            value: 'STANDARDCONVERSIONTOBACCO',
                                             text: {
                                                 en: 'Gold Substandard',
                                             },
@@ -1239,7 +1374,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 2,
                                         },
                                         {
-                                            partName: 'juvenile',
+                                            value: 'juvenile',
                                             text: {
                                                 en: 'Juvenile',
                                             },
@@ -1264,7 +1399,7 @@ export const farmersBlueprintIU0101 = {
                                             },
                                         },
                                         {
-                                            partName: 'juvenileSubstandard',
+                                            value: 'juvenileSubstandard',
                                             text: {
                                                 en: 'Juvenile Substandard',
                                             },
@@ -1324,8 +1459,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName:
-                                                'non-NicotineConversionAtAge18',
+                                            value: 'non-NicotineConversionAtAge18',
                                             text: {
                                                 en: 'Non-Nicotine Conversion at Age 18',
                                             },
@@ -1349,6 +1483,96 @@ export const farmersBlueprintIU0101 = {
                                         ],
                                     },
                                 },
+
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Table Rating',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'table-rating',
+                                    outputPath: 'subStandardRating',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '4eb09389-39d7-42e2-aa95-b0dbcc604e49',
+                                    partName:
+                                        'custom-07730628-0047-4b02-a172-9891959a0286',
+                                    selectOptions: [
+                                        {
+                                            value: 'TABLEA',
+                                            text: {
+                                                en: 'TABLEA',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEB',
+                                            text: {
+                                                en: 'TABLEB',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEC',
+                                            text: {
+                                                en: 'TABLEC',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLED',
+                                            text: {
+                                                en: 'TABLED',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'juvenileSubstandard',
+                                                isEqual: true,
+                                                targetNodeId: 'premium-class',
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                        },
+                        {
+                            id: 'e14e16f6-4196-470f-8ee4-0d7bec08a300',
+                            partName:
+                                'custom-bda1ddd1-5dc1-4e77-b473-42e93aab6333',
+                            text: {},
+                            title: {},
+                            isCustom: true,
+                            fields: [
                                 {
                                     fieldType: 'information',
                                     text: {
@@ -1391,95 +1615,6 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'table-rating',
-                                    outputPath: 'subStandardRating',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '4eb09389-39d7-42e2-aa95-b0dbcc604e49',
-                                    partName:
-                                        'custom-07730628-0047-4b02-a172-9891959a0286',
-                                    selectOptions: [
-                                        {
-                                            partName: 'TABLEA',
-                                            text: {
-                                                en: 'TABLEA',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'TABLEB',
-                                            text: {
-                                                en: 'TABLEB',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'TABLEC',
-                                            text: {
-                                                en: 'TABLEC',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            partName: 'TABLED',
-                                            text: {
-                                                en: 'TABLED',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'equalityCondition',
-                                                value: 'juvenileSubstandard',
-                                                isEqual: true,
-                                                targetNodeId: 'premium-class',
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                            displayAsCard: false,
-                            copyable: 'none',
-                        },
-                        {
-                            id: 'e14e16f6-4196-470f-8ee4-0d7bec08a300',
-                            partName:
-                                'custom-bda1ddd1-5dc1-4e77-b473-42e93aab6333',
-                            text: {},
-                            title: {},
-                            isCustom: true,
-                            fields: [
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Table Rating',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'table-rating',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -1499,7 +1634,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-58f1c54d-284d-4650-86c3-6e6274e7f4f5',
                                     selectOptions: [
                                         {
-                                            partName: 'TABLEA',
+                                            value: 'TABLEA',
                                             text: {
                                                 en: 'TABLEA',
                                             },
@@ -1507,7 +1642,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEB',
+                                            value: 'TABLEB',
                                             text: {
                                                 en: 'TABLEB',
                                             },
@@ -1515,7 +1650,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEC',
+                                            value: 'TABLEC',
                                             text: {
                                                 en: 'TABLEC',
                                             },
@@ -1523,7 +1658,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLED',
+                                            value: 'TABLED',
                                             text: {
                                                 en: 'TABLED',
                                             },
@@ -1531,7 +1666,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEE',
+                                            value: 'TABLEE',
                                             text: {
                                                 en: 'TABLEE',
                                             },
@@ -1539,7 +1674,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEF',
+                                            value: 'TABLEF',
                                             text: {
                                                 en: 'TABLEF',
                                             },
@@ -1547,7 +1682,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEG',
+                                            value: 'TABLEG',
                                             text: {
                                                 en: 'TABLEG',
                                             },
@@ -1555,7 +1690,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEH',
+                                            value: 'TABLEH',
                                             text: {
                                                 en: 'TABLEH',
                                             },
@@ -1563,7 +1698,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEI',
+                                            value: 'TABLEI',
                                             text: {
                                                 en: 'TABLEI',
                                             },
@@ -1571,7 +1706,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEJ',
+                                            value: 'TABLEJ',
                                             text: {
                                                 en: 'TABLEJ',
                                             },
@@ -1579,7 +1714,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEK',
+                                            value: 'TABLEK',
                                             text: {
                                                 en: 'TABLEK',
                                             },
@@ -1587,7 +1722,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEL',
+                                            value: 'TABLEL',
                                             text: {
                                                 en: 'TABLEL',
                                             },
@@ -1595,7 +1730,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEM',
+                                            value: 'TABLEM',
                                             text: {
                                                 en: 'TABLEM',
                                             },
@@ -1603,7 +1738,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEN',
+                                            value: 'TABLEN',
                                             text: {
                                                 en: 'TABLEN',
                                             },
@@ -1611,7 +1746,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEO',
+                                            value: 'TABLEO',
                                             text: {
                                                 en: 'TABLEO',
                                             },
@@ -1619,7 +1754,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEP',
+                                            value: 'TABLEP',
                                             text: {
                                                 en: 'TABLEP',
                                             },
@@ -1836,7 +1971,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-a0facd93-5707-4773-97f6-3cd08eca0d7a',
                                     selectOptions: [
                                         {
-                                            partName: 'MONTHS',
+                                            value: 'MONTHS',
                                             text: {
                                                 en: 'Months',
                                             },
@@ -1844,7 +1979,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'YEARS',
+                                            value: 'YEARS',
                                             text: {
                                                 en: 'Years',
                                             },
@@ -1967,6 +2102,61 @@ export const farmersBlueprintIU0101 = {
                                 ],
                             },
                         },
+                        {
+                            id: '2bb31d72-a6ec-414a-bb67-16fdbfa91ff9',
+                            partName:
+                                'custom-e27fe421-38cc-4979-a1d6-0f22f6200e31',
+                            text: {},
+                            title: {
+                                en: 'Adjustments',
+                            },
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'multiple-policy-owner',
+                                    outputPath: 'discountIndicator',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '73209330-ce34-4084-bff5-dc40a6d966fc',
+                                    partName:
+                                        'custom-86910a5b-146a-48c0-9185-c8999658c49e',
+                                    selectOptions: [
+                                        {
+                                            value: 'MULTIPRODUCT',
+                                            text: {
+                                                en: "Has additional Farmer's policies?",
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                        },
                     ],
                     showInNavigation: false,
                     copyable: 'none',
@@ -2030,7 +2220,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-24dfcd91-03a7-4fcb-99bc-474a41cfcb70',
                                     selectOptions: [
                                         {
-                                            partName: 'PREMIUM',
+                                            value: 'PREMIUM',
                                             text: {
                                                 en: 'Premium',
                                             },
@@ -2038,7 +2228,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'FACE',
+                                            value: 'FACE',
                                             text: {
                                                 en: 'Face Amount',
                                             },
@@ -2046,7 +2236,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'NO_SOLVE',
+                                            value: 'NO_SOLVE',
                                             text: {
                                                 en: 'No Solve',
                                             },
@@ -2054,7 +2244,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'incomeSolve',
+                                            value: 'incomeSolve',
                                             text: {
                                                 en: 'Income Solve',
                                             },
@@ -2264,7 +2454,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-f90b40dc-bfd6-44da-b1f1-72601e0202f8',
                                     selectOptions: [
                                         {
-                                            partName: 'MONTHLY',
+                                            value: 'MONTHLY',
                                             text: {
                                                 en: 'Monthly',
                                             },
@@ -2272,7 +2462,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'QUARTERLY',
+                                            value: 'QUARTERLY',
                                             text: {
                                                 en: 'Quarterly',
                                             },
@@ -2280,7 +2470,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'SEMIANNUAL',
+                                            value: 'SEMIANNUAL',
                                             text: {
                                                 en: 'Semi-Annual',
                                             },
@@ -2288,7 +2478,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'ANNUAL',
+                                            value: 'ANNUAL',
                                             text: {
                                                 en: 'Annual',
                                             },
@@ -2331,7 +2521,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-983f4c3d-cdfc-4f69-90c9-f955c79d08e9',
                                     selectOptions: [
                                         {
-                                            partName: 'ACH',
+                                            value: 'ACH',
                                             text: {
                                                 en: 'Electronic Funds Transfer (EFT)',
                                             },
@@ -2339,7 +2529,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'CREDITCARD',
+                                            value: 'CREDITCARD',
                                             text: {
                                                 en: 'Credit Card',
                                             },
@@ -2405,8 +2595,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-a3381593-d6d9-4e5e-9652-5cc03eeecda6',
                                     selectOptions: [
                                         {
-                                            partName:
-                                                'SOLVE_FOR_TARGET_CASH_VALUE',
+                                            value: 'SOLVE_FOR_TARGET_CASH_VALUE',
                                             text: {
                                                 en: 'Solve for Target Cash Value',
                                             },
@@ -2414,7 +2603,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'MINIMUM_PREMIUM',
+                                            value: 'MINIMUM_PREMIUM',
                                             text: {
                                                 en: 'Minimum Premium',
                                             },
@@ -2422,7 +2611,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TARGET_PREMIUM',
+                                            value: 'TARGET_PREMIUM',
                                             text: {
                                                 en: 'Target Premium',
                                             },
@@ -2430,8 +2619,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName:
-                                                'GUIDELINE_MAXIMUM_PREMIUM',
+                                            value: 'GUIDELINE_MAXIMUM_PREMIUM',
                                             text: {
                                                 en: 'Guideline Maximum Premium',
                                             },
@@ -2439,7 +2627,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 2,
                                         },
                                         {
-                                            partName: 'GUIDELINE_LEVEL_PREMIUM',
+                                            value: 'GUIDELINE_LEVEL_PREMIUM',
                                             text: {
                                                 en: 'Guideline Level Premium',
                                             },
@@ -2447,7 +2635,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 2,
                                         },
                                         {
-                                            partName: 'LEVEL_NON_MEC',
+                                            value: 'LEVEL_NON_MEC',
                                             text: {
                                                 en: 'Level Non-MEC',
                                             },
@@ -2610,7 +2798,7 @@ export const farmersBlueprintIU0101 = {
                                     applicationModes: ['digital', 'paper'],
                                     selectOptions: [
                                         {
-                                            partName: 'AGE',
+                                            value: 'AGE',
                                             text: {
                                                 en: 'Age',
                                             },
@@ -2618,7 +2806,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'YEARS',
+                                            value: 'YEARS',
                                             text: {
                                                 en: 'Years',
                                             },
@@ -2745,7 +2933,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-db55e733-8ca1-4f60-9d23-e876c52d3502',
                                     selectOptions: [
                                         {
-                                            partName: 'MONTHLY',
+                                            value: 'MONTHLY',
                                             text: {
                                                 en: 'Monthly',
                                             },
@@ -2753,7 +2941,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'QUARTERLY',
+                                            value: 'QUARTERLY',
                                             text: {
                                                 en: 'Quarterly',
                                             },
@@ -2761,7 +2949,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'SEMIANNUAL',
+                                            value: 'SEMIANNUAL',
                                             text: {
                                                 en: 'Semi-Annual',
                                             },
@@ -2769,7 +2957,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'ANNUAL',
+                                            value: 'ANNUAL',
                                             text: {
                                                 en: 'Annual',
                                             },
@@ -2812,7 +3000,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-c8944d62-3ca6-4ee2-98dc-44eb963990ea',
                                     selectOptions: [
                                         {
-                                            partName: 'ACH',
+                                            value: 'ACH',
                                             text: {
                                                 en: 'Electronic Funds Transfer (EFT)',
                                             },
@@ -2820,7 +3008,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'CREDITCARD',
+                                            value: 'CREDITCARD',
                                             text: {
                                                 en: 'Credit Card',
                                             },
@@ -2886,8 +3074,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-0625ff6e-d5c0-46e7-ade7-6b3e27139fb3',
                                     selectOptions: [
                                         {
-                                            partName:
-                                                'SOLVE_FOR_TARGET_CASH_VALUE',
+                                            value: 'SOLVE_FOR_TARGET_CASH_VALUE',
                                             text: {
                                                 en: 'Solve for Target Cash Value',
                                             },
@@ -2895,7 +3082,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'LEVEL_NON_MEC',
+                                            value: 'MINIMUM_NON_MEC',
                                             text: {
                                                 en: 'Minimum Non-MEC',
                                             },
@@ -3061,7 +3248,7 @@ export const farmersBlueprintIU0101 = {
                                     applicationModes: ['digital', 'paper'],
                                     selectOptions: [
                                         {
-                                            partName: 'AGE',
+                                            value: 'AGE',
                                             text: {
                                                 en: 'Age',
                                             },
@@ -3069,7 +3256,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'YEARS',
+                                            value: 'YEARS',
                                             text: {
                                                 en: 'Years',
                                             },
@@ -3198,7 +3385,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-4807d558-8b11-466b-9733-40c3b6c14037',
                                     selectOptions: [
                                         {
-                                            partName: 'MONTHLY',
+                                            value: 'MONTHLY',
                                             text: {
                                                 en: 'Monthly',
                                             },
@@ -3206,7 +3393,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'QUARTERLY',
+                                            value: 'QUARTERLY',
                                             text: {
                                                 en: 'Quarterly',
                                             },
@@ -3214,7 +3401,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'ANNUAL',
+                                            value: 'ANNUAL',
                                             text: {
                                                 en: 'Annual',
                                             },
@@ -3222,7 +3409,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 2,
                                         },
                                         {
-                                            partName: 'SEMIANNUAL',
+                                            value: 'SEMIANNUAL',
                                             text: {
                                                 en: 'Semi-Annual',
                                             },
@@ -3265,7 +3452,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-581db7bd-8ee9-4338-bce4-d4eea8f222c9',
                                     selectOptions: [
                                         {
-                                            partName: 'ACH',
+                                            value: 'ACH',
                                             text: {
                                                 en: 'Electronic Funds Transfer (EFT)',
                                             },
@@ -3273,7 +3460,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'CREDITCARD',
+                                            value: 'CREDITCARD',
                                             text: {
                                                 en: 'Credit Card',
                                             },
@@ -3338,7 +3525,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-150045be-c1f6-4f10-9ba1-3c62331ea400',
                                     selectOptions: [
                                         {
-                                            partName: 'faceAmountAndIncome',
+                                            value: 'faceAmountAndIncome',
                                             text: {
                                                 en: 'Face Amount and Income',
                                             },
@@ -3346,7 +3533,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'premiumAndIncome',
+                                            value: 'premiumAndIncome',
                                             text: {
                                                 en: 'Premium and Income',
                                             },
@@ -3354,7 +3541,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'income',
+                                            value: 'income',
                                             text: {
                                                 en: 'Income',
                                             },
@@ -3426,7 +3613,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-e38d9eda-ad32-4abc-bec1-4d09975ed943',
                                     selectOptions: [
                                         {
-                                            partName: 'withdrawalToBasis',
+                                            value: 'withdrawalToBasis',
                                             text: {
                                                 en: 'Withdrawal to Basis',
                                             },
@@ -3434,7 +3621,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'loan',
+                                            value: 'loan',
                                             text: {
                                                 en: 'Loan',
                                             },
@@ -3442,7 +3629,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'withdrawal',
+                                            value: 'withdrawal',
                                             text: {
                                                 en: 'Withdrawal',
                                             },
@@ -3565,7 +3752,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-005fe80e-0f24-499c-bcf2-f8dc5bdcf363',
                                     selectOptions: [
                                         {
-                                            partName: 'MONTHLY',
+                                            value: 'MONTHLY',
                                             text: {
                                                 en: 'Monthly',
                                             },
@@ -3573,7 +3760,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'QUARTERLY',
+                                            value: 'QUARTERLY',
                                             text: {
                                                 en: 'Quarterly',
                                             },
@@ -3581,7 +3768,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'SEMIANNUAL',
+                                            value: 'SEMIANNUAL',
                                             text: {
                                                 en: 'Semi-Annual',
                                             },
@@ -3589,7 +3776,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'ANNUAL',
+                                            value: 'ANNUAL',
                                             text: {
                                                 en: 'Annual',
                                             },
@@ -3632,7 +3819,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-23481828-fede-4dd4-aff7-e862dc60ec2e',
                                     selectOptions: [
                                         {
-                                            partName: 'ACH',
+                                            value: 'ACH',
                                             text: {
                                                 en: 'Electronic Funds Transfer (EFT)',
                                             },
@@ -3640,7 +3827,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'CREDITCARD',
+                                            value: 'CREDITCARD',
                                             text: {
                                                 en: 'Credit Card',
                                             },
@@ -3705,7 +3892,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-c4c2538a-ac29-4f15-a270-9d67ad3bf5bc',
                                     selectOptions: [
                                         {
-                                            partName: 'yes',
+                                            value: 'yes',
                                             text: {
                                                 en: 'Yes',
                                             },
@@ -3713,7 +3900,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'no',
+                                            value: 'no',
                                             text: {
                                                 en: 'No',
                                             },
@@ -3932,14 +4119,14 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'YES',
+                                            value: 'YES',
                                             text: {
                                                 en: 'Yes',
                                             },
                                             isCustom: true,
                                         },
                                         {
-                                            partName: 'NON',
+                                            value: 'NON',
                                             text: {
                                                 en: 'No',
                                             },
@@ -4035,7 +4222,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-77062f3d-906d-4014-9e36-d034e6654838',
                                     selectOptions: [
                                         {
-                                            partName: 'increasing',
+                                            value: 'increasing',
                                             text: {
                                                 en: 'Increasing',
                                             },
@@ -4043,7 +4230,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'level',
+                                            value: 'level',
                                             text: {
                                                 en: 'Level',
                                             },
@@ -4170,7 +4357,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-e957ce1d-3747-4701-9821-8936018d597d',
                                     selectOptions: [
                                         {
-                                            partName: 'yes',
+                                            value: 'yes',
                                             text: {
                                                 en: 'Yes',
                                             },
@@ -4178,7 +4365,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'no',
+                                            value: 'no',
                                             text: {
                                                 en: 'No',
                                             },
@@ -4276,6 +4463,8 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'long-term-fixed-account',
+                                    outputPath:
+                                        'longTermFixedAccountAllocation',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -4308,6 +4497,7 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'sp500-indexed-account',
+                                    outputPath: 'sp500IndexedAccountAllocation',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -4341,6 +4531,8 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     answerNodeId:
                                         'sp-marc-5-percent-er-indexed-account',
+                                    outputPath:
+                                        'spMarc5PercentErIndexedAccountAllocation',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -4449,7 +4641,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_ABRTRM',
+                                            value: 'Rider_ABRTRM',
                                             text: {
                                                 en: 'Accelerated Death Benefit Rider for Terminal Illness',
                                             },
@@ -4517,7 +4709,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_ABRCHR',
+                                            value: 'Rider_ABRCHR',
                                             text: {
                                                 en: 'Chronic Illness Accelerated Death Benefit Rider',
                                             },
@@ -4577,7 +4769,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_ADR',
+                                            value: 'Rider_ADR',
                                             text: {
                                                 en: 'Accidental Death Benefit Rider',
                                             },
@@ -4664,7 +4856,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-fc24f298-a5e6-4d3f-b0ba-cdfae9827a9a',
                                     selectOptions: [
                                         {
-                                            partName: 'NONETABLE',
+                                            value: 'NONETABLE',
                                             text: {
                                                 en: 'Standard',
                                             },
@@ -4672,7 +4864,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'TABLEB',
+                                            value: 'TABLEB',
                                             text: {
                                                 en: '1.5 x Standard',
                                             },
@@ -4680,7 +4872,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEC',
+                                            value: 'TABLEC',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -4688,7 +4880,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLED',
+                                            value: 'TABLED',
                                             text: {
                                                 en: '2.5 x Standard',
                                             },
@@ -4696,7 +4888,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEE',
+                                            value: 'TABLEE',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },
@@ -4771,7 +4963,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_CGR',
+                                            value: 'Rider_CGR',
                                             text: {
                                                 en: 'Charitable Giving Rider',
                                             },
@@ -4831,7 +5023,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_CTR',
+                                            value: 'Rider_CTR',
                                             text: {
                                                 en: "Children's Term Insurance Rider",
                                             },
@@ -4965,7 +5157,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_GIBR',
+                                            value: 'Rider_GIBR',
                                             text: {
                                                 en: 'Guaranteed Insurability Benefit Rider',
                                             },
@@ -5097,7 +5289,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_OPR',
+                                            value: 'Rider_OPR',
                                             text: {
                                                 en: 'Overloan Protection Rider',
                                             },
@@ -5161,7 +5353,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_OWDR',
+                                            value: 'Rider_OWDR',
                                             text: {
                                                 en: 'Owner Waiver of Deduction Rider',
                                             },
@@ -5287,7 +5479,7 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            partName: 'Rider_WDR',
+                                            value: 'Rider_WDR',
                                             text: {
                                                 en: 'Waiver of Deduction',
                                             },
@@ -5329,7 +5521,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-5f288900-f507-4c25-a12a-95d42b5290d0',
                                     selectOptions: [
                                         {
-                                            partName: 'NONETABLE',
+                                            value: 'NONETABLE',
                                             text: {
                                                 en: 'Standard',
                                             },
@@ -5337,7 +5529,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 0,
                                         },
                                         {
-                                            partName: 'TABLEB',
+                                            value: 'TABLEB',
                                             text: {
                                                 en: '1.5 x Standard',
                                             },
@@ -5345,7 +5537,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLED',
+                                            value: 'TABLED',
                                             text: {
                                                 en: '2.5 x Standard',
                                             },
@@ -5353,7 +5545,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEC',
+                                            value: 'TABLEC',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -5361,7 +5553,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'TABLEE',
+                                            value: 'TABLEE',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },
@@ -5451,7 +5643,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-c3e2fa2b-50e6-4193-a03e-75112a014217',
                                     selectOptions: [
                                         {
-                                            partName: 'daily',
+                                            value: 'daily',
                                             text: {
                                                 en: 'Daily',
                                             },
@@ -5459,7 +5651,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'everyTwoWeeks',
+                                            value: 'everyTwoWeeks',
                                             text: {
                                                 en: 'Every two weeks',
                                             },
@@ -5467,7 +5659,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'monthly',
+                                            value: 'monthly',
                                             text: {
                                                 en: 'Monthly',
                                             },
@@ -5475,7 +5667,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'semi-Annual',
+                                            value: 'semi-Annual',
                                             text: {
                                                 en: 'Semi-annual',
                                             },
@@ -5483,7 +5675,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'quarterly',
+                                            value: 'quarterly',
                                             text: {
                                                 en: 'Quarterly',
                                             },
@@ -5491,7 +5683,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'annual',
+                                            value: 'annual',
                                             text: {
                                                 en: 'Annual',
                                             },
@@ -5499,7 +5691,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'singlePayment',
+                                            value: 'singlePayment',
                                             text: {
                                                 en: 'Single Payment',
                                             },
@@ -5541,7 +5733,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-f0d771ec-7add-431a-b1dd-0fffade91406',
                                     selectOptions: [
                                         {
-                                            partName: 'withdrawToBasis',
+                                            value: 'withdrawToBasis',
                                             text: {
                                                 en: 'Withdraw to basis',
                                             },
@@ -5549,7 +5741,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'loan',
+                                            value: 'loan',
                                             text: {
                                                 en: 'Loan',
                                             },
@@ -5557,7 +5749,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'withdraw',
+                                            value: 'withdraw',
                                             text: {
                                                 en: 'Withdraw',
                                             },
@@ -5597,7 +5789,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-b252ac5d-d727-495d-b4d4-1a687b466626',
                                     selectOptions: [
                                         {
-                                            partName: 'borrow',
+                                            value: 'borrow',
                                             text: {
                                                 en: 'Borrow',
                                             },
@@ -5605,7 +5797,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'cash',
+                                            value: 'cash',
                                             text: {
                                                 en: 'Cash',
                                             },
@@ -5721,7 +5913,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-e72790d8-fc28-4324-a55b-dd329dff633b',
                                     selectOptions: [
                                         {
-                                            partName: 'AMOUNT',
+                                            value: 'AMOUNT',
                                             text: {
                                                 en: 'Specify',
                                             },
@@ -5729,7 +5921,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            partName: 'MAX',
+                                            value: 'MAX',
                                             text: {
                                                 en: 'Maximum',
                                             },

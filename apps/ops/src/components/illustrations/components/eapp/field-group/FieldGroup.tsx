@@ -71,11 +71,7 @@ export function InnerFieldGroup(props: FieldGroupProps): ReactElement | null {
     return (
         <div className={style.questionContainer}>
             <div className={style.questionHeaderWrapper}>
-                {fieldGroup.title && (
-                    <p className="typography-desktop-headline-4-d">
-                        {ReactHtmlParser(fieldGroup.title)}
-                    </p>
-                )}
+                {fieldGroup.title && <p>{ReactHtmlParser(fieldGroup.title)}</p>}
                 {fieldGroup.text && (
                     <p className="typography-content-body">
                         {ReactHtmlParser(fieldGroup.text)}
@@ -90,6 +86,7 @@ export function InnerFieldGroup(props: FieldGroupProps): ReactElement | null {
                                 ? field.appendToKeyValue
                                 : index
                         }`;
+
                         if (field.readOnly) {
                             return <ReadOnlyField key={key} field={field} />;
                             // TODO: readonly field

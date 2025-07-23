@@ -5,6 +5,7 @@ export type EAppData = {
     targetPremium?: number;
     faceAmount?: number;
     initialPremium?: number;
+    cashValue?: number;
 };
 
 type EappContextValue = {

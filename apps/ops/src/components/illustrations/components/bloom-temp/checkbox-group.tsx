@@ -41,12 +41,13 @@ export function CheckboxGroup({
 
     return (
         <div className={style.checkboxGroupRoot}>
-            {options.map((option) => (
+            {options.map((option, i) => (
                 <div key={option.value} className={style.checkboxWrapper}>
                     <Checkbox
                         aria-describedby={`${option.value}-label`}
                         checked={mapOfCheckedStatuses[option.value] || false}
                         id={option.value}
+                        key={`checkbox-${i}-${option.value}`}
                         onCheckedChange={(
                             checked: boolean | 'indeterminate'
                         ) => {

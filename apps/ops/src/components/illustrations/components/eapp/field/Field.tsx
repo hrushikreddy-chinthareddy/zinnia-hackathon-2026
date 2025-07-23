@@ -6,6 +6,8 @@ import {
     FieldStatus,
     Radio,
     Select,
+    Tag,
+    TagVariant,
 } from '@zinnia/bloom/components';
 import {
     isRenderingPlaceholderField,
@@ -19,6 +21,7 @@ import {
     RenderingFieldOption,
 } from '@zinnia/form-engine-sdk';
 import ReactHtmlParser from 'html-react-parser';
+import { RenderingCustomField } from 'node_modules/@zinnia/form-engine-sdk/dist/esm/questionnaire-engine/renderingTransforms/RenderingQuestionnaire';
 import {
     ReactElement,
     ReactNode,
@@ -27,6 +30,8 @@ import {
     useRef,
     memo,
 } from 'react';
+
+import { useQuestionnaireEngine } from '@deps/components/illustrations/providers/QuestionnaireEngineProvider';
 
 import style from './field.module.css';
 import { CheckboxGroup } from '../../bloom-temp/checkbox-group';
@@ -153,6 +158,8 @@ export function InnerField(props: FieldProps): ReactElement | null {
         focusedIncompleteFieldId,
     } = props;
 
+    const { questionnaireEngine } = useQuestionnaireEngine();
+
     // const onAnswerComplete = useCallback(
     //   (fieldId: string, answer: any, previousAnswer: any) => {
     //     onAnswerCompleteCallback(fieldId, answer, previousAnswer);
@@ -239,7 +246,35 @@ export function InnerField(props: FieldProps): ReactElement | null {
         focusedIncompleteFieldId,
     };
 
+    if (field.type === FieldTypes.custom) {
+        field;
+    }
     switch (field.type) {
+        case FieldTypes.custom: {
+            const tagNodeIds =
+                (field as RenderingCustomField)?.customProperties?.[
+                    'tagNodeIds'
+                ] ?? [];
+            const tags = (tagNodeIds as string[]).map((tagNodeId) => {
+                const tag = questionnaireEngine.getAnswer(tagNodeId);
+                return tag;
+            });
+
+            if (field.text) {
+                tags.unshift(field.text);
+            }
+
+            if (tags.length > 0) {
+                return (
+                    <Tag
+                        text={tags.join(' ')}
+                        variant={TagVariant.White}
+                        className={style.fieldTag}
+                    ></Tag>
+                );
+            }
+            return <></>;
+        }
         case FieldTypes.input:
             // const symbol = isRenderingTextField(field) ? field.symbol : undefined;
             return (
@@ -259,7 +294,8 @@ export function InnerField(props: FieldProps): ReactElement | null {
                             onAnswerChangeForFieldProps(e.target.value)
                         }
                         fieldSize={FieldSize.Small}
-                        readOnly={field.disabled}
+                        readOnly={field.readOnly}
+                        disabled={field.disabled}
                     />
                 </FieldContainer>
             );
