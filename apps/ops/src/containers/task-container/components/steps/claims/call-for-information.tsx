@@ -1,7 +1,7 @@
 import { Phone } from '@xd/api-types/dist/generated-types/sor';
 import { countries } from 'countries-list';
 import { TFunction } from 'i18next';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 import Button, {
     ButtonSize,
@@ -22,13 +22,14 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
 import BeneficiaryNotificationChange from './beneficiary-notification-change';
-import { updateCallLogs, validateForm } from './call-for-information.helper';
+import { CallForInformationFunctions } from './call-for-information.helper';
 import {
     CallEntry,
     CallLog,
-    ChangeTypeEnum,
     ContactRole,
     UpdatedBeneficiaryRecord,
+    DynamicKey,
+    ChangeTypeEnum,
 } from './claims.type';
 import { DisplayCompletedCalls } from './display-completed-calls';
 
@@ -65,9 +66,10 @@ function CallForInformation({
         },
     ]);
 
+    const readOnly = task.status === TaskStatus.Completed;
     const dynamicKey = task?.data?.details?.beneCall
-        ? 'beneCall'
-        : 'benefinalcontactattempt';
+        ? DynamicKey.BENE_CALL
+        : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
     const [contactRole, setContactRole] = useState('');
     const [filteredCallLogs, setFilteredCallLogs] = useState<CallLog[]>([]);
     const [name, setName] = useState('');
@@ -78,52 +80,43 @@ function CallForInformation({
 
     const { goToNext } = useWorkflow();
 
-    const contactRoleOptions = [
-        {
-            value: ContactRole.AGENT,
+    const {
+        contactRoleOptions,
+        changeTypeOptions,
+        addNewCallEntry,
+        updateCurrentCallEntry,
+        validateForm,
+        updateCallLogs,
+        shouldRenderChangeRequire,
+        applyBeneficiaryChanges,
+    } = CallForInformationFunctions({
+        t,
+        task,
+        setTask,
+        contactRole,
+        name,
+        setName,
+        phone,
+        setPhone,
+        country,
+        setContactRole,
+        relationshipToOwner,
+        setBeneficiary,
+        dynamicKey,
+        setCallEntries,
+        callEntries,
+        beneficiary,
+        setFormErrors,
+        addressSelected,
+    });
 
-            label: t('contactRoles.agent'),
-
-            textValue: t('contactRoles.agent'),
-            disabled: !task?.data?.details?.beneCall?.callLogs?.some(
-                (log: CallLog) => log.partyRoleCategory === ContactRole.AGENT
-            ),
-        },
-        {
-            value: ContactRole.PRIMARYBENEFICIARY,
-
-            label: t('contactRoles.beneficiary'),
-
-            textValue: t('contactRoles.beneficiary'),
-            disabled: !task?.data?.details?.beneCall?.callLogs?.some(
-                (log: CallLog) =>
-                    log.partyRole === ContactRole.PRIMARYBENEFICIARY
-            ),
-        },
-        {
-            value: ContactRole.OTHER,
-            label: t('contactRoles.other'),
-            textValue: t('contactRoles.other'),
-            disabled: false,
-        },
-    ];
-
-    const changeTypeOptions = [
-        {
-            value: 'BENEFICIARY_NOTIFICATION_CHANGE',
-
-            label: t('changeTypes.beneficiaryNotificationChange'),
-
-            textValue: t('changeTypes.beneficiaryNotificationChange'),
-        },
-        {
-            value: 'BENEFICIARY_DECEASED',
-
-            label: t('changeTypes.beneficiaryDeceased'),
-
-            textValue: t('changeTypes.beneficiaryDeceased'),
-        },
-    ];
+    useEffect(() => {
+        if (readOnly) {
+            applyBeneficiaryChanges();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // we only need once when component mounts
+    }, []);
 
     useEffect(() => {
         const handleContinue = async () => {
@@ -149,7 +142,7 @@ function CallForInformation({
                 country,
                 relationshipToOwner
             );
-            if (dynamicKey === 'benefinalcontactattempt') {
+            if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
                 updatedTask.data.details[
                     dynamicKey
                 ].subTaskBeneCallChangeRequire = beneficiary.changeRequire
@@ -178,56 +171,6 @@ function CallForInformation({
         country,
         dynamicKey,
     ]);
-
-    const addNewCallEntry = () => {
-        const updatedTask = updateCallLogs(
-            task,
-            dynamicKey,
-            callEntries.length,
-            contactRole,
-            name,
-            phone,
-            country,
-            relationshipToOwner
-        );
-        setTask(updatedTask);
-        setCallEntries((prev) => [
-            ...prev,
-            {
-                id:
-                    prev.length > 0
-                        ? Math.max(...prev.map((entry) => entry.id)) + 1
-                        : 1,
-                contactRole: '',
-                name: '',
-                phone: {} as Phone,
-            },
-        ]);
-        setBeneficiary((prev: UpdatedBeneficiaryRecord) => ({
-            ...prev,
-            changeRequire: null,
-        }));
-        setContactRole('');
-        setName('');
-        setPhone({} as Phone);
-    };
-
-    const updateCurrentCallEntry = useCallback(() => {
-        if (contactRole && name) {
-            setCallEntries((prev) => {
-                const lastEntry = prev[prev.length - 1];
-                return [
-                    ...prev.slice(0, prev.length - 1),
-                    {
-                        ...lastEntry,
-                        contactRole,
-                        name,
-                        phone,
-                    },
-                ];
-            });
-        }
-    }, [contactRole, name, phone]);
 
     useEffect(() => {
         if (
@@ -281,247 +224,217 @@ function CallForInformation({
     }, [filteredCallLogs, contactRole]);
 
     useEffect(() => {
-        validateForm(
-            dynamicKey,
-            contactRole,
-            phone,
-            name,
-            beneficiary,
-            setFormErrors,
-            relationshipToOwner,
-            addressSelected
-        );
+        validateForm();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [contactRole, phone, name, beneficiary, addressSelected]);
 
-    const shouldRenderChangeRequire = () => {
-        switch (contactRole === ContactRole.OTHER) {
-            case true: {
-                return (
-                    name &&
-                    phone.dialNumber &&
-                    relationshipToOwner &&
-                    contactRole
-                );
-            }
-            case false: {
-                return name && phone.dialNumber && contactRole;
-            }
-        }
-    };
     return (
         <div>
             <DisplayCompletedCalls task={task} t={t} />
 
             {/* Current call entry form */}
             <div className="grid grid-cols-4 gap-4">
-                <SelectComponent
-                    disabled={task.status === TaskStatus.Completed}
-                    value={contactRole}
-                    label={t('contactRoleLabel') as string}
-                    options={contactRoleOptions}
-                    onChange={(newValue) => {
-                        if (typeof newValue === 'string') {
-                            setName('');
-                            setPhone({} as Phone);
-                            setContactRole(newValue);
-                            setRelationshipToOwner('');
-                        }
-                    }}
-                />
+                {!readOnly && (
+                    <SelectComponent
+                        value={contactRole}
+                        label={t('contactRoleLabel') as string}
+                        options={contactRoleOptions}
+                        onChange={(newValue) => {
+                            if (typeof newValue === 'string') {
+                                setName('');
+                                setPhone({} as Phone);
+                                setContactRole(newValue);
+                                setRelationshipToOwner('');
+                            }
+                        }}
+                    />
+                )}
             </div>
 
-            {contactRole !== '' && (
-                <div className="grid grid-cols-4 gap-4 mt-5">
-                    {contactRole !== ContactRole.OTHER &&
-                        filteredCallLogs.length > 0 && (
-                            <>
-                                <SelectComponent
-                                    label={t('name') as string}
-                                    className="my-1"
-                                    value={name}
-                                    onChange={(newValue) => {
-                                        if (typeof newValue === 'string') {
-                                            setName(newValue);
-                                            const selectedLog =
-                                                filteredCallLogs.find(
-                                                    (log) =>
-                                                        log.fullName ===
-                                                        newValue
-                                                );
-                                            if (selectedLog?.phone) {
-                                                setPhone(
-                                                    selectedLog.phone as any
-                                                );
-                                            }
-                                        }
-                                    }}
-                                    options={filteredCallLogs.map((log) => ({
-                                        value: `${log.fullName}`,
-                                        label: log.fullName,
-                                        textValue: log.fullName,
-                                    }))}
-                                />
-                                <div>
-                                    <TextField
-                                        id="phone"
-                                        onChange={() => {}}
-                                        placeholder={t('phone') as string}
-                                        disabled={true}
-                                        value={formatPhone(phone)}
-                                        label={t('phone') as string}
-                                        className="w-full"
-                                    />
-                                </div>
-                            </>
-                        )}
-
-                    {contactRole === ContactRole.OTHER && (
+            <div className="grid grid-cols-4 gap-4 mt-5">
+                {contactRole !== ContactRole.OTHER &&
+                    filteredCallLogs.length > 0 && (
                         <>
+                            <SelectComponent
+                                label={t('name') as string}
+                                className="my-1"
+                                value={name}
+                                onChange={(newValue) => {
+                                    if (typeof newValue === 'string') {
+                                        setName(newValue);
+                                        const selectedLog =
+                                            filteredCallLogs.find(
+                                                (log) =>
+                                                    log.fullName === newValue
+                                            );
+                                        if (selectedLog?.phone) {
+                                            setPhone(
+                                                selectedLog.phone as Phone
+                                            );
+                                        }
+                                    }
+                                }}
+                                options={filteredCallLogs.map((log) => ({
+                                    value: `${log.fullName}`,
+                                    label: log.fullName,
+                                    textValue: log.fullName,
+                                }))}
+                            />
                             <div>
                                 <TextField
-                                    id="name"
-                                    onChange={setName}
-                                    placeholder={t('name') as string}
-                                    value={name}
-                                    label={t('name') as string}
-                                    className="w-full"
-                                />
-                            </div>
-                            <div className="mt-1">
-                                <PhoneNumber
-                                    title={false}
+                                    id="phone"
+                                    onChange={() => {}}
+                                    placeholder={t('phone') as string}
+                                    disabled={true}
+                                    value={formatPhone(phone)}
                                     label={t('phone') as string}
-                                    country={country}
-                                    phone={phone}
-                                    setCountry={setCountry}
-                                    setPhone={setPhone}
-                                />
-                            </div>
-
-                            <div className="col-span-1 ml-10">
-                                <TextField
-                                    id="relationshipToOwner"
-                                    onChange={setRelationshipToOwner}
-                                    placeholder={
-                                        t('relationshipToOwner') as string
-                                    }
-                                    value={relationshipToOwner}
-                                    label={t('relationshipToOwner') as string}
                                     className="w-full"
                                 />
                             </div>
                         </>
                     )}
 
-                    {shouldRenderChangeRequire() && (
-                        <div className="col-span-4 mt-4">
-                            <Radio
-                                label={t('didYouMakeAnyChanges') as string}
-                                items={[
-                                    { label: t('yes'), value: 'true' },
-                                    {
-                                        label: t('noChangesRequired'),
-                                        value: 'false',
-                                    },
-                                ]}
-                                value={beneficiary.changeRequire?.toString()}
-                                onChange={(event) =>
-                                    setBeneficiary({
-                                        ...beneficiary,
-                                        changeRequire:
-                                            event.target.value === 'true',
-                                    })
-                                }
+                {contactRole === ContactRole.OTHER && (
+                    <>
+                        <div>
+                            <TextField
+                                id="name"
+                                onChange={setName}
+                                placeholder={t('name') as string}
+                                value={name}
+                                label={t('name') as string}
+                                className="w-full"
                             />
                         </div>
-                    )}
-                    {beneficiary.changeRequire === false &&
-                        contactRole &&
-                        name && (
-                            <div className="col-span-1 mt-4">
-                                <Button
-                                    variant={ButtonVariant.Default}
-                                    type={ButtonType.Secondary}
-                                    size={ButtonSize.Small}
-                                    onClick={addNewCallEntry}
-                                >
-                                    {t('addAnotherCall')}
-                                </Button>
-                            </div>
+                        <div className="mt-1">
+                            <PhoneNumber
+                                title={false}
+                                label={t('phone') as string}
+                                country={country}
+                                phone={phone}
+                                setCountry={setCountry}
+                                setPhone={setPhone}
+                            />
+                        </div>
+
+                        <div className="col-span-1 ml-10">
+                            <TextField
+                                id="relationshipToOwner"
+                                onChange={setRelationshipToOwner}
+                                placeholder={t('relationshipToOwner') as string}
+                                value={relationshipToOwner}
+                                label={t('relationshipToOwner') as string}
+                                className="w-full"
+                            />
+                        </div>
+                    </>
+                )}
+
+                {(shouldRenderChangeRequire() || readOnly) && (
+                    <div className="col-span-4 mt-4">
+                        <Radio
+                            label={t('didYouMakeAnyChanges') as string}
+                            items={[
+                                { label: t('yes'), value: 'true' },
+                                {
+                                    label: t('noChangesRequired'),
+                                    value: 'false',
+                                },
+                            ]}
+                            readonly={readOnly}
+                            value={beneficiary.changeRequire?.toString()}
+                            onChange={(event) =>
+                                setBeneficiary({
+                                    ...beneficiary,
+                                    changeRequire:
+                                        event.target.value === 'true',
+                                })
+                            }
+                        />
+                    </div>
+                )}
+
+                {beneficiary.changeRequire === false && contactRole && name && (
+                    <div className="col-span-1 mt-4">
+                        <Button
+                            variant={ButtonVariant.Default}
+                            type={ButtonType.Secondary}
+                            size={ButtonSize.Small}
+                            onClick={addNewCallEntry}
+                        >
+                            {t('addAnotherCall')}
+                        </Button>
+                    </div>
+                )}
+
+                {(beneficiary.changeRequire &&
+                    contactRole &&
+                    name &&
+                    phone.dialNumber) ||
+                readOnly ? (
+                    <>
+                        <div className="mt-4 col-span-4">
+                            <SelectComponent
+                                label={t('newInformation') as string}
+                                disabled={readOnly}
+                                className="my-1 max-w-[250px]"
+                                value={beneficiary.changeType || ''}
+                                onChange={(newValue) => {
+                                    if (typeof newValue === 'string') {
+                                        const isNotificationChange =
+                                            newValue ===
+                                            ChangeTypeEnum.BENEFICIARY_DECEASED;
+
+                                        setBeneficiary((prev) => ({
+                                            ...prev,
+                                            changeType:
+                                                newValue as ChangeTypeEnum,
+                                            beneDeceased: isNotificationChange,
+                                            notificationPreferences: {
+                                                ...prev.notificationPreferences,
+                                                notificationMethod: {
+                                                    method: task?.data
+                                                        ?.details?.[dynamicKey]
+                                                        ?.beneficiary
+                                                        ?.notificationPreferences
+                                                        ?.notificationMethod
+                                                        ?.method,
+                                                    action: isNotificationChange
+                                                        ? ClaimActionTypes.NONE
+                                                        : ClaimActionTypes.UPDATE,
+                                                },
+                                            },
+                                        }));
+                                    }
+                                }}
+                                options={changeTypeOptions}
+                            />
+                        </div>
+
+                        {beneficiary.changeType ===
+                            ChangeTypeEnum.BENEFICIARY_DECEASED && (
+                            <BeneficiaryDeceased
+                                t={t}
+                                beneficiary={beneficiary}
+                                setBeneficiary={setBeneficiary}
+                                readOnly={readOnly}
+                            />
                         )}
 
-                    {beneficiary.changeRequire &&
-                        contactRole &&
-                        name &&
-                        phone.dialNumber && (
-                            <>
-                                <div className="mt-4 col-span-4">
-                                    <SelectComponent
-                                        label={t('newInformation') as string}
-                                        className="my-1 max-w-[250px]"
-                                        value={beneficiary.changeType || ''}
-                                        onChange={(newValue) => {
-                                            if (typeof newValue === 'string') {
-                                                const isNotificationChange =
-                                                    newValue ===
-                                                    ChangeTypeEnum.BENEFICIARY_DECEASED;
-
-                                                setBeneficiary((prev) => ({
-                                                    ...prev,
-                                                    changeType:
-                                                        newValue as ChangeTypeEnum,
-                                                    beneDeceased:
-                                                        isNotificationChange,
-                                                    notificationPreferences: {
-                                                        ...prev.notificationPreferences,
-                                                        notificationMethod: {
-                                                            method: task?.data
-                                                                ?.details?.[
-                                                                dynamicKey
-                                                            ]?.beneficiary
-                                                                ?.notificationPreferences
-                                                                ?.notificationMethod
-                                                                ?.method,
-                                                            action: isNotificationChange
-                                                                ? ClaimActionTypes.NONE
-                                                                : ClaimActionTypes.UPDATE,
-                                                        },
-                                                    },
-                                                }));
-                                            }
-                                        }}
-                                        options={changeTypeOptions}
-                                    />
-                                </div>
-
-                                {beneficiary.changeType ===
-                                    ChangeTypeEnum.BENEFICIARY_DECEASED && (
-                                    <BeneficiaryDeceased
-                                        t={t}
-                                        beneficiary={beneficiary}
-                                        setBeneficiary={setBeneficiary}
-                                    />
-                                )}
-
-                                {beneficiary.changeType ===
-                                    ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE && (
-                                    <>
-                                        <BeneficiaryNotificationChange
-                                            t={t}
-                                            beneficiary={beneficiary}
-                                            setBeneficiary={setBeneficiary}
-                                            task={task}
-                                            setAddressSelected={
-                                                setAddressSelected
-                                            }
-                                        />
-                                    </>
-                                )}
-                            </>
+                        {beneficiary.changeType ===
+                            ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE && (
+                            <BeneficiaryNotificationChange
+                                t={t}
+                                readOnly={readOnly}
+                                beneficiary={beneficiary}
+                                setBeneficiary={setBeneficiary}
+                                task={task}
+                                setAddressSelected={setAddressSelected}
+                            />
                         )}
-                </div>
-            )}
+                    </>
+                ) : null}
+            </div>
         </div>
     );
 }

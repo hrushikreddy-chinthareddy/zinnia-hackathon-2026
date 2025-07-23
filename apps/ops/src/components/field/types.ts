@@ -39,6 +39,7 @@ export interface FieldDataActiveProps extends FieldTypes {
 export type FieldDateProps = FieldTypes & {
     disableBeforeDate?: Date;
     disableAfterDate?: Date;
+    isDisabled?: boolean;
     id?: string;
     onDateSelect?: (date: Date | undefined) => void;
     defaultDate?: Date | string;

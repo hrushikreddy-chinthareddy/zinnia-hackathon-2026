@@ -4,7 +4,7 @@ import {
     AddressNotificationMethod,
     EmailNotificationMethod,
     FaxNotificationMethod,
-} from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
+} from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import { ClaimCommunicationTypes } from '@deps/containers/death-claim-container/death-claim.types';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 

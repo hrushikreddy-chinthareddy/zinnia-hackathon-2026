@@ -3,7 +3,7 @@ import { Button } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import { ButtonSize } from '@deps/components/button/button';
-import { AddressNotificationMethod } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
+import { AddressNotificationMethod } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';

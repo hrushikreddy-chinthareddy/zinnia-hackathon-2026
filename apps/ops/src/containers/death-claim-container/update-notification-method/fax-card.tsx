@@ -13,6 +13,7 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 import FaxNumber from '@deps/components/otp-send-document/components/fax-field';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -58,7 +59,9 @@ const FaxCard = ({ fax, setFax }: FaxCardProps) => {
                 <Typography variant={TypographyVariant.BodyBold}>
                     {t('fax')}
                 </Typography>
-                <span>{fax}</span>
+                <span>
+                    <PiiWrapper>{fax}</PiiWrapper>
+                </span>
             </div>
             <div>
                 <Button

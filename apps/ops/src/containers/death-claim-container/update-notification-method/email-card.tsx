@@ -13,6 +13,7 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 import EmailAddress from '@deps/components/otp-send-document/components/email-field';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -58,7 +59,9 @@ const EmailCard = ({ email, setEmail }: EmailCardProps) => {
                 <Typography variant={TypographyVariant.BodyBold}>
                     {t('email')}
                 </Typography>
-                <span>{email}</span>
+                <span>
+                    <PiiWrapper>{email}</PiiWrapper>
+                </span>
             </div>
             <div>
                 <Button

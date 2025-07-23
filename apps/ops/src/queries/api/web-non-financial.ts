@@ -156,6 +156,21 @@ export const updateNotificationMethod = async (body: any): Promise<any> => {
                 function: 'webnonfinancial.updateNotificationMethod',
                 policyNumber: body?.policyNumber,
                 zlcaseId: data?.zlCaseId,
+                payload: {
+                    addressAction:
+                        body?.beneficiaryChangeDetail?.notificationPreferences
+                            ?.address?.action,
+                    emailAction:
+                        body?.beneficiaryChangeDetail?.notificationPreferences
+                            ?.email?.action,
+                    faxAction:
+                        body?.beneficiaryChangeDetail?.notificationPreferences
+                            ?.fax?.action,
+                    notificationMethod:
+                        body?.beneficiaryChangeDetail?.notificationPreferences
+                            ?.notificationMethod,
+                    beneficiaryRecordId: body?.beneficiaryRecordId,
+                },
             }
         );
         return data;
@@ -169,6 +184,21 @@ export const updateNotificationMethod = async (body: any): Promise<any> => {
                 function: 'webnonfinancial.updateNotificationMethod',
                 policyNumber: body?.policyNumber,
                 zlcaseId: body?.zlCaseId,
+                payload: {
+                    addressAction:
+                        body?.beneficiaryChangeDetail?.notificationPreferences
+                            ?.address?.action,
+                    emailAction:
+                        body?.beneficiaryChangeDetail?.notificationPreferences
+                            ?.email?.action,
+                    faxAction:
+                        body?.beneficiaryChangeDetail?.notificationPreferences
+                            ?.fax?.action,
+                    notificationMethod:
+                        body?.beneficiaryChangeDetail?.notificationPreferences
+                            ?.notificationMethod,
+                    beneficiaryRecordId: body?.beneficiaryRecordId,
+                },
             }
         );
         return error;

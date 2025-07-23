@@ -13,13 +13,21 @@ type EmailAddressProps = {
     error?: FormValidationErrors;
     setEmail: (val: string) => void;
     name?: string;
+    isDisabled?: boolean;
 };
-const EmailAddress = ({ email, setEmail, error, name }: EmailAddressProps) => {
+const EmailAddress = ({
+    email,
+    setEmail,
+    error,
+    name,
+    isDisabled,
+}: EmailAddressProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
 
     return (
         <div>
             <Field
+                disabled={isDisabled}
                 label={t('correspondence.email') as string}
                 onChange={(e) => {
                     setEmail(xss(e?.target?.value?.trim() ?? ''));
@@ -30,7 +38,7 @@ const EmailAddress = ({ email, setEmail, error, name }: EmailAddressProps) => {
                 className="max-w-xs "
                 message={error?.email}
                 variant={
-                    error?.email ? FieldVariant.Error : FieldVariant.Default
+                    error?.email ? FieldVariant.Error : isDisabled ? FieldVariant.Inactive : FieldVariant.Default
                 }
                 labelTooltip={t('correspondence.email') as string}
                 labelTooltipBody={t('correspondence.emailTooltip') as string}

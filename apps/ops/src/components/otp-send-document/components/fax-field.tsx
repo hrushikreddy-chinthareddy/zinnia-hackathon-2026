@@ -1,13 +1,18 @@
 import { useTranslation } from 'next-i18next';
 import xss from 'xss';
 
-import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 
 type FaxNumberProps = {
     fax: string;
     setFax: (val: string) => void;
+    isDisabled?: boolean;
 };
-const FaxNumber = ({ fax, setFax }: FaxNumberProps) => {
+const FaxNumber = ({ fax, setFax, isDisabled }: FaxNumberProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'sendDocument.correspondence',
     });
@@ -17,6 +22,8 @@ const FaxNumber = ({ fax, setFax }: FaxNumberProps) => {
             onChange={(e) => {
                 setFax(xss(e?.target?.value));
             }}
+            variant={isDisabled ? FieldVariant.Inactive : FieldVariant.Default}
+            disabled={isDisabled}
             value={fax as string}
             size={FieldSize.Small}
             type={FieldType.BaseActive}

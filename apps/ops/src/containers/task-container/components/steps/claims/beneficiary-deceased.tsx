@@ -13,16 +13,19 @@ interface BeneficiaryDeceasedProps {
         React.SetStateAction<UpdatedBeneficiaryRecord>
     >;
     t: TFunction<TranslationFiles.COMMON, { keyPrefix: string }>;
+    readOnly?: boolean;
 }
 function BeneficiaryDeceased({
     beneficiary,
     setBeneficiary,
     t,
+    readOnly,
 }: BeneficiaryDeceasedProps) {
     return (
         <>
             <div className="col-span-1 mt-4">
                 <FieldDate
+                    isDisabled={readOnly}
                     disableAfterDate={new Date()}
                     label={
                         <Label labelFor="dateOfDeath">{t('dateOfDeath')}</Label>
@@ -35,6 +38,7 @@ function BeneficiaryDeceased({
                             beneDeathDate: val?.toLocaleDateString() || null,
                         });
                     }}
+                    disabled={readOnly}
                 />
             </div>
 
@@ -50,6 +54,7 @@ function BeneficiaryDeceased({
                     }}
                     value={beneficiary.beneDeathSourceOfInfo || ''}
                     className="w-full"
+                    disabled={readOnly}
                 />
             </div>
         </>

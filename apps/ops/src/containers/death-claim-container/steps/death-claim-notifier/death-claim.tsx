@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
 import Typography, {
@@ -24,6 +25,7 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { AddBeneficiaryCard } from './add-beneficiary-card';
 import getDeathClaimConfig from './death-claim.config';
+import styles from './death-claim.module.css';
 import OtherNotifier from './other-notifier';
 import { PartyCard } from './party-card';
 import PhoneNumber from './phone-number';
@@ -465,23 +467,30 @@ export const DeathClaim = ({
                         RoleType.Other,
                         RoleType.Annuitant,
                     ].includes(role) && (
-                        <div className="my-4">
-                            <div className="bg-gray-50 p-6 rounded-md mt-5">
+                        <div className={styles.beneList}>
+                            <div className="bg-gray-50 p-6 rounded-md mt-5 my-4">
                                 <Typography variant={TypographyVariant.LabelLg}>
                                     {t('labels.listedBenificary')}
                                 </Typography>
                                 {primaryBenificaries?.length > 0 && (
-                                    <ol className="my-2">
+                                    <ul className="my-2">
                                         {primaryBenificaries?.map(
                                             ({ party }) => (
                                                 <li
                                                     key={`bene-${party.partyId}`}
                                                 >
-                                                    &ndash; {party.fullName}
+                                                    <Content
+                                                        contentClassName="min-w-max"
+                                                        variant={
+                                                            ContentVariant.BodySm
+                                                        }
+                                                        details={party.fullName}
+                                                        pii={true}
+                                                    />
                                                 </li>
                                             )
                                         )}
-                                    </ol>
+                                    </ul>
                                 )}
                                 {primaryBenificaries &&
                                     primaryBenificaries.length === 0 && (

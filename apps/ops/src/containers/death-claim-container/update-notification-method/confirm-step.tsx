@@ -12,7 +12,7 @@ import NavElement, {
 import PageLoader, {
     PageLoaderVariant,
 } from '@deps/components/page-loader/page-loader';
-import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
+import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useUpdateNotificationMethod } from '@deps/contexts/UpdateNotificationMethodContext';

@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 import AssistiveText, {
     AssistiveTextVariant,
 } from '@deps/components/assistive-text/assistive-text';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -19,7 +20,7 @@ import {
     parseAndFormatDate,
     formatPhoneWithAreacode,
     toTitleCase,
-    formatFaxNumber,
+    formatFaxNumber
 } from '@deps/helpers/string.helpers';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
@@ -119,7 +120,9 @@ const DeathNotificationSidesheet = ({
                                       .country || '',
                           }
                         : DEFAULT_ERROR_STRING,
-                    faxNumber: bene.notificationPreferences.faxNumber,
+                    faxNumber: bene.notificationPreferences?.fax?.faxNumber
+                        ? bene.notificationPreferences.fax.faxNumber
+                        : DEFAULT_ERROR_STRING,
                 })) || [],
         };
     };
@@ -128,7 +131,7 @@ const DeathNotificationSidesheet = ({
         ? mapApiDataToDeathNotificationData(transactionEntity)
         : null;
 
-    if (isLoading) {
+    const displayIsLoading = () => {
         return (
             <div className="flex w-full flex-col">
                 <div className="mt-0.5">
@@ -150,9 +153,9 @@ const DeathNotificationSidesheet = ({
                 </div>
             </div>
         );
-    }
+    };
 
-    if (isError) {
+    const displayError = () => {
         return (
             <div className="flex w-full flex-col">
                 <div className="mt-0.5">
@@ -174,9 +177,9 @@ const DeathNotificationSidesheet = ({
                 </div>
             </div>
         );
-    }
+    };
 
-    if (!data) {
+    const displayNoData = () => {
         return (
             <div className="mt-0.5">
                 <Typography
@@ -200,6 +203,18 @@ const DeathNotificationSidesheet = ({
                 </div>
             </div>
         );
+    };
+
+    if (isLoading) {
+        return displayIsLoading();
+    }
+
+    if (isError) {
+        return displayError();
+    }
+
+    if (!data) {
+        return displayNoData();
     }
 
     return (
@@ -241,7 +256,7 @@ const DeathNotificationSidesheet = ({
                         variant={TypographyVariant.BodySm}
                         className="col-span-3"
                     >
-                        {data.notifiers.party?.fullName || DEFAULT_ERROR_STRING}
+                        <PiiWrapper>{data.notifiers.party?.fullName || DEFAULT_ERROR_STRING}</PiiWrapper>
                     </Typography>
                     <div className="col-span-2 text-[--color-base-text-text-secondary]">
                         {t(
@@ -252,11 +267,12 @@ const DeathNotificationSidesheet = ({
                         variant={TypographyVariant.BodySm}
                         className="col-span-3"
                     >
-                        {data.notifiers.party?.phone?.dialNumber
+                        <PiiWrapper>{data.notifiers.party?.phone?.dialNumber
                             ? formatPhoneWithAreacode(
                                   data.notifiers.party?.phone
                               )
                             : DEFAULT_ERROR_STRING}
+                        </PiiWrapper>
                     </Typography>
                     <div className="col-span-2 text-[--color-base-text-text-secondary]">
                         {t('deathNotification.notifierDetails.beneOnFileFlag')}
@@ -285,8 +301,8 @@ const DeathNotificationSidesheet = ({
                                     variant={TypographyVariant.BodySmBold}
                                     className="text-gray-800 mb-2"
                                 >
-                                    {toTitleCase(owner.party.fullName)} (
-                                    {toTitleCase(owner.party.partyRole)})
+                                    <PiiWrapper>{toTitleCase(owner.party.fullName)}</PiiWrapper>
+                                    &nbsp;({toTitleCase(owner.party.partyRole)})
                                 </Typography>
                                 <div className="grid grid-cols-5 gap-2 text-md align-center">
                                     <div className="col-span-2 text-[--color-base-text-text-secondary]">
@@ -346,7 +362,7 @@ const DeathNotificationSidesheet = ({
                                     variant={TypographyVariant.BodySmBold}
                                     className="text-gray-800 mb-2"
                                 >
-                                    {toTitleCase(bene.party.fullName)}
+                                    <PiiWrapper>{toTitleCase(bene.party.fullName)}</PiiWrapper>
                                 </Typography>
                                 {hasValidNotification ? (
                                     <div className="grid grid-cols-5 gap-2 text-md align-center">
@@ -362,13 +378,13 @@ const DeathNotificationSidesheet = ({
                                             {bene.notificationMethod ===
                                                 ClaimCommunicationTypes.Email &&
                                             bene.email?.emailAddress ? (
-                                                bene.email.emailAddress
+                                                <PiiWrapper>{bene.email.emailAddress}</PiiWrapper>
                                             ) : bene.notificationMethod ===
-                                                  ClaimCommunicationTypes.Fax &&
+                                                ClaimCommunicationTypes.Fax &&
                                               bene.faxNumber ? (
-                                                formatFaxNumber(bene.faxNumber)
+                                                <PiiWrapper>{formatFaxNumber(bene.faxNumber)}</PiiWrapper>
                                             ) : bene.notificationMethod ===
-                                                  ClaimCommunicationTypes.Mail &&
+                                                ClaimCommunicationTypes.Mail &&
                                               bene.address &&
                                               bene.address.country ? (
                                                 <FormattedAddress

@@ -1720,18 +1720,26 @@
             "types": {
                 "email": "Email",
                 "faxnumber": "Fax",
-                "mail": "Mail"
+                "mail": "Paper Mail"
             },
-            "startNotification": "Notification flow initiated.",
-            "sendNotification": "Sent notification via {{method}} ({{followup}} of 4)",
-            "scheduledNotification": "Send notification via {{method}} ({{followup}} of 4)",
-            "resetNotification": "Notification method updated. Attempts {{action}}.",
-            "resendNotification": "Attempts {{action}}.",
-            "receiveBeneficiaryConfirmation": "Receive beneficiary confirmation",
-            "completedStatusTooltipWithDate": "Completed on {{date}}",
-            "updatedStatusTooltipWithDate": "Updated on {{date}}",
-            "scheduledStatusTooltipWithDate": "Scheduled for {{date}}",
-            "notStarted": "Not started"
+            "update": {
+                "email": "Email Id",
+                "faxnumber": "Fax No.",
+                "mail": "Mailing Address"
+            },
+            "startNotification": "History",
+            "sendTo": "Send to",
+            "contactMethod": "Contact Method",
+            "scheduledNotification": "Attempts #{{followup}} of 4 scheduled for {{date}}",
+            "beneficiaryDeceasedNotification": "Beneficiary confirmed deceased on {{date}}",
+            "completedNotification": "Death packet received on {{date}}",
+            "sendNotification": "Attempts #{{followup}} of 4",
+            "resetNotification": "Notification method changed from {{old}} to {{new}} {{date}}",
+            "resetNotificationUpdate": "{{method}} Updated {{date}}",
+            "resendNotification": "{{action}} Request {{date}}.",
+            "contactNotEstablished": "Contact Not Established",
+            "contactEstablished": "Contact Established",
+            "beneficiaryDeceased": "Beneficiary deceased"
         }
     },
     "caseRenewal": {
@@ -5639,6 +5647,7 @@
         "uncashedTransactions": "Outstanding Checks Status",
         "stoppedTransactions": "Stopped Transactions",
         "noUncashedTransactions": "No uncashed checks available for this contract.",
+        "identificationInProgress": "Identification of outstanding check(s) is currently in progress.",
         "noUncashedTransactionsTableHead": "Contract #{{contractNumber}}",
         "noTransactionsFoundTitle": "No transactions were found",
         "noTransactionsMessage": "There are no transactions related with this event.",

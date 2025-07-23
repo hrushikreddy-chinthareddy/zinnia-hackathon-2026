@@ -8,7 +8,9 @@ import TransactionNavigationButtons, {
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 import CallForInformation from './call-for-information';
 import { UpdatedBeneficiaryRecord } from './claims.type';
@@ -42,7 +44,8 @@ export const ClaimsBeneficiaryCall = ({ taskType }: TaskReviewStepProps) => {
         beneDeathDate: null,
         beneDeathSourceOfInfo: null,
     } as UpdatedBeneficiaryRecord);
-
+    const readOnly = task.status === TaskStatus.Completed;
+    const { goToNext } = useWorkflow();
     return (
         <WorkflowCard
             title={t('title')}
@@ -51,9 +54,18 @@ export const ClaimsBeneficiaryCall = ({ taskType }: TaskReviewStepProps) => {
                 <TransactionNavigationButtons
                     className="mt-4"
                     submitLabel={t('submit') as string}
-                    handleContinue={handleContinueFn}
-                    isSubmit={true}
-                    disableContinue={Object.keys(formErrors).length > 0}
+                    readonly={readOnly}
+                    handleContinue={
+                        readOnly
+                            ? () => {
+                                  goToNext();
+                              }
+                            : handleContinueFn
+                    }
+                    isSubmit={!readOnly}
+                    disableContinue={
+                        readOnly ? false : Object.keys(formErrors).length > 0
+                    }
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
                     cancelLabel={t('cancel') as string}

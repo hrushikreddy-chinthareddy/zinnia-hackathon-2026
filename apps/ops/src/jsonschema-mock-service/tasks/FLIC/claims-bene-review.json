@@ -33,7 +33,7 @@
                         "sectionHeader": {
                             "type": "object",
                             "title": "Processing Instructions",
-                            "description": "Confirm beneficiary details match the Admin System."
+                            "description": "Confirm beneficiary details match the Admin System. For a complete list of supporting files,"
                         },
                         "details": {
                             "type": "object",
@@ -166,7 +166,9 @@
                     "sectionHeader": {
                         "ui:options": {
                             "label": true,
-                            "ObjectFieldTemplate": "InstructionsTemplate"
+                            "ObjectFieldTemplate": "InstructionsTemplate",
+                            "linkName": "click here to view all documents.",
+                            "linkUrl": "/cases/{{caseId}}/documents"
                         }
                     },
                     "details": {

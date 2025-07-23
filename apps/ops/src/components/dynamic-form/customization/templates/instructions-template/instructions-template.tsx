@@ -1,12 +1,16 @@
-import { ObjectFieldTemplateProps } from '@rjsf/utils';
+import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 import clsx from 'clsx';
 
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
+
 function InstructionsTemplate(props: ObjectFieldTemplateProps) {
     const { title, uiSchema, formContext, description } = props;
+    const { linkName, linkUrl } = getUiOptions(uiSchema);
+    const { customData } = formContext;
+    const resolvedUrl = replacePlaceholders(linkUrl, customData);
 
     return (
         <div
@@ -27,6 +31,21 @@ function InstructionsTemplate(props: ObjectFieldTemplateProps) {
                     <Typography variant={TypographyVariant.Body}>
                         {replacePlaceholders(description, formContext) ??
                             description}
+
+                        {linkUrl && linkName && (
+                            <>
+                                &nbsp;
+                                <Typography variant={TypographyVariant.NavLinks}>
+                                    <a
+                                        href={resolvedUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        {linkName as string}
+                                    </a>
+                                </Typography>
+                            </>
+                        )}
                     </Typography>
                 )}
             </div>

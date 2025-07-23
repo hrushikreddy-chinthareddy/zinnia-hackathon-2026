@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 
 import EmailAddress from '@deps/components/otp-send-document/components/email-field';
 import FaxNumber from '@deps/components/otp-send-document/components/fax-field';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Radio, { RadioItem } from '@deps/components/radio/radio';
 import Typography, {
     TypographyVariant,
@@ -214,11 +215,13 @@ const NotificationCard = ({
                 variant={TypographyVariant.H3}
                 className="capitalize mb-5"
             >
-                {toTitleCase(
-                    [party?.party.firstName, party?.party.lastName]
-                        .filter(Boolean)
-                        .join(' ')
-                )}
+                <PiiWrapper>
+                    {toTitleCase(
+                        [party?.party.firstName, party?.party.lastName]
+                            .filter(Boolean)
+                            .join(' ')
+                    )}
+                </PiiWrapper>
             </Typography>
             <div className="flex flex-col gap-4">
                 <Radio

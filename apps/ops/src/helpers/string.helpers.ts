@@ -11,6 +11,15 @@ import {
 
 import { calculateAgeNumber } from './age.helpers';
 
+export const standardMonthDayYear = (
+    timestamp: string | null | undefined
+): string => {
+    if (!timestamp) {
+        return 'N/A';
+    }
+    return dayjs(timestamp).format('MMM DD, YYYY');
+};
+
 export const isNullEmptyOrUndefined = (value?: any) => {
     return value === null || value === undefined || value === '';
 };

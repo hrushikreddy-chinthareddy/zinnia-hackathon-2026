@@ -1721,16 +1721,24 @@
                 "faxnumber": "Fax",
                 "mail": "Correo postal"
             },
-            "startNotification": "Flujo de notificación iniciado.",
-            "sendNotification": "Notificación enviada vía {{method}} ({{followup}} de 4)",
-            "scheduledNotification": "Enviar notificación vía {{method}} ({{followup}} de 4)",
-            "resetNotification": "Método de notificación actualizado. Intentos {{action}}.",
-            "resendNotification": "Intentos {{action}}.",
-            "receiveBeneficiaryConfirmation": "Recibir confirmación del beneficiario",
-            "completedStatusTooltipWithDate": "Completado el {{date}}",
-            "updatedStatusTooltipWithDate": "Actualizado el {{date}}",
-            "scheduledStatusTooltipWithDate": "Programado para el {{date}}",
-            "notStarted": "No iniciado"
+            "update": {
+                "email": "ID de correo electrónico",
+                "faxnumber": "Número de fax",
+                "mail": "Dirección postal"
+            },
+            "startNotification": "Historial",
+            "sendTo": "Enviar a",
+            "contactMethod": "Método de contacto",
+            "scheduledNotification": "Intento n°{{followup}} de 4 programado para el {{date}}",
+            "beneficiaryDeceasedNotification": "Beneficiario confirmado fallecido el {{date}}",
+            "completedNotification": "Paquete de defunción recibido el {{date}}",
+            "sendNotification": "Intento n°{{followup}} de 4",
+            "resetNotification": "Método de notificación cambiado de {{old}} a {{new}} el {{date}}",
+            "resetNotificationUpdate": "{{method}} Actualizado el {{date}}",
+            "resendNotification": "Solicitud {{action}} el {{date}}",
+            "contactNotEstablished": "Contacto no establecido",
+            "contactEstablished": "Contacto establecido",
+            "beneficiaryDeceased": "Beneficiario fallecido"
         }
     },
     "caseRenewal": {
@@ -5490,7 +5498,11 @@
     "transactionListing": {
         "loadingTransactions": "Recuperando transacciones detenidas...",
         "errorGettingTransactions": "No se pudieron recuperar los datos de las transacciones detenidas.",
+        "uncashedTransactions": "Estado de cheques pendientes",
         "stoppedTransactions": "Transacciones detenidas",
+        "noUncashedTransactions": "No hay cheques sin cobrar disponibles para este contrato.",
+        "identificationInProgress": "La identificación de cheque(s) pendientes está en curso.",
+        "noUncashedTransactionsTableHead": "Contrato #{{contractNumber}}",
         "noTransactionsFoundTitle": "No se encontraron transacciones",
         "noTransactionsMessage": "No hay transacciones relacionadas con este evento.",
         "labels": {

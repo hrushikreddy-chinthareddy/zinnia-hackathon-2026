@@ -4,7 +4,7 @@ import { Loader } from '@zinnia/bloom/components';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
-import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
+import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import { TranslationFiles } from '@deps/config/translations';
 import UpdateNotificationMethodContainer from '@deps/containers/death-claim-container/update-notification-method/update-notification-method-container';
 import { UpdateNotificationMethodProvider } from '@deps/contexts/UpdateNotificationMethodContext';

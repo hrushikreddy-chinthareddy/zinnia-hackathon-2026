@@ -10,6 +10,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import {
     StepProgramTypes,
@@ -39,6 +40,19 @@ export function ViewTransactions({
         prop === StepProgramTypes.UNCASHED
             ? transactionEntity?.entity?.stopTransactions?.transactions ?? []
             : transactionEntity?.entity?.stopPrograms?.[prop] ?? [];
+
+    const isUncashedInProgress =
+        prop === StepProgramTypes.UNCASHED &&
+        !transactionEntity?.entity?.stopTransactions
+            ?.uncashTransactionIdentified;
+    browserLogInfo('viewTransactions::isUncashedInProgress', {
+        isUncashedInProgress: isUncashedInProgress,
+        uncashTransactionIdentified: transactionEntity?.entity?.stopTransactions?.uncashTransactionIdentified,
+        stepProgramTypes: prop,
+        entityId: entityId,
+        contractNumber: transactionEntity?.entity?.contractNumber,
+        function: 'sidesheetcasestep.viewTransactions',
+    });
 
     const refreshData = () => {
         refetch();
@@ -70,8 +84,22 @@ export function ViewTransactions({
         );
     };
 
-    if (isLoading) {
+    const displayInProgress = () => {
         return (
+            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
+                <div className="text-sm font-bold">
+                    <AssistiveText
+                        text={t('transactionListing.identificationInProgress')}
+                        variant={AssistiveTextVariant.Default}
+                        iconOverride={<InProgressIcon width={16} height={16} />}
+                    />
+                </div>
+            </div>
+        );
+    };
+
+    const displayIsLoading = () => {
+          return (
             <div className="flex w-full flex-col">
                 <div className="mt-0.5">
                     <InProgressIcon
@@ -92,9 +120,9 @@ export function ViewTransactions({
                 </div>
             </div>
         );
-    }
+    };
 
-    if (isError) {
+    const displayTransactionError = () => {
         return (
             <div className="flex w-full flex-col">
                 <div className="mt-0.5">
@@ -116,6 +144,14 @@ export function ViewTransactions({
                 </div>
             </div>
         );
+    }
+
+    if (isLoading) {
+        return displayIsLoading();
+    }
+
+    if (isError) {
+        return displayTransactionError();
     }
 
     return (
@@ -140,14 +176,11 @@ export function ViewTransactions({
                     </Typography>
                 )}
             </div>
-            {programs.length > 0 ? (
+            {prop === StepProgramTypes.UNCASHED && isUncashedInProgress ? (
+                displayInProgress()
+            ) : programs.length > 0 ? (
                 prop === StepProgramTypes.UNCASHED ? (
-                    <>
-                        <UncashedTransactionsTable
-                            transactions={programs}
-                            t={t}
-                        />
-                    </>
+                    <UncashedTransactionsTable transactions={programs} t={t} />
                 ) : (
                     <TransactionsTable transactions={programs} t={t} />
                 )

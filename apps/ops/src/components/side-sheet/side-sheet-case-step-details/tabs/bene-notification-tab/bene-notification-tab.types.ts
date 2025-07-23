@@ -3,16 +3,16 @@ import {
     ClaimCommunicationTypes,
 } from '@deps/containers/death-claim-container/death-claim.types';
 import { Party } from '@deps/models/case/withdrawal/case';
-import {
-    AddressBase,
-    AddressType,
-    EmailType,
-} from '@deps/models/policy/sor-policy';
+import { EmailType, AddressType } from '@deps/models/policy/sor-policy';
 
 export enum DeliveryMethods {
     Email = 'EMAIL',
     Faxnumber = 'FAXNUMBER',
     Mail = 'MAIL',
+}
+
+export enum FollowupId {
+    fifth = 5,
 }
 
 export enum NotificationStatus {
@@ -34,7 +34,7 @@ export interface INotification {
     followupId: number;
     followupAttemptId: number;
     deliveryMethod: DeliveryMethods;
-    address?: AddressBase;
+    address?: any;
     email?: string;
     faxNumber?: string;
     followupStatus: NotificationStatus;
@@ -81,7 +81,7 @@ export type NotificationPreferences = {
     notificationMethod: NotificationMethod;
     fax?: FaxNotificationMethod;
     email?: EmailNotificationMethod;
-    address?: AddressNotificationMethod;
+    address?: any;
 };
 
 export type NotificationMethod = {

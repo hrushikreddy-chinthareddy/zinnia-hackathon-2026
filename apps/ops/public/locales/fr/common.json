@@ -1711,20 +1711,28 @@
         },
         "notifications": {
             "types": {
-                "email": "Courriel",
+                "email": "E-mail",
                 "faxnumber": "Fax",
-                "mail": "Courrier"
+                "mail": "Courrier papier"
             },
-            "startNotification": "Flux de notification initié.",
-            "sendNotification": "Notification envoyée via {{method}} ({{followup}} sur 4)",
-            "scheduledNotification": "Envoi de notification prévu via {{method}} ({{followup}} sur 4)",
-            "resetNotification": "Méthode de notification mise à jour. Tentatives {{action}}.",
-            "resendNotification": "Tentatives {{action}}.",
-            "receiveBeneficiaryConfirmation": "Recevoir la confirmation du bénéficiaire",
-            "completedStatusTooltipWithDate": "Terminé le {{date}}",
-            "updatedStatusTooltipWithDate": "Mis à jour le {{date}}",
-            "scheduledStatusTooltipWithDate": "Prévu pour le {{date}}",
-            "notStarted": "Non commencé"
+            "update": {
+                "email": "Identifiant e-mail",
+                "faxnumber": "Numéro de fax",
+                "mail": "Adresse postale"
+            },
+            "startNotification": "Historique",
+            "sendTo": "Envoyer à",
+            "contactMethod": "Méthode de contact",
+            "scheduledNotification": "Tentative n°{{followup}} sur 4 prévue pour le {{date}}",
+            "beneficiaryDeceasedNotification": "Bénéficiaire confirmé décédé le {{date}}",
+            "completedNotification": "Dossier de décès reçu le {{date}}",
+            "sendNotification": "Tentative n°{{followup}} sur 4",
+            "resetNotification": "Méthode de notification changée de {{old}} à {{new}} le {{date}}",
+            "resetNotificationUpdate": "{{method}} Mis à jour le {{date}}",
+            "resendNotification": "Demande {{action}} le {{date}}",
+            "contactNotEstablished": "Contact non établi",
+            "contactEstablished": "Contact établi",
+            "beneficiaryDeceased": "Bénéficiaire décédé"
         }
     },
     "caseRenewal": {
@@ -5589,6 +5597,7 @@
         "uncashedTransactions": "Statut des chèques en attente",
         "stoppedTransactions": "Transactions arrêtées",
         "noUncashedTransactions": "Aucun chèque non encaissé disponible pour ce contrat.",
+        "identificationInProgress": "L'identification des chèque(s) en attente est en cours.",
         "noUncashedTransactionsTableHead": "Contrat #{{contractNumber}}",
         "noTransactionsFoundTitle": "Aucune transaction trouvée",
         "noTransactionsMessage": "Il n'y a pas de transactions liées à cet événement.",

@@ -7,7 +7,7 @@ import Radio from '@deps/components/radio/radio';
 import {
     AddressNotificationMethod,
     NotificationsTransactionData,
-} from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
+} from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import TransactionNavigationButtons, {
     ParentPage,
 } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -25,10 +25,7 @@ import AddressCard from './address-card';
 import EmailCard from './email-card';
 import FaxCard from './fax-card';
 import { buildUpdateNotificationMethodPayload } from './update-notification-method-helper';
-import {
-    ClaimActionTypes,
-    ClaimCommunicationTypes,
-} from '../death-claim.types';
+import { ClaimCommunicationTypes } from '../death-claim.types';
 import {
     validateAddress,
     validateEmail,
@@ -48,13 +45,10 @@ const UpdateNotificationMethodStep = ({
         keyPrefix: 'updateNotificationMethodForBeneficiary',
     });
 
-    const originalEmail =
-        transactionData?.entity?.notificationPreferences?.email?.emailAddress ||
-        '';
-    const originalFax =
-        transactionData?.entity?.notificationPreferences?.fax?.faxNumber || '';
-    const originalAddress =
-        transactionData?.entity?.notificationPreferences?.address;
+    const notificationPrefs = transactionData?.entity?.notificationPreferences;
+    const originalEmail = notificationPrefs?.email?.emailAddress || '';
+    const originalFax = notificationPrefs?.fax?.faxNumber || '';
+    const originalAddress = notificationPrefs?.address || {};
 
     const {
         emailData,
@@ -176,7 +170,6 @@ const UpdateNotificationMethodStep = ({
             setEmailData({
                 ...emailData,
                 emailAddress: newEmail,
-                action: ClaimActionTypes.UPDATE,
             });
             setErrors({ ...errors, email: '' });
         }
@@ -188,7 +181,6 @@ const UpdateNotificationMethodStep = ({
             setFaxData({
                 ...faxData,
                 faxNumber: newFax,
-                action: ClaimActionTypes.UPDATE,
             });
             setErrors({ ...errors, fax: '' });
         }
@@ -203,7 +195,6 @@ const UpdateNotificationMethodStep = ({
         if (!isSameOriginal && !isSameContext) {
             setAddressData({
                 ...(newAddress as AddressNotificationMethod),
-                action: ClaimActionTypes.UPDATE,
             });
             setErrors({ ...errors, address: '' });
         }

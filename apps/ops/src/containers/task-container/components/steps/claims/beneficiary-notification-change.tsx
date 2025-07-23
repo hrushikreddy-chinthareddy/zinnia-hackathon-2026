@@ -1,3 +1,4 @@
+import { AddressType } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'i18next';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
@@ -9,6 +10,7 @@ import {
     ClaimActionTypes,
     ClaimCommunicationTypes,
 } from '@deps/containers/death-claim-container/death-claim.types';
+import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
 
 import { UpdatedBeneficiaryRecord } from './claims.type';
 
@@ -20,6 +22,7 @@ interface BeneficiaryNotificationChangeProps {
     task: any;
     setAddressSelected: (addressSelected: boolean) => void;
     t: TFunction<TranslationFiles.COMMON, { keyPrefix: string }>;
+    readOnly?: boolean;
 }
 
 function BeneficiaryNotificationChange({
@@ -28,6 +31,7 @@ function BeneficiaryNotificationChange({
     task,
     setAddressSelected,
     t,
+    readOnly,
 }: BeneficiaryNotificationChangeProps) {
     const handleAddressSubmit = (addressData: any) => {
         if (!Object.keys(addressData || {}).length) {
@@ -52,20 +56,39 @@ function BeneficiaryNotificationChange({
         switch (beneficiary.notificationPreferences.notificationMethod.method) {
             case ClaimCommunicationTypes.Mail:
                 return (
-                    <div className="col-span-4 -mt-10 -ml-8">
-                        <DifferentAddress
-                            carrierId={task.carrier ?? ''}
-                            handleClose={handleAddressSubmit}
-                            showName={false}
-                            isCancel={false}
-                            isContainerClass={false}
-                        />
+                    <div
+                        className={`col-span-4  ${
+                            readOnly ? 'mt-2' : '-mt-10 -ml-8'
+                        }`}
+                    >
+                        {readOnly ? (
+                            <AddressTypeAndAddress
+                                address={
+                                    beneficiary.notificationPreferences.address
+                                }
+                                addressType={
+                                    beneficiary.notificationPreferences.address
+                                        .addressType as AddressType
+                                }
+                                isAddressChange={false}
+                                isSideSheet={false}
+                            />
+                        ) : (
+                            <DifferentAddress
+                                carrierId={task.carrier ?? ''}
+                                handleClose={handleAddressSubmit}
+                                showName={false}
+                                isCancel={false}
+                                isContainerClass={false}
+                            />
+                        )}
                     </div>
                 );
             case ClaimCommunicationTypes.Email:
                 return (
                     <div className="col-span-4 mt-4">
                         <EmailAddress
+                            isDisabled={readOnly}
                             email={
                                 beneficiary.notificationPreferences.email
                                     ?.emailAddress ?? ''
@@ -91,6 +114,7 @@ function BeneficiaryNotificationChange({
                 return (
                     <div className="col-span-4 mt-4">
                         <FaxNumber
+                            isDisabled={readOnly}
                             fax={
                                 beneficiary.notificationPreferences.fax
                                     ?.faxNumber ?? ''
@@ -147,7 +171,7 @@ function BeneficiaryNotificationChange({
                     { label: t('email'), value: ClaimCommunicationTypes.Email },
                     { label: t('fax'), value: ClaimCommunicationTypes.Fax },
                 ]}
-                disabled={false}
+                disabled={readOnly}
             />
             {renderNotificationComponent()}
         </>

@@ -96,7 +96,7 @@
                                 "ui:options": {
                                     "label": false,
                                     "ArrayFieldTemplate": "ArrayFieldTableTemplate",
-                                    "sorting": true
+                                    "sorting": false
                                 },
                                 "items": {
                                     "ui:options": {

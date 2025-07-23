@@ -95,7 +95,7 @@
                                 "ui:options": {
                                     "label": false,
                                     "ArrayFieldTemplate": "TransactionsArrayFieldTemplate",
-                                    "sorting": true
+                                    "sorting": false
                                 },
                                 "items": {
                                     "ui:options": {

@@ -1,7 +1,8 @@
+import { Checkbox } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
-import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import Radio from '@deps/components/radio/radio';
@@ -92,15 +93,21 @@ export const DeceasedRecord = ({
     return (
         <div className="my-3">
             <div className="my-2">
-                <CheckboxText
-                    checked={currentDeceased.isDeceased}
-                    label={labelTxt + ' (' + roleTxt + ')'}
-                    onChange={(e) =>
+                <Checkbox
+                    isCheckedByDefault={currentDeceased.isDeceased}
+                    onClick={(e) =>
                         onPartySelection(!currentDeceased?.isDeceased)
                     }
                     id={`is-deceased-${owner?.party.partyId}`}
                     isDisabled={isDisabled}
-                />
+                >
+                    <Content
+                        contentClassName="min-w-max"
+                        variant={ContentVariant.BodySm}
+                        details={labelTxt + ' (' + roleTxt + ')'}
+                        pii={true}
+                    />
+                </Checkbox>
             </div>
             {currentDeceased.isDeceased && (
                 <>

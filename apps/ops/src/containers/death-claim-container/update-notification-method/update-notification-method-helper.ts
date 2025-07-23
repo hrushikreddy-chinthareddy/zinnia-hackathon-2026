@@ -5,7 +5,8 @@ import {
     EmailNotificationMethod,
     FaxNotificationMethod,
     NotificationsTransactionData,
-} from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab.types';
+} from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
+import { ChangeTypeEnum } from '@deps/containers/task-container/components/steps/claims/claims.type';
 
 import {
     ClaimActionTypes,
@@ -25,6 +26,32 @@ export const buildUpdateNotificationMethodPayload = (
     const zlCaseId = identifiers?.find(
         (item) => item.identifier === 'zlCaseId'
     )?.value;
+
+    const notificationPrefs = transactionData?.entity?.notificationPreferences;
+    const originalEmail = notificationPrefs?.email?.emailAddress || '';
+    const originalFax = notificationPrefs?.fax?.faxNumber || '';
+    const originalAddress = notificationPrefs?.address || {};
+
+    const faxAction =
+        updatedNotificationMethod === ClaimCommunicationTypes.Fax &&
+        originalFax !== faxData?.faxNumber
+            ? ClaimActionTypes.UPDATE
+            : ClaimActionTypes.NONE;
+    const emailAction =
+        updatedNotificationMethod === ClaimCommunicationTypes.Email &&
+        originalEmail !== emailData?.emailAddress
+            ? ClaimActionTypes.UPDATE
+            : ClaimActionTypes.NONE;
+    const addressAction =
+        updatedNotificationMethod === ClaimCommunicationTypes.Mail &&
+        JSON.stringify(originalAddress) !== JSON.stringify(addressData)
+            ? ClaimActionTypes.UPDATE
+            : ClaimActionTypes.NONE;
+    const addrValue =
+        addressAction === ClaimActionTypes.UPDATE
+            ? addressData
+            : originalAddress;
+
     const payload = {
         correlationId,
         zlCaseId,
@@ -37,7 +64,7 @@ export const buildUpdateNotificationMethodPayload = (
         beneficiaryRecordId: recordId,
         beneficiaryChangeDetail: {
             changeRequire: true,
-            changeType: 'BENEFICIARY_NOTIFICATION_CHANGE',
+            changeType: ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE,
             notificationPreferences: {
                 notificationMethod: {
                     method: updatedNotificationMethod,
@@ -48,19 +75,26 @@ export const buildUpdateNotificationMethodPayload = (
                             : ClaimActionTypes.NONE,
                 },
                 fax: {
-                    action: faxData.action || ClaimActionTypes.NONE,
-                    faxNumber: faxData?.faxNumber,
+                    action: faxAction,
+                    faxNumber:
+                        faxAction === ClaimActionTypes.UPDATE
+                            ? faxData?.faxNumber
+                            : originalFax,
                 },
                 email: {
-                    action: emailData.action || ClaimActionTypes.NONE,
-                    emailAddress: emailData?.emailAddress,
+                    action: emailAction,
+                    emailAddress:
+                        emailAction === ClaimActionTypes.UPDATE
+                            ? emailData?.emailAddress
+                            : originalEmail,
                 },
                 address: {
-                    ...addressData,
-                    action: addressData?.action || ClaimActionTypes.NONE,
+                    action: addressAction,
+                    ...addrValue,
                 },
             },
         },
     };
+
     return payload;
 };

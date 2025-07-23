@@ -1,4 +1,8 @@
-import { Phone, PhoneBase } from '@xd/api-types/dist/generated-types/sor';
+import {
+    AddressBase,
+    Phone,
+    PhoneBase,
+} from '@xd/api-types/dist/generated-types/sor';
 
 import { ClaimActionTypes } from '@deps/containers/death-claim-container/death-claim.types';
 
@@ -28,17 +32,7 @@ export interface NotificationMethod {
         emailType: string;
         emailAddress: string;
     };
-    address: {
-        action?: ClaimActionTypes;
-        addressId: string;
-        addressType: string;
-        addressLine1: string;
-        addressLine2: string;
-        city: string;
-        state: string;
-        zipCode: string;
-        country: string;
-    };
+    address: AddressBase & { action?: ClaimActionTypes };
     phone: PhoneBase;
 }
 
@@ -93,4 +87,9 @@ export enum ContactRole {
     ADDITIONALSERVICINGAGENT = 'ADDITIONALSERVICINGAGENT',
     ADDITIONALWRITINGAGENT = 'ADDITIONALWRITINGAGENT',
     OTHER = 'OTHER',
+}
+
+export enum DynamicKey {
+    BENE_CALL = 'beneCall',
+    BENE_FINAL_CONTACT_ATTEMPT = 'benefinalcontactattempt',
 }

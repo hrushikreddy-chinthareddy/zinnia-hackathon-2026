@@ -11,6 +11,7 @@ import {
 } from '@deps/containers/death-claim-container/death-claim.types';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { DataFormattingTypes } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { formatValueByDataType } from '../card-templates/card-template';
 
@@ -51,6 +52,11 @@ export const displayAddressType: Record<AddressType, string | undefined> = {
     [AddressType.MAILING]: 'Mailing',
 };
 
+export enum DynamicKey {
+    BENE_ADDRESS = 'beneAddress',
+    BENE_FINAL_CONTACT_ATTEMPT = 'benefinalcontactattempt',
+}
+
 export function ChangeAddressTemplate({
     formContext,
 }: ChangeAddressTemplateProps) {
@@ -58,8 +64,9 @@ export function ChangeAddressTemplate({
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
     const dynamicKey = customData.details.beneAddress
-        ? 'beneAddress'
-        : 'benefinalcontactattempt';
+        ? DynamicKey.BENE_ADDRESS
+        : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
+
     useEffect(() => {
         const updatedCustomData = customData;
         if (
@@ -71,7 +78,7 @@ export function ChangeAddressTemplate({
             ].beneficiaryChangeDetail = {};
         }
         if (
-            dynamicKey === 'benefinalcontactattempt' &&
+            dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT &&
             !updatedCustomData.task.data.details[dynamicKey]
                 .subTaskBeneAddressChangeRequire
         ) {
@@ -87,7 +94,6 @@ export function ChangeAddressTemplate({
             ]?.beneficiary?.notificationPreferences;
         const details = { details: { ...updatedCustomData.details } };
         setCustomData(details);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleCardClick = () => {
@@ -112,7 +118,7 @@ export function ChangeAddressTemplate({
                     customData.details[dynamicKey]?.beneficiary
                         ?.notificationPreferences?.address
                         ?.addressType as AddressType
-                ] || 'Residential'
+                ] || AddressType.RESIDENCE
             } Address`,
             sideSheetContent
         );
@@ -140,20 +146,42 @@ export function ChangeAddressTemplate({
         }
 
         if (!Object.keys(addressData || {}).length) {
+            sideSheet.handleOpen(false);
             sideSheet.onClose();
             return;
         }
-        const updatedAddress = {
-            action: ClaimActionTypes.UPDATE,
+
+        const updatedAddress: any = {
             addressLine1: addressData.addressLine1 ?? '',
             addressLine2: addressData.addressLine2 ?? '',
             addressLine3: addressData.addressLine3 ?? '',
             city: addressData.city ?? '',
-            country: addressData.country ?? '',
+            country: addressData.country ?? 'USA',
             state: addressData.state ?? '',
             zipCode: addressData.zipCode ?? '',
             addressType: addressData.addressType,
         };
+
+        const currentAddressInfo =
+            updatedCustomData.task.data.details[dynamicKey].beneficiary
+                .notificationPreferences.address;
+        const currentAddress = {
+            addressLine1: currentAddressInfo.addressLine1 ?? '',
+            addressLine2: currentAddressInfo.addressLine2 ?? '',
+            addressLine3: currentAddressInfo.addressLine3 ?? '',
+            city: currentAddressInfo.city ?? '',
+            country: currentAddressInfo.country ?? '',
+            state: currentAddressInfo.state ?? 'USA',
+            zipCode: currentAddressInfo.zipCode ?? '',
+            addressType: currentAddressInfo.addressType,
+        };
+
+        const isEqual =
+            JSON.stringify(currentAddress) === JSON.stringify(updatedAddress);
+
+        updatedAddress.action = isEqual
+            ? ClaimActionTypes.NONE
+            : ClaimActionTypes.UPDATE;
 
         updatedCustomData.task.data.details[
             dynamicKey
@@ -194,7 +222,7 @@ export function ChangeAddressTemplate({
         ].beneficiaryChangeDetail.notificationPreferences.notificationMethod.method =
             ClaimCommunicationTypes.Mail;
 
-        if (dynamicKey === 'benefinalcontactattempt') {
+        if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
             updatedCustomData.task.data.details[
                 dynamicKey
             ].subTaskBeneAddressChangeRequire = true;
@@ -208,6 +236,7 @@ export function ChangeAddressTemplate({
 
         const details = { details: { ...updatedCustomData.details } };
         setCustomData(details);
+        sideSheet.handleOpen(false);
         sideSheet.onClose();
     };
 
@@ -225,6 +254,7 @@ export function ChangeAddressTemplate({
         );
     };
 
+    const isTaskCompleted = customData.task?.status === TaskStatus.Completed;
     return (
         <>
             <div className="flex gap-2">
@@ -240,7 +270,7 @@ export function ChangeAddressTemplate({
                                             ?.beneficiary
                                             ?.notificationPreferences?.address
                                             ?.addressType as AddressType
-                                    ] || 'Residential'}{' '}
+                                    ] || AddressType.RESIDENCE}{' '}
                                     Address
                                 </div>
                                 <PiiWrapper>
@@ -257,8 +287,14 @@ export function ChangeAddressTemplate({
                             </div>
                         </div>
                         <div
-                            onClick={handleCardClick}
-                            className="cursor-pointer flex justify-center items-center text-[var(--color-base-text-text-link)]"
+                            onClick={
+                                isTaskCompleted ? () => {} : handleCardClick
+                            }
+                            className={`flex justify-center items-center text-[var(--color-base-text-text-link)] ${
+                                isTaskCompleted
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : 'cursor-pointer'
+                            }`}
                         >
                             {t('claimsAddressChange.change')}
                         </div>

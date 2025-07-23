@@ -39,6 +39,7 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
             label,
             fieldStatus = FieldStatus.DEFAULT,
             fieldSize,
+            isDisabled,
             onDateSelect = () => {},
             disableBeforeDate,
             disableAfterDate,
@@ -180,10 +181,11 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
                                     onSelect={handleDateSelect}
                                     defaultMonth={new Date()}
                                     disabled={
-                                        {
+                                        isDisabled ||
+                                        ({
                                             before: disableBeforeDate,
                                             after: disableAfterDate,
-                                        } as DateInterval
+                                        } as DateInterval)
                                     }
                                     modifiersClassNames={{
                                         disabled: fieldStyles.disabledDays,

@@ -1,4 +1,4 @@
-import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
+import Field, { FieldVariant } from '@deps/components/fields/field';
 import { formatPhone } from '@deps/helpers/string.helpers';
 
 import { CallLog, ContactRole } from './claims.type';
@@ -30,11 +30,12 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                         </h3>
                         <div className="grid grid-cols-5 gap-4">
                             <div>
-                                <TextField
+                                <Field
                                     id={`role-${index}`}
                                     onChange={() => {}}
                                     disabled={true}
                                     placeholder={t('contactRole') as string}
+                                    variant={FieldVariant.Inactive}
                                     value={
                                         log.partyRoleCategory ===
                                         ContactRole.AGENT
@@ -45,49 +46,53 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                                             : 'Other'
                                     }
                                     label={t('contactRole') as string}
-                                    className="w-full"
+                                    className="w-full h-10 p-2"
                                 />
                             </div>
                             <div>
-                                <TextField
+                                <Field
                                     disabled={true}
                                     id={`name-${index}`}
                                     onChange={() => {}}
+                                    variant={FieldVariant.Inactive}
                                     placeholder={t('name') as string}
                                     value={log.fullName}
                                     label={t('name') as string}
-                                    className="w-full"
+                                    className="w-full h-10 p-2"
                                 />
                             </div>
                             <div>
-                                <TextField
+                                <Field
                                     disabled={true}
                                     id={`phone-${index}`}
                                     onChange={() => {}}
+                                    variant={FieldVariant.Inactive}
                                     placeholder={t('phone') as string}
                                     value={formatPhone(log.phone)}
                                     label={t('phone') as string}
-                                    className="w-full"
+                                    className="w-full h-10 p-2"
                                 />
                             </div>
                             <div>
-                                <TextField
+                                <Field
                                     disabled={true}
                                     id={`callOutcome-${index}`}
                                     onChange={() => {}}
+                                    variant={FieldVariant.Inactive}
                                     placeholder={t('callOutcome') as string}
                                     value={t('noChangeRecorded')}
                                     label={t('callOutcome') as string}
-                                    className="w-full"
+                                    className="w-full h-10 p-2"
                                 />
                             </div>
 
                             {log.partyRoleCategory === ContactRole.OTHER && (
                                 <div>
-                                    <TextField
+                                    <Field
                                         disabled={true}
                                         id={`relationship-${index}`}
                                         onChange={() => {}}
+                                        variant={FieldVariant.Inactive}
                                         placeholder={
                                             t('relationshipToOwner') as string
                                         }
@@ -95,7 +100,7 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                                         label={
                                             t('relationshipToOwner') as string
                                         }
-                                        className="w-full"
+                                        className="w-full h-10 p-2"
                                     />
                                 </div>
                             )}

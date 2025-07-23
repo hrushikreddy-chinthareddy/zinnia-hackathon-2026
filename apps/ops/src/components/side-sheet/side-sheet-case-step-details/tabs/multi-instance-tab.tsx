@@ -20,10 +20,11 @@ import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 
-import { BeneSideSheetStep } from './bene-notification-tab';
+import { BeneSideSheetStep } from './bene-notification-tab/bene-notification-tab';
 import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 
 const INITIAL_BENE_NOTIFICATION = 'initiateBeneNotification';
+const BENE_ENTITY_TYPE = 'bene';
 
 const getStepStatusText = (
     step: TransformedStep,
@@ -202,7 +203,7 @@ export default function MultiInstanceTab({
         substep: TransformedStep
     ) => {
         switch (entityType?.toLowerCase()) {
-            case 'bene':
+            case BENE_ENTITY_TYPE:
                 return <BeneSideSheetStep step={substep} />;
             default:
                 return <SideSheetStep step={substep} />;
@@ -211,9 +212,12 @@ export default function MultiInstanceTab({
 
     return (
         <div {...rest}>
-            <Typography variant={TypographyVariant.H3}>
-                {t('caseOverview.sidesheet.multiInstance')}
-            </Typography>
+            {step.stepRaw.instanceInfo?.entityType?.toLowerCase() !==
+                BENE_ENTITY_TYPE && (
+                <Typography variant={TypographyVariant.H3}>
+                    {t('caseOverview.sidesheet.multiInstance')}
+                </Typography>
+            )}
             <ul className="mt-4">
                 {step.substeps?.map((substep, index) => {
                     // need to do this as we are getting substeps with same event id which is showing duplicate ids on UI

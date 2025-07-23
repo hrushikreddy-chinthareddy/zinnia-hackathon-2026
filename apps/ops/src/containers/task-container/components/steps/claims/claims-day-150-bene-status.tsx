@@ -18,7 +18,7 @@ import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
-import { UpdatedBeneficiaryRecord } from './claims.type';
+import { UpdatedBeneficiaryRecord, ChangeTypeEnum } from './claims.type';
 
 const BENE_STATUS = {
     YES: 'yes',
@@ -95,7 +95,7 @@ export const ClaimBeneStatus = ({
                 beneDeceased: isBeneDeceased === BENE_STATUS.YES,
                 changeType:
                     isBeneDeceased === BENE_STATUS.YES
-                        ? 'BENEFICIARY_DECEASED'
+                        ? ChangeTypeEnum.BENEFICIARY_DECEASED
                         : null,
                 changeRequire:
                     isBeneDeceased === BENE_STATUS.YES ? true : false,
@@ -172,6 +172,7 @@ export const ClaimBeneStatus = ({
                     <div className="grid grid-cols-4">
                         <div className="col-span-1">
                             <BeneficiaryDeceased
+                                readOnly={task.status === TaskStatus.Completed}
                                 beneficiary={beneficiary}
                                 setBeneficiary={setBeneficiary}
                                 t={t}
