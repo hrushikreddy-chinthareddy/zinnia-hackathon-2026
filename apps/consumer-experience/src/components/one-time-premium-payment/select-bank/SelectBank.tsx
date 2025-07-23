@@ -121,7 +121,7 @@ export const SelectBank = ({
                         <AccountType accountType={bankDetail.accountType} />{' '}
                         <span>
                           {bankDetail.accountType?.includes('Checking') ||
-                          bankDetail.accountType?.includes('Savings')
+                            bankDetail.accountType?.includes('Savings')
                             ? 'account ending in'
                             : 'ending in'}
                         </span>{' '}
@@ -178,8 +178,8 @@ export const SelectBank = ({
                       `/coverage/${lineOfBusinessUrlPath(lineOfBusiness)}/${planCode}/${policyNumber}/profile?addBank=true#addBankSection`
                     )
                   }
+                  inline
                   linkText="banking details"
-                  linkClassName={styles.linkClassname}
                   confirmDescription="Navigate to the profile page and open the add bank sidesheet"
                   message="If you leave now, your payment won't be submitted and you will have to start over."
                   cancelDescription="Stay on the premium payment page"

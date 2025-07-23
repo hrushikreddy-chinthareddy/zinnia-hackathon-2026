@@ -38,3 +38,24 @@
   justify-content: space-between;
   width: 100%;
 }
+
+.confirmTrigger {
+  &.inline {
+    font: var(--typography-nav-nav-links-inline-sm);
+    display: inline;
+    vertical-align: baseline;
+
+
+    text-decoration: underline;
+    text-underline-position: under;
+
+    &:hover {
+      text-decoration: none;
+      color: var(--color-links-color-global-link-dark);
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+}

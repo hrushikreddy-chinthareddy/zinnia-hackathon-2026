@@ -21,6 +21,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
+import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
 import { FieldData } from '@/components/field-data/FieldData';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { Link } from '@/components/link/Link';
@@ -374,9 +375,15 @@ export const SelectBank = ({
           <div className={`my-lg mb-none ${styles.disclaimer}`}>
             <p className="typography-content-body-sm">
               Want to pay with another bank account? Go to to{' '}
-              <Link href={addBankUrl} isInternal>
-                banking details
-              </Link>{' '}
+              <ConfirmDialog
+                confirmCallback={() => router.push(addBankUrl)}
+                inline
+                linkText="banking details"
+                confirmDescription="Navigate to the profile page and open the add bank sidesheet"
+                message="If you leave now, your withrawal won't be submitted and you will have to start over."
+                cancelDescription="Stay on the withdrawal page"
+                title="Leave withdrawal?"
+              ></ConfirmDialog>{' '}
               to add. If you're not seeing the account you want to pay with,
               give us a call at <CarrierPhoneNumber />.
             </p>

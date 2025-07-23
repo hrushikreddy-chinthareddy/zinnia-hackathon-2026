@@ -215,6 +215,7 @@ export const SelectBank = ({
                   Want to pay with another bank account? Go to{' '}
                   <ConfirmDialog
                     confirmCallback={() => router.push(addBankUrl)}
+                    inline
                     linkText="banking details"
                     linkClassName={styles.linkClassname}
                     confirmDescription="Navigate to the profile page and open the add bank sidesheet"

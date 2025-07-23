@@ -10,16 +10,17 @@ import styles from './ConfirmDialog.module.css';
 import { Button } from '../button/Button';
 
 export interface ConfirmDialogProps {
-  cancelText?: string;
   cancelCallback?: () => void;
+  cancelDescription?: string;
+  cancelText?: string;
   confirmCallback?: () => void;
+  confirmDescription?: string;
   confirmText?: string;
+  inline?: boolean;
   linkText?: string;
   linkClassName?: string;
   message?: string;
   title?: string;
-  cancelDescription?: string;
-  confirmDescription?: string;
 }
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -29,6 +30,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   confirmCallback,
   confirmDescription,
   confirmText = 'Yes',
+  inline = false,
   linkText = 'Open',
   linkClassName,
   message,
@@ -45,7 +47,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button
-          className={clsx([styles.confirmTrigger, linkClassName])}
+          className={clsx([styles.confirmTrigger, inline && styles.inline, linkClassName])}
+          size={inline ? 'small' : undefined}
           mode="link"
         >
           {linkText}
