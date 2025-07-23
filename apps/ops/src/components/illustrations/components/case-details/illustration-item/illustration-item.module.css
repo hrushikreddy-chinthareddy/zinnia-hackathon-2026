@@ -4,12 +4,12 @@
     align-items: center;
     padding: var(--measure-dimension-gap-lg) var(--measure-dimension-gap-lg);
 
-    &.selected {
-        background-color: var(--color-states-hover-surface-hover-fill);
-    }
-
     &:hover {
         background-color: var(--color-states-hover-surface-hover-fill-alt);
+    }
+
+    &.selected {
+        background-color: var(--color-states-hover-surface-hover-fill);
     }
 
     .status {

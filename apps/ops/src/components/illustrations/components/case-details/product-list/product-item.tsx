@@ -1,5 +1,6 @@
 import { Button, Divider, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import Badge from '@deps/components/badge/badge';
@@ -26,6 +27,8 @@ const IllustrationProductItem = ({
 }: IllustrationProductItemProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustrationsCount = (illustrations ?? []).length;
+    const router = useRouter();
+    const { illustrationId } = router.query;
 
     return (
         <li className={styles.productWrapper}>
@@ -70,6 +73,7 @@ const IllustrationProductItem = ({
                             <IllustrationItem
                                 product={product}
                                 illustration={illustration}
+                                isSelected={illustration.id === illustrationId}
                             />
                             {pIdx < illustrations.length - 1 && (
                                 <Divider
