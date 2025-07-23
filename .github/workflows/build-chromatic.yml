@@ -28,6 +28,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - uses: actions/setup-node@v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -36,11 +42,13 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: '@zinnia'
           cache: 'pnpm'
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-      - run: pnpm install
+
+      - name: Install modules
+        run: pnpm install
+
       - name: pnpm run build
         run: pnpm run build
+
       - name: Publish to ${{ inputs.project-name }} to Chromatic
         uses: chromaui/action@latest
         with:
