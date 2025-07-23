@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import { FASTQualTypes } from '@deps/models/case/withdrawal/case';
-import { fetchPolicy, searchPolicy } from '@deps/queries/api/policies';
+import { FASTQualTypes, QualTypes } from '@deps/models/case/withdrawal/case';
+import { fetchPolicy, getPolicyAccountInfo } from '@deps/queries/api/policies';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 type ContractAccountInfo = {
-    qualType: FASTQualTypes | '';
+    qualType: FASTQualTypes | QualTypes | '';
     issueState: string | '';
     issueDate: string | '';
     contractStatus: string | '';
@@ -15,26 +15,25 @@ type ContractAccountInfo = {
 
 export const useContractAccountInfo = (
     contract: string,
-    planCode: string
+    policyPlanCode: string,
+    clientCode: string,
+    isLC: boolean
 ): ContractAccountInfo => {
-    const [qualType, setQualType] = useState<FASTQualTypes | ''>('');
+    const [qualType, setQualType] = useState<FASTQualTypes | QualTypes | ''>(
+        ''
+    );
     const [issueState, setIssueState] = useState<string | ''>('');
     const [issueDate, setIssueDate] = useState<string | ''>('');
     const [contractStatus, setContractStatus] = useState<string | ''>('');
+    const [planCode, setPlanCode] = useState<string | ''>(policyPlanCode || '');
 
     useEffect(() => {
-        const getDetails = async () => {
+        const getEnterprisePolicyDetails = async () => {
             try {
-                const searchResults = await searchPolicy(
-                    { policyNumber: contract, planCode: planCode },
-                    { limit: 1, offset: 0 }
-                );
-
                 const acctInfoResponse = await fetchPolicy(
-                    searchResults.results[0]?.policyNumber,
-                    searchResults.results[0]?.planCode
+                    contract,
+                    policyPlanCode
                 );
-
                 setQualType(
                     (acctInfoResponse?.qualificationType as unknown as FASTQualTypes) ||
                         ''
@@ -43,28 +42,66 @@ export const useContractAccountInfo = (
                 setIssueDate(acctInfoResponse?.policyDates?.issueDate || '');
                 setContractStatus(acctInfoResponse?.policyStatus || '');
                 browserLogInfo(
-                    'useContractAccountInfo::Retrieved account info',
+                    'useContractAccountInfo::getEnterprisePolicyDetails::Retrieved account info',
                     {
                         policyNumber: contract,
-                        planCode: planCode,
+                        planCode: policyPlanCode,
+                        isLC,
                         file: 'useContractAccountInfo',
                     }
                 );
             } catch (e) {
                 browserLogError(
-                    'useContractAccountInfo::Error retrieving account info',
+                    'useContractAccountInfo::getEnterprisePolicyDetails::Error retrieving account info',
                     {
                         ...parseErrorInformation(e),
                         policyNumber: contract,
-                        planCode: planCode,
+                        planCode: policyPlanCode,
+                        isLC,
                         file: 'useContractAccountInfo',
                     }
                 );
             }
         };
 
-        getDetails();
-    }, [contract, planCode]);
+        const getLCPolicyDetails = async () => {
+            try {
+                const acctInfoResponse = await getPolicyAccountInfo(
+                    contract,
+                    clientCode
+                );
+                setQualType(
+                    (acctInfoResponse?.QualTypeDesc as QualTypes) || ''
+                );
+                setIssueState(acctInfoResponse?.IssueState || '');
+                setIssueDate(acctInfoResponse?.IssueDate || '');
+                setContractStatus(acctInfoResponse?.ContractStatus || '');
+                setPlanCode(acctInfoResponse?.PlanCode || '');
+                browserLogInfo(
+                    'useContractAccountInfo::getLCPolicyDetails::Retrieved account info',
+                    {
+                        policyNumber: contract,
+                        clientCode: clientCode,
+                        isLC,
+                        file: 'useContractAccountInfo',
+                    }
+                );
+            } catch (e) {
+                browserLogError(
+                    'useContractAccountInfo::getLCPolicyDetails::Error retrieving account info',
+                    {
+                        ...parseErrorInformation(e),
+                        policyNumber: contract,
+                        clientCode: clientCode,
+                        isLC,
+                        file: 'useContractAccountInfo',
+                    }
+                );
+            }
+        };
+
+        isLC ? getLCPolicyDetails() : getEnterprisePolicyDetails();
+    }, [contract, policyPlanCode, clientCode, isLC]);
 
     return { qualType, issueState, issueDate, contractStatus, planCode };
 };

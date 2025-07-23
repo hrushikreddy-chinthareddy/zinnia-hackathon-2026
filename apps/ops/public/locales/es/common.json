@@ -2019,7 +2019,11 @@
                     "static": "Estático",
                     "dynamic": "Dinámico"
                 },
-                "glwbTypeLabel": "Tipo GLWB"
+                "glwbTypeLabel": "Tipo GLWB",
+                "sswUpdateOptions": {
+                    "new": "Nuevo",
+                    "bankUpdate": "Actualización de Banco"
+                }
             },
             "rmdMethod": {
                 "title": "Método RMD",

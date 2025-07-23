@@ -25,6 +25,7 @@ import {
     PartyRoles,
     PaymentMethod,
 } from '@deps/models/case/withdrawal/case';
+import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
@@ -41,20 +42,6 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
     const [_, setSswProgramFrequency] = useState('' as Frequency);
 
     const {
-        formValidation,
-        w4pSignaturesConfig,
-        formPartyConfigs,
-        fundWithdrawnMethodOptions,
-        systematicWithdrawalOptions,
-        disbursementOptions,
-        signaturesConfig,
-        signaturesNotaryConfig,
-        additionalWithholdingAmountConfig,
-        irsSignatureConfig,
-        cslnCheckStates,
-        eSignatureFieldConfig,
-    } = getDlicConfig(t);
-    const {
         formParty,
         setFormValidator,
         formData,
@@ -69,7 +56,29 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         formESignatureData,
         setFormESignatureData,
         formErrors,
+        featureFlagDecisions,
     } = useContext(FormDataContext);
+
+    const isLC = !isFastFeatureEnabled(
+        initialForm?.taskType,
+        featureFlagDecisions
+    );
+
+    const {
+        formValidation,
+        w4pSignaturesConfig,
+        formPartyConfigs,
+        fundWithdrawnMethodOptions,
+        systematicWithdrawalOptions,
+        disbursementOptions,
+        signaturesConfig,
+        signaturesNotaryConfig,
+        additionalWithholdingAmountConfig,
+        irsSignatureConfig,
+        cslnCheckStates,
+        eSignatureFieldConfig,
+        sswUpdateFastOptions,
+    } = getDlicConfig(t, isLC);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -116,7 +125,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
-            <SswEditSelection />
+            <SswEditSelection isLC={isLC} fastOptions={sswUpdateFastOptions} />
             <FormParties
                 isFormStateReadOnly={isFormStateReadOnly}
                 configs={formPartyConfigs}
@@ -128,11 +137,15 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
             <SystematicWithdrawalProgram
                 isReadOnly={isFormStateReadOnly}
                 options={
-                    systematicWithdrawalOptions(planCode) as SSWProgramOptions[]
+                    systematicWithdrawalOptions(
+                        planCode,
+                        isLC
+                    ) as SSWProgramOptions[]
                 }
                 onSswProgramFrequencyChange={handleSswProgramFrequency}
                 singleLifePersonApplicable={isJointOwnerAvailable}
                 jointCoveredPersonApplicable={false}
+                isLC={isLC}
             />
             <FormDistribution
                 isDerivedMethodFromFunds={true}

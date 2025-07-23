@@ -31,7 +31,6 @@ import {
 } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helpers';
-import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
@@ -40,13 +39,16 @@ import { TaskType } from '@deps/models/case/task';
 import {
     ActiveWithdrawalCase,
     Carrier,
+    FASTQualTypes,
     QualTypes,
+    SystematicSpecialPrograms,
     Transaction,
 } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
 import {
+    getPolicyDetailsSsr,
     getPolicyPartiesSSR,
     searchPolicySSR,
 } from '@deps/queries/api/policies';
@@ -56,7 +58,10 @@ import {
     FeatureFlags,
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import {
+    isFastFeatureEnabled,
+    isFormFeatureEnabled,
+} from '@deps/utils/optimizely/utils';
 import {
     logError,
     logInfo,
@@ -85,6 +90,7 @@ import { PrdnSSWForm } from '@deps/containers/otp/ssw-forms/prdn/prdn-ssw-form';
 import { DlicSSWForm } from '@deps/containers/otp/ssw-forms/dlic/dlic-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { PageHead } from '@deps/components/page-title';
+import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -95,6 +101,7 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     parties: LifeCadParty[];
     featureFlagDecisions: FeatureFlags;
     planCode?: string;
+    systematicPrograms: SystematicSpecialPrograms[] | [];
 }
 
 const DefaultSidebarContent = {
@@ -105,7 +112,7 @@ const DefaultSidebarContent = {
 };
 
 const getFormComponentMap = (
-    qualType: QualTypes | '',
+    qualType: QualTypes | FASTQualTypes | '',
     planCode?: string
 ): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcSSWForm />,
@@ -129,6 +136,7 @@ export default function SSWCase({
     featureFlagDecisions,
     user,
     planCode,
+    systematicPrograms,
 }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
     // TODO: Need to map this from common portion whenever we will restructure i18 files
@@ -150,10 +158,16 @@ export default function SSWCase({
     });
 
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
-    const { issueState, qualType, issueDate } = useAccountInfo(
+    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
+
+    const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        clientId as string
+        planCode as string,
+        clientId as string,
+        isLC
     );
+    const { issueState, qualType, issueDate } = contractAccountInfo;
+
     const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
         DefaultSidebarContent
     );
@@ -261,6 +275,7 @@ export default function SSWCase({
                                         featureFlagDecisions={
                                             featureFlagDecisions
                                         }
+                                        systematicPrograms={systematicPrograms}
                                     >
                                         {
                                             <>
@@ -471,28 +486,106 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const parties = document?.contract
-                ? await getPolicyPartiesSSR(
-                      document?.contract,
-                      clientId,
-                      accessToken as string,
-                      loggingContext
-                  )
-                : [];
+            const isLC = !isFastFeatureEnabled(
+                form?.taskType,
+                featureFlagDecisions
+            );
+            if (isLC) {
+                const parties = document?.contract
+                    ? await getPolicyPartiesSSR(
+                          document?.contract,
+                          clientId,
+                          accessToken as string,
+                          loggingContext
+                      )
+                    : [];
 
-            return {
-                props: {
-                    ...translations,
-                    document,
-                    form,
-                    locale,
-                    transactionsHistory: null,
-                    parties: Array.isArray(parties) ? parties : [],
-                    featureFlagDecisions,
-                    user,
+                return {
+                    props: {
+                        ...translations,
+                        document,
+                        form,
+                        locale,
+                        transactionsHistory: null,
+                        parties: Array.isArray(parties) ? parties : [],
+                        featureFlagDecisions,
+                        user,
+                        planCode,
+                    },
+                };
+            } else {
+                const policies = await searchPolicySSR(
+                    document?.contract,
+                    [clientId?.toUpperCase() as Carrier],
+                    accessToken,
+                    1,
+                    0,
+                    loggingContext
+                );
+                const planCode = policies?.[0]?.planCode || null;
+                if (!planCode) {
+                    logInfo(
+                        'create-case/ssw/:id::Plan code not found',
+                        loggingContext
+                    );
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                            permanent: false,
+                        },
+                    };
+                }
+                logInfo('create-case/ssw/:id::Plan code found', {
+                    ...loggingContext,
+                    planCode: planCode,
+                });
+
+                const policy = await getPolicyDetailsSsr(
+                    document?.contract,
                     planCode,
-                },
-            };
+                    accessToken,
+                    loggingContext,
+                    true
+                );
+                if (!policy) {
+                    logInfo(
+                        'create-case/ssw/:id::Policy not found',
+                        loggingContext
+                    );
+                    return {
+                        redirect: {
+                            destination: `/create-case/error?errorCode=${ERROR_CODES.POLICY_NOT_FOUND}`,
+                            permanent: false,
+                        },
+                    };
+                }
+                logInfo(
+                    'create-case/ssw/:id::Policy details found',
+                    loggingContext
+                );
+
+                const {
+                    parties,
+                    partyRoles = [],
+                    systematicPrograms = [],
+                } = policy ?? {};
+
+                return {
+                    props: {
+                        ...translations,
+                        document,
+                        form,
+                        locale,
+                        // isNigoCase,
+                        featureFlagDecisions,
+                        parties: Array.isArray(parties) ? parties : [],
+                        partyRoles,
+                        user,
+                        planCode,
+                        systematicPrograms,
+                    },
+                };
+            }
         },
     },
     {

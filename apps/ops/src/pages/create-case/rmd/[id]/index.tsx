@@ -41,7 +41,6 @@ import {
 } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helpers';
-import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -163,15 +162,13 @@ export default function RmdCase({
     // get the contract issue type from custom hook
 
     const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
-
-    const accountInfo = useAccountInfo(document.contract, clientId as string);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        planCode as string
+        planCode as string,
+        clientId as string,
+        isLC
     );
-    const { issueState, qualType, issueDate } = isLC
-        ? accountInfo
-        : contractAccountInfo;
+    const { issueState, qualType, issueDate } = contractAccountInfo;
 
     useSegmentPageTracker(user, SegmentPageName.RmdCase, {
         clientForFormDetermination,

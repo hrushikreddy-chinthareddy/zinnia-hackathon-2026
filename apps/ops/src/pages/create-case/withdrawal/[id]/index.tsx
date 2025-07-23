@@ -50,7 +50,6 @@ import {
     TypeDesc,
     useTransactionsHistory,
 } from '@deps/hooks/otp-withdrawal/transaction-history';
-import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -158,15 +157,13 @@ export default function WithdrawalCase({
         : clientId;
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
     const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
-
-    const accountInfo = useAccountInfo(document.contract, clientId as string);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        planCode as string
+        planCode as string,
+        clientId as string,
+        isLC
     );
-    const { issueState, qualType, issueDate } = isLC
-        ? accountInfo
-        : contractAccountInfo;
+    const { issueState, qualType, issueDate } = contractAccountInfo;
 
     const showTransactions =
         featureFlagDecisions?.[FEATURE_FLAGS.TRANSACTION_HISTORY];

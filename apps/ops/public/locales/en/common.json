@@ -2020,7 +2020,11 @@
                     "static": "Static",
                     "dynamic": "Dynamic"
                 },
-                "glwbTypeLabel": "GLWB Type"
+                "glwbTypeLabel": "GLWB Type",
+                "sswUpdateOptions": {
+                    "new": "New",
+                    "bankUpdate": "Bank Update"
+                }
             },
             "rmdMethod": {
                 "title": "RMD Method",

@@ -173,7 +173,10 @@ export default function AmountDetails({
             <Typography variant={TypographyVariant.H3} className="mb-2">
                 {t(`title`)}
             </Typography>
-            <div className="my-4 flex max-w-[600px]  flex-row gap-10 ">
+            <div
+                className="my-4 flex max-w-[600px]  flex-row gap-10 "
+                data-testid="amount-details"
+            >
                 <ButtonGrp
                     activeValue={withdrawType}
                     groupLabel={t(`amountType`)}

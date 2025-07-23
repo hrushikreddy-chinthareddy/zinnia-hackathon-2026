@@ -26,7 +26,6 @@ import { DiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
 import { RenewalFormDataContext } from '@deps/contexts/OtpRenewalFormContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { CaseType } from '@deps/models/case/case';
 import { DocumentData, PolicyDocument } from '@deps/models/case/document';
@@ -103,12 +102,13 @@ function FormEntryStep({
         formState?.initialForm?.taskType,
         formState.featureFlagDecisions
     );
-    const accountInfo = useAccountInfo(document.contract, clientCode as string);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        planCode as string
+        planCode as string,
+        clientCode as string,
+        isLC
     );
-    const { qualType } = isLC ? accountInfo : contractAccountInfo;
+    const { qualType } = contractAccountInfo;
 
     const formParts = getFormParts(
         caseType,

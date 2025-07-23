@@ -2008,6 +2008,10 @@
                 "glwbType": {
                     "static": "Statique",
                     "dynamic": "Dynamique"
+                },
+                "sswUpdateOptions": {
+                    "new": "Nouveau",
+                    "bankUpdate": "Mise à jour bancaire"
                 }
             },
             "rmdMethod": {

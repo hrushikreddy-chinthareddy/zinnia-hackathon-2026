@@ -19,7 +19,6 @@ import {
 } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { CaseType, Processes } from '@deps/models/case/case';
@@ -134,12 +133,13 @@ const NigoEntry = ({
     });
 
     const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
-    const accountInfo = useAccountInfo(document.contract, clientCode as string);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        planCode as string
+        planCode as string,
+        clientCode as string,
+        isLC
     );
-    const { issueState } = isLC ? accountInfo : contractAccountInfo;
+    const { issueState } = contractAccountInfo;
 
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">

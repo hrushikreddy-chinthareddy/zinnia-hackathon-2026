@@ -30,7 +30,7 @@ const DiaryNotesWarning = () => {
     if (diaryNotesData.areDiaryNotesViewed) return <></>;
 
     return (
-        <div>
+        <div data-testid="diary-notes-warning">
             {Array.isArray(diaryNotesData.diaryNotes) &&
                 diaryNotesData.diaryNotes?.length >= 1 && (
                     <div className="flex items-center justify-start rounded-lg border border-[#FA7625]  bg-[#FFF7E3] p-4 shadow-md">

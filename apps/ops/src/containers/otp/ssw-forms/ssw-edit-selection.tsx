@@ -7,6 +7,7 @@ import PageLoader, {
     PageLoaderVariant,
 } from '@deps/components/page-loader/page-loader';
 import SelectSimple from '@deps/components/select/select';
+import { SimpleOption } from '@deps/components/select/select.helpers';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SswUpdateOption } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -37,9 +38,22 @@ export const sswUpdateOptions = (t: TFunction, carrier = '') =>
             label: t('sswUpdateOptions.withholdingUpdate'),
             value: SswUpdateOption.WITHHOLDING_UPDATE,
         },
-    ].filter(Boolean);
+    ].filter(Boolean) as Array<{
+        label: string;
+        value: SswUpdateOption;
+    }>;
 
-const SswEditSelection = ({ carrier }: { carrier?: string }) => {
+interface SswEditSelectionProps {
+    carrier?: string;
+    isLC?: boolean;
+    fastOptions?: Array<{ label: string; value: SswUpdateOption }>;
+}
+
+const SswEditSelection = ({
+    carrier = '',
+    isLC = true,
+    fastOptions,
+}: SswEditSelectionProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
     const router = useRouter();
     const { initialForm, isFormStateReadOnly } = useContext(FormDataContext);
@@ -72,15 +86,14 @@ const SswEditSelection = ({ carrier }: { carrier?: string }) => {
         );
 
     return (
-        <div>
+        <div data-testid="ssw-edit-select-dropdown">
             <SelectSimple
                 className="max-w-lg my-3"
                 label={t('sswRequest') as string}
                 options={
-                    sswUpdateOptions(t, carrier) as {
-                        label: string;
-                        value: SswUpdateOption;
-                    }[]
+                    isLC
+                        ? sswUpdateOptions(t, carrier)
+                        : (fastOptions as SimpleOption[])
                 }
                 onChange={(val) => handleChange(val)}
                 size={FieldSize.Small}

@@ -41,6 +41,7 @@ type SystematicWithdrawalProgramProps = {
     singleLifePersonApplicable?: boolean;
     jointCoveredPersonApplicable?: boolean;
     glwbApplicable?: boolean;
+    isLC?: boolean;
 };
 
 export interface SSWProgramOptions extends Omit<RadioItem, 'subelement'> {
@@ -59,6 +60,7 @@ const SystematicWithdrawalProgram = ({
     singleLifePersonApplicable = false,
     jointCoveredPersonApplicable = true,
     glwbApplicable = false,
+    isLC = true,
 }: SystematicWithdrawalProgramProps) => {
     const { formErrors, formProgram, formParty, setFormProgram, setFormParty } =
         useContext(FormDataContext);
@@ -102,10 +104,8 @@ const SystematicWithdrawalProgram = ({
         },
     });
 
-    const filteredSSWTypeOptions = options.filter((option) => option !== null);
-
     useEffect(() => {
-        const selectedOption = filteredSSWTypeOptions.find(
+        const selectedOption = options.find(
             (val) => val.value === sswData.programSubType.text
         );
 
@@ -143,14 +143,14 @@ const SystematicWithdrawalProgram = ({
             <Typography variant={TypographyVariant.H3} className="my-2">
                 {title || t('title')}
             </Typography>
-            <ExistingPrograms disableAllPrograms={true} />
+            <ExistingPrograms disableAllPrograms={true} isLC={isLC} />
             <Typography variant={TypographyVariant.BodyBold} className="my-2">
                 {t('newProgram')}
             </Typography>
-            <div className="p-2">
+            <div className="p-2" data-testid="systematic-withdrawal-program">
                 <SystematicWithdrawalRow
                     isReadOnly={isReadOnly}
-                    sswTypeOptions={filteredSSWTypeOptions}
+                    sswTypeOptions={options}
                     onDataChange={setSswData}
                     sswData={sswData}
                 />

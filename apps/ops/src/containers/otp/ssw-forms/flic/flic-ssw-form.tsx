@@ -18,6 +18,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import {
     Carrier,
+    FASTQualTypes,
     Frequency,
     FundWithdrawnMethod,
     PaymentMethod,
@@ -29,7 +30,7 @@ import getFlicConfig from './flic-ssw-form-helpers';
 import SswEditSelection from '../ssw-edit-selection';
 
 type SswFormProps = {
-    qualType: QualTypes | '';
+    qualType: QualTypes | FASTQualTypes | '';
 };
 
 export function FlicSSWForm({ qualType }: SswFormProps) {

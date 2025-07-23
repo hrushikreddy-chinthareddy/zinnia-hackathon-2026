@@ -138,6 +138,7 @@ export enum FEATURE_FLAGS {
     FAST_WITHDRAWAL = 'fast-withdrawal',
     FAST_OFT = 'fast-oft',
     FAST_RMD = 'fast-rmd',
+    FAST_SSW = 'fast-ssw',
     CALL_AUDIO_FEATURE = 'call-audio-feature',
     NEW_DEATH_CLAIM = 'new_death_claim',
     OPS_MANAGER_FEATURE = 'ops-manager-feature',

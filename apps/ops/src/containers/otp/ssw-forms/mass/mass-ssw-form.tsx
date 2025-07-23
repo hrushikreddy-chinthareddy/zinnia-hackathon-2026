@@ -9,7 +9,11 @@ import SignatureValidations from '@deps/components/otp-withdrawal-form/signature
 import SystematicWithdrawalProgram from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { Carrier, QualTypes } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FASTQualTypes,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -21,7 +25,7 @@ import SswEditSelection from '../ssw-edit-selection';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 type MassWithdrawalFormProps = {
-    qualType: QualTypes | '';
+    qualType: QualTypes | FASTQualTypes | '';
 };
 
 export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {

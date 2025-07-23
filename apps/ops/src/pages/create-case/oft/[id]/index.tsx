@@ -46,7 +46,6 @@ import {
     deStringifyTrueFalseNull,
     toTitleCase,
 } from '@deps/helpers/string.helpers';
-import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -151,14 +150,13 @@ export default function OftCase({
         : clientId;
 
     const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
-    const accountInfo = useAccountInfo(document.contract, clientId as string);
-
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
-        planCode as string
+        planCode as string,
+        clientId as string,
+        isLC
     );
-
-    const { issueState, qualType } = isLC ? accountInfo : contractAccountInfo;
+    const { issueState, qualType } = contractAccountInfo;
 
     useSegmentPageTracker(user, SegmentPageName.OftCase, {
         clientId,

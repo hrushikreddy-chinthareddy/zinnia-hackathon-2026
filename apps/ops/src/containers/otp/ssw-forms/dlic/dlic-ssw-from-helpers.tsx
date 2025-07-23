@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
-import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { DisbursementToggleType } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -18,8 +17,10 @@ import {
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers';
+import { SSWProgramOptions } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { SswUpdateOption } from '@deps/models/case/enums';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormParts,
@@ -48,31 +49,27 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../../utils/helper-utils';
 
-export default function getDlicConfig(t: TFunction) {
-    const formValidation = useCallback(
-        ({ formSignature }: Partial<FormParts> = {}): FormValidationErrors => {
-            const errors = {} as FormValidationErrors;
+export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
+    const formValidation = ({
+        formSignature,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
 
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
+        const ownerSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
+        );
 
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
+        // No choice made for signature
+        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+            ] = t('formValidation.signaturePresentOptionMustBeSelected');
+        }
 
-            return errors;
-        },
-        [t]
-    );
+        return errors;
+    };
 
     const sswFormValidation = ({
         formParty,
@@ -105,7 +102,11 @@ export default function getDlicConfig(t: TFunction) {
             );
         }
 
-        if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
+        if (
+            isLC &&
+            sswType === SSWType.PercentOfAmountValue &&
+            funds?.length === 0
+        ) {
             errors['specifyFundsRequired'] = t(
                 'sswProgram.warnings.specifyFundsRequired'
             );
@@ -230,37 +231,43 @@ export default function getDlicConfig(t: TFunction) {
 
     const planCodes = ['674', '722'];
 
-    const systematicWithdrawalOptions = (planCode: string) => [
-        {
-            label: t('sswProgram.sswOptions.fixedDollar'),
-            value: SSWType.FixDollar,
-            generateSSWPayloadFromSelection: (val: SSWProgram) =>
-                generateSSWPayload(val, SSWType.FixDollar),
-        },
-        {
-            label: t('sswProgram.sswOptions.jointLifetimeIncomeOption'),
-            value: SSWType.JointLifetimeIncomeOption,
-            generateSSWPayloadFromSelection: (val: SSWProgram) =>
-                generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
-        },
-        {
-            label: t('sswProgram.sswOptions.singleLifetimeIncomeOption'),
-            value: SSWType.SingleLifetimeIncomeOption,
-            generateSSWPayloadFromSelection: (val: SSWProgram) =>
-                generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
-        },
-        planCodes.includes(planCode)
-            ? {
-                  label: t('sswProgram.sswOptions.interestEarned'),
-                  value: SSWType.InterestEarningDividendsGains,
-                  generateSSWPayloadFromSelection: (val: SSWProgram) =>
-                      generateSSWPayload(
-                          val,
-                          SSWType.InterestEarningDividendsGains
-                      ),
-              }
-            : null,
-    ];
+    const systematicWithdrawalOptions = (planCode: string, isLC: boolean) =>
+        [
+            {
+                label: t('sswProgram.sswOptions.fixedDollar'),
+                value: SSWType.FixDollar,
+                generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                    generateSSWPayload(val, SSWType.FixDollar),
+            },
+            isLC && {
+                label: t('sswProgram.sswOptions.jointLifetimeIncomeOption'),
+                value: SSWType.JointLifetimeIncomeOption,
+                generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                    generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
+            },
+            isLC && {
+                label: t('sswProgram.sswOptions.singleLifetimeIncomeOption'),
+                value: SSWType.SingleLifetimeIncomeOption,
+                generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                    generateSSWPayload(val, SSWType.SingleLifetimeIncomeOption),
+            },
+            isLC &&
+                planCodes.includes(planCode) && {
+                    label: t('sswProgram.sswOptions.interestEarned'),
+                    value: SSWType.InterestEarningDividendsGains,
+                    generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                        generateSSWPayload(
+                            val,
+                            SSWType.InterestEarningDividendsGains
+                        ),
+                },
+            !isLC && {
+                label: t('sswProgram.sswOptions.percentageOfAccountValue'),
+                value: SSWType.PercentOfAmountValue,
+                generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                    generateSSWPayload(val, SSWType.PercentOfAmountValue),
+            },
+        ].filter(Boolean) as SSWProgramOptions[];
 
     const fundWithdrawnMethodOptions = (sswType: string) => [
         {
@@ -637,6 +644,17 @@ export default function getDlicConfig(t: TFunction) {
         auditTrial: true,
     };
 
+    const sswUpdateFastOptions = [
+        {
+            label: t('sswProgram.sswUpdateOptions.new'),
+            value: SswUpdateOption.NEW,
+        },
+        {
+            label: t('sswProgram.sswUpdateOptions.bankUpdate'),
+            value: SswUpdateOption.BANK_UPDATE,
+        },
+    ];
+
     return {
         formValidation: sswFormValidation,
         formPartyConfigs,
@@ -650,5 +668,6 @@ export default function getDlicConfig(t: TFunction) {
         irsSignatureConfig,
         cslnCheckStates,
         eSignatureFieldConfig,
+        sswUpdateFastOptions,
     };
 }
