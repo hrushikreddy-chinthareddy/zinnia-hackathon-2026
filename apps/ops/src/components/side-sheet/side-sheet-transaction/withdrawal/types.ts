@@ -86,6 +86,7 @@ export type WithdrawalDetailsValues = {
     // Completed - should pass the date the transaction went in the batch cycle
     processDate?: string;
     // ---------------------
+    reversalDate?: string;
 
     // ---------------------
     // Amount requested for withdrawal.

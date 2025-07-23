@@ -3381,6 +3381,7 @@
                 "effectiveDateTooltip": "This is the date used to calculate all the available account values for this withdrawal. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
                 "processDate": "Process date",
                 "processDateTooltip": "This is the date when the transaction went through processing. It tells you when the transaction was included in the batch cycle. Process date may differ from the effective date (the date the transaction is actually applied to the policy).",
+                "reversalDate": "Reversal date",
                 "fundDisbursementType": "Fund disbursement type",
                 "fundDisbursementTypeTooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund.  Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund.",
                 "disbursementTypeTooltip": "Disbursement type affects how fees are paid. Gross means the fees are subtracted from the requested amount; net means they are added. Not all policies have fees so depending on the carrier and the product, this selection may not make a meaningful difference.",

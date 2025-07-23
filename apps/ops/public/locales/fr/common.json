@@ -3352,6 +3352,7 @@
                 "effectiveDateTooltip": "C'est la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce retrait. Parce que les fonds dans la valeur du compte sont investis, la valeur du compte peut changer de jour en jour. Le traitement peut se produire à tout moment, nous devons donc savoir à quel moment retirer efficacement les fonds, même si nous traitons la transaction quelques jours avant ou après.",
                 "processDate": "Date de traitement",
                 "processDateTooltip": "C'est la date à laquelle la transaction a été traitée. Elle indique quand la transaction a été incluse dans le cycle de traitement. La date de traitement peut différer de la date d'effet (la date à laquelle la transaction est réellement appliquée à la police).",
+                "reversalDate": "Date d'inversion",
                 "fundDisbursementType": "Type de distribution des fonds",
                 "fundDisbursementTypeTooltip": "La valeur du compte est investie dans un ou plusieurs fonds d'investissement. Lorsque nous retirons l'argent, nous devons savoir comment prendre le montant de chaque fonds d'investissement. Pro rata signifie prendre un montant égal de chaque fonds d'investissement. Personnalisé permet au propriétaire de choisir un certain montant de chaque fonds d'investissement.",
                 "disbursementTypeTooltip": "Le type de distribution affecte la manière dont les frais sont payés. Brut signifie que les frais sont soustraits du montant demandé ; net signifie qu'ils sont ajoutés. Toutes les polices n'ont pas de frais, donc en fonction du transporteur et du produit, cette sélection peut ne pas faire de différence significative.",
@@ -6714,15 +6715,15 @@
             }
         }
     },
-      "usage":{
-         "tabs": {
+    "usage": {
+        "tabs": {
             "logins": "Connexions"
         },
-        "logins":{
-            "zinniaLive":{
+        "logins": {
+            "zinniaLive": {
                 "title": "Connexions uniques à Zinnia Live par rôle"
             },
-            "myPolicyView":{
+            "myPolicyView": {
                 "title": "MyPolicyView Connexions uniques"
             },
             "uniqueUsers": "Utilisateurs uniques",

@@ -158,6 +158,7 @@ const getWithdrawalDetails = (
         fundDisbursementType,
         transactionType,
         actualWithdrawalAmount,
+        reversalDate,
     } = values;
 
     if (transactionType === TransactionType.FULL_SURRENDER) {
@@ -233,7 +234,7 @@ const getWithdrawalDetails = (
         (disbursementType === DisbursementType.GROSS ||
             disbursementType === DisbursementType.NET)
     ) {
-        return [
+        const withdrawalDetails: WithdrawalDetails[] = [
             {
                 label: t(
                     'policy.history.withdrawalSidesheet.requestedWithdrawalAmount'
@@ -323,8 +324,16 @@ const getWithdrawalDetails = (
                         : DEFAULT_ERROR_STRING,
             },
         ];
+        if (status === TransactionStatus.REVERSED) {
+            withdrawalDetails.push({
+                label: t(
+                    'policy.history.withdrawalSidesheet.reversalDate'
+                ) as string,
+                value: reversalDate,
+            });
+        }
+        return withdrawalDetails;
     }
-
     return [];
 };
 
@@ -414,6 +423,7 @@ const getWithdrawalDetailsValues = (
         status,
         transactionAmounts,
         transactionType,
+        reversalDate,
     } = transaction;
     const {
         appliedAmount,
@@ -447,6 +457,7 @@ const getWithdrawalDetailsValues = (
         transactionType,
         disbursementType,
         processDate: convertKebabedDateString(processDate),
+        reversalDate: convertKebabedDateString(reversalDate),
         status,
     };
 };
