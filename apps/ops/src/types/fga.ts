@@ -11,6 +11,7 @@ export enum FgaRelation {
 
 export enum FgaUiEntity {
     ZinniaLiveHomeExerience = 'entity:zinnia_live_home_experience',
+    ZinniaLiveTaskManagment = 'entity:zinnia_live_task_management',
 }
 
 export type GetCarrierListQuery = {

@@ -191,6 +191,10 @@
                 "text": "Inicio",
                 "link": "/home"
             },
+            "tasks": {
+                "text": "Tareas",
+                "link": "/tasks"
+            },
             "marketingStorefront": {
                 "text": "Tienda de Marketing",
                 "link": "/toppan-merrill"
@@ -979,11 +983,15 @@
         "noTasks": "No hay tareas disponibles para su perfil en este momento.",
         "claimTaskError": "Error al reclamar tarea: ",
         "unassignTaskError": "Error al desasignar tarea: ",
+        "assignTaskError": "Error al asignar tarea",
         "unassignTask": "Desasignar Tarea",
         "unassign": "Desasignar",
         "startTask": "Iniciar Tarea",
         "assignTask": "Asignar Tarea",
         "transaction": "Transacción: {{transactionType}}",
+        "assigned": "Asignado",
+        "queue": "Cola",
+        "lastUpdated": "Última actualización",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Actualizar Estado de la Tarea",
             "setTaskAsPending": "Establecer Tarea como Pendiente",
@@ -1013,7 +1021,7 @@
         "caseId": "ID del Caso: ",
         "documentNumber": "Documento: ",
         "caseID": "Caso/ID",
-        "carrierPolicy": "Aseguradora/Póliza",
+        "carrierCase": "ID de operador/caso",
         "policy": "Póliza #:",
         "ID": "ID:",
         "product": "Producto",
@@ -1051,7 +1059,8 @@
             "task": {
                 "heading": "Tarea"
             }
-        }
+        },
+        "fetchTasksError": "No se pueden recuperar tareas"
     },
     "caseManagementDashboard": {
         "h1": "Casos",
@@ -1100,7 +1109,10 @@
             "exceptionRaised": "Excepción planteada",
             "processType": "Casos",
             "productName": "Productos",
-            "requestSubtype": "Tipos de caso"
+            "requestSubtype": "Tipos de caso",
+            "taskStatus": "Estado de la tarea",
+            "group": "Grupo",
+            "assignee": "Cesionario"
         },
         "refineResultsErrors": {
             "caseType": "Por favor, seleccione al menos un tipo de caso",
@@ -3697,6 +3709,7 @@
             "additionalDocuments": "Documentos adicionales",
             "noAssignee": "Solo el asignado puede comenzar esta tarea",
             "startTask": "Comenzar tarea",
+            "goToCase": "Ir al caso",
             "claimTask": "Reclamar tarea",
             "claimTaskError": "No tienes los permisos necesarios para acceder a esta función. Comunícate con el administrador para obtener ayuda.",
             "taskHeading": "Tarea"
@@ -5310,6 +5323,32 @@
         "openFor_other": "Abierto por {{count}} $t(temporal.{{unit}})s",
         "closedFor_one": "Cerrado por {{count}} $t(temporal.{{unit}})",
         "closedFor_other": "Cerrado por {{count}} $t(temporal.{{unit}})s"
+    },
+    "tasksView": {
+        "header": {
+            "title": "Tareas"
+        },
+        "search": {
+            "buttons": {
+                "taskName": "Nombre de la tarea",
+                "assignee": "Cesionario",
+                "caseID": "Identifícate cas"
+            },
+            "placeHolder": {
+                "taskName": "Buscar por nombre de tarea",
+                "assignee": "Buscar por administrador",
+                "caseID": "Buscar por ID de caso"
+            }
+        },
+        "filters": {
+            "buttons": {
+                "addFilter": "Añadir un filtro"
+            },
+            "headers": {
+                "title": "Refinar resultados"
+            }
+        },
+        "xToYOfZ": "Resultados: {{x}}-{{y}} de {{z}}"
     },
     "workflows": {
         "apiErrorCard": {

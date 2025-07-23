@@ -3,6 +3,8 @@ import {
     TableCell,
     Tooltip,
     TooltipPlacement,
+    Loader,
+    LoaderVariant,
 } from '@zinnia/bloom/components';
 import Image from 'next/image';
 import { default as NextLink, default as Link } from 'next/link';
@@ -15,6 +17,7 @@ import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
+import IconButton from '@deps/components/icon-button/icon-button';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import Typography, {
     TypographyVariant,
@@ -24,6 +27,10 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import {
+    getUserNameFromEmail,
+    NO_ASSIGNEE,
+} from '@deps/hooks/useTaskManagementQueue';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { EarlyTaskType } from '@deps/models/case/task';
 import {
@@ -32,7 +39,12 @@ import {
     UnassignedTask,
 } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
+import { searchUsersInGroupCSR } from '@deps/queries/api/server/fga/searchUsers';
 import { unassignTask } from '@deps/queries/api/v1/task';
+import {
+    assignTaskAsAdmin,
+    unAssignTaskAsAdmin,
+} from '@deps/queries/api/v1/task-admin';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
@@ -49,7 +61,7 @@ import {
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import { NO_ASSIGNEE } from './task-management-queue-container';
+import AssigneePopover from './table-elements/assignee-popover';
 import styles from './task-management-queue.module.css';
 import TaskQueueDrawer from './task-queue-drawer';
 
@@ -59,13 +71,135 @@ type TaskQueueTableRowProps = {
     tabIndex?: number;
     getTasks: (handleLoader: boolean) => void;
     setErrorMessage: (message: string) => void;
+    isOpsManagerView?: boolean;
+    manageTableAfterAction?: any;
+    setTaskDetails?: any;
+};
+
+const PROCESSOR_ROLE = 'processor';
+export const OPS_MANAGER_VIEW_TASK = 'opsManagerView-task';
+
+export const Assignee = ({
+    isOpsManagerView,
+    hasAssignee,
+    assignee,
+    task,
+    handleUnassignTask,
+    handleTaskAssignAsAdmin,
+    handleTaskUnassignAsAdmin,
+}: any) => {
+    const [allAssigneeList, setAllAssigneeList] = useState<string[]>([]);
+    const [assigneeList, setAssigneeList] = useState<string[]>([]);
+    const [assigneeLoading, setAssigneeLoading] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+
+    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (task.status === TaskStatus.Completed) {
+            return;
+        }
+
+        if (assigneeList.length === 0 && !assigneeLoading) {
+            try {
+                setAssigneeLoading(true);
+                const usersData = await searchUsersInGroupCSR({
+                    carrier: task.carrier,
+                    queue: task.queue,
+                    access: PROCESSOR_ROLE,
+                });
+
+                const mappedUsers =
+                    usersData?.users.map((user: any) => ({
+                        user: getUserNameFromEmail(user.email),
+                        partyId: user.id.split(':')[1],
+                    })) || [];
+
+                setAssigneeList(mappedUsers);
+                setAllAssigneeList(mappedUsers);
+            } catch (error) {
+                browserLogError('Error fetching assignee list');
+            } finally {
+                setAssigneeLoading(false);
+            }
+        }
+    };
+
+    const handleSearch = (searchValue: string): void => {
+        setSearchValue(searchValue);
+        setAssigneeList(
+            allAssigneeList.filter((assignee: any) =>
+                assignee.user.toLowerCase().includes(searchValue.toLowerCase())
+            )
+        );
+    };
+
+    return !isOpsManagerView ? (
+        <>
+            <div className={`flex items-center`}>
+                {hasAssignee() && <Avatar name={assignee || ''} size="small" />}
+                {hasAssignee() ? (
+                    <Content
+                        className="truncate"
+                        details={
+                            assignee
+                                ?.split(',')
+                                .map((x: string) => x.trim())
+                                .reverse()
+                                .join(' ') || ''
+                        }
+                        variant={ContentVariant.BodySm}
+                    />
+                ) : (
+                    <Content
+                        details={toSentenceCase(assignee)}
+                        variant={ContentVariant.BodySm}
+                    />
+                )}
+            </div>
+            {hasAssignee() && (
+                <Tooltip
+                    placement={TooltipPlacement.TopRight}
+                    tooltipClassName="!w-auto"
+                    triggerClassName="!z-10"
+                    trigger={
+                        <IconButton
+                            className="text-secondary"
+                            onClick={() => {
+                                handleUnassignTask(task?.id);
+                            }}
+                        >
+                            <CancelIcon height={18} width={18} />
+                        </IconButton>
+                    }
+                >
+                    <span className="text-md">Unassign</span>
+                </Tooltip>
+            )}
+        </>
+    ) : (
+        <AssigneePopover
+            task={task}
+            assignee={task?.assignee}
+            handleClick={handleClick}
+            handleSearch={handleSearch}
+            searchValue={searchValue}
+            assigneeLoading={assigneeLoading}
+            assigneeList={assigneeList}
+            hasAssignee={hasAssignee}
+            handleTaskAssignAsAdmin={handleTaskAssignAsAdmin}
+            handleTaskUnassignAsAdmin={handleTaskUnassignAsAdmin}
+        />
+    );
 };
 
 const TaskQueueTableRow = ({
     task,
     featureFlagDecisions,
+    tabIndex,
     getTasks,
     setErrorMessage,
+    isOpsManagerView,
+    manageTableAfterAction,
+    setTaskDetails,
 }: TaskQueueTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagementQueue',
@@ -80,6 +214,7 @@ const TaskQueueTableRow = ({
         task.identifiers,
         CaseIdentifier.DocumentNumber
     );
+    const [actionLoader, setActionLoader] = useState(false);
 
     const [_loader, setLoader] = useState(false);
     const {
@@ -89,7 +224,7 @@ const TaskQueueTableRow = ({
         status: _status,
         carrier,
         assignee,
-        process,
+        queue,
     } = task;
     const carrierName =
         getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
@@ -173,6 +308,59 @@ const TaskQueueTableRow = ({
         getTasks(true);
     };
 
+    const handleTaskAssignAsAdmin = async (
+        taskId: string,
+        assigneePartyId: string
+    ) => {
+        try {
+            setErrorMessage('');
+            setActionLoader(true);
+            const updatedTask = await assignTaskAsAdmin(
+                taskId,
+                assigneePartyId
+            );
+            if (updatedTask) {
+                const result = await manageTableAfterAction(
+                    taskId,
+                    assigneePartyId
+                );
+                if (result) {
+                    setActionLoader(false);
+                }
+            } else {
+                setActionLoader(false);
+                setErrorMessage(t('assignTaskError'));
+            }
+        } catch (error) {
+            setActionLoader(false);
+        }
+    };
+
+    const handleTaskUnassignAsAdmin = async (
+        taskId: string,
+        assigneePartyId: string
+    ) => {
+        try {
+            setActionLoader(true);
+            setErrorMessage('');
+            const updatedTask = await unAssignTaskAsAdmin(
+                taskId,
+                assigneePartyId
+            );
+            if (updatedTask) {
+                const result = await manageTableAfterAction(taskId);
+                if (result) {
+                    setActionLoader(false);
+                }
+            } else {
+                setActionLoader(false);
+                setErrorMessage(t('unassignTaskError'));
+            }
+        } catch (error) {
+            setActionLoader(false);
+        }
+    };
+
     const openTaskSideSheet = () => {
         if (task) {
             const { taskName = '', id } = task;
@@ -185,6 +373,7 @@ const TaskQueueTableRow = ({
                         : t('sideSheet.task.heading')
                 }`,
                 <GlobalTaskSideSheet
+                    type={isOpsManagerView ? OPS_MANAGER_VIEW_TASK : ''}
                     featureFlagDecisions={featureFlagDecisions}
                     taskId={id}
                     taskDescription={task?.taskDetails}
@@ -239,12 +428,14 @@ const TaskQueueTableRow = ({
     }
 
     const hasAssignee = () => {
-        return !assignee?.includes(NO_ASSIGNEE);
+        return !task.assignee?.includes(NO_ASSIGNEE);
     };
 
-    const getTimeText = () => {
-        let text;
-        const { unit, count } = getTimeAgoUnitValue(createdAt as string) || {};
+    const getTimeText = (field: string | undefined) => {
+        let text = '';
+        const { unit, count } =
+            getTimeAgoUnitValue(field ? field : new Date().toDateString()) ||
+            {};
         const timeText = t('temporal.timeago', {
             formattedDate: '',
             count: count,
@@ -273,8 +464,6 @@ const TaskQueueTableRow = ({
     return (
         <TableRow className={styles.row} key={`task_queue_row_${task.id}`}>
             <TableCell className={styles.taskLinkContainer}>
-                {/* This lives as a visibly hidden link instead of as a click handler on the table row for
-                 acccessibility concerns. Nested interactive elements are not allowed */}
                 <Link
                     href=""
                     onClick={handleLinkClick}
@@ -286,22 +475,29 @@ const TaskQueueTableRow = ({
             </TableCell>
             <TableCell>
                 <Content
-                    details={toSentenceCase(taskName)}
+                    truncate={true}
+                    details={toSentenceCase(task.taskName)}
                     variant={ContentVariant.BodySm}
                 />
                 <Content
-                    className={styles.fadedText}
-                    details={toSentenceCase(process)}
+                    truncate={true}
+                    className={`${styles.fadedText} truncate w-full`}
+                    details={toSentenceCase(task.process)}
                     variant={ContentVariant.BodySm}
                 />
             </TableCell>
             <TableCell>
                 {task?.status === TaskStatus.InProgress &&
                 task?.queue &&
+                !isOpsManagerView &&
                 !Object.values(EarlyTaskType).includes(
                     task?.taskType as EarlyTaskType
                 ) ? (
-                    <div className="z-5">
+                    <div
+                        className={`relative ${
+                            isOpsManagerView ? 'z-10' : 'z-5'
+                        }`}
+                    >
                         {task?.status === TaskStatus.InProgress && (
                             <Dropdown
                                 triggerIcon={
@@ -315,27 +511,21 @@ const TaskQueueTableRow = ({
                         )}
                     </div>
                 ) : (
-                    <Typography
-                        variant={TypographyVariant.BodySm}
-                        className="py-2 pr-6 "
-                    >
-                        <Badge
-                            icon={badgeIcon}
-                            variant={badgeVariant}
-                            label={badgeLabel}
-                            rounded={true}
-                            className="flex gap-1 items-center"
-                        />
-                    </Typography>
+                    <Badge
+                        icon={badgeIcon}
+                        variant={badgeVariant}
+                        label={badgeLabel}
+                        rounded={true}
+                        className="flex gap-1 items-center min-w-max"
+                    />
                 )}
             </TableCell>
-
             <TableCell>
                 <div className="flex">
                     <div className="flex justify-center items-center rounded border-1 border-gray-100 bg-white h-6 w-6 mr-2">
                         <Image
-                            src={getCarrierLogoByClientId(carrier)}
-                            alt={`${carrier} icon`}
+                            src={getCarrierLogoByClientId(task.carrier)}
+                            alt={`${task.carrier} icon`}
                             role="presentation"
                             height={16}
                             width={16}
@@ -351,14 +541,14 @@ const TaskQueueTableRow = ({
                                 className="flex-[1_1_auto] truncate"
                                 variant={TypographyVariant.BodySm}
                             >
-                                {t('policy')}
+                                {t('caseId')}
                             </Typography>
-                            {policyNumber ? (
+                            {task.caseId ? (
                                 <NextLink
-                                    className="relative z-5 text-secondary hover-[--color-base-text-text-secondary] hover:underline hover:decoration-2 hover:underline-offset-2"
-                                    href={`/policies?policyNumber=${policyNumber}`}
+                                    className="relative z-5 text-secondary hover-[--color-base-text-text-secondary] hover:underline hover:decoration-2 hover:underline-offset-2 ml-1"
+                                    href={`/cases/${task.caseId}`}
                                 >
-                                    {policyNumber}
+                                    {task.caseId}
                                 </NextLink>
                             ) : (
                                 <Content
@@ -371,54 +561,24 @@ const TaskQueueTableRow = ({
                     </div>
                 </div>
             </TableCell>
-            <TableCell>
+            <TableCell colSpan={2}>
                 <div className="flex">
-                    <div className={`flex items-center mr-2`}>
-                        {hasAssignee() && (
-                            <Avatar name={assignee || ''} size="small" />
-                        )}
-                        {hasAssignee() ? (
-                            <Content
-                                details={
-                                    assignee
-                                        ?.split(',')
-                                        .map((x: string) => x.trim())
-                                        .reverse()
-                                        .join(' ') || ''
-                                }
-                                variant={ContentVariant.BodySm}
-                            />
-                        ) : (
-                            <Content
-                                details={toSentenceCase(assignee)}
-                                variant={ContentVariant.BodySm}
-                            />
-                        )}
-                    </div>
-                    {hasAssignee() && (
-                        <Tooltip
-                            placement={TooltipPlacement.TopRight}
-                            tooltipClassName="!w-auto"
-                            triggerClassName="!z-10 focus:outline-none"
-                            trigger={
-                                <span
-                                    tabIndex={0}
-                                    aria-label="Unassign Task"
-                                    className="text-secondary cursor-pointer"
-                                    onClick={() => handleUnassignTask(task?.id)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            e.preventDefault();
-                                            handleUnassignTask(task?.id);
-                                        }
-                                    }}
-                                >
-                                    <CancelIcon height={18} width={18} />
-                                </span>
+                    {actionLoader ? (
+                        <div className="w-100 h-8 text-center py-4">
+                            <Loader variant={LoaderVariant.CTA} />
+                        </div>
+                    ) : (
+                        <Assignee
+                            hasAssignee={hasAssignee}
+                            assignee={task.assignee}
+                            isOpsManagerView={isOpsManagerView}
+                            task={task}
+                            handleUnassignTask={handleUnassignTask}
+                            handleTaskAssignAsAdmin={handleTaskAssignAsAdmin}
+                            handleTaskUnassignAsAdmin={
+                                handleTaskUnassignAsAdmin
                             }
-                        >
-                            <span className="text-md">{t('unassign')}</span>
-                        </Tooltip>
+                        />
                     )}
                 </div>
             </TableCell>
@@ -427,9 +587,19 @@ const TaskQueueTableRow = ({
                     variant={TypographyVariant.BodySm}
                     className={styles.fadedText}
                 >
-                    {getTimeText()}
+                    {getTimeText(task.createdAt)}
                 </Typography>
             </TableCell>
+            {isOpsManagerView ? (
+                <TableCell>
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={styles.fadedText}
+                    >
+                        {getTimeText(task.updatedAt)}
+                    </Typography>
+                </TableCell>
+            ) : null}
         </TableRow>
     );
 };

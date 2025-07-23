@@ -30,6 +30,7 @@ interface SearchBarProps
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
     formClasses?: string;
     handleError?: (bool: boolean) => void;
+    disabled?: boolean;
 }
 
 const SearchBar = ({
@@ -41,6 +42,7 @@ const SearchBar = ({
     onClear,
     className,
     handleError,
+    disabled = false,
 }: SearchBarProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const getToggleLabel = useCallback(
@@ -91,11 +93,18 @@ const SearchBar = ({
         value: string,
         key: PolicySearchKeys
     ) => {
+        const labelsToNoTrim = ['firmName', 'taskName'];
         handleError?.(false); // reset field error message on change
-        if (activeLabels?.value != 'firmName') {
+        if (!labelsToNoTrim.includes(activeLabels?.value as string)) {
             value = (value || '').trim();
         }
+
         setValues((prevValues) => ({ ...prevValues, [key]: value || '' }));
+
+        if (e?.target?.value?.length === 0 && typeof onClear === 'function') {
+            const activeLabelValue = activeLabels?.value;
+            onClear(activeLabelValue);
+        }
     };
 
     const handleToggle = useCallback(
@@ -177,6 +186,7 @@ const SearchBar = ({
                 aria-label={t('ariaLabel.search') as string}
                 type="submit"
                 size="small"
+                disabled={disabled}
             >
                 {t('dashboard.search.btnText')}
             </Button>

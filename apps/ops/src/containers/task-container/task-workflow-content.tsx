@@ -82,15 +82,20 @@ export const TaskWorkflowContent = ({
                     showLink={false}
                     caseId={caseId}
                 />
-                <div
+                <button
                     className="my-2 ml-auto cursor:pointer"
                     onClick={showDocumentPanel}
                 >
                     <div className="flex  font-semibold text-secondary whitespace-nowrap cursor-pointer">
-                        <ClipboardListIcon height={20} width={20} />
+                        <ClipboardListIcon
+                            role="img"
+                            aria-label="View task details"
+                            height={20}
+                            width={20}
+                        />
                         <div>{t('nigoEntry.documentPanel.taskTitle')}</div>
                     </div>
-                </div>
+                </button>
             </div>
             <ProgressBarSteps
                 classNames={`pb-2`}

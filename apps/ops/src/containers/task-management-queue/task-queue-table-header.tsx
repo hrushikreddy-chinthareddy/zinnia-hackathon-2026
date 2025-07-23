@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { TranslationFiles } from '@deps/config/translations';
 
-const TaskQueueTableHeader = () => {
+const TaskQueueTableHeader = ({ isOpsManagerView = false }: any) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagementQueue',
     });
@@ -32,11 +32,11 @@ const TaskQueueTableHeader = () => {
                 </TableHeaderCell>
                 <TableHeaderCell>
                     <Content
-                        details={t('carrierPolicy') as string}
+                        details={t('carrierCase') as string}
                         variant={ContentVariant.BodySmBold}
                     />
                 </TableHeaderCell>
-                <TableHeaderCell>
+                <TableHeaderCell colSpan={2}>
                     <Content
                         details={t('assignee') as string}
                         variant={ContentVariant.BodySmBold}
@@ -48,6 +48,18 @@ const TaskQueueTableHeader = () => {
                         variant={ContentVariant.BodySmBold}
                     />
                 </TableHeaderCell>
+                {isOpsManagerView ? (
+                    <>
+                        <TableHeaderCell>
+                            <Content
+                                details={t('lastUpdated') as string}
+                                variant={ContentVariant.BodySmBold}
+                            />
+                        </TableHeaderCell>
+                    </>
+                ) : (
+                    <></>
+                )}
             </TableRow>
         </TableHeader>
     );

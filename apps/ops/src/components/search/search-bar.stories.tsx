@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys } from '@deps/types/search';
 
-import SearchBar, { SearchBarInitialValues } from './search-bar';
+import SearchBar from './search-bar';
+import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import '@deps/styles/styles.css';
 
 export default {
@@ -63,6 +64,7 @@ export const SearchBarDefault = () => {
                 searchValue={searchValue}
                 initialToggleValue={initialToggleValue}
                 toggleLabels={toggleLabels}
+                disabled={false}
             />
         </>
     );

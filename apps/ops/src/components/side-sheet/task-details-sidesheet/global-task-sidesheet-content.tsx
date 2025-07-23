@@ -34,6 +34,7 @@ import Typography, {
 import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
+import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
 import {
     OptimizelyVariableKey,
     useOptimizely,
@@ -224,6 +225,7 @@ export default function GlobalTaskSideSheet({
 
     const { user } = useUser();
     const sideSheet = useSideSheetContext();
+    const isOpsManagerView = type === OPS_MANAGER_VIEW_TASK;
 
     const readOnly = task?.status === TaskStatus.Completed || false;
 
@@ -408,6 +410,13 @@ export default function GlobalTaskSideSheet({
         }
     };
 
+    const handleGoToCase = (caseId: string) => {
+        setStartLoader(true);
+        if (caseId) {
+            router.push(`/cases/${caseId}`);
+        }
+    };
+
     useEffect(() => {
         const getTaskData = async () => {
             const data = await getTaskInstance({ taskId });
@@ -435,12 +444,16 @@ export default function GlobalTaskSideSheet({
 
     const documentsList = transformDocument(task.mappedDocuments || []);
 
-    const allowedTaskStatusForStartBtnDisplay = [
+    let allowedTaskStatusForStartBtnDisplay = [
         TaskStatus.New,
         TaskStatus.InProgress,
         TaskStatus.Pending,
         TaskStatus.Completed,
     ];
+
+    allowedTaskStatusForStartBtnDisplay = isOpsManagerView
+        ? [...allowedTaskStatusForStartBtnDisplay, TaskStatus.Canceled]
+        : allowedTaskStatusForStartBtnDisplay;
 
     const showStartButton = allowedTaskStatusForStartBtnDisplay.includes(
         task.status
@@ -491,6 +504,7 @@ export default function GlobalTaskSideSheet({
         <div className="flex gap-2 text-gray-600">
             <span>No assignee</span>
             {task.status === TaskStatus.New &&
+                !isOpsManagerView &&
                 (!claimTaskLoader ? (
                     <button
                         tabIndex={0}
@@ -711,7 +725,7 @@ export default function GlobalTaskSideSheet({
                         : 'N/A'}
                 </Typography>
 
-                {task.taskName && type == 'case' && (
+                {!isOpsManagerView && task.taskName && type == 'case' && (
                     <>
                         {details && (
                             <>
@@ -730,7 +744,8 @@ export default function GlobalTaskSideSheet({
                 )}
             </div>
 
-            {type == 'case' &&
+            {!isOpsManagerView &&
+                type == 'case' &&
                 !isUserAssociatedWithTask &&
                 showStartButton &&
                 !readOnly && (
@@ -739,39 +754,52 @@ export default function GlobalTaskSideSheet({
                     </div>
                 )}
 
-            {shouldRenderStartButton && (
-                <div
-                    className={
-                        !isUserAssociatedWithTask
-                            ? 'flex flex-row items-center gap-1 pt-2'
-                            : 'flex flex-row items-center gap-1 pt-8'
-                    }
-                >
-                    <Button
-                        mode="primary"
-                        disabled={
-                            task.status === TaskStatus.Completed
-                                ? false
-                                : !isUserAssociatedWithTask || startLoader
+            {shouldRenderStartButton ||
+                (isOpsManagerView && (
+                    <div
+                        className={
+                            !isUserAssociatedWithTask
+                                ? 'flex flex-row items-center gap-1 pt-2'
+                                : 'flex flex-row items-center gap-1 pt-8'
                         }
-                        onClick={() => handleStart(task.id, task.status)}
-                        data-testid="start-task-btm"
-                        aria-label={t('ariaLabel.startTask') as string}
-                        type="submit"
-                        size={startLoader ? 'large' : 'small'}
                     >
-                        {!startLoader ? (
-                            readOnly ? (
-                                t('sideSheet.task.viewTask')
+                        <Button
+                            className={`${isOpsManagerView ? 'mt-4' : ''}`}
+                            mode="primary"
+                            disabled={
+                                isOpsManagerView ||
+                                task.status === TaskStatus.Completed
+                                    ? false
+                                    : !isUserAssociatedWithTask || startLoader
+                            }
+                            onClick={() =>
+                                isOpsManagerView
+                                    ? handleGoToCase(task?.caseId)
+                                    : handleStart(task.id, task.status)
+                            }
+                            data-testid="start-task-btm"
+                            aria-label={t('ariaLabel.startTask') as string}
+                            type="submit"
+                            size={startLoader ? 'large' : 'small'}
+                        >
+                            {isOpsManagerView ? (
+                                startLoader ? (
+                                    <CustomLoader />
+                                ) : (
+                                    t('sideSheet.task.goToCase')
+                                )
+                            ) : !startLoader ? (
+                                readOnly ? (
+                                    t('sideSheet.task.viewTask')
+                                ) : (
+                                    t('sideSheet.task.startTask')
+                                )
                             ) : (
-                                t('sideSheet.task.startTask')
-                            )
-                        ) : (
-                            <CustomLoader />
-                        )}
-                    </Button>
-                </div>
-            )}
+                                <CustomLoader />
+                            )}
+                        </Button>
+                    </div>
+                ))}
         </div>
     );
 

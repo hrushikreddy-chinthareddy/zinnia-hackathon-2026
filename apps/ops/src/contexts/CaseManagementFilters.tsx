@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import { SearchBarInitialValues } from '@deps/components/search/search-bar';
+import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import { Statuses, Case } from '@deps/models/case/case';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 

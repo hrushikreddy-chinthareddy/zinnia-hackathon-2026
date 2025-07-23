@@ -103,6 +103,7 @@ export abstract class ServerApiClient {
             logCtx?.correlationId
         );
         const correlationId = configWithToken.headers?.['x-correlation-id'];
+
         const loggingContext = {
             ...logCtx,
             file: 'serverApiClient',
@@ -287,6 +288,7 @@ export abstract class ServerApiClient {
             correlationId,
         };
         logTrace('serverApiClient::delete', loggingContext);
+
         try {
             const result = await this.instance.delete<T, R>(
                 url,

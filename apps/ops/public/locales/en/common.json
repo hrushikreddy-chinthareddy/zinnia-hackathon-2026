@@ -95,11 +95,16 @@
             "usage": "Usage",
             "viewDocument": "View Document",
             "withdrawals": "Withdrawals",
+            "tasks": "Tasks",
             "defaultCase": "Service Request Form"
         },
         "navLinks": {
             "accessManagement": {
                 "text": "Manage Access"
+            },
+            "tasks": {
+                "text": "Tasks",
+                "link": "/tasks"
             },
             "activity": {
                 "text": "Activity",
@@ -976,12 +981,16 @@
         "noTasksMessage": "Click 'Claim Task' to get started.",
         "noTasks": "No tasks available for your profile at this time.",
         "claimTaskError": "Claim task error: ",
-        "unassignTaskError": "Unassign task error: ",
+        "unassignTaskError": "Unassign task error",
+        "assignTaskError": "Assign task error",
         "unassignTask": "Unassign Task",
         "unassign": "Unassign",
         "startTask": "Start Task",
         "assignTask": "Assign Task",
         "transaction": "Transaction: {{transactionType}}",
+        "assigned": "Assigned",
+        "queue": "Queue",
+        "lastUpdated": "Last Updated",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Update Task Status",
             "setTaskAsPending": "Set Task as Pending",
@@ -1011,7 +1020,7 @@
         "caseId": "Case ID: ",
         "documentNumber": "Document: ",
         "caseID": "Case/ID",
-        "carrierPolicy": "Carrier/Policy",
+        "carrierCase": "Carrier/Case",
         "policy": "Policy #:",
         "ID": "ID:",
         "product": "Product",
@@ -1049,7 +1058,8 @@
             "task": {
                 "heading": "Task"
             }
-        }
+        },
+        "fetchTasksError": "Unable to retrieve tasks."
     },
     "caseManagementDashboard": {
         "h1": "Cases",
@@ -1098,7 +1108,10 @@
             "exceptionRaised": "Exception raised",
             "processType": "Cases",
             "productName": "Products",
-            "requestSubtype": "Case types"
+            "requestSubtype": "Case types",
+            "taskStatus": "Task Status",
+            "group": "Group",
+            "assignee": "Assignee"
         },
         "refineResultsErrors": {
             "caseType": "Please select at least one case type",
@@ -3729,6 +3742,7 @@
             "additionalDocuments": "Additional Documents",
             "noAssignee": "Only the assignee can start this task",
             "startTask": "Start task",
+            "goToCase": "Go to case",
             "viewTask": "View task",
             "claimTask": "Claim task",
             "claimTaskError": "You don't have the necessary permissions to access this feature. Please reach out to the administrator for assistance.",
@@ -5455,6 +5469,32 @@
         "openFor_other": "Open for {{count}} $t(temporal.{{unit}})s",
         "closedFor_one": "Closed for {{count}} $t(temporal.{{unit}})",
         "closedFor_other": "Closed for {{count}} $t(temporal.{{unit}})s"
+    },
+    "tasksView": {
+        "header": {
+            "title": "Tasks"
+        },
+        "search": {
+            "buttons": {
+                "taskName": "Task Name",
+                "assignee": "Assignee",
+                "caseID": "Case ID"
+            },
+            "placeHolder": {
+                "taskName": "Search by task name",
+                "assignee": "Search by assignee",
+                "caseID": "Search by case id"
+            }
+        },
+        "filters": {
+            "buttons": {
+                "addFilter": "Add filter"
+            },
+            "headers": {
+                "title": "Refine Results"
+            }
+        },
+        "xToYOfZ": "Results: {{x}}-{{y}} of {{z}}"
     },
     "workflows": {
         "apiErrorCard": {

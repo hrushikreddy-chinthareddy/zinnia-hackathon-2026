@@ -5,7 +5,10 @@ export function isClaimNextTask(response: any): response is ClaimNextTask {
 }
 
 export function isAPIErrorInformation(response: any): response is RequestData {
-    return typeof response?.statusCode === 'number';
+    return (
+        typeof response?.statusCode === 'number' ||
+        typeof response?.status === 'number'
+    );
 }
 
 export type RequestData = {

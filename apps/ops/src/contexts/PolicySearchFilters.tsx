@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { createContext, useEffect, useMemo, useState } from 'react';
 
-import { SearchBarInitialValues } from '@deps/components/search/search-bar';
+import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
 import {
     POLICY_SEARCH_FILTERS_STORAGE_KEY,

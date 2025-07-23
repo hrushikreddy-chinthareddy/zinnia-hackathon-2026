@@ -511,8 +511,6 @@ export default function SideSheetRefineResults({
     };
 
     const selectedCarriers = additionalFilters.carriers ?? {};
-
-    // Render
     return (
         <div className="flex flex-col px-8">
             <>

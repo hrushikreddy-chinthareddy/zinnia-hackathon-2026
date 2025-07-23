@@ -140,6 +140,7 @@ export enum FEATURE_FLAGS {
     FAST_RMD = 'fast-rmd',
     CALL_AUDIO_FEATURE = 'call-audio-feature',
     NEW_DEATH_CLAIM = 'new_death_claim',
+    OPS_MANAGER_FEATURE = 'ops-manager-feature',
     DASHBOARD_NIGO_TAB = 'dashboard_nigo_tab',
     BENEFICIARY_CHANGE_TRANSACTION = 'beneficiary_change_transaction',
     SERVICE_REQUEST_FORM_ENABLED = 'service_request_default_case',

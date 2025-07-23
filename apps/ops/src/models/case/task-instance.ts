@@ -117,7 +117,7 @@ export type AssignedTask<T = TaskStatus> = {
     queue: string;
     escalated: boolean;
     assignee: string;
-    assigneePartyId: string;
+    assigneePartyId?: string;
     assignedAt: string;
     createdBy: string;
     createdByPartyId: string;
@@ -126,6 +126,8 @@ export type AssignedTask<T = TaskStatus> = {
     updatedByPartyId: string;
     updatedAt: string;
     identifiers: IdentifierInstance[];
+    createdDate: string;
+    updatedDate: string;
 };
 
 export type DocumentData = {
@@ -167,7 +169,10 @@ export type UnassignedTask<T = TaskStatus> = {
     taskName: string;
     status: T;
     assignee?: string;
+    assigneePartyId?: string;
     identifiers: IdentifierInstance[];
+    createdDate: string;
+    updatedDate: string;
     taskDetails?: string;
     createdAt?: string;
     updatedAt?: string;

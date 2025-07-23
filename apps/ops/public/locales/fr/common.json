@@ -139,6 +139,14 @@
                 "link": "/cases",
                 "text": "Dossiers"
             },
+            "home": {
+                "link": "/home",
+                "text": "D'accueil"
+            },
+            "tasks": {
+                "text": "Tâches",
+                "link": "/tasks"
+            },
             "caseRenewalCreate": {
                 "link": "/create-case",
                 "text": "Créer un cas"
@@ -332,10 +340,14 @@
         "fetchTaskError": "Impossible de récupérer les tâches.",
         "unassignTask": "Annuler l'attribution d'une tâche",
         "unassign": "Annuler l'attribution",
-        "unassignTaskError": "Erreur de désattribution de tâche :",
+        "unassignTaskError": "Erreur de désattribution de tâche",
+        "assignTaskError": "Erreur d'affectation de tâche",
         "startTask": "Démarrer la tâche",
         "assignTask": "Assigner une tâche",
         "transaction": "Transaction: {{transactionType}}",
+        "assigned": "Attribué",
+        "queue": "File d'attente",
+        "lastUpdated": "Dernière mise à jour",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Mettre à jour l'état de la tâche",
             "setTaskAsPending": "Définir la tâche comme en attente",
@@ -368,7 +380,7 @@
         "caseId": "Numéro du cas: ",
         "documentNumber": "Document: ",
         "caseID": "Cas/ID",
-        "carrierPolicy": "Opérateur/Politique",
+        "carrierCase": "Opérateur/ID du cas",
         "policy": "Politique #:",
         "product": "Produit",
         "assignee": "Cessionnaire",
@@ -407,7 +419,8 @@
             "task": {
                 "heading": "Tâche"
             }
-        }
+        },
+        "fetchTasksError": "Impossible de récupérer les tâches."
     },
     "beneChange": {
         "tabs": {
@@ -1076,7 +1089,10 @@
             "exceptionRaised": "Exception levée",
             "processType": "Dossiers",
             "productName": "Produits",
-            "requestSubtype": "Catégories de dossier."
+            "requestSubtype": "Catégories de dossier.",
+            "taskStatus": "Statut de la tâche",
+            "group": "Groupe",
+            "assignee": "Cessionnaire"
         },
         "refineResultsErrors": {
             "caseType": "Veuillez sélectionner un type de dossier",
@@ -3692,6 +3708,7 @@
             "additionalDocuments": "Documents supplémentaires",
             "noAssignee": "Seul le responsable peut démarrer cette tâche",
             "startTask": "Démarrer la tâche",
+            "goToCase": "Aller au cas",
             "viewTask": "Afficher la tâche",
             "claimTask": "Revendiquer la tâche",
             "claimTaskError": "Le système a rencontré une erreur temporaire. Veuillez réessayer.",
@@ -5402,6 +5419,32 @@
         "openFor_other": "Ouvert pendant {{count}} $t(temporal.{{unit}})s",
         "closedFor_one": "Fermé pendant {{count}} $t(temporal.{{unit}})",
         "closedFor_other": "Fermé pendant {{count}} $t(temporal.{{unit}})s"
+    },
+    "tasksView": {
+        "header": {
+            "title": "Tâches"
+        },
+        "search": {
+            "buttons": {
+                "taskName": "Nom de la tâche",
+                "assignee": "Cessionnaire",
+                "caseID": "ID du cas"
+            },
+            "placeHolder": {
+                "taskName": "Rechercher par nom de tâche",
+                "assignee": "Recherche par responsable",
+                "caseID": "Recherche par identifiant de cas"
+            }
+        },
+        "filters": {
+            "buttons": {
+                "addFilter": "Ajouter un filtre"
+            },
+            "headers": {
+                "title": "Affiner les résultats"
+            }
+        },
+        "xToYOfZ": "Résultats : {{x}}-{{y}} de {{z}}"
     },
     "workflows": {
         "apiErrorCard": {

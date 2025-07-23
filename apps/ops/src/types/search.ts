@@ -19,7 +19,8 @@ export type PolicySearchKeys =
     | 'agentName'
     | 'agentFirstName'
     | 'agentLastName'
-    | 'documentNumber';
+    | 'documentNumber'
+    | 'taskName';
 
 export interface PolicySearchResult {
     carrierId: string;

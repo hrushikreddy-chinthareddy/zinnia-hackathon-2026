@@ -271,6 +271,45 @@ export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     }
 };
 
+type TaskManagerTaskResponseData = {
+    count: number;
+    limit: number;
+    message: string;
+    offset: number;
+    status: number;
+    total: number;
+    data: (AssignedTask | UnassignedTask)[];
+};
+export const getManagerTasks = async (searchParams?: {
+    field?: string;
+    value?: string;
+    offset?: number;
+    limit?: number;
+}): Promise<{ data: (AssignedTask | UnassignedTask)[]; total: number }> => {
+    try {
+        const response: AxiosResponse = await client.post(
+            `${baseAppUrl}/api/case/v2/tasks/search`,
+            searchParams
+        );
+        const taskManagerTaskResponseData = response.data;
+        const taskManagerData = taskManagerTaskResponseData.data ?? [];
+        const taskManagerTaskDataTotal =
+            taskManagerTaskResponseData?.total ?? 0;
+
+        return { data: taskManagerData, total: taskManagerTaskDataTotal };
+    } catch (error) {
+        browserLogError(
+            'getManagerTasks::Failed to retrieve unassigned tasks',
+            {
+                ...parseErrorInformation(error),
+                file: 'queries/v2/tasks/search',
+                function: 'getManagerTasks',
+            }
+        );
+        return { data: [], total: 0 };
+    }
+};
+
 export const getTaskFormMetadataSSR = async (
     clientId: string,
     taskType: TaskType | undefined,

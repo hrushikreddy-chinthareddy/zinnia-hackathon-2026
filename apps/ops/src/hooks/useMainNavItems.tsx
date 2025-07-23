@@ -21,6 +21,7 @@ export const useMainNavItems = (): NavGroup[] => {
         permissionsLoadingComplete,
         isSuperAdmin,
         hasHomeExperience,
+        isOpsManagerView,
         showToppanMerrill,
         isAllowReadIllustrations,
         hasUsagePermission,
@@ -39,6 +40,8 @@ export const useMainNavItems = (): NavGroup[] => {
 
     const homeLinkText = t('site.navLinks.home.text');
     const homeLinkHref = t('site.navLinks.home.link');
+    const taskManagementText = t('site.navLinks.tasks.text');
+    const taskManagementHref = t('site.navLinks.tasks.link') || '';
     const caseLinkText = t('site.navLinks.caseManagement.text');
     const caseLinkHref = t('site.navLinks.caseManagement.link') || '';
     const policySearchText = t('site.navLinks.policySearch.text');
@@ -74,6 +77,15 @@ export const useMainNavItems = (): NavGroup[] => {
                 href={homeLinkHref}
                 onClick={() => handleAnalytics(homeLinkText)}
             />
+        ),
+    };
+
+    const taskManagementLink = {
+        id: taskManagementHref,
+        display: taskManagementText,
+        icon: IconType.TABLE,
+        renderComponent: (
+            <NavLink type={NavElementType.Link} href={taskManagementHref} onClick={() => handleAnalytics(taskManagementText)} />
         ),
     };
 
@@ -199,7 +211,7 @@ export const useMainNavItems = (): NavGroup[] => {
             ],
         },
         {
-            items: [...(isAllowReadOtpRenewals ? [transactionOpsLink] : [])],
+            items: [...(isAllowReadOtpRenewals ? [transactionOpsLink] : []), ...(isOpsManagerView ? [taskManagementLink] : [])],
         },
         {
             items: [...(hasDashboardPermission ? [dashboardLink] : [])],

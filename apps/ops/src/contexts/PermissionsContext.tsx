@@ -50,6 +50,7 @@ export interface PermissionsContextProps {
     partyReferenceData?: PartyReferenceDataModel;
     permissionsLoadingComplete: boolean;
     hasHomeExperience: boolean;
+    isOpsManagerView: boolean;
     hasPolicyIndexPageAccess: boolean;
     isAllowReadIllustrations: boolean;
     hasUsagePermission: boolean;
@@ -82,15 +83,17 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
-    const {
-        data: isAllowReadCaseManagement,
-        isLoading: caseManagementLoading,
-    } = useQuery({
-        queryKey: [
-            'isAllowReadCaseManagement',
-            partyId,
-            featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE],
-        ],
+    const { data: opsManagerCheck, isLoading: opsManagerLoading } = useQuery({
+        queryKey: ['isAllowOpsManagerView', partyId],
+        queryFn: () => {
+            return checkTuple(partyId, FgaRelation.UiAccess, FgaUiEntity.ZinniaLiveTaskManagment);
+        },
+        enabled: !!partyId,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
+
+    const { data: isAllowReadCaseManagement, isLoading: caseManagementLoading } = useQuery({
+        queryKey: ['isAllowReadCaseManagement', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]],
         queryFn: async () => {
             if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
                 return await checkTuple(
@@ -208,7 +211,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         !policyAdminLoading &&
         !otpRenewalsLoading &&
         !showToppanMerrillLoading &&
-        !homeCheckLoading;
+        !homeCheckLoading &&
+        !opsManagerLoading;
     return (
         <PermissionContext.Provider
             value={{
@@ -226,6 +230,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,
                 isCallLogAudioPermitted: !!fgaRoleData?.isCallLogAudioPermitted,
                 hasHomeExperience: !!homeCheck?.data,
+                isOpsManagerView: !!opsManagerCheck?.data,
                 showToppanMerrill: partyReferenceData
                     ? !!isWellabeAgent(partyReferenceData)
                     : false,

@@ -1,5 +1,7 @@
 import { AxiosResponse } from 'axios';
 
+import { browserLogError } from '@deps/utils/browser-logging';
+
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 
@@ -10,6 +12,19 @@ interface DeleteCommunication {
     policyNumber: string | undefined;
     recordId: string | undefined;
 }
+
+type Assignee = {
+    email: string;
+    firstName?: string;
+    lastName?: string;
+};
+
+type GetUserDataByPartyIdsPayload = {
+    partyIds: string[];
+    fields: string[];
+};
+
+export type AssigneeMap = Record<string, Assignee>;
 
 export const deleteCommunication = async ({
     communicationType,
@@ -44,6 +59,22 @@ export const getPartyMetadata = async (): Promise<AxiosResponse> => {
     } catch (error: any) {
         console.error('getPartyMetadata::an error occurred', error);
 
+        return error;
+    }
+};
+
+export const getUserDataByPartyIds = async (
+    payload: GetUserDataByPartyIdsPayload
+): Promise<{ parties: AssigneeMap }> => {
+    try {
+        const response = await client.post<
+            GetUserDataByPartyIdsPayload,
+            AxiosResponse
+        >(`${baseAppUrl}/api/party/v1/parties/reference/batch-get`, payload);
+
+        return { parties: response?.data?.parties };
+    } catch (error: any) {
+        browserLogError('getUserDataByPartyIds::an error occurred', error);
         return error;
     }
 };
