@@ -2,13 +2,13 @@ import { TFunction } from 'next-i18next';
 
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
+    AccountType,
     AddressTypes,
     AmountType,
     Frequency,
     PaymentMethod,
     SSWType,
 } from '@deps/models/case/withdrawal/case';
-import { AccountType } from '@deps/models/policy/sor-policy';
 
 import getDlicConfig from './dlic-ssw-from-helpers';
 
@@ -86,7 +86,7 @@ describe('getDlicConfig', () => {
         it('should generate EFT payload', () => {
             const payload = eftOption.generatePayloadFromSelection({
                 accountNumber: '123',
-                accountType: AccountType.CHECKING,
+                accountType: AccountType.Checking,
                 bankName: 'BankName',
                 accountHolder: 'Holder',
                 bankFurtherCreditAccount: 'FCAccount',
@@ -97,6 +97,35 @@ describe('getDlicConfig', () => {
                 isDirectDeposit: true,
                 reEnterAccountNumber: '123',
                 reEnterBankRoutingNumber: '987654321',
+                bankContactPerson: '',
+                bankLocation: '',
+                bankPhone: '',
+                nameOnBankAccount: '',
+                isVoidCheckAttached: null,
+                firstTimeExpressCheck: null,
+                isWireApprovalPresent: null,
+                doesCheckMeetSecurityRequirements: null,
+                address: {
+                    addressLine1: '',
+                    addressType: AddressTypes.DEFAULT,
+                    city: null,
+                    state: '',
+                    zip: '',
+                },
+                acordAttached: null,
+                companyName: '',
+                participantId: null,
+                payeeName: null,
+                contractNumber: null,
+                taxId: null,
+                zip: '',
+                emailDeliveryNotification: false,
+                isDifferentPayeeOrAddress: false,
+                accountName: null,
+                emailNotification: null,
+                selectIfPayeeIsDifferent: false,
+                fboDetails: '',
+                consentAvailable: null,
             });
             expect(payload).toMatchObject({
                 mockedDisbursement: true,
@@ -112,8 +141,40 @@ describe('getDlicConfig', () => {
                 address: {
                     addressLine1: 'addr',
                     addressType: AddressTypes.DEFAULT,
+                    city: null,
+                    state: '',
+                    zip: '',
                 },
                 selectIfPayeeIsDifferent: true,
+                accountNumber: '',
+                accountType: '',
+                bankContactPerson: '',
+                bankFurtherCreditAccount: '',
+                bankFurtherCreditName: '',
+                bankRoutingNumber: '',
+                bankLocation: '',
+                bankName: '',
+                bankPhone: '',
+                nameOnBankAccount: '',
+                isVoidCheckAttached: null,
+                firstTimeExpressCheck: null,
+                isWireApprovalPresent: null,
+                doesCheckMeetSecurityRequirements: null,
+                acordAttached: null,
+                companyName: '',
+                participantId: null,
+                contractNumber: null,
+                taxId: null,
+                zip: '',
+                emailDeliveryNotification: false,
+                isDifferentPayeeOrAddress: false,
+                maskedAccountNumber: null,
+                accountHolder: null,
+                accountName: null,
+                emailNotification: null,
+                isDirectDepositValid: null,
+                fboDetails: '',
+                consentAvailable: null,
             });
             expect(payload).toMatchObject({
                 mockedDisbursement: true,
@@ -166,11 +227,24 @@ describe('getDlicConfig', () => {
 
         it('should generate FixDollar payload', () => {
             const opt = options.find((o) => o.value === SSWType.FixDollar);
-            const payload = opt.generateSSWPayloadFromSelection({
-                amount: { text: '100' },
+            const payload = opt?.generateSSWPayloadFromSelection({
+                amount: {
+                    text: '100',
+                    amountType: AmountType.Dollar,
+                },
                 frequency: { text: Frequency.Monthly },
                 startDate: { text: '2020-01-01' },
                 duration: { text: '1' },
+                programSubType: {
+                    text: null,
+                },
+                percent: {
+                    text: null,
+                    amountType: AmountType.Dollar,
+                },
+                depleteFundYears: {
+                    text: null,
+                },
             });
             expect(payload).toMatchObject({
                 mockedSSW: true,
@@ -272,7 +346,7 @@ describe('getDlicConfig', () => {
                             signTitle: {
                                 text: null,
                             },
-                            signTitles: [],
+                            signTitles: [{ text: null }],
                             spousalConsent: {
                                 text: null,
                             },
