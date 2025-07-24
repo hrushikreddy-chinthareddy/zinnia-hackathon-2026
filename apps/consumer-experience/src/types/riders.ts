@@ -14,6 +14,7 @@ export interface RiderParticipant {
 
 export interface PolicyRider {
   riderCode?: string;
+  coverageId?: string;
   isElected: boolean;
   cost?: number;
   description?: string | null;

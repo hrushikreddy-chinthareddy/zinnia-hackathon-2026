@@ -20,7 +20,6 @@ export interface OTTPPaymentDetails {
 export const PaymentSummary = ({
   planCode,
   policyNumber,
-  lineOfBusiness,
   uncollectedCharges,
 }: {
   moveToNextStep?: () => void;
@@ -77,9 +76,6 @@ export const PaymentSummary = ({
     <form id="submit-form" onSubmit={form.handleSubmit(submitPayment)}>
       <SummaryForm
         ottpPaymentData={state}
-        planCode={planCode}
-        policyNumber={policyNumber}
-        lineOfBusiness={lineOfBusiness}
         uncollectedCharges={uncollectedCharges}
       />
     </form>

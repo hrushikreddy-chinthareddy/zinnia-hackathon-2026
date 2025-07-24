@@ -1,5 +1,4 @@
 'use client';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label, Loader } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -36,7 +35,7 @@ const LoadingText = () => {
         setLoadingText(
           loadingText =>
             loadingStrings[
-              loadingStrings.indexOf(loadingText || 'one moment please') + 1
+            loadingStrings.indexOf(loadingText || 'one moment please') + 1
             ]
         );
       }
@@ -54,15 +53,9 @@ const LoadingText = () => {
 
 export const SummaryForm = ({
   ottpPaymentData,
-  planCode,
-  policyNumber,
-  lineOfBusiness,
   uncollectedCharges,
 }: {
   ottpPaymentData: OttpState;
-  planCode: string;
-  policyNumber: string;
-  lineOfBusiness: LineOfBusiness;
   uncollectedCharges: number;
 }) => {
   const { effectiveDate, paymentAmount, payorBank, paymentFee } =

@@ -514,6 +514,7 @@ export const transformRiders = (policy: Policy): RidersAndBenefits => {
     return {
       riderCode: rider.riderCode,
       // TODO: DATA - {rider.terminalRiderPaymentAmount}
+      coverageId: rider.coverageId,
       cost: rider.terminalRiderPaymentAmount,
       description: getRiderDescription(rider.riderCode || ''),
       effectiveDate: rider.effectiveDate,

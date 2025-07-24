@@ -4,7 +4,7 @@ import {
   AssistiveTextVariant,
   Label,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@zinnia/utils';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { PolicyRider } from '@/types/riders';
@@ -17,13 +17,18 @@ import { LabelPopover } from '../label-popover/LabelPopover';
 
 interface RiderProps extends PolicyRider {
   hidePopover?: boolean;
+  // special client specific field for Everly
+  // see [DEPU-4946](https://zinnia.atlassian.net/browse/DEPU-4946)
+  futureChildren?: boolean | null;
 }
 
 export const Rider = ({
   isElected,
   cost,
+  coverageId,
   description,
   effectiveDate,
+  futureChildren,
   insured,
   status,
   title,
@@ -51,6 +56,17 @@ export const Rider = ({
                     firstName: insured?.firstName || '',
                     lastName: insured?.lastName || '',
                   })}
+                </span>
+              </FieldData>
+            )}
+            {coverageId === 'Rider_CTR' && (
+              <FieldData Label={<Label>Future children covered</Label>}>
+                <span className="typography-content-body-sm mt-sm">
+                  {(futureChildren === undefined || futureChildren === null)
+                    ? DEFAULT_ERROR_STRING
+                    : futureChildren
+                      ? 'Yes'
+                      : 'No'}
                 </span>
               </FieldData>
             )}
