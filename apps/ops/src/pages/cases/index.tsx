@@ -432,6 +432,15 @@ const CaseManagementDashboard = ({
             return <PageLoader variant={PageLoaderVariant.Center} />;
         if (caseSearchError) return <SearchResultsErrorCard />;
 
+        const numberOfItems = caseManagementFilters.offset + 1;
+        const currentIndex = Math.min(
+            caseManagementFilters.offset + limit,
+            caseSearchData?.total || 0
+        );
+        const total = `${caseSearchData?.total?.toLocaleString() ?? '0'}${
+            caseSearchData?.total === 10000 ? '+' : ''
+        }`;
+
         return (
             <>
                 <CaseResultTable
@@ -454,18 +463,9 @@ const CaseManagementDashboard = ({
                     >
                         {caseSearchData
                             ? t('policy.documents.xToYOfZ', {
-                                  numberOfItems:
-                                      caseManagementFilters.offset + 1,
-                                  currentIndex: Math.min(
-                                      caseManagementFilters.offset + limit,
-                                      caseSearchData?.total || 0
-                                  ),
-                                  total: `${
-                                      caseSearchData?.total?.toLocaleString() ??
-                                      '0'
-                                  }${
-                                      caseSearchData?.total === 10000 ? '+' : ''
-                                  }`,
+                                  x: numberOfItems,
+                                  y: currentIndex,
+                                  z: total,
                               })
                             : ''}
                     </Typography>

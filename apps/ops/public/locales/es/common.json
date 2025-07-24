@@ -3130,7 +3130,7 @@
             "taxDocuments": "Documentos fiscales",
             "taxYear": "Año fiscal",
             "view": "Ver",
-            "xToYOfZ": "Resultados: {{numberOfItems}}-{{currentIndex}} de {{total}}"
+            "xToYOfZ": "Resultados: {{x}}-{{y}} de {{z}}"
         },
         "funds": {
             "matchCard": {
