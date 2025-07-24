@@ -59,7 +59,7 @@ type IllustrationsPageProps = {
 const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';
 const INTERNAL_ERROR_LABEL = 'We were unable to create this client case.';
 const EXTERNAL_ERROR_LABEL =
-    'We are aware of the issue and are working on it. Please try again later.';
+    'We were unable to create the required client case due to external issues';
 
 //This should be  just a red    ict page or maybe a redirect with urk params read and user/permision validation
 export default function Illustrations({
@@ -78,32 +78,19 @@ export default function Illustrations({
             className={styles.bannerText}
         >
             {bannerText}
-            {fetchingErrorOrigin === ErrorOrigin.NewBusiness && (
-                <Button
-                    mode="link"
-                    data-testid="reload-page-btn"
-                    aria-label="reload"
-                    type="button"
-                    size="small"
-                    onClick={() => window.location.reload()}
-                    className={styles.reloadButton}
-                >
-                    Reload
-                </Button>
-            )}
         </Typography>
     );
 
     useEffect(() => {
-        if (fetchingErrorMessage) {
-            console.log(
-                '🚀 ~ useEffect ~ fetchingErrorMessage:',
-                fetchingErrorMessage
-            );
-        }
         switch (fetchingErrorOrigin) {
             case ErrorOrigin.NewBusiness:
-                setBannerText(EXTERNAL_ERROR_LABEL);
+                if (fetchingErrorMessage) {
+                    setBannerText(
+                        `${EXTERNAL_ERROR_LABEL} - ${fetchingErrorMessage}`
+                    );
+                } else {
+                    setBannerText(EXTERNAL_ERROR_LABEL);
+                }
                 break;
             case ErrorOrigin.ClientCase:
             case ErrorOrigin.Internal:
@@ -256,9 +243,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                             );
                         if (newCaseResponse) {
                             const { id, planCode } = newCaseResponse;
+                            const baseRedirectionUrl = `/illustrations/client-cases/${id}/illustrate`;
+                            const destination =
+                                planCode !== ''
+                                    ? `${baseRedirectionUrl}?planCode=${planCode}`
+                                    : baseRedirectionUrl;
                             return {
                                 redirect: {
-                                    destination: `/illustrations/client-cases/${id}/illustrate?planCode=${planCode}`,
+                                    destination,
                                     permanent: false,
                                 },
                             };

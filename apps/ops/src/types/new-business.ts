@@ -39,11 +39,30 @@ interface identifier {
     key: IdentifierKeyType;
 }
 
+interface AddressDetail {
+    id: string;
+    addressType: string;
+    addressLine1: string;
+    addressLine2: string;
+    addressLine3: string;
+    city: string;
+    state: string;
+    zipCode: number;
+    zipCodeExt: number;
+    country: string;
+}
+
+interface Address {
+    preferredAddressId: string;
+    addresses: AddressDetail[];
+}
+
 export interface party {
     partyRole: PartyRole;
     personalInformation: PersonalInformation;
     email: EmailObject;
     identifiers: identifier[];
+    address: Address;
 }
 
 // This interface needs to be completed

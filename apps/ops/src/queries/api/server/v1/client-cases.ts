@@ -1,5 +1,6 @@
 import { toTitleCase } from '@xd/utils/dist';
 import { AxiosResponse } from 'axios';
+import get from 'lodash/get';
 
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
@@ -18,7 +19,7 @@ import {
 } from '../v2/new-business';
 
 const INSURED_BUSINESS_LABEL = 'INSURED';
-const AGENT_BUSINESS_LABEL = 'PRIMARYWRITINGAGENT';
+const PRIMARY_AGENT_BUSINESS_LABEL = 'PRIMARYWRITINGAGENT';
 const AGENCY_ID_BUSINESS_IDENTIFIER = 'AOR';
 const NPN_BUSINESS_IDENTIFIER = 'UPN';
 const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
@@ -31,30 +32,45 @@ const buildClientCaseFromNewBusiness = (
         eAppId,
     };
 
-    // pull insured data
+    // pull Insured data
     const insuredParty = newBusinessObject.parties.find(
         (party) => party.partyRole === INSURED_BUSINESS_LABEL
     );
     if (insuredParty) {
-        const { personalInformation: insuredPersonalInformation } =
+        const { personalInformation: insuredPersonalInformation, address } =
             insuredParty;
         const {
             firstName: insuredFirstName,
             lastName: insuredLastName,
             dateOfBirth = '',
-            birthSex = '',
-            birthState,
+            gender = '',
         } = insuredPersonalInformation;
+
+        // getting Insured address
+        let insuredState;
+        const { addresses, preferredAddressId } = address;
+        if (preferredAddressId !== undefined) {
+            const preferedAddress = addresses.find(
+                (address) => address.id === preferredAddressId
+            );
+            if (preferedAddress) {
+                insuredState = preferedAddress.state;
+            }
+        } else if (addresses.length > 0) {
+            insuredState = addresses[0].state;
+        } else {
+            insuredState = '';
+        }
 
         const clientCaseTitle = `${insuredFirstName} ${insuredLastName} from Sureify`;
 
         const insuredDetails = {
             firstName: insuredFirstName,
             lastName: insuredLastName,
-            sexAtBirth: toTitleCase(birthSex),
+            sexAtBirth: toTitleCase(gender),
             dateOfBirth: new Date(dateOfBirth),
+            state: insuredState,
             // nicotineUser
-            state: birthState,
             // illustrateAtOlderAge
             // issueAge
             // riskClass
@@ -69,9 +85,9 @@ const buildClientCaseFromNewBusiness = (
         };
     }
 
-    // pull agent data
+    // pull Agent data
     const agentParty = newBusinessObject.parties.find(
-        (party) => party.partyRole === AGENT_BUSINESS_LABEL
+        (party) => party.partyRole === PRIMARY_AGENT_BUSINESS_LABEL
     );
     if (agentParty) {
         const {
@@ -81,35 +97,49 @@ const buildClientCaseFromNewBusiness = (
         } = agentParty;
         const { firstName: agentFirstName, lastName: agentLastName } =
             agentPersonalInformation;
-        const agentPreferedEmail = agentEmailObject.emails.find(
-            (email) => agentEmailObject.preferredEmailId === email.id
-        );
-        const aorIdentifier = identifiers.find(
-            (identifier) => identifier.key === AGENCY_ID_BUSINESS_IDENTIFIER
-        );
-        const npnIdentifier = identifiers.find(
-            (identifier) => identifier.key === NPN_BUSINESS_IDENTIFIER
-        );
+
+        // get agent main email
+        let agentPreferedEmail = '';
+        if (agentEmailObject && agentEmailObject.emails) {
+            const foundAgentEmail = agentEmailObject.emails.find(
+                (email) => agentEmailObject.preferredEmailId === email.id
+            );
+            if (foundAgentEmail) {
+                agentPreferedEmail = foundAgentEmail.address;
+            }
+        }
+
+        // get Identifiers
         let agencyId = '';
         let npn = '';
 
-        if (aorIdentifier) {
-            agencyId = aorIdentifier.value;
-        }
-        if (npnIdentifier) {
-            npn = npnIdentifier.value;
+        if (identifiers) {
+            const aorIdentifier = identifiers.find(
+                (identifier) =>
+                    identifier?.key === AGENCY_ID_BUSINESS_IDENTIFIER
+            );
+            const npnIdentifier = identifiers.find(
+                (identifier) => identifier?.key === NPN_BUSINESS_IDENTIFIER
+            );
+            if (aorIdentifier && aorIdentifier.value) {
+                agencyId = aorIdentifier.value;
+            }
+            if (npnIdentifier && npnIdentifier.value) {
+                npn = npnIdentifier.value;
+            }
         }
 
         const agentDetails = {
             firstName: agentFirstName,
             lastName: agentLastName,
-            email: agentPreferedEmail?.address,
-            agencyId,
+            email: agentPreferedEmail,
             npn,
         };
+
         businessClientCasePayload = {
             ...businessClientCasePayload,
             agentDetails,
+            agencyId,
         };
     }
 
@@ -141,29 +171,39 @@ export const searchClientCaseByEappId = async (
         throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
     }
 };
+
+const CLIENT_CASE_REQUIRED_FIELDS = {
+    eAppId: 'eAppId',
+    'insuredDetails.firstName': 'Insured first name',
+    'insuredDetails.lastName': 'Insured last name',
+    'insuredDetails.sexAtBirth': 'Insured sex at birth',
+    'insuredDetails.dateOfBirth': 'Insured date of birth',
+    'insuredDetails.state': 'Insured state of residence',
+    caseManagementCaseId: 'Case Management ID',
+    title: 'Title of the case',
+};
+
 const validateClientCasePayload = (
     payload: Partial<IllustrationsClientCase>
 ) => {
     if (!payload) {
         throwTypedError(
-            'The data from newBusiness api has not the required values to create a client case',
+            'Client case information is empty',
             NEW_BUSINESS_API_ORIGIN
         );
     }
-    if (
-        !payload.eAppId ||
-        !payload.insuredDetails?.firstName ||
-        !payload.insuredDetails?.lastName ||
-        !payload.insuredDetails?.sexAtBirth ||
-        !payload.insuredDetails?.dateOfBirth ||
-        !payload.insuredDetails?.state ||
-        !payload.agentDetails?.npn ||
-        !payload.agentDetails?.agencyId ||
-        !payload.caseManagementCaseId ||
-        !payload.title
-    ) {
+    const missingFields: string[] = [];
+
+    for (const [path, label] of Object.entries(CLIENT_CASE_REQUIRED_FIELDS)) {
+        const value = get(payload, path);
+        if (!value) {
+            missingFields.push(label);
+        }
+    }
+
+    if (missingFields.length > 0) {
         throwTypedError(
-            'The data from newBusiness api has not the required values to create a client case',
+            `There are missing required fields: ${missingFields.join(', ')}`,
             NEW_BUSINESS_API_ORIGIN
         );
     }
@@ -210,7 +250,9 @@ export const createClientCaseFromNewBusiness = async (
             config,
             loggingContext
         );
-        const planCode = newBusinessResponseObject.policy.planCode;
+
+        // get plancode to preselect the product of the illustration
+        const planCode = newBusinessResponseObject?.policy?.planCode ?? '';
 
         return { ...data, planCode };
     } catch (error: any) {

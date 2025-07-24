@@ -492,6 +492,9 @@ importers:
       i18next:
         specifier: ^22.4.15
         version: 22.5.1
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
@@ -643,6 +646,9 @@ importers:
       '@types/jest-axe':
         specifier: ^3.5.5
         version: 3.5.9
+      '@types/lodash':
+        specifier: ^4.17.20
+        version: 4.17.20
       '@types/node':
         specifier: 18.11.18
         version: 18.11.18
@@ -16849,7 +16855,7 @@ snapshots:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@22.16.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@20.19.7)(typescript@5.8.3))
+      jest-config: 29.7.0(@types/node@22.16.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.12.14)(@types/node@20.19.7)(typescript@5.8.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -26655,7 +26661,7 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-config@29.7.0(@types/node@22.16.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@20.19.7)(typescript@5.8.3)):
+  jest-config@29.7.0(@types/node@22.16.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.12.14)(@types/node@20.19.7)(typescript@5.8.3)):
     dependencies:
       '@babel/core': 7.28.0
       '@jest/test-sequencer': 29.7.0
