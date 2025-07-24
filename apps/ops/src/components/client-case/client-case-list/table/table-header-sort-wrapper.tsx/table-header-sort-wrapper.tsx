@@ -36,7 +36,13 @@ const TableHeaderSortWrapper = ({
             sortable
         >
             {children}
-            <Icon type={IconType.SORT} color="#00628B" height={16} width={16} />
+
+            <Icon
+                type={asc ? IconType.ARROW_UP : IconType.ARROW_DOWN}
+                color="#00628B"
+                height={16}
+                width={16}
+            />
         </TableHeaderCell>
     );
 };
