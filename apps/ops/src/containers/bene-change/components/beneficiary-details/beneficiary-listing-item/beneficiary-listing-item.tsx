@@ -36,7 +36,7 @@ export default function BeneficiaryListingItem({
     setBeneData,
     isBeneInfoOnFile,
     partyRoleId,
-    partyId
+    partyId,
 }: BeneficiaryListingItemProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.beneDetails.beneficiaryListing',
@@ -44,13 +44,32 @@ export default function BeneficiaryListingItem({
     const [showBeneficiary, setShowBeneficiary] = useState(false);
     const { deletedBene, setDeletedBene, beneData } = useBeneChange();
 
-    const relationshipToParty = partyId && policy?.partyRoles?.find(role => role?.partyId === partyId)?.relationshipToParty;
+    const relationshipToParty =
+        partyId &&
+        policy?.partyRoles?.find((role) => role?.partyId === partyId)
+            ?.relationshipToParty;
     const currentBene = useMemo(() => {
         const pos = beneData.map((e: any) => e.index).indexOf(index);
         return pos > -1
             ? beneData[pos]
-            : getInitialBene(partyRole, index, selectedParty, relationshipToParty, selectedParty?.partyId, true, 'NONE', partyRoleId);
-    }, [beneData, index, partyRole, relationshipToParty, selectedParty, partyRoleId]);
+            : getInitialBene(
+                  partyRole,
+                  index,
+                  selectedParty,
+                  relationshipToParty,
+                  selectedParty?.partyId,
+                  true,
+                  'NONE',
+                  partyRoleId
+              );
+    }, [
+        beneData,
+        index,
+        partyRole,
+        relationshipToParty,
+        selectedParty,
+        partyRoleId,
+    ]);
 
     const [isNonEditable, setIsNonEditable] = useState<boolean>(true);
 

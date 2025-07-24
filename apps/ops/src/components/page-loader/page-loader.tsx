@@ -24,7 +24,9 @@ export const PageLoader: React.FC<PageLoaderProps> = ({
 
     return (
         <div
-            className={`flex items-center w-full ${variant === PageLoaderVariant.Center ? 'justify-center' : 'ml-2'}`}
+            className={`flex items-center w-full ${
+                variant === PageLoaderVariant.Center ? 'justify-center' : 'ml-2'
+            }`}
             data-testid="test-loader"
         >
             <Loader />

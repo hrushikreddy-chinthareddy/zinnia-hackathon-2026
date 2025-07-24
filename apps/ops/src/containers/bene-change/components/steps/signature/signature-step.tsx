@@ -5,10 +5,15 @@ import { useState, useCallback, useEffect, ChangeEvent } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import SignatureValidationContainer from '@deps/components/otp-signature-container/component/otp-signature-conatiner';
-import Radio, { RadioOrientation, RadioVariant } from '@deps/components/radio/radio';
+import Radio, {
+    RadioOrientation,
+    RadioVariant,
+} from '@deps/components/radio/radio';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
-import Typography, { TypographyVariant } from '@deps/components/typography/typography';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
@@ -31,8 +36,15 @@ interface SignatureStepProps {
     leaveTransactionLink: string;
     validateTransaction?: () => Promise<TransactionResponse>;
 }
-const SignatureStep = ({ policy, parentPage, leaveTransactionLink, validateTransaction }: SignatureStepProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: 'beneChange.signature' });
+const SignatureStep = ({
+    policy,
+    parentPage,
+    leaveTransactionLink,
+    validateTransaction,
+}: SignatureStepProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.signature',
+    });
 
     const jointOwnerId = policy?.partyRoles?.find(
         (pr) => pr.partyRole === PartyRole.JOINTOWNER
@@ -66,8 +78,15 @@ const SignatureStep = ({ policy, parentPage, leaveTransactionLink, validateTrans
         policy.carrierId as string
     );
 
-    const { signatureData, setSignatureData, formErrors, setFormErrors, setValidationResponse, validationResponse, ownerInfo } =
-        useBeneChange();
+    const {
+        signatureData,
+        setSignatureData,
+        formErrors,
+        setFormErrors,
+        setValidationResponse,
+        validationResponse,
+        ownerInfo,
+    } = useBeneChange();
 
     const [spousalConsent, setSpousalConsent] = useState(
         signatureData?.isSpousePresent ||

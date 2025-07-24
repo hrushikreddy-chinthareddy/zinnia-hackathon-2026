@@ -87,7 +87,13 @@ const TabGroupContent = ({
     );
 
     const sideSheet = useSideSheetContext();
-    const { diaryNotes } = useDiaryNotes(policy.policyNumber as string, policy.carrierId as string, 0, 10, showDiaryNotes);
+    const { diaryNotes } = useDiaryNotes(
+        policy.policyNumber as string,
+        policy.carrierId as string,
+        0,
+        10,
+        showDiaryNotes
+    );
     const openSideSheet = () => {
         const content = (
             <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />
@@ -160,13 +166,31 @@ const TabGroupContent = ({
     );
 };
 
-const ConditionalDiaryNotesProvider = ({ condition, caseDetails, children }: ConditionalDiaryNotesProviderProps) => {
-    return condition ? <DiaryNotesProvider caseDetails={caseDetails}>{children}</DiaryNotesProvider> : <>{children}</>;
+const ConditionalDiaryNotesProvider = ({
+    condition,
+    caseDetails,
+    children,
+}: ConditionalDiaryNotesProviderProps) => {
+    return condition ? (
+        <DiaryNotesProvider caseDetails={caseDetails}>
+            {children}
+        </DiaryNotesProvider>
+    ) : (
+        <>{children}</>
+    );
 };
 
-const TabGroupContainer = ({ steps, policy, hideGlobalValueBar, showDiaryNotes = false }: TabGroupContainerProps) => {
+const TabGroupContainer = ({
+    steps,
+    policy,
+    hideGlobalValueBar,
+    showDiaryNotes = false,
+}: TabGroupContainerProps) => {
     return (
-        <ConditionalDiaryNotesProvider condition={showDiaryNotes} caseDetails={policy as any}>
+        <ConditionalDiaryNotesProvider
+            condition={showDiaryNotes}
+            caseDetails={policy as any}
+        >
             <WorkflowProvider>
                 <TabGroupContent
                     hideGlobalValueBar={hideGlobalValueBar}

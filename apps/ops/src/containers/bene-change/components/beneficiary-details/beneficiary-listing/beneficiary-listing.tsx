@@ -336,8 +336,10 @@ export default function BeneficiaryListing({
                                 key={`listing-item-${index}`}
                                 setBeneData={setBeneData}
                                 policy={policy}
-                                isBeneInfoOnFile={formData.isPrimaryBeneInfoOnFile}
-                                partyId = {item.partyId}
+                                isBeneInfoOnFile={
+                                    formData.isPrimaryBeneInfoOnFile
+                                }
+                                partyId={item.partyId}
                             />
                         );
                     }
@@ -452,8 +454,10 @@ export default function BeneficiaryListing({
                                 key={`listing-item-${index}`}
                                 setBeneData={setBeneData}
                                 policy={policy}
-                                isBeneInfoOnFile={formData.isContingentBeneInfoOnFile}
-                                partyId = {item.partyId}
+                                isBeneInfoOnFile={
+                                    formData.isContingentBeneInfoOnFile
+                                }
+                                partyId={item.partyId}
                             />
                         );
                     }

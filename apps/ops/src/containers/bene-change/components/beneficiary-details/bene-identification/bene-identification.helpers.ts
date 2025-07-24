@@ -81,17 +81,16 @@ export const suffixOptions = (t: TFunction) => [
 ];
 
 export const formatPrefix = (prefix: string | undefined | null): string => {
-  if (!prefix) return '';
+    if (!prefix) return '';
 
-  const trimmedPrefix = prefix.trim().toUpperCase();
+    const trimmedPrefix = prefix.trim().toUpperCase();
 
-  const prefixMap: Record<string, string> = {
-    'MR': 'Mr.',
-    'MRS': 'Mrs.',
-    'DR': 'Dr.',
-    'MS': 'Ms.',
-  };
+    const prefixMap: Record<string, string> = {
+        MR: 'Mr.',
+        MRS: 'Mrs.',
+        DR: 'Dr.',
+        MS: 'Ms.',
+    };
 
-  return prefixMap[trimmedPrefix] || prefix;
-  
+    return prefixMap[trimmedPrefix] || prefix;
 };
