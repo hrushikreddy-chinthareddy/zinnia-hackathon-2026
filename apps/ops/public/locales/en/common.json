@@ -6700,6 +6700,7 @@
             "clientCase": "Client case",
             "insured": "Insured",
             "agent": "Agent",
+            "agency": "Agency",
             "agentTooltip": "This is the agent of record whose name will appear on the illustration.",
             "productTypes": "Product types",
             "illustrations": "Illustrations",

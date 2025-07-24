@@ -6546,6 +6546,7 @@
             "clientCase": "Client case",
             "insured": "Asegurado",
             "agent": "Agente",
+            "agency": "Agencia",
             "agentTooltip": "Este es el agente registrado cuyo nombre aparecerá en la ilustración.",
             "productTypes": "Tipo de productos",
             "illustrations": "Ilustraciones",

@@ -46,6 +46,7 @@ const generateTableContent = (
                 lastModified,
                 illustrationsCount,
                 productTypes,
+                agencyName,
             } = caseData;
             const clientCase = title || DEFAULT_ERROR_STRING;
 
@@ -117,6 +118,11 @@ const generateTableContent = (
                     <TableCell>
                         <Typography variant={TypographyVariant.BodySm}>
                             {agentName}
+                        </Typography>
+                    </TableCell>
+                    <TableCell>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {agencyName}
                         </Typography>
                     </TableCell>
                     <TableCell>
@@ -209,6 +215,11 @@ export const ClientCaseTable = () => {
                             </Label>
                         </div>
                     </TableHeaderSortWrapper>
+                    <TableHeaderCell>
+                        <Typography variant={TypographyVariant.BodySmBold}>
+                            {t('clientCase.clientCaseTable.agency')}
+                        </Typography>
+                    </TableHeaderCell>
                     <TableHeaderCell>
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('clientCase.clientCaseTable.productTypes')}

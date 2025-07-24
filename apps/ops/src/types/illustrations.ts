@@ -19,6 +19,8 @@ export interface IllustrationsClientCase {
     illustrations?: IllustrationSummary[];
     illustrationsCount?: number;
     productTypes: string[];
+    agencyId: string;
+    agencyName: string;
 }
 
 export interface IllustrationSummary {

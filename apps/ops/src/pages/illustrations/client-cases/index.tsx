@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 
 import { ClientCasePaginator } from '@deps/components/client-case/client-case-list/paginator/client-case-paginator';
 import ClientCaseSearchBar from '@deps/components/client-case/client-case-list/search-bar/client-case-search-bar';
-import { ClientCaseTable } from '@deps/components/client-case/client-case-list/table';
+import { ClientCaseTable } from '@deps/components/client-case/client-case-list/table/client-case-table';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';

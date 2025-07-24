@@ -6632,6 +6632,7 @@
             "clientCase": "Client case",
             "insured": "assuré",
             "agent": "Agent",
+            "agency": "Agence",
             "agentTooltip": "Il s’agit de l’agent enregistré dont le nom apparaîtra dans l’illustration.",
             "productTypes": "Types de produits",
             "illustrations": "Illustrations",

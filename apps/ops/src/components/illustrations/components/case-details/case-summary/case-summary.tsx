@@ -225,6 +225,14 @@ const IllustrationCaseSumary = ({
                     >
                         {agentFullName}
                     </span>
+                    <span
+                        className={clsx(
+                            styles.caption,
+                            'typography-content-caption'
+                        )}
+                    >
+                        {clientCase.agencyName}
+                    </span>
                 </article>
             </section>
         </header>
