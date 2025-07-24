@@ -141,6 +141,33 @@ export const searchClientCaseByEappId = async (
         throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
     }
 };
+const validateClientCasePayload = (
+    payload: Partial<IllustrationsClientCase>
+) => {
+    if (!payload) {
+        throwTypedError(
+            'The data from newBusiness api has not the required values to create a client case',
+            NEW_BUSINESS_API_ORIGIN
+        );
+    }
+    if (
+        !payload.eAppId ||
+        !payload.insuredDetails?.firstName ||
+        !payload.insuredDetails?.lastName ||
+        !payload.insuredDetails?.sexAtBirth ||
+        !payload.insuredDetails?.dateOfBirth ||
+        !payload.insuredDetails?.state ||
+        !payload.agentDetails?.npn ||
+        !payload.agentDetails?.agencyId ||
+        !payload.caseManagementCaseId ||
+        !payload.title
+    ) {
+        throwTypedError(
+            'The data from newBusiness api has not the required values to create a client case',
+            NEW_BUSINESS_API_ORIGIN
+        );
+    }
+};
 
 export const createClientCaseFromNewBusiness = async (
     eAppId: string,
@@ -165,6 +192,9 @@ export const createClientCaseFromNewBusiness = async (
         newBusinessResponseObject,
         eAppId
     );
+
+    validateClientCasePayload(newClientCasePayload);
+
     const config = {
         authorization: `Bearer ${token}`,
         headers: {
@@ -184,6 +214,9 @@ export const createClientCaseFromNewBusiness = async (
 
         return { ...data, planCode };
     } catch (error: any) {
-        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
+        throwTypedError(
+            error.message,
+            error.origin ?? CLIENT_CASE_MANAGER_API_ORIGIN
+        );
     }
 };
