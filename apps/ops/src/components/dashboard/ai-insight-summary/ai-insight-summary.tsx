@@ -79,7 +79,7 @@ export const AiInsightSummary = ({
             <div className="flex flow-col items-center align-middle gap-2">
                 <LightBulbIcon height={'24px'} width={'24px'} />
                 <Typography variant={TypographyVariant.LabelLg}>
-                    Insights
+                    AI Insights
                 </Typography>
             </div>
             {insightLoading ? (
