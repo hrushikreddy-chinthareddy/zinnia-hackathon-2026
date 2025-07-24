@@ -1,18 +1,21 @@
-import { Label } from '@zinnia/bloom/components';
+import { Button, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
+import styles from '@/app/(authenticated)/coverage/shared-styles/ActionBar.module.css';
 import { AccountValue } from '@/components/account-value/AccountValue';
-import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { FieldData } from '@/components/field-data/FieldData';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
+import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicySurrenderDetails } from '@/services';
+import { getPolicySurrenderEligibility } from '@/services/bpm/fullsurrender';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
-
 const NET_SURRENDER_VALUE = 'Net surrender value';
 
 const pageTitle = getPageTitle(RouteKey.SURRENDER);
@@ -27,6 +30,7 @@ export default async function SurrenderPolicy({
 }: {
   params: PolicyRequestInputs;
 }) {
+  const flags = await getFeatureFlags();
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
   const { data, error } = await getPolicySurrenderDetails(
@@ -36,6 +40,19 @@ export default async function SurrenderPolicy({
     },
     loggingContext
   );
+
+  const showSurrenderCta = !!flags?.[FEATURE_FLAGS.TRANSACTION_FULL_SURRENDER];
+  let isEligibleForSurrender = false;
+
+  if (showSurrenderCta) {
+    const { data: surrenderEligibility } = await getPolicySurrenderEligibility(
+      planCode,
+      policyNumber,
+      loggingContext
+    );
+
+    isEligibleForSurrender = !!surrenderEligibility?.isEligible;
+  }
 
   const surrenderData = () => {
     if (error || !data) {
@@ -87,19 +104,30 @@ export default async function SurrenderPolicy({
               </p>
             </FieldData>
           </div>
+          {showSurrenderCta && (
+            <div className={styles.actionBarContainer}>
+              {isEligibleForSurrender ? (
+                <Link
+                  // @TODO: CUI-919 replace with correct route when implementing surrender flow with stepped workflow
+                  href={`/coverage/policies/${planCode}/${policyNumber}/surrender/confirm`}
+                  role="link"
+                  text="Surrender policy"
+                />
+              ) : (
+                <Button
+                  mode="link"
+                  size="small"
+                  disabled={!isEligibleForSurrender}
+                >
+                  Surrender policy
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       </>
     );
   };
 
-  return (
-    <div className="container">
-      {surrenderData()}
-      <CallForAssistance
-        callToAction="Requesting a surrender is coming soon. For now,"
-        customInstruction="to surrender your policy."
-        contactPrompt="call"
-      />
-    </div>
-  );
+  return <div className="container">{surrenderData()}</div>;
 }

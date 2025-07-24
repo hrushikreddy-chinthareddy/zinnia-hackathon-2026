@@ -66,6 +66,7 @@ class ServerHttpRequest extends HttpRequest {
       // TODO: verify that bpm is using this header
       // TODO: if not in log, check req body? but then what about GET requests?
       'x-correlation-id': correlationId || uuid4(),
+      'Content-type': 'application/json',
       ...requestInit.headers,
       Authorization: `Bearer ${accessToken}`,
     };
