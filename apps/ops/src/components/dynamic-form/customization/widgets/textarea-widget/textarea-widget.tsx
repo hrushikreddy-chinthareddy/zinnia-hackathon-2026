@@ -30,6 +30,7 @@ function TextareaWidget<
         uiSchema,
         formContext,
         placeholder,
+        readonly,
     } = props;
     const { props: uiProps } = getUiOptions<T, S, F>(uiSchema);
     const apiProps =
@@ -60,7 +61,7 @@ function TextareaWidget<
                 id={id}
                 className={styles.textarea}
                 value={value || ''}
-                disabled={disabled}
+                disabled={disabled || readonly}
                 onChange={handleChange}
                 placeholder={placeholder}
                 rows={4}

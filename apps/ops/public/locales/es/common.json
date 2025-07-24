@@ -5778,7 +5778,7 @@
             "title": "¡Enviado!",
             "subTitle": "Los datos de idoneidad ingresados han sido enviados.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Cerrar",
+            "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar detalles de idoneidad"
         }
     },
@@ -5797,7 +5797,7 @@
             "title": "¡Enviado!",
             "subTitle": "La revisión de idoneidad fue enviada.",
             "cta": "Ir a revisión de idoneidad",
-            "secondaryCta": "Cerrar",
+            "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar detalles de revisión de idoneidad"
         }
     },
@@ -5896,7 +5896,8 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Problemas de OFAC fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio"
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "agentOnboardingNigo": {
@@ -5904,7 +5905,8 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Problemas de Incorporación fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio"
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "nbToaNigo": {
@@ -5912,7 +5914,8 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Transferencia fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio"
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "nbPrenoteNigo": {
@@ -5920,7 +5923,8 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Transferencia fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio"
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "nbApplicationReview": {
@@ -5937,7 +5941,8 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Problemas de Incorporación fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio"
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "claimsIdentifyUncashedTransactions": {
@@ -5945,8 +5950,8 @@
             "title": "Got It!",
             "subTitle": "Task: Identify Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
-            "submitTask": "Submit"
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "claimsStopUncashedTransactions": {
@@ -5954,8 +5959,8 @@
             "title": "Got It!",
             "subTitle": "Task: Stop Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
-            "submitTask": "Submit"
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "claimsReverseUncashedTransactions": {
@@ -5963,8 +5968,8 @@
             "title": "Got It!",
             "subTitle": "Task: Reverse Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
-            "submitTask": "Submit"
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
         }
     },
     "unauthorized": {

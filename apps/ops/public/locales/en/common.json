@@ -5929,7 +5929,7 @@
             "title": "Submitted!",
             "subTitle": "Input suitability data was submitted.",
             "cta": "Go to incoming transfer",
-            "secondaryCta": "Close",
+            "secondaryCta": "Back to home",
             "submitTask": "Submit suitability details"
         }
     },
@@ -5948,7 +5948,7 @@
             "title": "Submitted!",
             "subTitle": "Review suitability was submitted.",
             "cta": "Go to suitability review",
-            "secondaryCta": "Close",
+            "secondaryCta": "Back to home",
             "submitTask": "Submit suitability review details"
         }
     },
@@ -6046,7 +6046,8 @@
             "title": "Got It!",
             "subTitle": "Task: Review OFAC Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "agentOnboardingNigo": {
@@ -6054,7 +6055,8 @@
             "title": "Got It!",
             "subTitle": "Task: Review Onboarding Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbToaNigo": {
@@ -6062,7 +6064,8 @@
             "title": "Got It!",
             "subTitle": "Task: Review Transfer was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbPrenoteNigo": {
@@ -6070,7 +6073,8 @@
             "title": "Got It!",
             "subTitle": "Task: Review Transfer was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     },
     "nbApplicationReview": {
@@ -6087,6 +6091,7 @@
             "title": "Got It!",
             "subTitle": "Task: Validate Onboarding Issues was submitted.",
             "cta": "Go to incoming transfer ",
+            "submitTask": "Submit",
             "secondaryCta": "Back to home"
         }
     },
@@ -6260,7 +6265,7 @@
             "submitClaim": "Submit Claim",
             "subTitle": "Death claim notification was submitted successfully for {{caseId}}.",
             "cta": "Go to Death Claim Case",
-            "secondaryCta": "Close"
+            "secondaryCta": "Back to home"
         },
         "documentSelection": {
             "title": "Select Supporting Document",
@@ -6315,7 +6320,7 @@
             "updateNotificationMethod": "Update Notification Method",
             "subTitle": "Notification method for beneficiary was updated successfully for {{caseId}}.",
             "cta": "Go to case",
-            "secondaryCta": "Close"
+            "secondaryCta": "Back to home"
         }
     },
     "nbAppDataEntry": {
