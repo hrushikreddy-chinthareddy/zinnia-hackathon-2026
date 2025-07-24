@@ -13,10 +13,12 @@ import {
     TableCell,
     PopoverPlacement,
 } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { Columns, DownloadCSV } from '@deps/components/dashboard/download-csv';
+import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
@@ -45,6 +47,7 @@ export const IssueCountsByStatusTable = () => {
         issueCountsByStatusDataLoading,
         issueCountsByStatusDataFetching,
         exceptionStatus,
+        timerange
     } = useContext(IssueCountsByStatusContext);
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
@@ -161,7 +164,9 @@ export const IssueCountsByStatusTable = () => {
                 <IssueCountsByStatusHeader />
                 <DownloadCSV
                     sortedData={sortedData}
-                    csvFileName={`${csvFileName} Issue Counts.csv`}
+                    csvFileName={`${csvFileName} Issue Counts ${dayjs(timerange.from).format(
+                                defaultDateFormat
+                            )} to ${dayjs(timerange.to).format(defaultDateFormat)}`}
                     columns={columnsForCSV}
                 />
             </div>

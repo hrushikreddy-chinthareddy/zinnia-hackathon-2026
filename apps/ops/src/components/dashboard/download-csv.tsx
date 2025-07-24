@@ -52,7 +52,7 @@ export const DownloadCSV: FC<DownloadCSVProps> = ({
             onClick={() =>
                 downloadCSV(
                     sortedData,
-                    `${csvFileName} Issue Counts.csv`,
+                    `${csvFileName}`,
                     columns
                 )
             }
