@@ -85,7 +85,11 @@ export const useMainNavItems = (): NavGroup[] => {
         display: taskManagementText,
         icon: IconType.TABLE,
         renderComponent: (
-            <NavLink type={NavElementType.Link} href={taskManagementHref} onClick={() => handleAnalytics(taskManagementText)} />
+            <NavLink
+                type={NavElementType.Link}
+                href={taskManagementHref}
+                onClick={() => handleAnalytics(taskManagementText)}
+            />
         ),
     };
 
@@ -211,7 +215,10 @@ export const useMainNavItems = (): NavGroup[] => {
             ],
         },
         {
-            items: [...(isAllowReadOtpRenewals ? [transactionOpsLink] : []), ...(isOpsManagerView ? [taskManagementLink] : [])],
+            items: [
+                ...(isAllowReadOtpRenewals ? [transactionOpsLink] : []),
+                ...(isOpsManagerView ? [taskManagementLink] : []),
+            ],
         },
         {
             items: [...(hasDashboardPermission ? [dashboardLink] : [])],

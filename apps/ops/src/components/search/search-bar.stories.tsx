@@ -2,11 +2,11 @@ import { Meta } from '@storybook/react';
 import { TFunction } from 'next-i18next';
 import { useState } from 'react';
 
+import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys } from '@deps/types/search';
 
 import SearchBar from './search-bar';
-import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import '@deps/styles/styles.css';
 
 export default {

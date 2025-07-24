@@ -1,0 +1,269 @@
+import { render, screen, waitFor } from '@testing-library/react';
+
+import {
+    FormDataContext,
+    defaultFormDataContext,
+} from '@deps/contexts/OtpWithdrawalFormContext';
+import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { TaskType } from '@deps/models/case/task';
+import {
+    AddressTypes,
+    CaseStatus,
+    maritalStatusType,
+    PartyRoles,
+    PhoneTypes,
+} from '@deps/models/case/withdrawal/case';
+import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
+
+import UsaaRmdWithdrawalForm from './usaa-rmd-form';
+
+jest.mock('@deps/hooks/useDebounce', () => {
+    return jest.fn((value) => value);
+});
+
+jest.mock('next-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+        i18n: {
+            language: DEFAULT_LOCALE,
+        },
+    }),
+}));
+
+jest.mock('@deps/queries/api/policies', () => ({
+    getSpecialPrograms: jest.fn(() => {
+        return Promise.resolve(null);
+    }),
+}));
+
+afterEach(() => {
+    jest.clearAllMocks();
+});
+
+jest.mock('@deps/utils/server-logging');
+
+describe('UsaaRmdForm', () => {
+    window.HTMLElement.prototype.hasPointerCapture = jest.fn();
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
+
+    const data = CaseDetails.data.formRequest;
+    const formData = data.formData;
+    const formDisbursement = data.formDisbursement;
+    const formDistribution = data.formDistribution;
+    const formErrors = {};
+    const formFullSurrenderAck = data.formFullSurrenderAck;
+    const formLoan = data.formLoan;
+    const formParty = data.formParty;
+    const formProgram = data.formProgram;
+    const formRestriction = data.formRestriction;
+    const formSignature = data.formSignature;
+    const formSource = data.formSource;
+    const formTaxWithholding = data.formTaxWithholding;
+    const formTpaAuthorization = data.formTpaAuthorization;
+
+    describe('CSLN Section', () => {
+        it('Should not render the CSLN Section for AZ', async () => {
+            const setMockData = jest.fn();
+            const formParty = {
+                parties: [
+                    {
+                        partyRoleType: 'OWNER' as PartyRoles, //- lifecad party API
+                        firstName: 'JAMES',
+                        middleName: 'C',
+                        lastName: 'FORD',
+                        fullName: 'JAMES C FORD',
+                        suffix: null,
+                        dob: { text: null },
+                        taxId: '572621420',
+                        email: null,
+                        employer: null,
+                        maritalStatus: {
+                            text: '' as maritalStatusType | null,
+                        },
+                        addresses: [
+                            {
+                                addressLine1: '560 calle de la sierra',
+                                addressLine2: '',
+                                addressLine3: null,
+                                addressLine4: null,
+                                addressType: 'DEFAULT' as AddressTypes,
+                                city: '',
+                                country: null,
+                                state: 'AZ',
+                                zip: '92019-1241',
+                                zipPlusFour: '',
+                            },
+                        ],
+                        phones: [
+                            {
+                                phoneCountry: 'US',
+                                phoneNumber: '6192001466',
+                                phoneTypeDesc: 'Default',
+                                phoneType: {
+                                    text: 'Owner_Phone_Day' as PhoneTypes, //-party API phone type
+                                },
+                            },
+                            {
+                                phoneCountry: 'US',
+                                phoneNumber: '6192001411',
+                                phoneTypeDesc: 'Default',
+                                phoneType: {
+                                    text: 'Owner_Phone_Home' as PhoneTypes,
+                                },
+                            },
+                        ],
+                    },
+                ],
+            };
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        formData,
+                        formDisbursement,
+                        formDistribution,
+                        formErrors,
+                        formFullSurrenderAck,
+                        formLoan,
+                        formParty,
+                        formProgram,
+                        formRestriction,
+                        formSignature,
+                        formSource,
+                        formTaxWithholding,
+                        formTpaAuthorization,
+                        initialForm: {
+                            ...CaseDetails,
+                            caseId: 'CA0000034607',
+                            taskType: TaskType.Withdrawal,
+                            source: 'Zinnia.TaskManagement',
+                            carrier: 'DLIC',
+                            createdDate: '',
+                            updatedDate: '',
+                            status: CaseStatus.Pending,
+                            taskId: '6551c49b18a0092d07bfa9db',
+                            data: {
+                                ...CaseDetails.data,
+                                agentEmailAddress: '',
+                                documentNumber: '',
+                                onbaseCaseId: '',
+                            },
+                        },
+                        setFormData: setMockData,
+                    }}
+                >
+                    <UsaaRmdWithdrawalForm />
+                </FormDataContext.Provider>
+            );
+
+            const sectionTitle = await waitFor(() =>
+                screen.queryByTestId('data-testid-csln-title')
+            );
+
+            expect(sectionTitle).not.toBeInTheDocument();
+        });
+
+        it('Should render the CSLN Section for CA', async () => {
+            const setMockData = jest.fn();
+
+            const formParty = {
+                parties: [
+                    {
+                        partyRoleType: 'OWNER' as PartyRoles, //- lifecad party API
+                        firstName: 'JAMES',
+                        middleName: 'C',
+                        lastName: 'FORD',
+                        fullName: 'JAMES C FORD',
+                        suffix: null,
+                        dob: { text: null },
+                        taxId: '572621420',
+                        email: null,
+                        employer: null,
+                        maritalStatus: {
+                            text: '' as maritalStatusType | null,
+                        },
+                        addresses: [
+                            {
+                                addressLine1: '560 calle de la sierra',
+                                addressLine2: '',
+                                addressLine3: null,
+                                addressLine4: null,
+                                addressType: 'DEFAULT' as AddressTypes,
+                                city: '',
+                                country: null,
+                                state: 'CA',
+                                zip: '92019-1241',
+                                zipPlusFour: '',
+                            },
+                        ],
+                        phones: [
+                            {
+                                phoneCountry: 'US',
+                                phoneNumber: '6192001466',
+                                phoneTypeDesc: 'Default',
+                                phoneType: {
+                                    text: 'Owner_Phone_Day' as PhoneTypes, //-party API phone type
+                                },
+                            },
+                            {
+                                phoneCountry: 'US',
+                                phoneNumber: '6192001411',
+                                phoneTypeDesc: 'Default',
+                                phoneType: {
+                                    text: 'Owner_Phone_Home' as PhoneTypes,
+                                },
+                            },
+                        ],
+                    },
+                ],
+            };
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        formData,
+                        formDisbursement,
+                        formDistribution,
+                        formErrors,
+                        formFullSurrenderAck,
+                        formLoan,
+                        formParty,
+                        formProgram,
+                        formRestriction,
+                        formSignature,
+                        formSource,
+                        formTaxWithholding,
+                        formTpaAuthorization,
+                        contractIssueState: '',
+                        initialForm: {
+                            ...CaseDetails,
+                            caseId: 'CA0000034607',
+                            taskType: TaskType.Withdrawal,
+                            source: 'Zinnia.TaskManagement',
+                            carrier: 'DLIC',
+                            createdDate: '',
+                            updatedDate: '',
+                            status: CaseStatus.Pending,
+                            taskId: '6551c49b18a0092d07bfa9db',
+                            data: {
+                                ...CaseDetails.data,
+                                agentEmailAddress: '',
+                                documentNumber: '',
+                                onbaseCaseId: '',
+                            },
+                        },
+                        setFormData: setMockData,
+                    }}
+                >
+                    <UsaaRmdWithdrawalForm />
+                </FormDataContext.Provider>
+            );
+
+            const el = await waitFor(() =>
+                screen.queryByTestId('data-testid-csln-title')
+            );
+
+            expect(el).toBeInTheDocument();
+        });
+    });
+});

@@ -86,14 +86,25 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { data: opsManagerCheck, isLoading: opsManagerLoading } = useQuery({
         queryKey: ['isAllowOpsManagerView', partyId],
         queryFn: () => {
-            return checkTuple(partyId, FgaRelation.UiAccess, FgaUiEntity.ZinniaLiveTaskManagment);
+            return checkTuple(
+                partyId,
+                FgaRelation.UiAccess,
+                FgaUiEntity.ZinniaLiveTaskManagment
+            );
         },
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
-    const { data: isAllowReadCaseManagement, isLoading: caseManagementLoading } = useQuery({
-        queryKey: ['isAllowReadCaseManagement', partyId, featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]],
+    const {
+        data: isAllowReadCaseManagement,
+        isLoading: caseManagementLoading,
+    } = useQuery({
+        queryKey: [
+            'isAllowReadCaseManagement',
+            partyId,
+            featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE],
+        ],
         queryFn: async () => {
             if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
                 return await checkTuple(

@@ -507,6 +507,8 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         auditTrial: true,
     };
 
+    const cslnCheckStates = ['CA', 'MO', 'TX', 'RI'];
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -515,5 +517,6 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         irsSignatureConfig,
         signaturesConfig,
         eSignatureFieldConfig,
+        cslnCheckStates,
     };
 }

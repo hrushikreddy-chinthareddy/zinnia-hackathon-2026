@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
+import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
@@ -14,6 +15,7 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import {
     Carrier,
     FundWithdrawnMethod,
@@ -38,6 +40,7 @@ export function UsaaSSWForm() {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         eSignatureFieldConfig,
+        cslnCheckStates,
     } = getUsaaConfig(t);
     const {
         setFormValidator,
@@ -45,6 +48,9 @@ export function UsaaSSWForm() {
         setFormData,
         initialForm,
         isFormStateReadOnly,
+        ownerStateOfResidence,
+        formParty,
+        setOwnerStateOfResidence,
         contractIssueState,
         formESignatureData,
         setFormESignatureData,
@@ -68,6 +74,13 @@ export function UsaaSSWForm() {
             },
         });
     }, []);
+
+    useEffect(() => {
+        const newOwnerStateOfResidence = getOwnerStateOfResidence(formParty);
+        if (newOwnerStateOfResidence !== ownerStateOfResidence) {
+            setOwnerStateOfResidence(newOwnerStateOfResidence);
+        }
+    }, [formParty]);
 
     const shouldStateW4pRender = isAllowedState(contractIssueState);
 
@@ -113,6 +126,10 @@ export function UsaaSSWForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
             />
+            {(ownerStateOfResidence || contractIssueState) &&
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}

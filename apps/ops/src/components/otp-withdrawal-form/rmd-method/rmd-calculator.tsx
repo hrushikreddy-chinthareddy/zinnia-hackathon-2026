@@ -1,4 +1,3 @@
-import useDebounce from '@xd/hooks/useDebounce';
 import { RelationshipToParty } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -17,6 +16,7 @@ import { Loader } from '@deps/components/page-loader';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
+import { useDebounce } from '@deps/hooks/useDebounce';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { QualTypes } from '@deps/models/case/withdrawal/case';
 import {
