@@ -735,9 +735,9 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
                 assumed.annualTimeSeriesData[0].deathBenefitsMount;
 
             if (deathBenefitsMount) {
-                return `Death Benefits ${numberFormatify(
+                return `, Death Benefits ${numberFormatify(
                     deathBenefitsMount
-                )}, `;
+                )} `;
             }
 
             return '';
@@ -747,8 +747,6 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
             assumed.initial.minimumPremiumAmount
         )}, ${numberFormatify(
             assumed.initial.totalFaceAmount
-        )}, ${getDeathBenefits()}${
-            guaranteed.lapse.year
-        }years ${getRidersText()}`;
+        )} ${getDeathBenefits()} ${getRidersText()}`;
     }
 }

@@ -313,9 +313,6 @@ export function getFarmersCreateIllustrationPayload(
         },
     };
 
-    console.log('myvalues', values);
-    console.log('handler output', output);
-
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
     if (!parseOutputResult.success) {
         console.log('parseOutputResult', parseOutputResult.error);
