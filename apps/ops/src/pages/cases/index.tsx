@@ -8,9 +8,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
     KeyboardEvent,
     useCallback,
-    useEffect,
     useMemo,
     useState,
+    useEffect,
 } from 'react';
 
 import FilterButton from '@deps/components/filter-button/filter-button';
@@ -235,6 +235,25 @@ const CaseManagementDashboard = ({
         enabled: loadedStoredFilters,
     });
 
+    const [liveResultsMessage, setLiveResultsMessage] = useState<string>('');
+    useEffect(() => {
+        if (caseSearchData) {
+            setLiveResultsMessage('');
+            const msg = t('policy.documents.xToYOfZ', {
+                numberOfItems: caseManagementFilters.offset + 1,
+                currentIndex: Math.min(
+                    caseManagementFilters.offset + limit,
+                    caseSearchData.total || 0
+                ),
+                total: `${caseSearchData.total?.toLocaleString() ?? '0'}${
+                    caseSearchData.total === 10000 ? '+' : ''
+                }`,
+            });
+            const timer = setTimeout(() => setLiveResultsMessage(msg), 50);
+            return () => clearTimeout(timer);
+        }
+    }, [caseSearchData, caseManagementFilters.offset, limit, t]);
+
     useEffect(() => {
         if (loadedStoredFilters) {
             storage.setItem('CASE_MANAGEMENT_FILTERS', {
@@ -422,7 +441,9 @@ const CaseManagementDashboard = ({
                     sortDirection={caseManagementFilters.sortDirection}
                     sortBy={caseManagementFilters.sortBy}
                 />
-
+                <div aria-live="polite" aria-atomic="true" className="sr-only">
+                    {liveResultsMessage}
+                </div>
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                     <Typography
                         variant={TypographyVariant.BodySm}
@@ -431,14 +452,15 @@ const CaseManagementDashboard = ({
                         aria-live="polite"
                         aria-atomic="true"
                     >
-                        {caseSearchData && caseSearchData?.total > 0
+                        {caseSearchData
                             ? t('policy.documents.xToYOfZ', {
-                                  x: caseManagementFilters.offset + 1,
-                                  y: Math.min(
+                                  numberOfItems:
+                                      caseManagementFilters.offset + 1,
+                                  currentIndex: Math.min(
                                       caseManagementFilters.offset + limit,
                                       caseSearchData?.total || 0
                                   ),
-                                  z: `${
+                                  total: `${
                                       caseSearchData?.total?.toLocaleString() ??
                                       '0'
                                   }${
@@ -461,6 +483,7 @@ const CaseManagementDashboard = ({
         handleCreatedBySort,
         paginationControls,
         t,
+        liveResultsMessage,
     ]);
 
     // Sidesheet Support

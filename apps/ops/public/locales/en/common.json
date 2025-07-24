@@ -3145,7 +3145,7 @@
             "taxDocuments": "Tax documents",
             "taxYear": "Tax year",
             "view": "View",
-            "xToYOfZ": "Results: {{x}}-{{y}} of {{z}}",
+            "xToYOfZ": "Results: {{numberOfItems}}-{{currentIndex}} of {{total}}",
             "pdfError": "An error occured while loading the PDF."
         },
         "funds": {
