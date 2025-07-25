@@ -1,6 +1,7 @@
 import { Icon, IconType, TableHeaderCell } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { ReactNode, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
 
 import { useIllustrationsClientCase } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
 
@@ -9,40 +10,63 @@ import styles from './table-header-sort-wrapper.module.css';
 interface TableHeaderSortWrapperProps {
     children: ReactNode;
     className?: string | undefined;
-    collumnId: string;
+    columnId: string;
 }
 
 const TableHeaderSortWrapper = ({
     children,
     className,
-    collumnId,
+    columnId,
 }: TableHeaderSortWrapperProps) => {
     const { setFilters } = useIllustrationsClientCase();
     const tableHeaderClassNames = clsx(styles.tableHeader, className);
     const [asc, setAsc] = useState(true);
+    const [isActive, setIsActive] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+    const searchParams = useSearchParams();
 
     const setSortBy = () => {
         const sortDir = asc ? 'ascending' : 'descending';
         setFilters({
-            sortBy: collumnId,
+            sortBy: columnId,
             sortDir,
         });
         setAsc(!asc);
     };
+
+    useEffect(() => {
+        const activeColumn = searchParams.get('sortBy');
+        setIsActive(activeColumn === columnId);
+    }, [columnId, searchParams]);
+
     return (
         <TableHeaderCell
             className={tableHeaderClassNames}
             onClick={setSortBy}
             sortable
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             {children}
-
-            <Icon
-                type={asc ? IconType.ARROW_UP : IconType.ARROW_DOWN}
-                color="#00628B"
-                height={16}
-                width={16}
-            />
+            {isHovered && !isActive && (
+                <Icon
+                    type={IconType.SORT}
+                    color="#00628B"
+                    height={16}
+                    width={16}
+                />
+            )}
+            {isActive && (
+                <Icon
+                    type={asc ? IconType.ARROW_UP : IconType.ARROW_DOWN}
+                    color="#00628B"
+                    height={16}
+                    width={16}
+                />
+            )}
+            {!isActive && !isHovered && (
+                <div className={styles.tablePlaceholder}></div>
+            )}
         </TableHeaderCell>
     );
 };

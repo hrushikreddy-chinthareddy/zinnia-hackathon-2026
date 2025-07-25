@@ -186,12 +186,12 @@ export const ClientCaseTable = () => {
                             {t('clientCase.clientCaseTable.clientCase')}
                         </Typography>
                     </TableHeaderCell>
-                    <TableHeaderSortWrapper collumnId="insuredFirstName">
+                    <TableHeaderSortWrapper columnId="insuredFirstName">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('clientCase.clientCaseTable.insured')}
                         </Typography>
                     </TableHeaderSortWrapper>
-                    <TableHeaderSortWrapper collumnId="agentFirstName">
+                    <TableHeaderSortWrapper columnId="agentFirstName">
                         <div className={styles.agentHeader}>
                             <Label
                                 interactiveElements={[
@@ -230,7 +230,7 @@ export const ClientCaseTable = () => {
                             {t('clientCase.clientCaseTable.illustrations')}
                         </Typography>
                     </TableHeaderCell>
-                    <TableHeaderSortWrapper collumnId="lastModified">
+                    <TableHeaderSortWrapper columnId="lastModified">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('clientCase.clientCaseTable.lastModified')}
                         </Typography>

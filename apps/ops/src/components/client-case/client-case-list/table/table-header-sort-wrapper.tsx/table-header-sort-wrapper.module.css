@@ -4,3 +4,8 @@
     gap: var(--measure-dimension-gap-md);
     align-items: center;
 }
+
+.tablePlaceholder {
+    width: 16px;
+    height: 16px;
+}
