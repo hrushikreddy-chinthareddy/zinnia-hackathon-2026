@@ -18,7 +18,8 @@ export const getDay150ReviewSteps = ({
     taskMetadata,
 }: GetStepsProps) => {
     const [beneficiary, setBeneficiary] = useState<UpdatedBeneficiaryRecord>(
-        task?.data?.details?.benefinalcontactattempt?.beneficiary || {
+        task?.data?.details?.benefinalcontactattempt
+            ?.beneficiaryChangeDetail || {
             notificationPreferences: null,
             changeRequire: null,
             changeType: null,
@@ -37,6 +38,7 @@ export const getDay150ReviewSteps = ({
                 <ClaimBeneStatus
                     beneficiary={beneficiary}
                     setBeneficiary={setBeneficiary}
+                    readOnly={readOnly}
                 />
             ),
             text: t('tabs.beneficiaryStatus'),
@@ -79,6 +81,7 @@ export const getDay150ReviewSteps = ({
                     beneficiary={beneficiary}
                     setBeneficiary={setBeneficiary}
                     taskType={taskType}
+                    readOnly={readOnly}
                 />
             ),
             text: t('tabs.call'),

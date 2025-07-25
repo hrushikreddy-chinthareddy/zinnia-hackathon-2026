@@ -30,11 +30,13 @@ type TaskReviewStepProps = {
     setBeneficiary: React.Dispatch<
         React.SetStateAction<UpdatedBeneficiaryRecord>
     >;
+    readOnly: boolean;
 };
 
 export const ClaimBeneStatus = ({
     beneficiary,
     setBeneficiary,
+    readOnly,
 }: TaskReviewStepProps) => {
     const {
         task,
@@ -60,6 +62,7 @@ export const ClaimBeneStatus = ({
             goToNext();
         }
     };
+
     const validateAddress = () => {
         const errors: FormValidationErrors = {};
         if (!isBeneDeceased) {
@@ -106,6 +109,20 @@ export const ClaimBeneStatus = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isBeneDeceased, beneficiary]);
 
+    useEffect(() => {
+        if (readOnly) {
+            if (
+                task.data?.details?.benefinalcontactattempt
+                    ?.subTaskBeneDeceasedChangeRequire &&
+                beneficiary.beneDeceased
+            ) {
+                setIsBeneDeceased(BENE_STATUS.YES);
+            } else {
+                setIsBeneDeceased(BENE_STATUS.NO);
+            }
+        }
+    }, [beneficiary.beneDeceased, readOnly, task.data]);
+
     return (
         <WorkflowCard
             title={t('title')}
@@ -113,9 +130,18 @@ export const ClaimBeneStatus = ({
             footerContent={
                 <TransactionNavigationButtons
                     className="mt-4"
-                    handleContinue={handleContinueFn}
+                    readonly={readOnly}
+                    handleContinue={
+                        readOnly
+                            ? () => {
+                                  goToNext();
+                              }
+                            : handleContinueFn
+                    }
                     isSubmit={false}
-                    disableContinue={Object.keys(formErrors).length > 0}
+                    disableContinue={
+                        readOnly ? false : Object.keys(formErrors).length > 0
+                    }
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
                     cancelLabel={t('cancel') as string}

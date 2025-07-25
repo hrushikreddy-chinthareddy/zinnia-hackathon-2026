@@ -56,15 +56,39 @@ export function TransactionsArrayFieldTemplate<
         };
     }, [formData]);
 
+    const {
+        reverseTransactionRadioCheck,
+        sendCheckToEstateRadioCheck,
+        reviewFundsRadioCheck,
+    } = useMemo(() => {
+        return {
+            reverseTransactionRadioCheck: postFundData.every(
+                (item: Transaction) => item?.reverseSor === true
+            ),
+            sendCheckToEstateRadioCheck: preFundData.every(
+                (item: Transaction) => item?.sendCheckToEstate === true
+            ),
+            reviewFundsRadioCheck: reviewData.every(
+                (item: Transaction) =>
+                    item?.isReverseUncashTxnReviewRequired === true
+            ),
+        };
+    }, [preFundData, postFundData, reviewData]);
+
     const { customData, setCustomData, setSubmitEnabled } =
         formContext as FormContextType;
 
     const taskStatus = customData?.task?.status ?? '';
 
-    const [sendCheckToEstateRadio, setSendCheckToEstateRadio] = useState(false);
-    const [reverseTransactionRadio, setReverseTransactionRadio] =
-        useState(false);
-    const [reviewFundsRadio, setReviewFundsRadio] = useState(false);
+    const [sendCheckToEstateRadio, setSendCheckToEstateRadio] = useState(
+        sendCheckToEstateRadioCheck
+    );
+    const [reverseTransactionRadio, setReverseTransactionRadio] = useState(
+        reverseTransactionRadioCheck
+    );
+    const [reviewFundsRadio, setReviewFundsRadio] = useState(
+        reviewFundsRadioCheck
+    );
 
     useEffect(() => {
         const uncash = customData?.details?.uncashTransaction;

@@ -8,6 +8,7 @@ import TransactionNavigationButtons, {
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
+import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 
 import CallForInformation from './call-for-information';
@@ -16,6 +17,7 @@ import { UpdatedBeneficiaryRecord } from './claims.type';
 type TaskReviewStepProps = {
     taskType: TaskType;
     beneficiary: UpdatedBeneficiaryRecord;
+    readOnly: boolean;
     setBeneficiary: React.Dispatch<
         React.SetStateAction<UpdatedBeneficiaryRecord>
     >;
@@ -24,6 +26,7 @@ type TaskReviewStepProps = {
 export const Claims150Call = ({
     taskType,
     beneficiary,
+    readOnly,
     setBeneficiary,
 }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -40,6 +43,7 @@ export const Claims150Call = ({
     const [handleContinueFn, setHandleContinueFn] = useState<() => void>(
         () => () => {}
     );
+    const { goToNext } = useWorkflow();
 
     return (
         <WorkflowCard
@@ -49,9 +53,18 @@ export const Claims150Call = ({
                 <TransactionNavigationButtons
                     className="mt-4"
                     submitLabel={t('submit') as string}
-                    handleContinue={handleContinueFn}
-                    isSubmit={true}
-                    disableContinue={Object.keys(formErrors).length > 0}
+                    readonly={readOnly}
+                    handleContinue={
+                        readOnly
+                            ? () => {
+                                  goToNext();
+                              }
+                            : handleContinueFn
+                    }
+                    isSubmit={!readOnly}
+                    disableContinue={
+                        readOnly ? false : Object.keys(formErrors).length > 0
+                    }
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
                     cancelLabel={t('cancel') as string}

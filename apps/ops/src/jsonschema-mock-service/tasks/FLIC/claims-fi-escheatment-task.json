@@ -94,8 +94,7 @@
                             },
                             "escheatmentOnBase": {
                                 "ui:options": {
-                                    "label": true,
-                                    "omitValue": true
+                                    "label": true
                                 },
                                 "ui:hideError": true
                             },

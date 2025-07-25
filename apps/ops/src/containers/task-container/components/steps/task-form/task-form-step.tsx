@@ -126,10 +126,8 @@ const TaskFormStep = ({
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
                     disableContinue={
-                        !(
-                            isContinueButtonEnabled ||
-                            task?.status === TaskStatus.Completed
-                        ) && !isValidForm
+                        (!isContinueButtonEnabled && !isValidForm) ||
+                        !submitEnabled
                     }
                 />
             }

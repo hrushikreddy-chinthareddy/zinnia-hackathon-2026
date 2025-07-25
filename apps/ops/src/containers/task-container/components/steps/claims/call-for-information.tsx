@@ -342,7 +342,15 @@ function CallForInformation({
                                 },
                             ]}
                             readonly={readOnly}
-                            value={beneficiary.changeRequire?.toString()}
+                            value={
+                                task.taskType === 'DAY_150_REVIEW' &&
+                                task.status === TaskStatus.Completed
+                                    ? task.data.details.benefinalcontactattempt
+                                          .subTaskBeneCallChangeRequire
+                                        ? beneficiary.changeRequire?.toString()
+                                        : null
+                                    : beneficiary.changeRequire?.toString()
+                            }
                             onChange={(event) =>
                                 setBeneficiary({
                                     ...beneficiary,

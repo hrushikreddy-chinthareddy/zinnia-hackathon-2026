@@ -1,8 +1,8 @@
 import { Label } from '@zinnia/bloom/components';
 import { TFunction } from 'i18next';
 
-import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
 import { FieldDate } from '@deps/components/field/date/FieldDate';
+import Field, { FieldVariant } from '@deps/components/fields/field';
 import { TranslationFiles } from '@deps/config/translations';
 
 import { UpdatedBeneficiaryRecord } from './claims.type';
@@ -43,18 +43,21 @@ function BeneficiaryDeceased({
             </div>
 
             <div className="col-span-1 mt-4">
-                <TextField
+                <Field
                     label={t('sourceOfInfo') as string}
                     id="sourceOfInfo"
-                    onChange={(value: string) => {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setBeneficiary({
                             ...beneficiary,
-                            beneDeathSourceOfInfo: value,
+                            beneDeathSourceOfInfo: e.target.value,
                         });
                     }}
                     value={beneficiary.beneDeathSourceOfInfo || ''}
-                    className="w-full"
+                    className="w-full h-10 p-2"
                     disabled={readOnly}
+                    variant={
+                        readOnly ? FieldVariant.Inactive : FieldVariant.Default
+                    }
                 />
             </div>
         </>
