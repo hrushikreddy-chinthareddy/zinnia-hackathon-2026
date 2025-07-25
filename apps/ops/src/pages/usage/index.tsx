@@ -6,6 +6,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { PageHead } from '@deps/components/page-title';
 import { Logins } from '@deps/components/usage/logins/logins';
 import { UsageResponsiveLayout } from '@deps/components/usage/logins/usage-responsive-layout';
+import { PageViews } from '@deps/components/usage/page-views/page-views';
 import UsageHeader from '@deps/components/usage/usage-header/header';
 import { UsageTabNav, UsageTabs } from '@deps/components/usage/usage-nav-links';
 import { TranslationFiles } from '@deps/config/translations';
@@ -49,11 +50,11 @@ const UsagePage = ({ user }: UsagePageProps) => {
                         <TabContent value={UsageTabs.LOGINS}>
                             <Logins />
                         </TabContent>
+                        <TabContent value={UsageTabs.PAGE_VIEWS}>
+                            <PageViews />
+                        </TabContent>
                         {/* These are upcoming tabs */}
-                        {/* <TabContent value={UsageTabs.PAGE_VIEWS}>
-              <Logins />
-            </TabContent>
-            <TabContent value={UsageTabs.ACTIVITY}>
+                        {/* <TabContent value={UsageTabs.ACTIVITY}>
               <Logins />
             </TabContent> */}
                     </div>

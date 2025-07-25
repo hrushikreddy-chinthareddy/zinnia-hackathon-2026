@@ -7,12 +7,12 @@ info:
     email: data-science@se2office365.onmicrosoft.com
   version: 1.0.0
 servers:
-- url: http://127.0.0.1:8080
-  description: Local Dev
-- url: https://qa.api.zinnia.io
-  description: QA Environment
-- url: https://api.zinnia.io
-  description: Production Environment
+  - url: http://127.0.0.1:8080
+    description: Local Dev
+  - url: https://qa.api.zinnia.io
+    description: QA Environment
+  - url: https://api.zinnia.io
+    description: Production Environment
 paths:
   /analytics/v1/dashboard/completed_case_time:
     post:
@@ -32,6 +32,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CompletedCaseTimeOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '500':
+          description: Internal Server Error
         '422':
           description: Validation Error
           content:
@@ -56,6 +62,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CaseCountOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '500':
+          description: Internal Server Error
         '422':
           description: Validation Error
           content:
@@ -80,6 +92,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExceptionCountOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '500':
+          description: Internal Server Error
         '422':
           description: Validation Error
           content:
@@ -89,7 +107,8 @@ paths:
   /analytics/v1/dashboard/user_activity_count:
     post:
       summary: User Activity Count
-      description: Get the quantity of users matching filters grouped by selected
+      description:
+        Get the quantity of users matching filters grouped by selected
         dimensions
       operationId: user_activity_count_analytics_v1_dashboard_user_activity_count_post
       requestBody:
@@ -105,6 +124,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserActivityOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '500':
+          description: Internal Server Error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /analytics/v1/dashboard/user_views_count:
+    post:
+      summary: User Views Count
+      description: Get user specific activity (i.e. tied to carriers)
+      operationId: user_views_count_analytics_v1_dashboard_user_views_count_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserViewsInput'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserViewsOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '500':
+          description: Internal Server Error
         '422':
           description: Validation Error
           content:
@@ -116,15 +171,15 @@ components:
     CaseCountGroupByEnum:
       type: string
       enum:
-      - brokerDealerName
-      - carrier
-      - caseStatus
-      - processSubType
-      - process
-      - productName
-      - applicationType
-      - createdDay
-      - updatedDay
+        - brokerDealerName
+        - carrier
+        - caseStatus
+        - processSubType
+        - process
+        - productName
+        - applicationType
+        - createdDay
+        - updatedDay
       title: CaseCountGroupByEnum
     CaseCountInput:
       properties:
@@ -138,94 +193,84 @@ components:
           minItems: 1
           title: Groupby
           example:
-          - carrier
+            - carrier
       type: object
       required:
-      - filter
-      - groupBy
+        - filter
+        - groupBy
       title: CaseCountInput
     CaseCountInputFilter:
       properties:
         caseStatus:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Casestatus
           example:
-          - COMPLETED
+            - COMPLETED
         carrier:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Carrier
           example:
-          - MASS
+            - MASS
         process:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Process
           example:
-          - New Business
+            - New Business
         requestSubType:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Requestsubtype
           example:
-          - Suitability Review
+            - Suitability Review
         productName:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Productname
           example:
-          - Security Benefit Foundations Annuity 5 Yr product
+            - Security Benefit Foundations Annuity 5 Yr product
         brokerDealerName:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Brokerdealername
           example:
-          - SANTANDER  SECURITIES LLC
+            - SANTANDER  SECURITIES LLC
         createdDateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Createddatestart
           example: '2025-01-11T01:01:31.316Z'
         createdDateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Createddateend
           example: '2025-01-21T23:34:31.316Z'
         updatedDateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Updateddatestart
           example: '2025-01-11T01:01:01.316Z'
         updatedDateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Updateddateend
           example: '2025-01-21T23:34:31.316Z'
       type: object
@@ -243,8 +288,8 @@ components:
           example: 12345
       type: object
       required:
-      - data
-      - totalElements
+        - data
+        - totalElements
       title: CaseCountOutput
     CaseCountOutputLevel1:
       properties:
@@ -262,16 +307,15 @@ components:
           example: 5832
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/CaseCountOutputLevel2'
-            type: array
-          - type: 'null'
+            - items:
+                $ref: '#/components/schemas/CaseCountOutputLevel2'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: CaseCountOutputLevel1
     CaseCountOutputLevel2:
       properties:
@@ -289,16 +333,15 @@ components:
           example: 2294
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/CaseCountOutputLevel3'
-            type: array
-          - type: 'null'
+            - items:
+                $ref: '#/components/schemas/CaseCountOutputLevel3'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: CaseCountOutputLevel2
     CaseCountOutputLevel3:
       properties:
@@ -316,19 +359,19 @@ components:
           example: 28
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: CaseCountOutputLevel3
     CompletedCaseTimeGroupByEnum:
       type: string
       enum:
-      - brokerDealerName
-      - carrier
-      - processSubType
-      - process
-      - productName
-      - applicationType
+        - brokerDealerName
+        - carrier
+        - processSubType
+        - process
+        - productName
+        - applicationType
       title: CompletedCaseTimeGroupByEnum
     CompletedCaseTimeInput:
       properties:
@@ -342,85 +385,76 @@ components:
           minItems: 1
           title: Groupby
           example:
-          - carrier
+            - carrier
       type: object
       required:
-      - filter
-      - groupBy
+        - filter
+        - groupBy
       title: CompletedCaseTimeInput
     CompletedCaseTimeInputFilter:
       properties:
         carrier:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Carrier
           example:
-          - MASS
+            - MASS
         process:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Process
           example:
-          - New Business
+            - New Business
         requestSubType:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Requestsubtype
           example:
-          - Suitability Review
+            - Suitability Review
         productName:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Productname
           example:
-          - Security Benefit Foundations Annuity 5 Yr product
+            - Security Benefit Foundations Annuity 5 Yr product
         brokerDealerName:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Brokerdealername
           example:
-          - SANTANDER  SECURITIES LLC
+            - SANTANDER  SECURITIES LLC
         createdDateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Createddatestart
           example: '2025-01-11T01:01:31.316Z'
         createdDateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Createddateend
           example: '2025-01-21T23:34:31.316Z'
         updatedDateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Updateddatestart
           example: '2025-01-11T01:01:01.316Z'
         updatedDateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Updateddateend
           example: '2025-01-21T23:34:31.316Z'
       type: object
@@ -434,7 +468,7 @@ components:
           title: Data
       type: object
       required:
-      - data
+        - data
       title: CompletedCaseTimeOutput
     CompletedCaseTimeOutputLevel1:
       properties:
@@ -468,20 +502,19 @@ components:
           example: 5832
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/CompletedCaseTimeOutputLevel2'
-            type: array
-          - type: 'null'
+            - items:
+                $ref: '#/components/schemas/CompletedCaseTimeOutputLevel2'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - secondLow
-      - secondMedian
-      - secondMean
-      - secondHigh
-      - count
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
       title: CompletedCaseTimeOutputLevel1
     CompletedCaseTimeOutputLevel2:
       properties:
@@ -515,20 +548,19 @@ components:
           example: 19
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/CompletedCaseTimeOutputLevel3'
-            type: array
-          - type: 'null'
+            - items:
+                $ref: '#/components/schemas/CompletedCaseTimeOutputLevel3'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - secondLow
-      - secondMedian
-      - secondMean
-      - secondHigh
-      - count
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
       title: CompletedCaseTimeOutputLevel2
     CompletedCaseTimeOutputLevel3:
       properties:
@@ -562,31 +594,31 @@ components:
           example: 19
       type: object
       required:
-      - key
-      - name
-      - secondLow
-      - secondMedian
-      - secondMean
-      - secondHigh
-      - count
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
       title: CompletedCaseTimeOutputLevel3
     ExceptionCountGroupByEnum:
       type: string
       enum:
-      - applicationType
-      - brokerDealerName
-      - carrier
-      - caseStatus
-      - exceptionCategory
-      - process
-      - processSubType
-      - productName
-      - createdDay
-      - updatedDay
-      - exceptionDetailedReason
-      - exceptionReason
-      - exceptionCreatedDay
-      - exceptionUpdatedDay
+        - applicationType
+        - brokerDealerName
+        - carrier
+        - caseStatus
+        - exceptionCategory
+        - process
+        - processSubType
+        - productName
+        - createdDay
+        - updatedDay
+        - exceptionDetailedReason
+        - exceptionReason
+        - exceptionCreatedDay
+        - exceptionUpdatedDay
       title: ExceptionCountGroupByEnum
     ExceptionCountInput:
       properties:
@@ -600,142 +632,126 @@ components:
           minItems: 1
           title: Groupby
           example:
-          - carrier
+            - carrier
       type: object
       required:
-      - filter
-      - groupBy
+        - filter
+        - groupBy
       title: ExceptionCountInput
     ExceptionCountInputFilter:
       properties:
         caseStatus:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Casestatus
           example:
-          - COMPLETED
+            - COMPLETED
         carrier:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Carrier
           example:
-          - MASS
+            - MASS
         process:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Process
           example:
-          - New Business
+            - New Business
         requestSubType:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Requestsubtype
           example:
-          - Suitability Review
+            - Suitability Review
         productName:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Productname
           example:
-          - Security Benefit Foundations Annuity 5 Yr product
+            - Security Benefit Foundations Annuity 5 Yr product
         brokerDealerName:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Brokerdealername
           example:
-          - SANTANDER  SECURITIES LLC
+            - SANTANDER  SECURITIES LLC
         createdDateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Createddatestart
           example: '2025-01-11T01:01:31.316Z'
         createdDateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Createddateend
           example: '2025-01-21T23:34:31.316Z'
         updatedDateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Updateddatestart
           example: '2025-01-11T01:01:01.316Z'
         updatedDateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Updateddateend
           example: '2025-01-21T23:34:31.316Z'
         exceptionCreatedDateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Exceptioncreateddatestart
           example: '2025-01-21T23:34:31.316Z'
         exceptionCreatedDateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Exceptioncreateddateend
           example: '2025-01-21T23:34:31.316Z'
         exceptionUpdatedDateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Exceptionupdateddatestart
           example: '2025-01-21T23:34:31.316Z'
         exceptionUpdatedDateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Exceptionupdateddateend
           example: '2025-01-21T23:34:31.316Z'
         exceptionStatus:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Exceptionstatus
           example:
-          - Resolved
+            - Resolved
         exceptionCategory:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Exceptioncategory
           example:
-          - Form
+            - Form
       type: object
       title: ExceptionCountInputFilter
     ExceptionCountOutput:
@@ -755,9 +771,9 @@ components:
           example: 999
       type: object
       required:
-      - data
-      - totalElements
-      - totalUniqueCases
+        - data
+        - totalElements
+        - totalUniqueCases
       title: ExceptionCountOutput
     ExceptionCountOutputLevel1:
       properties:
@@ -779,17 +795,16 @@ components:
           example: 1234
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/ExceptionCountOutputLevel2'
-            type: array
-          - type: 'null'
+            - items:
+                $ref: '#/components/schemas/ExceptionCountOutputLevel2'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - count
-      - uniqueCaseCount
+        - key
+        - name
+        - count
+        - uniqueCaseCount
       title: ExceptionCountOutputLevel1
     ExceptionCountOutputLevel2:
       properties:
@@ -811,17 +826,16 @@ components:
           example: 1234
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/ExceptionCountOutputLevel3'
-            type: array
-          - type: 'null'
+            - items:
+                $ref: '#/components/schemas/ExceptionCountOutputLevel3'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - count
-      - uniqueCaseCount
+        - key
+        - name
+        - count
+        - uniqueCaseCount
       title: ExceptionCountOutputLevel2
     ExceptionCountOutputLevel3:
       properties:
@@ -843,10 +857,10 @@ components:
           example: 1234
       type: object
       required:
-      - key
-      - name
-      - count
-      - uniqueCaseCount
+        - key
+        - name
+        - count
+        - uniqueCaseCount
       title: ExceptionCountOutputLevel3
     HTTPValidationError:
       properties:
@@ -860,10 +874,10 @@ components:
     UserActivityGroupByEnum:
       type: string
       enum:
-      - userRole
-      - userStatus
-      - systemSource
-      - activityDay
+        - userRole
+        - userStatus
+        - systemSource
+        - activityDay
       title: UserActivityGroupByEnum
     UserActivityInput:
       properties:
@@ -877,62 +891,56 @@ components:
           minItems: 1
           title: Groupby
           example:
-          - userRole
+            - userRole
       type: object
       required:
-      - filter
-      - groupBy
+        - filter
+        - groupBy
       title: UserActivityInput
     UserActivityInputFilter:
       properties:
         userRole:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Userrole
           example:
-          - Customer
+            - Customer
         userStatus:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Userstatus
           example:
-          - active
+            - active
         systemSource:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Systemsource
           example:
-          - MyPolicyView
+            - MyPolicyView
         userEligibleCarrier:
           anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+            - items:
+                type: string
+              type: array
           title: Usereligiblecarrier
           example:
-          - MASS
+            - MASS
         dateStart:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Datestart
           example: '2025-05-13T00:00:00.000Z'
         dateEnd:
           anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
+            - type: string
+              format: date-time
           title: Dateend
           example: '2025-05-20T00:00:00.000Z'
       type: object
@@ -950,8 +958,8 @@ components:
           example: 123
       type: object
       required:
-      - data
-      - totalElements
+        - data
+        - totalElements
       title: UserActivityOutput
     UserActivityOutputLevel1:
       properties:
@@ -969,16 +977,15 @@ components:
           example: 18
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/UserActivityOutputLevel2'
-            type: array
-          - type: 'null'
+            - items:
+                $ref: '#/components/schemas/UserActivityOutputLevel2'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: UserActivityOutputLevel1
     UserActivityOutputLevel2:
       properties:
@@ -996,16 +1003,15 @@ components:
           example: 24
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/UserActivityOutputLevel3'
-            type: array
-          - type: 'null'
+            - items:
+                $ref: '#/components/schemas/UserActivityOutputLevel3'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: UserActivityOutputLevel2
     UserActivityOutputLevel3:
       properties:
@@ -1023,17 +1029,181 @@ components:
           example: 35
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: UserActivityOutputLevel3
+    UserViewsGroupByEnum:
+      type: string
+      enum:
+        - userRole
+        - pageType
+        - carrier
+        - activityDay
+        - process
+        - processSubType
+      title: UserViewsGroupByEnum
+    UserViewsInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/UserViewsInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/UserViewsGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+            - activityDay
+      type: object
+      required:
+        - filter
+        - groupBy
+      title: UserViewsInput
+    UserViewsInputFilter:
+      properties:
+        userRole:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Userrole
+          example:
+            - Customer
+        pageType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Pagetype
+          example:
+            - Cases
+        carrier:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Carrier
+          example:
+            - MASS
+        process:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Process
+          example:
+            - New Business
+        dateStart:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Datestart
+          example: '2025-05-13T00:00:00.000Z'
+        dateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Dateend
+          example: '2025-05-20T00:00:00.000Z'
+      type: object
+      title: UserViewsInputFilter
+    UserViewsOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/UserViewsOutputLevel1'
+          type: array
+          title: Data
+        totalElements:
+          type: integer
+          title: Totalelements
+          example: 123
+      type: object
+      required:
+        - data
+        - totalElements
+      title: UserViewsOutput
+    UserViewsOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: userRole
+        name:
+          type: string
+          title: Name
+          example: Customer
+        count:
+          type: integer
+          title: Count
+          example: 18
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/UserViewsOutputLevel2'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserViewsOutputLevel1
+    UserViewsOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: pageType
+        name:
+          type: string
+          title: Name
+          example: Cases
+        count:
+          type: integer
+          title: Count
+          example: 24
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/UserViewsOutputLevel3'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserViewsOutputLevel2
+    UserViewsOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: activityDay
+        name:
+          type: string
+          title: Name
+          example: '2025-06-18'
+        count:
+          type: integer
+          title: Count
+          example: 35
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserViewsOutputLevel3
     ValidationError:
       properties:
         loc:
           items:
             anyOf:
-            - type: string
-            - type: integer
+              - type: string
+              - type: integer
           type: array
           title: Location
         msg:
@@ -1044,7 +1214,7 @@ components:
           title: Error Type
       type: object
       required:
-      - loc
-      - msg
-      - type
+        - loc
+        - msg
+        - type
       title: ValidationError

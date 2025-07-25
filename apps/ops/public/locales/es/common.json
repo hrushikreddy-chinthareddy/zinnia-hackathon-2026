@@ -6488,8 +6488,11 @@
         }
     },
     "usage": {
+        "date": "Fecha",
+        "exportToCSV": "Exportar a CSV",
         "tabs": {
-            "logins": "Inicios de sesión"
+            "logins": "Inicios de sesión",
+            "pageViews": "Vistas de página"
         },
         "logins": {
             "zinniaLive": {
@@ -6501,6 +6504,14 @@
             "uniqueUsers": "Usuarios únicos",
             "date": "Fecha",
             "exportToCSV": "Exportar a CSV"
+        },
+        "pageViews": {
+            "zinniaLivePageViews": {
+                "title": "Visitas de página en vivo de Zinnia"
+            },
+            "zinniaLiveCaseViews": {
+                "title": "Vistas de casos de Zinnia Live por transacción"
+            }
         }
     },
     "reverseTransaction": {

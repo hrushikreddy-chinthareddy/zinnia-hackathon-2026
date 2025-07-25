@@ -1,11 +1,14 @@
 import {
-    UserActivityOutputLevel1,
-    UserActivityOutputLevel3,
+    UserViewsOutputLevel1,
+    UserViewsOutputLevel3,
 } from '@xd/api-types/dist/generated-types/analytics';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { useTranslation } from 'react-i18next';
 
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
+import { Timerange } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
+import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 
 import { downloadCSV } from '../utils';
@@ -30,12 +33,20 @@ export const startDates: Record<TimeframeFilterOptions, string> = {
 
 dayjs.extend(isoWeek);
 
+export const roles = [
+    { value: 'All', label: 'All' },
+    { value: 'Call Center', label: 'Call Center' },
+    { value: 'Operations', label: 'Operations' },
+    { value: 'Selling Agent', label: 'Selling Agent' },
+    { value: 'Zinnia User', label: 'Zinnia User' },
+];
+
 export const generateSeries = (
-    loginsData: UserActivityOutputLevel1[] | undefined,
+    loginsData: UserViewsOutputLevel1[] | undefined,
     timerange: { from: string; to: string },
     color: string[]
 ) => {
-    if (!loginsData || !loginsData.length) return [];
+    if (!loginsData?.length) return [];
 
     const fromDate = dayjs(timerange.from);
     const toDate = dayjs(timerange.to);
@@ -49,7 +60,7 @@ export const generateSeries = (
             type: 'line',
             name: item.name,
             color: color[index],
-            data: data?.map((item: UserActivityOutputLevel3) => [
+            data: data?.map((item: UserViewsOutputLevel3) => [
                 dayjs(item.name).unix() * 1000,
                 item.count,
             ]),
@@ -57,25 +68,40 @@ export const generateSeries = (
     });
 };
 
-export const downloadUserActivityCSV = (
-    data: UserActivityOutputLevel1[],
-    filename = 'Usage-Logins.csv'
+export const PrepareUserViewsCSV = (
+    data: UserViewsOutputLevel1[],
+    filename = 'Usage-Page-Views.csv'
 ) => {
-    const rows: string[] = ['Date,User Group,Count'];
+    const rows: string[] = ['Date, Page Type, Total views'];
 
-    const userRoleEntries = data.filter((d) => d.key === 'userRole');
+    for (const pageTypeEntry of data) {
+        const pageType = pageTypeEntry.name;
 
-    for (const entry of userRoleEntries) {
-        if (!Array.isArray(entry.values)) continue;
+        if (!Array.isArray(pageTypeEntry.values)) continue;
 
-        const userGroup = entry.name;
-
-        for (const activity of entry.values) {
+        for (const activity of pageTypeEntry.values) {
             const [year, month, day] = activity.name.split('-');
             const formattedDate = `${parseInt(month)}/${parseInt(day)}/${year}`;
-            rows.push(`${formattedDate},${userGroup},${activity.count}`);
+            rows.push(`${formattedDate},${pageType},${activity.count}`);
         }
     }
+
     const csv = rows.join('\n');
     downloadCSV(csv, filename);
+};
+
+export const generateCSVFileName = (
+    title: string,
+    role: string,
+    timerange: Timerange,
+    optionaltitle?: string
+) => {
+    const { t } = useTranslation();
+    const rolePart = role === 'All' ? 'All Roles' : role;
+    const fromDate = dayjs(timerange.from).format(defaultDateFormat);
+    const toDate = dayjs(timerange.to).format(defaultDateFormat);
+
+    return `${t(title)} ${rolePart} ${t(
+        optionaltitle || ''
+    )} ${fromDate} to ${toDate}`;
 };

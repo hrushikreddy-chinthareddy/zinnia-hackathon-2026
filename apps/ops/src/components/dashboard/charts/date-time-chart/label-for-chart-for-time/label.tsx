@@ -14,19 +14,24 @@ interface Props {
     labelData: LabelData[];
     dateStr: string;
     total: number;
+    isTooltipColorCircle?: boolean;
 }
 
 export const LabelComponent: React.FC<Props> = ({
     labelData,
     dateStr,
     total,
+    isTooltipColorCircle = true,
 }) => {
     return (
         <div className={styles.labelWrapper}>
             {labelData.map((value, index) => (
                 <div key={index} className={styles.label}>
                     <div
-                        className={styles.color}
+                        className={clsx(
+                            styles.color,
+                            isTooltipColorCircle && styles.colorCircle
+                        )}
                         style={{ backgroundColor: value.color }}
                     />
                     <div className={styles.labelText}>
@@ -34,11 +39,16 @@ export const LabelComponent: React.FC<Props> = ({
                     </div>
                 </div>
             ))}
-            <div
-                className={clsx('typography-labels-label-sm-alt', styles.date)}
-            >
-                <i>Closed date: {dateStr}</i>
-            </div>
+            {dateStr && (
+                <div
+                    className={clsx(
+                        'typography-labels-label-sm-alt',
+                        styles.date
+                    )}
+                >
+                    <i>Closed date: {dateStr}</i>
+                </div>
+            )}
             <div className={styles.total}>
                 Total: <b>{total.toLocaleString()}</b>
             </div>

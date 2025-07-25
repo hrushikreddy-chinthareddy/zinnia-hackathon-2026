@@ -1,3 +1,4 @@
+import { toTitleCase } from '@xd/utils/dist';
 import {
     Icon,
     IconType,
@@ -12,8 +13,8 @@ import { useTranslation } from 'react-i18next';
 
 export enum UsageTabs {
     LOGINS = 'logins',
-    //These are upcoming tabs
-    // PAGE_VIEWS = 'page-views',
+    PAGE_VIEWS = 'page-views',
+    // This is upcoming tab
     // ACTIVITY = 'activity',
 }
 const DEFAULT_TAB = UsageTabs.LOGINS;
@@ -61,12 +62,17 @@ export const UsageTabNav: FC<PropsWithChildren> = ({ children }) => {
                     {t('usage.tabs.logins')}
                 </TabTrigger>
 
-                {/* These are upcoming tabs*/}
-                {/* <TabTrigger value={UsageTabs.PAGE_VIEWS}>
-          <Icon type={IconType.DASHBOARD} width={24} height={24} className="hidden lg:block" />{' '}
-          {toTitleCase('page views')}
-        </TabTrigger>
-        <TabTrigger value={UsageTabs.ACTIVITY}>
+                <TabTrigger value={UsageTabs.PAGE_VIEWS}>
+                    <Icon
+                        type={IconType.DASHBOARD}
+                        width={24}
+                        height={24}
+                        className="hidden lg:block"
+                    />{' '}
+                    {toTitleCase('page views')}
+                </TabTrigger>
+                {/* This is upcoming tabbs*/}
+                {/* <TabTrigger value={UsageTabs.ACTIVITY}>
           <Icon type={IconType.COLLECTION} width={24} height={24} className="hidden lg:block" />{' '}
           {toTitleCase('activity')}
         </TabTrigger> */}

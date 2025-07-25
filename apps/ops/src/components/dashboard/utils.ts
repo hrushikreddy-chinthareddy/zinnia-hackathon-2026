@@ -5,6 +5,7 @@ import {
     ExceptionCountGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
+import { useMemo } from 'react';
 
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Processes, Statuses } from '@deps/models/case/case';
@@ -255,4 +256,41 @@ export const friendlyGroupByName: Record<
     [ExceptionCountGroupByEnum.EXCEPTION_REASON]: 'Exception reason',
     [ExceptionCountGroupByEnum.EXCEPTION_CREATED_DAY]: 'Exception created date',
     [ExceptionCountGroupByEnum.EXCEPTION_UPDATED_DAY]: 'Exception updated date',
+};
+
+/**
+ * Custom React hook to filter user roles for use in API calls or filtering logic.
+ *
+ * @param role - The currently selected role. Can be a specific role (e.g., 'Call Center') or the string 'All'.
+ * @param roles - An array of all available roles, each as a SimpleOption (typically { label: string, value: string }).
+ *
+ * @returns A string array of roles that can be used in the payload of the API:
+ *   - If `role` is `'All'`, it returns all role values except `'All'`.
+ *   - Otherwise, it returns an array containing just the selected role.
+ *
+ * Example:
+ *
+ * const rolesToPass = useUserRolesFilter({ role: 'All', roles: [ { value: 'All', label: 'All' },
+    { value: 'Call Center', label: 'Call Center' },
+    { value: 'Operations', label: 'Operations' },] });
+
+ * // rolesToPass => ['Call Center', 'Operations]
+ * ```
+ */
+
+export const useUserRolesFilter = ({
+    role,
+    roles,
+}: {
+    role: string;
+    roles: SimpleOption[];
+}) => {
+    return useMemo(() => {
+        if (role === 'All') {
+            return roles
+                .filter(({ value }) => value !== 'All')
+                .map(({ value }) => value);
+        }
+        return [role];
+    }, [role, roles]);
 };

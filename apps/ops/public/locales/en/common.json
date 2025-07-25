@@ -6670,9 +6670,12 @@
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
-    "usage": {
+    "usage":{
+        "date": "Date",
+        "exportToCSV": "Export to CSV",
         "tabs": {
-            "logins": "Logins"
+            "logins": "Logins",
+            "pageViews": "Page Views"
         },
         "logins": {
             "zinniaLive": {
@@ -6684,6 +6687,14 @@
             "uniqueUsers": "Unique users",
             "date": "Date",
             "exportToCSV": "Export to CSV"
+        },
+        "pageViews" : {
+            "zinniaLivePageViews":{
+                 "title" : "Zinnia Live Page Views"
+        },
+        "zinniaLiveCaseViews": {
+            "title" : "Zinnia Live Case Views by Transaction"
+        }
         }
     },
     "clientCase": {
