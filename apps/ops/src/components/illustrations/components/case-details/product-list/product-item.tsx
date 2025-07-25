@@ -17,12 +17,14 @@ import IllustrationItem from '../illustration-item/illustration-item';
 interface IllustrationProductItemProps {
     product: Product;
     illustrations?: IllustrationSummary[];
+    eAppId?: string;
     onNewIllustration?: (planCode: string) => void;
 }
 
 const IllustrationProductItem = ({
     product,
     illustrations,
+    eAppId,
     onNewIllustration,
 }: IllustrationProductItemProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
@@ -74,6 +76,7 @@ const IllustrationProductItem = ({
                                 product={product}
                                 illustration={illustration}
                                 isSelected={illustration.id === illustrationId}
+                                isSelectableForApplication={!!eAppId}
                             />
                             {pIdx < illustrations.length - 1 && (
                                 <Divider

@@ -123,7 +123,6 @@ export default function IllustrationDetailsToolbar({
             link.click();
             document.body.removeChild(link);
 
-            // Optional: Clean up the blob URL
             window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Error downloading PDF:', error);

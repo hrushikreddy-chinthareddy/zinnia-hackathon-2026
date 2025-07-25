@@ -1,9 +1,4 @@
-import {
-    Icon,
-    IconType,
-    MenuContextual,
-    MenuContextualItem,
-} from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
@@ -11,18 +6,21 @@ import { IllustrationSummary } from '@deps/types/illustrations';
 import { Product } from '@deps/types/product';
 
 import styles from './illustration-item.module.css';
+import IllustrationMenu from './illustration-menu';
 import StatusBadge from './status-badge';
 
 interface IllustrationItemProps {
     illustration: IllustrationSummary;
     product: Product;
     isSelected?: boolean;
+    isSelectableForApplication?: boolean;
 }
 
 const IllustrationItem = ({
     illustration,
     product,
     isSelected,
+    isSelectableForApplication,
 }: IllustrationItemProps) => {
     const { handleSelectIllustration } = useSelectedIllustration();
     return (
@@ -38,57 +36,11 @@ const IllustrationItem = ({
             <div className={clsx(styles.status)}>
                 <StatusBadge status={illustration.status} />
                 <span className={clsx(styles.menu)}>
-                    <MenuContextual
-                        triggerLabel={<Icon type={IconType.MENU_HORIZONTAL} />}
-                    >
-                        <MenuContextualItem
-                            disabled
-                            content="Edit"
-                            href="/"
-                            icon={
-                                <Icon
-                                    type={IconType.EDIT}
-                                    height={20}
-                                    width={20}
-                                />
-                            }
-                        />
-                        <MenuContextualItem
-                            disabled
-                            content="Duplicate"
-                            href="/"
-                            icon={
-                                <Icon
-                                    type={IconType.DUPLICATE}
-                                    height={20}
-                                    width={20}
-                                />
-                            }
-                        />
-                        <MenuContextualItem
-                            disabled
-                            content="Archive"
-                            href="/"
-                            icon={
-                                <Icon
-                                    type={IconType.ARCHIVE}
-                                    height={20}
-                                    width={20}
-                                />
-                            }
-                        />
-                        <MenuContextualItem
-                            content="Select for Application"
-                            href="/"
-                            icon={
-                                <Icon
-                                    type={IconType.CIRCLE_CHECKMARK}
-                                    height={20}
-                                    width={20}
-                                />
-                            }
-                        />
-                    </MenuContextual>
+                    <IllustrationMenu
+                        isSelectForApplicationVisible={
+                            isSelectableForApplication
+                        }
+                    ></IllustrationMenu>
                 </span>
             </div>
         </li>

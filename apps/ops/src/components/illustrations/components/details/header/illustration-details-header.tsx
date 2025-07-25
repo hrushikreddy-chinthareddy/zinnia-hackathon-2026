@@ -8,8 +8,6 @@ import {
     Icon,
     IconType,
     Label,
-    MenuContextual,
-    MenuContextualItem,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -20,6 +18,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import style from './illustration-details-header.module.css';
+import IllustrationMenu from '../../case-details/illustration-item/illustration-menu';
 
 type IllustrationDetailsHeaderProps = {
     title?: string;
@@ -79,61 +78,9 @@ export default function IllustrationDetailsHeader({
                             </Label>
                         )}
                         <span>
-                            <MenuContextual
-                                triggerLabel={
-                                    <Icon type={IconType.MENU_HORIZONTAL} />
-                                }
-                            >
-                                <MenuContextualItem
-                                    disabled
-                                    content="Edit"
-                                    href="/"
-                                    icon={
-                                        <Icon
-                                            type={IconType.EDIT}
-                                            height={20}
-                                            width={20}
-                                        />
-                                    }
-                                />
-                                <MenuContextualItem
-                                    disabled
-                                    content="Duplicate"
-                                    href="/"
-                                    icon={
-                                        <Icon
-                                            type={IconType.DUPLICATE}
-                                            height={20}
-                                            width={20}
-                                        />
-                                    }
-                                />
-                                <MenuContextualItem
-                                    disabled
-                                    content="Archive"
-                                    href="/"
-                                    icon={
-                                        <Icon
-                                            type={IconType.ARCHIVE}
-                                            height={20}
-                                            width={20}
-                                        />
-                                    }
-                                />
-                                {!!eAppId && (
-                                    <MenuContextualItem
-                                        content="Select for Application"
-                                        href="/"
-                                        icon={
-                                            <Icon
-                                                type={IconType.CIRCLE_CHECKMARK}
-                                                height={20}
-                                                width={20}
-                                            />
-                                        }
-                                    />
-                                )}
-                            </MenuContextual>
+                            <IllustrationMenu
+                                isSelectForApplicationVisible={!!eAppId}
+                            ></IllustrationMenu>
                         </span>
                     </div>
                 </div>

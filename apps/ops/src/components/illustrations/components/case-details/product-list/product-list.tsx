@@ -182,6 +182,7 @@ const IllustrationProductList = ({
                                             illustrations={
                                                 product.illustrations
                                             }
+                                            eAppId={clientCase.eAppId}
                                             onNewIllustration={
                                                 handleNewIllustration
                                             }
