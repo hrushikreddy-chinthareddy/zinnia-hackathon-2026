@@ -6598,7 +6598,14 @@
                 "includedInPremiumsFootNote": "(incluido en primas)",
                 "noRiders": "Sin adicionales",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
-                "accidentalDeathBenefit": "Accidental Death Benefit"
+                "accidentalDeathBenefit": "Accidental Death Benefit",
+                "acceleratedDeathBenefitForTerminalIllness": "Beneficio de muerte acelerado por enfermedad terminal",
+                "acceleratedDeathBenefitForChronicIllness": "Beneficio de muerte acelerado por enfermedades crónicas",
+                "charitableGiving": "Donaciones caritativas",
+                "childrensTerm": "Seguro a plazo infantil",
+                "overloanProtection": "Protección contra sobrepréstamo",
+                "waiverOfDeduction": "Renuncia a la deducción",
+                "waiverOfPremium": "Exención de prima"
             },
             "accountValue": {
                 "title": "Valor de cuenta",

@@ -32,7 +32,7 @@ const IllustrationItem = ({
             onClick={() => handleSelectIllustration(product, illustration)}
         >
             <Icon type={IconType.DOCUMENT_REPORT} />
-            <span>{illustration.title}</span>
+            <span className="flex-1">{illustration.title}</span>
             <div className={clsx(styles.status)}>
                 <StatusBadge status={illustration.status} />
                 <span className={clsx(styles.menu)}>

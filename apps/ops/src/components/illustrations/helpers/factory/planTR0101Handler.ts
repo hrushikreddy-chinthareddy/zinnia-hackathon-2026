@@ -23,6 +23,7 @@ import {
     InsuredRoleCodes,
     SubStandardRating,
 } from '../illustrationApiSchemas';
+import { riderNamesMap } from '../rider-names-map';
 
 const baseCoverageSchema = t.object(
     // TODO: change to not optional once we understand how to get amount when solve for is face amount
@@ -448,7 +449,7 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
 
             const riders = Object.keys(assumed.coverages)
                 .filter((coverage) => coverage !== 'base')
-                .map((riderName) => riderName)
+                .map((riderName) => riderNamesMap?.[riderName] ?? riderName)
                 .join(', ');
 
             return `, ${riders}`;
@@ -456,6 +457,6 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
 
         return `${createDate}, ${numberFormatify(
             assumed.initial.totalFaceAmount
-        )}, ${guaranteed.lapse.year} years ${getRidersText()}`;
+        )}, ${guaranteed.lapse.year} years${getRidersText()}`;
     }
 }

@@ -23,6 +23,7 @@ import {
     NonInsuredRoleCodes,
     SubStandardRating,
 } from '../illustrationApiSchemas';
+import { riderNamesMap } from '../rider-names-map';
 
 const baseCoverageSchema = t.object(
     // TODO: change to not optional once we understand how to get amount when solve for is face amount
@@ -714,20 +715,19 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
     public generateTitle(data: any): string {
         const assumed = data.assumed;
         const guaranteed = data.guaranteed;
-        const createDate = new Date().toLocaleDateString();
+        const creationDate = new Date().toLocaleDateString();
 
-        const getRidersText = () => {
+        const getRidersTextList = () => {
             const hasRiders = Object.keys(assumed.coverages).length > 1;
             if (!hasRiders) {
-                return '';
+                return [];
             }
 
             const riders = Object.keys(assumed.coverages)
                 .filter((coverage) => coverage !== 'base')
-                .map((riderName) => riderName)
-                .join(', ');
+                .map((riderName) => riderNamesMap?.[riderName] ?? riderName);
 
-            return `, ${riders}`;
+            return riders;
         };
 
         const getDeathBenefits = () => {
@@ -735,18 +735,22 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
                 assumed.annualTimeSeriesData[0].deathBenefitsMount;
 
             if (deathBenefitsMount) {
-                return `, Death Benefits ${numberFormatify(
-                    deathBenefitsMount
-                )} `;
+                return `Death Benefits ${numberFormatify(deathBenefitsMount)}`;
             }
 
             return '';
         };
 
-        return `${createDate}, Initial Premium ${numberFormatify(
-            assumed.initial.minimumPremiumAmount
-        )}, ${numberFormatify(
-            assumed.initial.totalFaceAmount
-        )} ${getDeathBenefits()} ${getRidersText()}`;
+        return [
+            creationDate,
+            `Initial Premium  ${numberFormatify(
+                assumed.initial.minimumPremiumAmount
+            )}`,
+            numberFormatify(assumed.initial.totalFaceAmount),
+            getDeathBenefits(),
+            ...getRidersTextList(),
+        ]
+            .filter((x) => x)
+            .join(', ');
     }
 }

@@ -7,11 +7,11 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
-import { ridersLabelMap } from './riders-label-map';
+import { useRidersLabelMap } from './use-riders-label-map';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export function useIllustrationRidersData() {
-    const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const ridersLabelMap = useRidersLabelMap();
     const illustration = useIllustrationDetail();
 
     if (!illustration) {
@@ -23,8 +23,9 @@ export function useIllustrationRidersData() {
     if (Object.keys(coverages).length === 1) {
         return [];
     }
+    type Keys<T> = T extends any ? keyof T : never;
 
-    return Object.keys(coverages)
+    return (Object.keys(coverages) as Keys<typeof coverages>[])
         .filter((k) => k !== 'base')
         .map((riderName) => {
             const { premium } =
@@ -35,7 +36,7 @@ export function useIllustrationRidersData() {
                     >
                 )[riderName] ?? {};
             return {
-                label: t(ridersLabelMap[riderName] ?? riderName),
+                label: ridersLabelMap?.[riderName] ?? riderName,
                 value: numberFormatify(premium),
             };
         });

@@ -21,6 +21,7 @@ import {
     mapIllustrationPayloadToEngineInputData,
 } from '../farmers/famersBlueprintToIllustrationPayloadTL0101';
 import { farmersTermBlueprintTL0101 } from '../farmers/farmersTermBlueprintTL0101';
+import { riderNamesMap } from '../rider-names-map';
 
 export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
     constructor(clientCase: IllustrationsClientCase) {
@@ -88,7 +89,7 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
 
             const riders = Object.keys(assumed.coverages)
                 .filter((coverage) => coverage !== 'base')
-                .map((riderName) => riderName)
+                .map((riderName) => riderNamesMap?.[riderName] ?? riderName)
                 .join(', ');
 
             return `, ${riders}`;
@@ -96,6 +97,6 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
 
         return `${createDate}, ${numberFormatify(
             assumed.initial.totalFaceAmount
-        )}, ${guaranteed.lapse.year} years ${getRidersText()}`;
+        )}, ${guaranteed.lapse.year} years${getRidersText()}`;
     }
 }

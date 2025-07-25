@@ -8,10 +8,11 @@ import { ProductTypes } from '@deps/types/product';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
-import { ridersLabelMap } from './riders-label-map';
+import { useRidersLabelMap } from './use-riders-label-map';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export function useIllustrationCoverageData() {
+    const ridersLabelMap = useRidersLabelMap();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustration = useIllustrationDetail();
     const baseCoverageLabel = t(
@@ -50,7 +51,7 @@ export function useIllustrationCoverageData() {
                     coverages as unknown as Record<string, OutputCoverageValues>
                 )[riderName]?.faceAmount;
                 return {
-                    label: t(ridersLabelMap[riderName] ?? riderName),
+                    label: ridersLabelMap?.[riderName] ?? riderName,
                     value: numberFormatify(faceAmount),
                 };
             }),

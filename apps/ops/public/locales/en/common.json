@@ -6752,7 +6752,14 @@
                 "includedInPremiumsFootNote": "(included in premiums)",
                 "noRiders": "No Riders",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
-                "accidentalDeathBenefit": "Accidental Death Benefit"
+                "accidentalDeathBenefit": "Accidental Death Benefit",
+                "acceleratedDeathBenefitForTerminalIllness": "Accelerated Death Benefit for Terminal Illness",
+                "acceleratedDeathBenefitForChronicIllness": "Chronic Illness Accelerated Death Benefit",
+                "charitableGiving": "Charitable Giving",
+                "childrensTerm": "Children's Term Insurance",
+                "overloanProtection": "Overloan Protection",
+                "waiverOfDeduction": "Waiver of Deduction",
+                "waiverOfPremium": "Waiver of Premium"
             },
             "accountValue": {
                 "title": "Account Value",
