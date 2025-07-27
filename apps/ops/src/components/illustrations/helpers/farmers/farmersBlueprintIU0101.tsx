@@ -95,56 +95,6 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     disabled: true,
                                 },
-                                // {
-                                //     fieldType: 'dropdown',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: "Farmer's Multiple Policy Owner",
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'multiple-policy-owner',
-                                //     outputPath: 'discountIndicator',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: '73209330-ce34-4084-bff5-dc40a6d966fc',
-                                //     partName:
-                                //         'custom-86910a5b-146a-48c0-9185-c8999658c49e',
-                                //     selectOptions: [
-                                //         {
-                                //             value: 'MULTIPRODUCT',
-                                //             text: {
-                                //                 en: 'Yes',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 0,
-                                //         },
-                                //         {
-                                //             value: 'NON',
-                                //             text: {
-                                //                 en: 'No',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //     ],
-                                //     validateAs: 'string',
-                                //     defaultValue: 'NON',
-                                // },
                                 {
                                     fieldType: 'custom',
                                     customName: 'insuredFullNameTag',
@@ -979,8 +929,6 @@ export const farmersBlueprintIU0101 = {
                                                                 },
                                                                 targetBirthdateNodeId:
                                                                     'date-of-birth',
-                                                                // roundingType:
-                                                                //     'lastBirthday',
                                                             },
                                                         ],
                                                     },
@@ -1062,87 +1010,6 @@ export const farmersBlueprintIU0101 = {
                                     applicationModes: ['digital', 'paper'],
                                     validateAs: 'string',
                                 },
-                                // {
-                                //     fieldType: 'checkboxGroup',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'illustrate-at-older-age',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: true,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: '4499ea89-4c57-4cf8-8880-d650df344f24',
-                                //     partName:
-                                //         'custom-b1b55a6a-e49f-4a62-b7b9-7d51e68034e8',
-                                //     validateAs: 'string',
-                                //     selectOptions: [
-                                //         {
-                                //             value: 'illustrateAtOlderAge',
-                                //             text: {
-                                //                 en: 'Illustrate at older age',
-                                //             },
-                                //             isCustom: true,
-                                //         },
-                                //     ],
-                                // },
-                                // {
-                                //     fieldType: 'date',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Effective Date',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'effective-date',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: '65098291-cd6f-4358-99f7-9fd2de5ebc2b',
-                                //     partName:
-                                //         'custom-11faca2d-91a2-4846-913c-d30647d7d321',
-                                //     validateAs: 'futureOrCurrentDate',
-                                //     visible: {
-                                //         booleanOperator: 'and',
-                                //         conditions: [
-                                //             {
-                                //                 type: 'matchesCondition',
-                                //                 value: ['illustrateAtOlderAge'],
-                                //                 targetNodeId:
-                                //                     'illustrate-at-older-age',
-                                //                 quantifier: 'any',
-                                //             },
-                                //         ],
-                                //     },
-                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -1358,7 +1225,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'STANDARDCONVERSIONNONTOBACCO',
+                                            value: 'STANDARDNONTOBACCO',
                                             text: {
                                                 en: 'Platinum Substandard',
                                             },
@@ -1366,7 +1233,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'STANDARDCONVERSIONTOBACCO',
+                                            value: 'STANDARDTOBACCO',
                                             text: {
                                                 en: 'Gold Substandard',
                                             },
@@ -1839,8 +1706,8 @@ export const farmersBlueprintIU0101 = {
                                             {
                                                 type: 'matchesCondition',
                                                 value: [
-                                                    'STANDARDCONVERSIONNONTOBACCO',
-                                                    'STANDARDCONVERSIONTOBACCO',
+                                                    'STANDARDNONTOBACCO',
+                                                    'STANDARDTOBACCO',
                                                 ],
                                                 targetNodeId: 'premium-class',
                                                 quantifier: 'any',
@@ -1857,8 +1724,8 @@ export const farmersBlueprintIU0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDCONVERSIONNONTOBACCO',
-                                            'STANDARDCONVERSIONTOBACCO',
+                                            'STANDARDNONTOBACCO',
+                                            'STANDARDTOBACCO',
                                         ],
                                         targetNodeId: 'premium-class',
                                         quantifier: 'any',
@@ -1998,8 +1865,8 @@ export const farmersBlueprintIU0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDCONVERSIONTOBACCO',
-                                            'STANDARDCONVERSIONNONTOBACCO',
+                                            'STANDARDTOBACCO',
+                                            'STANDARDNONTOBACCO',
                                         ],
                                         targetNodeId: 'premium-class',
                                         quantifier: 'any',
@@ -2093,8 +1960,8 @@ export const farmersBlueprintIU0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDCONVERSIONTOBACCO',
-                                            'STANDARDCONVERSIONNONTOBACCO',
+                                            'STANDARDTOBACCO',
+                                            'STANDARDNONTOBACCO',
                                         ],
                                         targetNodeId: 'premium-class',
                                         quantifier: 'any',

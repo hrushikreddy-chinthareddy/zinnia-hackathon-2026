@@ -17,6 +17,7 @@ type SubmitContextValue = {
     onSubmit: () => void;
     onQuickQuote: () => void;
     isError?: boolean;
+    isLoadingQuickQuote: boolean;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -105,7 +106,10 @@ export function SubmitProvider({
         },
     });
 
-    const quickQuoteIllustrationMutation = useMutation({
+    const {
+        mutateAsync: quickQuoteIllustrationMutation,
+        isPending: isLoadingQuickQuote,
+    } = useMutation({
         mutationKey: ['saveOrderEntryAnswers'],
         mutationFn: async (engine: QuestionnaireEngine): Promise<any> => {
             // Use this next line to debug only. Never access the dump to grab values in the engine.
@@ -165,11 +169,9 @@ export function SubmitProvider({
                         {}
                     ),
                 onQuickQuote: () =>
-                    quickQuoteIllustrationMutation.mutateAsync(
-                        questionnaireEngine,
-                        {}
-                    ),
+                    quickQuoteIllustrationMutation(questionnaireEngine, {}),
                 isError: createIllustrationMutation.isError,
+                isLoadingQuickQuote,
             }}
         >
             {children}

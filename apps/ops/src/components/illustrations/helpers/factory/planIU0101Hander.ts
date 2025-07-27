@@ -157,8 +157,7 @@ const farmersEntitiesSchema = t.object(
         t.object(
             t.optionalProperty('amount', t.union(t.number, t.undefined)), // temporary-flat-extra
             t.property('duration', t.union(t.number, t.undefined)), // schedule-duration
-            t.property('durationType', t.union(t.string, t.undefined)), // schedule-duration-unit
-            t.property('startDate', t.union(t.string, t.undefined)) // schedule-from
+            t.property('durationType', t.union(t.string, t.undefined)) // schedule-duration-unit
         )
     ),
     t.optionalProperty('riders', ridersSchema),
@@ -372,8 +371,6 @@ function createIllustrationPayload(
                                         values.temporaryFlatExtra?.duration,
                                     durationType:
                                         values.temporaryFlatExtra?.durationType,
-                                    startDate:
-                                        values.temporaryFlatExtra?.startDate,
                                 },
                             ],
                         }),
@@ -634,7 +631,6 @@ function mapIllustrationPayloadToEngineInputData(
             amount: dataInsuredParticipant?.flatExtra?.[1]?.amount,
             duration: dataInsuredParticipant?.flatExtra?.[1]?.duration,
             durationType: dataInsuredParticipant?.flatExtra?.[1]?.durationType,
-            startDate: dataInsuredParticipant?.flatExtra?.[1]?.startDate,
         },
         solveFor: data.options?.solveFor || '',
         paymentMethod: data.options?.paymentMethod || '',

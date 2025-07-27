@@ -4,6 +4,7 @@ import { Result } from 'typegate';
 
 import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
+import { calculateAge } from '@deps/helpers/string.helpers';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 
@@ -89,6 +90,10 @@ export abstract class IllustrationHandler<TOutputEntities> {
                     lastName: clientCase.agentDetails.lastName,
                 }),
             },
+            insuredAgeTag: calculateAge(
+                clientCase.insuredDetails?.dateOfBirth?.toString(),
+                ''
+            ),
         };
     }
 }

@@ -78,6 +78,7 @@ export const farmersBlueprintTR0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'insured-age-tag',
+                                    outputPath: 'insuredAgeTag',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -97,8 +98,18 @@ export const farmersBlueprintTR0101 = {
                                         'custom-795fd778-ee97-4e0b-b58d-d7ce2bc0b1e4',
                                     validateAs: 'string',
                                     customProperties: {
-                                        tagNodeIds: ['age'],
+                                        tagNodeIds: ['insured-age-tag'],
                                     },
+                                    // internal: {
+                                    //     computedValue: {
+                                    //         select: ['date-of-birth'],
+                                    //         operator: 'formula',
+                                    //         operatorParams: {
+                                    //             formula:
+                                    //                 "dateToAge(date_of_birth, 'lastBirthday', '--')",
+                                    //         },
+                                    //     },
+                                    // },
                                 },
                                 {
                                     fieldType: 'custom',
@@ -146,6 +157,36 @@ export const farmersBlueprintTR0101 = {
                                     },
                                     answerNodeId: 'insured-issue-age',
                                     outputPath: 'insured.issueAge',
+                                    valid: [
+                                        {
+                                            id: 'f41a1156-7d54-45db-a707-d1ce6f7f9227',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 0,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 80,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'This property requires a value which is an INTEGER and is >=0 and is <80 and must be entered.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                     renderOn: [],
                                     copyable: 'none',
                                     optional: false,
@@ -877,74 +918,74 @@ export const farmersBlueprintTR0101 = {
                                     ],
                                     disabled: true,
                                 },
-                                {
-                                    fieldType: 'input',
-                                    id: 'eafbbfee-eb08-46b2-83e4-85b8b484bb27',
-                                    partName:
-                                        'custom-2482f9e9-78ca-46db-b09a-7fae45b5bf42',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Age',
-                                        fr: '',
-                                    },
-                                    platforms: ['consumer'],
-                                    renderOn: [],
-                                    copyable: 'none',
-                                    answerNodeId: 'age',
-                                    internal: {
-                                        computedValue: {
-                                            select: ['date-of-birth'],
-                                            operator: 'formula',
-                                            operatorParams: {
-                                                formula:
-                                                    "dateToAge(date_of_birth, 'closestBirthday', '--')",
-                                            },
-                                        },
-                                    },
-                                    outputPath: 'insured.age',
-                                    valid: [
-                                        {
-                                            id: 'f41a1156-7d54-45db-a707-d1ce6f7f9227',
-                                            conditions: {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 0,
-                                                            maxAge: 80,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'closestBirthday',
-                                                    },
-                                                ],
-                                            },
-                                            message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=0 and is <80 and must be entered.',
-                                                fr: '',
-                                            },
-                                        },
-                                    ],
-                                    optional: false,
-                                    disabled: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                },
+                                // {
+                                //     fieldType: 'input',
+                                //     id: 'eafbbfee-eb08-46b2-83e4-85b8b484bb27',
+                                //     partName:
+                                //         'custom-2482f9e9-78ca-46db-b09a-7fae45b5bf42',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Age',
+                                //         fr: '',
+                                //     },
+                                //     platforms: ['consumer'],
+                                //     renderOn: [],
+                                //     copyable: 'none',
+                                //     answerNodeId: 'age',
+                                //     internal: {
+                                //         computedValue: {
+                                //             select: ['date-of-birth'],
+                                //             operator: 'formula',
+                                //             operatorParams: {
+                                //                 formula:
+                                //                     "dateToAge(date_of_birth, 'lastBirthday', '--')",
+                                //             },
+                                //         },
+                                //     },
+                                //     outputPath: 'insured.age',
+                                //     valid: [
+                                //         {
+                                //             id: 'f41a1156-7d54-45db-a707-d1ce6f7f9227',
+                                //             conditions: {
+                                //                 booleanOperator: 'and',
+                                //                 conditions: [
+                                //                     {
+                                //                         type: 'ageRangeCondition',
+                                //                         value: {
+                                //                             minAge: 0,
+                                //                             maxAge: 80,
+                                //                             unit: 'year',
+                                //                         },
+                                //                         targetBirthdateNodeId:
+                                //                             'date-of-birth',
+                                //                         roundingType:
+                                //                             'lastBirthday',
+                                //                     },
+                                //                 ],
+                                //             },
+                                //             message: {
+                                //                 en: 'This property requires a value which is an INTEGER and is >=0 and is <80 and must be entered.',
+                                //                 fr: '',
+                                //             },
+                                //         },
+                                //     ],
+                                //     optional: false,
+                                //     disabled: true,
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     validateAs: 'string',
+                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -1155,25 +1196,62 @@ export const farmersBlueprintTR0101 = {
                                             },
                                             orderingIndex: 1,
                                         },
-                                        {
-                                            value: 'STANDARDCONVERSIONNONTOBACCO',
-                                            text: {
-                                                en: 'Platinum Substandard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'STANDARDCONVERSIONTOBACCO',
-                                            text: {
-                                                en: 'Gold Substandard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
                                     ],
                                     validateAs: 'string',
                                     defaultValue: 'STANDARDNONTOBACCO',
+                                },
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'table-or-flat-extra-selection',
+                                    outputPath: 'tableOrFlatExtraSelection',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {},
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'ee983615-56d5-459d-9000-57bc8910d0fd',
+                                    partName:
+                                        'custom-281f12c6-5c81-473e-ab5d-30a885b717ad',
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: 'selectTableOrFlatExtraRatings',
+                                            text: {
+                                                en: 'Add sub-standard rating',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: [
+                                                    'STANDARDNONTOBACCO',
+                                                    'STANDARDTOBACCO',
+                                                ],
+                                                targetNodeId: 'premium-class',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
                                 },
                             ],
                             displayAsCard: false,
@@ -1233,7 +1311,7 @@ export const farmersBlueprintTR0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -1247,7 +1325,16 @@ export const farmersBlueprintTR0101 = {
                                     id: '47bc5261-7647-4d16-bee0-4eacfb10e434',
                                     partName:
                                         'custom-58f1c54d-284d-4650-86c3-6e6274e7f4f5',
+                                    defaultValue: 'NONETABLE',
                                     selectOptions: [
+                                        {
+                                            value: 'NONETABLE',
+                                            text: {
+                                                en: 'None',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
                                         {
                                             value: 'TABLEA',
                                             text: {
@@ -1395,7 +1482,7 @@ export const farmersBlueprintTR0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -1414,30 +1501,42 @@ export const farmersBlueprintTR0101 = {
                                         {
                                             id: 'ddf60c38-eb5e-439c-8a16-1412c8f72bd7',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 15,
-                                                        targetNodeId:
-                                                            'temporary-flat-extra',
-                                                        operator:
-                                                            'lessThanOrEqual',
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 15,
+                                                                targetNodeId:
+                                                                    'temporary-flat-extra',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0,
+                                                                targetNodeId:
+                                                                    'temporary-flat-extra',
+                                                                operator:
+                                                                    'greaterThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0.5,
+                                                                targetNodeId:
+                                                                    'temporary-flat-extra',
+                                                                operator:
+                                                                    'multipleOf',
+                                                            },
+                                                        ],
                                                     },
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0,
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
                                                         targetNodeId:
                                                             'temporary-flat-extra',
-                                                        operator:
-                                                            'greaterThanOrEqual',
-                                                    },
-                                                    {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0.5,
-                                                        targetNodeId:
-                                                            'temporary-flat-extra',
-                                                        operator: 'multipleOf',
                                                     },
                                                 ],
                                             },
@@ -1454,10 +1553,10 @@ export const farmersBlueprintTR0101 = {
                                             {
                                                 type: 'matchesCondition',
                                                 value: [
-                                                    'STANDARDCONVERSIONNONTOBACCO',
-                                                    'STANDARDCONVERSIONTOBACCO',
+                                                    'selectTableOrFlatExtraRatings',
                                                 ],
-                                                targetNodeId: 'premium-class',
+                                                targetNodeId:
+                                                    'table-or-flat-extra-selection',
                                                 quantifier: 'any',
                                             },
                                         ],
@@ -1472,10 +1571,10 @@ export const farmersBlueprintTR0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDCONVERSIONNONTOBACCO',
-                                            'STANDARDCONVERSIONTOBACCO',
+                                            'selectTableOrFlatExtraRatings',
                                         ],
-                                        targetNodeId: 'premium-class',
+                                        targetNodeId:
+                                            'table-or-flat-extra-selection',
                                         quantifier: 'any',
                                     },
                                 ],
@@ -1491,38 +1590,38 @@ export const farmersBlueprintTR0101 = {
                             },
                             isCustom: true,
                             fields: [
-                                {
-                                    fieldType: 'date',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Start Date',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'schedule-from',
-                                    outputPath: 'temporaryFlatExtra.startDate',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'a076c49f-92c0-433b-9544-2c617fafac33',
-                                    partName:
-                                        'custom-0374a377-1217-4529-b031-8539f98cd208',
-                                    validateAs: 'futureOrCurrentDate',
-                                    isCustom: true,
-                                },
+                                // {
+                                //     fieldType: 'date',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Start Date',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'schedule-from',
+                                //     outputPath: 'temporaryFlatExtra.startDate',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: 'a076c49f-92c0-433b-9544-2c617fafac33',
+                                //     partName:
+                                //         'custom-0374a377-1217-4529-b031-8539f98cd208',
+                                //     validateAs: 'futureOrCurrentDate',
+                                //     isCustom: true,
+                                // },
                                 {
                                     fieldType: 'number',
                                     text: {
@@ -1603,6 +1702,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                     ],
+                                    defaultValue: 'YEARS',
                                     validateAs: 'string',
                                 },
                             ],
@@ -1614,11 +1714,17 @@ export const farmersBlueprintTR0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDCONVERSIONTOBACCO',
-                                            'STANDARDCONVERSIONNONTOBACCO',
+                                            'selectTableOrFlatExtraRatings',
                                         ],
-                                        targetNodeId: 'premium-class',
+                                        targetNodeId:
+                                            'table-or-flat-extra-selection',
                                         quantifier: 'any',
+                                    },
+                                    {
+                                        type: 'numberComparisonCondition',
+                                        value: 0,
+                                        targetNodeId: 'temporary-flat-extra',
+                                        operator: 'greaterThan',
                                     },
                                 ],
                             },
@@ -1646,7 +1752,7 @@ export const farmersBlueprintTR0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -1665,30 +1771,42 @@ export const farmersBlueprintTR0101 = {
                                         {
                                             id: 'ddf60c38-eb5e-439c-8a16-1412c8f72bd7',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 15,
-                                                        targetNodeId:
-                                                            'permanent-flat-extra',
-                                                        operator:
-                                                            'lessThanOrEqual',
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 15,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'greaterThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0.5,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'multipleOf',
+                                                            },
+                                                        ],
                                                     },
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0,
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
                                                         targetNodeId:
                                                             'permanent-flat-extra',
-                                                        operator:
-                                                            'greaterThanOrEqual',
-                                                    },
-                                                    {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0.5,
-                                                        targetNodeId:
-                                                            'permanent-flat-extra',
-                                                        operator: 'multipleOf',
                                                     },
                                                 ],
                                             },
@@ -1709,10 +1827,10 @@ export const farmersBlueprintTR0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDCONVERSIONTOBACCO',
-                                            'STANDARDCONVERSIONNONTOBACCO',
+                                            'selectTableOrFlatExtraRatings',
                                         ],
-                                        targetNodeId: 'premium-class',
+                                        targetNodeId:
+                                            'table-or-flat-extra-selection',
                                         quantifier: 'any',
                                     },
                                 ],
@@ -1944,7 +2062,7 @@ export const farmersBlueprintTR0101 = {
                                 },
                                 {
                                     fieldType: 'dropdown',
-                                    defaultValue: '30',
+                                    defaultValue: '20',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -2049,8 +2167,8 @@ export const farmersBlueprintTR0101 = {
                                                             {
                                                                 type: 'matchesCondition',
                                                                 value: [
-                                                                    'STANDARDCONVERSIONNONTOBACCO',
-                                                                    'STANDARDCONVERSIONTOBACCO',
+                                                                    'STANDARDNONTOBACCO',
+                                                                    'STANDARDTOBACCO',
                                                                 ],
                                                                 targetNodeId:
                                                                     'premium-class',
@@ -2342,7 +2460,7 @@ export const farmersBlueprintTR0101 = {
                                                         targetBirthdateNodeId:
                                                             'date-of-birth',
                                                         roundingType:
-                                                            'closestBirthday',
+                                                            'lastBirthday',
                                                     },
                                                     {
                                                         type: 'equalityCondition',
@@ -2366,7 +2484,7 @@ export const farmersBlueprintTR0101 = {
                                                         targetBirthdateNodeId:
                                                             'date-of-birth',
                                                         roundingType:
-                                                            'closestBirthday',
+                                                            'lastBirthday',
                                                     },
                                                     {
                                                         type: 'equalityCondition',
@@ -2672,6 +2790,7 @@ export const farmersBlueprintTR0101 = {
                                             },
                                         },
                                     ],
+                                    defaultValue: 5000,
                                 },
 
                                 {
@@ -3005,7 +3124,7 @@ export const farmersBlueprintTR0101 = {
                                                         targetBirthdateNodeId:
                                                             'date-of-birth',
                                                         roundingType:
-                                                            'closestBirthday',
+                                                            'lastBirthday',
                                                     },
                                                     {
                                                         type: 'equalityCondition',
@@ -3053,7 +3172,7 @@ export const farmersBlueprintTR0101 = {
                                                         targetBirthdateNodeId:
                                                             'date-of-birth',
                                                         roundingType:
-                                                            'closestBirthday',
+                                                            'lastBirthday',
                                                     },
                                                     {
                                                         type: 'equalityCondition',

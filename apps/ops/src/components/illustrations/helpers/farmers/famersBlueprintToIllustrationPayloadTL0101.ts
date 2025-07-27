@@ -91,6 +91,10 @@ const farmersEntitiesSchema = t.object(
     t.property('jurisdiction', t.string), // state-of-issue
     t.property('planCode', t.string), // product
     t.property('premiumClass', t.string), // premium-class
+    t.optionalProperty(
+        'tableOrFlatExtraSelection',
+        t.union(t.array(t.union(t.string, t.undefined)), t.undefined)
+    ),
     t.property('baseCoverage', baseCoverageSchema),
     t.property('insured', insuredSchema),
     t.optionalProperty(
@@ -106,8 +110,7 @@ const farmersEntitiesSchema = t.object(
         t.object(
             t.optionalProperty('amount', t.union(t.number, t.undefined)), // temporary-flat-extra
             t.property('duration', t.union(t.number, t.undefined)), // schedule-duration
-            t.property('durationType', t.union(t.string, t.undefined)), // schedule-duration-unit
-            t.property('startDate', t.union(t.string, t.undefined)) // schedule-from
+            t.property('durationType', t.union(t.string, t.undefined)) // schedule-duration-unit
         )
     ),
     t.optionalProperty('riders', ridersSchema),
@@ -134,10 +137,7 @@ const FARMERS_HARDCODED_DATA = {
     revisedIllustration: true,
 } as const;
 
-const SUBSTANDARD_PREMIUM_CLASSES = [
-    'STANDARDCONVERSIONNONTOBACCO',
-    'STANDARDCONVERSIONTOBACCO',
-];
+const SUBSTANDARD_PREMIUM_CLASSES = ['STANDARDNONTOBACCO', 'STANDARDTOBACCO'];
 
 export function getFarmersCreateIllustrationPayload(
     answerOutputData: unknown
@@ -224,6 +224,28 @@ export function getFarmersCreateIllustrationPayload(
         });
     }
 
+    const flatExtras = [];
+
+    if (
+        SUBSTANDARD_PREMIUM_CLASSES.includes(values.premiumClass) &&
+        values.tableOrFlatExtraSelection?.[0] == 'selectTableOrFlatExtraRatings'
+    ) {
+        if (values.permanentFlatExtra?.amount) {
+            flatExtras.push({
+                type: FARMERS_HARDCODED_DATA.permanentFlatExtraType,
+                amount: values.permanentFlatExtra.amount,
+            });
+        }
+        if (values.temporaryFlatExtra?.amount) {
+            flatExtras.push({
+                type: FARMERS_HARDCODED_DATA.temporaryFlatExtraType,
+                amount: values.temporaryFlatExtra.amount,
+                duration: values.temporaryFlatExtra?.duration,
+                durationType: values.temporaryFlatExtra?.durationType,
+            });
+        }
+    }
+
     const output = {
         calculationType: values.illustrationType,
         source: FARMERS_HARDCODED_DATA.source,
@@ -244,26 +266,7 @@ export function getFarmersCreateIllustrationPayload(
                             substandardRating: values.subStandardRating,
                         }),
                         underwritingClass: values.premiumClass,
-                        ...(SUBSTANDARD_PREMIUM_CLASSES.includes(
-                            values.premiumClass
-                        ) && {
-                            flatExtra: [
-                                {
-                                    type: FARMERS_HARDCODED_DATA.permanentFlatExtraType,
-                                    amount: values.permanentFlatExtra?.amount,
-                                },
-                                {
-                                    type: FARMERS_HARDCODED_DATA.temporaryFlatExtraType,
-                                    amount: values.temporaryFlatExtra?.amount,
-                                    duration:
-                                        values.temporaryFlatExtra?.duration,
-                                    durationType:
-                                        values.temporaryFlatExtra?.durationType,
-                                    startDate:
-                                        values.temporaryFlatExtra?.startDate,
-                                },
-                            ],
-                        }),
+                        flatExtras,
                     },
                 ],
             },
@@ -336,7 +339,9 @@ export function mapIllustrationPayloadToEngineInputData(
             middleName: dataInsuredParty.middleName || '',
             lastName: dataInsuredParty.lastName || '',
         },
-        subStandardRating: dataInsuredParticipant?.subStandardRating,
+        ...(dataInsuredParticipant?.subStandardRating && {
+            subStandardRating: dataInsuredParticipant?.subStandardRating,
+        }),
         permanentFlatExtra: {
             amount: dataInsuredParticipant?.flatExtra?.[0]?.amount,
         },
@@ -344,7 +349,6 @@ export function mapIllustrationPayloadToEngineInputData(
             amount: dataInsuredParticipant?.flatExtra?.[1]?.amount,
             duration: dataInsuredParticipant?.flatExtra?.[1]?.duration,
             durationType: dataInsuredParticipant?.flatExtra?.[1]?.durationType,
-            startDate: dataInsuredParticipant?.flatExtra?.[1]?.startDate,
         },
         solveFor: data.options?.solveFor || '',
         fixedCostPeriod: data.options?.fixedCostPeriod?.toString(),

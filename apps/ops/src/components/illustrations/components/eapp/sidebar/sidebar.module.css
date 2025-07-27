@@ -31,6 +31,12 @@
     margin-bottom: var(--measure-dimension-margin-sm);
 }
 
+.loader {
+    margin: auto 0;
+    display: flex;
+    justify-content: center;
+}
+
 .calculateBtn {
     width: 100px;
 }
