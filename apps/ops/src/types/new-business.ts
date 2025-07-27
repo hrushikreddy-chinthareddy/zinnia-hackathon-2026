@@ -28,7 +28,7 @@ interface Email {
     type: EmailType;
     address: string;
 }
-interface EmailObject {
+export interface EmailObject {
     preferredEmailId: string;
     emails: Email[];
 }
@@ -52,7 +52,7 @@ interface AddressDetail {
     country: string;
 }
 
-interface Address {
+export interface AddressObject {
     preferredAddressId: string;
     addresses: AddressDetail[];
 }
@@ -62,7 +62,7 @@ export interface party {
     personalInformation: PersonalInformation;
     email: EmailObject;
     identifiers: identifier[];
-    address: Address;
+    address: AddressObject;
 }
 
 // This interface needs to be completed

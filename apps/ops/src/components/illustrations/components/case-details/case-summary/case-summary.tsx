@@ -53,24 +53,14 @@ const IllustrationCaseSumary = ({
 
     useEffect(() => {
         if (
-            clientCase?.insuredDetails?.firstName &&
-            clientCase?.insuredDetails?.lastName
+            !clientCase?.insuredDetails?.firstName &&
+            !clientCase?.insuredDetails?.lastName
         ) {
+            setInsurredFullName(DEFAULT_ERROR_STRING);
+        } else {
             setInsurredFullName(
                 `${clientCase?.insuredDetails?.firstName} ${clientCase?.insuredDetails?.lastName}`
             );
-        } else if (
-            clientCase?.insuredDetails?.firstName &&
-            !clientCase?.insuredDetails?.lastName
-        ) {
-            setInsurredFullName(`${clientCase?.insuredDetails?.firstName}`);
-        } else if (
-            !clientCase?.insuredDetails?.firstName &&
-            clientCase?.insuredDetails?.lastName
-        ) {
-            setInsurredFullName(`${clientCase?.insuredDetails?.lastName}`);
-        } else {
-            setInsurredFullName(DEFAULT_ERROR_STRING);
         }
     }, [
         clientCase?.insuredDetails?.firstName,
@@ -79,24 +69,14 @@ const IllustrationCaseSumary = ({
 
     useEffect(() => {
         if (
-            clientCase?.agentDetails?.firstName &&
-            clientCase?.agentDetails?.lastName
+            !clientCase?.agentDetails?.firstName &&
+            !clientCase?.agentDetails?.lastName
         ) {
+            setAgentFullName(DEFAULT_ERROR_STRING);
+        } else {
             setAgentFullName(
                 `${clientCase?.agentDetails?.firstName} ${clientCase?.agentDetails?.lastName}`
             );
-        } else if (
-            clientCase?.agentDetails?.firstName &&
-            !clientCase?.agentDetails?.lastName
-        ) {
-            setAgentFullName(`${clientCase?.agentDetails?.firstName}`);
-        } else if (
-            !clientCase?.agentDetails?.firstName &&
-            clientCase?.agentDetails?.lastName
-        ) {
-            setAgentFullName(`${clientCase?.agentDetails?.lastName}`);
-        } else {
-            setInsurredFullName(DEFAULT_ERROR_STRING);
         }
     }, [
         clientCase?.agentDetails?.firstName,

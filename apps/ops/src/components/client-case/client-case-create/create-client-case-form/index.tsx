@@ -81,14 +81,17 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     // TODO: review once agent search is ready for implementation
     const currentAgent: IllustrationAgentDetails =
         clientCase?.agentDetails &&
-        !isNullEmptyUndefinedOrDefault(clientCase?.agentDetails?.firstName) &&
-        !isNullEmptyUndefinedOrDefault(clientCase?.agentDetails?.lastName)
+        (!isNullEmptyUndefinedOrDefault(clientCase?.agentDetails?.firstName) ||
+            !isNullEmptyUndefinedOrDefault(
+                clientCase?.agentDetails?.lastName
+            ) ||
+            !isNullEmptyUndefinedOrDefault(clientCase?.agentDetails?.email))
             ? {
-                  firstName: clientCase.agentDetails.firstName || '',
-                  lastName: clientCase.agentDetails.lastName || '',
+                  firstName: clientCase.agentDetails.firstName || '--',
+                  lastName: clientCase.agentDetails.lastName || '--',
                   agencyId: clientCase.agentDetails.agencyId || '',
                   npn: clientCase.agentDetails.npn || '',
-                  email: clientCase.agentDetails.email || '',
+                  email: clientCase.agentDetails.email || '--',
               }
             : {
                   firstName: (user?.given_name as string) || '',

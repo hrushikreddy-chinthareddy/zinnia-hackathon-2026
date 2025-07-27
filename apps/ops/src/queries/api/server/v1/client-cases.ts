@@ -10,7 +10,11 @@ import {
     IllustraionsClientCaseSearchResponse,
     IllustrationsClientCase,
 } from '@deps/types/illustrations';
-import { NewBusiness } from '@deps/types/new-business';
+import {
+    AddressObject,
+    EmailObject,
+    NewBusiness,
+} from '@deps/types/new-business';
 import { LoggingContext } from '@deps/utils/server-logging';
 
 import {
@@ -37,8 +41,10 @@ const buildClientCaseFromNewBusiness = (
         (party) => party.partyRole === INSURED_BUSINESS_LABEL
     );
     if (insuredParty) {
-        const { personalInformation: insuredPersonalInformation, address } =
-            insuredParty;
+        const {
+            personalInformation: insuredPersonalInformation,
+            address = {} as AddressObject,
+        } = insuredParty;
         const {
             firstName: insuredFirstName,
             lastName: insuredLastName,
@@ -47,7 +53,7 @@ const buildClientCaseFromNewBusiness = (
         } = insuredPersonalInformation;
 
         // getting Insured address
-        let insuredState;
+        let insuredState = '';
         const { addresses, preferredAddressId } = address;
         if (preferredAddressId !== undefined) {
             const preferedAddress = addresses.find(
@@ -58,8 +64,6 @@ const buildClientCaseFromNewBusiness = (
             }
         } else if (addresses.length > 0) {
             insuredState = addresses[0].state;
-        } else {
-            insuredState = '';
         }
 
         const clientCaseTitle = `${insuredFirstName} ${insuredLastName} from Sureify`;
@@ -70,6 +74,7 @@ const buildClientCaseFromNewBusiness = (
             sexAtBirth: toTitleCase(gender),
             dateOfBirth: new Date(dateOfBirth),
             state: insuredState,
+            // all this properties used on client case payload are not included in newBussiness
             // nicotineUser
             // illustrateAtOlderAge
             // issueAge
@@ -92,21 +97,25 @@ const buildClientCaseFromNewBusiness = (
     if (agentParty) {
         const {
             personalInformation: agentPersonalInformation,
-            email: agentEmailObject,
+            email: agentEmailObject = {} as EmailObject,
             identifiers,
         } = agentParty;
         const { firstName: agentFirstName, lastName: agentLastName } =
             agentPersonalInformation;
 
         // get agent main email
+        const { emails, preferredEmailId } = agentEmailObject;
         let agentPreferedEmail = '';
-        if (agentEmailObject && agentEmailObject.emails) {
-            const foundAgentEmail = agentEmailObject.emails.find(
-                (email) => agentEmailObject.preferredEmailId === email.id
+
+        if (preferredEmailId !== undefined && emails) {
+            const preferedEmail = emails.find(
+                (email) => email.id === preferredEmailId
             );
-            if (foundAgentEmail) {
-                agentPreferedEmail = foundAgentEmail.address;
+            if (preferedEmail !== undefined) {
+                agentPreferedEmail = preferedEmail.address;
             }
+        } else if (emails && emails.length > 0) {
+            agentPreferedEmail = emails[0].address;
         }
 
         // get Identifiers
