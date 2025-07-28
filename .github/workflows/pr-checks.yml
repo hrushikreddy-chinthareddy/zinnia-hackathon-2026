@@ -18,7 +18,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const jiraRegex = /\[?[A-Z]{2,10}-\d{1,7}\]?/g;
+            const jiraRegex = /\[?[A-Za-z]{2,10}-\d{1,7}\]?/g;
             const title = context.payload.pull_request.title || "";
             const description = (context.payload.pull_request.body || "").trim();
             const combined = title + "\n" + description;
