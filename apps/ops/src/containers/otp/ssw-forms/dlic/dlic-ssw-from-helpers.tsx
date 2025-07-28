@@ -269,11 +269,11 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
             },
         ].filter(Boolean) as SSWProgramOptions[];
 
-    const fundWithdrawnMethodOptions = (sswType: string) => [
+    const fundWithdrawnMethodOptions = (sswType: string, isLC: boolean) => [
         {
             label: t(`distributionInstruction.prorata`),
             value: FundWithdrawnMethod.Prorata,
-            disabled: sswType === SSWType.PercentOfAmountValue,
+            disabled: isLC && sswType === SSWType.PercentOfAmountValue,
         },
         {
             label: t(`distributionInstruction.specifyFunds`),

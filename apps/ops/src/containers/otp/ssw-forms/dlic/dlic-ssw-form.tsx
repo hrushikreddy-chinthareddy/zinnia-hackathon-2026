@@ -152,7 +152,8 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 isFormStateReadOnly={isFormStateReadOnly}
                 defaultMethod={FundWithdrawnMethod.Prorata}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions(
-                    formProgram?.programSubType?.text || ''
+                    formProgram?.programSubType?.text || '',
+                    isLC
                 )}
                 title={
                     t(
