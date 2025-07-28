@@ -34,9 +34,9 @@ const insuredSchema = t.object(
     t.property('issueAge', t.number), // age
     t.optionalProperty('gender', t.string), // sex
     t.property('dateOfBirth', t.string), // date-of-birth
-    t.property('firstName', t.string), // insured-first-name
+    t.optionalProperty('firstName', t.union(t.string, t.undefined)), // insured-first-name
     t.optionalProperty('middleName', t.union(t.string, t.undefined)), // insured-middle-name
-    t.property('lastName', t.string) // insured-last-name
+    t.optionalProperty('lastName', t.union(t.string, t.undefined)) // insured-last-name
 );
 
 const agentSchema = t.object(
@@ -386,9 +386,9 @@ function createIllustrationPayload(
                     FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
                 gender: values.insured.gender,
                 dateOfBirth: values.insured.dateOfBirth,
-                firstName: values.insured.firstName,
+                firstName: values.insured.firstName || '',
                 middleName: values.insured.middleName || '',
-                lastName: values.insured.lastName,
+                lastName: values.insured.lastName || '',
                 roleCode: FARMERS_HARDCODED_DATA.insuredRoleCode,
             },
             {

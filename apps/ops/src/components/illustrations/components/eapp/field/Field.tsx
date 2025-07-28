@@ -257,7 +257,6 @@ export function InnerField(props: FieldProps): ReactElement | null {
                 ] ?? [];
             const tags = (tagNodeIds as string[]).map((tagNodeId) => {
                 const tag = questionnaireEngine.getAnswer(tagNodeId);
-                console.log('tag', tag);
                 return tag;
             });
 
