@@ -7,10 +7,12 @@ import {
 import { DEFAULT_ERROR_STRING, toSentenceCase } from '@zinnia/utils';
 
 import { FieldData } from '@/components/field-data/FieldData';
+import { useFeatureFlagsFor } from '@/hooks/use-feature-flags';
 import { PolicyRider } from '@/types/riders';
 import { formatUSDollars } from '@/utils/currency';
 import { fullName } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './Rider.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
@@ -35,6 +37,12 @@ export const Rider = ({
   isOwner,
   hidePopover,
 }: RiderProps) => {
+  const { data: childRiderFeatureFlag = false } = useFeatureFlagsFor(
+    FEATURE_FLAGS.EVERLY_CHILD_RIDER
+  );
+  const showChildRiderField =
+    childRiderFeatureFlag && coverageId === 'Rider_CTR';
+
   return (
     <div className={styles.riderContainer}>
       <h3 className="typography-titles-subtitle">{toSentenceCase(title)}</h3>
@@ -59,10 +67,10 @@ export const Rider = ({
                 </span>
               </FieldData>
             )}
-            {coverageId === 'Rider_CTR' && (
+            {showChildRiderField && (
               <FieldData Label={<Label>Future children covered</Label>}>
                 <span className="typography-content-body-sm mt-sm">
-                  {(futureChildren === undefined || futureChildren === null)
+                  {futureChildren === undefined || futureChildren === null
                     ? DEFAULT_ERROR_STRING
                     : futureChildren
                       ? 'Yes'

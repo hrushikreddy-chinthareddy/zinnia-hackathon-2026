@@ -14,4 +14,5 @@ export enum FEATURE_FLAGS {
   WELLABE_AUTH_TOKENS = 'wellabe_auth_tokens',
   ENTERPRISE_POLICY_SEARCH = 'enterprise_policy_search',
   TRANSACTION_FULL_SURRENDER = 'transaction_full_surrender',
+  EVERLY_CHILD_RIDER = 'everly_child_rider',
 }
