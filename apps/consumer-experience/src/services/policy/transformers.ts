@@ -51,7 +51,7 @@ import {
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
-const allBeneficiaries = (policy: Policy) => {
+export const allBeneficiaries = (policy: Policy) => {
   const benesWithRoles = [] as Beneficiary[];
   const beneRoles = [
     PartyRole.CONTINGENTBENEFICIARY,
@@ -687,7 +687,7 @@ export const sortPoliciesByIssuedDate = (policies: CarrierPolicyDetails[]) => {
  * This one is particular to a policy party
  */
 export const getPartyRolesFromPolicyPartyId = (
-  policyPartyId: string,
+  policyPartyId: string | undefined,
   policy: Policy
 ) => {
   // Find all partyRoles entries matching the partyId

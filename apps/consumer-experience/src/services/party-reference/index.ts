@@ -5,9 +5,8 @@ import { parseAPIResponse } from '@/utils/api';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
-import { isMockErrorEnabled, policyApiBaseUrl } from '../api-config';
+import { apiServerBaseUrl, isMockErrorEnabled } from '../api-config';
 import { ServerApi } from '../server-http';
-import { ApiResponse } from '../types';
 
 const FILE_NAME = '/src/services/party-reference/index.ts';
 
@@ -16,7 +15,7 @@ const FILE_NAME = '/src/services/party-reference/index.ts';
  */
 export const getPartyReferenceData = withLogging(
   async (partyId: string, loggingCtx: CommonLogContext) => {
-    const url = `${policyApiBaseUrl}/party/v1/parties/${partyId}/reference`;
+    const url = `${apiServerBaseUrl}/party/v1/parties/${partyId}/reference`;
 
     if (isMockErrorEnabled(ApiEndpoints.PARTY_REFERENCE)) {
       throw new Error('Error fetching party reference data.', {
@@ -25,7 +24,7 @@ export const getPartyReferenceData = withLogging(
     }
 
     const rawResponse = await ServerApi.get(url, undefined, loggingCtx);
-    const response: ApiResponse<PartyReferenceDataModel> =
+    const response: PartyReferenceDataModel =
       await parseAPIResponse(rawResponse);
 
     if (!rawResponse?.ok) {
@@ -34,9 +33,7 @@ export const getPartyReferenceData = withLogging(
       });
     }
 
-    const { data } = response;
-
-    if (!data) {
+    if (!response) {
       throw new Error(
         'No data returned trying to retrieve party reference data.',
         {
@@ -45,7 +42,7 @@ export const getPartyReferenceData = withLogging(
       );
     }
 
-    return data;
+    return response;
   },
   { file: FILE_NAME, functionName: 'getPartyReferenceData' }
 );

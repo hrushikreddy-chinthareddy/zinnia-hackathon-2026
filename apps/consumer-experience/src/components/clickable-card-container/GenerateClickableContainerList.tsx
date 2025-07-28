@@ -10,6 +10,7 @@ interface ClickableCardLink {
   isInternal?: boolean;
   iconType?: IconType;
   linkText: string;
+  visibility?: boolean;
 }
 
 interface GenerateClickableContainerListProps {
@@ -27,30 +28,35 @@ export const GenerateClickableContainerList: FC<
 > = ({ links }) => {
   return (
     <>
-      {links.map((link, index) => (
-        <ClickableCardContainer key={index}>
-          <ClickableCardContainer.LinkContent
-            linkTo={{
-              url: link.url,
-              label: link.urlLabel,
-              isInternal: link.isInternal,
-            }}
-          >
-            <div className="flex-center">
-              {link.iconType && (
-                <Icon
-                  type={link.iconType}
-                  color="var(--color-base-icon-icon-dark)"
-                />
-              )}
+      {links.map((link, index) => {
+        if (!link.visibility) {
+          return null;
+        }
+        return (
+          <ClickableCardContainer key={index}>
+            <ClickableCardContainer.LinkContent
+              linkTo={{
+                url: link.url,
+                label: link.urlLabel,
+                isInternal: link.isInternal,
+              }}
+            >
+              <div className="flex-center">
+                {link.iconType && (
+                  <Icon
+                    type={link.iconType}
+                    color="var(--color-base-icon-icon-dark)"
+                  />
+                )}
 
-              <span className="typography-labels-field-label ml-md">
-                {toSentenceCase(link.linkText)}
-              </span>
-            </div>
-          </ClickableCardContainer.LinkContent>
-        </ClickableCardContainer>
-      ))}
+                <span className="typography-labels-field-label ml-md">
+                  {toSentenceCase(link.linkText)}
+                </span>
+              </div>
+            </ClickableCardContainer.LinkContent>
+          </ClickableCardContainer>
+        );
+      })}
     </>
   );
 };

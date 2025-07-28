@@ -1,8 +1,4 @@
-import {
-  LineOfBusiness,
-  PolicyStatus,
-  ProductType,
-} from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -17,6 +13,8 @@ import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/L
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { getPolicyForHeaderDetails } from '@/services';
+import { getComponentVisibility } from '@/services/display-rules';
+import { ComponentName } from '@/services/display-rules/types';
 import { LineOfBusinessPath } from '@/types';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
@@ -44,6 +42,8 @@ export default async function Page({
     loggingContext
   );
 
+  const visibility = await getComponentVisibility(policyNumber, planCode);
+
   if (error) {
     return (
       <>
@@ -61,6 +61,9 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.LAPSE) {
       return (
         <>
+          {visibility?.[ComponentName.OVERVIEW_COVERAGE]() && (
+            <Coverage planCode={planCode} policyNumber={policyNumber} />
+          )}
           <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />
           <CallForAssistance customInstruction="for help with reinstatement." />
         </>
@@ -87,8 +90,17 @@ export default async function Page({
 
     return (
       <div className="card-container">
-        <UpcomingPremium planCode={planCode} policyNumber={policyNumber} />
-        {data?.product?.productType !== ProductType.TERM && (
+        {visibility?.[ComponentName.OVERVIEW_PREMIUM_LINK]() && (
+          <UpcomingPremium
+            planCode={planCode}
+            policyNumber={policyNumber}
+            extended={visibility?.[
+              ComponentName.OVERVIEW_PREMIUM_DETAILED_VIEW
+            ]()}
+          />
+        )}
+
+        {visibility?.[ComponentName.OVERVIEW_ACCOUNT_VALUE]() && (
           <ClickableCardContainer>
             <ClickableCardContainer.LinkContent
               linkTo={{
@@ -106,11 +118,14 @@ export default async function Page({
           </ClickableCardContainer>
         )}
 
-        <Coverage
-          planCode={planCode}
-          policyNumber={policyNumber}
-          lineOfBusiness={LineOfBusiness.LIFE}
-        />
+        {visibility?.[ComponentName.OVERVIEW_COVERAGE]() && (
+          <Coverage
+            planCode={planCode}
+            policyNumber={policyNumber}
+            lineOfBusiness={LineOfBusiness.LIFE}
+          />
+        )}
+
         <AdditionalOverviewLinks
           planCode={planCode}
           policyNumber={policyNumber}

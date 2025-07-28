@@ -3,6 +3,8 @@ import { IconType } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
 import { getCoverage } from '@/services';
+import { getComponentVisibility } from '@/services/display-rules';
+import { ComponentName } from '@/services/display-rules/types';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
@@ -35,25 +37,56 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
 
   const { beneficiaryCount } = data!;
 
+  const visibility = await getComponentVisibility(policyNumber, planCode);
+
+  const showOwnerProfile = visibility?.[ComponentName.OWNER_PROFILE]();
+  const showPayorProfile = visibility?.[ComponentName.PAYOR_PROFILE]();
+  const showBeneficiaries =
+    visibility?.[ComponentName.OVERVIEW_BENEFICIARIES]() &&
+    !!beneficiaryCount &&
+    beneficiaryCount > 0;
+  const showRiders = visibility?.[ComponentName.OVERVIEW_RIDERS]();
+  const showDocuments = visibility?.[ComponentName.OVERVIEW_DOCUMENTS]();
+  const showPaymentHistory =
+    visibility?.[ComponentName.OVERVIEW_PAYMENT_HISTORY]();
+
   const links = [
+    {
+      url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/premium/history`,
+      urlLabel: 'payment history',
+      isInternal: true,
+      iconType: IconType.HISTORY_EVENT,
+      linkText: 'Payment History',
+      visibility: showPaymentHistory,
+    },
+
     {
       url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/profile`,
       urlLabel: 'owner profile',
       isInternal: true,
       iconType: IconType.CIRCLE_USER,
       linkText: 'Owner Profile',
+      visibility: showOwnerProfile,
     },
-    ...(beneficiaryCount && beneficiaryCount > 0
-      ? [
-          {
-            url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/beneficiaries`,
-            urlLabel: 'beneficiaries',
-            isInternal: true,
-            iconType: IconType.USER_GROUP,
-            linkText: 'Beneficiaries',
-          },
-        ]
-      : []),
+
+    {
+      url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/profile`,
+      urlLabel: 'payor profile',
+      isInternal: true,
+      iconType: IconType.CIRCLE_USER,
+      linkText: 'Payor Profile',
+      visibility: showPayorProfile,
+    },
+
+    {
+      url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/beneficiaries`,
+      urlLabel: 'beneficiaries',
+      isInternal: true,
+      iconType: IconType.USER_GROUP,
+      linkText: 'Beneficiaries',
+      visibility: showBeneficiaries,
+    },
+
     {
       url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/riders`,
       urlLabel:
@@ -66,13 +99,16 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
         lineOfBusiness === LineOfBusiness.ANNUITY
           ? 'Riders and extras'
           : 'riders and features',
+      visibility: showRiders,
     },
+
     {
       url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/documents`,
       urlLabel: 'documents',
       isInternal: true,
       iconType: IconType.DOCUMENT_TEXT,
       linkText: 'Documents',
+      visibility: showDocuments,
     },
   ];
 

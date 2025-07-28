@@ -2,7 +2,7 @@ import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference'
 import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import {
-  getPartyIdByPolicyNumber,
+  getPolicyPartyIdByPolicyNumber,
   getPartyRolesByPolicyNumber,
 } from './transformers';
 
@@ -16,20 +16,20 @@ describe('getPartyIdByPolicyNumber', () => {
   };
 
   test('should return the correct partyId when policy number exists', () => {
-    expect(getPartyIdByPolicyNumber(mockPartyReferenceData, 'POL123')).toBe(
-      'PARTY001'
-    );
-    expect(getPartyIdByPolicyNumber(mockPartyReferenceData, 'POL456')).toBe(
-      'PARTY002'
-    );
-    expect(getPartyIdByPolicyNumber(mockPartyReferenceData, 'POL789')).toBe(
-      'PARTY003'
-    );
+    expect(
+      getPolicyPartyIdByPolicyNumber(mockPartyReferenceData, 'POL123')
+    ).toBe('PARTY001');
+    expect(
+      getPolicyPartyIdByPolicyNumber(mockPartyReferenceData, 'POL456')
+    ).toBe('PARTY002');
+    expect(
+      getPolicyPartyIdByPolicyNumber(mockPartyReferenceData, 'POL789')
+    ).toBe('PARTY003');
   });
 
   test('should return empty string when policy number does not exist', () => {
     expect(
-      getPartyIdByPolicyNumber(mockPartyReferenceData, 'NONEXISTENT')
+      getPolicyPartyIdByPolicyNumber(mockPartyReferenceData, 'NONEXISTENT')
     ).toBe(undefined);
   });
 
@@ -37,12 +37,12 @@ describe('getPartyIdByPolicyNumber', () => {
     const emptyData: PartyReferenceDataModel = {
       alias: [],
     };
-    expect(getPartyIdByPolicyNumber(emptyData, 'POL123')).toBe(undefined);
+    expect(getPolicyPartyIdByPolicyNumber(emptyData, 'POL123')).toBe(undefined);
   });
 
   test('should handle undefined policy number', () => {
     expect(
-      getPartyIdByPolicyNumber(
+      getPolicyPartyIdByPolicyNumber(
         mockPartyReferenceData,
         undefined as unknown as string
       )

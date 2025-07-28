@@ -7,7 +7,7 @@ import { PartyRole } from '@zinnia/api-types/types/sor';
  * Note this returned partyId is a totally separate thing from the accessToken partyId and is specific to a policy.
  * TODO: At some point, CIAM is updating this to match the accessToken partyId
  */
-export const getPartyIdByPolicyNumber = (
+export const getPolicyPartyIdByPolicyNumber = (
   partyReferenceData: PartyReferenceDataModel,
   policyNumber: string
 ) => {
