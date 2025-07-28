@@ -49,13 +49,7 @@ export const DownloadCSV: FC<DownloadCSVProps> = ({
     return (
         <div
             className="flex items-center gap-2"
-            onClick={() =>
-                downloadCSV(
-                    sortedData,
-                    `${csvFileName}`,
-                    columns
-                )
-            }
+            onClick={() => downloadCSV(sortedData, `${csvFileName}`, columns)}
         >
             <Icon type={IconType.DOWNLOAD} />
             <Link href={'#'} text={'Export to CSV'} />

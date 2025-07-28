@@ -14,6 +14,7 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/preferences',
     'src/generated-types/partyreference',
     'src/generated-types/analytics',
+    'src/generated-types/contact-management',
   ],
   clean: true,
   dts: true,

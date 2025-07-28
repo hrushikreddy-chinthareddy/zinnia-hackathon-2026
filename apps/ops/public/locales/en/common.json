@@ -165,6 +165,11 @@
                 "text": "$t(pageHeader.coverage.headerText)",
                 "link": "/policies/{{planCode}}/{{id}}/policy/coverage"
             },
+            "customers": {
+                "text": "$t(pageHeader.customers.headerText)",
+                "link": "/customers",
+                "altText": "Customers"
+            },
             "dashboard": {
                 "text": "Case Stats",
                 "link": "/dashboard"
@@ -3977,6 +3982,9 @@
                 "deathBenefitOption": "Some policies come with an option to increase coverage over time. Level death benefit stays the same for the life of the policy. An increasing death benefit goes up as the policy's account value increases."
             }
         },
+        "customers": {
+            "headerText": "Customers"
+        },
         "documents": {
             "headerText": "Documents"
         },
@@ -6679,6 +6687,16 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "contacts": {
+        "pageTitle": "$t(pageHeader.customers.headerText)",
+        "addCustomer": "Add new customer",
+        "age": "Age: {{age}}",
+        "updated": "Updated",
+        "coverage": "Coverage",
+        "nothingToShow": "Customer has no quotes or in-force products",
+        "getMatched": "Get matched with products",
+        "startQuote": "Start a quote"
     },
     "policyupdatePartydetailsReview": {
         "confirmStep": {

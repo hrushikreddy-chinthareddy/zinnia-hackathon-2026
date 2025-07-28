@@ -100,7 +100,12 @@
                             "title": "Date"
                         }
                     },
-                    "required": ["transactionDesc", "processCompanyCode", "amount", "transactionDateTime"],
+                    "required": [
+                        "transactionDesc",
+                        "processCompanyCode",
+                        "amount",
+                        "transactionDateTime"
+                    ],
                     "definitions": {
                         "transactionDescEnum": {
                             "enum": ["Check", "Wire"]

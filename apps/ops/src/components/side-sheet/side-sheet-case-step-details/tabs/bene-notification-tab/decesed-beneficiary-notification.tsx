@@ -1,24 +1,20 @@
-import {
-    BadgeVariant
-} from '@zinnia/bloom/components';
+import { BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
 import { INotification } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import { StatusBadge } from '@deps/components/status-badge/status-badge';
 import Title, { TitleVariant } from '@deps/components/title/title';
-import {
-    standardMonthDayYear
-} from '@deps/helpers/string.helpers';
+import { standardMonthDayYear } from '@deps/helpers/string.helpers';
 
 interface DeceasedBeneficiaryNotificationProps {
-    notification: INotification,
+    notification: INotification;
 }
 
 export const DeceasedBeneficiaryNotification = ({
-  notification,
+    notification,
 }: DeceasedBeneficiaryNotificationProps) => {
     const { t } = useTranslation();
- const contentText = t(
+    const contentText = t(
         'caseOverview.notifications.beneficiaryDeceasedNotification',
         {
             date: notification.statusDateTime

@@ -1,0 +1,41 @@
+.pizzaTracker {
+    border-radius: var(--measure-dimension-radius-md, 0.25rem);
+    border: var(--measure-dimension-stroke-sm) solid
+        var(--color-grayscale-color-100-gray);
+    background-color: var(--color-grayscale-color-white);
+    display: flex;
+    height: 32px;
+    overflow: hidden;
+    width: 100%;
+}
+.step {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    gap: var(--measure-dimension-gap-sm);
+    padding-inline: var(--measure-dimension-gap-lg);
+    padding-block: var(--measure-dimension-gap-md);
+    white-space: wrap;
+
+    &:not(:last-of-type) {
+        border-right: var(--measure-dimension-stroke-sm) solid
+            var(--color-grayscale-color-100-gray);
+    }
+}
+
+.complete {
+    color: var(--color-semantics-color-semantic-success);
+}
+
+.progress {
+    background-color: var(--color-grayscale-color-100-gray);
+}
+
+.not-started,
+.default {
+    background-color: var(--color-base-surface-surface-secondary);
+}
+
+.issue {
+    background-color: var(--color-semantics-color-semantic-warning-light);
+}

@@ -47,7 +47,9 @@ export function ViewTransactions({
             ?.uncashTransactionIdentified;
     browserLogInfo('viewTransactions::isUncashedInProgress', {
         isUncashedInProgress: isUncashedInProgress,
-        uncashTransactionIdentified: transactionEntity?.entity?.stopTransactions?.uncashTransactionIdentified,
+        uncashTransactionIdentified:
+            transactionEntity?.entity?.stopTransactions
+                ?.uncashTransactionIdentified,
         stepProgramTypes: prop,
         entityId: entityId,
         contractNumber: transactionEntity?.entity?.contractNumber,
@@ -99,7 +101,7 @@ export function ViewTransactions({
     };
 
     const displayIsLoading = () => {
-          return (
+        return (
             <div className="flex w-full flex-col">
                 <div className="mt-0.5">
                     <InProgressIcon
@@ -144,7 +146,7 @@ export function ViewTransactions({
                 </div>
             </div>
         );
-    }
+    };
 
     if (isLoading) {
         return displayIsLoading();

@@ -20,7 +20,7 @@ import {
     parseAndFormatDate,
     formatPhoneWithAreacode,
     toTitleCase,
-    formatFaxNumber
+    formatFaxNumber,
 } from '@deps/helpers/string.helpers';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
@@ -256,7 +256,10 @@ const DeathNotificationSidesheet = ({
                         variant={TypographyVariant.BodySm}
                         className="col-span-3"
                     >
-                        <PiiWrapper>{data.notifiers.party?.fullName || DEFAULT_ERROR_STRING}</PiiWrapper>
+                        <PiiWrapper>
+                            {data.notifiers.party?.fullName ||
+                                DEFAULT_ERROR_STRING}
+                        </PiiWrapper>
                     </Typography>
                     <div className="col-span-2 text-[--color-base-text-text-secondary]">
                         {t(
@@ -267,11 +270,12 @@ const DeathNotificationSidesheet = ({
                         variant={TypographyVariant.BodySm}
                         className="col-span-3"
                     >
-                        <PiiWrapper>{data.notifiers.party?.phone?.dialNumber
-                            ? formatPhoneWithAreacode(
-                                  data.notifiers.party?.phone
-                              )
-                            : DEFAULT_ERROR_STRING}
+                        <PiiWrapper>
+                            {data.notifiers.party?.phone?.dialNumber
+                                ? formatPhoneWithAreacode(
+                                      data.notifiers.party?.phone
+                                  )
+                                : DEFAULT_ERROR_STRING}
                         </PiiWrapper>
                     </Typography>
                     <div className="col-span-2 text-[--color-base-text-text-secondary]">
@@ -301,7 +305,9 @@ const DeathNotificationSidesheet = ({
                                     variant={TypographyVariant.BodySmBold}
                                     className="text-gray-800 mb-2"
                                 >
-                                    <PiiWrapper>{toTitleCase(owner.party.fullName)}</PiiWrapper>
+                                    <PiiWrapper>
+                                        {toTitleCase(owner.party.fullName)}
+                                    </PiiWrapper>
                                     &nbsp;({toTitleCase(owner.party.partyRole)})
                                 </Typography>
                                 <div className="grid grid-cols-5 gap-2 text-md align-center">
@@ -362,7 +368,9 @@ const DeathNotificationSidesheet = ({
                                     variant={TypographyVariant.BodySmBold}
                                     className="text-gray-800 mb-2"
                                 >
-                                    <PiiWrapper>{toTitleCase(bene.party.fullName)}</PiiWrapper>
+                                    <PiiWrapper>
+                                        {toTitleCase(bene.party.fullName)}
+                                    </PiiWrapper>
                                 </Typography>
                                 {hasValidNotification ? (
                                     <div className="grid grid-cols-5 gap-2 text-md align-center">
@@ -378,13 +386,19 @@ const DeathNotificationSidesheet = ({
                                             {bene.notificationMethod ===
                                                 ClaimCommunicationTypes.Email &&
                                             bene.email?.emailAddress ? (
-                                                <PiiWrapper>{bene.email.emailAddress}</PiiWrapper>
+                                                <PiiWrapper>
+                                                    {bene.email.emailAddress}
+                                                </PiiWrapper>
                                             ) : bene.notificationMethod ===
-                                                ClaimCommunicationTypes.Fax &&
+                                                  ClaimCommunicationTypes.Fax &&
                                               bene.faxNumber ? (
-                                                <PiiWrapper>{formatFaxNumber(bene.faxNumber)}</PiiWrapper>
+                                                <PiiWrapper>
+                                                    {formatFaxNumber(
+                                                        bene.faxNumber
+                                                    )}
+                                                </PiiWrapper>
                                             ) : bene.notificationMethod ===
-                                                ClaimCommunicationTypes.Mail &&
+                                                  ClaimCommunicationTypes.Mail &&
                                               bene.address &&
                                               bene.address.country ? (
                                                 <FormattedAddress

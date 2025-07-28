@@ -1,0 +1,60 @@
+.policyCard {
+    width: 100%;
+    &:not(:last-child) {
+        .policyCardContainer {
+            border-bottom: var(--measure-dimension-stroke-xs, 1px) solid
+                var(--color-base-border-border-light, #ededed);
+        }
+    }
+}
+
+.policyCardContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: var(--measure-dimension-padding-2xl, 1rem) 0;
+}
+
+.policyCardInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md, 0.5rem);
+}
+
+.policyCardInfoText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--color-base-text-text-primary, #212121);
+}
+
+.timeAgo {
+    color: var(--color-base-text-text-secondary, #676767);
+}
+
+.policyCardRightSide {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--measure-dimension-gap-sm, 0.25rem);
+}
+
+.policyCardRightSideInfo {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.userIcon,
+.icon {
+    flex-shrink: 0;
+}
+
+.carrierLogo {
+    flex-shrink: 0;
+    border: var(--measure-dimension-stroke-xs, 1px) solid
+        var(--color-base-border-border-light, #ededed);
+    border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+}

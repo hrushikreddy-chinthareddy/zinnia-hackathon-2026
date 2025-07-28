@@ -35,7 +35,9 @@ function InstructionsTemplate(props: ObjectFieldTemplateProps) {
                         {linkUrl && linkName && (
                             <>
                                 &nbsp;
-                                <Typography variant={TypographyVariant.NavLinks}>
+                                <Typography
+                                    variant={TypographyVariant.NavLinks}
+                                >
                                     <a
                                         href={resolvedUrl}
                                         target="_blank"

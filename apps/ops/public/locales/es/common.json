@@ -6516,6 +6516,16 @@
             "submitTask": "Enviar"
         }
     },
+    "contacts": {
+        "pageTitle": "$t(pageHeader.customers.headerText)",
+        "addCustomer": "Agregar nuevo cliente",
+        "age": "Edad: {{age}}",
+        "updated": "Actualizado",
+        "coverage": "Cobertura",
+        "nothingToShow": "El cliente no tiene cotizaciones ni productos vigentes",
+        "getMatched": "Obtener coincidencia con productos",
+        "startQuote": "Iniciar una cotización"
+    },
     "policyupdatePartydetailsReview": {
         "confirmStep": {
             "title": "¡Entendido!",

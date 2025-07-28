@@ -47,7 +47,7 @@ export const IssueCountsByStatusTable = () => {
         issueCountsByStatusDataLoading,
         issueCountsByStatusDataFetching,
         exceptionStatus,
-        timerange
+        timerange,
     } = useContext(IssueCountsByStatusContext);
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
@@ -164,9 +164,11 @@ export const IssueCountsByStatusTable = () => {
                 <IssueCountsByStatusHeader />
                 <DownloadCSV
                     sortedData={sortedData}
-                    csvFileName={`${csvFileName} Issue Counts ${dayjs(timerange.from).format(
-                                defaultDateFormat
-                            )} to ${dayjs(timerange.to).format(defaultDateFormat)}`}
+                    csvFileName={`${csvFileName} Issue Counts ${dayjs(
+                        timerange.from
+                    ).format(defaultDateFormat)} to ${dayjs(
+                        timerange.to
+                    ).format(defaultDateFormat)}`}
                     columns={columnsForCSV}
                 />
             </div>

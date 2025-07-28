@@ -24,7 +24,8 @@
     "./types/preferences": "./dist/generated-types/preferences/index.js",
     "./types/partyreference": "./dist/generated-types/partyreference/index.js",
     "./types/transaction-store": "./dist/generated-types/transaction-store/index.js",
-    "./types/analytics": "./dist/generated-types/analytics/index.js"
+    "./types/analytics": "./dist/generated-types/analytics/index.js",
+    "./types/contact-management": "./dist/generated-types/contact-management/index.js"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -66,6 +67,9 @@
       ],
       "./types/analytics": [
         "dist/generated-types/analytics/index.d.ts"
+      ],
+      "./types/contact-management": [
+        "dist/generated-types/contact-management/index.d.ts"
       ]
     }
   },
@@ -85,7 +89,8 @@
     "generate-types:preferences": "npx openapi --input ./src/api-spec-preferences.yaml --output ./src/generated-types/preferences --exportCore false --exportServices false",
     "generate-types:partyreference": "npx openapi --input ./src/api-spec-partyreference.json --output ./src/generated-types/partyreference --exportCore false --exportServices false",
     "generate-types:analytics": "npx openapi --input ./src/api-spec-analytics.yaml --output ./src/generated-types/analytics --exportCore false --exportServices false",
-    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:preferences && pnpm run generate-types:partyreference && pnpm run generate-types:transaction-store && pnpm run generate-types:analytics",
+    "generate-types:contact-management": "npx openapi --input ./src/api-spec-contact-management.json --output ./src/generated-types/contact-management --exportCore false --exportServices false",
+    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:preferences && pnpm run generate-types:partyreference && pnpm run generate-types:transaction-store && pnpm run generate-types:analytics && pnpm run generate-types:contact-management",
     "clean": "rm -rf ./dist"
   },
   "devDependencies": {

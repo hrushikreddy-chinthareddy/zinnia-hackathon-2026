@@ -1,0 +1,74 @@
+.contactContainer {
+    border: var(--measure-dimension-stroke-sm, 2px) solid
+        var(--color-base-border-border-light, #ededed);
+    border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+}
+
+.carrierLogo {
+    flex-shrink: 0;
+    border: var(--measure-dimension-stroke-xs, 1px) solid
+        var(--color-base-border-border-light, #ededed);
+    border-radius: var(--measure-dimension-radius-sm, 0.25rem);
+}
+
+.contactInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-sm, 0.25rem);
+}
+
+.contactTypes {
+    display: flex;
+    flex-direction: row;
+    gap: var(--measure-dimension-gap-lg, 1rem);
+    align-items: center;
+}
+
+.contactInfoItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--measure-dimension-gap-sm, 0.25rem);
+}
+
+.topBar {
+    padding: var(--measure-dimension-padding-2xl, 1rem);
+    border-bottom: var(--measure-dimension-stroke-xs, 1px) solid
+        var(--color-base-border-border-light, #ededed);
+}
+
+.productInfo {
+    padding: var(--measure-dimension-padding-lg, 0.5rem)
+        var(--measure-dimension-padding-2xl, 1rem);
+}
+
+.cases {
+    &:not(:last-child) {
+        border-bottom: var(--measure-dimension-stroke-xs, 1px) solid
+            var(--color-base-border-border-light, #ededed);
+    }
+}
+
+.ctaLinks {
+    display: flex;
+    flex-direction: row;
+    gap: var(--measure-dimension-gap-lg, 1rem);
+}
+
+.cta {
+    display: flex;
+    flex-direction: row;
+    gap: var(--measure-dimension-gap-sm, 0.25rem);
+    align-items: center;
+}
+
+.nothingToShow {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg, 1rem);
+}
+
+.userIcon,
+.icon {
+    flex-shrink: 0;
+}

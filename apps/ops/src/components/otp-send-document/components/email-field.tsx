@@ -38,7 +38,11 @@ const EmailAddress = ({
                 className="max-w-xs "
                 message={error?.email}
                 variant={
-                    error?.email ? FieldVariant.Error : isDisabled ? FieldVariant.Inactive : FieldVariant.Default
+                    error?.email
+                        ? FieldVariant.Error
+                        : isDisabled
+                        ? FieldVariant.Inactive
+                        : FieldVariant.Default
                 }
                 labelTooltip={t('correspondence.email') as string}
                 labelTooltipBody={t('correspondence.emailTooltip') as string}

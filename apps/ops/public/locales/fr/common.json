@@ -6617,6 +6617,16 @@
             "submitTask": "Soumettre"
         }
     },
+    "contacts": {
+        "pageTitle": "$t(pageHeader.customers.headerText)",
+        "addCustomer": "Ajouter un nouveau client",
+        "age": "Âge : {{age}}",
+        "updated": "Mis à jour",
+        "coverage": "Couverture",
+        "nothingToShow": "Le client n'a ni devis ni produits en vigueur",
+        "getMatched": "Trouver des produits correspondants",
+        "startQuote": "Commencer un devis"
+    },
     "policyupdatePartydetailsReview": {
         "confirmStep": {
             "title": "C'est fait !",
