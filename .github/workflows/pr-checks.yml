@@ -1,0 +1,127 @@
+name: 'Pull Request Checks'
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  pr-description-check:
+    name: Check PR Description and JIRA Link
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - name: Check PR description contains JIRA ID
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const jiraRegex = /\[?[A-Z]{2,10}-\d{1,7}\]?/g;
+            const title = context.payload.pull_request.title || "";
+            const description = (context.payload.pull_request.body || "").trim();
+            const combined = title + "\n" + description;
+
+            console.log("🔍 PR Title:", title);
+            console.log("🔍 PR Description:", description);
+
+            const matches = combined.match(jiraRegex);
+            console.log("🔍 Matched JIRA IDs:", matches);
+
+            if (!combined) {
+              core.setFailed("❌ PR description is missing. Please add a description.");
+            } else if (!matches) {
+              core.setFailed("❌ JIRA ticket ID (e.g., ABC-123) is missing in the PR title or description.");
+            } else {
+              console.log("✅ PR description/title JIRA ID check passed.");
+            }
+
+  lint:
+    name: Lint Check for apps/ops
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@zinnia'
+      - name: Clean and install all monorepo deps
+        run: |
+          rm -rf node_modules apps/ops/node_modules
+          pnpm install --frozen-lockfile
+      - name: Prune and install only apps/ops deps
+        run: |
+          pnpm install --filter ./apps/ops --frozen-lockfile
+      - name: Run linting in apps/ops
+        run: |
+          cd apps/ops
+          pnpm run lint
+
+  type-check:
+    name: TypeScript Check for apps/ops
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@zinnia'
+          cache: 'pnpm'
+      - name: Configure npm auth
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+      - name: Clean and install all monorepo deps
+        run: |
+          rm -rf node_modules apps/ops/node_modules
+          pnpm install --frozen-lockfile
+      - name: Build dependent workspace packages
+        run: pnpm --filter '!./apps/ops' run build
+      - name: Run type check in apps/ops
+        run: |
+          cd apps/ops
+          pnpm run typecheck
+
+  test:
+    name: Test apps/ops
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://npm.pkg.github.com/'
+          scope: '@zinnia'
+          cache: 'pnpm'
+
+      - name: install packages for compiling canvas-node
+        run: sudo apt-get update && sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+      - run: pnpm install --filter ops
+
+      - run: pnpm run test:ops
