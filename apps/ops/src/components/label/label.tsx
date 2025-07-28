@@ -36,6 +36,7 @@ export enum LabelVariant {
     LabelMdAlt = 'label-md-atl',
     LabelSm = 'label-sm',
     LabelSmAlt = 'label-sm-alt',
+    LabelUnchanged = 'label-unchanged',
 }
 
 type LabelData = {
@@ -70,6 +71,9 @@ export const labelMapping: Record<LabelVariant, LabelData> = {
     [LabelVariant.LabelSmAlt]: {
         styles: 'font-primary text-sm font-medium',
     },
+    [LabelVariant.LabelUnchanged]: {
+        styles: 'typography-labels-label-lg',
+    },
 };
 
 export const Label = ({
@@ -86,7 +90,10 @@ export const Label = ({
 }: LabelProps) => {
     const { className, ...newRest } = rest;
 
-    const newLabel = sentenceCase ? toSentenceCase(label) : label;
+    const newLabel =
+        sentenceCase && variant !== LabelVariant.LabelUnchanged
+            ? toSentenceCase(label)
+            : label;
 
     let myNode;
 

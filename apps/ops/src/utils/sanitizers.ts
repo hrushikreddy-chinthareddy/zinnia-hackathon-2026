@@ -554,7 +554,9 @@ export const mcsResponseSanitizer = (
 export const agentSanitizer = (agent: AgentData): AgentData => {
     try {
         const { bankAccountNumber, taxId, individuals, ...rest } = agent;
-        const firstAgent = individuals?.[0];
+        const firstAgent = individuals?.filter(
+            (indvidual) => indvidual.individualTypeId === 19
+        )[0];
         return {
             ...rest,
             bankAccountNumber: formatAccountNumber(

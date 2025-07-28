@@ -11,6 +11,8 @@ import {
     ProductType,
     Rider,
     LoanValues,
+    CostBasis,
+    PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -39,6 +41,7 @@ export class PolicyDetails {
     public contestabilityStartDate: string | undefined;
     public contestabilityEndDate: string | undefined;
     public costBasis: number | undefined;
+    public costBasisDetails: CostBasis | undefined;
     public coverage: Coverage;
     public distribution: DistributionType | undefined;
     public cumulativeGrossDeathBenefitAmount: number | undefined;
@@ -61,6 +64,7 @@ export class PolicyDetails {
     public netAmountAtRisk: number | undefined;
     public netDeathBenefitAmount: number | undefined;
     public parties: Parties;
+    public partyRoles: Array<PolicyPartyRoles> | undefined;
     public planCode: string | undefined;
     public planName: string | undefined;
     public policyTerminationDate: string | undefined;
@@ -81,6 +85,7 @@ export class PolicyDetails {
 
         this.parties = new Parties(policy);
         this.allParties = this.parties.parties;
+        this.partyRoles = policy?.partyRoles;
 
         this.features = new Features(this.policyRaw.policyFeatures);
 
@@ -96,6 +101,7 @@ export class PolicyDetails {
             policy?.policyDates?.contestabilityStartDate;
         this.contestabilityEndDate = policy?.policyDates?.contestabilityEndDate;
         this.costBasis = policy?.costBasis?.costBasis;
+        this.costBasisDetails = policy?.costBasis;
         this.cumulativeGrossDeathBenefitAmount =
             policy?.coverage?.cumulativeGrossDeathBenefitAmount;
         this.currency = policy?.currency;
@@ -134,6 +140,7 @@ export class PolicyDetails {
         this.product = policy?.product;
         this.riders = policy?.riders;
         this.investmentType = policy?.allocation?.investmentType;
+        this.qualificationType = policy?.qualificationType;
     }
 
     public get carrierName(): string | undefined {
@@ -165,10 +172,25 @@ export class PolicyDetails {
         //     coveredPartyRole = PartyRole.INSURED;
         // }
 
-        return [
-            ...this.parties.getPartiesWithRole('ANNUITANT' as PartyRole),
-            ...this.parties.getPartiesWithRole(PartyRole.INSURED),
+        const roles: PartyRole[] = [
+            'ANNUITANT' as PartyRole,
+            PartyRole.INSURED,
+            PartyRole.OWNER,
+            PartyRole.JOINTOWNER,
         ];
+
+        const uniqueCoveredMap = new Map<string, PolicyParty>();
+
+        for (const role of roles) {
+            const parties = this.parties.getPartiesWithRole(role) || [];
+            for (const party of parties) {
+                if (party.partyId && !uniqueCoveredMap.has(party.partyId)) {
+                    uniqueCoveredMap.set(party.partyId, party);
+                }
+            }
+        }
+
+        return Array.from(uniqueCoveredMap.values());
     }
 
     public get baseDeathBenefit(): number | undefined {

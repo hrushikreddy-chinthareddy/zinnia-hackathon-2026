@@ -31,6 +31,7 @@ export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
         costBasis,
         baseDeathBenefit,
         surrenderValue,
+        qualificationType,
         fixedCostPeriod,
     } = policy;
 
@@ -40,92 +41,119 @@ export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
         select: (visibility) => buildTransactionCards(policy, t, visibility),
     });
 
+    const qualificationTypeValue = t(
+        `${qualificationType?.toLocaleLowerCase()}`
+    );
+
+    const renderField = (
+        labelKey: string,
+        tooltipKey: string,
+        value: string | number,
+        formatAsCurrency = false
+    ) => {
+        const formattedValue = formatAsCurrency
+            ? numberFormatify(value, currencyFormat)
+            : String(value);
+
+        return (
+            <div>
+                <Label
+                    label={t(labelKey)}
+                    tooltipTitle={t(labelKey)}
+                    tooltipBody={t(tooltipKey)}
+                    variant={LabelVariant.FieldLabel}
+                />
+                <Content
+                    details={formattedValue}
+                    variant={ContentVariant.Value}
+                />
+            </div>
+        );
+    };
+
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
             <Typography variant={TypographyVariant.H2}>
                 {t('financials')}
             </Typography>
-            <div className="mt-4 sm:flex gap-8 sm:flex-wrap grid grid-cols-2">
-                <div>
-                    <Label
-                        label={t(`baseDeathBenefit`)}
-                        tooltipBody={t(`baseDeathBenefitTooltip`)}
-                        tooltipTitle={t(`baseDeathBenefit`)}
-                        variant={LabelVariant.FieldLabel}
-                    />
-                    <Content
-                        details={numberFormatify(
-                            baseDeathBenefit as number,
-                            currencyFormat
-                        )}
-                        variant={ContentVariant.Value}
-                    />
-                </div>
-                {!policy.isTerm && (
+            <div className="mt-4 flex flex-col gap-8 sm:flex-row">
+                {policy?.isAnnuity && (
                     <>
-                        <div>
-                            <Label
-                                label={t(`accountValue`)}
-                                tooltipBody={t(`accountValueTooltip`)}
-                                tooltipTitle={t(`accountValue`)}
-                                variant={LabelVariant.FieldLabel}
-                            />
-                            <Content
-                                details={numberFormatify(
-                                    accountValue as number,
-                                    currencyFormat
-                                )}
-                                variant={ContentVariant.Value}
-                            />
+                        <div className="flex flex-col gap-8 lg:flex-row">
+                            {renderField(
+                                'surrenderValue',
+                                'netSurrenderValueTooltip',
+                                surrenderValue as number,
+                                true
+                            )}
+                            {renderField(
+                                'costBasis',
+                                'costBasisTooltip',
+                                costBasis as number,
+                                true
+                            )}
                         </div>
-                        <div>
-                            <Label
-                                label={t(`netSurrenderValue`)}
-                                tooltipBody={t(`netSurrenderValueTooltip`)}
-                                tooltipTitle={t(`netSurrenderValue`)}
-                                variant={LabelVariant.FieldLabel}
-                            />
-                            <Content
-                                details={numberFormatify(
-                                    surrenderValue as number,
-                                    currencyFormat
-                                )}
-                                variant={ContentVariant.Value}
-                            />
-                        </div>
-                        <div>
-                            <Label
-                                label={t(`costBasis`)}
-                                tooltipBody={t(`costBasisTooltip`)}
-                                tooltipTitle={t(`costBasis`)}
-                                variant={LabelVariant.FieldLabel}
-                            />
-                            <Content
-                                details={numberFormatify(
-                                    costBasis as number,
-                                    currencyFormat
-                                )}
-                                variant={ContentVariant.Value}
-                            />
+                        <div className="flex flex-col gap-8 lg:flex-row">
+                            {renderField(
+                                'qualificationType',
+                                'qualificationTypeTooltip',
+                                qualificationTypeValue
+                            )}
+                            {renderField(
+                                'deathBenefit',
+                                'baseDeathBenefitTooltip',
+                                baseDeathBenefit as number,
+                                true
+                            )}
                         </div>
                     </>
                 )}
-
-                {policy.isTerm && (
-                    <div>
-                        <Label
-                            label={t(`policyTerm`)}
-                            tooltipBody={t(`policyTermTooltip`)}
-                            tooltipTitle={t(`policyTerm`)}
-                            variant={LabelVariant.FieldLabel}
-                        />
-                        <Content
-                            details={translateYearOrYears(
-                                fixedCostPeriod,
-                                tRaw
+                {!policy?.isTerm && !policy.isAnnuity && (
+                    <>
+                        <div className="flex flex-col gap-8 lg:flex-row">
+                            {renderField(
+                                'baseDeathBenefit',
+                                'baseDeathBenefitTooltip',
+                                baseDeathBenefit as number,
+                                true
                             )}
-                            variant={ContentVariant.Value}
-                        />
+                            {renderField(
+                                'accountValue',
+                                'accountValueTooltip',
+                                accountValue as number,
+                                true
+                            )}
+                        </div>
+                        <div className="flex flex-col gap-8 lg:flex-row">
+                            {renderField(
+                                'netSurrenderValue',
+                                'netSurrenderValueTooltip',
+                                surrenderValue as number,
+                                true
+                            )}
+                            {renderField(
+                                'costBasis',
+                                'costBasisTooltip',
+                                costBasis as number,
+                                true
+                            )}
+                        </div>
+                    </>
+                )}
+                {policy?.isTerm && (
+                    <div className="flex flex-col gap-8 lg:flex-row">
+                        {renderField(
+                            'baseDeathBenefit',
+                            'baseDeathBenefitTooltip',
+                            baseDeathBenefit as number,
+                            true
+                        )}
+                        {renderField(
+                            'policyTerm',
+                            'policyTermTooltip',
+                            translateYearOrYears(fixedCostPeriod, tRaw),
+                            false
+                        )}
                     </div>
                 )}
             </div>

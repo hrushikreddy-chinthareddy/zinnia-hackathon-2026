@@ -52,7 +52,7 @@ const orderedRoles = [
 
 export class PolicyParty {
     party: Party;
-    private partyRolesList: PolicyPartyRoles[] = [];
+    public partyRolesList: PolicyPartyRoles[] = [];
     public addresses: Addresses;
     public ageInYears: number | undefined;
     public banks: Banks;

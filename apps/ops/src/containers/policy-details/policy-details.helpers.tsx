@@ -23,6 +23,8 @@ const distributionMapping: { [key: DistributionType | string]: string } = {
         'policy.distributionType.affiliatedAgency',
     [DistributionType.BANKMARKET]: 'policy.distributionType.bankMarket',
     [DistributionType.BROKERDEALER]: 'policy.distributionType.brokerDealer',
+    ['BROKER_DEALER' as DistributionType]:
+        'policy.distributionType.broker_Dealer',
     [DistributionType.BROKERAGEINDEPENDENTMARKET]:
         'policy.distributionType.brokerageIndependentMarket',
     [DistributionType.CAPTIVEMARKET]: 'policy.distributionType.captiveMarket',
@@ -60,18 +62,32 @@ export const buildTransactionCards = (
 ): TransactionCardProps[] => {
     const { policyNumber, planCode, currency, isAnnuity } = policy;
     // BPB - TODO: add these to PolicyDetails
-    const { accountValues, withdrawalValues, loanValues, allocation } =
-        policy.policy;
+    const {
+        accountValues,
+        withdrawalValues,
+        loanValues,
+        allocation,
+        requiredMinimumDistribution,
+    } = policy.policy;
     const cumulativePremiumSinceIssue =
         accountValues?.cumulativePremiumSinceIssue;
-    const fundValue = allocation?.funds?.[0]?.totalFundValue;
+    const fundValue = isAnnuity
+        ? accountValues?.endingAccountValue
+        : allocation?.funds?.[0]?.totalFundValue;
+    const policyGainAmount = accountValues?.policyGainAmount;
     const lastDeposit =
         allocation?.funds?.[0]?.fundSegments?.[0]?.depositAmount;
     const loansAmount = loanValues?.totalLoanBalance;
     const loansCount = loanValues?.totalNumberOfLoan;
-    const withdrawalAmount = withdrawalValues?.totalWithdrawalAmount;
+    const withdrawalAmount = isAnnuity
+        ? withdrawalValues?.totalYearToDateWithdrawalTaken
+        : withdrawalValues?.totalWithdrawalAmount;
     const withdrawalCount = withdrawalValues?.numberOfWithdrawal;
     const ytdPremiums = accountValues?.totalYearToDatePremiumAmount;
+    const totalReqMinDistributionAmount =
+        requiredMinimumDistribution?.totalRequiredMinimumDistributionAnnualAmount;
+    const reqRemainigDistributionAmountAmount =
+        requiredMinimumDistribution?.remainingRequiredMinimumDistributionAmount;
 
     const currencyFormat: Intl.NumberFormatOptions = {
         style: 'currency',
@@ -80,7 +96,7 @@ export const buildTransactionCards = (
 
     const premiumsCard = {
         cardTitle: t('premiums'),
-        fieldLabel: t('allTimePremium'),
+        fieldLabel: isAnnuity ? t('cumulativePremium') : t('allTimePremium'),
         href: `/policies/${planCode}/${policyNumber}/policy/premiums`,
         summary: `${t('ytd')} ${numberFormatify(
             ytdPremiums as number,
@@ -94,13 +110,40 @@ export const buildTransactionCards = (
 
     const withdrawalsCard = {
         cardTitle: t('withdrawals'),
-        fieldLabel: t('withdrawalsTaken'),
+        fieldLabel: isAnnuity
+            ? t('cumulativeWithdrawals')
+            : t('withdrawalsTaken'),
         href: `/policies/${planCode}/${policyNumber}/policy/withdrawals`,
-        summary: `${t('total')} ${numberFormatify(
+        summary: `${isAnnuity ? t('ytd') : t('total')} ${numberFormatify(
             withdrawalAmount as number,
             currencyFormat
         )}`,
-        value: withdrawalCount || 0,
+        value: isAnnuity
+            ? numberFormatify(
+                  withdrawalValues?.totalWithdrawalAmount as number,
+                  currencyFormat
+              )
+            : withdrawalCount || 0,
+    };
+
+    const rmdCard = {
+        cardTitle: t('rmds'),
+        fieldLabel: t('eligibility'),
+        href: `/policies/${planCode}/${policyNumber}/policy/withdrawals`,
+        summary:
+            totalReqMinDistributionAmount === 0 ||
+            totalReqMinDistributionAmount == null
+                ? ''
+                : `${reqRemainigDistributionAmountAmount} ${t(
+                      'yearsRemaining'
+                  )}`,
+        value:
+            totalReqMinDistributionAmount && totalReqMinDistributionAmount > 0
+                ? t('eligible')
+                : totalReqMinDistributionAmount === 0 ||
+                  totalReqMinDistributionAmount === null
+                ? t('ineligible')
+                : t('notAvailable'),
     };
 
     const loansCard = {
@@ -116,17 +159,20 @@ export const buildTransactionCards = (
 
     const fundsCard = {
         cardTitle: t('funds'),
-        fieldLabel: t('totalFundValue'),
+        fieldLabel: isAnnuity ? t('accountValue') : t('totalFundValue'),
         href: `/policies/${planCode}/${policyNumber}/policy/funds`,
-        summary: `${t('lastDeposit')} ${numberFormatify(
-            lastDeposit as number,
+        summary: `${
+            isAnnuity ? t('gains') : t('lastDeposit')
+        } ${numberFormatify(
+            (isAnnuity ? policyGainAmount : lastDeposit) as number,
             currencyFormat
         )}`,
-        value: !isAnnuity
-            ? numberFormatify(fundValue as number, currencyFormat)
-            : '',
+        value: numberFormatify(fundValue as number, currencyFormat),
     };
 
+    if (policy.isAnnuity) {
+        return [premiumsCard, withdrawalsCard, rmdCard, fundsCard];
+    }
     const cards: TransactionCardProps[] = [premiumsCard];
 
     if (visibility.showWithdrawals) {

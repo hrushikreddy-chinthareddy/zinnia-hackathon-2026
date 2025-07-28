@@ -22,6 +22,7 @@ export interface ToggleProps {
     text?: string;
     value: boolean;
     handleToggle: (value: boolean) => void;
+    ['data-testid']?: string;
 }
 
 const ToggleLabel = ({ label }: Pick<ToggleProps, 'label'>) => {
@@ -89,6 +90,7 @@ export default function Toggle({
     text,
     value,
     handleToggle,
+    'data-testid': testId,
 }: ToggleProps) {
     const focusClasses = 'default-focus';
     const baseClasses = `${focusClasses} ${
@@ -121,6 +123,7 @@ export default function Toggle({
                     tabIndex={variant === ToggleVariant.Inactive ? -1 : 0}
                     aria-pressed={value}
                     role="button"
+                    data-testid={testId}
                 >
                     <ToggleInterior
                         size={size}

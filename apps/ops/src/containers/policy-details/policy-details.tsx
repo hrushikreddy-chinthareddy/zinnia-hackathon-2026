@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 
 import PolicyDetailsHeaderCard from '@deps/containers/page-header/policy-details-header';
-import { AnnuityApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card.tsx';
+import { AnnuityApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card';
 import { PolicyApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/policy-application-details-card';
+import { CostBasisQualificationCard } from '@deps/containers/policy-details/cards/cost-basis-qualification-card';
 import ProductDetailsCard from '@deps/containers/policy-details/cards/product-details-card';
 import {
     AnnuityTimelineCard,
@@ -18,7 +19,7 @@ import { PolicyFinancialsCard } from './cards/policy-financials-card';
 import { PolicyDetailsCard } from '../policy-summary-card/policy-details-card';
 
 const AnnuityPolicyDetailsContainer = () => {
-    const { policyDetails } = useContext(PolicyData);
+    const { policy, policyDetails } = useContext(PolicyData);
 
     return (
         <>
@@ -34,8 +35,9 @@ const AnnuityPolicyDetailsContainer = () => {
             <hr className="border-t-2 border-gray-200" />
             <PolicyFinancialsCard policy={policyDetails} />
             <AnnuitantCard policy={policyDetails} />
+            <CostBasisQualificationCard policy={policyDetails} />
             <AnnuityTimelineCard policy={policyDetails} />
-            <AnnuityApplicationDetailsCard policy={policyDetails} />
+            <AnnuityApplicationDetailsCard policy={policy} />
             <ProductDetailsCard policy={policyDetails} />
         </>
     );

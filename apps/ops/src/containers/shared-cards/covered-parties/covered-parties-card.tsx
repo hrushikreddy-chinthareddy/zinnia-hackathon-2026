@@ -2,8 +2,10 @@ import {
     FlatExtra,
     FlatExtraType,
     SubStandardRating,
+    PartyRole,
+    PartyType,
 } from '@zinnia/api-types/types/sor';
-import { useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -21,8 +23,12 @@ import {
     getRiskClass,
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
+import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import {
+    isNullEmptyOrUndefined,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 const TableRating = ({
@@ -117,7 +123,6 @@ export const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.detailCards.coveredParty',
     });
-
     const {
         ageInYears,
         fullName = DEFAULT_ERROR_STRING,
@@ -200,86 +205,121 @@ export const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     );
 };
 
+const getPartyDisplayName = (party: PolicyParty, t: TFunction) => {
+    if (!party) {
+        return t('notAvailable');
+    }
+    if (party.partyType === PartyType.INDIVIDUAL) {
+        return toTitleCase(`${party.firstName} ${party.lastName}`);
+    }
+    return party.fullName;
+};
+
+const CoveredPersonCard = ({
+    label,
+    person,
+    policy,
+    nameOverride,
+}: {
+    label: string;
+    person: PolicyParty;
+    policy: PolicyDetails;
+    nameOverride?: string;
+}) => {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'policy.detailCards.coveredParty',
+    });
+
+    const displayName =
+        nameOverride ||
+        (person.partyType === PartyType.INDIVIDUAL
+            ? toTitleCase(`${person.firstName} ${person.lastName}`)
+            : person.fullName);
+
+    return (
+        <div key={person.partyId}>
+            <Label label={t(label)} variant={LabelVariant.FieldLabel} />
+            <NavElement
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/people/${person.partyId}`}
+                size={NavElementSize.Small}
+                type={NavElementType.Link}
+            >
+                <PiiWrapper>{displayName}</PiiWrapper>
+            </NavElement>
+            <Typography variant={TypographyVariant.BodySm}>
+                {toTitleCase(person.partyType)}
+            </Typography>
+        </div>
+    );
+};
+
 export const AnnuitantCard = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.detailCards.coveredParty',
     });
 
+    const owners = policy.coveredPeople.filter((person) =>
+        person.partyRoles.some((role) =>
+            role.partyRole?.includes(PartyRole.OWNER)
+        )
+    );
+    const annuitants = policy.coveredPeople.filter((person) =>
+        person.partyRoles.some((role) =>
+            role.partyRole?.includes(PartyRole.ANNUITANT)
+        )
+    );
+    const jointOwners = policy.coveredPeople.filter((person) =>
+        person.partyRoles.some((role) =>
+            role.partyRole?.includes(PartyRole.JOINTOWNER)
+        )
+    );
+
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
             <Typography variant={TypographyVariant.H2}>
-                {t('annuitant')}
+                {t('ownerAndAnnuitant')}
             </Typography>
 
             <div className="mt-4 flex flex-col gap-2">
-                {policy.coveredPeople.map(
-                    ({
-                        partyId,
-                        ageInYears,
-                        fullName = DEFAULT_ERROR_STRING,
-                    }) => (
-                        <div
-                            className="flex flex-col gap-8 md:flex-row"
-                            key={partyId}
-                        >
-                            <div>
-                                <Label
-                                    label={t('fullName')}
-                                    variant={LabelVariant.FieldLabel}
+                <div className="flex flex-col gap-8 md:flex-row">
+                    {owners.map((owner) => (
+                        <CoveredPersonCard
+                            key={owner.partyId}
+                            label="owner"
+                            person={owner}
+                            policy={policy}
+                        />
+                    ))}
+                    <div className="flex flex-row gap-8">
+                        {annuitants?.length > 0 &&
+                            annuitants.map((annuitant) => {
+                                const ownerComparision = owners.find(
+                                    (o) => o.partyId === annuitant.partyId
+                                );
+                                const annuitantName = ownerComparision
+                                    ? t('sameAsOwner')
+                                    : getPartyDisplayName(annuitant, t);
+                                return (
+                                    <CoveredPersonCard
+                                        key={annuitant.partyId}
+                                        label="annuitant"
+                                        person={annuitant}
+                                        policy={policy}
+                                        nameOverride={annuitantName}
+                                    />
+                                );
+                            })}
+                        {jointOwners.length > 0 &&
+                            jointOwners.map((jointOwner) => (
+                                <CoveredPersonCard
+                                    key={jointOwner.partyId}
+                                    label="jointOwner"
+                                    person={jointOwner}
+                                    policy={policy}
                                 />
-                                <NavElement
-                                    href={`/policies/${policy.planCode}/${policy.policyNumber}/people/${partyId}`}
-                                    size={NavElementSize.Small}
-                                    type={NavElementType.Link}
-                                >
-                                    <PiiWrapper>{fullName}</PiiWrapper>
-                                </NavElement>
-                            </div>
-                            <div className="flex flex-row gap-8">
-                                <div>
-                                    <Label
-                                        label={t('currentAge')}
-                                        variant={LabelVariant.FieldLabel}
-                                    />
-                                    <Content
-                                        pii={true}
-                                        details={
-                                            isNullEmptyOrUndefined(ageInYears)
-                                                ? DEFAULT_ERROR_STRING
-                                                : (t('yearsOld', {
-                                                      count: ageInYears,
-                                                  }) as string)
-                                        }
-                                        variant={ContentVariant.BodySm}
-                                    />
-                                </div>
-                                <div>
-                                    <Label
-                                        label={t('ageAtIssue')}
-                                        variant={LabelVariant.FieldLabel}
-                                    />
-                                    <Content
-                                        pii={true}
-                                        details={
-                                            isNullEmptyOrUndefined(
-                                                policy.coverage.getCoverageParticipantByPartyId(
-                                                    partyId
-                                                )?.issueAge
-                                            )
-                                                ? DEFAULT_ERROR_STRING
-                                                : (t('yearsOld', {
-                                                      count: policy.coverage.getCoverageParticipantByPartyId(
-                                                          partyId
-                                                      )?.issueAge,
-                                                  }) as string)
-                                        }
-                                        variant={ContentVariant.BodySm}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )
-                )}
+                            ))}
+                    </div>
+                </div>
             </div>
         </CardContainer>
     );

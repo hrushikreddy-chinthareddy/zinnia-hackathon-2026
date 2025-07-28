@@ -22,7 +22,9 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
     cardTitle,
     value,
 }) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'policy.detailCards.policyDetails',
+    });
     const router = useRouter();
 
     const goto = (href: string) => {
@@ -46,7 +48,11 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
                 <Label
                     className="text-gray-900"
                     label={cardTitle}
-                    variant={LabelVariant.LabelLg}
+                    variant={
+                        cardTitle === t('rmds')
+                            ? LabelVariant.LabelUnchanged
+                            : LabelVariant.LabelLg
+                    }
                 />
                 <Icon
                     type={IconType.CHEVRON_RIGHT}
