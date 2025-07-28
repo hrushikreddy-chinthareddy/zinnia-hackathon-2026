@@ -2,7 +2,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { WidgetProps } from '@rjsf/utils';
 import { Button } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AssistiveText, {
@@ -20,7 +20,8 @@ import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 export default function NotesWidget(props: WidgetProps) {
-    const { formContext } = props;
+    const { formContext, required } = props;
+    const { setSubmitEnabled } = formContext;
     const [notes, setNotes] = useState(formContext?.customData?.notes || []);
     const [currentNote, setCurrentNote] = useState('');
     const { user } = useUser();
@@ -32,6 +33,15 @@ export default function NotesWidget(props: WidgetProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagementQueue',
     });
+    useEffect(() => {
+        if (required) {
+            setSubmitEnabled(
+                Array.isArray(task.data.notes) && task.data.notes.length >= 1
+            );
+        } else {
+            setSubmitEnabled(true);
+        }
+    }, [task.data, required, setSubmitEnabled]);
 
     const addNote = async () => {
         setError(false);
@@ -84,7 +94,15 @@ export default function NotesWidget(props: WidgetProps) {
 
     return (
         <div className="flex w-full flex-col">
-            <div className="font-primary text-2xl mt-8">{t('noteTitle')}</div>
+            <div className="font-primary text-2xl mt-8">
+                {t('noteTitle')}
+                {required && (
+                    <span className="text-[var(--color-secondary-color-primary)]">
+                        {' '}
+                        *{' '}
+                    </span>
+                )}
+            </div>
             <div
                 className={`w-full border-2 border-gray-200 mt-6 min-h-[100px] rounded-lg `}
             >
