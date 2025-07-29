@@ -28,8 +28,8 @@ export const GenerateClickableContainerList: FC<
 > = ({ links }) => {
   return (
     <>
-      {links.map((link, index) => {
-        if (!link.visibility) {
+      {links.map(({ visibility = true, ...link }, index) => {
+        if (!visibility) {
           return null;
         }
         return (
