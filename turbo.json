@@ -93,6 +93,8 @@
       "env": ["NEXT_PUBLIC_BASE_URL"]
     },
     "lint": {},
+    "prettier": {},
+    "prettier:fix": {},
     "consumer-experience#lint": {
       "dependsOn": ["^lint"]
     },
@@ -100,7 +102,9 @@
       "cache": false,
       "persistent": true
     },
-    "pre-commit": {},
+    "pre-commit": {
+      "dependsOn": ["^build", "lint", "prettier"]
+    },
     "pre-push": {},
     "consumer-experience#pre-commit": {
       "dependsOn": ["^build"]
