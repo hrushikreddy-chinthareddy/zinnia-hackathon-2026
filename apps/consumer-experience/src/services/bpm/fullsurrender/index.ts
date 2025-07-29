@@ -35,7 +35,9 @@ export const getPolicySurrenderEligibility = withLogging(
         },
         charges: null,
       }),
-      undefined,
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
       loggingCtx
     );
 
