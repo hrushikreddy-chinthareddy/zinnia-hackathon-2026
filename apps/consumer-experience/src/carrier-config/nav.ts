@@ -43,6 +43,15 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
       className: styles.logoEverly,
     },
   },
+  [CarrierName.SECURITY_BENEFIT]: {
+    homePageHref: '/',
+    hrefAriaLabel: 'Home Page',
+    image: CarrierLogos[CarrierName.SECURITY_BENEFIT],
+    logoProps: {
+      title: 'Security Benefit Logo',
+      height: '32px',
+    },
+  },
   [CarrierName.WELLABE]: {
     homePageHref: '/',
     hrefAriaLabel: 'Home Page',

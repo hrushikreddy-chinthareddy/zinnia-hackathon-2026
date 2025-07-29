@@ -35,6 +35,7 @@ const carrierIcons: Record<
   [CarrierNames.EVERLY]: EverlyIcon,
   [CarrierNames.WELLABE]: WellabeIcon,
   [CarrierNames.FARMERS]: CarrierAvatars[CarrierName.FARMERS],
+  [CarrierNames.SECURITY_BENEFIT]: CarrierAvatars[CarrierName.SECURITY_BENEFIT],
   [CarrierNames.ZINNIA]: CarrierAvatars[CarrierName.ZINNIA],
 };
 

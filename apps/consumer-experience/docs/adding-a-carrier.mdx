@@ -1,0 +1,188 @@
+import { Meta } from '@storybook/blocks';
+
+---
+
+<Meta title="Adding a New Carrier" />
+
+# Adding a new carrier
+
+Adding a new carrier can seem like a daunting task, here is a step by step guide
+
+## Adding Bloom Tokens
+
+In order to add tokens from the new carrier theme from `Bloom` please add the new import to `globals.css`
+
+```css
+@import '~@zinnia/bloom/css';
+@import '~@zinnia/bloom/themes/bloom';
+@import '~@zinnia/bloom/themes/everglades';
+// ... rest of carriers
+@import '~@zinnia/bloom/themes/<carrier-name>';
+@import './fonts.css';
+@import './spacing.css';
+@import './borders.css';
+
+// ... rest of global styles
+```
+
+## Carriers List
+
+### Carrier Types
+
+Please add carrier name and IDs to appropriate enums in `src/types/carriers.ts`
+
+```tsx
+// TODO: We have CompanyName and CarrierNames because we were parallising work on the
+// carrier stuff, we should really only have one of these.
+export enum CompanyName {
+  NEW_CARRIER = 'new-carrier'
+  ZINNIA = 'zinnia',
+}
+
+// subdomain for carrier [carrier-name].mypolicyview.com
+export enum Subdomains {
+  NEW_CARRIER = 'new-carrier',
+  ZINNIA = 'zinnia',
+}
+
+export enum CarrierNames {
+  NEW_CARRIER = 'New Carrier Inc'
+  ZINNIA = 'Zinnia',
+}
+
+export enum CarrierId {
+  NEW_CARRIER = 'NWC'
+  ZINNIA = 'ZINN',
+}
+
+```
+
+### Carrier utils
+
+Also make sure to add carrier to appropriate enums in `src/utils/carriers.ts`
+
+```tsx
+// Carriers that use the base mpv experience where users can
+// switch between carrier policies
+export const baseExperienceCarriers = [
+  CarrierId.ZINN
+  CarrierId.NWC,
+];
+
+// or if it's an sso carrier
+
+// Carriers that use sso for authentication. Users will only
+// be able to navigate through policies that are authorized for
+// that sso login
+export const ssoExperienceCarriers = [CarrierId.FARMERS, CarrierId.NWC];
+```
+
+Go through the rest of this file and add carrier to:
+
+- `getCarrierSubdomainById`
+- `getCarrierSubdomainByName`
+- `getCarrierNameById`
+- `getCarrierIdsByName`
+- `getCarrierIdsByThemeCookie`
+
+Just follow the pattern, I believe in you! ☺️
+
+## Nav Bar
+
+To add styles and logo to nav bar, please add an entry in `src/carrier-config/nav.ts`
+
+```tsx
+export const navCarrierConfig: Record<ComanyName, NavCarrierConfig> = {
+  // ... other carriers
+  [CompanyName.[CarrierName]]: {
+    homePageHref: 'this is where clicking on home button goes',
+        hrefAriaLabel: 'Home Page aria Label',
+    image: CarrierLogos[CarrierName], // path to svg of logo
+    logoProps: {
+      // svg props
+      title: 'Zinnia Logo',
+      // svg height
+      height: '32px',
+      // svg width
+      width: '115px',
+      className: styles.logoZinnia,
+      color: 'var(--primary-color)',
+      fill: 'var(--logo-fill)',
+      title: 'svg title for a11y'
+    },
+  }
+}
+```
+
+## Nav Menu
+
+Add the carrier icon to the `carrierIcons` fn in `src/components/nav-menu/NavMenu.tsx`
+
+```tsx
+const carrierIcons: Record<
+  CarrierNames,
+  React.FunctionComponent<
+    React.SVGProps<SVGSVGElement> & { title?: string }
+  > | null
+> = {
+  [CarrierNames.EVERLY]: CarrierAvatars[CArrierNames.EVERLY],
+  [CarrierNames.CARRIER_NAME]: CarrierAvatars[CarrierName],
+};
+```
+
+## Generic Info Page
+
+Please add carrier to login by registering it in `GenericInfoPage.tsx`
+
+```tsx
+const getCarrierConfig = (carrier: CompanyName): CarrierConfig => {
+  switch (carrier) {
+    case CompanyName.CARRIER:
+      return {
+        logo: (
+          <CarrierLogo carrier={CarrierName.CARRIER} width={420} height={69} />
+        ),
+        theme: styles.securityBenefit,
+        showBranding: true,
+      };
+    default:
+      return {
+        logo: null,
+        theme: styles.zinnia,
+        showBranding: false,
+      };
+  }
+};
+```
+
+Also add styles to the accompanying `GenericInfoPage.module.css`
+
+```css
+&.security-benefit {
+  background-color: var(--login-bg-color);
+  background-image: url('../../app/styles/carrier-name/assets/carrier-background-mobile.png');
+
+  @media (width >=500px) {
+    background-image: url('../../app/styles/carrier-name/assets/carrier-background-tablet.png');
+  }
+
+  @media (width >=1024px) {
+    background-image: url('../../app/styles/carrier-name/assets/carrier-background-desktop.png');
+  }
+}
+
+/* ... other styles */
+.logoContainer {
+  &.carrier {
+    width: var(--carier-logo-width-sm);
+
+    @media (width >=1024px) {
+      width: var(--carrier-logo-width-lg);
+    }
+  }
+}
+```
+
+## More Info
+
+For more info, see the [PR](https://github.com/zinnia/digital-experience-monorepo/pull/2370) where we merged Security Benefit

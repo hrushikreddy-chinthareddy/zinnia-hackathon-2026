@@ -47,6 +47,18 @@ const getCarrierConfig = (carrier: CompanyName): CarrierConfig => {
         theme: styles.farmers,
         showBranding: true,
       };
+    case CompanyName.SECURITY_BENEFIT:
+      return {
+        logo: (
+          <CarrierLogo
+            carrier={CarrierName.SECURITY_BENEFIT}
+            width={334}
+            height={63}
+          />
+        ),
+        theme: styles.securityBenefit,
+        showBranding: true,
+      };
     default:
       return {
         logo: null,

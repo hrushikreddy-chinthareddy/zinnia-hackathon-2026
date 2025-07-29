@@ -57,6 +57,20 @@
       }
     }
 
+    &.securityBenefit {
+      background-color: #81b0d2;
+      background-image: unset;
+      /* background-image: url('../../app/styles/security-benefit/assets/security-benefit-hero-background-mobile.png'); */
+
+      @media (width >=500px) {
+        /* background-image: url('../../app/styles/security-benefit/assets/security-benefit-hero-background-tablet.png'); */
+      }
+
+      @media (width >=1024px) {
+        /* background-image: url('../../app/styles/security-benefit/assets/security-benefit-hero-background.png'); */
+      }
+    }
+
     &.wellabe {
       background-color: #efc416;
       background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-mobile.png');

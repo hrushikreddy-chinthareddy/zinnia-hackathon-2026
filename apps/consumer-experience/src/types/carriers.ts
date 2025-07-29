@@ -4,6 +4,7 @@ export enum CompanyName {
   EVERLY = 'everly',
   WELLABE = 'wellabe',
   FARMERS = 'farmers',
+  SECURITY_BENEFIT = 'security-benefit',
   ZINNIA = 'zinnia',
 }
 
@@ -11,6 +12,7 @@ export enum Subdomains {
   EVERLY = 'everly',
   WELLABE = 'wellabe',
   FARMERS = 'farmers',
+  SECURITY_BENEFIT = 'security-benefit',
   ZINNIA = 'zinnia',
 }
 
@@ -18,15 +20,16 @@ export enum CarrierNames {
   EVERLY = 'Everly Life',
   WELLABE = 'Wellabe',
   FARMERS = 'Farmers Insurance',
+  SECURITY_BENEFIT = 'Security Benefit',
   ZINNIA = 'Zinnia',
 }
 
 export enum CarrierId {
   ELIC = 'ELIC',
   FARMERS = 'FNWL',
-  SBUL = 'SBUL',
   SB = 'SB',
+  SBL = 'SBL',
+  SBUL = 'SBUL',
   WELLABE = 'WELB',
-  ZINNIA = 'ZINN'
+  ZINNIA = 'ZINN',
 }
-

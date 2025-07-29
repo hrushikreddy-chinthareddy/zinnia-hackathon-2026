@@ -8,6 +8,8 @@ import { prependSubdomain } from './url';
 export const baseExperienceCarriers = [
   CarrierId.SBUL,
   CarrierId.ELIC,
+  CarrierId.SB,
+  CarrierId.SBL,
   CarrierId.WELLABE,
 ];
 
@@ -32,6 +34,9 @@ export const getCarrierSubdomainById = (
       return Subdomains.WELLABE;
     case CarrierId.FARMERS:
       return Subdomains.FARMERS;
+    case CarrierId.SB:
+    case CarrierId.SBL:
+      return Subdomains.SECURITY_BENEFIT;
     default:
       return '';
   }
@@ -47,7 +52,8 @@ export const getCarrierSubdomainByName = (
       return Subdomains.WELLABE;
     case CarrierNames.FARMERS:
       return Subdomains.FARMERS;
-
+    case CarrierNames.SECURITY_BENEFIT:
+      return Subdomains.SECURITY_BENEFIT;
     default:
       return '';
   }
@@ -74,6 +80,9 @@ export const getCarrierNameById = (
       return CarrierNames.WELLABE;
     case CarrierId.FARMERS:
       return CarrierNames.FARMERS;
+    case CarrierId.SB:
+    case CarrierId.SBL:
+      return CarrierNames.SECURITY_BENEFIT;
     default:
       return '';
   }
@@ -121,6 +130,8 @@ export const getCarrierIdsByName = (name: string | undefined) => {
       return [CarrierId.ELIC, CarrierId.SBUL];
     case 'Wellabe':
       return [CarrierId.WELLABE];
+    case 'Security Benefit':
+      return [CarrierId.SB, CarrierId.SBL];
     default:
       return [];
   }
@@ -134,6 +145,8 @@ export const getCarrierIdsByThemeCookie = (themeCookie: string | undefined) => {
       return [CarrierId.WELLABE];
     case Subdomains.FARMERS:
       return [CarrierId.FARMERS];
+    case Subdomains.SECURITY_BENEFIT:
+      return [CarrierId.SB, CarrierId.SBL];
   }
 
   return [CarrierId.ELIC, CarrierId.SBUL, CarrierId.WELLABE, CarrierId.FARMERS];
