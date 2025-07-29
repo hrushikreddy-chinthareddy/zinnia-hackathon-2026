@@ -6,8 +6,6 @@ import {
     FieldStatus,
     Radio,
     Select,
-    Tag,
-    TagVariant,
 } from '@zinnia/bloom/components';
 import {
     isRenderingPlaceholderField,
@@ -20,20 +18,13 @@ import {
     RenderingOptionField,
     RenderingFieldOption,
 } from '@zinnia/form-engine-sdk';
-import ReactHtmlParser from 'html-react-parser';
 import { RenderingCustomField } from 'node_modules/@zinnia/form-engine-sdk/dist/esm/questionnaire-engine/renderingTransforms/RenderingQuestionnaire';
-import {
-    ReactElement,
-    ReactNode,
-    useCallback,
-    useEffect,
-    useRef,
-    memo,
-} from 'react';
+import { ReactElement, useCallback, useEffect, memo } from 'react';
 
-import { useQuestionnaireEngine } from '@deps/components/illustrations/providers/QuestionnaireEngineProvider';
-
+import { FieldContainer, FieldContainerProps, FieldLabel } from './common';
 import style from './field.module.css';
+import { IllustrationScheduler } from './IllustrationScheduler';
+import { Tags } from './Tags';
 import { CheckboxGroup } from '../../bloom-temp/checkbox-group';
 
 export const DefaultFieldSizesMap: { [key in FieldTypes]?: number } = {
@@ -124,29 +115,6 @@ type FieldProps = {
 
 export const Field = memo(InnerField);
 
-const FieldLabel = ({ field }: { field: RenderingField }) => {
-    return (
-        (field.title || field.text) && (
-            <div className={style.fieldHeader}>
-                {field.title && (
-                    <label
-                        htmlFor={field.id}
-                        className="typography-labels-label-md-alt"
-                    >
-                        {ReactHtmlParser(field.title)}
-                        {!field.optional && '*'}
-                    </label>
-                )}
-                {field.text && (
-                    <p className="typography-labels-label-sm-alt">
-                        {ReactHtmlParser(field.text)}
-                    </p>
-                )}
-            </div>
-        )
-    );
-};
-
 export function InnerField(props: FieldProps): ReactElement | null {
     const {
         field,
@@ -157,8 +125,6 @@ export function InnerField(props: FieldProps): ReactElement | null {
         onInfoIconClick,
         focusedIncompleteFieldId,
     } = props;
-
-    const { questionnaireEngine } = useQuestionnaireEngine();
 
     // const onAnswerComplete = useCallback(
     //   (fieldId: string, answer: any, previousAnswer: any) => {
@@ -246,34 +212,26 @@ export function InnerField(props: FieldProps): ReactElement | null {
         focusedIncompleteFieldId,
     };
 
-    if (field.type === FieldTypes.custom) {
-        field;
-    }
     switch (field.type) {
         case FieldTypes.custom: {
-            const tagNodeIds =
-                (field as RenderingCustomField)?.customProperties?.[
-                    'tagNodeIds'
-                ] ?? [];
-            const tags = (tagNodeIds as string[]).map((tagNodeId) => {
-                const tag = questionnaireEngine.getAnswer(tagNodeId);
-                return tag;
-            });
-
-            if (field.text) {
-                tags.unshift(field.text);
+            const customField: RenderingCustomField = field;
+            switch (customField.customName) {
+                case 'IllustrationScheduler': {
+                    return <IllustrationScheduler field={customField} />;
+                }
+                case 'Tags': {
+                    return <Tags field={customField} />;
+                }
+                default: {
+                    return (
+                        <div>
+                            Blueprint is referencing a custom component called{' '}
+                            {customField.customName} but no component is
+                            registered for it.
+                        </div>
+                    );
+                }
             }
-
-            if (tags.length > 0) {
-                return (
-                    <Tag
-                        text={tags.join(' ')}
-                        variant={TagVariant.White}
-                        className={style.fieldTag}
-                    ></Tag>
-                );
-            }
-            return <></>;
         }
         case FieldTypes.input:
             // const symbol = isRenderingTextField(field) ? field.symbol : undefined;
@@ -644,84 +602,4 @@ export function InnerField(props: FieldProps): ReactElement | null {
 
 function getPlaceholderForField(field: RenderingField): string | undefined {
     return isRenderingPlaceholderField(field) ? field.placeholder : undefined;
-}
-
-interface FieldContainerProps {
-    forceNewLine: boolean;
-    fieldSize: number;
-    field: RenderingField;
-    infoSupplementImage?: { src: string; alt?: string };
-    onInfoIconClick?: () => void;
-    withoutInfoSupplement?: boolean;
-    children?: ReactNode;
-    focusedIncompleteFieldId?: string;
-    boldedBorder?: boolean;
-}
-
-function FieldContainer(props: FieldContainerProps): ReactElement {
-    const {
-        // forceNewLine,
-        field,
-        children,
-        // fieldSize,
-        // onInfoIconClick,
-        // infoSupplementImage,
-        withoutInfoSupplement = false,
-        focusedIncompleteFieldId,
-        // boldedBorder,
-    } = props;
-
-    const divRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (focusedIncompleteFieldId === field.blueprintId) {
-            const { current } = divRef;
-            if (current) {
-                current.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    }, [focusedIncompleteFieldId, field.blueprintId]);
-
-    // const gridSize = useMemo(() => {
-    //   if (withoutInfoSupplement) {
-    //     return 12;
-    //   }
-    //   return (
-    //     field.info ? fieldSize - INFO_ICON_BUTTON_SIZE : fieldSize
-    //   ) as number;
-    // }, [withoutInfoSupplement, field.info, fieldSize]);
-
-    return (
-        <div className={style.fieldContainer}>
-            {/*  TODO: handle force new line*/}
-            {/* {forceNewLine && <SpacerField styleVariant={styleVariant} />} */}
-
-            <div>{children}</div>
-            {withoutInfoSupplement === false && field.info && (
-                <div>
-                    <div>
-                        {/* TODO: info supplement */}
-                        <div>(i)</div>
-                        {/* <InfoSupplement
-              title={field.info.title}
-              text={field.info.text}
-              image={infoSupplementImage}
-              modalOptions={field.info.modalOptions}
-              onClick={onInfoIconClick}
-              boldedBorder={boldedBorder}
-            /> */}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-}
-
-export function ReadOnlyField({ field }: { field: RenderingField }) {
-    return (
-        <FieldContainer field={field} forceNewLine fieldSize={FieldSizes.full}>
-            <FieldLabel field={field} />
-            {field.value && <p>{field.value}</p>}
-        </FieldContainer>
-    );
 }

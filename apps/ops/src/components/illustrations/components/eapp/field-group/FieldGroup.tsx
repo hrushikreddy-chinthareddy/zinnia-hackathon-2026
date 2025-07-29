@@ -9,7 +9,8 @@ import { Fragment, memo, ReactElement, useMemo } from 'react';
 
 import style from './fieldGroup.module.css';
 import { useQuestionnaireEngine } from '../../../providers/QuestionnaireEngineProvider';
-import { Field, ReadOnlyField } from '../field/Field';
+import { ReadOnlyField } from '../field/common';
+import { Field } from '../field/Field';
 
 type FieldGroupProps = {
     fieldGroup: RenderingFieldGroup;
