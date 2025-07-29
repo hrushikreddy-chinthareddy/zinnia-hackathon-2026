@@ -119,14 +119,7 @@ export function QuestionnaireEngineProvider(
             },
         });
 
-        const blueprintOutput = engine.getSimpleMappingOutput();
-
-        if (blueprintOutput.success) {
-            const blueprintDefaults = blueprintOutput.value;
-            engine.populateSimpleMappingAnswers(
-                Object.assign(blueprintDefaults, props.prePopulateData)
-            );
-        }
+        engine.populateSimpleMappingAnswers(props.prePopulateData);
 
         setRenderingQuestionnaire(engine.renderingQuestionnaire);
 

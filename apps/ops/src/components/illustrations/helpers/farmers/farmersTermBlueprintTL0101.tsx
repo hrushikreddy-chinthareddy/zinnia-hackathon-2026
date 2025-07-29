@@ -31,7 +31,7 @@ export const farmersTermBlueprintTL0101 = {
                             fields: [
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredFullNameTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -68,7 +68,7 @@ export const farmersTermBlueprintTL0101 = {
                                 },
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredAgeTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: 'Age: ',
                                         fr: '',
@@ -103,7 +103,7 @@ export const farmersTermBlueprintTL0101 = {
                                 },
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredSexAtBirthTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -1764,38 +1764,6 @@ export const farmersTermBlueprintTL0101 = {
                             },
                             isCustom: true,
                             fields: [
-                                // {
-                                //     fieldType: 'date',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Start Date',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'schedule-from',
-                                //     outputPath: 'temporaryFlatExtra.startDate',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: 'a076c49f-92c0-433b-9544-2c617fafac33',
-                                //     partName:
-                                //         'custom-0374a377-1217-4529-b031-8539f98cd208',
-                                //     validateAs: 'futureOrCurrentDate',
-                                //     isCustom: true,
-                                // },
                                 {
                                     fieldType: 'number',
                                     text: {

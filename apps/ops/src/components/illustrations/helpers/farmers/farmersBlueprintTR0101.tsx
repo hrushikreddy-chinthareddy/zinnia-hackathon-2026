@@ -31,7 +31,7 @@ export const farmersBlueprintTR0101 = {
                             fields: [
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredFullNameTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -68,7 +68,7 @@ export const farmersBlueprintTR0101 = {
                                 },
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredAgeTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: 'Age: ',
                                         fr: '',
@@ -113,7 +113,7 @@ export const farmersBlueprintTR0101 = {
                                 },
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredSexAtBirthTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: '',
                                         fr: '',

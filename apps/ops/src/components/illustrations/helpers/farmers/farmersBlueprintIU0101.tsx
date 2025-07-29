@@ -97,7 +97,7 @@ export const farmersBlueprintIU0101 = {
                                 },
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredFullNameTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -134,7 +134,7 @@ export const farmersBlueprintIU0101 = {
                                 },
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredAgeTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: 'Age: ',
                                         fr: '',
@@ -144,6 +144,7 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'insured-age-tag',
+                                    outputPath: 'insuredAgeTag',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -163,12 +164,12 @@ export const farmersBlueprintIU0101 = {
                                         'custom-795fd778-ee97-4e0b-b58d-d7ce2bc0b1e4',
                                     validateAs: 'string',
                                     customProperties: {
-                                        tagNodeIds: ['age'],
+                                        tagNodeIds: ['insured-age-tag'],
                                     },
                                 },
                                 {
                                     fieldType: 'custom',
-                                    customName: 'insuredSexAtBirthTag',
+                                    customName: 'Tags',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -1224,75 +1225,62 @@ export const farmersBlueprintIU0101 = {
                                             },
                                             orderingIndex: 1,
                                         },
-                                        {
-                                            value: 'STANDARDNONTOBACCO',
-                                            text: {
-                                                en: 'Platinum Substandard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'STANDARDTOBACCO',
-                                            text: {
-                                                en: 'Gold Substandard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
-                                        {
-                                            value: 'juvenile',
-                                            text: {
-                                                en: 'Juvenile',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                            visible: {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 0,
-                                                            maxAge: 17,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                ],
-                                            },
-                                        },
-                                        {
-                                            value: 'juvenileSubstandard',
-                                            text: {
-                                                en: 'Juvenile Substandard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                            visible: {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 0,
-                                                            maxAge: 17,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                ],
-                                            },
-                                        },
                                     ],
                                     validateAs: 'string',
                                     defaultValue: 'STANDARDNONTOBACCO',
+                                },
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'table-or-flat-extra-selection',
+                                    outputPath: 'tableOrFlatExtraSelection',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {},
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'ee983615-56d5-459d-9000-57bc8910d0fd',
+                                    partName:
+                                        'custom-281f12c6-5c81-473e-ab5d-30a885b717ad',
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: 'selectTableOrFlatExtraRatings',
+                                            text: {
+                                                en: 'Add sub-standard rating',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: [
+                                                    'STANDARDNONTOBACCO',
+                                                    'STANDARDTOBACCO',
+                                                ],
+                                                targetNodeId: 'premium-class',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'checkboxGroup',
@@ -1350,84 +1338,92 @@ export const farmersBlueprintIU0101 = {
                                         ],
                                     },
                                 },
-
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Table Rating',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'table-rating',
-                                    outputPath: 'subStandardRating',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '4eb09389-39d7-42e2-aa95-b0dbcc604e49',
-                                    partName:
-                                        'custom-07730628-0047-4b02-a172-9891959a0286',
-                                    selectOptions: [
-                                        {
-                                            value: 'TABLEA',
-                                            text: {
-                                                en: 'TABLEA',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLEB',
-                                            text: {
-                                                en: 'TABLEB',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLEC',
-                                            text: {
-                                                en: 'TABLEC',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLED',
-                                            text: {
-                                                en: 'TABLED',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'equalityCondition',
-                                                value: 'juvenileSubstandard',
-                                                isEqual: true,
-                                                targetNodeId: 'premium-class',
-                                            },
-                                        ],
-                                    },
-                                },
+                                // {
+                                //     fieldType: 'dropdown',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Table Rating',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'table-rating',
+                                //     outputPath: 'subStandardRating',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '4eb09389-39d7-42e2-aa95-b0dbcc604e49',
+                                //     partName:
+                                //         'custom-07730628-0047-4b02-a172-9891959a0286',
+                                //     selectOptions: [
+                                //         {
+                                //             value: 'NONETABLE',
+                                //             text: {
+                                //                 en: 'None',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'TABLEA',
+                                //             text: {
+                                //                 en: 'TABLEA',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'TABLEB',
+                                //             text: {
+                                //                 en: 'TABLEB',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'TABLEC',
+                                //             text: {
+                                //                 en: 'TABLEC',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'TABLED',
+                                //             text: {
+                                //                 en: 'TABLED',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //     ],
+                                //     validateAs: 'string',
+                                //     isCustom: true,
+                                //     visible: {
+                                //         booleanOperator: 'and',
+                                //         conditions: [
+                                //             {
+                                //                 type: 'equalityCondition',
+                                //                 value: 'juvenileSubstandard',
+                                //                 isEqual: true,
+                                //                 targetNodeId: 'premium-class',
+                                //             },
+                                //         ],
+                                //     },
+                                //     defaultValue: 'NONETABLE',
+                                // },
                             ],
                             displayAsCard: false,
                             copyable: 'none',
@@ -1482,10 +1478,11 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'table-rating',
+                                    outputPath: 'subStandardRating',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -1501,9 +1498,17 @@ export const farmersBlueprintIU0101 = {
                                         'custom-58f1c54d-284d-4650-86c3-6e6274e7f4f5',
                                     selectOptions: [
                                         {
+                                            value: 'NONETABLE',
+                                            text: {
+                                                en: 'None',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
                                             value: 'TABLEA',
                                             text: {
-                                                en: 'TABLEA',
+                                                en: 'A',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1511,7 +1516,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEB',
                                             text: {
-                                                en: 'TABLEB',
+                                                en: 'B',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1519,7 +1524,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEC',
                                             text: {
-                                                en: 'TABLEC',
+                                                en: 'C',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1527,7 +1532,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLED',
                                             text: {
-                                                en: 'TABLED',
+                                                en: 'D',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1535,7 +1540,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEE',
                                             text: {
-                                                en: 'TABLEE',
+                                                en: 'E',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1543,7 +1548,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEF',
                                             text: {
-                                                en: 'TABLEF',
+                                                en: 'F',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1551,7 +1556,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEG',
                                             text: {
-                                                en: 'TABLEG',
+                                                en: 'G',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1559,7 +1564,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEH',
                                             text: {
-                                                en: 'TABLEH',
+                                                en: 'H',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1567,7 +1572,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEI',
                                             text: {
-                                                en: 'TABLEI',
+                                                en: 'I',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1575,7 +1580,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEJ',
                                             text: {
-                                                en: 'TABLEJ',
+                                                en: 'J',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1583,7 +1588,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEK',
                                             text: {
-                                                en: 'TABLEK',
+                                                en: 'K',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1591,7 +1596,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEL',
                                             text: {
-                                                en: 'TABLEL',
+                                                en: 'L',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1599,7 +1604,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEM',
                                             text: {
-                                                en: 'TABLEM',
+                                                en: 'M',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1607,7 +1612,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEN',
                                             text: {
-                                                en: 'TABLEN',
+                                                en: 'N',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1615,7 +1620,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEO',
                                             text: {
-                                                en: 'TABLEO',
+                                                en: 'O',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1623,7 +1628,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'TABLEP',
                                             text: {
-                                                en: 'TABLEP',
+                                                en: 'P',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -1631,6 +1636,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     isCustom: true,
+                                    defaultValue: 'NONETABLE',
                                 },
                                 {
                                     fieldType: 'money',
@@ -1647,7 +1653,7 @@ export const farmersBlueprintIU0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -1666,30 +1672,42 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             id: 'ddf60c38-eb5e-439c-8a16-1412c8f72bd7',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 15,
-                                                        targetNodeId:
-                                                            'temporary-flat-extra',
-                                                        operator:
-                                                            'lessThanOrEqual',
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 15,
+                                                                targetNodeId:
+                                                                    'temporary-flat-extra',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0,
+                                                                targetNodeId:
+                                                                    'temporary-flat-extra',
+                                                                operator:
+                                                                    'greaterThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0.5,
+                                                                targetNodeId:
+                                                                    'temporary-flat-extra',
+                                                                operator:
+                                                                    'multipleOf',
+                                                            },
+                                                        ],
                                                     },
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0,
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
                                                         targetNodeId:
                                                             'temporary-flat-extra',
-                                                        operator:
-                                                            'greaterThanOrEqual',
-                                                    },
-                                                    {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0.5,
-                                                        targetNodeId:
-                                                            'temporary-flat-extra',
-                                                        operator: 'multipleOf',
                                                     },
                                                 ],
                                             },
@@ -1706,10 +1724,10 @@ export const farmersBlueprintIU0101 = {
                                             {
                                                 type: 'matchesCondition',
                                                 value: [
-                                                    'STANDARDNONTOBACCO',
-                                                    'STANDARDTOBACCO',
+                                                    'selectTableOrFlatExtraRatings',
                                                 ],
-                                                targetNodeId: 'premium-class',
+                                                targetNodeId:
+                                                    'table-or-flat-extra-selection',
                                                 quantifier: 'any',
                                             },
                                         ],
@@ -1724,10 +1742,10 @@ export const farmersBlueprintIU0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDNONTOBACCO',
-                                            'STANDARDTOBACCO',
+                                            'selectTableOrFlatExtraRatings',
                                         ],
-                                        targetNodeId: 'premium-class',
+                                        targetNodeId:
+                                            'table-or-flat-extra-selection',
                                         quantifier: 'any',
                                     },
                                 ],
@@ -1743,38 +1761,6 @@ export const farmersBlueprintIU0101 = {
                             },
                             isCustom: true,
                             fields: [
-                                {
-                                    fieldType: 'date',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Start Date',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'schedule-from',
-                                    outputPath: 'temporaryFlatExtra.startDate',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'a076c49f-92c0-433b-9544-2c617fafac33',
-                                    partName:
-                                        'custom-0374a377-1217-4529-b031-8539f98cd208',
-                                    validateAs: 'futureOrCurrentDate',
-                                    isCustom: true,
-                                },
                                 {
                                     fieldType: 'number',
                                     text: {
@@ -1855,6 +1841,7 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
+                                    defaultValue: 'YEARS',
                                 },
                             ],
                             displayAsCard: true,
@@ -1865,11 +1852,17 @@ export const farmersBlueprintIU0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDTOBACCO',
-                                            'STANDARDNONTOBACCO',
+                                            'selectTableOrFlatExtraRatings',
                                         ],
-                                        targetNodeId: 'premium-class',
+                                        targetNodeId:
+                                            'table-or-flat-extra-selection',
                                         quantifier: 'any',
+                                    },
+                                    {
+                                        type: 'numberComparisonCondition',
+                                        value: 0,
+                                        targetNodeId: 'temporary-flat-extra',
+                                        operator: 'greaterThan',
                                     },
                                 ],
                             },
@@ -1897,7 +1890,7 @@ export const farmersBlueprintIU0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -1960,10 +1953,10 @@ export const farmersBlueprintIU0101 = {
                                     {
                                         type: 'matchesCondition',
                                         value: [
-                                            'STANDARDTOBACCO',
-                                            'STANDARDNONTOBACCO',
+                                            'selectTableOrFlatExtraRatings',
                                         ],
-                                        targetNodeId: 'premium-class',
+                                        targetNodeId:
+                                            'table-or-flat-extra-selection',
                                         quantifier: 'any',
                                     },
                                 ],
@@ -2546,6 +2539,124 @@ export const farmersBlueprintIU0101 = {
                                     isCustom: true,
                                 },
                                 {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Premium Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'premium-mode',
+                                    outputPath: 'paymentMode',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '5d72fb55-7bd5-4f9f-91a6-65843c00e0d4',
+                                    partName:
+                                        'custom-db55e733-8ca1-4f60-9d23-e876c52d3502',
+                                    selectOptions: [
+                                        {
+                                            value: 'MONTHLY',
+                                            text: {
+                                                en: 'Monthly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'QUARTERLY',
+                                            text: {
+                                                en: 'Quarterly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'SEMIANNUAL',
+                                            text: {
+                                                en: 'Semi-Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'ANNUAL',
+                                            text: {
+                                                en: 'Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    defaultValue: 'MONTHLY',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Payment Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'payment-mode',
+                                    outputPath: 'paymentMethod',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'c6d51e5b-0bc7-4a61-827e-bee6d10cdcd7',
+                                    partName:
+                                        'custom-c8944d62-3ca6-4ee2-98dc-44eb963990ea',
+                                    selectOptions: [
+                                        {
+                                            value: 'ACH',
+                                            text: {
+                                                en: 'Electronic Funds Transfer (EFT)',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            value: 'CREDITCARD',
+                                            text: {
+                                                en: 'Credit Card',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    defaultValue: 'ACH',
+                                },
+                                {
                                     fieldType: 'number',
                                     text: {
                                         en: '',
@@ -2769,124 +2880,6 @@ export const farmersBlueprintIU0101 = {
                                         ],
                                     },
                                 },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Premium Mode',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'premium-mode',
-                                    outputPath: 'paymentMode',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '5d72fb55-7bd5-4f9f-91a6-65843c00e0d4',
-                                    partName:
-                                        'custom-db55e733-8ca1-4f60-9d23-e876c52d3502',
-                                    selectOptions: [
-                                        {
-                                            value: 'MONTHLY',
-                                            text: {
-                                                en: 'Monthly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'QUARTERLY',
-                                            text: {
-                                                en: 'Quarterly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'SEMIANNUAL',
-                                            text: {
-                                                en: 'Semi-Annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'ANNUAL',
-                                            text: {
-                                                en: 'Annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    defaultValue: 'MONTHLY',
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Payment Mode',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'payment-mode',
-                                    outputPath: 'paymentMethod',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'c6d51e5b-0bc7-4a61-827e-bee6d10cdcd7',
-                                    partName:
-                                        'custom-c8944d62-3ca6-4ee2-98dc-44eb963990ea',
-                                    selectOptions: [
-                                        {
-                                            value: 'ACH',
-                                            text: {
-                                                en: 'Electronic Funds Transfer (EFT)',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            value: 'CREDITCARD',
-                                            text: {
-                                                en: 'Credit Card',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    defaultValue: 'ACH',
-                                },
                             ],
                             displayAsCard: false,
                             copyable: 'none',
@@ -2961,17 +2954,90 @@ export const farmersBlueprintIU0101 = {
                                     isCustom: true,
                                 },
                                 {
-                                    fieldType: 'money',
+                                    id: '900234d9-547c-4446-ad43-6b76f1f746ec',
+                                    fieldType: 'custom',
+                                    customName: 'IllustrationScheduler',
+                                    answerNodeId: 'modalPremiumTable',
+                                    defaultValue: [
+                                        {
+                                            id: '2b7d2fb8-5186-4986-b8c4-60d12ee191db',
+                                            firstColumn: undefined,
+                                            fromYear: 1,
+                                            through: 120,
+                                        },
+                                    ],
+                                    customProperties: {
+                                        firstColumn: {
+                                            type: 'money',
+                                            label: {
+                                                en: 'Modal Premium',
+                                            },
+                                            placeholder: {
+                                                en: 'Maximum',
+                                            },
+                                            tooltip: {
+                                                en: 'Configurable through the blueprint.',
+                                            },
+                                        },
+                                        fromYear: {
+                                            min: 1,
+                                            label: { en: 'From year' },
+                                        },
+                                        through: {
+                                            max: 120,
+                                            label: { en: 'Through' },
+                                        },
+                                        buttons: {
+                                            add: {
+                                                label: { en: 'Add new row' },
+                                            },
+                                        },
+                                    },
+                                },
+                                // {
+                                //     fieldType: 'money',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Modal Premium',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'modal-premium',
+                                //     outputPath: 'modalPremiumValue',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: 'cba28c1d-d763-47d7-b602-f3016feb24e8',
+                                //     partName:
+                                //         'custom-a25eb5f1-da2a-4d33-a5e4-46bc0e4304f5',
+                                //     validateAs: 'integer',
+                                //     isCustom: true,
+                                // },
+                                {
+                                    fieldType: 'dropdown',
                                     text: {
                                         en: '',
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Modal Premium',
+                                        en: 'Premium Mode',
                                         fr: '',
                                     },
-                                    answerNodeId: 'modal-premium',
-                                    outputPath: 'modalPremiumValue',
+                                    answerNodeId: 'premium-mode',
+                                    outputPath: 'paymentMode',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -2986,11 +3052,97 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: 'cba28c1d-d763-47d7-b602-f3016feb24e8',
+                                    id: '9bb05ea6-2c66-4ee7-8312-8a213503dbd7',
                                     partName:
-                                        'custom-a25eb5f1-da2a-4d33-a5e4-46bc0e4304f5',
-                                    validateAs: 'integer',
+                                        'custom-4807d558-8b11-466b-9733-40c3b6c14037',
+                                    selectOptions: [
+                                        {
+                                            value: 'MONTHLY',
+                                            text: {
+                                                en: 'Monthly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'QUARTERLY',
+                                            text: {
+                                                en: 'Quarterly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'ANNUAL',
+                                            text: {
+                                                en: 'Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                        },
+                                        {
+                                            value: 'SEMIANNUAL',
+                                            text: {
+                                                en: 'Semi-Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
                                     isCustom: true,
+                                    defaultValue: 'MONTHLY',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Payment Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'payment-mode',
+                                    outputPath: 'paymentMethod',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'c3dbae40-6c22-4812-8fee-cf2db78c0538',
+                                    partName:
+                                        'custom-581db7bd-8ee9-4338-bce4-d4eea8f222c9',
+                                    selectOptions: [
+                                        {
+                                            value: 'ACH',
+                                            text: {
+                                                en: 'Electronic Funds Transfer (EFT)',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            value: 'CREDITCARD',
+                                            text: {
+                                                en: 'Credit Card',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    defaultValue: 'ACH',
                                 },
                                 {
                                     fieldType: 'number',
@@ -3221,124 +3373,6 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     isCustom: true,
                                 },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Premium Mode',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'premium-mode',
-                                    outputPath: 'paymentMode',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '9bb05ea6-2c66-4ee7-8312-8a213503dbd7',
-                                    partName:
-                                        'custom-4807d558-8b11-466b-9733-40c3b6c14037',
-                                    selectOptions: [
-                                        {
-                                            value: 'MONTHLY',
-                                            text: {
-                                                en: 'Monthly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'QUARTERLY',
-                                            text: {
-                                                en: 'Quarterly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'ANNUAL',
-                                            text: {
-                                                en: 'Annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
-                                        {
-                                            value: 'SEMIANNUAL',
-                                            text: {
-                                                en: 'Semi-Annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    defaultValue: 'MONTHLY',
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Payment Mode',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'payment-mode',
-                                    outputPath: 'paymentMethod',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'c3dbae40-6c22-4812-8fee-cf2db78c0538',
-                                    partName:
-                                        'custom-581db7bd-8ee9-4338-bce4-d4eea8f222c9',
-                                    selectOptions: [
-                                        {
-                                            value: 'ACH',
-                                            text: {
-                                                en: 'Electronic Funds Transfer (EFT)',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            value: 'CREDITCARD',
-                                            text: {
-                                                en: 'Credit Card',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    defaultValue: 'ACH',
-                                },
                             ],
                             displayAsCard: false,
                             copyable: 'none',
@@ -3449,6 +3483,124 @@ export const farmersBlueprintIU0101 = {
                                         'custom-7af5f07e-247d-46b1-99d9-508289356830',
                                     validateAs: 'integer',
                                     isCustom: true,
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Premium Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'premium-mode',
+                                    outputPath: 'paymentMode',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '8d86b2df-45e9-4fb3-aeaa-765ab69c2caf',
+                                    partName:
+                                        'custom-005fe80e-0f24-499c-bcf2-f8dc5bdcf363',
+                                    selectOptions: [
+                                        {
+                                            value: 'MONTHLY',
+                                            text: {
+                                                en: 'Monthly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'QUARTERLY',
+                                            text: {
+                                                en: 'Quarterly',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'SEMIANNUAL',
+                                            text: {
+                                                en: 'Semi-Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'ANNUAL',
+                                            text: {
+                                                en: 'Annual',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    defaultValue: 'MONTHLY',
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Payment Mode',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'payment-mode',
+                                    outputPath: 'paymentMethod',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'e81fcedb-ab6c-4f7c-8804-60ffdb1458ab',
+                                    partName:
+                                        'custom-23481828-fede-4dd4-aff7-e862dc60ec2e',
+                                    selectOptions: [
+                                        {
+                                            value: 'ACH',
+                                            text: {
+                                                en: 'Electronic Funds Transfer (EFT)',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            value: 'CREDITCARD',
+                                            text: {
+                                                en: 'Credit Card',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    defaultValue: 'ACH',
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -3587,124 +3739,6 @@ export const farmersBlueprintIU0101 = {
                                             },
                                         ],
                                     },
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Premium Mode',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'premium-mode',
-                                    outputPath: 'paymentMode',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '8d86b2df-45e9-4fb3-aeaa-765ab69c2caf',
-                                    partName:
-                                        'custom-005fe80e-0f24-499c-bcf2-f8dc5bdcf363',
-                                    selectOptions: [
-                                        {
-                                            value: 'MONTHLY',
-                                            text: {
-                                                en: 'Monthly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'QUARTERLY',
-                                            text: {
-                                                en: 'Quarterly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'SEMIANNUAL',
-                                            text: {
-                                                en: 'Semi-Annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'ANNUAL',
-                                            text: {
-                                                en: 'Annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    defaultValue: 'MONTHLY',
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Payment Mode',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'payment-mode',
-                                    outputPath: 'paymentMethod',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'e81fcedb-ab6c-4f7c-8804-60ffdb1458ab',
-                                    partName:
-                                        'custom-23481828-fede-4dd4-aff7-e862dc60ec2e',
-                                    selectOptions: [
-                                        {
-                                            value: 'ACH',
-                                            text: {
-                                                en: 'Electronic Funds Transfer (EFT)',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            value: 'CREDITCARD',
-                                            text: {
-                                                en: 'Credit Card',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    isCustom: true,
-                                    defaultValue: 'ACH',
                                 },
                             ],
                             displayAsCard: false,
@@ -3910,108 +3944,6 @@ export const farmersBlueprintIU0101 = {
                                         ],
                                     },
                                 },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '1035 Exchange Basis',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'exchange-basis-1035',
-                                    outputPath: 'exchangeBasis1035',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'f2d528ef-f4ce-41ee-ab30-38cbe9611c1f',
-                                    partName:
-                                        'custom-c2dc760a-f01e-429e-a29e-7b5658d46ff2',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'equalityCondition',
-                                                value: 'yes',
-                                                isEqual: true,
-                                                targetNodeId: 'illustrate-1035',
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    fieldType: 'radio',
-                                    id: 'b640d8d6-3d9f-49d4-9cc8-7a421e7230b9',
-                                    partName:
-                                        'custom-e648da03-b2ca-437f-85bf-d0ae1660b362',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '1035 MEC',
-                                        fr: '',
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'mec-1035',
-                                    outputPath: 'mec1035',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            value: 'YES',
-                                            text: {
-                                                en: 'Yes',
-                                            },
-                                            isCustom: true,
-                                        },
-                                        {
-                                            value: 'NON',
-                                            text: {
-                                                en: 'No',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'equalityCondition',
-                                                value: 'yes',
-                                                isEqual: true,
-                                                targetNodeId: 'illustrate-1035',
-                                            },
-                                        ],
-                                    },
-                                },
                             ],
                             displayAsCard: false,
                             copyable: 'none',
@@ -4058,6 +3990,56 @@ export const farmersBlueprintIU0101 = {
                             title: {},
                             isCustom: true,
                             fields: [
+                                // {
+                                //     fieldType: 'dropdown',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Death Benefit Option',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'death-benefit-option',
+                                //     outputPath: 'deathBenefitOption.value',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: 'bf7b2782-ebd5-4def-87af-5b19d5356dec',
+                                //     partName:
+                                //         'custom-77062f3d-906d-4014-9e36-d034e6654838',
+                                //     selectOptions: [
+                                //         {
+                                //             value: 'increasing',
+                                //             text: {
+                                //                 en: 'Increasing',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'level',
+                                //             text: {
+                                //                 en: 'Level',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //     ],
+                                //     validateAs: 'string',
+                                //     defaultValue: 'level',
+                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -4065,11 +4047,11 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Death Benefit Option',
+                                        en: 'Do you want to schedule Death benefit Option?',
                                         fr: '',
                                     },
-                                    answerNodeId: 'death-benefit-option',
-                                    outputPath: 'deathBenefitOption.value',
+                                    answerNodeId:
+                                        'schedule-death-benefit-option',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -4084,115 +4066,163 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: 'bf7b2782-ebd5-4def-87af-5b19d5356dec',
+                                    id: '9aa169a1-91be-4588-af9d-c1c9e827923e',
                                     partName:
-                                        'custom-77062f3d-906d-4014-9e36-d034e6654838',
+                                        'custom-bc99356e-a65a-4fa7-8ad8-b5af642af466',
                                     selectOptions: [
                                         {
-                                            value: 'increasing',
+                                            value: 'yes',
                                             text: {
-                                                en: 'Increasing',
+                                                en: 'Yes',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'level',
+                                            value: 'no',
                                             text: {
-                                                en: 'Level',
+                                                en: 'No',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
                                         },
                                     ],
                                     validateAs: 'string',
-                                    defaultValue: 'level',
                                 },
                                 {
-                                    fieldType: 'input',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'From',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'death-benefit-option-from',
-                                    outputPath: 'deathBenefitOption.from',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                        forceNewLine: true,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '3b357e2c-5df0-4093-977b-35f422998ec2',
-                                    partName:
-                                        'custom-d9e46b20-8ea4-4e7c-82b2-53ab5e41aff4',
-                                    validateAs: 'integer',
-                                },
-                                {
-                                    fieldType: 'input',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Thru',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'death-benefit-option-thru',
-                                    outputPath: 'deathBenefitOption.thru',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'bef51498-2496-4991-b55c-fa6c4522635d',
-                                    partName:
-                                        'custom-73c54cec-3b93-4e45-a70b-9f44faf2ee4a',
-                                    validateAs: 'integer',
-                                    valid: [
+                                    id: 'cae207c7-bb34-496b-8360-64ea609ea792',
+                                    fieldType: 'custom',
+                                    customName: 'IllustrationScheduler',
+                                    answerNodeId: 'death-benefit-scheduler',
+                                    outputPath: 'deathBenefitSchedulerValue',
+                                    defaultValue: [
                                         {
-                                            id: '0b2b9aa9-b20d-4d7e-8a5d-b11ffacf16bf',
-                                            conditions: {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'numberComparisonCondition',
-                                                        nodeIdOfValue:
-                                                            'death-benefit-option-from',
-                                                        targetNodeId:
-                                                            'death-benefit-option-thru',
-                                                        operator: 'greaterThan',
-                                                    },
-                                                ],
-                                            },
-                                            message: {
-                                                en: "The From and the Thru can't be the same.",
-                                                fr: '',
-                                            },
+                                            id: 'a0999c14-57a3-4fdc-b660-1cbc5f19fc0e',
+                                            firstColumn: 'level',
+                                            fromYear: 1,
+                                            through: 120,
                                         },
                                     ],
+                                    customProperties: {
+                                        firstColumn: {
+                                            type: 'dropdown',
+                                            label: {
+                                                en: 'Death benefit option',
+                                            },
+                                            tooltip: {
+                                                en: '',
+                                            },
+                                            options: [
+                                                {
+                                                    value: 'level',
+                                                    label: { en: 'Level' },
+                                                },
+                                                {
+                                                    value: 'increasing',
+                                                    label: { en: 'Increasing' },
+                                                },
+                                            ],
+                                        },
+                                        fromYear: {
+                                            min: 1,
+                                            label: { en: 'From year' },
+                                        },
+                                        through: {
+                                            max: 120,
+                                            label: { en: 'Through' },
+                                        },
+                                        buttons: {
+                                            add: {
+                                                label: { en: 'Add new row' },
+                                            },
+                                        },
+                                    },
                                 },
+                                // {
+                                //     fieldType: 'input',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'From',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'death-benefit-option-from',
+                                //     outputPath: 'deathBenefitOption.from',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //         forceNewLine: true,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '3b357e2c-5df0-4093-977b-35f422998ec2',
+                                //     partName:
+                                //         'custom-d9e46b20-8ea4-4e7c-82b2-53ab5e41aff4',
+                                //     validateAs: 'integer',
+                                // },
+                                // {
+                                //     fieldType: 'input',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Thru',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'death-benefit-option-thru',
+                                //     outputPath: 'deathBenefitOption.thru',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: 'bef51498-2496-4991-b55c-fa6c4522635d',
+                                //     partName:
+                                //         'custom-73c54cec-3b93-4e45-a70b-9f44faf2ee4a',
+                                //     validateAs: 'integer',
+                                //     valid: [
+                                //         {
+                                //             id: '0b2b9aa9-b20d-4d7e-8a5d-b11ffacf16bf',
+                                //             conditions: {
+                                //                 booleanOperator: 'and',
+                                //                 conditions: [
+                                //                     {
+                                //                         type: 'numberComparisonCondition',
+                                //                         nodeIdOfValue:
+                                //                             'death-benefit-option-from',
+                                //                         targetNodeId:
+                                //                             'death-benefit-option-thru',
+                                //                         operator: 'greaterThan',
+                                //                     },
+                                //                 ],
+                                //             },
+                                //             message: {
+                                //                 en: "The From and the Thru can't be the same.",
+                                //                 fr: '',
+                                //             },
+                                //         },
+                                //     ],
+                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -4293,39 +4323,6 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Short Term Holding Account Allocation',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'short-term-holding-account-allocation',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '3a7d59a3-59e7-438b-9549-ad158d3fc0db',
-                                    partName:
-                                        'custom-8a698fbb-5290-43cd-a4f6-82091188874e',
-                                    numericalDataType: 'float',
-                                    validateAs: 'percentage',
-                                    defaultValue: 0,
-                                },
-                                {
-                                    fieldType: 'number',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
                                         en: 'Long Term Fixed Account Allocation',
                                         fr: '',
                                     },
@@ -4352,6 +4349,62 @@ export const farmersBlueprintIU0101 = {
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
                                     defaultValue: 0,
+                                },
+                                {
+                                    fieldType: 'number',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Current Illustrated Rate (%)',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'long-term-holding-account-current-illustrated-rate',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '62753c4c-e989-4ea0-a4e6-f0a28c744688',
+                                    partName:
+                                        'custom-61fa7a5c-d395-4a47-836c-9ba1f126ccde',
+                                    numericalDataType: 'float',
+                                    validateAs: 'percentage',
+                                    defaultValue: 4,
+                                    valid: [
+                                        {
+                                            id: '36ece1c0-491e-4f80-ab88-ddbebad173a9',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 4,
+                                                        targetNodeId:
+                                                            'long-term-holding-account-current-illustrated-rate',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Maximum is 4%',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                    isCustom: true,
                                 },
                                 {
                                     fieldType: 'number',
@@ -4393,6 +4446,62 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     title: {
+                                        en: 'Current Illustrated Rate (%)',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'sp500-indexed-account-current-illustrated-rate',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'b2e1eecf-50fd-4da5-a3a5-2c4548d7e81b',
+                                    partName:
+                                        'custom-ba46e0e6-d290-41d1-952c-6306bd16922a',
+                                    numericalDataType: 'float',
+                                    validateAs: 'percentage',
+                                    defaultValue: 7.41,
+                                    valid: [
+                                        {
+                                            id: '36ece1c0-491e-4f80-ab88-ddbebad173a9',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 7.41,
+                                                        targetNodeId:
+                                                            'sp500-indexed-account-current-illustrated-rate',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Maximum is 7.41%',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                    isCustom: true,
+                                },
+                                {
+                                    fieldType: 'number',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
                                         en: 'S&P MARC 5% ER Indexed Account Allocation',
                                         fr: '',
                                     },
@@ -4420,6 +4529,62 @@ export const farmersBlueprintIU0101 = {
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
                                     defaultValue: 50,
+                                },
+                                {
+                                    fieldType: 'number',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Current Illustrated Rate (%)',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'sp-marc-5-percent-er-indexed-account-current-illustrated-rate',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'a268e602-e668-42b4-bf84-304a132f75e2',
+                                    partName:
+                                        'custom-8fed7eb2-5cc0-438e-9f62-20f660cf13cd',
+                                    numericalDataType: 'float',
+                                    validateAs: 'percentage',
+                                    defaultValue: 7.41,
+                                    valid: [
+                                        {
+                                            id: '36ece1c0-491e-4f80-ab88-ddbebad173a9',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 7.41,
+                                                        targetNodeId:
+                                                            'sp-marc-5-percent-er-indexed-account-current-illustrated-rate',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Maximum is 7.41%',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                    isCustom: true,
                                 },
                             ],
                             displayAsCard: false,
@@ -4579,260 +4744,6 @@ export const farmersBlueprintIU0101 = {
                                             value: 'Rider_ABRCHR',
                                             text: {
                                                 en: 'Chronic Illness Accelerated Death Benefit Rider',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
-                                },
-                                {
-                                    fieldType: 'checkboxGroup',
-                                    id: 'd6c527e6-d48f-40a3-8934-56244dd0aa0e',
-                                    partName:
-                                        'custom-baf7d186-ce03-402f-aa2b-d986daeeaa23',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 1,
-                                                    maxAge: 60,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
-                                            },
-                                        ],
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId:
-                                        'accidental-death-benefit-rider',
-                                    outputPath:
-                                        'riders.accidentalDeathBenefitRider.values',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 12,
-                                        forceNewLine: false,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            value: 'Rider_ADR',
-                                            text: {
-                                                en: 'Accidental Death Benefit Rider',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Benefit',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'accidental-death-benefit-rider-benefit',
-                                    outputPath:
-                                        'riders.accidentalDeathBenefitRider.benefit',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'dbab04a4-418e-4072-ac46-b85484c20fbb',
-                                    partName:
-                                        'custom-bccda2e8-db99-43fe-a06b-228d8f744575',
-                                    validateAs: 'integer',
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['Rider_ADR'],
-                                                targetNodeId:
-                                                    'accidental-death-benefit-rider',
-                                                quantifier: 'any',
-                                            },
-                                        ],
-                                    },
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Table Rating',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'accidental-death-benefit-rider-table-rating',
-                                    outputPath:
-                                        'riders.accidentalDeathBenefitRider.tableRating',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'd37debc3-4964-4568-b18c-e02588f6ffc3',
-                                    partName:
-                                        'custom-fc24f298-a5e6-4d3f-b0ba-cdfae9827a9a',
-                                    selectOptions: [
-                                        {
-                                            value: 'NONETABLE',
-                                            text: {
-                                                en: 'Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            value: 'TABLEB',
-                                            text: {
-                                                en: '1.5 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLEC',
-                                            text: {
-                                                en: '2.0 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLED',
-                                            text: {
-                                                en: '2.5 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLEE',
-                                            text: {
-                                                en: '3.0 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    defaultValue: 'NONETABLE',
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['Rider_ADR'],
-                                                targetNodeId:
-                                                    'accidental-death-benefit-rider',
-                                                quantifier: 'any',
-                                            },
-                                        ],
-                                    },
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'checkboxGroup',
-                                    id: 'c62a5c5c-5587-48c3-a1c2-848d6f4cb58d',
-                                    partName:
-                                        'custom-7d9525cc-20a3-46d4-809a-0dcfcf627e17',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 0,
-                                                    maxAge: 80,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
-                                            },
-                                        ],
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'charitable-giving-rider',
-                                    outputPath:
-                                        'riders.charitableGivingRider.values',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 12,
-                                        forceNewLine: false,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            value: 'Rider_CGR',
-                                            text: {
-                                                en: 'Charitable Giving Rider',
                                             },
                                             isCustom: true,
                                         },
@@ -5448,6 +5359,275 @@ export const farmersBlueprintIU0101 = {
                             displayAsCard: false,
                             copyable: 'none',
                         },
+                        {
+                            id: '57c5da23-f68f-4c77-b8a0-b62fb8a8d9db',
+                            partName:
+                                'custom-dd916e09-5882-4f7f-a125-4b00efd38af3',
+                            text: {},
+                            title: {
+                                en: 'Cost-free riders',
+                            },
+                            isCustom: true,
+                            fields: [
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    id: '450a8479-66d1-4547-9781-82e5621b749b',
+                                    partName:
+                                        'custom-3429b2ac-539c-4709-b2bc-05255ed2aabd',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'ageRangeCondition',
+                                                value: {
+                                                    minAge: 1,
+                                                    maxAge: 60,
+                                                    unit: 'year',
+                                                },
+                                                targetBirthdateNodeId:
+                                                    'date-of-birth',
+                                                roundingType: 'lastBirthday',
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    isCustom: true,
+                                    copyable: 'none',
+                                    answerNodeId:
+                                        'accidental-death-benefit-rider',
+                                    outputPath:
+                                        'riders.accidentalDeathBenefitRider.values',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: 'Rider_ADR',
+                                            text: {
+                                                en: 'Accidental Death Benefit Rider',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Benefit',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'accidental-death-benefit-rider-benefit',
+                                    outputPath:
+                                        'riders.accidentalDeathBenefitRider.benefit',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '954b0a76-8755-4c1a-871e-ea3e9564209c',
+                                    partName:
+                                        'custom-25bcba4c-8176-4fba-b524-e609b2be4141',
+                                    validateAs: 'integer',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ADR'],
+                                                targetNodeId:
+                                                    'accidental-death-benefit-rider',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                    isCustom: true,
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Table Rating',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'accidental-death-benefit-rider-table-rating',
+                                    outputPath:
+                                        'riders.accidentalDeathBenefitRider.tableRating',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '6c327a8e-57fc-4ec2-a810-66d07bcc6bdb',
+                                    partName:
+                                        'custom-39fe23fd-9d11-477e-a859-4a2265179e3d',
+                                    selectOptions: [
+                                        {
+                                            value: 'NONETABLE',
+                                            text: {
+                                                en: 'Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            value: 'TABLEB',
+                                            text: {
+                                                en: '1.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEC',
+                                            text: {
+                                                en: '2.0 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLED',
+                                            text: {
+                                                en: '2.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEE',
+                                            text: {
+                                                en: '3.0 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    defaultValue: 'NONETABLE',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ADR'],
+                                                targetNodeId:
+                                                    'accidental-death-benefit-rider',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                    isCustom: true,
+                                },
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    id: '6f07067c-3360-4824-8a9d-7e091bc9c239',
+                                    partName:
+                                        'custom-8ee8668b-a0c4-440d-ac42-1b90623afb85',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'ageRangeCondition',
+                                                value: {
+                                                    minAge: 0,
+                                                    maxAge: 80,
+                                                    unit: 'year',
+                                                },
+                                                targetBirthdateNodeId:
+                                                    'date-of-birth',
+                                                roundingType: 'lastBirthday',
+                                            },
+                                        ],
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    isCustom: true,
+                                    copyable: 'none',
+                                    answerNodeId: 'charitable-giving-rider',
+                                    outputPath:
+                                        'riders.charitableGivingRider.values',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: 'Rider_CGR',
+                                            text: {
+                                                en: 'Charitable Giving Rider',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                            ],
+                            displayAsCard: false,
+                            copyable: 'none',
+                            referenceLabel: '',
+                        },
                     ],
                     showInNavigation: false,
                     copyable: 'none',
@@ -5480,95 +5660,136 @@ export const farmersBlueprintIU0101 = {
                             title: {},
                             isCustom: true,
                             fields: [
+                                // {
+                                //     fieldType: 'dropdown',
+                                //     text: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     title: {
+                                //         en: 'Frequency',
+                                //         fr: '',
+                                //     },
+                                //     answerNodeId: 'distribution-frequency',
+                                //     renderOn: [],
+                                //     platforms: [],
+                                //     copyable: 'none',
+                                //     optional: false,
+                                //     triggerStepNavigation: false,
+                                //     layout: {
+                                //         size: 6,
+                                //     },
+                                //     displayInCardPreview: false,
+                                //     applicationModes: ['digital', 'paper'],
+                                //     placeholder: {
+                                //         en: '',
+                                //         fr: '',
+                                //     },
+                                //     id: '18cb9837-331b-4587-a0a7-c46b416a2f27',
+                                //     partName:
+                                //         'custom-c3e2fa2b-50e6-4193-a03e-75112a014217',
+                                //     selectOptions: [
+                                //         {
+                                //             value: 'daily',
+                                //             text: {
+                                //                 en: 'Daily',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'everyTwoWeeks',
+                                //             text: {
+                                //                 en: 'Every two weeks',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'monthly',
+                                //             text: {
+                                //                 en: 'Monthly',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'semi-Annual',
+                                //             text: {
+                                //                 en: 'Semi-annual',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'quarterly',
+                                //             text: {
+                                //                 en: 'Quarterly',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'annual',
+                                //             text: {
+                                //                 en: 'Annual',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //         {
+                                //             value: 'singlePayment',
+                                //             text: {
+                                //                 en: 'Single Payment',
+                                //             },
+                                //             isCustom: true,
+                                //             orderingIndex: 1,
+                                //         },
+                                //     ],
+                                //     validateAs: 'string',
+                                //     defaultValue: 'annual',
+                                //     disabled: true,
+                                // },
                                 {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Frequency',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'distribution-frequency',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '18cb9837-331b-4587-a0a7-c46b416a2f27',
-                                    partName:
-                                        'custom-c3e2fa2b-50e6-4193-a03e-75112a014217',
-                                    selectOptions: [
+                                    id: '2d62b565-3878-446b-8802-a7ff3410c4c8',
+                                    fieldType: 'custom',
+                                    customName: 'IllustrationScheduler',
+                                    answerNodeId: 'distribution-amount-table',
+                                    defaultValue: [
                                         {
-                                            value: 'daily',
-                                            text: {
-                                                en: 'Daily',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'everyTwoWeeks',
-                                            text: {
-                                                en: 'Every two weeks',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'monthly',
-                                            text: {
-                                                en: 'Monthly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'semi-Annual',
-                                            text: {
-                                                en: 'Semi-annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'quarterly',
-                                            text: {
-                                                en: 'Quarterly',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'annual',
-                                            text: {
-                                                en: 'Annual',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'singlePayment',
-                                            text: {
-                                                en: 'Single Payment',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
+                                            id: '99090f2c-248f-4884-ad22-dbaef302c849',
+                                            firstColumn: undefined,
+                                            fromYear: 1,
+                                            through: 120,
                                         },
                                     ],
-                                    validateAs: 'string',
-                                    defaultValue: 'annual',
-                                    disabled: true,
+                                    customProperties: {
+                                        firstColumn: {
+                                            type: 'money',
+                                            label: {
+                                                en: 'Distribution Amount',
+                                            },
+                                            placeholder: {
+                                                en: 'Maximum',
+                                            },
+                                            tooltip: {
+                                                en: 'Distribution Amount',
+                                            },
+                                        },
+                                        fromYear: {
+                                            min: 1,
+                                            label: { en: 'From year' },
+                                        },
+                                        through: {
+                                            max: 120,
+                                            label: { en: 'Through' },
+                                        },
+                                        buttons: {
+                                            add: {
+                                                label: { en: 'Add new row' },
+                                            },
+                                        },
+                                    },
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -5679,176 +5900,176 @@ export const farmersBlueprintIU0101 = {
                             displayAsCard: false,
                             copyable: 'none',
                         },
-                        {
-                            id: '18bf83bc-2d07-4c49-81ca-34087e19c1f6',
-                            partName:
-                                'custom-21a8b052-6488-40c5-8593-9f681b3b6d50',
-                            text: {},
-                            title: {},
-                            isCustom: true,
-                            fields: [
-                                {
-                                    fieldType: 'number',
-                                    id: 'dfa0de32-d2a3-46af-a5e4-452bd17eee74',
-                                    partName:
-                                        'custom-3d3d509a-91b8-4842-88ce-42c97c2c46dd',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'From',
-                                        fr: '',
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'withdrawals-from',
-                                    optional: false,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 3,
-                                        forceNewLine: false,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'integer',
-                                },
-                                {
-                                    fieldType: 'number',
-                                    id: '19235170-1a3f-41e0-88ff-b5287e369d5d',
-                                    partName:
-                                        'custom-2c63c402-5eb2-420c-85d5-445ebf61d68a',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Thru',
-                                        fr: '',
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId: 'withdrawals-thru',
-                                    optional: false,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 3,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'integer',
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Type',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'distribution-type',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 3,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'b483e323-aa09-4cad-afaf-f9955937f58e',
-                                    partName:
-                                        'custom-e72790d8-fc28-4324-a55b-dd329dff633b',
-                                    selectOptions: [
-                                        {
-                                            value: 'AMOUNT',
-                                            text: {
-                                                en: 'Specify',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'MAX',
-                                            text: {
-                                                en: 'Maximum',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    defaultValue: 'AMOUNT',
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Amount',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'distribution-amount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 3,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '833fd531-e534-456b-97ae-68bd86502293',
-                                    partName:
-                                        'custom-6f908ed5-2577-486d-b39b-8d75c6a6b276',
-                                    validateAs: 'integer',
-                                    isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['AMOUNT'],
-                                                targetNodeId:
-                                                    'distribution-type',
-                                                quantifier: 'any',
-                                                collectionOperators: {
-                                                    'distributions-information':
-                                                        'thisItem',
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                            displayAsCard: false,
-                        },
+                        // {
+                        //     id: '18bf83bc-2d07-4c49-81ca-34087e19c1f6',
+                        //     partName:
+                        //         'custom-21a8b052-6488-40c5-8593-9f681b3b6d50',
+                        //     text: {},
+                        //     title: {},
+                        //     isCustom: true,
+                        //     fields: [
+                        //         {
+                        //             fieldType: 'number',
+                        //             id: 'dfa0de32-d2a3-46af-a5e4-452bd17eee74',
+                        //             partName:
+                        //                 'custom-3d3d509a-91b8-4842-88ce-42c97c2c46dd',
+                        //             text: {
+                        //                 en: '',
+                        //                 fr: '',
+                        //             },
+                        //             title: {
+                        //                 en: 'From',
+                        //                 fr: '',
+                        //             },
+                        //             platforms: [],
+                        //             renderOn: [],
+                        //             isCustom: true,
+                        //             copyable: 'none',
+                        //             answerNodeId: 'withdrawals-from',
+                        //             optional: false,
+                        //             placeholder: {
+                        //                 en: '',
+                        //                 fr: '',
+                        //             },
+                        //             triggerStepNavigation: false,
+                        //             layout: {
+                        //                 size: 3,
+                        //                 forceNewLine: false,
+                        //             },
+                        //             displayInCardPreview: false,
+                        //             applicationModes: ['digital', 'paper'],
+                        //             validateAs: 'integer',
+                        //         },
+                        //         {
+                        //             fieldType: 'number',
+                        //             id: '19235170-1a3f-41e0-88ff-b5287e369d5d',
+                        //             partName:
+                        //                 'custom-2c63c402-5eb2-420c-85d5-445ebf61d68a',
+                        //             text: {
+                        //                 en: '',
+                        //                 fr: '',
+                        //             },
+                        //             title: {
+                        //                 en: 'Thru',
+                        //                 fr: '',
+                        //             },
+                        //             platforms: [],
+                        //             renderOn: [],
+                        //             isCustom: true,
+                        //             copyable: 'none',
+                        //             answerNodeId: 'withdrawals-thru',
+                        //             optional: false,
+                        //             placeholder: {
+                        //                 en: '',
+                        //                 fr: '',
+                        //             },
+                        //             triggerStepNavigation: false,
+                        //             layout: {
+                        //                 size: 3,
+                        //             },
+                        //             displayInCardPreview: false,
+                        //             applicationModes: ['digital', 'paper'],
+                        //             validateAs: 'integer',
+                        //         },
+                        //         {
+                        //             fieldType: 'dropdown',
+                        //             text: {
+                        //                 en: '',
+                        //                 fr: '',
+                        //             },
+                        //             title: {
+                        //                 en: 'Type',
+                        //                 fr: '',
+                        //             },
+                        //             answerNodeId: 'distribution-type',
+                        //             renderOn: [],
+                        //             platforms: [],
+                        //             copyable: 'none',
+                        //             optional: false,
+                        //             triggerStepNavigation: false,
+                        //             layout: {
+                        //                 size: 3,
+                        //             },
+                        //             displayInCardPreview: false,
+                        //             applicationModes: ['digital', 'paper'],
+                        //             placeholder: {
+                        //                 en: '',
+                        //                 fr: '',
+                        //             },
+                        //             id: 'b483e323-aa09-4cad-afaf-f9955937f58e',
+                        //             partName:
+                        //                 'custom-e72790d8-fc28-4324-a55b-dd329dff633b',
+                        //             selectOptions: [
+                        //                 {
+                        //                     value: 'AMOUNT',
+                        //                     text: {
+                        //                         en: 'Specify',
+                        //                     },
+                        //                     isCustom: true,
+                        //                     orderingIndex: 1,
+                        //                 },
+                        //                 {
+                        //                     value: 'MAX',
+                        //                     text: {
+                        //                         en: 'Maximum',
+                        //                     },
+                        //                     isCustom: true,
+                        //                     orderingIndex: 1,
+                        //                 },
+                        //             ],
+                        //             validateAs: 'string',
+                        //             defaultValue: 'AMOUNT',
+                        //         },
+                        //         {
+                        //             fieldType: 'money',
+                        //             text: {
+                        //                 en: '',
+                        //                 fr: '',
+                        //             },
+                        //             title: {
+                        //                 en: 'Amount',
+                        //                 fr: '',
+                        //             },
+                        //             answerNodeId: 'distribution-amount',
+                        //             renderOn: [],
+                        //             platforms: [],
+                        //             copyable: 'none',
+                        //             optional: false,
+                        //             triggerStepNavigation: false,
+                        //             layout: {
+                        //                 size: 3,
+                        //             },
+                        //             displayInCardPreview: false,
+                        //             applicationModes: ['digital', 'paper'],
+                        //             placeholder: {
+                        //                 en: '',
+                        //                 fr: '',
+                        //             },
+                        //             id: '833fd531-e534-456b-97ae-68bd86502293',
+                        //             partName:
+                        //                 'custom-6f908ed5-2577-486d-b39b-8d75c6a6b276',
+                        //             validateAs: 'integer',
+                        //             isCustom: true,
+                        //             visible: {
+                        //                 booleanOperator: 'and',
+                        //                 conditions: [
+                        //                     {
+                        //                         type: 'matchesCondition',
+                        //                         value: ['AMOUNT'],
+                        //                         targetNodeId:
+                        //                             'distribution-type',
+                        //                         quantifier: 'any',
+                        //                         collectionOperators: {
+                        //                             'distributions-information':
+                        //                                 'thisItem',
+                        //                         },
+                        //                     },
+                        //                 ],
+                        //             },
+                        //         },
+                        //     ],
+                        //     displayAsCard: false,
+                        // },
                     ],
                     showInNavigation: false,
                     copyable: 'none',

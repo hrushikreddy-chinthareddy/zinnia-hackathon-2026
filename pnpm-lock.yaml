@@ -418,8 +418,8 @@ importers:
         specifier: ^5.22.1
         version: 5.22.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
       '@zinnia/form-engine-sdk':
-        specifier: 1.2.1
-        version: 1.2.1(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))
+        specifier: 1.2.3
+        version: 1.2.3(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))
       '@zinnia/pom':
         specifier: workspace:*
         version: link:../../packages/pom
@@ -6766,8 +6766,8 @@ packages:
   '@zinnia/bloom@5.23.0':
     resolution: {integrity: sha512-jxiFo/fBLxPqOD/jdRhRM2jTyAUjZQK32sOj05b2er1lmTPXZxL3eKtyXTHOIo0w6KxWCHn9EkCZW2dYRvm6Xw==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.23.0/ae844bcc0f855b054f693e4084040d62a1150e9a}
 
-  '@zinnia/form-engine-sdk@1.2.1':
-    resolution: {integrity: sha512-33hbrt67mK7rb7oxfPrj0MER4wgyKB5tdZTfZset4aXQUlkZDDY92FoeF9o4DVIoH4w9Ivu/0dtuMWlP6F3zGQ==, tarball: https://npm.pkg.github.com/download/@zinnia/form-engine-sdk/1.2.1/aab096a0f49874742d9129ad43222c54d5318487}
+  '@zinnia/form-engine-sdk@1.2.3':
+    resolution: {integrity: sha512-jFDau+Q5Jx7erL/cXoaJq/aAuoo1KOWxeNTwXXVixvkrfvhc5mpBi3rdtwZK1ktWQxVO/CtAP4JQIwmotHqi3g==, tarball: https://npm.pkg.github.com/download/@zinnia/form-engine-sdk/1.2.3/1a67488bcfb8c49c2ff64c528ab897cc25b38f5c}
 
   '@zinnia/prettier-config@0.0.1':
     resolution: {integrity: sha512-H/90EcMEPKpyeXV5MQJQMqcSaKfvNKqi9Os90sBqp6dEkSaB8vdnTMKdJ6BJUSAr6jwvu/aSXkNintZFYuwQng==, tarball: https://npm.pkg.github.com/download/@zinnia/prettier-config/0.0.1/ab3051a974dc3c08ce02fb490d620bbd5fc2e1a0}
@@ -16855,7 +16855,7 @@ snapshots:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@22.16.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.12.14)(@types/node@20.19.7)(typescript@5.8.3))
+      jest-config: 29.7.0(@types/node@22.16.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@20.19.7)(typescript@5.8.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -22437,7 +22437,7 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/form-engine-sdk@1.2.1(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))':
+  '@zinnia/form-engine-sdk@1.2.3(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))':
     dependencies:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.14
@@ -26661,7 +26661,7 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-config@29.7.0(@types/node@22.16.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.12.14)(@types/node@20.19.7)(typescript@5.8.3)):
+  jest-config@29.7.0(@types/node@22.16.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@20.19.7)(typescript@5.8.3)):
     dependencies:
       '@babel/core': 7.28.0
       '@jest/test-sequencer': 29.7.0

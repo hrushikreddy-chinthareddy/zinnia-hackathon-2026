@@ -243,14 +243,14 @@ function validateSequence(
 } {
     for (let i = 0; i < answer.length; i++) {
         const row = answer[i];
-        if (row.firstColumn === undefined) {
-            return {
-                message: `${pluralize(i + 1)} row is missing a value in "${
-                    customProperties.firstColumn.label['en']
-                }".`,
-                cells: [[i, 'firstColumn']],
-            };
-        }
+        // if (row.firstColumn === undefined) {
+        //     return {
+        //         message: `${pluralize(i + 1)} row is missing a value in "${
+        //             customProperties.firstColumn.label['en']
+        //         }".`,
+        //         cells: [[i, 'firstColumn']],
+        //     };
+        // }
         if (row.fromYear === undefined) {
             return {
                 message: `${pluralize(i + 1)} row is missing a value in "${
@@ -337,11 +337,8 @@ export function IllustrationScheduler(props: Props) {
     const { questionnaireEngine } = useQuestionnaireEngine();
     const answerResolver = questionnaireEngine.getAnswerResolverInstance();
     const answer: Answer = useMemo(() => {
-        return (
-            JSON.parse(
-                JSON.stringify(answerResolver.getAnswer(field.blueprintId, {}))
-            ) || []
-        );
+        const value = answerResolver.getAnswer(field.blueprintId, {});
+        return value ? JSON.parse(JSON.stringify(value)) || [] : [];
     }, [answerResolver, field]);
 
     const result = customPropertiesSchema.parse(props.field.customProperties);
@@ -468,9 +465,12 @@ export function IllustrationScheduler(props: Props) {
                                                 handleEvent({
                                                     type: 'UserChangedFirstColumn',
                                                     row: index,
-                                                    value: Number(
-                                                        e.target.value
-                                                    ),
+                                                    value:
+                                                        e.target.value === ''
+                                                            ? undefined
+                                                            : Number(
+                                                                  e.target.value
+                                                              ),
                                                 });
                                             }}
                                             placeholder={

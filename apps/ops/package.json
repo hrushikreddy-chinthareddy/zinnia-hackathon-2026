@@ -65,7 +65,7 @@
         "@typescript-eslint/eslint-plugin": "^6.18.1",
         "@zinnia/api-types": "workspace:*",
         "@zinnia/bloom": "^5.22.1",
-        "@zinnia/form-engine-sdk": "1.2.1",
+        "@zinnia/form-engine-sdk": "1.2.3",
         "@zinnia/pom": "workspace:*",
         "@zinnia/utils": "workspace:*",
         "@zinnia/xd-components": "workspace:*",
