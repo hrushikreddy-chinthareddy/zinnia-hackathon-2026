@@ -37,6 +37,7 @@ import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/glob
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import SelectSearch from '@deps/components/select-search/select-search';
 import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
@@ -88,6 +89,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
+import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 import { CardDetailsTest } from '@deps/jest/constants/test-id-constants';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
@@ -252,7 +254,6 @@ const QuickViewHeader = ({
                 });
         }
     };
-
     const { data: quickLinks, isLoading: loadingQuickLinks } =
         usePolicyQuickLinks(t, policy);
 
@@ -368,6 +369,9 @@ export const StatusBanner = ({
     const isDeathClaimStatusApplicable =
         deathClaimApplicableStatuses.includes(policyStatus);
 
+    const { isPermissioned: isUserPermissionedToWrite } =
+        useWritePolicyPermissionCheck(policy.policyNumber, policy.planCode);
+
     useEffect(() => {
         const checkIsNewDeathClaim = async () => {
             const response = await initialDeathClaimExists(
@@ -416,12 +420,34 @@ export const StatusBanner = ({
             {policyStatus === PolicyStatus.PENDINGLAPSE && (
                 <BannerAlert
                     variant={BannerVariant.Warning}
-                    cta={{
-                        href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
-                        text: t(
-                            'dashboard.search.results.policySummaryCard.pendingLapseBannerLink'
-                        ),
-                    }}
+                    cta={
+                        isUserPermissionedToWrite
+                            ? {
+                                  href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
+                                  text: t(
+                                      'dashboard.search.results.policySummaryCard.pendingLapseBannerLink'
+                                  ),
+                              }
+                            : {
+                                  href: '#',
+                                  text: (
+                                      <TempNavInactive
+                                          tooltipBody={t(
+                                              'dashboard.search.results.policySummaryCard.BannerLink.permissionDeniedTooltip',
+                                              {
+                                                  carrier: policy.carrierName,
+                                              }
+                                          )}
+                                          hideIcon
+                                          navElementClassName="!bg-transparent !p-0"
+                                      >
+                                          {t(
+                                              'dashboard.search.results.policySummaryCard.pendingLapseBannerLink'
+                                          )}
+                                      </TempNavInactive>
+                                  ) as unknown as string,
+                              }
+                    }
                     bodyText={t(
                         'dashboard.search.results.policySummaryCard.pendingLapseBannerText'
                     )}
@@ -432,12 +458,35 @@ export const StatusBanner = ({
                 !!reinstatementWithApproval && (
                     <BannerAlert
                         variant={BannerVariant.Error}
-                        cta={{
-                            href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
-                            text: t(
-                                'dashboard.search.results.policySummaryCard.lapseBannerLink'
-                            ),
-                        }}
+                        cta={
+                            isUserPermissionedToWrite
+                                ? {
+                                      href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`,
+                                      text: t(
+                                          'dashboard.search.results.policySummaryCard.lapseBannerLink'
+                                      ),
+                                  }
+                                : {
+                                      href: '#',
+                                      text: (
+                                          <TempNavInactive
+                                              tooltipBody={t(
+                                                  'dashboard.search.results.policySummaryCard.BannerLink.permissionDeniedTooltip',
+                                                  {
+                                                      carrier:
+                                                          policy.carrierName,
+                                                  }
+                                              )}
+                                              hideIcon
+                                              navElementClassName="!bg-transparent !p-0"
+                                          >
+                                              {t(
+                                                  'dashboard.search.results.policySummaryCard.lapseBannerLink'
+                                              )}
+                                          </TempNavInactive>
+                                      ) as unknown as string,
+                                  }
+                        }
                         bodyText={t(
                             'dashboard.search.results.policySummaryCard.lapseBannerText'
                         )}
@@ -456,26 +505,73 @@ export const StatusBanner = ({
                                 ),
                             }
                         )}
-                        cta={{
-                            href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
-                            text: t(
-                                'dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'
-                            ),
-                        }}
+                        cta={
+                            isUserPermissionedToWrite
+                                ? {
+                                      href: `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`,
+                                      text: t(
+                                          'dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'
+                                      ),
+                                  }
+                                : {
+                                      href: '#',
+                                      text: (
+                                          <TempNavInactive
+                                              tooltipBody={t(
+                                                  'dashboard.search.results.policySummaryCard.BannerLink.permissionDeniedTooltip',
+                                                  {
+                                                      carrier:
+                                                          policy.carrierName,
+                                                  }
+                                              )}
+                                              hideIcon
+                                              navElementClassName="!bg-transparent !p-0"
+                                          >
+                                              {t(
+                                                  'dashboard.search.results.policySummaryCard.freeLookCancelBannerLink'
+                                              )}
+                                          </TempNavInactive>
+                                      ) as unknown as string,
+                                  }
+                        }
                     />
                 )}
+
             {isNewDeathClaimEnabled &&
                 !isNewDeathClaim &&
                 zlCaseId &&
                 isDeathClaimStatusApplicable && (
                     <BannerAlert
                         variant={BannerVariant.Warning}
-                        cta={{
-                            href: `/cases/${zlCaseId}/progress`,
-                            text: t(
-                                'dashboard.search.results.policySummaryCard.initialDeathNotificationLink'
-                            ),
-                        }}
+                        cta={
+                            isUserPermissionedToWrite
+                                ? {
+                                      href: `/cases/${zlCaseId}/progress`,
+                                      text: t(
+                                          'dashboard.search.results.policySummaryCard.initialDeathNotificationLink'
+                                      ),
+                                  }
+                                : {
+                                      href: '#',
+                                      text: (
+                                          <TempNavInactive
+                                              tooltipBody={t(
+                                                  'dashboard.search.results.policySummaryCard.BannerLink.permissionDeniedTooltip',
+                                                  {
+                                                      carrier:
+                                                          policy.carrierName,
+                                                  }
+                                              )}
+                                              hideIcon
+                                              navElementClassName="!bg-transparent !p-0"
+                                          >
+                                              {t(
+                                                  'dashboard.search.results.policySummaryCard.initialDeathNotificationLink'
+                                              )}
+                                          </TempNavInactive>
+                                      ) as unknown as string,
+                                  }
+                        }
                         bodyText={t(
                             'dashboard.search.results.policySummaryCard.initialDeathNotification'
                         )}

@@ -20,6 +20,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkFullSurrenderWithdrawal,
@@ -31,8 +32,6 @@ import {
     checkSystematicProgramsEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
-import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
-import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/icons_outlined/clipboard.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import {
     DropdownClickedEvent,
@@ -128,6 +127,9 @@ export const MenuContextualContent = ({
             }
         );
     };
+
+    const { isPermissioned: isUserPermissionedToDoTransaction } =
+        useWritePolicyPermissionCheck(policy.policyNumber, policy.planCode);
 
     const premiumProgram = policy.systematicPrograms.getProgramsByReason(
         Reason.PREMIUM
@@ -288,160 +290,179 @@ export const MenuContextualContent = ({
         },
     });
 
+    const transactionItems: JSX.Element[] = [];
+
+    if (
+        freeLookEnabled &&
+        policy.freeLookPeriodDetails.isInFreeLookPeriod &&
+        isUserPermissionedToDoTransaction
+    ) {
+        transactionItems.push(
+            <MenuContextualItem
+                key="free-look"
+                content={t('transactions.freeLookCancel')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`}
+                onClick={() => {
+                    trackClick(
+                        'Free Look Cancel',
+                        `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`
+                    );
+                }}
+            />
+        );
+    }
+
+    if (
+        isUserPermissionedToDoTransaction &&
+        systematicProgramsEligibility?.isEligibleManageAutopay
+    ) {
+        transactionItems.push(
+            <MenuContextualItem
+                key="manage-autopay"
+                disabled={
+                    !systematicProgramsEligibility?.isEligibleManageAutopay
+                }
+                content={t('transactions.managePremiumAutopay')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/update-premium-autopay/`}
+                onClick={() => {
+                    trackClick(
+                        'Manage Premium Autopay',
+                        `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/update-premium-autopay/`
+                    );
+                }}
+            />
+        );
+    }
+
+    if (
+        isUserPermissionedToDoTransaction &&
+        oneTimePremiumEligibility?.isEligibleOneTimePremium
+    ) {
+        transactionItems.push(
+            <MenuContextualItem
+                key="new-premium"
+                disabled={!oneTimePremiumEligibility?.isEligibleOneTimePremium}
+                content={t('transactions.newPremium')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`}
+                onClick={() => {
+                    trackClick(
+                        'New Premium',
+                        `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`
+                    );
+                }}
+            />
+        );
+    }
+
+    if (isNewDeathClaim && isUserPermissionedToDoTransaction) {
+        transactionItems.push(
+            <MenuContextualItem
+                key="new-death-claim"
+                disabled={
+                    (deathClaimApplicableStatuses.includes(
+                        policy.policyStatus
+                    ) &&
+                        !initialDeathClaimEligibility?.isEligibleNewDeathClaim) ||
+                    !deathClaimApplicableStatuses.includes(policy.policyStatus)
+                }
+                content={t('transactions.newDeathClaim')}
+                href={`/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`}
+                onClick={() => {
+                    trackClick(
+                        'New Death Claim',
+                        `/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                    );
+                }}
+            />
+        );
+    }
+
+    if (
+        isUserPermissionedToDoTransaction &&
+        partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime
+    ) {
+        transactionItems.push(
+            <MenuContextualItem
+                key="start-a-withdrawal"
+                disabled={
+                    !partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime
+                }
+                content={t('transactions.startAWithdrawal')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`}
+                onClick={() => {
+                    trackClick(
+                        'Start a Withdrawal',
+                        `/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`
+                    );
+                }}
+            />
+        );
+    }
+
+    if (
+        isUserPermissionedToDoTransaction &&
+        surrenderEligibility?.isEligibleSurrender
+    ) {
+        transactionItems.push(
+            <MenuContextualItem
+                key="surrender"
+                disabled={!surrenderEligibility?.isEligibleSurrender}
+                content={t('transactions.surrender')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`}
+            />
+        );
+    }
+
+    if (
+        isUserPermissionedToDoTransaction &&
+        newLoanEligibility?.isEligibleNewLoan
+    ) {
+        transactionItems.push(
+            <MenuContextualItem
+                key="new-loan"
+                disabled={!newLoanEligibility?.isEligibleNewLoan}
+                content={t('transactions.newLoan')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/new-loan/`}
+                onClick={() => {
+                    trackClick(
+                        'New Loan',
+                        `/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/new-loan/`
+                    );
+                }}
+            />
+        );
+    }
+
+    if (
+        loanPaymentEnabled &&
+        isUserPermissionedToDoTransaction &&
+        loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime
+    ) {
+        transactionItems.push(
+            <MenuContextualItem
+                key="loan-payment"
+                disabled={
+                    !loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime
+                }
+                content={t('transactions.loanPayment')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`}
+                onClick={() => {
+                    trackClick(
+                        'Loan Payment',
+                        `/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`
+                    );
+                }}
+            />
+        );
+    }
+
     return (
         <>
-            <MenuContextualLabel label={t('transactions.label')}>
-                <>
-                    {freeLookEnabled &&
-                        policy.freeLookPeriodDetails.isInFreeLookPeriod && (
-                            <MenuContextualItem
-                                content={t('transactions.freeLookCancel')}
-                                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`}
-                                icon={<CashIcon height={20} width={20} />}
-                                onClick={() => {
-                                    trackClick(
-                                        'Free Look Cancel',
-                                        `/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`
-                                    );
-                                }}
-                            />
-                        )}
-
-                    <MenuContextualItem
-                        disabled={
-                            !systematicProgramsEligibility?.isEligibleManageAutopay
-                        }
-                        content={t('transactions.managePremiumAutopay')}
-                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/update-premium-autopay/`}
-                        icon={
-                            <Icon
-                                type={IconType.AUTOPAY}
-                                height={20}
-                                width={20}
-                            />
-                        }
-                        onClick={() => {
-                            trackClick(
-                                'Manage Premium Autopay',
-                                `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/update-premium-autopay/`
-                            );
-                        }}
-                    />
-
-                    <MenuContextualItem
-                        disabled={
-                            !oneTimePremiumEligibility?.isEligibleOneTimePremium
-                        }
-                        content={t('transactions.newPremium')}
-                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`}
-                        icon={
-                            <Icon
-                                type={IconType.PAYMENT}
-                                height={20}
-                                width={20}
-                            />
-                        }
-                        onClick={() => {
-                            trackClick(
-                                'New Premium',
-                                `/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium/`
-                            );
-                        }}
-                    />
-                    {isNewDeathClaim && (
-                        <MenuContextualItem
-                            disabled={
-                                (deathClaimApplicableStatuses.includes(
-                                    policy.policyStatus
-                                ) &&
-                                    !initialDeathClaimEligibility?.isEligibleNewDeathClaim) ||
-                                !deathClaimApplicableStatuses.includes(
-                                    policy.policyStatus
-                                )
-                            }
-                            content={t('transactions.newDeathClaim')}
-                            href={`/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`}
-                            icon={
-                                <Icon
-                                    type={IconType.BRIEFCASE}
-                                    height={20}
-                                    width={20}
-                                />
-                            }
-                            onClick={() => {
-                                trackClick(
-                                    'New Death Claim',
-                                    `/claims/d-notification?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
-                                );
-                            }}
-                        />
-                    )}
-                    <MenuContextualItem
-                        disabled={
-                            !partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime
-                        }
-                        content={t('transactions.startAWithdrawal')}
-                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`}
-                        icon={
-                            <Icon type={IconType.CASH} height={20} width={20} />
-                        }
-                        onClick={() => {
-                            trackClick(
-                                'Start a Withdrawal',
-                                `/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`
-                            );
-                        }}
-                    />
-                    <MenuContextualItem
-                        disabled={!surrenderEligibility?.isEligibleSurrender}
-                        content={t('transactions.surrender')}
-                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/withdrawals/new-withdrawal/`}
-                        icon={
-                            <Icon
-                                type={IconType.CHECK}
-                                height={20}
-                                width={20}
-                            />
-                        }
-                    />
-                    <MenuContextualItem
-                        disabled={!newLoanEligibility?.isEligibleNewLoan}
-                        content={t('transactions.newLoan')}
-                        href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/new-loan/`}
-                        icon={
-                            <Icon type={IconType.BANK} height={20} width={20} />
-                        }
-                        onClick={() => {
-                            trackClick(
-                                'New Loan',
-                                `/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/new-loan/`
-                            );
-                        }}
-                    />
-                    {loanPaymentEnabled && (
-                        <MenuContextualItem
-                            disabled={
-                                !loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime
-                            }
-                            content={t('transactions.loanPayment')}
-                            href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`}
-                            icon={
-                                <Icon
-                                    type={IconType.PAYMENT}
-                                    height={20}
-                                    width={20}
-                                />
-                            }
-                            onClick={() => {
-                                trackClick(
-                                    'Loan Payment',
-                                    `/policies/${policy.planCode}/${policy.policyNumber}/policy/loans/loan-payment/`
-                                );
-                            }}
-                        />
-                    )}
-                </>
-            </MenuContextualLabel>
+            {transactionItems.length > 0 && (
+                <MenuContextualLabel label={t('transactions.label')}>
+                    <>{transactionItems}</>
+                </MenuContextualLabel>
+            )}
             <MenuContextualLabel label={t('documents.label')}>
                 <>
                     <MenuContextualItem
@@ -451,7 +472,6 @@ export const MenuContextualContent = ({
                         }&policyNumber=${
                             policy.policyNumber
                         }&correlationId=${uuidV4()}`}
-                        icon={<ClipboardIcon height={20} width={20} />}
                         onClick={() => {
                             trackClick(
                                 'Send Forms',
@@ -467,13 +487,6 @@ export const MenuContextualContent = ({
                         }&policyNumber=${
                             policy.policyNumber
                         }&correlationId=${uuidV4()}`}
-                        icon={
-                            <Icon
-                                type={IconType.DOCUMENT_REPORT}
-                                height={20}
-                                width={20}
-                            />
-                        }
                         onClick={() => {
                             trackClick(
                                 'Send Statements',
@@ -489,13 +502,6 @@ export const MenuContextualContent = ({
                         }&policyNumber=${
                             policy.policyNumber
                         }&correlationId=${uuidV4()}`}
-                        icon={
-                            <Icon
-                                type={IconType.TABLE}
-                                height={20}
-                                width={20}
-                            />
-                        }
                         onClick={() => {
                             trackClick(
                                 'Send Tax Forms',
@@ -512,13 +518,6 @@ export const MenuContextualContent = ({
                             }&policyNumber=${
                                 policy.policyNumber
                             }&correlationId=${uuidV4()}`}
-                            icon={
-                                <Icon
-                                    type={IconType.LIBRARY}
-                                    height={20}
-                                    width={20}
-                                />
-                            }
                             onClick={() => {
                                 trackClick(
                                     'Send Correspondence',
@@ -536,13 +535,6 @@ export const MenuContextualContent = ({
                     <MenuContextualItem
                         content={t('additionalActions.serviceRequestForm')}
                         href={`/policies/${policy.planCode}/${policy.policyNumber}/default-case/`}
-                        icon={
-                            <Icon
-                                type={IconType.TICKET}
-                                height={20}
-                                width={20}
-                            />
-                        }
                         onClick={() => {
                             trackClick(
                                 'Raise a Service Request',

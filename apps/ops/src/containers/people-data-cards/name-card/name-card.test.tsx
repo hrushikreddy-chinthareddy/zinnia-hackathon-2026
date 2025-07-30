@@ -38,23 +38,31 @@ describe('NameCard', () => {
 
     it('renders edit icon when editable is true and feature flag is true', () => {
         render(
-            <NameCard editable={true} t={mockT}>
-                <p data-testid="edit-icon">Child</p>
+            <NameCard
+                editable={true}
+                isUserPermissionedToEditCards={true}
+                t={mockT}
+            >
+                <p data-testid="edit-icon-permissioned">Child</p>
             </NameCard>
         );
         expect(
-            screen.getByTestId('edit-icon') as HTMLInputElement
+            screen.getByTestId('edit-icon-permissioned') as HTMLInputElement
         ).toBeInTheDocument();
     });
 
     it('does not render edit icon when editable is false', () => {
         render(
-            <NameCard editable={false} t={mockT}>
+            <NameCard
+                editable={false}
+                isUserPermissionedToEditCards={false}
+                t={mockT}
+            >
                 <p>Child</p>
             </NameCard>
         );
         expect(
-            screen.queryByTestId('edit-icon') as HTMLInputElement
-        ).not.toBeInTheDocument();
+            screen.queryByTestId('edit-icon-disabled') as HTMLInputElement
+        ).toBeInTheDocument();
     });
 });

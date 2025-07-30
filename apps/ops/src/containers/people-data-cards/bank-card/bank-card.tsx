@@ -1,12 +1,13 @@
 import { Party } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import NavElement, {
     NavElementSize,
     NavElementType,
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -16,6 +17,7 @@ import { BankAccounts } from '@deps/containers/people-data-cards/bank-card/bank-
 import SideSheetBank from '@deps/containers/people-data-cards/bank-card/side-sheet/side-sheet-bank';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import {
@@ -29,10 +31,12 @@ export interface BankCardProps {
     party?: Party;
     planCode?: string;
     policyNumber?: string;
+    isUserPermissionedToEditCards?: boolean;
 }
 
 export const BankCard = ({
     editable = false,
+    isUserPermissionedToEditCards = false,
     party,
     planCode,
     policyNumber,
@@ -42,6 +46,7 @@ export const BankCard = ({
     });
 
     const sideSheet = useSideSheetContext();
+    const { policyDetails } = useContext(PolicyData);
 
     const [currentBankAccounts, setCurrentBankAccounts] = useState(
         party?.bankDetails?.filter((bank) => !isEndDated(bank.endDate)) ?? []
@@ -64,6 +69,8 @@ export const BankCard = ({
         );
         sideSheet.handleOpen(true);
     };
+    const isUserPermissionedToEditBankingDetails =
+        isUserPermissionedToEditCards ?? false;
 
     return (
         <CardContainer classNames="flex w-full flex-col text-gray-900 gap-4">
@@ -71,7 +78,7 @@ export const BankCard = ({
                 <Typography className="mr-5" variant={TypographyVariant.H2}>
                     {t('label')}
                 </Typography>
-                {editable && (
+                {editable && isUserPermissionedToEditBankingDetails ? (
                     <NavElement
                         onClick={openSidesheet}
                         size={NavElementSize.Small}
@@ -81,7 +88,15 @@ export const BankCard = ({
                     >
                         {t('general.add')}
                     </NavElement>
-                )}
+                ) : editable ? (
+                    <TempNavInactive
+                        tooltipBody={t('transactions.permissionDeniedTooltip', {
+                            carrier: policyDetails.carrierName,
+                        })}
+                    >
+                        {t('general.add')}
+                    </TempNavInactive>
+                ) : null}
             </div>
 
             {currentBankAccounts?.length ? (

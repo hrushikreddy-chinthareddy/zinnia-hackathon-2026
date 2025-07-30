@@ -896,7 +896,10 @@
                     "q403b": "Qualified 403(b) Plan",
                     "q457deferredcomp": "Qualified 457 Deferred Compensation Plan",
                     "pensionplan": "Pension Plan",
-                    "ira-simple": "SIMPLE IRA (Savings Incentive Match Plan for Employees)"
+                    "ira-simple": "SIMPLE IRA (Savings Incentive Match Plan for Employees)",
+                    "BannerLink": {
+                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+                }
                 },
                 "notFound": "We couldn't find a contract or policy that matches your search.",
                 "tryAgain": "Check your input and try again.",
@@ -3545,6 +3548,9 @@
                     "SubsequentPayment": "subsequent payment",
                     "SubsequentPremium": "subsequent premium",
                     "Monthly autopay": "monthly autopay"
+                },
+                "transactions": {
+                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
                 }
             }
         }
@@ -4305,7 +4311,10 @@
                     "new": "New",
                     "showAdditional": "Show additional addresses"
                 },
-                "label": "Address"
+                "label": "Address",
+                "transactions": {
+                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+                }
             },
             "allocation": {
                 "amount": "Amount",
@@ -4338,7 +4347,10 @@
                     "new": "New",
                     "routingNumber": "Routing number"
                 },
-                "label": "Banking Details"
+                "label": "Banking Details",
+                "transactions": {
+                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+                }
             },
             "email": {
                 "emailOptions": {
@@ -4352,7 +4364,10 @@
                     "new": "New",
                     "showAdditional": "Show additional email addresses"
                 },
-                "label": "Email"
+                "label": "Email",
+                "transactions": {
+                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+                }
             },
             "firmInformation": {
                 "label": "Firm Information",
@@ -4386,6 +4401,9 @@
                     "mobilePhone": "Mobile phone",
                     "other": "Other",
                     "unknown": "Unknown"
+                },
+                "transactions": {
+                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
                 }
             },
             "general": {
@@ -4405,6 +4423,9 @@
                 "weAdded": "We added",
                 "type": "Type",
                 "submit": "Submit"
+            },
+            "transactions": {
+                "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
             },
             "identification": {
                 "add": "Add",
@@ -4573,7 +4594,10 @@
                 "header": "Nothing's scheduled yet."
             },
             "endingIn": " ending in ",
-            "startNew": "$t(transactions.loans.header.startLoan)"
+            "startNew": "$t(transactions.loans.header.startLoan)",
+            "transactions": {
+                "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+            }
         },
         "policyTestsCard": {
             "title": "Policy Tests",
@@ -4901,7 +4925,9 @@
             "maxAnnualTooltip": "This is how many times an owner can make a withdrawal (of any eligible amount) within a policy year.",
             "coverageLimit": "Coverage preservation limit",
             "coverageLimitTooltip": "Owners can withdraw this amount without impacting their coverage. In other words, they can withdraw this amount and still keep their death benefit intact.",
-            "statusTooltip": "This policy's status {{status}} doesn't allow this transaction type."
+            "statusTooltip": "This policy's status {{status}} doesn't allow this transaction type.",
+            "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+
         },
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",
@@ -4911,7 +4937,10 @@
             "withdrawalAutopay": "Upcoming Withdrawal Autopay",
             "rmdAutopay": "Upcoming RMD Autopay",
             "cancelWithdrawalAutopayTitle": "Cancel Systematic {{type}}",
-            "cancelAutopay": "Cancel autopay"
+            "cancelAutopay": "Cancel autopay",
+            "transactions": {
+                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+            }
         },
         "exchange1035": "Start a 1035 Exchange",
         "allTimeWithdrawals": "All-time withdrawals",

@@ -27,6 +27,7 @@ import {
     getFlatExtra,
     getParty,
 } from '@deps/helpers/payments.helpers';
+import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkOneTimePremiumEligibilityQuery,
@@ -129,6 +130,43 @@ export const PremiumsSubPage = () => {
             };
         },
     });
+    const { isPermissioned: isUserPermissionedToAutopay } =
+        useWritePolicyPermissionCheck(policyNumber, planCode);
+
+    const getManageAutopayTooltip = () => {
+        const permissionRequired =
+            systematicProgramsEligibility?.isEligibleManageAutopay &&
+            upcomingPayment?.nextProgramDate;
+
+        if (permissionRequired) {
+            return !isUserPermissionedToAutopay
+                ? t('transactions.permissionDeniedTooltip', {
+                      carrier: policyDetails.carrierName,
+                  })
+                : undefined;
+        }
+
+        return formatValidationResult(
+            systematicProgramsEligibility?.validationResult
+        );
+    };
+
+    const getOneTimeTooltip = () => {
+        const permissionRequired =
+            oneTimePremiumEligibility?.isEligibleOneTimePremium;
+
+        if (permissionRequired) {
+            return !isUserPermissionedToAutopay
+                ? t('transactions.permissionDeniedTooltip', {
+                      carrier: policyDetails.carrierName,
+                  })
+                : undefined;
+        }
+
+        return formatValidationResult(
+            oneTimePremiumEligibility?.validationResult
+        );
+    };
 
     const { data: setUpAutopayProgramsEligibility } = useQuery({
         queryKey: [
@@ -181,20 +219,22 @@ export const PremiumsSubPage = () => {
             isDisabled:
                 !setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay ||
                 !premiumSetOrCancelAutopayEnabled ||
-                upcomingPayment?.nextProgramDate,
-            tooltip: formatValidationResult(
-                setUpAutopayProgramsEligibility?.validationResult
-            ),
+                upcomingPayment?.nextProgramDate ||
+                !isUserPermissionedToAutopay,
+            tooltip: !isUserPermissionedToAutopay
+                ? t('transactions.permissionDeniedTooltip', {
+                      carrier: policyDetails.carrierName,
+                  })
+                : undefined,
         },
         {
             text: t('manageAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay`,
             isDisabled:
                 !systematicProgramsEligibility?.isEligibleManageAutopay ||
-                !upcomingPayment?.nextProgramDate,
-            tooltip: formatValidationResult(
-                systematicProgramsEligibility?.validationResult
-            ),
+                !upcomingPayment?.nextProgramDate ||
+                !isUserPermissionedToAutopay,
+            tooltip: getManageAutopayTooltip(),
         },
         {
             // TODO: avoid using # here
@@ -202,17 +242,18 @@ export const PremiumsSubPage = () => {
             isDisabled:
                 !premiumSetOrCancelAutopayEnabled ||
                 !systematicProgramsEligibility?.isEligibleManageAutopay ||
-                !upcomingPayment?.nextProgramDate,
+                !upcomingPayment?.nextProgramDate ||
+                !isUserPermissionedToAutopay,
             text: t('cancelAutopay'),
             onClick: openCancelSideSheet,
         },
         {
             text: t('oneTimePaymentText'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium`,
-            isDisabled: !oneTimePremiumEligibility?.isEligibleOneTimePremium,
-            tooltip: formatValidationResult(
-                oneTimePremiumEligibility?.validationResult
-            ),
+            isDisabled:
+                !oneTimePremiumEligibility?.isEligibleOneTimePremium ||
+                !isUserPermissionedToAutopay,
+            tooltip: getOneTimeTooltip(),
         },
     ];
 

@@ -26,6 +26,7 @@ import {
     getParty,
 } from '@deps/helpers/payments.helpers';
 import { TempAnnuityArrangementTypes } from '@deps/helpers/policy-sor/SystematicPrograms';
+import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -140,6 +141,37 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         }),
     });
 
+    const getWithdrawalTooltip = () => {
+        const permissionRequired =
+            withdrawalEligibility?.isEligibleWithdrawal &&
+            withdrawalProgram?.nextProgramDate;
+
+        if (permissionRequired) {
+            return !isUserPermissionedToWithdraw
+                ? t('transactions.permissionDeniedTooltip', {
+                      carrier: policyDetails.carrierName,
+                  })
+                : undefined;
+        }
+
+        return withdrawalEligibility?.ineligibleWithdrawalReason;
+    };
+
+    const getRmdTooltip = () => {
+        const permissionRequired =
+            rmdEligibility?.isEligibleRmd && rmdProgram?.nextProgramDate;
+
+        if (permissionRequired) {
+            return !isUserPermissionedToWithdraw
+                ? t('transactions.permissionDeniedTooltip', {
+                      carrier: policyDetails.carrierName,
+                  })
+                : undefined;
+        }
+
+        return rmdEligibility?.ineligibleRmdReason;
+    };
+
     const sideSheet = useSideSheetContext();
     const openCancelSideSheet = (type: string) => {
         const sideSheetTitle =
@@ -176,7 +208,8 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         );
         sideSheet.handleOpen(true);
     };
-
+    const { isPermissioned: isUserPermissionedToWithdraw } =
+        useWritePolicyPermissionCheck(policyNumber, planCode);
     return (
         <>
             <WithdrawalsPageHeaderContainer
@@ -208,18 +241,18 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                 text: t('manageAutopay'),
                                 isDisabled:
                                     !withdrawalEligibility?.isEligibleWithdrawal ||
-                                    !withdrawalProgram?.nextProgramDate,
-                                tooltip:
-                                    withdrawalEligibility?.ineligibleWithdrawalReason,
+                                    !withdrawalProgram?.nextProgramDate ||
+                                    isUserPermissionedToWithdraw,
+                                tooltip: getWithdrawalTooltip(),
                             },
                             {
                                 href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
                                 text: t('setUpAutopay'),
                                 isDisabled:
                                     !withdrawalEligibility?.isEligibleWithdrawal ||
-                                    !!withdrawalProgram?.nextProgramDate,
-                                tooltip:
-                                    withdrawalEligibility?.ineligibleWithdrawalReason,
+                                    !!withdrawalProgram?.nextProgramDate ||
+                                    !isUserPermissionedToWithdraw,
+                                tooltip: getWithdrawalTooltip(),
                             },
                             {
                                 href: '#',
@@ -231,7 +264,8 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                 },
                                 isDisabled:
                                     !withdrawalEligibility?.isEligibleWithdrawal ||
-                                    !withdrawalProgram?.nextProgramDate,
+                                    !withdrawalProgram?.nextProgramDate ||
+                                    !isUserPermissionedToWithdraw,
                             },
                         ]}
                         displayCardWithZeroAmount={true}
@@ -261,16 +295,18 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                 text: t('manageAutopay'),
                                 isDisabled:
                                     !rmdEligibility?.isEligibleRmd ||
-                                    !rmdProgram?.nextProgramDate,
-                                tooltip: rmdEligibility?.ineligibleRmdReason,
+                                    !rmdProgram?.nextProgramDate ||
+                                    !isUserPermissionedToWithdraw,
+                                tooltip: getRmdTooltip(),
                             },
                             {
                                 href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
                                 text: t('setUpAutopay'),
                                 isDisabled:
                                     !rmdEligibility?.isEligibleRmd ||
-                                    !!rmdProgram?.nextProgramDate,
-                                tooltip: rmdEligibility?.ineligibleRmdReason,
+                                    !!rmdProgram?.nextProgramDate ||
+                                    !isUserPermissionedToWithdraw,
+                                tooltip: getRmdTooltip(),
                             },
                             {
                                 href: '#',
@@ -282,7 +318,8 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                 },
                                 isDisabled:
                                     !rmdEligibility?.isEligibleRmd ||
-                                    !rmdProgram?.nextProgramDate,
+                                    !rmdProgram?.nextProgramDate ||
+                                    !isUserPermissionedToWithdraw,
                             },
                         ]}
                         displayCardWithZeroAmount={false}

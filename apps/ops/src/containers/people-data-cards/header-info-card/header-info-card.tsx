@@ -20,6 +20,7 @@ type HeaderInfoCardProps = {
     children: React.ReactNode;
     t: TFunction;
     editable?: boolean;
+    isUserPermissionedToEditCards?: boolean;
 };
 
 export const HeaderInfoCard: FC<HeaderInfoCardProps> = ({
@@ -27,6 +28,7 @@ export const HeaderInfoCard: FC<HeaderInfoCardProps> = ({
     selectedPolicyParty,
     t,
     editable,
+    isUserPermissionedToEditCards,
 }) => {
     return (
         <div className="flex items-start align-middle justify-between bg-opacity-50">
@@ -34,6 +36,7 @@ export const HeaderInfoCard: FC<HeaderInfoCardProps> = ({
                 partyInfo={selectedPolicyParty}
                 t={t}
                 editable={editable}
+                isUserPermissionedToEditCards={isUserPermissionedToEditCards}
             />
             {children}
         </div>
@@ -44,11 +47,13 @@ type CommunicationPreferenceFieldProps = {
     partyInfo?: Party;
     t: TFunction;
     editable?: boolean;
+    isUserPermissionedToEditCards?: boolean;
 };
 const CommunicationPreferenceField = ({
     partyInfo,
     t,
     editable = true,
+    isUserPermissionedToEditCards = true,
 }: CommunicationPreferenceFieldProps): JSX.Element | null => {
     const sidesheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
@@ -104,6 +109,9 @@ const CommunicationPreferenceField = ({
                     className="field-label font-primary font-bold"
                     handleEditClick={handleEditClick}
                     editable={editable}
+                    isUserPermissionedToEditCards={
+                        isUserPermissionedToEditCards
+                    }
                     label={t(
                         'people.sideSheet.transactions.communicationpreference'
                     )}

@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';
-import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
@@ -23,6 +22,7 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helpers';
+import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkFullSurrenderWithdrawal,
@@ -71,6 +71,9 @@ const WithdrawalsPageHeaderContainer = ({
             };
         },
     });
+
+    const { isPermissioned: isUserPermissionedToWithdraw } =
+        useWritePolicyPermissionCheck(policyNumber, planCode);
 
     const withdrawalsValues = mapWithdrawalsSubPage({
         isEligible:
@@ -352,7 +355,8 @@ const WithdrawalsPageHeaderContainer = ({
                 </div>
             </div>
             <div className="mt-4 flex w-full flex-row items-center gap-8 bg-gray-50 px-8 py-4 align-middle">
-                {partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ? (
+                {partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime &&
+                isUserPermissionedToWithdraw ? (
                     <NavElement
                         href={
                             t(
@@ -373,39 +377,32 @@ const WithdrawalsPageHeaderContainer = ({
                               )}
                     </NavElement>
                 ) : (
-                    <Tooltip
-                        placement={TooltipPlacement.TopLeft}
-                        trigger={
-                            <NavElement
-                                disabled={
-                                    !partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime
-                                }
-                                href={
-                                    t(
-                                        'site.navLinks.transactions.withdrawalStart.href',
-                                        { id: policyNumber, planCode }
-                                    ) || ''
-                                }
-                                size={NavElementSize.Small}
-                                type={NavElementType.Link}
-                                data-testid="withdrawal-start-link"
-                            >
-                                {policyDetails.isAnnuity
-                                    ? t(
-                                          'site.navLinks.transactions.withdrawalOneTime.text'
-                                      )
-                                    : t(
-                                          'site.navLinks.transactions.withdrawalStart.text'
-                                      )}
-                            </NavElement>
+                    <TempNavInactive
+                        tooltipBody={
+                            partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime
+                                ? t(
+                                      'withdrawals.rules.permissionDeniedTooltip',
+                                      {
+                                          carrier: policyDetails.carrierName,
+                                      }
+                                  )
+                                : t('withdrawals.rules.statusTooltip', {
+                                      status: status,
+                                  })
                         }
+                        navElementClassName="!px-2"
                     >
-                        {t('withdrawals.rules.statusTooltip', {
-                            status: status,
-                        })}
-                    </Tooltip>
+                        {policyDetails.isAnnuity
+                            ? t(
+                                  'site.navLinks.transactions.withdrawalOneTime.text'
+                              )
+                            : t(
+                                  'site.navLinks.transactions.withdrawalStart.text'
+                              )}
+                    </TempNavInactive>
                 )}
-                {fullSurrenderEligibility?.isEligibleFullSurrender ? (
+                {fullSurrenderEligibility?.isEligibleFullSurrender &&
+                isUserPermissionedToWithdraw ? (
                     <NavElement
                         href={
                             t(
@@ -423,62 +420,55 @@ const WithdrawalsPageHeaderContainer = ({
                         {t('withdrawals.surrenderPolicy')}
                     </NavElement>
                 ) : (
-                    <Tooltip
-                        placement={TooltipPlacement.TopLeft}
-                        trigger={
-                            <NavElement
-                                href="#"
-                                disabled
-                                size={NavElementSize.Small}
-                                type={NavElementType.Link}
-                                className="text-gray-400 cursor-not-allowed pointer-events-none"
-                                data-testid="surrender-policy-link-disabled"
-                            >
-                                {t('withdrawals.surrenderPolicy')}
-                            </NavElement>
-                        }
-                    >
-                        {t('withdrawals.rules.statusTooltip', {
-                            status: status,
-                        })}
-                    </Tooltip>
-                )}
-
-                {freeLookEnabled &&
-                    policyDetails.freeLookPeriodDetails.isInFreeLookPeriod && (
-                        <NavElement
-                            href={
-                                t('site.navLinks.cancelFreeLook.href', {
-                                    id: policyNumber,
-                                    planCode,
-                                }) || ''
-                            }
-                            size={NavElementSize.Small}
-                            type={NavElementType.Link}
-                            data-testid="cancel-free-look-link"
-                        >
-                            {t('withdrawals.freeLookCancel')}
-                        </NavElement>
-                    )}
-                {isStillInactive.withdrawalPageexchange1035.length ? (
                     <TempNavInactive
-                        tooltipBody={isStillInactive.withdrawalPageexchange1035}
+                        tooltipBody={
+                            fullSurrenderEligibility?.isEligibleFullSurrender
+                                ? t(
+                                      'withdrawals.rules.permissionDeniedTooltip',
+                                      {
+                                          carrier: policyDetails.carrierName,
+                                      }
+                                  )
+                                : t('withdrawals.rules.statusTooltip', {
+                                      status: status,
+                                  })
+                        }
+                        navElementClassName="!px-2"
                     >
-                        {t('withdrawals.exchange1035')}
+                        {t('withdrawals.surrenderPolicy')}
                     </TempNavInactive>
-                ) : (
+                )}
+                {freeLookEnabled &&
+                policyDetails.freeLookPeriodDetails.isInFreeLookPeriod &&
+                isUserPermissionedToWithdraw ? (
                     <NavElement
                         href={
-                            t('site.navLinks.transactions.exchange1035.href', {
+                            t('site.navLinks.cancelFreeLook.href', {
                                 id: policyNumber,
                                 planCode,
                             }) || ''
                         }
                         size={NavElementSize.Small}
                         type={NavElementType.Link}
+                        data-testid="cancel-free-look-link"
                     >
-                        {t('withdrawals.exchange1035')}
+                        {t('withdrawals.freeLookCancel')}
                     </NavElement>
+                ) : (
+                    freeLookEnabled &&
+                    policyDetails.freeLookPeriodDetails.isInFreeLookPeriod && (
+                        <TempNavInactive
+                            tooltipBody={t(
+                                'withdrawals.rules.permissionDeniedTooltip',
+                                {
+                                    carrier: policyDetails.carrierName,
+                                }
+                            )}
+                            navElementClassName="!px-2"
+                        >
+                            {t('withdrawals.freeLookCancel')}
+                        </TempNavInactive>
+                    )
                 )}
             </div>
         </>

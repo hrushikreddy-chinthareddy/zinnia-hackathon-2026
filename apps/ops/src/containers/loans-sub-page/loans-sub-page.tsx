@@ -7,7 +7,7 @@ import {
     Status,
 } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helpers';
@@ -16,6 +16,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import {
@@ -24,6 +25,7 @@ import {
     getParty,
 } from '@deps/helpers/payments.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
+import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkLoanRepaymentOneTimeEligibilityQuery,
@@ -46,6 +48,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const { t: defaultT } = useTranslation();
     const { featureFlags } = useOptimizely();
     const sideSheet = useSideSheetContext();
+
+    const { policyDetails } = useContext(PolicyData);
 
     const loanPaymentEnabled =
         featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
@@ -132,7 +136,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
             };
         },
     });
-
+    const { isPermissioned: isUserPermissionedToEditLoan } =
+        useWritePolicyPermissionCheck(policyNumber, planCode);
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
@@ -146,6 +151,48 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
             />
         );
         sideSheet.handleOpen(true);
+    };
+    const getLoanTooltip = () => {
+        const permissionRequired =
+            systematicProgramsEligibility?.isEligibleManageAutopay &&
+            loanPaymentEnabled &&
+            upcomingLoanRepayment?.nextProgramDate;
+
+        if (permissionRequired) {
+            return !isUserPermissionedToEditLoan
+                ? t('transactions.permissionDeniedTooltip', {
+                      carrier: policyDetails.carrierName,
+                  })
+                : undefined;
+        }
+
+        return formatValidationResult(
+            systematicProgramsEligibility?.validationResult
+        );
+    };
+    const getLoanTooltipsetUpAutoPay = () => {
+        return !isUserPermissionedToEditLoan
+            ? t('transactions.permissionDeniedTooltip', {
+                  carrier: policyDetails.carrierName,
+              })
+            : undefined;
+    };
+
+    const getOneTimeLoanTooltip = () => {
+        const permissionRequired =
+            loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime;
+
+        if (permissionRequired) {
+            return !isUserPermissionedToEditLoan
+                ? t('transactions.permissionDeniedTooltip', {
+                      carrier: policyDetails.carrierName,
+                  })
+                : undefined;
+        }
+
+        return formatValidationResult(
+            loanRepaymentOneTimeEligibility?.validationResult
+        );
     };
 
     return (
@@ -183,7 +230,9 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                             isDisabled:
                                 !loanPaymentEnabled ||
                                 upcomingLoanRepayment?.nextProgramDate !==
-                                    undefined,
+                                    undefined ||
+                                !isUserPermissionedToEditLoan,
+                            tooltip: getLoanTooltipsetUpAutoPay(),
                         },
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/manage-loan-payment`,
@@ -191,17 +240,17 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                             isDisabled:
                                 !loanPaymentEnabled ||
                                 !systematicProgramsEligibility?.isEligibleManageAutopay ||
-                                !upcomingLoanRepayment?.nextProgramDate,
-                            tooltip: formatValidationResult(
-                                systematicProgramsEligibility?.validationResult
-                            ),
+                                !upcomingLoanRepayment?.nextProgramDate ||
+                                !isUserPermissionedToEditLoan,
+                            tooltip: getLoanTooltip(),
                         },
                         {
                             href: '#',
                             isDisabled:
                                 !loanCancelEnabled ||
                                 !loanPaymentEnabled ||
-                                !upcomingLoanRepayment?.nextProgramDate,
+                                !upcomingLoanRepayment?.nextProgramDate ||
+                                !isUserPermissionedToEditLoan,
                             text: t('cancelAutopay'),
                             onClick: openCancelSideSheet,
                         },
@@ -209,10 +258,9 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/loan-payment`,
                             text: t('oneTimePaymentText'),
                             isDisabled:
-                                !loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime,
-                            tooltip: formatValidationResult(
-                                loanRepaymentOneTimeEligibility?.validationResult
-                            ),
+                                !loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime ||
+                                !isUserPermissionedToEditLoan,
+                            tooltip: getOneTimeLoanTooltip(),
                         },
                     ]}
                     requestSubTypes={[

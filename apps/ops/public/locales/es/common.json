@@ -916,7 +916,10 @@
                     "q457deferredcomp": "Plan de Compensación Diferida 457 Calificado",
                     "pensionplan": "Plan de Pensiones",
                     "ira-simple": "SIMPLE IRA (Plan de incentivos de ahorro para empleados)",
-                    "q401a": "Plan 401(a) calificado"
+                    "q401a": "Plan 401(a) calificado",
+                    "BannerLink": {
+                        "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
+                    }
                 },
                 "notFound": "No pudimos encontrar un contrato o póliza que coincida con su búsqueda.",
                 "tryAgain": "Verifique su entrada e intente nuevamente.",
@@ -3513,6 +3516,9 @@
                     "SubsequentPayment": "pago subsiguiente",
                     "SubsequentPremium": "prima subsiguiente",
                     "Monthly autopay": "autopago mensual"
+                },
+                "transactions": {
+                    "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
                 }
             }
         }
@@ -4243,7 +4249,10 @@
                     "new": "Nuevo",
                     "showAdditional": "Mostrar direcciones adicionales"
                 },
-                "label": "Dirección"
+                "label": "Dirección",
+                "transactions": {
+                    "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
+                }
             },
             "allocation": {
                 "amount": "Cantidad",
@@ -4276,7 +4285,10 @@
                     "new": "Nuevo",
                     "routingNumber": "Número de ruta"
                 },
-                "label": "Detalles bancarios"
+                "label": "Detalles bancarios",
+                "transactions": {
+                    "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
+                }
             },
             "email": {
                 "emailOptions": {
@@ -4290,7 +4302,10 @@
                     "new": "Nuevo",
                     "showAdditional": "Mostrar direcciones de correo adicionales"
                 },
-                "label": "Correo electrónico"
+                "label": "Correo electrónico",
+                "transactions": {
+                    "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
+                }
             },
             "firmInformation": {
                 "label": "Información de la firma",
@@ -4324,6 +4339,9 @@
                     "mobilePhone": "Teléfono móvil",
                     "other": "Otro",
                     "unknown": "Desconocido"
+                },
+                "transactions": {
+                    "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
                 }
             },
             "general": {
@@ -4343,6 +4361,9 @@
                 "weAdded": "Hemos añadido",
                 "type": "Tipo",
                 "submit": "Enviar"
+            },
+            "transactions": {
+                "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
             },
             "identification": {
                 "add": "Añadir",
@@ -4511,7 +4532,10 @@
                 "header": "Aún no hay nada programado."
             },
             "endingIn": " terminando en ",
-            "startNew": "$t(transactions.loans.header.startLoan)"
+            "startNew": "$t(transactions.loans.header.startLoan)",
+            "transactions": {
+                "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
+            }
         },
         "policyTestsCard": {
             "title": "Pruebas de Póliza",
@@ -4838,7 +4862,8 @@
             "maxAnnualTooltip": "Esta es la cantidad de veces que un propietario puede hacer un retiro (de cualquier cantidad elegible) dentro de un año de póliza.",
             "coverageLimit": "Límite de preservación de cobertura",
             "coverageLimitTooltip": "Los propietarios pueden retirar esta cantidad sin afectar su cobertura. En otras palabras, pueden retirar esta cantidad y mantener intacto su beneficio por fallecimiento.",
-            "statusTooltip": "El estado de esta política {{status}} no permite este tipo de transacción."
+            "statusTooltip": "El estado de esta política {{status}} no permite este tipo de transacción.",
+            "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
         },
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",
@@ -4846,7 +4871,12 @@
             "setUpAutopay": "$t(premium.upcoming.setUpAutopay)",
             "noAdditionalCharges": "$t(premium.upcoming.noAdditionalCharges)",
             "withdrawalAutopay": "Pago automático de retiro próximo",
-            "rmdAutopay": "Pago automático de RMD próximo"
+            "rmdAutopay": "Pago automático de RMD próximo",
+            "cancelWithdrawalAutopayTitle": "Cancelar sistemáticamente {{type}}",
+            "cancelAutopay": "Cancelar pago automático",
+            "transactions": {
+                "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
+            }
         },
         "exchange1035": "Iniciar un Intercambio 1035",
         "allTimeWithdrawals": "Retiros de todos los tiempos",

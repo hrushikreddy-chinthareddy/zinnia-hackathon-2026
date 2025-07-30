@@ -166,3 +166,66 @@ export const getCarrierList = async (
         };
     }
 };
+
+export const checkWritePolicyPermissionQuery = async (
+    partyId: string,
+    policyNumber: string | undefined,
+    planCode: string | undefined
+): Promise<ApiResponse<boolean>> => {
+    const url = `${baseUrl}/check-policy`;
+
+    const body = {
+        user: `party:${partyId}`,
+        relation: 'write_policy',
+        policyNumber,
+        planCode,
+    };
+
+    try {
+        const fgaCheck = await client.post<
+            typeof body,
+            AxiosResponse<CheckTupleResponse>
+        >(url, body);
+
+        const allowed = fgaCheck?.data?.allowed;
+
+        const response: ApiResponse<boolean> = {
+            data: !!allowed, // Ensure we return a boolean
+            error: null,
+        };
+
+        if (fgaCheck.status !== 200) {
+            response.error = {
+                status: fgaCheck.status,
+                message: fgaCheck.statusText,
+                name: 'Error checking write_policy permission',
+            };
+        }
+
+        return response;
+    } catch (e: any) {
+        browserLogError(
+            'checkWritePolicyPermissionQuery::An error occurred while checking write_policy permission',
+            {
+                file: 'queries/api/fga.ts',
+                function: 'checkWritePolicyPermissionQuery',
+                url,
+                extra: {
+                    partyId,
+                    policyNumber,
+                    planCode,
+                    errorMessage: e.message,
+                },
+            }
+        );
+
+        return {
+            data: false,
+            error: {
+                status: 500,
+                message: e.message,
+                name: 'Exception during write_policy check',
+            },
+        };
+    }
+};

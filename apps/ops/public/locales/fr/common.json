@@ -992,7 +992,10 @@
                     "q457deferredcomp": "Régime de rémunération différée qualifié 457",
                     "pensionplan": "Régime de retraite",
                     "ira-simple": "SIMPLE IRA (Plan d'intéressement à l'épargne pour les employés)",
-                    "q401a": "Plan 401(a) qualifié"
+                    "q401a": "Plan 401(a) qualifié",
+                    "BannerLink": {
+                        "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
+                    }
                 },
                 "notFound": "We couldn't find a contract or policy that matches your search.",
                 "tryAgain": "Check your input and try again.",
@@ -3500,6 +3503,9 @@
                     "SubsequentPayment": "paiement ultérieur",
                     "SubsequentPremium": "prime ultérieure",
                     "Monthly autopay": "paiement automatique mensuel"
+                },
+                "transactions": {
+                    "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
                 }
             }
         }
@@ -4256,7 +4262,10 @@
                     "new": "Nouveau",
                     "showAdditional": "Afficher des adresses supplémentaires"
                 },
-                "label": "Adresse"
+                "label": "Adresse",
+                "transactions": {
+                    "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
+                }
             },
             "allocation": {
                 "amount": "Montant",
@@ -4289,7 +4298,10 @@
                     "new": "Nouveau",
                     "routingNumber": "Numéro de routage"
                 },
-                "label": "Détails bancaires"
+                "label": "Détails bancaires",
+                "transactions": {
+                    "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
+                }
             },
             "email": {
                 "emailOptions": {
@@ -4303,7 +4315,10 @@
                     "new": "Nouveau",
                     "showAdditional": "Afficher des adresses e-mail supplémentaires"
                 },
-                "label": "Email"
+                "label": "Email",
+                "transactions": {
+                    "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
+                }
             },
             "firmInformation": {
                 "label": "Informations sur l'entreprise",
@@ -4337,6 +4352,9 @@
                     "mobilePhone": "Téléphone portable",
                     "other": "Autre",
                     "unknown": "Inconnu"
+                },
+                "transactions": {
+                    "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
                 }
             },
             "general": {
@@ -4356,6 +4374,9 @@
                 "weAdded": "Nous avons ajouté",
                 "type": "Type",
                 "submit": "Soumettre"
+            },
+            "transactions": {
+                "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
             },
             "identification": {
                 "add": "Ajouter",
@@ -4524,7 +4545,10 @@
                 "header": "Rien n'est encore prévu."
             },
             "endingIn": " se terminant par ",
-            "startNew": "$t(transactions.loans.header.startLoan)"
+            "startNew": "$t(transactions.loans.header.startLoan)",
+            "transactions": {
+                "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
+            }
         },
         "policyTestsCard": {
             "title": "Tests de police",
@@ -4851,7 +4875,8 @@
             "maxAnnualTooltip": "C'est le nombre de fois qu'un propriétaire peut effectuer un retrait (de tout montant éligible) au cours d'une année de police.",
             "coverageLimit": "Limite de préservation de couverture",
             "coverageLimitTooltip": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d'autres termes, ils peuvent retirer ce montant et conserver intact leur capital-décès.",
-            "statusTooltip": "Le statut de cette politique {{status}} n'autorise pas ce type de transaction."
+            "statusTooltip": "Le statut de cette politique {{status}} n'autorise pas ce type de transaction.",
+            "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
         },
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",
@@ -4861,7 +4886,10 @@
             "withdrawalAutopay": "Retrait Autopay à venir",
             "rmdAutopay": "RMD Autopay à venir",
             "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
-            "cancelAutopay": "Annuler le paiement automatique"
+            "cancelAutopay": "Annuler le paiement automatique",
+            "transactions": {
+                "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
+            }
         },
         "exchange1035": "Commencer un échange 1035",
         "allTimeWithdrawals": "Retraits cumulés",

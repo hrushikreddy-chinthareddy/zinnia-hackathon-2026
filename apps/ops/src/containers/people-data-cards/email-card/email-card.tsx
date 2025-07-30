@@ -1,12 +1,13 @@
 import { Email } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import NavElement, {
     NavElementSize,
     NavElementType,
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import Toggle, {
     ToggleSize,
     ToggleVariant,
@@ -20,6 +21,7 @@ import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card'
 import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import {
     NonFinancialTransactionActions,
@@ -38,6 +40,7 @@ interface OpenSideSheet {
 
 const EmailCard = ({
     editable = false,
+    isUserPermissionedToEditCards = false,
     infoOnly,
     party,
     planCode,
@@ -46,7 +49,7 @@ const EmailCard = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.email',
     });
-
+    const { policyDetails } = useContext(PolicyData);
     const sideSheet = useSideSheetContext();
 
     const [showAdditional, setShowAdditional] = useState(false);
@@ -94,6 +97,8 @@ const EmailCard = ({
 
     if (infoOnly) return EmailsBody;
 
+    const isUserPermissionedToEditEmail =
+        isUserPermissionedToEditCards ?? false;
     return (
         <CardContainer classNames="flex w-full flex-col items-start">
             <div className="flex w-full flex-col md:flex-row md:justify-between">
@@ -101,7 +106,7 @@ const EmailCard = ({
                     <Typography className="mr-5" variant={TypographyVariant.H2}>
                         {t('label')}
                     </Typography>
-                    {editable && (
+                    {editable && isUserPermissionedToEditEmail ? (
                         <NavElement
                             onClick={() =>
                                 openSideSheet({
@@ -122,7 +127,18 @@ const EmailCard = ({
                         >
                             {t('general.add')}
                         </NavElement>
-                    )}
+                    ) : editable ? (
+                        <TempNavInactive
+                            tooltipBody={t(
+                                'transactions.permissionDeniedTooltip',
+                                {
+                                    carrier: policyDetails.carrierName,
+                                }
+                            )}
+                        >
+                            {t('general.add')}
+                        </TempNavInactive>
+                    ) : null}
                 </div>
 
                 {showAdditionalToggle && (

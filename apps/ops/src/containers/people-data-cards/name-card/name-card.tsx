@@ -6,6 +6,9 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
+import TempNavInactive, {
+    isStillInactive,
+} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -19,6 +22,7 @@ interface INameCardProps {
     children: React.ReactNode;
     t: TFunction;
     editable?: boolean;
+    isUserPermissionedToEditCards?: boolean;
 }
 
 export const NameCard: FC<INameCardProps> = ({
@@ -26,6 +30,7 @@ export const NameCard: FC<INameCardProps> = ({
     selectedPolicyParty,
     t,
     editable,
+    isUserPermissionedToEditCards,
 }) => {
     const sidesheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
@@ -44,12 +49,14 @@ export const NameCard: FC<INameCardProps> = ({
         );
         sidesheet.handleOpen(true);
     };
-
+    const isUserPermissionedToEditName = isUserPermissionedToEditCards ?? false;
     return (
         <div className="flex items-start align-middle justify-between bg-opacity-50 pb-2">
             <div className="flex h-6 items-center gap-2 xs:mt-2">
                 {children}
-                {editable && partyNameChangeEnabled && (
+                {editable &&
+                partyNameChangeEnabled &&
+                isUserPermissionedToEditName ? (
                     <NavElement
                         type={NavElementType.Button}
                         size={NavElementSize.Small}
@@ -59,9 +66,25 @@ export const NameCard: FC<INameCardProps> = ({
                         <EditIcon
                             height={16}
                             onClick={handleEditClick}
-                            data-testid="edit-icon"
+                            data-testid="edit-icon-permissioned"
                         />
                     </NavElement>
+                ) : (
+                    <TempNavInactive
+                        tooltipBody={t(
+                            'people.card.transactions.permissionDeniedTooltip',
+                            {
+                                carrier: policyDetails.carrierName,
+                            }
+                        )}
+                        navElementClassName="!px-1"
+                        hideIcon
+                    >
+                        <EditIcon
+                            height={16}
+                            data-testid="edit-icon-disabled"
+                        />
+                    </TempNavInactive>
                 )}
             </div>
         </div>

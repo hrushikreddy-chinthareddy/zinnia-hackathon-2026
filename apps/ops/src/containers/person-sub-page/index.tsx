@@ -18,6 +18,7 @@ import {
     getSexAtBirth,
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
+import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 
@@ -78,6 +79,9 @@ export const PersonSubPage = ({
             PartyRole.PRIMARYSERVICINGAGENT.toLowerCase()
         );
 
+    const { isPermissioned: isUserAllowedToEditCards } =
+        useWritePolicyPermissionCheck(policyNumber, planCode);
+
     if (isAgent) {
         return <AgentSubPage partyId={partyId} />;
     } else
@@ -87,6 +91,7 @@ export const PersonSubPage = ({
                     selectedPolicyParty={selectedPolicyParty}
                     selectedPolicyPartyRoles={selectedPolicyPartyRoles}
                     editable={editable}
+                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     partyStatus={selectedPolicyParty?.partyStatus}
                 />
 
@@ -115,6 +120,7 @@ export const PersonSubPage = ({
                 <hr className="h-0.5 border-none bg-gray-200" />
                 <PhoneCard
                     editable={editable}
+                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
                     partyRoles={selectedPolicyPartyRoles}
                     planCode={planCode}
@@ -124,6 +130,7 @@ export const PersonSubPage = ({
                 <hr className="h-0.5 border-none bg-gray-200" />
                 <EmailCard
                     editable={editable}
+                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
                     partyRoles={selectedPolicyPartyRoles}
                     planCode={planCode}
@@ -133,6 +140,7 @@ export const PersonSubPage = ({
                 <hr className="h-0.5 border-none bg-gray-200" />
                 <AddressCard
                     editable={editable}
+                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
                     partyRoles={selectedPolicyPartyRoles}
                     planCode={planCode}
@@ -142,6 +150,7 @@ export const PersonSubPage = ({
                 <hr className="h-0.5 border-none bg-gray-200" />
                 <BankCard
                     editable={editable}
+                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
                     // TODO CB - set these ase vars to be reused above
                     planCode={planCode}

@@ -33,6 +33,7 @@ export enum FieldDataVariant {
 export type FieldDataProps = {
     caption?: ReactNode;
     editable?: boolean;
+    isUserPermissionedToEditCards?: boolean;
     label: string;
     variant?: FieldDataVariant;
     captionTag?: ElementType;
@@ -138,6 +139,7 @@ const FieldData = ({
     className,
     sentenceCase,
     editable,
+    isUserPermissionedToEditCards,
     labelClassName,
     ...tooltipProps
 }: FieldDataProps) => (
@@ -160,6 +162,7 @@ const FieldData = ({
                 label={label}
                 sentenceCase={sentenceCase}
                 editable={editable}
+                isUserPermissionedToEditCards={isUserPermissionedToEditCards}
                 className={labelClassName}
                 {...filterTruthyProps(tooltipProps)}
             />

@@ -1,10 +1,13 @@
 import clsx from 'clsx';
-import { HTMLAttributes, PropsWithChildren } from 'react';
+import { useTranslation } from 'next-i18next';
+import { HTMLAttributes, PropsWithChildren, useContext } from 'react';
 
 import IconButton from '@deps/components/icon-button/icon-button';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PiiProps } from '@deps/components/pii/pii';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
@@ -20,6 +23,7 @@ export type LabelProps = {
     variant: LabelVariant;
     className?: string;
     editable?: boolean;
+    isUserPermissionedToEditCards?: boolean;
     handleEditClick?: () => void;
 } & PropsWithChildren<PiiProps> &
     TooltipProps &
@@ -84,6 +88,7 @@ export const Label = ({
     variant,
     sentenceCase = true,
     editable,
+    isUserPermissionedToEditCards,
     pii = false,
     handleEditClick,
     ...rest
@@ -94,6 +99,9 @@ export const Label = ({
         sentenceCase && variant !== LabelVariant.LabelUnchanged
             ? toSentenceCase(label)
             : label;
+
+    const { policyDetails } = useContext(PolicyData);
+    const { t } = useTranslation();
 
     let myNode;
 
@@ -123,10 +131,24 @@ export const Label = ({
                     />
                 </Popover>
             )}
-            {editable && (
+            {editable && isUserPermissionedToEditCards ? (
                 <IconButton onClick={handleEditClick}>
                     <EditIcon height={16} width={16} />
                 </IconButton>
+            ) : (
+                editable && (
+                    <TempNavInactive
+                        hideIcon
+                        tooltipBody={t(
+                            'people.card.transactions.permissionDeniedTooltip',
+                            {
+                                carrier: policyDetails.carrierName,
+                            }
+                        )}
+                    >
+                        <EditIcon height={16} width={16} />
+                    </TempNavInactive>
+                )
             )}
         </div>
     );

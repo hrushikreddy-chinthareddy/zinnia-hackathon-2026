@@ -12,9 +12,6 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, {
-    isStillInactive,
-} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
 import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
@@ -39,12 +36,14 @@ interface InteriorPeoplePageHeaderContainerProps {
     selectedPolicyPartyRoles?: PolicyPartyRoles[];
     editable: boolean;
     partyStatus?: PartyStatus;
+    isUserPermissionedToEditCards?: boolean;
 }
 
 const InteriorPeoplePageHeaderContainer = ({
     selectedPolicyParty,
     selectedPolicyPartyRoles,
     editable,
+    isUserPermissionedToEditCards,
     partyStatus,
 }: InteriorPeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
@@ -106,36 +105,6 @@ const InteriorPeoplePageHeaderContainer = ({
                         >
                             {t('people.party.birthDate')}
                         </p>
-                        {isStillInactive.interiorPeoplePageDOB ? (
-                            // https://zinnia.atlassian.net/browse/DEPU-1936
-                            <TempNavInactive
-                                hideIcon
-                                tooltipBody={
-                                    isStillInactive.interiorPeoplePageDOB
-                                }
-                                navElementClassName="!px-1"
-                            >
-                                <EditIcon height={16} />
-                                <span className="sr-only">
-                                    {t('people.card.edit')}
-                                </span>
-                            </TempNavInactive>
-                        ) : (
-                            editable && (
-                                <NavElement
-                                    type={NavElementType.Button}
-                                    size={NavElementSize.Small}
-                                    tabIndex={0}
-                                    className="flex self-center"
-                                    aria-describedby="people-birth-date"
-                                >
-                                    <EditIcon height={16} />
-                                    <span className="sr-only">
-                                        {t('people.card.edit')}
-                                    </span>
-                                </NavElement>
-                            )
-                        )}
                     </span>
 
                     <p className="typography-content-body-sm">
@@ -190,27 +159,6 @@ const InteriorPeoplePageHeaderContainer = ({
                     </span>
                 ))}
             </div>
-            {isStillInactive.interiorPeoplePageHeader ? (
-                <TempNavInactive
-                    triggerClassName=" xs:ml-0 xs:mt-4 md:ml-4 md:mt-0 w-fit"
-                    tooltipBody={isStillInactive.interiorPeoplePageHeader}
-                >
-                    {t('people.party.addRemoveRoles')}
-                </TempNavInactive>
-            ) : (
-                editable && (
-                    <NavElement
-                        startIcon={<UserGroup height={16} />}
-                        type={NavElementType.Button}
-                        size={NavElementSize.Small}
-                        tabIndex={0}
-                        className="flex h-[21px] w-fit items-center whitespace-nowrap leading-[21px] xs:ml-0 xs:mt-4 md:ml-4 md:mt-0 [&_svg]:mr-1"
-                        aria-label={t('ariaLabel.addRemoveRoles') as string}
-                    >
-                        {t('people.party.addRemoveRoles')}
-                    </NavElement>
-                )
-            )}
         </div>
     );
 
@@ -220,6 +168,7 @@ const InteriorPeoplePageHeaderContainer = ({
             t={t}
             selectedPolicyParty={selectedPolicyParty}
             editable={editable}
+            isUserPermissionedToEditCards={isUserPermissionedToEditCards}
         >
             {getHeaderText(selectedPolicyParty)}
         </NameCard>
@@ -233,6 +182,7 @@ const InteriorPeoplePageHeaderContainer = ({
                 t={t}
                 selectedPolicyParty={selectedPolicyParty}
                 editable={editable}
+                isUserPermissionedToEditCards={isUserPermissionedToEditCards}
             >
                 {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
             </HeaderInfoCard>

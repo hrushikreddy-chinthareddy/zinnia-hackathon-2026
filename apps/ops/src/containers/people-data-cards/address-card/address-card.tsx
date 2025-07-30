@@ -1,12 +1,13 @@
 import { Address } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import NavElement, {
     NavElementType,
     NavElementVariant,
     NavElementSize,
 } from '@deps/components/nav-element/nav-element';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import Toggle, {
     ToggleSize,
     ToggleVariant,
@@ -26,13 +27,13 @@ import { PersonCardProps } from '@deps/containers/people-data-cards/people-data-
 import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-
 interface OpenSideSheet {
     address?: Address;
     header: SideSheetPeopleHeaderProps;
@@ -40,6 +41,7 @@ interface OpenSideSheet {
 
 const AddressCard = ({
     editable = false,
+    isUserPermissionedToEditCards = false,
     infoOnly,
     party,
     planCode,
@@ -50,7 +52,7 @@ const AddressCard = ({
     });
 
     const sideSheet = useSideSheetContext();
-
+    const { policyDetails } = useContext(PolicyData);
     const [showAdditional, setShowAdditional] = useState(false);
 
     const { addresses, preferredAddressIndicator } = party ?? {};
@@ -85,6 +87,8 @@ const AddressCard = ({
         );
         sideSheet.handleOpen(true);
     };
+    const isUserPermissionedToEditAddress =
+        isUserPermissionedToEditCards ?? false;
 
     const AddressesBody = (
         <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
@@ -109,7 +113,7 @@ const AddressCard = ({
                         {t('label')}
                     </Typography>
 
-                    {editable && (
+                    {editable && isUserPermissionedToEditAddress ? (
                         <NavElement
                             onClick={() =>
                                 openSideSheet({
@@ -130,7 +134,18 @@ const AddressCard = ({
                         >
                             {t('general.add')}
                         </NavElement>
-                    )}
+                    ) : editable ? (
+                        <TempNavInactive
+                            tooltipBody={t(
+                                'transactions.permissionDeniedTooltip',
+                                {
+                                    carrier: policyDetails.carrierName,
+                                }
+                            )}
+                        >
+                            {t('general.add')}
+                        </TempNavInactive>
+                    ) : null}
                 </div>
 
                 {showToggle && (

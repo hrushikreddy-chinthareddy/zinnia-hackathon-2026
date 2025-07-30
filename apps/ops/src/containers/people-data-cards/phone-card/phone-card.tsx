@@ -1,12 +1,13 @@
 import { Phone } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import NavElement, {
     NavElementSize,
     NavElementType,
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import Toggle, {
     ToggleSize,
     ToggleVariant,
@@ -26,13 +27,13 @@ import { SideSheetPhone } from '@deps/containers/people-data-cards/phone-card/si
 import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-
 interface OpenSideSheet {
     phone?: Phone;
     header: SideSheetPeopleHeaderProps;
@@ -40,6 +41,7 @@ interface OpenSideSheet {
 
 const PhoneCard = ({
     editable = false,
+    isUserPermissionedToEditCards = false,
     infoOnly,
     party,
     planCode,
@@ -48,7 +50,7 @@ const PhoneCard = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.phone',
     });
-
+    const { policyDetails } = useContext(PolicyData);
     const sideSheet = useSideSheetContext();
 
     const [showAdditional, setShowAdditional] = useState(false);
@@ -95,6 +97,9 @@ const PhoneCard = ({
 
     if (infoOnly) return PhonesBody;
 
+    const isUserPermissionedToEditPhone =
+        isUserPermissionedToEditCards ?? false;
+
     return (
         <CardContainer classNames="flex w-full flex-col items-start">
             <div className="flex w-full flex-col md:flex-row md:justify-between">
@@ -102,7 +107,7 @@ const PhoneCard = ({
                     <Typography className="mr-5" variant={TypographyVariant.H2}>
                         {t('label')}
                     </Typography>
-                    {editable && (
+                    {editable && isUserPermissionedToEditPhone ? (
                         <NavElement
                             onClick={() =>
                                 openSideSheet({
@@ -123,7 +128,18 @@ const PhoneCard = ({
                         >
                             {t('general.add')}
                         </NavElement>
-                    )}
+                    ) : editable ? (
+                        <TempNavInactive
+                            tooltipBody={t(
+                                'transactions.permissionDeniedTooltip',
+                                {
+                                    carrier: policyDetails.carrierName,
+                                }
+                            )}
+                        >
+                            {t('general.add')}
+                        </TempNavInactive>
+                    ) : null}
                 </div>
 
                 {showToggle && (

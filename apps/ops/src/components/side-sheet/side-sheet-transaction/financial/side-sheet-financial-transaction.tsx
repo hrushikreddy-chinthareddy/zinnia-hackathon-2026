@@ -9,13 +9,16 @@ import { useEffect, useState } from 'react';
 
 import ChipStatus from '@deps/components/chip-status/chip-status';
 import { Content, ContentVariant } from '@deps/components/content/content';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { withdrawalFinancialTransactions } from '@deps/helpers/transaction-types.helpers';
+import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 import { Statuses } from '@deps/models/case/case';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import SideSheetFinancialTransactionContent from './side-sheet-financial-content';
@@ -45,7 +48,6 @@ const SidesheetViews = {
 const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
-
     const [loading, setLoading] = useState<boolean>(false);
     const [asyncValues, setAsyncValues] = useState<any | null>(null);
     const [view, setView] = useState(SidesheetViews.default);
@@ -74,6 +76,12 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
         transactionValue,
     } = sideSheetValues || {};
     const { status, transactionType } = transaction || {};
+
+    const { isPermissioned: isUserPermissionedToDoTransaction } =
+        useWritePolicyPermissionCheck(
+            policy?.policyNumber,
+            policy?.product?.planCode
+        );
 
     useEffect(() => {
         if (featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED]) return;
@@ -265,43 +273,90 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                     />
                                 </div>
                             )}
+
                             {reverseCta && (
-                                <div>
-                                    <Button
-                                        onClick={() => {
-                                            changeSideSheetContent(
-                                                t(
-                                                    'policy.history.reverseRecreateSidesheet.title'
-                                                )
-                                            );
-                                            setView(SidesheetViews.reverse);
-                                        }}
-                                        mode="link"
-                                        size="small"
-                                        className="mt-4.5 !justify-start !p-0"
-                                    >
-                                        {reverseCta}
-                                    </Button>
+                                <div className="mt-4.5">
+                                    {isUserPermissionedToDoTransaction ? (
+                                        <Button
+                                            onClick={() => {
+                                                changeSideSheetContent(
+                                                    t(
+                                                        'policy.history.reverseRecreateSidesheet.title'
+                                                    )
+                                                );
+                                                setView(SidesheetViews.reverse);
+                                            }}
+                                            mode="link"
+                                            size="small"
+                                            className="!justify-start !p-0"
+                                        >
+                                            {reverseCta}
+                                        </Button>
+                                    ) : (
+                                        <TempNavInactive
+                                            tooltipBody={t(
+                                                'policy.history.reverseRecreateSidesheet.transactions.permissionDeniedTooltip',
+                                                {
+                                                    carrier:
+                                                        getCarrierNameByClientId(
+                                                            policy.carrierId as string
+                                                        ),
+                                                }
+                                            )}
+                                            navElementClassName="!px-2"
+                                        >
+                                            <Button
+                                                disabled
+                                                mode="link"
+                                                size="small"
+                                            >
+                                                {reverseCta}
+                                            </Button>
+                                        </TempNavInactive>
+                                    )}
                                 </div>
                             )}
                             {cancelCta && (
-                                <div>
-                                    <Button
-                                        onClick={() => {
-                                            setView(SidesheetViews.cancel);
-                                        }}
-                                        mode="link"
-                                        size="small"
-                                        className={clsx(
-                                            '!justify-start !p-0',
-                                            transactionType ===
-                                                TransactionType.FULL_SURRENDER
-                                                ? 'mb-6'
-                                                : ''
-                                        )}
-                                    >
-                                        {cancelCta}
-                                    </Button>
+                                <div className="mb-6">
+                                    {isUserPermissionedToDoTransaction ? (
+                                        <Button
+                                            onClick={() => {
+                                                setView(SidesheetViews.cancel);
+                                            }}
+                                            mode="link"
+                                            size="small"
+                                            className={clsx(
+                                                '!justify-start !p-0',
+                                                transactionType ===
+                                                    TransactionType.FULL_SURRENDER
+                                                    ? 'mb-6'
+                                                    : ''
+                                            )}
+                                        >
+                                            {cancelCta}
+                                        </Button>
+                                    ) : (
+                                        <TempNavInactive
+                                            tooltipBody={t(
+                                                'policy.history.reverseRecreateSidesheet.transactions.permissionDeniedTooltip',
+                                                {
+                                                    carrier:
+                                                        getCarrierNameByClientId(
+                                                            policy.carrierId as string
+                                                        ),
+                                                }
+                                            )}
+                                            navElementClassName="!px-2"
+                                        >
+                                            <Button
+                                                disabled
+                                                mode="link"
+                                                size="small"
+                                            >
+                                                {cancelCta}
+                                            </Button>
+                                        </TempNavInactive>
+                                    )}
                                 </div>
                             )}
 

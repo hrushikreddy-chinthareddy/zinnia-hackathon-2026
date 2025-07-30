@@ -12,4 +12,5 @@ export interface PersonCardProps extends EditableCardProps {
     partyRoles: PolicyPartyRoles[];
     planCode?: string;
     policyNumber?: string;
+    isUserPermissionedToEditCards?: boolean;
 }
