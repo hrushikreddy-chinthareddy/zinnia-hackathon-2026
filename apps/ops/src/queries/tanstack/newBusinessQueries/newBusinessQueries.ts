@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ApiResponse } from '@deps/types/api-response';
@@ -14,6 +16,30 @@ export const getNewBusinessEApp = async (
             }
         );
 
+        return { data: response.data, error: null };
+    } catch (error: any) {
+        return error;
+    }
+};
+
+export const patchNewBusinessEApp = async (
+    eAppId: string,
+    illustrationId: string,
+    caseId: string
+): Promise<ApiResponse<NewBusiness>> => {
+    try {
+        const newBusinessUpdateNode = {
+            caseId,
+            illustrations: { source: 'ZINNIA', illustrationId },
+        };
+
+        const response = await client.patch<
+            Partial<NewBusiness>,
+            AxiosResponse<NewBusiness>
+        >(
+            `${baseAppUrl}/api/new-business/v2/application/${eAppId}`,
+            newBusinessUpdateNode
+        );
         return { data: response.data, error: null };
     } catch (error: any) {
         return error;

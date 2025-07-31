@@ -15,6 +15,7 @@ interface StatusBadgeProps {
 const StatusBadge = ({ status }: StatusBadgeProps) => {
     switch (status) {
         case IllustrationStatuses.SUBMITTED:
+        case IllustrationStatuses.SELECTED:
             return (
                 <span className={clsx(styles.iconBadge)}>
                     <Icon

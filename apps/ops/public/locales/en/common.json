@@ -6873,7 +6873,7 @@
             },
             "unArchive": "Un-archive",
             "selected": "Selected",
-            "archived": "Archived",
+            "archived": "Archive",
             "expired": "Expired",
             "selectForApplication": "Select for application",
             "valuePerYear": "{{value}} / year",

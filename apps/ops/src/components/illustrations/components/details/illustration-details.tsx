@@ -1,6 +1,7 @@
 import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import { CarrierName } from '@zinnia/bloom/components';
+import { useEffect } from 'react';
 
 import { getIllustrationQueryOptions } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
@@ -23,7 +24,8 @@ export default function IllustrationDetails({
     clientCaseId,
     eAppId,
 }: IllustrationDetailsProps) {
-    const { selectedIllustration } = useSelectedIllustration();
+    const { selectedIllustration, setNewBusinessCaseId } =
+        useSelectedIllustration();
     const illustration = selectedIllustration?.illustration;
     const product = selectedIllustration?.product;
 
@@ -46,6 +48,12 @@ export default function IllustrationDetails({
             fullIllustration.inputs.source === 'zinnia-live',
     });
 
+    useEffect(() => {
+        if (newBusinesResponse) {
+            setNewBusinessCaseId(newBusinesResponse.caseId);
+        }
+    }, [newBusinesResponse]);
+
     if (!illustration) {
         return <NoIllustration />;
     }
@@ -63,9 +71,8 @@ export default function IllustrationDetails({
 
     const getEAppLink = () => {
         if (!eAppId) return undefined;
-
         return newBusinesResponse?.illustrations?.customIdentifiers?.find(
-            (identifier) => identifier.key === 'redirectionURL'
+            (identifier) => identifier.key.toLowerCase() === 'redirectionurl'
         )?.value;
     };
 

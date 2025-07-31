@@ -131,3 +131,39 @@ export const selectIllustrationForApplication = async (
         return error;
     }
 };
+
+export const archiveIllustration = async (
+    clientCaseId: string,
+    illustrationId: string
+): Promise<ApiResponse<IllustrationsClientCase>> => {
+    try {
+        const response = await client.patch<
+            any,
+            AxiosResponse<IllustrationsClientCase>
+        >(
+            `${BASE_URL}/${clientCaseId}/illustrations/${illustrationId}/archive`
+        );
+
+        return { data: response.data, error: null };
+    } catch (error: any) {
+        return error;
+    }
+};
+
+export const unarchiveIllustration = async (
+    clientCaseId: string,
+    illustrationId: string
+): Promise<ApiResponse<IllustrationsClientCase>> => {
+    try {
+        const response = await client.patch<
+            any,
+            AxiosResponse<IllustrationsClientCase>
+        >(
+            `${BASE_URL}/${clientCaseId}/illustrations/${illustrationId}/reactivate`
+        );
+
+        return { data: response.data, error: null };
+    } catch (error: any) {
+        return error;
+    }
+};

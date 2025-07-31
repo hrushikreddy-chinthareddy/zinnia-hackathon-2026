@@ -80,6 +80,7 @@ export type RiskClass =
 
 export enum IllustrationStatuses {
     SUBMITTED = 'SUBMITTED',
+    SELECTED = 'SELECTED',
     ARCHIVED = 'ARCHIVED',
     EXPIRED = 'EXPIRED',
     ACTIVE = 'ACTIVE',
@@ -94,6 +95,7 @@ export type IllustrationProductType =
 
 export type IllustrationStatus =
     | IllustrationStatuses.SUBMITTED
+    | IllustrationStatuses.SELECTED
     | IllustrationStatuses.ARCHIVED
     | IllustrationStatuses.EXPIRED
     | IllustrationStatuses.ACTIVE;

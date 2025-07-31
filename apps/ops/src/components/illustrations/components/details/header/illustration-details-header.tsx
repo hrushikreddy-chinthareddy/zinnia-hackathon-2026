@@ -1,5 +1,4 @@
 import {
-    Button,
     CarrierAvatar,
     CarrierName,
     FieldStatus,
@@ -54,22 +53,19 @@ export default function IllustrationDetailsHeader({
                         {!!eAppId && !!eAppLink && (
                             <Label
                                 interactiveElements={[
-                                    <Button
+                                    <a
                                         key={'eapp-link'}
-                                        mode="link"
-                                        data-testid="eapp-link-btn"
+                                        data-testid="eapp-link"
                                         aria-label={t('') as string}
-                                        type="button"
-                                        size="small"
                                         className={clsx(style.goToSureify)}
-                                        onClick={() =>
-                                            window.open(eAppLink, '_blank')
-                                        }
+                                        href={eAppLink}
+                                        target="_blank"
+                                        rel="noreferrer"
                                     >
                                         <Icon
                                             type={IconType.EXTERNAL_LINK}
                                         ></Icon>
-                                    </Button>,
+                                    </a>,
                                 ]}
                                 status={FieldStatus.INACTIVE}
                                 size="sm"

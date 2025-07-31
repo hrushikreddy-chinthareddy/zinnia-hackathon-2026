@@ -6,10 +6,12 @@ import {
     getNewTermLifeIllustration,
 } from '@deps/queries/api/client/documents/v3/illustrations';
 import {
+    archiveIllustration,
     createClientCase,
     patchClientCase,
     searchClientCase,
     selectIllustrationForApplication,
+    unarchiveIllustration,
 } from '@deps/queries/api/v1/client-cases';
 import {
     ClientCaseSearchInputs,
@@ -155,5 +157,21 @@ export const selectIllustrationForClientCase = async (
         clientCaseId,
         illustrationId
     );
+    return data;
+};
+
+export const archiveIllustrationInClientCase = async (
+    clientCaseId: string,
+    illustrationId: string
+) => {
+    const { data } = await archiveIllustration(clientCaseId, illustrationId);
+    return data;
+};
+
+export const unarchiveIllustrationInClientCase = async (
+    clientCaseId: string,
+    illustrationId: string
+) => {
+    const { data } = await unarchiveIllustration(clientCaseId, illustrationId);
     return data;
 };

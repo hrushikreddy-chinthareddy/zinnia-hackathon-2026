@@ -93,6 +93,9 @@ export function SubmitProvider({
             );
 
             queryClient.invalidateQueries({
+                queryKey: ['illustrationData', data.id],
+            });
+            queryClient.invalidateQueries({
                 queryKey: ['clientCaseData', clientCase.id],
             });
             queryClient.invalidateQueries({

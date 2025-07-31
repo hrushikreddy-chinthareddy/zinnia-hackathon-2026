@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
     IconType,
     BodyVariant,
@@ -11,11 +11,10 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
+import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
-import {
-    getIllustrationCalculationStatus,
-    selectIllustrationForClientCase,
-} from '@deps/queries/tanstack/illustrations/clientCasesQueries';
+import { getIllustrationCalculationStatus } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import {
     IllustrationStatus,
     IllustrationStatuses,
@@ -44,10 +43,12 @@ export default function IllustrationDetailsToolbar({
     eAppId,
 }: IllustrationDetailsToolbarProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const queryClient = useQueryClient();
     const [isPdfGenerationErrorVisible, setIsPdfGenerationErrorVisible] =
         useState<boolean>(false);
-    const [isSavingChanges, setIsSavingChanges] = useState<boolean>(false);
+    const { isLoadingSelectForApplication, setIsLoadingSelectForApplication } =
+        useSelectedIllustration();
+    const { selectIllustrationMutation, unarchiveIllustrationMutation } =
+        useIllustrationActions();
 
     const { data: isPdfReportAvailable, isError } = useQuery({
         queryKey: ['illustrationProcessingStatus', illustrationId],
@@ -69,31 +70,6 @@ export default function IllustrationDetailsToolbar({
         retry: 3,
         enabled:
             !!productType && productType === ProductTypes.INDEX_UNIVERSAL_LIFE,
-    });
-
-    const selectIllustrationMutation = useMutation({
-        mutationKey: [
-            'selectIllustrationForApplication',
-            illustrationId,
-            productType,
-        ],
-        mutationFn: ({
-            clientCaseId,
-            illustrationId,
-        }: {
-            clientCaseId: string;
-            illustrationId: string;
-        }) => selectIllustrationForClientCase(clientCaseId, illustrationId),
-        onSuccess: () => {
-            setIsSavingChanges(false);
-            queryClient.invalidateQueries({
-                queryKey: ['illustrationData', illustrationId],
-            });
-        },
-        onMutate: () => {},
-        onError: () => {
-            setIsSavingChanges(false);
-        },
     });
 
     const handleDownloadPdf = async () => {
@@ -130,7 +106,7 @@ export default function IllustrationDetailsToolbar({
     };
 
     const handleSelectIllustration = () => {
-        setIsSavingChanges(true);
+        setIsLoadingSelectForApplication(true);
         selectIllustrationMutation.mutateAsync({
             clientCaseId,
             illustrationId,
@@ -146,6 +122,16 @@ export default function IllustrationDetailsToolbar({
             return () => clearTimeout(timer);
         }
     }, [isError]);
+
+    const handleUnarchiveIllustration = () => {
+        if (isLoadingSelectForApplication || !illustrationId || !clientCaseId)
+            return;
+
+        unarchiveIllustrationMutation.mutateAsync({
+            clientCaseId,
+            illustrationId,
+        });
+    };
 
     return (
         <>
@@ -171,7 +157,7 @@ export default function IllustrationDetailsToolbar({
 
                 {status === IllustrationStatuses.ARCHIVED ? (
                     <ToolbarButton
-                        disabled={true}
+                        onClick={handleUnarchiveIllustration}
                         icon={IconType.REFRESH}
                         className={styles.linkButton}
                     >
@@ -192,7 +178,7 @@ export default function IllustrationDetailsToolbar({
                     style={{ '--loader-size': '24px' } as any}
                     aria-live="polite"
                 >
-                    {isLoading || isSavingChanges ? (
+                    {isLoading || isLoadingSelectForApplication ? (
                         <>
                             <Text className="" as={BodyVariant.span}>
                                 {t(
@@ -214,7 +200,7 @@ export default function IllustrationDetailsToolbar({
                             </Button>
                         )
                     ) : (
-                        <span className="relative">
+                        <span className="relative flex">
                             <StatusBadge status={status} />
                         </span>
                     )}

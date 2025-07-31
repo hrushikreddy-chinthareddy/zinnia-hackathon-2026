@@ -11,11 +11,15 @@ type SelectedIllustrationsState = {
 
 type SelectedIllustrationContextValue = {
     selectedIllustration: SelectedIllustrationsState;
+    isLoadingSelectForApplication: boolean;
+    newBusinessCaseId: string | null;
     onSelectedIllustrationChange: (data: SelectedIllustrationsState) => void;
     handleSelectIllustration: (
         product: Product,
         illustration: IllustrationSummary
     ) => void;
+    setIsLoadingSelectForApplication: (isLoading: boolean) => void;
+    setNewBusinessCaseId: (caseId: string) => void;
 };
 
 const SelectedIllustrationContext =
@@ -26,6 +30,11 @@ export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
     const { clientCaseId } = router.query;
     const [selectedIllustration, setSelectedIllustration] =
         useState<SelectedIllustrationsState | null>(null);
+    const [isLoadingSelectForApplication, setIsLoadingSelectForApplication] =
+        useState(false);
+    const [newBusinessCaseId, setNewBusinessCaseId] = useState<string | null>(
+        null
+    );
 
     const handleSelectIllustration = (
         product: Product,
@@ -45,9 +54,15 @@ export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
         <SelectedIllustrationContext.Provider
             value={{
                 selectedIllustration,
+                isLoadingSelectForApplication,
+                newBusinessCaseId,
                 onSelectedIllustrationChange: (data) =>
                     setSelectedIllustration(data),
                 handleSelectIllustration,
+                setIsLoadingSelectForApplication: (isLoading: boolean) =>
+                    setIsLoadingSelectForApplication(isLoading),
+                setNewBusinessCaseId: (caseId: string) =>
+                    setNewBusinessCaseId(caseId),
             }}
         >
             {props.children}

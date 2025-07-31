@@ -6702,9 +6702,9 @@
             },
             "selectForApplication": "Seleccione para la aplicación",
             "expired": "Venció",
-            "archived": "Archivado",
+            "archived": "Archivar",
             "selected": "Seleccionado",
-            "unArchive": "No arquitoso",
+            "unArchive": "Desarchivar",
             "valuePerYear": "{{value}} / año",
             "numYears": "{{years}} años"
         },

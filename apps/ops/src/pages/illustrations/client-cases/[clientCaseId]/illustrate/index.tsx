@@ -42,7 +42,6 @@ export default function ClientCaseIllustrations({
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const params = useParams<{ clientCaseId: string }>();
     const searchParams = useSearchParams();
-    // const sideSheet = useSideSheetContext();
     const carrierProductId = searchParams.get('planCode') || '';
 
     const {
@@ -59,16 +58,6 @@ export default function ClientCaseIllustrations({
         select: (data) => data.data,
         enabled: true,
     });
-
-    // const handleNewIllustration = (planCode: string) => {
-    //     if (planCode && clientCase) {
-    //         sideSheet.changeSideSheetContent(
-    //             'Add Illustration',
-    //             <EappContainer planCode={planCode} clientCase={clientCase} />
-    //         );
-    //         sideSheet.handleOpen(true, '50%');
-    //     }
-    // };
 
     return (
         <SelectedIllustrationProvider>
