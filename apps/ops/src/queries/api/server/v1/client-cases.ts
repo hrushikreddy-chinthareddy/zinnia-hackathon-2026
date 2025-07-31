@@ -1,5 +1,6 @@
 import { toTitleCase } from '@xd/utils/dist';
 import { AxiosResponse } from 'axios';
+import { sortBy } from 'lodash';
 import get from 'lodash/get';
 
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
@@ -17,6 +18,8 @@ import {
 } from '@deps/types/new-business';
 import { LoggingContext } from '@deps/utils/server-logging';
 
+import { getPartyReferenceByPartyId } from './party-reference';
+import { getHierarchyBySellingCode } from './producers';
 import {
     getNewBusinessById,
     NEW_BUSINESS_API_ORIGIN,
@@ -24,13 +27,16 @@ import {
 
 const INSURED_BUSINESS_LABEL = 'INSURED';
 const PRIMARY_AGENT_BUSINESS_LABEL = 'PRIMARYWRITINGAGENT';
-const AGENCY_ID_BUSINESS_IDENTIFIER = 'AOR';
-const NPN_BUSINESS_IDENTIFIER = 'UPN';
+const AOR_IDENTIFIER_LABEL = 'AOR';
+const UPN_IDENTIFIER_LABEL = 'UPN';
+const SELLING_CODE_IDENTIFIER_LABEL = 'SELLING_CODE';
 const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
+const MAIN_AGENCY_ROLE = 'GeneralAgency';
 
-const buildClientCaseFromNewBusiness = (
+const buildClientCaseFromNewBusiness = async (
     newBusinessObject: NewBusiness,
-    eAppId: string
+    eAppId: string,
+    loggingContext: LoggingContext
 ) => {
     let businessClientCasePayload: Partial<IllustrationsClientCase> = {
         eAppId,
@@ -66,6 +72,7 @@ const buildClientCaseFromNewBusiness = (
             insuredState = addresses[0].state;
         }
 
+        // generate title
         const clientCaseTitle = `${insuredFirstName} ${insuredLastName} from Sureify`;
 
         const insuredDetails = {
@@ -99,6 +106,7 @@ const buildClientCaseFromNewBusiness = (
             personalInformation: agentPersonalInformation,
             email: agentEmailObject = {} as EmailObject,
             identifiers,
+            partyId,
         } = agentParty;
         const { firstName: agentFirstName, lastName: agentLastName } =
             agentPersonalInformation;
@@ -118,31 +126,117 @@ const buildClientCaseFromNewBusiness = (
             agentPreferedEmail = emails[0].address;
         }
 
-        // get Identifiers
+        // get Identifiers from newBusiness
         let agencyId = '';
-        let npn = '';
+        let agentSellingCode = '';
 
         if (identifiers) {
             const aorIdentifier = identifiers.find(
-                (identifier) =>
-                    identifier?.key === AGENCY_ID_BUSINESS_IDENTIFIER
+                (identifier) => identifier?.key === AOR_IDENTIFIER_LABEL
             );
-            const npnIdentifier = identifiers.find(
-                (identifier) => identifier?.key === NPN_BUSINESS_IDENTIFIER
+            const upnIdentifier = identifiers.find(
+                (identifier) => identifier?.key === UPN_IDENTIFIER_LABEL
             );
-            if (aorIdentifier && aorIdentifier.value) {
-                agencyId = aorIdentifier.value;
-            }
-            if (npnIdentifier && npnIdentifier.value) {
-                npn = npnIdentifier.value;
+            if (
+                upnIdentifier &&
+                upnIdentifier.value &&
+                aorIdentifier &&
+                aorIdentifier.value
+            ) {
+                agentSellingCode = aorIdentifier.value + upnIdentifier.value;
             }
         }
+
+        if (!agentSellingCode) {
+            // *** Init Party Reference Section ***
+            // retrieve data from partyReference and POM to get the complete data for agent and the agencyId
+            // call api reference to get all the information
+            const partyReferenceResponse = await getPartyReferenceByPartyId(
+                partyId,
+                loggingContext
+            );
+
+            if (partyReferenceResponse) {
+                const { email, alias } = partyReferenceResponse;
+                const agentAlias = alias.find((alias) => alias.email === email);
+                if (agentAlias) {
+                    const { externalPartyIds } = agentAlias;
+
+                    if (externalPartyIds) {
+                        const agentSellingCodeExternalParty =
+                            externalPartyIds.find(
+                                (externalParty) =>
+                                    externalParty.key ===
+                                    SELLING_CODE_IDENTIFIER_LABEL
+                            );
+
+                        // AOR + UPN = SELLING_CODE
+                        const agentAORExternalParty = externalPartyIds.find(
+                            (externalParty) =>
+                                externalParty.key === AOR_IDENTIFIER_LABEL
+                        );
+
+                        const agentUPNExternalParty = externalPartyIds.find(
+                            (externalParty) =>
+                                externalParty.key === UPN_IDENTIFIER_LABEL
+                        );
+
+                        if (agentSellingCodeExternalParty) {
+                            agentSellingCode =
+                                agentSellingCodeExternalParty.value;
+                        } else if (
+                            agentAORExternalParty &&
+                            agentUPNExternalParty
+                        ) {
+                            agentSellingCode =
+                                agentAORExternalParty.value +
+                                agentAORExternalParty.value;
+                        }
+                    }
+                }
+            }
+            // *** Finish Party Reference Section ***
+        }
+
+        if (!agentSellingCode) {
+            throwTypedError(
+                'Agent Selling Code was not able to be obtained',
+                NEW_BUSINESS_API_ORIGIN
+            );
+        }
+
+        // *** Init Producers Hierarchy Section ***
+        const agentHierarchy = await getHierarchyBySellingCode(
+            agentSellingCode,
+            loggingContext
+        );
+
+        if (agentHierarchy) {
+            // search to see if the agent is the actual main agency
+            // if (agentHierarchy.role === MAIN_AGENCY_ROLE) {
+            // where do i get the agencyId/hierarchyId?
+            // }
+            const { upline } = agentHierarchy;
+            const mainAgencies = upline.filter(
+                (upline) => upline.role === MAIN_AGENCY_ROLE
+            );
+            const sortedAgencies = sortBy(mainAgencies, 'level');
+            const mainAgency = sortedAgencies[0];
+
+            if (mainAgency) {
+                // hierarchyId should be the agencyId
+                const { hierarchyId } = mainAgency;
+                if (!agencyId) {
+                    agencyId = hierarchyId;
+                }
+            }
+        }
+        // *** Finish Producers Hierarchy Section ***
 
         const agentDetails = {
             firstName: agentFirstName,
             lastName: agentLastName,
             email: agentPreferedEmail,
-            npn,
         };
 
         businessClientCasePayload = {
@@ -188,6 +282,10 @@ const CLIENT_CASE_REQUIRED_FIELDS = {
     'insuredDetails.sexAtBirth': 'Insured sex at birth',
     'insuredDetails.dateOfBirth': 'Insured date of birth',
     'insuredDetails.state': 'Insured state of residence',
+    'agentDetails.firstName': 'Agent first name',
+    'agentDetails.lastName': 'Agent last name',
+    'agentDetails.email': 'Agent email',
+    agencyId: 'Agency ID',
     caseManagementCaseId: 'Case Management ID',
     title: 'Title of the case',
 };
@@ -237,9 +335,10 @@ export const createClientCaseFromNewBusiness = async (
         );
     }
 
-    const newClientCasePayload = buildClientCaseFromNewBusiness(
+    const newClientCasePayload = await buildClientCaseFromNewBusiness(
         newBusinessResponseObject,
-        eAppId
+        eAppId,
+        loggingContext
     );
 
     validateClientCasePayload(newClientCasePayload);

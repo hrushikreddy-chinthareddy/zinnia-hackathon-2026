@@ -46,6 +46,8 @@ type additionalDataProps = {
 enum ErrorOrigin {
     ClientCase = 'client-case-manager-api',
     NewBusiness = 'new-business-api',
+    partyReference = 'party-reference-api',
+    producers = 'producers-api',
     Internal = 'internal-error',
 }
 
@@ -84,6 +86,8 @@ export default function Illustrations({
     useEffect(() => {
         switch (fetchingErrorOrigin) {
             case ErrorOrigin.NewBusiness:
+            case ErrorOrigin.partyReference:
+            case ErrorOrigin.producers:
                 if (fetchingErrorMessage) {
                     setBannerText(
                         `${EXTERNAL_ERROR_LABEL} - ${fetchingErrorMessage}`

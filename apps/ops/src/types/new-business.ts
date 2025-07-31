@@ -57,12 +57,29 @@ export interface AddressObject {
     addresses: AddressDetail[];
 }
 
+export interface PhoneNumberDetail {
+    id: string;
+    type: string;
+    countryCode: string;
+    areaCode: string;
+    dialNumber: string;
+}
+export interface PhoneNumberObject {
+    preferredPhoneId: string;
+    phoneNumbers: PhoneNumberDetail[];
+}
+
 export interface party {
-    partyRole: PartyRole;
+    partyType: string;
     personalInformation: PersonalInformation;
-    email: EmailObject;
+    partyId: string;
+    partyCommunication: string;
+    partyRole: PartyRole;
+    partyPercentage: number;
     identifiers: identifier[];
     address: AddressObject;
+    phoneNumber: PhoneNumberObject;
+    email: EmailObject;
 }
 
 // This interface needs to be completed
