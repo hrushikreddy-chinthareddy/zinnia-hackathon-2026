@@ -6,7 +6,7 @@ LC_ALL=C
 # This file validates the branch name format
 # and enforces a naming convention
 # using the following regular expression:
-# ^(build|ci|docs|feat|fix|perf|refactor|test|bugfix)\/[[:alnum:]-]+-[[:digit:]]+--[[:alnum:]-]+[^-]$
+# ^(build|ci|chore|docs|feat|fix|perf|refactor|test|bugfix|hotfix)\/[[:alnum:]-]+-[[:digit:]]+--[[:alnum:]-]+[^-]$
 #
 # in-depth explanation of the regex below:
 # https://regex101.com/r/9EnvqJ/4
@@ -48,7 +48,7 @@ NC='\033[0m' # Text Reset
 # > perf: A code change that improves performance
 # > refactor: A code change that neither fixes a bug nor adds a feature
 # > test: Adding missing tests or correcting existing tests
-BRANCH_TYPE_PATTERN="^(build|ci|chore|docs|feat|fix|perf|refactor|test|bugfix)"
+BRANCH_TYPE_PATTERN="^(build|ci|chore|docs|feat|fix|perf|refactor|test|bugfix|hotfix)"
 
 #  next we look for a valid ticket number
 # EX: [CUI-613] [DEPU-2749] [OA5946-5]
