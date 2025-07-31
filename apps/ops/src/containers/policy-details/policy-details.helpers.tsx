@@ -14,6 +14,7 @@ import { getStateName } from '@deps/helpers/states.helpers';
 import {
     convertKebabedDateString,
     isNullEmptyOrUndefined,
+    toSentenceCase,
     translateYearOrYears,
 } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
@@ -221,6 +222,7 @@ export const mapPolicyTimelineValues = (
         !isNullEmptyOrUndefined(policyYear as number)
             ? (fixedCostPeriod as number) - Number(policyYear)
             : undefined;
+
     return {
         fixedCostPeriod,
         fixedCostPeriodLeft,
@@ -229,7 +231,7 @@ export const mapPolicyTimelineValues = (
         maturityDate: maturityDate
             ? convertKebabedDateString(maturityDate)
             : null,
-        policyAge: translateYearOrYears(policyYear, t),
+        policyAge: toSentenceCase(policyYear?.toString()),
         policyLength,
         policyYearsLeft,
     };

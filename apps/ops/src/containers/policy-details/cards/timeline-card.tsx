@@ -69,7 +69,7 @@ export function AnnuityTimelineCard({ policy }: BasePolicyComponentArgs) {
             <div className="mt-4 grid grid-cols-[repeat(2,max-content)] gap-8 sm:grid-cols-[repeat(4,max-content)]">
                 <div>
                     <Label
-                        label={t(`${BASE_KEY}ageOfContract`)}
+                        label={t(`${BASE_KEY}contractYear`)}
                         variant={LabelVariant.FieldLabel}
                     />
                     <Content

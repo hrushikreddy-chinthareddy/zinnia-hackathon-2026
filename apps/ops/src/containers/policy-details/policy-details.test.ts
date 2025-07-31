@@ -119,7 +119,7 @@ describe('policy details helpers', () => {
                 fixedCostPeriodLeft: 10,
                 issueDate: '1/1/2023',
                 maturityDate: '1/1/2033',
-                policyAge: 'temporal.nYears',
+                policyAge: '10',
                 policyLength: 'temporal.nYears',
                 policyYearsLeft: 'temporal.timeLeft',
             });

@@ -15,7 +15,7 @@ const PolicyAge = ({ policyAge }: PolicyAgeProps) => {
 
     return (
         <div>
-            <Label label={t('ageOfPolicy')} variant={LabelVariant.FieldLabel} />
+            <Label label={t('policyYear')} variant={LabelVariant.FieldLabel} />
             <Content details={policyAge} variant={ContentVariant.BodySm} />
         </div>
     );

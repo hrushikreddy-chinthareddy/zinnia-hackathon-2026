@@ -917,6 +917,7 @@
                     "pensionplan": "Plan de Pensiones",
                     "ira-simple": "SIMPLE IRA (Plan de incentivos de ahorro para empleados)",
                     "q401a": "Plan 401(a) calificado",
+                    "inheritedrothindividualretirementaccount": "Cuenta de jubilación individual Roth heredada",
                     "BannerLink": {
                         "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
                     }
@@ -3059,10 +3060,9 @@
                 "yearsOld_zero": "-- años"
             },
             "policyTimeline": {
-                "ageOfContract": "Edad del contrato",
-                "ageOfPolicy": "Edad de la póliza",
                 "contractLength": "Duración del contrato",
                 "contractTimeline": "Cronología del contrato",
+                "contractYear": "Año del contrato",
                 "fixedCostPeriod": "Período de costo fijo",
                 "fixedCostPeriodTooltip": "Durante el período de costo fijo, no hay cargo de seguro para esta póliza. El costo del seguro es exactamente lo que suena: es cuánto cobra la aseguradora por cubrir el riesgo de asegurar la vida de una persona. En última instancia, esto significa que los propietarios de esta póliza disfrutan de un menor costo para tener y mantener su seguro activo durante el período de costo fijo. Una vez que finaliza el período de costo fijo, comienzan los cargos del seguro.",
                 "issueDate": "Fecha de emisión",
@@ -3073,6 +3073,7 @@
                 "nYearsLeft": "{{n}} años restantes",
                 "oneYear": "1 año",
                 "oneYearLeft": "1 año restante",
+                "policyYear": "Año de póliza",
                 "policyTimeline": "Cronología de la póliza",
                 "freeLookEndDate": "Fecha de finalización del look gratuito",
                 "policyLength": "Duración de la póliza",

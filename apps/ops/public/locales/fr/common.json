@@ -993,6 +993,7 @@
                     "pensionplan": "Régime de retraite",
                     "ira-simple": "SIMPLE IRA (Plan d'intéressement à l'épargne pour les employés)",
                     "q401a": "Plan 401(a) qualifié",
+                    "inheritedrothindividualretirementaccount": "Compte de retraite individuel Roth hérité",
                     "BannerLink": {
                         "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
                     }
@@ -3047,10 +3048,9 @@
                 "yearsOld_zero": "-- années"
             },
             "policyTimeline": {
-                "ageOfContract": "Âge du contrat",
-                "ageOfPolicy": "Âge de la police",
                 "contractLength": "Longueur du contrat",
                 "contractTimeline": "Chronologie du contrat",
+                "contractYear": "Année du contrat",
                 "issueDate": "Date de souscription",
                 "fixedCostPeriod": "Période de coût fixe",
                 "fixedCostPeriodTooltip": "Pendant la période de coût fixe, il n'y a pas de frais d'assurance pour cette police. Le coût de l'assurance est exactement ce que cela implique : c'est le montant que l'assureur facture pour couvrir le risque d'assurer la vie d'une personne. En fin de compte, cela signifie que les détenteurs de cette police profitent d'un coût inférieur pour posséder et maintenir leur assurance active pendant la période de coût fixe. Une fois que la période de coût fixe se termine, les frais d'assurance commenceront.",
@@ -3061,6 +3061,7 @@
                 "nYearsLeft": "Il reste {{n}} ans",
                 "oneYear": "1 an",
                 "oneYearLeft": "Il reste 1 an",
+                "policyYear": "Año de póliza",
                 "policyLengthTooltip": "La durée de la police correspond à sa durée de validité. Certaines polices ont une durée déterminée (exprimée en nombre d'années) et une date de fin, tandis que d'autres durent jusqu'au décès de l'assuré.",
                 "policyTimeline": "Chronologie de la police",
                 "freeLookEndDate": "Date de fin de la consultation gratuite"

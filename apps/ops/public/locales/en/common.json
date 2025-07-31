@@ -3036,7 +3036,8 @@
                 "q403b": "Qualified 403(b) Plan",
                 "q457deferredcomp": "Qualified 457 Deferred Compensation Plan",
                 "pensionplan": "Pension Plan",
-                "ira-simple": "SIMPLE IRA (Savings Incentive Match Plan for Employees)"
+                "ira-simple": "SIMPLE IRA (Savings Incentive Match Plan for Employees)",
+                "inheritedrothindividualretirementaccount": "Inherited Roth Individual Retirement Account"
             },
             "contestability": {
                 "activeBadgeTooltip": "If there's a death claim during the contestability period, the carrier will take extra care to verify the insured was honest during their application. Carrier may even contest the claim.",
@@ -3076,10 +3077,9 @@
                 "yearsOld_zero": "-- years old"
             },
             "policyTimeline": {
-                "ageOfContract": "Age of contract",
-                "ageOfPolicy": "Age of policy",
                 "contractLength": "Contract length",
                 "contractTimeline": "Contract Timeline",
+                "contractYear": "Contract Year",
                 "fixedCostPeriod": "Fixed cost period",
                 "fixedCostPeriodTooltip": "During the fixed cost period, there is no cost of insurance charge for this policy. The cost of insurance is exactly what it sounds like: it's how much the carrier charges to cover the risk of insuring a person's life. Ultimately this means that owners of this policy enjoy a lower cost to own and keep their insurance active during the fixed cost period. Once the fixed cost period ends, cost of insurance charges will start.",
                 "issueDate": "Issue date",
@@ -3090,6 +3090,7 @@
                 "nYearsLeft": "{{n}} years left",
                 "oneYear": "1 year",
                 "oneYearLeft": "1 year left",
+                "policyYear": "Policy year",
                 "policyLength": "Policy length",
                 "policyLengthTooltip": "Policy length is just what it sounds like: it's how long the policy lasts. Some policies have a set term (shown in number of years) and end date, while others last until death of the insured.",
                 "policyTimeline": "Policy Timeline",
@@ -6765,7 +6766,7 @@
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
-    "usage":{
+    "usage": {
         "date": "Date",
         "exportToCSV": "Export to CSV",
         "tabs": {
@@ -6783,13 +6784,13 @@
             "date": "Date",
             "exportToCSV": "Export to CSV"
         },
-        "pageViews" : {
-            "zinniaLivePageViews":{
-                 "title" : "Zinnia Live Page Views"
-        },
-        "zinniaLiveCaseViews": {
-            "title" : "Zinnia Live Case Views by Transaction"
-        }
+        "pageViews": {
+            "zinniaLivePageViews": {
+                "title": "Zinnia Live Page Views"
+            },
+            "zinniaLiveCaseViews": {
+                "title": "Zinnia Live Case Views by Transaction"
+            }
         }
     },
     "clientCase": {
