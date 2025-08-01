@@ -60,7 +60,7 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
                 >
                     <a
                         className={
-                            'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10'
+                            'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-2 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10 text-nowrap w-full'
                         }
                         href={apexUrl}
                     >
@@ -71,10 +71,13 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
             )}
 
             {showCommissions && (
-                <DropdownMenu.Item onSelect={handleAnalytics}>
+                <DropdownMenu.Item
+                    onSelect={handleAnalytics}
+                    className="w-full"
+                >
                     <Link
                         className={
-                            'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10'
+                            'default-focus flex items-center gap-2 rounded-sm px-4 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10 w-full text-nowrap'
                         }
                         href={
                             t('site.navLinks.commissions.link') ??
@@ -90,11 +93,9 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
                     </Link>
                 </DropdownMenu.Item>
             )}
-            <DropdownMenu.Item onSelect={handleAnalytics}>
+            <DropdownMenu.Item onSelect={handleAnalytics} className="w-full">
                 <a
-                    className={
-                        'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-0 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10'
-                    }
+                    className="default-focus flex items-center gap-2 rounded-sm px-4 py-2 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10 w-full text-nowrap"
                     href={t('auth.logout.link') ?? '/api/auth/logout'}
                 >
                     <Icon type={IconType.LOGOUT} width={20} height={20} />
