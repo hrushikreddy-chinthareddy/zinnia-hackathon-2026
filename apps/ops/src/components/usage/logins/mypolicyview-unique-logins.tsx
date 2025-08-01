@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { UserActivityGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
@@ -24,8 +23,15 @@ import Typography, {
 import { getUserActivityCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import LoginsHeaderLayout from './logins-header-layout';
-import { generateSeries, startDates, TimeframeFilterOptions } from './utils';
+import {
+    downloadUserActivityCSV,
+    generateSeries,
+    startDates,
+    TimeframeFilterOptions,
+} from './utils';
+import { TotalCount } from '../total-count';
+import UsageHeaderLayout from '../usage-common-header';
+import { generateCSVFileName } from '../utils';
 
 export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
     const { t } = useTranslation();
@@ -82,38 +88,24 @@ export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
         '#C0C64F',
     ]);
     const tickInterval = calculateTickInterval(timerange);
-    const csvFileName = `MyPolicyView Unique Logins ${dayjs(
-        timerange.from
-    ).format(defaultDateFormat)} to ${dayjs(timerange.to).format(
-        defaultDateFormat
-    )}`;
     return (
         <div className="flex w-1/2 flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h justify-between">
-            <LoginsHeaderLayout
+            <UsageHeaderLayout
                 title={title}
                 data={myPolicyViewLoginsData?.data ?? []}
-                csvFileName={csvFileName}
+                csvFileName={generateCSVFileName(
+                    'MyPolicyView Unique Logins',
+                    timerange
+                )}
+                csvFunction={downloadUserActivityCSV}
             />
             <div className="flex items-center justify-end gap-4">
-                {myPolicyViewDataFetching ? (
-                    <div className="blur">
-                        <div className="flex items-center h-full mt-5">
-                            <Typography variant={TypographyVariant.BodySm}>
-                                {myPolicyViewLoginsData?.totalElements?.toLocaleString() ||
-                                    '0'}{' '}
-                                total
-                            </Typography>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="flex items-center h-full mt-5">
-                        <Typography variant={TypographyVariant.BodySm}>
-                            {myPolicyViewLoginsData?.totalElements?.toLocaleString() ||
-                                '0'}{' '}
-                            total
-                        </Typography>
-                    </div>
-                )}
+                <TotalCount
+                    isDataFetching={myPolicyViewDataFetching}
+                    data={
+                        myPolicyViewLoginsData ?? { data: [], totalElements: 0 }
+                    }
+                />
 
                 <TimeFilter
                     defaultValue={timeframeRadio}

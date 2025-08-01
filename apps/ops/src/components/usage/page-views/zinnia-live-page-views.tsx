@@ -23,15 +23,17 @@ import Typography, {
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import PageViewsHeaderLayout from './page-views-header-layout';
 import { tooltipFormatter } from './page-views-tooltip';
 import {
-    generateCSVFileName,
     generateSeries,
+    PrepareUserViewsCSV,
     roles,
     startDates,
     TimeframeFilterOptions,
 } from './utils';
+import { TotalCount } from '../total-count';
+import UsageHeaderLayout from '../usage-common-header';
+import { colors, generateCSVFileName } from '../utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const [role, setRole] = useState('All');
@@ -48,8 +50,6 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
         defaultOption: TimeframeFilterOptions.Last1Month,
         dateFormat: defaultDateFormat,
     });
-
-    const colors = ['#0B7EAE', '#072838', '#6CC2F6'];
 
     const filter = {
         pageType: ['Cases', 'Policies'],
@@ -82,15 +82,16 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const chartNotRenderable = zinniaLivePageViewsDataError || !series?.length;
     return (
         <div className="flex w-1/2 flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h">
-            <PageViewsHeaderLayout
+            <UsageHeaderLayout
                 title={title}
                 data={zinniaLivePageViewsData?.data || []}
                 csvFileName={generateCSVFileName(
                     'Zinnia Live',
-                    role,
                     timerange,
+                    role,
                     'usage.tabs.pageViews'
                 )}
+                csvFunction={PrepareUserViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">
                 <div className="mb-4 md:mb-0 md:w-1/3">
@@ -104,19 +105,16 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
                     />
                 </div>
                 <div className="flex items-center gap-4">
-                    <div
-                        className={
-                            zinniaLivePageViewsDataFetching ? 'blur' : ''
+                    <TotalCount
+                        isDataFetching={zinniaLivePageViewsDataFetching}
+                        data={
+                            zinniaLivePageViewsData ?? {
+                                data: [],
+                                totalElements: 0,
+                            }
                         }
-                    >
-                        <div className="flex items-center h-full mt-5">
-                            <Typography variant={TypographyVariant.BodySm}>
-                                {zinniaLivePageViewsData?.totalElements?.toLocaleString() ||
-                                    '0'}{' '}
-                                total
-                            </Typography>
-                        </div>
-                    </div>
+                    />
+
                     <TimeFilter
                         defaultValue={timeframeRadio}
                         onRadioChange={(val) =>

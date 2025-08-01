@@ -4,11 +4,8 @@ import {
 } from '@xd/api-types/dist/generated-types/analytics';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { useTranslation } from 'react-i18next';
 
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
-import { Timerange } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
-import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 
 import { downloadCSV } from '../utils';
@@ -88,20 +85,4 @@ export const PrepareUserViewsCSV = (
 
     const csv = rows.join('\n');
     downloadCSV(csv, filename);
-};
-
-export const generateCSVFileName = (
-    title: string,
-    role: string,
-    timerange: Timerange,
-    optionaltitle?: string
-) => {
-    const { t } = useTranslation();
-    const rolePart = role === 'All' ? 'All Roles' : role;
-    const fromDate = dayjs(timerange.from).format(defaultDateFormat);
-    const toDate = dayjs(timerange.to).format(defaultDateFormat);
-
-    return `${t(title)} ${rolePart} ${t(
-        optionaltitle || ''
-    )} ${fromDate} to ${toDate}`;
 };

@@ -2,6 +2,11 @@ import {
     UserActivityGroupByEnum,
     UserViewsGroupByEnum,
 } from '@xd/api-types/dist/generated-types/analytics';
+import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+
+import { Timerange } from '../dashboard/filters/time-filter/useTimeRangeFilter';
+import { defaultDateFormat } from '../dashboard/utils';
 
 export const friendlyGroupByName: Record<UserActivityGroupByEnum, string> = {
     [UserActivityGroupByEnum.ACTIVITY_DAY]: 'Activity day',
@@ -32,3 +37,36 @@ export const downloadCSV = (csv: string, filename: string) => {
     link.click();
     document.body.removeChild(link);
 };
+
+export const generateCSVFileName = (
+    title: string,
+    timerange: Timerange,
+    role?: string,
+    optionaltitle?: string
+) => {
+    const { t } = useTranslation();
+    const rolePart = role === 'All' ? 'All Roles' : role;
+    const fromDate = dayjs(timerange.from).format(defaultDateFormat);
+    const toDate = dayjs(timerange.to).format(defaultDateFormat);
+
+    return `${t(title)} ${rolePart || ''} ${t(
+        optionaltitle || ''
+    )} ${fromDate} to ${toDate}`;
+};
+
+export const colors = [
+    '#00628B',
+    '#072838',
+    '#6CC2F6',
+    '#D47ACC',
+    '#C0C64F',
+    '#F26003',
+    '#E89510',
+    '#DA021C',
+    '#752671',
+    '#489A9D',
+    '#BB3D05',
+    '#3A3E01',
+    '#560F08',
+    '#9D5400',
+];

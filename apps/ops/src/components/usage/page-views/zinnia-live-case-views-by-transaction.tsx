@@ -23,15 +23,17 @@ import Typography, {
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import PageViewsHeaderLayout from './page-views-header-layout';
 import { tooltipFormatter } from './page-views-tooltip';
 import {
-    generateCSVFileName,
     generateSeries,
+    PrepareUserViewsCSV,
     roles,
     startDates,
     TimeframeFilterOptions,
 } from './utils';
+import { TotalCount } from '../total-count';
+import UsageHeaderLayout from '../usage-common-header';
+import { colors, generateCSVFileName } from '../utils';
 
 export const ZinniaLiveCaseViewsByTransaction = ({
     title,
@@ -52,23 +54,6 @@ export const ZinniaLiveCaseViewsByTransaction = ({
         defaultOption: TimeframeFilterOptions.Last1Month,
         dateFormat: defaultDateFormat,
     });
-
-    const colors = [
-        '#00628B',
-        '#072838',
-        '#6CC2F6',
-        '#D47ACC',
-        '#C0C64F',
-        '#F26003',
-        '#E89510',
-        '#DA021C',
-        '#752671',
-        '#489A9D',
-        '#BB3D05',
-        '#3A3E01',
-        '#560F08',
-        '#9D5400',
-    ];
 
     const filter = {
         pageType: ['Cases'],
@@ -103,14 +88,15 @@ export const ZinniaLiveCaseViewsByTransaction = ({
 
     return (
         <div className="flex w-1/2 flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h">
-            <PageViewsHeaderLayout
+            <UsageHeaderLayout
                 title={title}
                 data={zinniaLiveCaseViewsByTransactionData?.data || []}
                 csvFileName={generateCSVFileName(
                     'usage.pageViews.zinniaLiveCaseViews.title',
-                    role,
-                    timerange
+                    timerange,
+                    role
                 )}
+                csvFunction={PrepareUserViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">
                 <div className="mb-4 md:mb-0 md:w-1/3">
@@ -124,21 +110,18 @@ export const ZinniaLiveCaseViewsByTransaction = ({
                     />
                 </div>
                 <div className="flex items-center gap-4">
-                    <div
-                        className={
+                    <TotalCount
+                        isDataFetching={
                             zinniaLiveCaseViewsByTransactionDataFetching
-                                ? 'blur'
-                                : ''
                         }
-                    >
-                        <div className="flex items-center h-full mt-5">
-                            <Typography variant={TypographyVariant.BodySm}>
-                                {zinniaLiveCaseViewsByTransactionData?.totalElements?.toLocaleString() ||
-                                    '0'}{' '}
-                                total
-                            </Typography>
-                        </div>
-                    </div>
+                        data={
+                            zinniaLiveCaseViewsByTransactionData ?? {
+                                data: [],
+                                totalElements: 0,
+                            }
+                        }
+                    />
+
                     <TimeFilter
                         defaultValue={timeframeRadio}
                         onRadioChange={(val) =>

@@ -1,4 +1,7 @@
-import { UserActivityOutputLevel1 } from '@xd/api-types/dist/generated-types/analytics';
+import {
+    UserActivityOutputLevel1,
+    UserViewsOutputLevel1,
+} from '@xd/api-types/dist/generated-types/analytics';
 import { Icon, IconType, Link } from '@zinnia/bloom/components';
 import { useTranslation } from 'react-i18next';
 
@@ -6,19 +9,22 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 
-import { downloadUserActivityCSV } from './utils';
-
-type LoginsCommonLayoutProps = {
+type UsageCommonLayoutProps = {
     title: string;
-    data: UserActivityOutputLevel1[];
+    data: UserActivityOutputLevel1[] | UserViewsOutputLevel1[];
     csvFileName: string;
+    csvFunction: (
+        data: UserActivityOutputLevel1[] | UserViewsOutputLevel1[],
+        csvFileName: string
+    ) => void;
 };
 
-const LoginsHeaderLayout = ({
+const UsageHeaderLayout = ({
     title,
     data,
     csvFileName,
-}: LoginsCommonLayoutProps) => {
+    csvFunction,
+}: UsageCommonLayoutProps) => {
     const { t } = useTranslation();
     return (
         <div className="flex justify-between items-center w-full">
@@ -26,7 +32,7 @@ const LoginsHeaderLayout = ({
             <div
                 className="flex items-center gap-2"
                 onClick={() => {
-                    data.length && downloadUserActivityCSV(data, csvFileName);
+                    data.length && csvFunction(data, csvFileName);
                 }}
             >
                 <Icon type={IconType.DOWNLOAD} />
@@ -36,4 +42,4 @@ const LoginsHeaderLayout = ({
     );
 };
 
-export default LoginsHeaderLayout;
+export default UsageHeaderLayout;

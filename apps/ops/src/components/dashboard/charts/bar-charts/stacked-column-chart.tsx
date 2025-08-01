@@ -8,6 +8,8 @@ interface StackedColumnChartProps {
     title?: string;
     colors: string[];
     yAxisTitle: string;
+    xAxisTitle?: string;
+    xAxisLabelRoatationRequired?: boolean;
 }
 
 export const StackedColumnChart: FC<StackedColumnChartProps> = ({
@@ -16,6 +18,8 @@ export const StackedColumnChart: FC<StackedColumnChartProps> = ({
     title,
     colors,
     yAxisTitle,
+    xAxisTitle = '',
+    xAxisLabelRoatationRequired = false,
 }) => {
     const chartOptions: Highcharts.Options = useMemo(
         () => ({
@@ -38,12 +42,32 @@ export const StackedColumnChart: FC<StackedColumnChartProps> = ({
             xAxis: {
                 type: 'category',
                 categories,
+                ...(xAxisTitle && {
+                    title: {
+                        text: `<div class="typography-labels-label-md">${xAxisTitle}</div>`,
+                        useHtml: true,
+                        style: {
+                            color: '#212121',
+                        },
+                    },
+                }),
+                labels: {
+                    style: {
+                        color: '#212121',
+                    },
+                    ...(xAxisLabelRoatationRequired && {
+                        rotation: -45,
+                    }),
+                },
             },
             yAxis: {
                 min: 0,
                 title: {
                     text: `<div class="typography-labels-label-md">${yAxisTitle}</div>`,
                     useHtml: true,
+                    style: {
+                        color: '#212121',
+                    },
                 },
             },
             legend: {

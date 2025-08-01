@@ -1,9 +1,12 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabContent } from '@zinnia/bloom/components';
 import { FgaRoles } from '@zinnia/utils';
+import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useEffect } from 'react';
 
 import { PageHead } from '@deps/components/page-title';
+import { Activity } from '@deps/components/usage/activity/activity';
 import { Logins } from '@deps/components/usage/logins/logins';
 import { UsageResponsiveLayout } from '@deps/components/usage/logins/usage-responsive-layout';
 import { PageViews } from '@deps/components/usage/page-views/page-views';
@@ -40,6 +43,14 @@ interface UsagePageProps extends SegmentTrackedPageProps {
 const UsagePage = ({ user }: UsagePageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Usage);
 
+    useEffect(() => {
+        Highcharts.setOptions({
+            lang: {
+                thousandsSep: ',',
+            },
+        });
+    }, []);
+
     return (
         <>
             <PageHead titleKey="usage" />
@@ -53,10 +64,9 @@ const UsagePage = ({ user }: UsagePageProps) => {
                         <TabContent value={UsageTabs.PAGE_VIEWS}>
                             <PageViews />
                         </TabContent>
-                        {/* These are upcoming tabs */}
-                        {/* <TabContent value={UsageTabs.ACTIVITY}>
-              <Logins />
-            </TabContent> */}
+                        <TabContent value={UsageTabs.ACTIVITY}>
+                            <Activity />
+                        </TabContent>
                     </div>
                 </UsageTabNav>
             </UsageResponsiveLayout>

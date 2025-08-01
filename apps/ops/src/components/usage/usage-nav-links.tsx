@@ -14,8 +14,7 @@ import { useTranslation } from 'react-i18next';
 export enum UsageTabs {
     LOGINS = 'logins',
     PAGE_VIEWS = 'page-views',
-    // This is upcoming tab
-    // ACTIVITY = 'activity',
+    ACTIVITY = 'activity',
 }
 const DEFAULT_TAB = UsageTabs.LOGINS;
 
@@ -58,24 +57,27 @@ export const UsageTabNav: FC<PropsWithChildren> = ({ children }) => {
                         width={24}
                         height={24}
                         className="hidden lg:block"
-                    />{' '}
+                    />
                     {t('usage.tabs.logins')}
                 </TabTrigger>
-
                 <TabTrigger value={UsageTabs.PAGE_VIEWS}>
                     <Icon
                         type={IconType.DASHBOARD}
                         width={24}
                         height={24}
                         className="hidden lg:block"
-                    />{' '}
+                    />
                     {toTitleCase('page views')}
                 </TabTrigger>
-                {/* This is upcoming tabbs*/}
-                {/* <TabTrigger value={UsageTabs.ACTIVITY}>
-          <Icon type={IconType.COLLECTION} width={24} height={24} className="hidden lg:block" />{' '}
-          {toTitleCase('activity')}
-        </TabTrigger> */}
+                <TabTrigger value={UsageTabs.ACTIVITY}>
+                    <Icon
+                        type={IconType.COLLECTION}
+                        width={24}
+                        height={24}
+                        className="hidden lg:block"
+                    />
+                    {toTitleCase('activity')}
+                </TabTrigger>
             </TabList>
             {children}
         </TabGroup>
