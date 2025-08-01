@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { ParsedUrlQuery } from 'querystring';
 import { useEffect, useState } from 'react';
 
 import { ClientCasePaginator } from '@deps/components/client-case/client-case-list/paginator/client-case-paginator';
@@ -206,8 +205,15 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
 
-            const { eappid } = context.query as ParsedUrlQuery;
-            const _eAppId = typeof eappid === 'string' ? eappid : '';
+            // parse the desire queryParam to lowercase and return it
+            const loweredCaseEAppIdQueryParam = Object.entries(
+                context.query
+            ).find(([key]) => key.toLowerCase() === 'eappid')?.[1];
+
+            const _eAppId =
+                typeof loweredCaseEAppIdQueryParam === 'string'
+                    ? loweredCaseEAppIdQueryParam
+                    : '';
 
             if (_eAppId) {
                 // Step 1: Search existing client cases if and eAppId is on the query string
