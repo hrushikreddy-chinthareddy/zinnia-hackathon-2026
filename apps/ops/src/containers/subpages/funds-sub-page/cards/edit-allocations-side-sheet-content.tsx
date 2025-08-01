@@ -382,6 +382,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
                     sentenceCase={false}
                     variant={LabelVariant.LabelLg}
                 />
+
                 <div className="grid max-w-[436px] gap-2">
                     {caseOptions
                         .sort((a, b) =>

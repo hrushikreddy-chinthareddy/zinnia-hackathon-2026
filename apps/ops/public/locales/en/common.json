@@ -3242,7 +3242,9 @@
                 "nextSweepDateTooltip": "On this date, all money in the holding fund will be \"swept\" or moved into the policy's various funds, according to the owner's selected fund allocations. In most cases, the sweep date happens on the same date every month.",
                 "noFunds": "Nothing to show.",
                 "type": "Type",
-                "years": "$t(temporal.years, {{count}})"
+                "years": "$t(temporal.years, {{count}})",
+                "sheetDetail": "Details",
+                "segmentDetails": "Segment Details"
             },
             "segmentsTable": {
                 "segmentID": "Segment ID",
@@ -3256,7 +3258,12 @@
                 "segmentCap": "Segment cap",
                 "segmentCapTooltip": "This is the rate ceiling of what this fund can earn. Each of the funds in the policy will follow a certain stock market index (like S&P 500 or Dow Jones Average) during the segment's index period. The money in the segment can earn interest based on the performance of this tracked index fund during this time, but earnings can be limited by a segment cap. For example, even the supporting index grows a lot, the earnings can not exceed the segment cap rate.",
                 "participationRate": "Participation rate",
-                "participationRateTooltip": "This is the rate ceiling of what this fund can earn. Each of the funds in the policy will follow a certain stock market index (like S&P or Dow Jones Average) during the segment's index period. The money in the segment can earn interest based on the performance of this tracked index fund during this time, but earnings can be limited by a participation rate. For example, if the participation cap is 80% and the tracked index fund increases by 15% during the segment period, the interest credit will be limited to 80% of the 15% gain, so the money will only earn 12% (80% × 15% = 12%)."
+                "participationRateTooltip": "The participation rate determines how the account may be credited with interest. For example, if the  account is tracking an index that increases 10% between the start and end of a segment, and the participation rate is 80%, the account will be credited with 8% interest.",
+                "capRate": "Cap rate",
+                "capRateTooltip": "Cap means a maximum rate that may be used in determining the index interest rate for an index account. For example, if the index increases 10% between the start and end of a segment, and your segment cap is 5%, the account will be credited with 5% interest.",
+                "indexFundID": "ID",
+                "indexPeriod": "Index period",
+                "indexPeriodTooltip": "This is a set time during which the money within the segment can earn interest based on the rules of the fund or account. The start date is always the day that money was “swept” or moved into the segment. The end date is when the segment closes. In most cases, the end date is 12 months from the start date."
             }
         },
         "extras": {

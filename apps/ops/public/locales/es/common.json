@@ -3210,7 +3210,9 @@
                 "nextSweepDateTooltip": "En esta fecha, todo el dinero en el fondo de retención será \"barrido\" o transferido a los diversos fondos de la póliza, según las asignaciones de fondos seleccionadas por el propietario. En la mayoría de los casos, la fecha de barrido ocurre en la misma fecha todos los meses.",
                 "noFunds": "Nada que mostrar.",
                 "type": "Tipo",
-                "years": "$t(temporal.years, {{count}})"
+                "years": "$t(temporal.years, {{count}})",
+                "sheetDetail": "Detalles",
+                "segmentDetails": "Detalles del segmento"
             },
             "segmentsTable": {
                 "segmentID": "ID del segmento",
@@ -3224,7 +3226,12 @@
                 "segmentCap": "Límite del segmento",
                 "segmentCapTooltip": "Este es el techo de la tasa de lo que puede ganar este fondo. Cada uno de los fondos en la póliza seguirá un cierto índice del mercado de valores (como S&P 500 o Dow Jones Average) durante el período del índice del segmento. El dinero en el segmento puede ganar intereses según el rendimiento de este fondo índice seguido durante este tiempo, pero las ganancias pueden estar limitadas por un límite del segmento. Por ejemplo, incluso si el índice de soporte crece mucho, las ganancias no pueden exceder la tasa del límite del segmento.",
                 "participationRate": "Tasa de participación",
-                "participationRateTooltip": "Este es el techo de la tasa de lo que puede ganar este fondo. Cada uno de los fondos en la póliza seguirá un cierto índice del mercado de valores (como S&P o Dow Jones Average) durante el período del índice del segmento. El dinero en el segmento puede ganar intereses según el rendimiento de este fondo índice seguido durante este tiempo, pero las ganancias pueden estar limitadas por una tasa de participación. Por ejemplo, si el límite de participación es del 80% y el fondo índice seguido aumenta un 15% durante el período del segmento, el crédito de interés se limitará al 80% del aumento del 15%, por lo que el dinero solo ganará un 12% (80% × 15% = 12%)."
+                "participationRateTooltip": "La tasa de participación determina cómo se acreditarán los intereses en la cuenta. Por ejemplo, si la cuenta sigue un índice que aumenta un 10 % entre el inicio y el final de un segmento, y la tasa de participación es del 80 %, se acreditará un interés del 8 %.",
+                "capRate": "Tasa de capitalización",
+                "capRateTooltip": "El límite se refiere a la tasa máxima que puede utilizarse para determinar la tasa de interés indexada de una cuenta indexada. Por ejemplo, si el índice aumenta un 10 % entre el inicio y el final de un segmento, y el límite de su segmento es del 5 %, se acreditará un interés del 5 % en la cuenta.",
+                "indexFundID": "ID",
+                "indexPeriod": "Período del índice",
+                "indexPeriodTooltip": "Este es un período determinado durante el cual el dinero del segmento puede generar intereses según las reglas del fondo o la cuenta. La fecha de inicio siempre es el día en que el dinero se transfirió al segmento. La fecha de finalización es el cierre del segmento. En la mayoría de los casos, la fecha de finalización es 12 meses después de la fecha de inicio."
             }
         },
         "extras": {

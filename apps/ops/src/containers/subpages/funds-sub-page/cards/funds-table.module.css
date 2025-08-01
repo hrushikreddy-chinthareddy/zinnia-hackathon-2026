@@ -70,5 +70,7 @@
 
 .tableHeaderContainer {
     display: flex;
+    align-items: center;
+    white-space: nowrap;
     gap: var(--measure-dimension-gap-md);
 }

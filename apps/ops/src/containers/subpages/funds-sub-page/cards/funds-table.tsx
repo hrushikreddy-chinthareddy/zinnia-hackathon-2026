@@ -17,6 +17,7 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { TranslationFiles } from '@deps/config/translations';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import {
     isNullEmptyOrUndefined,
@@ -26,12 +27,22 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import styles from './funds-table.module.css';
 import { FundViewModel } from '../types';
+import IndexVariableFundSideSheet from './index-variable-fund-side-sheet';
 
 interface FundsTableProps {
     funds?: FundViewModel[];
     loading?: boolean;
     policy: PolicyDetails;
 }
+
+export enum FundTypes {
+    Index = 'Index',
+    Variable = 'Variable',
+    Fixed = 'Fixed',
+}
+
+const hasSideSheet = (fundType: string | undefined) =>
+    fundType === FundTypes.Index || fundType === FundTypes.Variable;
 
 const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -49,6 +60,8 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
             </div>
         );
     }
+
+    const sideSheet = useSideSheetContext();
 
     const hasSomeAllocation = funds?.some(
         (fund) => fund.allocation !== DEFAULT_ERROR_STRING
@@ -81,6 +94,15 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                 />
             </TableCell>
         );
+    };
+
+    const openSideBar = (fund: FundViewModel) => {
+        sideSheet.changeSideSheetContent(
+            t('sheetDetail') as string,
+            <IndexVariableFundSideSheet fund={fund} policy={policy} />
+        );
+
+        sideSheet.handleOpen(true);
     };
 
     return (
@@ -198,12 +220,27 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                     funds?.map((fund, index) => {
                         return (
                             <TableRow key={`fund-${fund.fundId}-${index}`}>
-                                <TableCell className={styles.nameCell}>
-                                    <Content
-                                        details={fund.fundName}
-                                        variant={ContentVariant.BodySm}
-                                    />
-                                </TableCell>
+                                {hasSideSheet(fund.type) ? (
+                                    <TableCell className={styles.nameCell}>
+                                        <button
+                                            onClick={() => openSideBar(fund)}
+                                            className="cursor-pointer text-[var(--color-base-text-text-link)] underline underline-offset-4 bg-transparent border-none p-0 text-left"
+                                        >
+                                            <Content
+                                                details={fund.fundName}
+                                                variant={ContentVariant.BodySm}
+                                            />
+                                        </button>
+                                    </TableCell>
+                                ) : (
+                                    <TableCell className={styles.nameCell}>
+                                        <Content
+                                            details={fund.fundName}
+                                            variant={ContentVariant.BodySm}
+                                        />
+                                    </TableCell>
+                                )}
+
                                 <TableCell className={styles.typeCell}>
                                     <Content
                                         details={toSentenceCase(fund.type)}

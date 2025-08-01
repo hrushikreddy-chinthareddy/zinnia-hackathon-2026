@@ -510,6 +510,7 @@ export const getFundDetailsViewModel = async (
         policy?.carrierId,
         planCode
     );
+
     const productFundsInfoMap = await getProductFundsInfoMap(
         policy,
         productFunds?.funds

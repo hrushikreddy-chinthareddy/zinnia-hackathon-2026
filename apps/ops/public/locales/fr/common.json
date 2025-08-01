@@ -3198,7 +3198,9 @@
                 "nextSweepDateTooltip": "À cette date, tout l'argent du fonds de réserve sera \"balayé\" ou transféré dans les différents fonds de la police, selon les allocations de fonds sélectionnées par le propriétaire. Dans la plupart des cas, la date de balayage se produit le même jour chaque mois.",
                 "noFunds": "Rien à afficher.",
                 "type": "Type",
-                "years": "$t(temporal.years, {{count}})"
+                "years": "$t(temporal.years, {{count}})",
+                "sheetDetail": "Détails",
+                "segmentDetails": "Détails du segment"
             },
             "segmentsTable": {
                 "segmentID": "ID de segment.",
@@ -3212,7 +3214,12 @@
                 "segmentCap": "Plafond de segment",
                 "segmentCapTooltip": "Il s'agit du plafond de taux que ce fonds peut atteindre. Chacun des fonds dans la police suivra un certain indice boursier (comme le S&P 500 ou le Dow Jones Average) pendant la période d'indexation du segment. L'argent dans le segment peut générer des intérêts en fonction de la performance de cet indice suivi durant cette période, mais les gains peuvent être limités par un plafond de segment. Par exemple, même si l'indice sous-jacent augmente beaucoup, les gains ne peuvent pas dépasser le taux plafond du segment.",
                 "participationRate": "Taux de participation",
-                "participationRateTooltip": "Il s'agit du plafond de taux que ce fonds peut atteindre. Chacun des fonds dans la police suivra un certain indice boursier (comme le S&P ou le Dow Jones Average) pendant la période d'indexation du segment. L'argent dans le segment peut générer des intérêts en fonction de la performance de cet indice suivi durant cette période, mais les gains peuvent être limités par un taux de participation. Par exemple, si le plafond de participation est de 80 % et que l'indice suivi augmente de 15 % pendant la période du segment, le crédit d'intérêt sera limité à 80 % de la hausse de 15 %, donc l'argent ne gagnera que 12 % (80 % × 15 % = 12 %)."
+                "participationRateTooltip": "Le taux de participation détermine le mode de crédit des intérêts sur le compte. Par exemple, si le compte suit un indice qui augmente de 10 % entre le début et la fin d'un segment et que le taux de participation est de 80 %, le compte sera crédité de 8 % d'intérêts.",
+                "capRate": "Taux plafond",
+                "capRateTooltip": "Le plafond désigne le taux maximal pouvant être utilisé pour déterminer le taux d'intérêt de l'indice d'un compte indiciel. Par exemple, si l'indice augmente de 10 % entre le début et la fin d'un segment et que le plafond de votre segment est de 5 %, le compte sera crédité d'un intérêt de 5 %.",
+                "indexFundID": "ID",
+                "indexPeriod": "Période d'indexation",
+                "indexPeriodTooltip": "Il s'agit d'une période définie pendant laquelle les fonds du segment peuvent générer des intérêts, conformément aux règles du fonds ou du compte. La date de début correspond toujours au jour où les fonds ont été transférés dans le segment. La date de fin correspond à la clôture du segment. Dans la plupart des cas, la date de fin est fixée à 12 mois après la date de début."
             }
         },
         "extras": {
