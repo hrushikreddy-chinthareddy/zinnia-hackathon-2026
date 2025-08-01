@@ -27,16 +27,7 @@ class EnterpriseTokenHttp extends HttpRequest {
             await this.refreshToken();
         }
         const correlationId = loggingCtx?.correlationId || uuid4();
-        const now = performance.now();
-        // const session = await getSession();
-        // const loggingContext = {
-        //   userInfo: getUserInfoFromSession(session),
-        //   url: input?.toString(),
-        //   method: init?.method,
-        //   correlationId,
-        //   file: 'enterprise-api-token-http.ts',
-        //   function: 'request',
-        // };
+
         logTrace('enterprise-api-token-http::request::start', loggingCtx);
 
         const requestInit: RequestInit = init || {};
@@ -53,12 +44,6 @@ class EnterpriseTokenHttp extends HttpRequest {
         };
 
         const result = await fetch(input, requestInit);
-
-        // const logContext = {
-        //     ...loggingCtx,
-        //     duration: performance.now() - now,
-        //     requestStatus: result.status || 502,
-        // };
 
         logTrace('enterprise-api-token-http::request::complete', loggingCtx);
 

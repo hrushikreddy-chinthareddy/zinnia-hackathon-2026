@@ -60,13 +60,32 @@ export default withAuthAndLogging(
         //     caseId: 'CA0000433484',
         // });
 
+        const method = req.method;
         const { eAppId } = req.query;
-        const response = await EnterpriseTokenApi.get(
-            `${apiServerBaseUrl}/newbusiness/v2/application/${eAppId}`,
-            {},
-            loggingContext
-        );
-        return res.json(await response.json());
+        let response: Response;
+
+        switch (method) {
+            case 'GET':
+                response = await EnterpriseTokenApi.get(
+                    `${apiServerBaseUrl}/newbusiness/v2/application/${eAppId}`,
+                    {},
+                    loggingContext
+                );
+
+                return res.json(await response.json());
+            case 'PATCH':
+                response = await EnterpriseTokenApi.patch(
+                    `${apiServerBaseUrl}/newbusiness/v2/application/${eAppId}`,
+                    JSON.stringify(req.body),
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                    },
+                    loggingContext
+                );
+                return res.json(await response.json());
+            default:
+                return res.status(405).json({ message: 'Method not allowed' });
+        }
     },
     { file: 'reverse-proxy (slug)', function: 'routeHandler' }
 );

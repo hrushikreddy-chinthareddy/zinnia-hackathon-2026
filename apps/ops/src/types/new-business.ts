@@ -118,3 +118,10 @@ export interface NewBusiness {
     policy: Policy;
     illustrations: Illustrations;
 }
+
+export interface NewBusinessResponse {
+    status?: string;
+    timestamp?: Date;
+    message: string;
+    errors?: string[];
+}

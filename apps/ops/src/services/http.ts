@@ -40,4 +40,16 @@ export abstract class HttpRequest {
         init.body = data;
         return this.request(input, init, loggingCtx);
     };
+
+    patch = (
+        input: string | URL | Request,
+        data?: BodyInit | null | undefined,
+        init?: RequestInit | undefined,
+        loggingCtx?: LoggingContext
+    ) => {
+        init = init || {};
+        init.method = 'PATCH';
+        init.body = data;
+        return this.request(input, init, loggingCtx);
+    };
 }
