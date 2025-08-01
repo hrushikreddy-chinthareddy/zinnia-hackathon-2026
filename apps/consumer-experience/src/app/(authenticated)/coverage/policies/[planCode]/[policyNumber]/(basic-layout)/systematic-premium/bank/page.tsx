@@ -16,7 +16,6 @@ const BankPage = async ({ params }: PolicyRequestInputsParams) => {
     {
       policyNumber,
       planCode,
-      paymentProvider: payment.provider,
     },
     loggingContext
   );

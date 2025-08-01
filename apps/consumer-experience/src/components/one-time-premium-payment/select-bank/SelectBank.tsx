@@ -110,9 +110,13 @@ export const SelectBank = ({
                   control={control}
                   rules={{ required: true }}
                   render={({ field }) => (
-                    <label key={`${index}-${bankDetail.branchName}`}>
+                    <label
+                      key={`${index}-${bankDetail.branchName}`}
+                      className={styles.radioCard}
+                    >
                       <BankName
                         bankName={bankDetail.branchName}
+                        accountType={bankDetail.accountType}
                         className="typography-labels-label-lg"
                       />
                       <div
@@ -151,7 +155,11 @@ export const SelectBank = ({
                     </label>
                   )}
                 />
-                {editBankEnabled && <EditBankSidesheet />}
+                {editBankEnabled && (
+                  <div className={styles.editPayment}>
+                    <EditBankSidesheet />
+                  </div>
+                )}
               </div>
             );
           })}

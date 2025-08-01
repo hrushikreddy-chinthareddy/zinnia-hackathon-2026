@@ -1,11 +1,10 @@
-import { OneTimePremiumTransaction } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-  getPremiumValidation,
+  getOneTimePremiumValidation,
   submitOneTimePremiumPayment,
 } from '@/services/bpm';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -18,7 +17,7 @@ export async function POST(
   _request: NextRequest,
   { params }: { params: PolicyRequestInputs }
 ) {
-  const loggingContext = buildNextReqLoggingContext(_request);
+  const loggingContext = await buildNextReqLoggingContext(_request);
   logTrace('bpm::onetimepremium::POST::start', {
     ...loggingContext,
     planCode: params.planCode,
@@ -43,15 +42,16 @@ export async function POST(
     payor: {
       partyId: paymentDetails.partyId,
       bankId: paymentDetails.bankId,
-      paymentForm: OneTimePremiumTransaction.paymentForm.ACH,
+      paymentForm: paymentDetails.paymentForm,
     },
     // TODO: do we need to pass this?
     // reverseInitiator: false
   };
 
-  const ottpValidation = await getPremiumValidation(
+  const ottpValidation = await getOneTimePremiumValidation(
     { planCode, policyNumber },
-    ottpRequest
+    ottpRequest,
+    loggingContext
   );
 
   // Its a little confusing that one of these calls returns data, error object and the other
@@ -72,7 +72,8 @@ export async function POST(
   try {
     const response = await submitOneTimePremiumPayment(
       { planCode, policyNumber },
-      ottpRequest
+      ottpRequest,
+      loggingContext
     );
 
     logTrace('bpm::onetimepremium::POST::complete', {

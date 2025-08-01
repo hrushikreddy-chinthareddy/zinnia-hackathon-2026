@@ -1,13 +1,13 @@
 .bankContainer {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   border: var(--measure-dimension-stroke-sm) solid
     var(--color-base-border-border-light);
   border-radius: var(--measure-dimension-radius-sm);
-  padding: var(--measure-dimension-padding-2xl);
+
   max-width: 375px;
-  cursor: pointer;
+  /* cursor: pointer; */
 
   &:hover {
     border-color: var(--color-states-hover-border-hover-border);
@@ -55,6 +55,17 @@ button.linkClassname {
       color: var(--color-links-color-global-link-dark);
     }
   }
+}
+
+.radioCard {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  padding: var(--measure-dimension-padding-2xl);
+}
+
+.editPayment {
+  padding-right: var(--measure-dimension-padding-2xl);
 }
 
 @media (width > 767px) {

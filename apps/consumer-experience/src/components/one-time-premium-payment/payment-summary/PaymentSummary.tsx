@@ -40,6 +40,12 @@ export const PaymentSummary = ({
         effectiveDate: state.effectiveDate,
         partyId: state.payorBank?.appliesToPartyId,
         bankId: state.payorBank?.bankId,
+        // To integrate with third party banks, we now send paymentForm
+        // as the accountType and rely on the backend service to convert
+        // this to the correct form based on the payment method being used
+        // this was communicated to us by Shrutika
+        // https://se2llc-global.slack.com/archives/C08TKJG89TQ/p1753963380359029?thread_ts=1753836773.602869&cid=C08TKJG89TQ
+        paymentForm: state.payorBank?.accountType,
       };
       return await submitOttp(policyNumber, planCode, ottpRequest);
     },
@@ -47,28 +53,15 @@ export const PaymentSummary = ({
       router.push(currentStepInfo?.nextStepUrl);
     },
     onError: () => {
-      // if (error) {
-      //   if (error === 400) {
-      //     return (
-      //       <PaymentInvalid goToUrl={paymentUrl({ planCode, policyNumber })} />
-      //     );
-      //   }
-      //   return (
-      //     <PaymentError goToUrl={paymentUrl({ planCode, policyNumber })} />
-      //   );
-      // }
       router.push('error');
     },
   });
 
   const submitPayment = () => {
-    if (mutation.isPending) {
-      return;
-    }
     mutation.mutate();
   };
 
-  if (mutation.isPending) {
+  if (mutation.isPending || mutation.isError || mutation.isSuccess) {
     return <PaymentLoading />;
   }
 

@@ -1,6 +1,6 @@
 import { ApiResponse } from '@/services/types'; // Assuming ApiResponse is exported from here
 
-import { getErrorMessage } from './error-details';
+import { getErrorCause, getErrorMessage } from './error-details';
 import { logError, logTrace } from './log-fns';
 import { CommonLogContext } from './server-logging';
 
@@ -54,7 +54,7 @@ export function withLogging<T extends unknown[], R>(
         // @TODO [CUI-590](https://zinnia.atlassian.net/browse/CUI-590): Update data unavailable message
         status: 400,
         name: `ServerFunction::${additionalLoggingContext.functionName} Error`,
-        cause: getErrorMessage(err),
+        cause: getErrorCause(err),
       };
       // 3- Log error
       logError(

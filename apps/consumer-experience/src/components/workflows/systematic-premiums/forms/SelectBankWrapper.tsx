@@ -3,10 +3,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { Loader } from '@zinnia/bloom/components';
 
-import {
-  getAccountTypeDisplay,
-  getBranchName,
-} from '@/components/paymentus/utils';
 import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PaymentProvider } from '@/types/carrier-config';
@@ -37,18 +33,6 @@ export const SelectBankWrapper = ({
     ],
     queryFn: () => getPaymentMethods(policyNumber, planCode, paymentProvider),
     initialData: initialPaymentMethods,
-    select: data => {
-      return paymentProvider === PaymentProvider.PAYMENTUS
-        ? data?.map(paymentMethod => ({
-          ...paymentMethod,
-          accountType: getAccountTypeDisplay(paymentMethod.type!),
-          branchName: getBranchName({
-            type: paymentMethod.type!,
-            bankName: paymentMethod.branchName,
-          }),
-        }))
-        : data;
-    },
   });
 
   const queryClient = useQueryClient();

@@ -2,11 +2,14 @@ import { cookies } from 'next/headers';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { isMockAllowed } from '@/utils';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import {
   MOCK_ANNUITY_COOKIE_KEY,
   MOCK_COOKIE_KEY,
   SHOW_TEST_POLICIES_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
+
+import { getFeatureFlags } from './feature-flags';
 
 export const apiVersion = 'v1';
 export const AUDIENCE = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -28,7 +31,7 @@ export const documentV3ApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/docu
  */
 // TODO: update BPM url to the new one
 // this is the newer version of the BPM API -- this will not exist in production until Farmers release
-export const transactionApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/${apiVersion}/transactions`;
+export const transactionApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/v1/transactions`;
 // this is the older version of the transactions API
 export const bpmApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/bpm/v1/policies`;
 
@@ -40,6 +43,15 @@ export const bpmApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/bpm/v1/poli
  * i.e. do not throw a logError
  */
 export const preferencesBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/preferences/v1`;
+export const aggregationBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/aggregation/v1`;
+
+export const transactionsAPIUrl = async () => {
+  const flags = await getFeatureFlags();
+
+  return flags?.[FEATURE_FLAGS.UPDATED_TRANSACTION_URL]
+    ? transactionApiBaseUrl
+    : bpmApiBaseUrl;
+};
 
 const getMockParam = () => {
   const cookieStore = cookies();

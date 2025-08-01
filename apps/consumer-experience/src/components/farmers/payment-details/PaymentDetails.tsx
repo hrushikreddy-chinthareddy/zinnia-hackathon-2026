@@ -1,6 +1,5 @@
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { getPaymentMethods } from '@/services/payment-methods';
-import { PaymentProvider } from '@/types/carrier-config';
 import {
   buildCommonLogContext,
   CommonLogContext,
@@ -19,7 +18,7 @@ export const PaymentDetails = async ({
 }) => {
   const loggingContext: CommonLogContext = await buildCommonLogContext();
   const { data } = await getPaymentMethods(
-    { paymentProvider: PaymentProvider.PAYMENTUS },
+    { policyNumber, planCode },
     loggingContext
   );
 

@@ -5,10 +5,6 @@ import { FC } from 'react';
 
 import { BankData } from '@/components/bank-data/BankData';
 import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPaymentMethod';
-import {
-  getAccountTypeDisplay,
-  getBranchName,
-} from '@/components/paymentus/utils';
 import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
 import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
@@ -35,16 +31,6 @@ export const PaymentProfilesList: FC<PaymentProfilesListProps> = ({
     queryFn: () =>
       getPaymentMethods(policyNumber, planCode, PaymentProvider.PAYMENTUS),
     initialData: profiles,
-    select: data => {
-      return data?.map(paymentMethod => ({
-        ...paymentMethod,
-        accountType: getAccountTypeDisplay(paymentMethod.type!),
-        branchName: getBranchName({
-          type: paymentMethod.type!,
-          bankName: paymentMethod.branchName,
-        }),
-      }));
-    },
   });
 
   const onAddPaymentMethod = () => {
@@ -59,7 +45,7 @@ export const PaymentProfilesList: FC<PaymentProfilesListProps> = ({
         <BankData
           numberOfAccounts={paymentMethods.length}
           accountNumber={paymentItem.accountNumber}
-          accountType={getAccountTypeDisplay(paymentItem.type)}
+          accountType={paymentItem.accountType}
           checkVerification={verifyIdentityRequired}
           branchName={paymentItem.branchName}
           nameOnAccount={paymentItem.nameOnAccount}

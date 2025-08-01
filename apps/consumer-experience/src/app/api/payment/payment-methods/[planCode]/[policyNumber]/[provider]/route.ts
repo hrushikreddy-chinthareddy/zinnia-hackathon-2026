@@ -30,7 +30,6 @@ export async function GET(
   try {
     const { data, error } = await getPaymentMethods(
       {
-        paymentProvider: params.provider,
         policyNumber: params.policyNumber,
         planCode: params.planCode,
       },

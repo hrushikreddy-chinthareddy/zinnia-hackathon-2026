@@ -1,3 +1,5 @@
+import { AccountType } from '@xd/api-types/dist/generated-types/sor';
+
 import { PaymentusAccountType } from '@/types/paymentus';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -25,7 +27,7 @@ export const accountType: Record<PaymentusAccountType, string> = {
   [PaymentusAccountType.WALMART_PAY]: 'Walmart Pay',
 };
 
-export const creditCardAccountTypes: PaymentusAccountType[] = [
+export const creditCardAccountTypes: (PaymentusAccountType | AccountType)[] = [
   PaymentusAccountType.VISA,
   PaymentusAccountType.MC,
   PaymentusAccountType.AMEX,
@@ -37,6 +39,8 @@ export const creditCardAccountTypes: PaymentusAccountType[] = [
  * If paymentItem is a credit card, show 'VISA' or 'MASTERCARD', etc.
  * If paymentItem is a bank account, show the name of the bank
  * Otherwise show the type of the account
+ * HOPEFULLY a lot of this logic can be removed if the backend normalizes
+ * the bank return
  * @param {PaymentusProfile} paymentItem - The payment item to get the branch name from
  * @returns {string} The branch name
  */
@@ -44,17 +48,33 @@ export const getBranchName = ({
   type,
   bankName,
 }: {
-  type: PaymentusAccountType;
+  type?: PaymentusAccountType | AccountType;
   bankName?: string;
 }) => {
-  if ([PaymentusAccountType.CHQ, PaymentusAccountType.SAV].includes(type)) {
+  if (!type) {
     return bankName || DEFAULT_ERROR_STRING;
   }
 
-  return accountType[type];
+  if (
+    [PaymentusAccountType.CHQ, PaymentusAccountType.SAV].includes(
+      type as PaymentusAccountType
+    )
+  ) {
+    return bankName || DEFAULT_ERROR_STRING;
+  }
+
+  if (
+    [AccountType.CHECKING, AccountType.SAVINGS].includes(type as AccountType)
+  ) {
+    return bankName || DEFAULT_ERROR_STRING;
+  }
+
+  return accountType[type as PaymentusAccountType];
 };
 
-export const getAccountTypeDisplay = (paymentType?: PaymentusAccountType) => {
+export const getAccountTypeDisplay = (
+  paymentType?: PaymentusAccountType | AccountType
+) => {
   if (!paymentType) {
     return DEFAULT_ERROR_STRING;
   }
@@ -65,10 +85,16 @@ export const getAccountTypeDisplay = (paymentType?: PaymentusAccountType) => {
   if (creditCardAccountTypes.includes(paymentType)) {
     return 'Credit Card';
   }
-  if (paymentType === PaymentusAccountType.CHQ) {
+  if (
+    paymentType === PaymentusAccountType.CHQ ||
+    paymentType === AccountType.CHECKING
+  ) {
     return 'Checking';
   }
-  if (paymentType === PaymentusAccountType.SAV) {
+  if (
+    paymentType === PaymentusAccountType.SAV ||
+    paymentType === AccountType.SAVINGS
+  ) {
     return 'Savings';
   }
 

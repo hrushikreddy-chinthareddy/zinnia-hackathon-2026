@@ -151,7 +151,10 @@ export const SummaryForm = ({
           <FieldData Label={<Label>Payment method</Label>}>
             <div className="typography-content-body-sm">
               <div>
-                <BankName bankName={payorBank.branchName} />
+                <BankName
+                  bankName={payorBank.branchName}
+                  accountType={payorBank.accountType}
+                />
               </div>
               <div>
                 <AccountType accountType={payorBank.accountType} />{' '}
