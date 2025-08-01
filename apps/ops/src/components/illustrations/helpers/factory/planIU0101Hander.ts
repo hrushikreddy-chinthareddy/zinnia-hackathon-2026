@@ -4,6 +4,7 @@ import { Result, t, failure, success, Infer } from 'typegate';
 import { v4 as uuid } from 'uuid';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 
@@ -45,6 +46,16 @@ const agentSchema = t.object(
 );
 
 const ridersSchema = t.object(
+    t.optionalProperty(
+        'waiverOfDeductionRider',
+        t.object(
+            t.optionalProperty(
+                'values',
+                t.union(t.array(t.string), t.undefined)
+            ),
+            t.optionalProperty('tableRating', t.union(t.string, t.undefined))
+        )
+    ),
     t.optionalProperty(
         'ownerWaiverOfDeductionRider',
         t.object(
@@ -135,12 +146,34 @@ const ridersSchema = t.object(
     )
 );
 
+const distributionAmountTableSchema = t.optionalProperty(
+    'distributionAmountTable',
+    t.union(
+        t.array(
+            t.object(
+                t.property('id', t.string),
+                t.optionalProperty(
+                    'firstColumn',
+                    t.union(t.number, t.undefined)
+                ),
+                t.property('fromYear', t.number),
+                t.property('through', t.number)
+            )
+        ),
+        t.undefined
+    )
+);
+
 const farmersEntitiesSchema = t.object(
     t.property('illustrationType', t.string),
     t.property('illustrationRequestDate', t.string), // effective-date currently hard coded to today
     t.property('jurisdiction', t.string), // state-of-issue
     t.property('planCode', t.string), // product
     t.property('premiumClass', t.string), // premium-class
+    t.optionalProperty(
+        'tableOrFlatExtraSelection',
+        t.union(t.array(t.union(t.string, t.undefined)), t.undefined)
+    ),
     t.property('baseCoverage', baseCoverageSchema),
     t.property('insured', insuredSchema),
     t.property('agent', agentSchema),
@@ -165,11 +198,47 @@ const farmersEntitiesSchema = t.object(
     t.property('paymentMode', t.string),
     t.property('discountIndicator', t.union(t.array(t.string), t.undefined)), // multiple-policy-owner
     t.property('paymentMethod', t.string),
-    t.property('premiumDuration', t.number),
+    t.property('premiumDuration', t.union(t.number, t.undefined)),
     t.optionalProperty('premiumDurationOption', t.string),
     t.optionalProperty('modalPremiumValue', t.union(t.number, t.undefined)),
+
+    t.optionalProperty(
+        'modalPremiumTable',
+        t.union(
+            t.array(
+                t.object(
+                    t.property('id', t.string),
+                    t.optionalProperty(
+                        'firstColumn',
+                        t.union(t.number, t.undefined)
+                    ),
+                    t.property('fromYear', t.number),
+                    t.property('through', t.number)
+                )
+            ),
+            t.undefined
+        )
+    ),
     t.optionalProperty('preventMec', t.string),
     t.optionalProperty('non1035LumpSumAmount', t.union(t.number, t.undefined)),
+    t.optionalProperty(
+        'scheduleDeathBenefitOption',
+        t.union(t.string, t.undefined)
+    ),
+    t.optionalProperty(
+        'deathBenefitSchedulerValue',
+        t.union(
+            t.array(
+                t.object(
+                    t.property('id', t.string),
+                    t.property('firstColumn', t.string),
+                    t.property('fromYear', t.number),
+                    t.property('through', t.number)
+                )
+            ),
+            t.undefined
+        )
+    ),
     t.optionalProperty(
         'deathBenefitOption',
         t.object(
@@ -209,7 +278,11 @@ const farmersEntitiesSchema = t.object(
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty('exchangeBasis1035', t.union(t.number, t.undefined)),
-    t.optionalProperty('mec1035', t.union(t.string, t.undefined))
+    t.optionalProperty('mec1035', t.union(t.string, t.undefined)),
+    t.optionalProperty('scheduleDistributions', t.union(t.string, t.undefined)),
+    distributionAmountTableSchema,
+
+    t.optionalProperty('distributionOptions', t.union(t.string, t.undefined))
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -226,12 +299,11 @@ const FARMERS_HARDCODED_DATA = {
     baseCoverageId: 'BASE_COVERAGE',
     revisedIllustration: true,
     solveForFrequency: 'ANNUAL',
+    distributionFrequency: 'ANNUAL',
 } as const;
 
-const SUBSTANDARD_PREMIUM_CLASSES = [
-    'StandardConversionNonTobacco',
-    'StandardConversionTobacco',
-];
+// TODO: these constants are shared across all blueprints.
+const SUBSTANDARD_PREMIUM_CLASSES = ['StandardNonTobacco', 'StandardTobacco'];
 
 function createIllustrationPayload(
     answerOutputData: unknown
@@ -323,18 +395,76 @@ function createIllustrationPayload(
         });
     }
 
-    // TODO this needs reviewed with product. DEPU-5382
-    if (values?.riders?.ownerWaiverOfDeductionRider?.values?.length) {
+    if (values?.riders?.waiverOfDeductionRider?.values?.length) {
         riders.push({
-            coverageId: values.riders.ownerWaiverOfDeductionRider?.values[0],
+            coverageId: values.riders.waiverOfDeductionRider?.values[0],
             participants: [
                 {
                     ...baseParticipantForRiders,
-                    // subStandardRating: values.riders.ownerWaiverOfDeductionRider?.tableRating,
+                    subStandardRating:
+                        values.riders.waiverOfDeductionRider?.tableRating,
                 },
             ],
         });
     }
+
+    const flatExtras = [];
+
+    if (
+        SUBSTANDARD_PREMIUM_CLASSES.includes(values.premiumClass) &&
+        values.tableOrFlatExtraSelection?.[0] == 'selectTableOrFlatExtraRatings'
+    ) {
+        if (values.permanentFlatExtra?.amount) {
+            flatExtras.push({
+                type: FARMERS_HARDCODED_DATA.permanentFlatExtraType,
+                amount: values.permanentFlatExtra.amount,
+            });
+        }
+        if (values.temporaryFlatExtra?.amount) {
+            flatExtras.push({
+                type: FARMERS_HARDCODED_DATA.temporaryFlatExtraType,
+                amount: values.temporaryFlatExtra.amount,
+                duration: values.temporaryFlatExtra?.duration,
+                durationType: values.temporaryFlatExtra?.durationType,
+            });
+        }
+    }
+
+    const hasDeathBenefitOption = values.scheduleDeathBenefitOption === 'yes';
+    let deathBenefitSchedule;
+    if (hasDeathBenefitOption) {
+        deathBenefitSchedule = values?.deathBenefitSchedulerValue?.map(
+            (item) => ({
+                from: item.fromYear,
+                through: item.through,
+                value: item.firstColumn,
+            })
+        );
+    }
+
+    const modalPremiumTable = values?.modalPremiumTable?.map((item) => ({
+        from: item.fromYear,
+        through: item.through,
+        value: item.firstColumn,
+    }));
+
+    const distributionSequence = values?.distributionAmountTable?.map(
+        (item) => ({
+            from: {
+                offset: item.fromYear,
+                basis: 'DURATION',
+            },
+            through: {
+                offset: item.through,
+                basis: 'DURATION',
+            },
+            amountType: !item.firstColumn ? 'MAX' : 'AMOUNT',
+            ...(item.firstColumn && { requestedAmount: item.firstColumn }),
+            funding: values.distributionOptions,
+        })
+    );
+
+    const premiumDuration = values.premiumDuration || 0;
 
     const output = {
         calculationType: values.illustrationType,
@@ -356,24 +486,7 @@ function createIllustrationPayload(
                             substandardRating: values.subStandardRating,
                         }),
                         underwritingClass: values.premiumClass,
-                        ...(SUBSTANDARD_PREMIUM_CLASSES.includes(
-                            values.premiumClass
-                        ) && {
-                            flatExtra: [
-                                {
-                                    type: FARMERS_HARDCODED_DATA.permanentFlatExtraType,
-                                    amount: values.permanentFlatExtra?.amount,
-                                },
-                                {
-                                    type: FARMERS_HARDCODED_DATA.temporaryFlatExtraType,
-                                    amount: values.temporaryFlatExtra?.amount,
-                                    duration:
-                                        values.temporaryFlatExtra?.duration,
-                                    durationType:
-                                        values.temporaryFlatExtra?.durationType,
-                                },
-                            ],
-                        }),
+                        flatExtras,
                     },
                 ],
             },
@@ -414,7 +527,7 @@ function createIllustrationPayload(
                 paymentMode: values.paymentMode,
                 discountIndicator: values.discountIndicator?.[0] || 'NON',
                 paymentMethod: values.paymentMethod,
-                premiumDuration: values.premiumDuration,
+                premiumDuration: premiumDuration,
                 premiumDurationOption: 'YEARS', // DEPU-5382
                 faceAmount: {
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
@@ -433,7 +546,7 @@ function createIllustrationPayload(
                     sequence: [
                         {
                             from: FARMERS_HARDCODED_DATA.premiumFrom,
-                            through: values.premiumDuration,
+                            through: premiumDuration,
                             value: values.modalPremiumValue,
                         },
                     ],
@@ -441,23 +554,20 @@ function createIllustrationPayload(
                 doli: 'GPT',
                 preventModifiedEndowment: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
-                deathBenefitOption: {
-                    frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
-                    basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                    sequence: [
-                        {
-                            from: values.deathBenefitOption?.from,
-                            through: values.deathBenefitOption?.thru,
-                            value: values.deathBenefitOption?.value,
+                ...(hasDeathBenefitOption &&
+                    deathBenefitSchedule && {
+                        deathBenefitOption: {
+                            frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
+                            basis: FARMERS_HARDCODED_DATA.premiumBasis,
+                            sequence: deathBenefitSchedule,
                         },
-                    ],
-                },
+                    }),
             }),
             ...(values.solveFor === 'PREMIUM' && {
                 paymentMode: values.paymentMode,
                 discountIndicator: values.discountIndicator?.[0] || 'NON',
                 paymentMethod: values.paymentMethod,
-                premiumDuration: values.premiumDuration,
+                premiumDuration: premiumDuration,
                 premiumDurationOption: 'YEARS',
                 faceAmount: {
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
@@ -476,7 +586,7 @@ function createIllustrationPayload(
                     sequence: [
                         {
                             from: FARMERS_HARDCODED_DATA.premiumFrom,
-                            through: values.premiumDuration,
+                            through: premiumDuration,
                             value: values.solveForPremiumType,
                         },
                     ],
@@ -493,23 +603,20 @@ function createIllustrationPayload(
                 doli: 'GPT',
                 preventModifiedEndowment: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
-                deathBenefitOption: {
-                    frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
-                    basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                    sequence: [
-                        {
-                            from: values.deathBenefitOption?.from,
-                            through: values.deathBenefitOption?.thru,
-                            value: values.deathBenefitOption?.value,
+                ...(hasDeathBenefitOption &&
+                    deathBenefitSchedule && {
+                        deathBenefitOption: {
+                            frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
+                            basis: FARMERS_HARDCODED_DATA.premiumBasis,
+                            sequence: deathBenefitSchedule,
                         },
-                    ],
-                },
+                    }),
             }),
             ...(values.solveFor === 'FACE' && {
                 paymentMode: values.paymentMode,
                 discountIndicator: values.discountIndicator?.[0] || 'NON',
                 paymentMethod: values.paymentMethod,
-                premiumDuration: values.premiumDuration,
+                // premiumDuration: premiumDuration,
                 premiumDurationOption: 'YEARS',
                 faceAmount: {
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
@@ -525,13 +632,14 @@ function createIllustrationPayload(
                 premium: {
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
                     basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                    sequence: [
-                        {
-                            from: FARMERS_HARDCODED_DATA.premiumFrom,
-                            through: values.premiumDuration,
-                            value: values.modalPremiumValue,
-                        },
-                    ],
+                    sequence: modalPremiumTable,
+                    // sequence: [
+                    //     {
+                    //         from: FARMERS_HARDCODED_DATA.premiumFrom,
+                    //         through: premiumDuration,
+                    //         value: values.modalPremiumValue,
+                    //     },
+                    // ],
                 },
                 targetCashValueOption: 'SPECIFY_AMOUNT',
                 targetCashValueAtOption: values.targetCashValueAtOption,
@@ -545,17 +653,14 @@ function createIllustrationPayload(
                 doli: 'GPT',
                 preventModifiedEndowment: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
-                deathBenefitOption: {
-                    frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
-                    basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                    sequence: [
-                        {
-                            from: values.deathBenefitOption?.from,
-                            through: values.deathBenefitOption?.thru,
-                            value: values.deathBenefitOption?.value,
+                ...(hasDeathBenefitOption &&
+                    deathBenefitSchedule && {
+                        deathBenefitOption: {
+                            frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
+                            basis: FARMERS_HARDCODED_DATA.premiumBasis,
+                            sequence: deathBenefitSchedule,
                         },
-                    ],
-                },
+                    }),
             }),
             exchanges: {
                 internalAmount: values.internal1035ExchangeAmount,
@@ -580,6 +685,13 @@ function createIllustrationPayload(
                 fundId: 'FLI002',
             },
         ],
+        ...(values.scheduleDistributions === 'yes' &&
+            distributionSequence && {
+                distributions: {
+                    frequency: FARMERS_HARDCODED_DATA.distributionFrequency,
+                    sequence: distributionSequence,
+                },
+            }),
     };
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
@@ -650,8 +762,10 @@ function mapIllustrationPayloadToEngineInputData(
 // We are not checking the type of the return value right now so type is any
 function getIllustrationDataFromResponse(data: any) {
     return {
-        faceAmount: data.assumed.initial.totalFaceAmount,
-        initialPremium: data.assumed.initial.totalModalPremium,
+        faceAmount:
+            data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
+        initialPremium:
+            data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
     };
 }
 

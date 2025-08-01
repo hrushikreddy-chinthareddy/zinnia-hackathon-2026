@@ -163,7 +163,7 @@ export enum IllustrationFaceAmountAndPremiumBasis {
     RETIREMENT = 'RETIREMENT',
 }
 
-enum FaceAmountOption {
+export enum FaceAmountOption {
     SOLVE_FOR_TARGET_CASH_VALUE = 'SOLVE_FOR_TARGET_CASH_VALUE',
     MINIMUM_NON_MEC = 'MINIMUM_NON_MEC',
 }
@@ -332,7 +332,7 @@ const illustrationPayloadNonInsuredPartySchema = t.intersection(
     )
 );
 
-const illustrationPayloadFaceAmountSequenceSchema = t.object(
+export const illustrationPayloadFaceAmountSequenceSchema = t.object(
     t.property('from', t.number),
     t.property('through', t.number),
     t.property('value', t.union(t.number, t.enum(FaceAmountOption)))

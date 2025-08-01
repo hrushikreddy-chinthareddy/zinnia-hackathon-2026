@@ -72,8 +72,7 @@ const buildClientCaseFromNewBusiness = async (
             insuredState = addresses[0].state;
         }
 
-        // generate title
-        const clientCaseTitle = `${insuredFirstName} ${insuredLastName} from Sureify`;
+        const clientCaseTitle = 'Untitled Client Case';
 
         const insuredDetails = {
             firstName: insuredFirstName,

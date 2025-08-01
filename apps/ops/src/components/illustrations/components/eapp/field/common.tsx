@@ -1,4 +1,5 @@
 import { FieldSizes, RenderingField } from '@zinnia/form-engine-sdk';
+import clsx from 'clsx';
 import ReactHtmlParser from 'html-react-parser';
 import { ReactElement, ReactNode, useEffect, useRef } from 'react';
 
@@ -49,12 +50,16 @@ export function FieldContainer(props: FieldContainerProps): ReactElement {
     //   ) as number;
     // }, [withoutInfoSupplement, field.info, fieldSize]);
 
+    const layoutStyle = field.layout?.size
+        ? style[`layout-${field.layout.size}`]
+        : '';
+
     return (
         <div className={style.fieldContainer}>
             {/*  TODO: handle force new line*/}
             {/* {forceNewLine && <SpacerField styleVariant={styleVariant} />} */}
 
-            <div>{children}</div>
+            <div className={clsx(style.fieldItem, layoutStyle)}>{children}</div>
             {withoutInfoSupplement === false && field.info && (
                 <div>
                     <div>
