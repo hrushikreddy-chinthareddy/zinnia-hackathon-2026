@@ -9,7 +9,7 @@ import { UserClaims } from '@/types/auth';
 import { getAccessToken } from '@/utils/auth';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { isPartyOwner, isPayorOnly } from '@/utils/party';
+import { isPayorOnly } from '@/utils/party';
 
 import { ComponentName } from './types';
 import { getPartyReferenceData } from '../party-reference';
@@ -30,22 +30,26 @@ export const evaluateRules = (
   policy: Policy,
   partyRoles: PartyRole[]
 ): Record<ComponentName, () => boolean> => {
-  const isOwner = isPartyOwner(partyRoles);
   const isPayorNotOwner = isPayorOnly(partyRoles);
+  // This means that we are defaulting to the owner view for any
+  // role that is not explicitly set to be exclusive e.g. payor
+  // this should be temporary, but this whole setup should be temporary
+  // and ideally should be handled by CIAM
+  const isNotPayor = !isPayorOnly(partyRoles);
 
   // Evaluate all rules at once
   return {
-    [ComponentName.OWNER_PROFILE]: () => isOwner,
+    [ComponentName.OWNER_PROFILE]: () => isNotPayor,
     [ComponentName.PAYOR_PROFILE]: () => isPayorNotOwner,
     [ComponentName.OVERVIEW_PAYMENT_HISTORY]: () => isPayorNotOwner,
-    [ComponentName.OVERVIEW_PREMIUM_LINK]: () => isOwner || isPayorNotOwner,
+    [ComponentName.OVERVIEW_PREMIUM_LINK]: () => isNotPayor || isPayorNotOwner,
     [ComponentName.OVERVIEW_PREMIUM_DETAILED_VIEW]: () => isPayorNotOwner,
     [ComponentName.OVERVIEW_ACCOUNT_VALUE]: () =>
-      isOwner && policy.product?.productType !== ProductType.TERM,
-    [ComponentName.OVERVIEW_COVERAGE]: () => isOwner,
-    [ComponentName.OVERVIEW_BENEFICIARIES]: () => isOwner,
-    [ComponentName.OVERVIEW_RIDERS]: () => isOwner,
-    [ComponentName.OVERVIEW_DOCUMENTS]: () => isOwner,
+      isNotPayor && policy.product?.productType !== ProductType.TERM,
+    [ComponentName.OVERVIEW_COVERAGE]: () => isNotPayor,
+    [ComponentName.OVERVIEW_BENEFICIARIES]: () => isNotPayor,
+    [ComponentName.OVERVIEW_RIDERS]: () => isNotPayor,
+    [ComponentName.OVERVIEW_DOCUMENTS]: () => isNotPayor,
   };
 };
 
