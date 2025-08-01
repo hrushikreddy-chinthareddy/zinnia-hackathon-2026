@@ -89,9 +89,9 @@ const getSideSheetValues = (
         moneySource,
         receivedAmount,
         documentSentDate,
-        deliveryMethod,
-        trackingNumber,
     } = entity?.payment || {};
+    const { deliveryMethod } = entity?.payment?.exchangeReplace ?? null;
+    const trackingNumber = entity?.trackingNumber ?? null;
     const rateLockEndDate = exchangeReplace?.rateLockEndDate;
     const rateLockStartDate = exchangeReplace?.rateLockStartDate;
     const values: TransactionEntitySideSheetValues = {
