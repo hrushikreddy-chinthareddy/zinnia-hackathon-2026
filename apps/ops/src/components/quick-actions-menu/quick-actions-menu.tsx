@@ -1,7 +1,6 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery } from '@tanstack/react-query';
 import { Reason } from '@zinnia/api-types/types/sor';
-import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
 import React from 'react';
@@ -482,7 +481,7 @@ export const MenuContextualContent = ({
                     />
                     <MenuContextualItem
                         content={t('documents.sendStatements')}
-                        href={`/contact-center/send-correspondence?planCode=${
+                        href={`/contact-center/send-statement?planCode=${
                             policy.planCode
                         }&policyNumber=${
                             policy.policyNumber
@@ -490,7 +489,7 @@ export const MenuContextualContent = ({
                         onClick={() => {
                             trackClick(
                                 'Send Statements',
-                                `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                                `/contact-center/send-statement?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
                             );
                         }}
                         openInNewTab={true}
@@ -513,7 +512,7 @@ export const MenuContextualContent = ({
                     {sendCorrespondenceEnabled && (
                         <MenuContextualItem
                             content={t('documents.sendCorrespondence')}
-                            href={`/contact-center/send-correspondence?planCode=${
+                            href={`/contact-center/send-statement?planCode=${
                                 policy.planCode
                             }&policyNumber=${
                                 policy.policyNumber
@@ -521,7 +520,7 @@ export const MenuContextualContent = ({
                             onClick={() => {
                                 trackClick(
                                     'Send Correspondence',
-                                    `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                                    `/contact-center/send-statement?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
                                 );
                             }}
                             openInNewTab={true}

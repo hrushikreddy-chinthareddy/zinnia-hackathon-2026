@@ -59,7 +59,7 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-interface SendCorrespondenceProps extends SegmentTrackedPageProps {
+interface SendStatementProps extends SegmentTrackedPageProps {
     policy: Policy;
     shouldShowCaseButton: FeatureFlags;
     shouldShowEmailOption: FeatureFlags;
@@ -67,7 +67,7 @@ interface SendCorrespondenceProps extends SegmentTrackedPageProps {
     shouldShowMailOption: FeatureFlags;
     applicableStatement: StatementTypes[];
 }
-const SendCorrespondence = ({
+const SendStatement = ({
     policy,
     shouldShowCaseButton,
     shouldShowEmailOption,
@@ -75,12 +75,12 @@ const SendCorrespondence = ({
     shouldShowMailOption,
     user,
     applicableStatement,
-}: SendCorrespondenceProps) => {
+}: SendStatementProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: '' });
     const [statements, setStatements] = useState<PolicyDocument[]>([]);
     const { ctiCallNumber, correlationId } = router.query;
 
-    useSegmentPageTracker(user, SegmentPageName.SendCorrespondence, {
+    useSegmentPageTracker(user, SegmentPageName.SendStatement, {
         ctiCallNumber,
         correlationId,
         policyNumber: policy.policyNumber,
@@ -322,10 +322,10 @@ export const getServerSideProps = withPageAuthAndLogging(
         },
     },
     {
-        file: 'contact-center/send-correspondence/index',
+        file: 'contact-center/send-statement/index',
         function: 'getServerSideProps',
-        page: 'contact-center/send-correspondence',
+        page: 'contact-center/send-statement',
     }
 );
 
-export default SendCorrespondence;
+export default SendStatement;

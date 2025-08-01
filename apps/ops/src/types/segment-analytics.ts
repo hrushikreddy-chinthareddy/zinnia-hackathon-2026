@@ -25,6 +25,7 @@ export enum SegmentPageName {
     RenewalCaseDetails = 'Renewal Case Details',
     RmdCase = 'RMD Case',
     SendCorrespondence = 'Send Correspondence',
+    SendStatement = 'Send Statement',
     SendDocument = 'Send Document',
     SendTaxForms = 'Send Tax Forms',
     DefaultCaseDataEntry = 'Default Case Data Entry',
