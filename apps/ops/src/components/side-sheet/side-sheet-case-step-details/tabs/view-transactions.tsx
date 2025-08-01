@@ -41,10 +41,12 @@ export function ViewTransactions({
             ? transactionEntity?.entity?.stopTransactions?.transactions ?? []
             : transactionEntity?.entity?.stopPrograms?.[prop] ?? [];
 
+    // For some cases we will get uncashTransactionIdentified  as undefined we need to support default behaviour
     const isUncashedInProgress =
         prop === StepProgramTypes.UNCASHED &&
-        !transactionEntity?.entity?.stopTransactions
-            ?.uncashTransactionIdentified;
+        transactionEntity?.entity?.stopTransactions
+            ?.uncashTransactionIdentified === false;
+
     browserLogInfo('viewTransactions::isUncashedInProgress', {
         isUncashedInProgress: isUncashedInProgress,
         uncashTransactionIdentified:
