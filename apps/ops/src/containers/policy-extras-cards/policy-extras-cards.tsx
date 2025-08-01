@@ -5,35 +5,34 @@ import { useEffect, useState } from 'react';
 import PolicyExtrasCard from '@deps/components/policy-extras-card/policy-extras-card';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useIsMounted } from '@deps/hooks/useIsMounted';
-import { getRiderBenefitData } from '@deps/queries/api/product-rate';
-import { RiderBenefit } from '@deps/types/product-rate';
 
 import {
     mapPolicyFeaturesToExtrasCards,
     mapPolicyRidersToExtrasCards,
 } from './policy-extras-cards-helpers';
-
-type PolicyExtrasCardsProps = {
-    policyDetails?: PolicyDetails;
-    filterValues: { key: 'type' | 'status'; value: string } | null;
-};
+import EmptyCard from '../people-data-cards/empty-card/empty-card';
+import { ExtraFilters } from '../riders-and-features-sub-page/riders-and-features-sub-page.helpers';
 
 export enum ExtrasCardType {
     Feature = 'Feature',
     Rider = 'Rider',
 }
+type PolicyExtrasCardsProps = {
+    policyDetails?: PolicyDetails;
+    selectedTab: string;
+    filterValues: { key: ExtrasCardType; value: string };
+};
 
 export default function PolicyExtrasCards({
     policyDetails,
+    selectedTab,
     filterValues,
 }: PolicyExtrasCardsProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.extras',
     });
 
-    const [riderBenefitData, setRiderBenefitData] = useState<RiderBenefit[]>(
-        []
-    );
+    const [riderBenefitData, setRiderBenefitData] = useState<Rider[]>([]);
     const [featuresCards, setFeaturesCards] = useState(
         mapPolicyFeaturesToExtrasCards(
             policyDetails?.features.policyFeatures || [],
@@ -53,18 +52,14 @@ export default function PolicyExtrasCards({
     }, [policyDetails, riderBenefitData, t]);
 
     useEffect(() => {
+        // TODO: Convert to use tanstack for data fetching
         const isAnnuity = !!policyDetails?.isAnnuity;
         const getRiderBenefitDataOnPolicy = async () => {
             try {
-                policyDetails?.riders?.map(async (rider: Rider) => {
-                    const riderBenefit = await getRiderBenefitData(
-                        policyDetails,
-                        rider
-                    );
-
+                policyDetails?.riders?.map((rider: Rider) => {
                     setRiderBenefitData((prevData) => [
                         ...prevData,
-                        riderBenefit ?? {},
+                        rider ?? {},
                     ]);
                 });
                 setFeaturesCards(
@@ -86,9 +81,16 @@ export default function PolicyExtrasCards({
         if (isMounted()) getRiderBenefitDataOnPolicy();
     }, [isMounted, policyDetails, t]);
 
-    const filteredCards = [...(featuresCards ?? []), ...(ridersCards ?? [])]
-        .filter((card) =>
-            filterValues ? card[filterValues.key] === filterValues?.value : true
+    const cards = {
+        Feature: featuresCards,
+        Rider: ridersCards,
+    };
+
+    const filteredCards = [...(cards[filterValues.key] ?? [])]
+        .filter(
+            (card) =>
+                card.status === filterValues.value ||
+                filterValues.value === ExtraFilters.All
         )
         .sort((a, b) =>
             a.cardProps?.headerText?.toUpperCase() <
@@ -96,6 +98,18 @@ export default function PolicyExtrasCards({
                 ? -1
                 : 1
         );
+
+    if (!filteredCards.length) {
+        return (
+            <EmptyCard
+                text={
+                    t('general.empty', {
+                        type: selectedTab.toLowerCase(),
+                    }) as string
+                }
+            />
+        );
+    }
 
     return (
         <>

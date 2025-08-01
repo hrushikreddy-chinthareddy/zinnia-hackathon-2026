@@ -1,19 +1,18 @@
-import * as RadioGroup from '@radix-ui/react-radio-group';
+import { TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import PageHeader from '@deps/components/page-header/page-header';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
+import SelectComponent from '@deps/components/select/select';
 import CardContainer from '@deps/containers/card-container/card-container';
-import PolicyExtrasCards from '@deps/containers/policy-extras-cards/policy-extras-cards';
+import PolicyExtrasCards, {
+    ExtrasCardType,
+} from '@deps/containers/policy-extras-cards/policy-extras-cards';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 
 import {
     calculaterFilterProps,
     ExtraFilters,
-    FilterKeys,
 } from './riders-and-features-sub-page.helpers';
 
 const RidersAndFeaturesSubPage = () => {
@@ -22,71 +21,85 @@ const RidersAndFeaturesSubPage = () => {
     });
     const { policyDetails } = useContext(PolicyData);
 
-    const [selectedChip, setSelectedChip] = useState<ExtraFilters>(
+    const [selectedTab, setSelectedTab] = useState<ExtrasCardType>(
+        ExtrasCardType.Rider
+    );
+
+    const [selectedOption, setSelectedOption] = useState<ExtraFilters>(
         ExtraFilters.All
     );
 
-    const chips = calculaterFilterProps({
+    const options = calculaterFilterProps({
         riders: policyDetails.riders,
         features: policyDetails.features.policyFeatures,
         t,
     });
 
-    const filterValues: { key: FilterKeys; value: string } = {
-        key:
-            selectedChip === ExtraFilters.Riders ||
-            selectedChip === ExtraFilters.Features
-                ? FilterKeys.Type
-                : FilterKeys.Status,
-        value: selectedChip,
+    const triggers = options.filter(
+        (opt) =>
+            opt.value === ExtraFilters.Riders ||
+            opt.value === ExtraFilters.Features
+    );
+
+    const selectOption = options.find(
+        (option) => (option.value as string) === selectedTab
+    );
+
+    const filterValues: { key: ExtrasCardType; value: string } = {
+        key: selectedTab,
+        value: selectedOption,
     };
+
+    useEffect(() => {
+        setSelectedOption(ExtraFilters.All);
+    }, [selectedTab]);
 
     return (
         <>
-            <div className="border-b-2 border-gray-200 text-gray-900">
+            <div className="text-gray-900">
                 <PageHeader headerText={t('title') || ''} />
             </div>
-            <CardContainer classNames="flex flex-col gap-4">
+            <CardContainer classNames="flex flex-col gap-4 !pt-0">
                 <>
-                    <Typography
-                        variant={TypographyVariant.FieldLabel}
-                        className="text-gray-900"
-                    >
-                        {t('filter.label')}
-                    </Typography>
-                    <RadioGroup.Root
-                        value={selectedChip}
-                        aria-label="chips"
+                    <TabGroup
+                        defaultValue={selectedTab}
                         onValueChange={(value) =>
-                            setSelectedChip(value as ExtraFilters)
+                            setSelectedTab(value as ExtrasCardType)
                         }
-                        className="md:nowrap flex flex-wrap gap-2"
                     >
-                        <RadioGroup.Item
-                            key="extras-filter-all"
-                            value="All"
-                            className="chip"
-                        >
-                            All
-                        </RadioGroup.Item>
-                        {chips.map((chip) => (
-                            <RadioGroup.Item
-                                key={`extras-filter-${chip.value}`}
-                                value={chip.value}
-                                className="chip"
-                                disabled={chip.disabled}
-                            >
-                                {chip.text}{' '}
-                                {!!chip.quantity && `(${chip.quantity})`}
-                            </RadioGroup.Item>
-                        ))}
-                    </RadioGroup.Root>
+                        <TabList className="!mb-4">
+                            {triggers.map((trigger) => (
+                                <TabTrigger
+                                    value={trigger.value}
+                                    key={trigger.value}
+                                >
+                                    {`${trigger.text} (${trigger?.quantity})`}
+                                </TabTrigger>
+                            ))}
+                        </TabList>
+                    </TabGroup>
+                    <SelectComponent
+                        className="md:w-1/4"
+                        label="Status"
+                        value={selectedOption}
+                        onChange={(value) =>
+                            setSelectedOption(value as ExtraFilters)
+                        }
+                        options={
+                            selectOption?.options.map((opt) => ({
+                                label: opt.text,
+                                value: opt.value as ExtraFilters,
+                                totalValue: opt.quantity,
+                                disabled: opt.disabled,
+                            })) ?? []
+                        }
+                        disabled={selectOption?.disabled}
+                    />
                 </>
                 <PolicyExtrasCards
                     policyDetails={policyDetails}
-                    filterValues={
-                        selectedChip === ExtraFilters.All ? null : filterValues
-                    }
+                    selectedTab={selectedTab}
+                    filterValues={filterValues}
                 />
             </CardContainer>
         </>

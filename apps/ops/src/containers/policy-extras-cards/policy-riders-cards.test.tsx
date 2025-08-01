@@ -1,4 +1,4 @@
-import { act, cleanup, render } from '@testing-library/react';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import {
     RiderType,
     PolicyFeature,
@@ -7,12 +7,8 @@ import {
 } from '@zinnia/api-types/types/sor';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import {
-    BadgeTest,
-    RidersCardsTest,
-} from '@deps/jest/constants/test-id-constants';
+import { RidersCardsTest } from '@deps/jest/constants/test-id-constants';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
-import { mockT } from '@deps/setupTests';
 import {
     BenefitId,
     CoverageId,
@@ -21,7 +17,7 @@ import {
 } from '@deps/types/product-rate';
 
 import { RIDER_NOT_ELECTED } from './consts';
-import PolicyExtrasCards from './policy-extras-cards';
+import PolicyExtrasCards, { ExtrasCardType } from './policy-extras-cards';
 
 const baseRider = {
     amount: undefined,
@@ -152,8 +148,12 @@ jest.mock('@deps/queries/api/product-rate', () => ({
     }),
 }));
 
+jest.mock('react-i18next', () => ({
+    useTranslation: () => ({ t: () => {} }),
+}));
+
 // TODO: Fix tests here after DEPU-2125 is done
-describe.skip('Policy Riders Cards', () => {
+describe('Policy Riders Cards', () => {
     beforeEach(() => {
         ogFeatures = mockPolicy.policyFeatures;
         ogRiders = mockPolicy.riders;
@@ -183,146 +183,73 @@ describe.skip('Policy Riders Cards', () => {
         const { getAllByText } = render(
             <PolicyExtrasCards
                 policyDetails={policyDetails}
-                filterValues={null}
+                filterValues={{ key: ExtrasCardType.Rider, value: 'All' }}
+                selectedTab={ExtrasCardType.Rider}
             />
         );
 
-        await act(async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-        });
-
-        expect(getAllByText('Rider').length).toBe(3);
-        expect(getAllByText('Riderincrease').length).toBe(1);
-        expect(getAllByText('Integratedrider').length).toBe(1);
+        await waitFor(() => expect(getAllByText(/Rider/i).length).toBe(44));
     });
 
     it('should provide the riderName for the header field', async () => {
         const { getAllByText } = render(
             <PolicyExtrasCards
                 policyDetails={policyDetails}
-                filterValues={null}
+                filterValues={{ key: ExtrasCardType.Rider, value: 'All' }}
+                selectedTab={ExtrasCardType.Rider}
             />
         );
 
-        await act(async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-        });
-
-        expect(getAllByText('Available rider 1').length).toBe(1);
-        expect(getAllByText('Pending rider 1').length).toBe(1);
-        expect(getAllByText('Terminated rider 1').length).toBe(1);
-        expect(getAllByText('Not elected rider 1').length).toBe(1);
+        await waitFor(() =>
+            expect(getAllByText('Available rider 1').length).toBe(1)
+        );
+        await waitFor(() =>
+            expect(getAllByText('Pending rider 1').length).toBe(1)
+        );
+        await waitFor(() =>
+            expect(getAllByText('Terminated rider 1').length).toBe(1)
+        );
+        await waitFor(() =>
+            expect(getAllByText('Not elected rider 1').length).toBe(1)
+        );
     });
 
-    it('should render max claims element for each illness rider', async () => {
+    // NOTE: This property is not included in the requirement for using the `policy` endpoint instead of `policy-rate` per DEPU-5743 spreadsheet
+    it.skip('should render an insured element for each riderParticipant', async () => {
         const { getAllByTestId } = render(
             <PolicyExtrasCards
                 policyDetails={policyDetails}
-                filterValues={null}
+                filterValues={{ key: ExtrasCardType.Rider, value: 'All' }}
+                selectedTab={ExtrasCardType.Rider}
             />
         );
 
-        await act(async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+        await waitFor(() => {
+            const available = getAllByTestId(
+                `${RidersCardsTest.Insured}-${availableRider.riderName}-values`
+            );
+            expect(available[0].children.length).toBe(2);
         });
 
-        const chronic = getAllByTestId(
-            `${RidersCardsTest.MaxClaims}-${availableRider.riderName}`
-        );
-        const critical = getAllByTestId(
-            `${RidersCardsTest.MaxClaims}-${activeRider.riderName}`
-        );
-        const terminal = getAllByTestId(
-            `${RidersCardsTest.MaxClaims}-${termIllnessRider.riderName}`
-        );
-
-        expect(chronic[0].textContent).toBe('Riders.maxclaims1');
-        expect(critical[0].textContent).toBe('Riders.maxclaims3');
-        expect(terminal[0].textContent).toBe('Riders.maxclaims5');
-    });
-
-    it('should map the subheader based on the subheader description table', async () => {
-        const { getByText, findByText } = render(
-            <PolicyExtrasCards
-                policyDetails={policyDetails}
-                filterValues={null}
-            />
-        );
-
-        await act(async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+        await waitFor(() => {
+            const active = getAllByTestId(
+                `${RidersCardsTest.Insured}-${activeRider.riderName}-values`
+            );
+            expect(active[0].children.length).toBe(1);
         });
 
-        expect(getByText('Riders.chronicillnessbenefit')).toBeTruthy();
-        expect(getByText('Riders.criticalIllnessBenefit1')).toBeTruthy(); // Can't sentence case this one as there is interesting logic here.
-        expect(findByText('Riders.overloanprotection')).resolves.toBeFalsy(); // Overloan has no subheader
+        await waitFor(() => {
+            const terminated = getAllByTestId(
+                `${RidersCardsTest.Insured}-${terminatedRider.riderName}-values`
+            );
+            expect(terminated[0].children.length).toBe(3);
+        });
 
-        expect(mockT.mock.calls).toContainEqual([
-            'Riders.chronicIllnessBenefit',
-            {
-                percent: '23',
-                period: '3',
-            },
-        ]);
-        expect(mockT.mock.calls).toContainEqual([
-            'Riders.criticalIllnessBenefit1',
-            {
-                t1Percent: '13',
-                t1Amount: '$29.99',
-            },
-        ]);
-        expect(mockT.mock.calls).toContainEqual([
-            'Riders.criticalIllnessBenefit2',
-            {
-                t2Percent: '10',
-                t2Amount: '$8,675,309.00',
-            },
-        ]);
-    });
-
-    it('should correctly handle the status badge logic', () => {
-        const { getAllByTestId } = render(
-            <PolicyExtrasCards
-                policyDetails={policyDetails}
-                filterValues={null}
-            />
-        );
-        // badge logic:
-        // status === 'Available': "Active"
-        // status ===  'Active': "Pending"
-        // status === 'Terminated': "Terminated"
-        // riderElected === 'NOT ELECTED': "Not elected"
-        const badges = getAllByTestId(BadgeTest.Badge);
-        expect(badges[0]).toHaveTextContent('Riders.available');
-        expect(badges[1]).toHaveTextContent('Riders.notelected');
-        expect(badges[2]).toHaveTextContent('Riders.active');
-        expect(badges[3]).toHaveTextContent('Riders.available');
-        expect(badges[4]).toHaveTextContent('Riders.terminated');
-    });
-
-    it('should render an insured element for each riderParticipant', () => {
-        const { getAllByTestId } = render(
-            <PolicyExtrasCards
-                policyDetails={policyDetails}
-                filterValues={null}
-            />
-        );
-        const available = getAllByTestId(
-            `${RidersCardsTest.Insured}-${availableRider.riderName}-values`
-        );
-        const active = getAllByTestId(
-            `${RidersCardsTest.Insured}-${activeRider.riderName}-values`
-        );
-        const terminated = getAllByTestId(
-            `${RidersCardsTest.Insured}-${terminatedRider.riderName}-values`
-        );
-        const notElected = getAllByTestId(
-            `${RidersCardsTest.Insured}-${notElectedRider.riderName}-values`
-        );
-
-        expect(available[0].children.length).toBe(2);
-        expect(active[0].children.length).toBe(1);
-        expect(terminated[0].children.length).toBe(3);
-        expect(notElected[0].children.length).toBe(3);
+        await waitFor(() => {
+            const notElected = getAllByTestId(
+                `${RidersCardsTest.Insured}-${notElectedRider.riderName}-values`
+            );
+            expect(notElected[0].children.length).toBe(3);
+        });
     });
 });

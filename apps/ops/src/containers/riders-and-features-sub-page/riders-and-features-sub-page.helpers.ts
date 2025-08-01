@@ -29,6 +29,10 @@ export const filterValidFeature = (feature: PolicyFeature) =>
     dayjs(feature.startDate, ZAHARA_API_DATE_FORMAT).isValid() &&
     dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isValid();
 
+const sum = (acc: number, curr: number) => acc + curr;
+
+const totalSum = (numbers: number[]) => numbers.reduce(sum, 0);
+
 export const calculaterFilterProps = ({
     riders,
     features: originalFeatures,
@@ -40,43 +44,53 @@ export const calculaterFilterProps = ({
 }) => {
     const features = originalFeatures?.filter(filterValidFeature) ?? [];
 
-    const numActive =
-        (riders?.filter(
+    const numActiveRiders =
+        riders?.filter(
             (rider) => rider.status?.toLowerCase() === ExtraFilters.Pending
-        ).length ?? 0) +
-        features.filter(
-            (feature) =>
-                feature.approvalDate &&
-                !dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(
-                    dayjs()
-                )
-        ).length;
-    const numAvailable =
-        (riders?.filter(
+        ).length ?? 0;
+
+    const numActiveFeatures = features.filter(
+        (feature) =>
+            feature.approvalDate &&
+            !dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())
+    ).length;
+
+    const numAvailableRiders =
+        riders?.filter(
             (rider) => rider.status?.toLowerCase() === ExtraFilters.Active
-        ).length ?? 0) +
-        features.filter(
-            (feature) =>
-                !feature.approvalDate &&
-                !dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(
-                    dayjs()
-                )
-        ).length;
-    const numTerminated =
-        (riders?.filter(
+        ).length ?? 0;
+
+    const numAvailableFeatures = features.filter(
+        (feature) =>
+            !feature.approvalDate &&
+            !dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())
+    ).length;
+
+    const numTerminatedRiders =
+        riders?.filter(
             (rider) => rider.status?.toLowerCase() === ExtraFilters.Terminated
-        ).length ?? 0) +
-        features.filter((feature) =>
-            dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())
-        ).length;
+        ).length ?? 0;
+
+    const numTerminatedFeatures = features.filter((feature) =>
+        dayjs(feature.endDate, ZAHARA_API_DATE_FORMAT).isBefore(dayjs())
+    ).length;
+
     const numNotElected =
         riders?.filter((rider) => rider.riderElected === RIDER_NOT_ELECTED)
             .length ?? 0;
 
-    const quantitySort = (
-        a: { quantity: number | undefined },
-        b: { quantity: number | undefined }
-    ) => (a.quantity === 0 ? 1 : b.quantity === 0 ? -1 : 1);
+    const totalRiders = totalSum([
+        numActiveRiders,
+        numAvailableRiders,
+        numTerminatedRiders,
+        numNotElected,
+    ]);
+
+    const totalFeatures = totalSum([
+        numActiveFeatures,
+        numAvailableFeatures,
+        numTerminatedFeatures,
+    ]);
 
     return [
         {
@@ -84,36 +98,70 @@ export const calculaterFilterProps = ({
             value: ExtraFilters.Riders,
             quantity: riders?.length,
             disabled: riders?.length === 0,
+            options: [
+                {
+                    text: t(`filter.${ExtraFilters.All}`),
+                    value: ExtraFilters.All,
+                    quantity: totalRiders,
+                    disabled: totalRiders === 0,
+                },
+                {
+                    text: t(`filter.${ExtraFilters.Active}`),
+                    value: ExtraFilters.Active,
+                    quantity: numActiveRiders,
+                    disabled: numActiveRiders === 0,
+                },
+                {
+                    text: t(`filter.${ExtraFilters.Available}`),
+                    value: ExtraFilters.Available,
+                    quantity: numAvailableRiders,
+                    disabled: numAvailableRiders === 0,
+                },
+                {
+                    text: t(`filter.${ExtraFilters.Terminated}`),
+                    value: ExtraFilters.Terminated,
+                    quantity: numTerminatedRiders,
+                    disabled: numTerminatedRiders === 0,
+                },
+                {
+                    text: t(`filter.${ExtraFilters.NotElected}`),
+                    value: ExtraFilters.NotElected,
+                    quantity: numNotElected,
+                    disabled: numNotElected === 0,
+                },
+            ],
         },
         {
             text: t(`filter.${ExtraFilters.Features}`),
             value: ExtraFilters.Features,
             quantity: features.length,
             disabled: features.length === 0,
+            options: [
+                {
+                    text: t(`filter.${ExtraFilters.All}`),
+                    value: ExtraFilters.All,
+                    quantity: totalFeatures,
+                    disabled: totalFeatures === 0,
+                },
+                {
+                    text: t(`filter.${ExtraFilters.Active}`),
+                    value: ExtraFilters.Active,
+                    quantity: numActiveFeatures,
+                    disabled: numActiveFeatures === 0,
+                },
+                {
+                    text: t(`filter.${ExtraFilters.Available}`),
+                    value: ExtraFilters.Available,
+                    quantity: numAvailableFeatures,
+                    disabled: numAvailableFeatures === 0,
+                },
+                {
+                    text: t(`filter.${ExtraFilters.Terminated}`),
+                    value: ExtraFilters.Terminated,
+                    quantity: numTerminatedFeatures,
+                    disabled: numTerminatedFeatures === 0,
+                },
+            ],
         },
-        {
-            text: t(`filter.${ExtraFilters.Active}`),
-            value: ExtraFilters.Active,
-            quantity: numActive,
-            disabled: numActive === 0,
-        },
-        {
-            text: t(`filter.${ExtraFilters.Available}`),
-            value: ExtraFilters.Available,
-            quantity: numAvailable,
-            disabled: numAvailable === 0,
-        },
-        {
-            text: t(`filter.${ExtraFilters.Terminated}`),
-            value: ExtraFilters.Terminated,
-            quantity: numTerminated,
-            disabled: numTerminated === 0,
-        },
-        {
-            text: t(`filter.${ExtraFilters.NotElected}`),
-            value: ExtraFilters.NotElected,
-            quantity: numNotElected,
-            disabled: numNotElected === 0,
-        },
-    ].sort(quantitySort);
+    ];
 };

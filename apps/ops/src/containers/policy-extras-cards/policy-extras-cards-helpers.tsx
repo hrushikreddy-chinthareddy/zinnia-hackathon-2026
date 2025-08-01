@@ -1,4 +1,7 @@
 import { Skeleton } from '@radix-ui/themes';
+import { isObject } from '@rjsf/utils';
+import { SubStandardRating } from '@xd/api-types/dist/generated-types/sor';
+import { formatTimestamp } from '@xd/utils/src/dates';
 import {
     PartyStatus,
     PolicyFeature,
@@ -6,7 +9,7 @@ import {
     Rider,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
-import { TFunction } from 'next-i18next';
+import { TFunction, I18n, i18n } from 'next-i18next';
 import React, { ReactElement } from 'react';
 
 import BadgeWithTooltip, {
@@ -14,6 +17,7 @@ import BadgeWithTooltip, {
 } from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
+import { filterNullAndUndefined } from '@deps/components/dynamic-form/helpers/object.helpers';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import NavElement, {
     NavElementSize,
@@ -22,11 +26,15 @@ import NavElement, {
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyExtrasCardProps } from '@deps/components/policy-extras-card/policy-extras-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    getRiskClass,
+    getSubstandardRating,
+} from '@deps/helpers/party-info-helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import {
-    convertKebabedDateString,
     isNullEmptyOrUndefined,
     toSentenceCase,
+    convertKebabedDateString,
 } from '@deps/helpers/string.helpers';
 import {
     FeaturesCardsTest,
@@ -84,7 +92,7 @@ interface CardFields {
     key: string;
     testId: string;
     label: string;
-    details?: string;
+    details?: string | CardFields[];
     customContent?: React.ReactNode;
 }
 
@@ -373,10 +381,18 @@ const createFieldKvp = ({
     label,
     details,
     customContent,
-}: CardFields) => {
+}: CardFields): ReactElement | null => {
+    if (Array.isArray(details)) {
+        return null;
+    }
+
     return (
         <span data-testid={testId} key={key}>
-            <Label variant={LabelVariant.FieldLabel} label={label} />
+            <Label
+                variant={LabelVariant.FieldLabel}
+                label={label}
+                sentenceCase={false}
+            />
             <Skeleton
                 loading={
                     isNullEmptyOrUndefined(details) &&
@@ -402,7 +418,7 @@ const mapFeatureFields = (
     t: TFunction,
     currency: string,
     isAnnuity = false
-): ReactElement[] => {
+) => {
     const formatPolicyFeatureDate = (date: string | Date | undefined) => {
         if (date === '2999-12-31') return t('features.lifetime');
         return dayjs(date, ZAHARA_API_DATE_FORMAT).format(DEFAULT_DATE_FORMAT);
@@ -456,104 +472,97 @@ const mapFeatureFields = (
     ].map(createFieldKvp);
 };
 
-const mapRiderFields = (
+export const cardFieldReducer =
+    (
+        t: TFunction,
+        currency: string,
+        insuredContent: React.ReactNode,
+        keyLabel: string
+    ) =>
+    (acc: CardFields[] | [], array: [string, any]): CardFields[] => {
+        const [key, value] = array;
+        if (!Array.isArray(value) && !isObject(value)) {
+            return [
+                ...acc,
+                {
+                    key: `${keyLabel}-card-${key}-field`,
+                    label: t(`${keyLabel}.${key}`) as string,
+                    testId: `${keyLabel}-card-${key}`,
+                    ...(key === 'riderName' // @TODO: There should be a follow up to decide what the insuredContent properties are - MR
+                        ? {
+                              customContent: insuredContent,
+                              details: '',
+                          }
+                        : {
+                              details: formatData(
+                                  key,
+                                  value,
+                                  RiderFormatConfig // @TODO: This should be a param
+                              ),
+                          }),
+                },
+            ];
+        } else if (Array.isArray(value) && !isObject(value)) {
+            const processedDetails = value
+                .map((item) => {
+                    if (isObject(item)) {
+                        return Object.entries(item)
+                            .map((obj) =>
+                                cardFieldReducer(
+                                    t,
+                                    currency,
+                                    insuredContent,
+                                    keyLabel
+                                )([], obj)
+                            )
+                            .flat();
+                    }
+                })
+                .flat() as CardFields[];
+            return [
+                ...acc,
+                {
+                    details: processedDetails,
+                    key: `${keyLabel}-card-parent-${key}`,
+                    label: t(`${keyLabel}.${key}`) as string,
+                    testId: `${keyLabel}-card-parent-${key}`,
+                },
+            ];
+        } else if (!Array.isArray(value) && isObject(value)) {
+            const processedDetails = Object.entries(value)
+                .map((item) => {
+                    return cardFieldReducer(
+                        t,
+                        currency,
+                        insuredContent,
+                        keyLabel
+                    )([], item);
+                })
+                .flat();
+            return [
+                ...acc,
+                {
+                    details: processedDetails,
+                    key: `${keyLabel}-card-parent-${key}`,
+                    label: t(`${keyLabel}.${key}`) as string,
+                    testId: `${keyLabel}-card-parent-${key}`,
+                },
+            ];
+        }
+        return acc;
+    };
+
+export const mapRiderFields = (
     rider: Rider,
-    riderBenefit: RiderBenefit,
     t: TFunction,
     currency: string,
-    insuredContent: React.ReactNode
-): ReactElement[] => {
-    /*
-        I use the rider's coverage id to get the benefit id instead of using the benefit id from riderBenefit
-        because it could potentially be undefined/null. See below in this function for why I did this
-    */
-    const benefitId = CoverageToBenefitId[rider.coverageId as CoverageId];
-
-    const fields: CardFields[] = [
-        {
-            customContent: insuredContent,
-            details: '',
-            key: `rider-extras-card-${rider.riderName}-field-insured`,
-            label: t('riders.insured'),
-            testId: `${RidersCardsTest.Insured}-${rider.riderName}`,
-        },
-        {
-            details: convertKebabedDateString(rider.effectiveDate as string),
-            key: `rider-extras-card-${rider.riderName}-field-effectiveDate`,
-            label: t('riders.effectiveDate'),
-            testId: `${RidersCardsTest.EffectiveDate}-${rider.riderName}`,
-        },
-        {
-            details: convertKebabedDateString(rider.terminationDate as string),
-            key: `rider-extras-card-${rider.riderName}-field-expirationDate`,
-            label: t('riders.expirationDate'),
-            testId: `${RidersCardsTest.ExpirationDate}-${rider.riderName}`,
-        },
-    ];
-
-    if (!isNullEmptyOrUndefined(rider.claimStatus)) {
-        fields.push({
-            details: rider.claimStatus?.toString() ?? '',
-            key: `rider-extras-card-${rider.riderName}-field-claimStatus`,
-            label: t('riders.claimStatus'),
-            testId: `${RidersCardsTest.ClaimStatus}-${rider.riderName}`,
-        });
-    }
-
-    if (!isNullEmptyOrUndefined(rider.riderPaymentDate)) {
-        fields.push({
-            details: convertKebabedDateString(rider.riderPaymentDate as string),
-            key: `rider-extras-card-${rider.riderName}-field-claimProcessedDate`,
-            label: t('riders.claimProcessedDate'),
-            testId: `${RidersCardsTest.ClaimProcessedDate}-${rider.riderName}`,
-        });
-    }
-
-    if (!isNullEmptyOrUndefined(rider.terminalRiderPaymentAmount)) {
-        fields.push({
-            details: numberFormatify(
-                rider.terminalRiderPaymentAmount as number,
-                { style: 'currency', currency }
-            ),
-            key: `rider-extras-card-${rider.riderName}-field-claimProcessed`,
-            label: t('riders.claimProcessed'),
-            testId: `${RidersCardsTest.ClaimProcessed}-${rider.riderName}`,
-        });
-    }
-
-    /*
-        1. Product API currently does not support max claims for OverloanProtection or Child riders
-        2. The reason I use benefit ids here and not coverage ids is because products on Zahara can have different
-        coverage ids for the same benefit. For example, a rider on a SBUL policy can have a coverage id of
-        'Rider_SBLOPR' for overloan protection, but an Everly IUL policy will have a coverage id of 'Rider_OPR'
-        for the same thing.
-    */
-    if (
-        benefitId !== BenefitId.OverloanProtection &&
-        benefitId !== BenefitId.Child &&
-        riderBenefit?.[ConfiguredSettingId.MaxNumberOfClaims]
-    ) {
-        fields.push({
-            details:
-                riderBenefit[ConfiguredSettingId.MaxNumberOfClaims].toString(),
-            key: `rider-extras-card-${rider.riderName}-field-maxClaims`,
-            label: t('riders.maxClaims'),
-            testId: `${RidersCardsTest.MaxClaims}-${rider.riderName}`,
-        });
-    }
-
-    if (!isNullEmptyOrUndefined(rider.amount)) {
-        fields.push({
-            details: numberFormatify(rider.amount as number, {
-                style: 'currency',
-                currency,
-            }),
-            key: `rider-extras-card-${rider.riderName}-field-claimProcessed`,
-            label: t('riders.coverageAmount'),
-            testId: `${RidersCardsTest.Amount}-${rider.riderName}`,
-        });
-    }
-
+    insuredContent: React.ReactNode,
+    keyLabel = 'riders'
+) => {
+    const fields = Object.entries(filterNullAndUndefined(rider)).reduce(
+        cardFieldReducer(t, currency, insuredContent, keyLabel),
+        []
+    );
     return fields.map(createFieldKvp);
 };
 
@@ -584,14 +593,14 @@ export const mapPolicyFeaturesToExtrasCards = (
 export const mapPolicyRidersToExtrasCards = (
     policyDetails: PolicyDetails | undefined,
     t: TFunction,
-    riderBenefitData: RiderBenefit[] = []
+    riderBenefitData: Rider[] = []
 ): PolicyExtrasCards[] => {
     if (!policyDetails?.riders) return [];
 
     return policyDetails.riders.map((rider) => {
         const riderBenefit = riderBenefitData?.find(
-            (benefit: RiderBenefit) =>
-                benefit?.benefitId ===
+            (benefit: Rider) =>
+                benefit?.coverageId ===
                 CoverageToBenefitId[rider.coverageId as CoverageId]
         ) as RiderBenefit;
         const insuredContent = getRiderInsuredContent(policyDetails, rider);
@@ -602,19 +611,126 @@ export const mapPolicyRidersToExtrasCards = (
             cardKey: `rider-extras-card-${rider.riderName}`,
             cardProps: {
                 badge: getBadgeFromRider(rider, t),
-                children: mapRiderFields(
-                    rider,
-                    riderBenefit,
-                    t,
-                    currency,
-                    insuredContent
-                ),
+                children: mapRiderFields(rider, t, currency, insuredContent),
                 headerText: toSentenceCase(rider.riderName as string),
                 labelText: toSentenceCase(rider.type as string),
                 subheader,
+                coverageId: rider.coverageId,
             },
             status: getRiderStatus(rider),
             type: ExtrasCardType.Rider,
         };
     });
+};
+
+export const formatBooleanToString = (value: boolean) => {
+    const { t } = i18n as I18n;
+    return t(`general.${!!value}`);
+};
+
+export const formatNumberToCurrency = (
+    value: number,
+    currency: string = 'USD'
+) => numberFormatify(value, { style: 'currency', currency });
+
+export const formatPercentageToString = (value: number) => `${value}%`;
+
+export const convertToString = (val: any): string => `${val}`;
+
+const customGetSubstandardRating = (value: string | undefined) => {
+    const { t } = i18n as I18n;
+    return getSubstandardRating(value as SubStandardRating, t);
+};
+
+export const getTranslationValues = (basePath: string) => (value: string) => {
+    const { t } = i18n as I18n;
+    return t(`${basePath}.${value}`) || value;
+};
+
+const RiderFormatConfig = {
+    type: convertToString,
+    riderName: convertToString,
+    riderElected: formatBooleanToString,
+    underwritingStatus: getTranslationValues(
+        'policy.extras.riders.underwritingStatusValues'
+    ), //enum
+    unbornChildIndicator: formatBooleanToString,
+    qualifiedAdditionalBenefit: formatBooleanToString,
+    effectiveDate: convertKebabedDateString,
+    exerciseDate: convertKebabedDateString,
+    terminationDate: convertKebabedDateString,
+    status: getTranslationValues('policy.extras.riders.statusValues'), //enum
+    coverageId: convertToString,
+    amount: formatNumberToCurrency,
+    annualBenefitAmount: formatNumberToCurrency,
+    riderBenefitAmount: formatNumberToCurrency,
+    riderBenefitPercent: formatPercentageToString,
+    minimumRiderBenefitAmount: formatNumberToCurrency,
+    growthIncomeBenefitAmount: formatNumberToCurrency,
+    riderStoredIncomeBalance: formatNumberToCurrency,
+    insuredID: convertToString,
+    insuredAgeAtIssue: convertToString,
+    partyId: convertToString,
+    partyAgeAtIssue: convertToString,
+    riskClass: getRiskClass, //enum
+    substandardRating: customGetSubstandardRating, //enum
+    flatExtraType: getTranslationValues(
+        'policy.extras.riders.flatExtraTypeValues'
+    ), //enum
+    flatExtraDuration: convertToString,
+    flatExtraAmount: formatNumberToCurrency,
+    flatExtraStartDate: convertKebabedDateString,
+    riderExerciseCharge: formatNumberToCurrency,
+    riderExerciseChargeRate: convertToString,
+    maximumChronicIllnessBenefitPercentage: formatPercentageToString,
+    maximumPeriodicPaymentPeriod: convertToString,
+    claimStatus: formatBooleanToString,
+    nextEvaluationDate: convertKebabedDateString,
+    riderPaymentDate: convertKebabedDateString,
+    terminalRiderPaymentAmount: formatNumberToCurrency,
+    riderMinimumPaymentAmount: formatNumberToCurrency,
+    maximumCriticalIllnessBenefitPercentage: formatPercentageToString,
+    tierOneMaximumCriticalIllnessBenefitPercentage: formatPercentageToString,
+    tierOneMaximumCriticalIllnessBenefitAmount: formatNumberToCurrency,
+    tierTwoMaximumCriticalIllnessBenefitPercentage: formatPercentageToString,
+    tierTwoMaximumCriticalIllnessBenefitAmount: formatNumberToCurrency,
+    tierOneCriticalRiderPaymentDate: convertKebabedDateString,
+    tierOneCriticalRiderPaymentAmount: formatNumberToCurrency,
+    tierTwoCriticalRiderPaymentDate: convertKebabedDateString,
+    tierTwoCriticalRiderPaymentAmount: formatNumberToCurrency,
+    coverageType: getTranslationValues(
+        'policy.extras.riders.coverageTypeValues'
+    ), //enum
+    coverageName: convertToString,
+    productCode: convertToString,
+    coverageTerm: convertToString,
+    approvedCoverageAmount: formatNumberToCurrency,
+    currentAmount: formatNumberToCurrency,
+    originalCoverageAmount: formatNumberToCurrency,
+    minimumCoverageAmount: formatNumberToCurrency,
+    maximumCoverageAmount: formatNumberToCurrency,
+    grossDeathBenefitAmount: formatNumberToCurrency,
+    lowDeathBenefitAmount: formatNumberToCurrency,
+    coverageChangeAmount: formatNumberToCurrency,
+    coverageEffectiveDate: convertKebabedDateString,
+    coverageChangeEffectiveDate: convertKebabedDateString,
+    coverageTerminationDate: convertKebabedDateString,
+    unitOfCoverage: convertToString,
+    valuePerUnitOfCoverage: formatNumberToCurrency,
+    guidelineSinglePremium: formatNumberToCurrency,
+    guidelineLevelPremium: formatNumberToCurrency,
+    sevenPayPremium: formatNumberToCurrency,
+    modalPremium: formatNumberToCurrency,
+    coverageTargetPremium: formatNumberToCurrency,
+    annualPremium: formatNumberToCurrency,
+    timestamp: formatTimestamp,
+};
+
+export const formatData = (
+    key: string,
+    value: string | number | boolean,
+    config?: { [key: string]: (val: any) => string | undefined }
+): string | undefined => {
+    const formatter = config?.[key] ?? convertToString;
+    return formatter(value);
 };

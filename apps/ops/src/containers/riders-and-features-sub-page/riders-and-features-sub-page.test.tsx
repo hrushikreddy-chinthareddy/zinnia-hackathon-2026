@@ -14,7 +14,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import RidersAndFeaturesContainer from './riders-and-features-sub-page';
+import RidersAndFeaturesSubPage from './riders-and-features-sub-page';
 import { calculaterFilterProps } from './riders-and-features-sub-page.helpers';
 
 jest.mock('next/router', () => ({
@@ -32,7 +32,7 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 
-describe('Riders and Features Container', () => {
+describe('<RidersAndFeaturesSubPage />', () => {
     describe('Verify the correct labels are passed', () => {
         it('should contain the correct h1', () => {
             render(
@@ -43,7 +43,7 @@ describe('Riders and Features Container', () => {
                         refreshPolicy: jest.fn(),
                     }}
                 >
-                    <RidersAndFeaturesContainer />
+                    <RidersAndFeaturesSubPage />
                 </PolicyData.Provider>
             );
 
@@ -54,8 +54,8 @@ describe('Riders and Features Container', () => {
         });
     });
 
-    describe('filter chips', () => {
-        it('should contain the correct chips', () => {
+    describe('<TabGroup />', () => {
+        it('shows the correct tabs with total', () => {
             render(
                 <PolicyData.Provider
                     value={{
@@ -64,18 +64,12 @@ describe('Riders and Features Container', () => {
                         refreshPolicy: jest.fn(),
                     }}
                 >
-                    <RidersAndFeaturesContainer />
+                    <RidersAndFeaturesSubPage />
                 </PolicyData.Provider>
             );
 
-            expect(screen.getByText('filter.label')).toBeInTheDocument();
-            expect(screen.getByText('All')).toBeInTheDocument();
-            expect(screen.getByText('filter.Rider')).toBeInTheDocument();
-            expect(screen.getByText('filter.Feature')).toBeInTheDocument();
-            expect(screen.getByText('filter.active')).toBeInTheDocument();
-            expect(screen.getByText('filter.available')).toBeInTheDocument();
-            expect(screen.getByText('filter.terminated')).toBeInTheDocument();
-            expect(screen.getByText('filter.notElected')).toBeInTheDocument();
+            expect(screen.getByText('filter.Rider (0)')).toBeInTheDocument();
+            expect(screen.getByText('filter.Feature (0)')).toBeInTheDocument();
         });
 
         it('should start with correct initial checked states', () => {
@@ -87,41 +81,20 @@ describe('Riders and Features Container', () => {
                         refreshPolicy: jest.fn(),
                     }}
                 >
-                    <RidersAndFeaturesContainer />
+                    <RidersAndFeaturesSubPage />
                 </PolicyData.Provider>
             );
-
-            expect(screen.getByText('All')).toHaveAttribute(
-                'aria-checked',
+            expect(screen.getByText(/filter.Rider/i)).toHaveAttribute(
+                'aria-selected',
                 'true'
             );
-            expect(screen.getByText('filter.Rider')).toHaveAttribute(
-                'aria-checked',
-                'false'
-            );
-            expect(screen.getByText('filter.Feature')).toHaveAttribute(
-                'aria-checked',
-                'false'
-            );
-            expect(screen.getByText('filter.active')).toHaveAttribute(
-                'aria-checked',
-                'false'
-            );
-            expect(screen.getByText('filter.available')).toHaveAttribute(
-                'aria-checked',
-                'false'
-            );
-            expect(screen.getByText('filter.terminated')).toHaveAttribute(
-                'aria-checked',
-                'false'
-            );
-            expect(screen.getByText('filter.notElected')).toHaveAttribute(
-                'aria-checked',
+            expect(screen.getByText(/filter.Feature/i)).toHaveAttribute(
+                'aria-selected',
                 'false'
             );
         });
 
-        it('should change chip states correctly when one is clicked', () => {
+        it('should change tab state correctly when one is clicked', () => {
             render(
                 <PolicyData.Provider
                     value={{
@@ -130,22 +103,18 @@ describe('Riders and Features Container', () => {
                         refreshPolicy: jest.fn(),
                     }}
                 >
-                    <RidersAndFeaturesContainer />
+                    <RidersAndFeaturesSubPage />
                 </PolicyData.Provider>
             );
 
-            expect(screen.getByText('All')).toHaveAttribute(
-                'aria-checked',
+            expect(screen.getByText(/filter.Rider/i)).toHaveAttribute(
+                'aria-selected',
                 'true'
             );
-            expect(screen.getByText('filter.Rider')).toHaveAttribute(
-                'aria-checked',
-                'false'
-            );
-            fireEvent.click(screen.getByText('filter.Rider'));
+            fireEvent.click(screen.getByText(/filter.Feature/i));
             waitFor(() => {
-                expect(screen.getByText('filter.Rider')).toHaveAttribute(
-                    'aria-checked',
+                expect(screen.getByText(/filter.Feature/i)).toHaveAttribute(
+                    'aria-selected',
                     'true'
                 );
             });
@@ -154,7 +123,7 @@ describe('Riders and Features Container', () => {
 });
 
 describe('Riders and Features Helpers', () => {
-    describe('calculaterFilterProps', () => {
+    describe('.calculaterFilterProps', () => {
         it('returns the correct values for each filter type, including variant', () => {
             const futureEndDate = dayjs()
                 .add(11, 'y')
@@ -163,14 +132,7 @@ describe('Riders and Features Helpers', () => {
                 .subtract(11, 'y')
                 .format(ZAHARA_API_DATE_FORMAT);
 
-            const [
-                riders,
-                features,
-                active,
-                available,
-                terminated,
-                notElected,
-            ] = calculaterFilterProps({
+            const [riders, features] = calculaterFilterProps({
                 riders: [
                     { status: Status.TERMINATED },
                     { status: Status.PENDING },
@@ -197,6 +159,38 @@ describe('Riders and Features Helpers', () => {
                 value: 'Rider',
                 quantity: 5,
                 disabled: false,
+                options: [
+                    {
+                        disabled: false,
+                        quantity: 5,
+                        text: 'filter.All',
+                        value: 'All',
+                    },
+                    {
+                        disabled: false,
+                        quantity: 1,
+                        text: 'filter.active',
+                        value: 'active',
+                    },
+                    {
+                        disabled: false,
+                        quantity: 2,
+                        text: 'filter.available',
+                        value: 'available',
+                    },
+                    {
+                        disabled: false,
+                        quantity: 1,
+                        text: 'filter.terminated',
+                        value: 'terminated',
+                    },
+                    {
+                        disabled: false,
+                        quantity: 1,
+                        text: 'filter.notElected',
+                        value: 'notElected',
+                    },
+                ],
             });
 
             expect(features).toEqual({
@@ -204,99 +198,32 @@ describe('Riders and Features Helpers', () => {
                 value: 'Feature',
                 quantity: 3,
                 disabled: false,
-            });
-
-            expect(active).toEqual({
-                text: 'filter.active',
-                value: 'active',
-                quantity: 2,
-                disabled: false,
-            });
-
-            expect(available).toEqual({
-                text: 'filter.available',
-                value: 'available',
-                quantity: 3,
-                disabled: false,
-            });
-
-            expect(terminated).toEqual({
-                text: 'filter.terminated',
-                value: 'terminated',
-                quantity: 2,
-                disabled: false,
-            });
-
-            expect(notElected).toEqual({
-                text: 'filter.notElected',
-                value: 'notElected',
-                quantity: 1,
-                disabled: false,
-            });
-        });
-
-        it('returns the correct order', () => {
-            const [
-                riders,
-                available,
-                terminated,
-                notElected,
-                features,
-                active,
-            ] = calculaterFilterProps({
-                riders: [
-                    { status: Status.TERMINATED },
-                    { status: Status.TERMINATED },
-                    { status: Status.ACTIVE },
-                    { status: Status.ACTIVE },
-                    { status: Status.ACTIVE },
-                    { riderElected: 'NOT ELECTED' },
-                ] as Rider[],
-                // terminated, terminated, available, available, available, not elected
-                features: [] as PolicyFeature[],
-                t: ((key: any) => key) as TFunction,
-            });
-
-            expect(riders).toEqual({
-                text: 'filter.Rider',
-                value: 'Rider',
-                quantity: 6,
-                disabled: false,
-            });
-
-            expect(available).toEqual({
-                text: 'filter.available',
-                value: 'available',
-                quantity: 3,
-                disabled: false,
-            });
-
-            expect(terminated).toEqual({
-                text: 'filter.terminated',
-                value: 'terminated',
-                quantity: 2,
-                disabled: false,
-            });
-
-            expect(notElected).toEqual({
-                text: 'filter.notElected',
-                value: 'notElected',
-                quantity: 1,
-                disabled: false,
-            });
-
-            expect(features).toEqual({
-                text: 'filter.Feature',
-                value: 'Feature',
-                quantity: 0,
-                disabled: true,
-            });
-
-            expect(active).toEqual({
-                text: 'filter.active',
-                value: 'active',
-                quantity: 0,
-                disabled: true,
+                options: [
+                    {
+                        disabled: false,
+                        quantity: 3,
+                        text: 'filter.All',
+                        value: 'All',
+                    },
+                    {
+                        disabled: false,
+                        quantity: 1,
+                        text: 'filter.active',
+                        value: 'active',
+                    },
+                    {
+                        disabled: false,
+                        quantity: 1,
+                        text: 'filter.available',
+                        value: 'available',
+                    },
+                    {
+                        disabled: false,
+                        quantity: 1,
+                        text: 'filter.terminated',
+                        value: 'terminated',
+                    },
+                ],
             });
         });
     });
