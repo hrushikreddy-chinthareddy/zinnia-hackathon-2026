@@ -60,12 +60,18 @@ export const SummaryPage = () => {
     },
   });
 
-  if (!validationResponse || isLoading) return <PaymentLoading />;
+  if (!validationResponse) {
+    return <PaymentLoading />;
+  }
 
   const { data, error } = validationResponse;
 
   if (validationError || error) {
     router.push('error');
+  }
+
+  if (isLoading || !data) {
+    return <PaymentLoading />;
   }
 
   return (
@@ -174,21 +180,22 @@ export const SummaryPage = () => {
           </FieldData>
         </div>
       </form>
-      {data?.status === TransactionFailureResponse.status.FAILURE && (
-        <div>
-          {data.validationResult?.map(
-            (result, index) =>
-              result.resolution?.length && (
-                <AssistiveText
-                  className="mb-md"
-                  key={index}
-                  variant={AssistiveTextVariant.Error}
-                  text={result.error + ' ' + result.resolution}
-                />
-              )
-          )}
-        </div>
-      )}
+      {validationResponse?.data?.status ===
+        TransactionFailureResponse.status.FAILURE && (
+          <div>
+            {validationResponse.data.validationResult?.map(
+              (result, index) =>
+                result.resolution?.length && (
+                  <AssistiveText
+                    className="mb-md"
+                    key={index}
+                    variant={AssistiveTextVariant.Error}
+                    text={result.error + ' ' + result.resolution}
+                  />
+                )
+            )}
+          </div>
+        )}
     </>
   );
 };

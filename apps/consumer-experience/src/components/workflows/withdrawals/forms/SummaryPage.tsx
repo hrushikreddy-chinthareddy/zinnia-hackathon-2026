@@ -27,13 +27,15 @@ import { AccountNumber } from '@/components/pii/AccountNumber';
 import { Address } from '@/components/pii/Address';
 import { BankName } from '@/components/pii/BankName';
 import { Payee } from '@/components/pii/Payee';
-import { taxWithholdingSchema, WithdrawalSteps } from '@/components/providers/withdrawals/types';
+import {
+  taxWithholdingSchema,
+  WithdrawalSteps,
+} from '@/components/providers/withdrawals/types';
 import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { stepsInfo } from '@/components/workflows/withdrawals/steps';
 import { getPartialWithdrawalOneTimeValidation } from '@/queries/transaction-queries';
-
 
 const fundWithdrawalMethodCopyMap = {
   [AllocationOption.PRORATA]: 'Even distribution (prorata)',
@@ -221,7 +223,7 @@ export const SummaryPage = () => {
 
   const distributionMethod = state.distributionMethodStep.distributionType;
 
-  if (!validationResponse || validationLoading) {
+  if (!validationResponse) {
     return <PaymentLoading />;
   }
 
@@ -229,6 +231,10 @@ export const SummaryPage = () => {
 
   if (error || validationError) {
     router.push('error');
+  }
+
+  if (validationLoading || !data) {
+    return <PaymentLoading />;
   }
 
   return (
