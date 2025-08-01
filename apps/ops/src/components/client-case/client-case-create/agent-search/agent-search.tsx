@@ -35,21 +35,21 @@ const MOCK_AGENTS_LIST: IllustrationAgentDetails[] = [
         firstName: 'Tim',
         lastName: 'Apple',
         email: 'tim.apple@domain.com',
-        agencyId: 'aa',
+        sellingCode: 'aa',
         npn: 'a',
     },
     {
         firstName: 'Cindy',
         lastName: 'Mercer',
         email: 'cmercer@domain.com',
-        agencyId: 'bb',
+        sellingCode: 'bb',
         npn: 'b',
     },
     {
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@domain.com',
-        agencyId: 'cc',
+        sellingCode: 'cc',
         npn: 'c',
     },
 ];
@@ -109,9 +109,9 @@ export const AgentSearch = ({
         setSearchResults([]);
     };
 
-    const updateAgent = (npn: string | undefined) => {
+    const updateAgent = (email: string | undefined) => {
         const selectedAgent = searchResults.find((result) => {
-            return result.npn === npn;
+            return result.email === email;
         }) as IllustrationAgentDetails;
         setCurrentAgent(selectedAgent);
         onSelectAgent({
@@ -142,7 +142,7 @@ export const AgentSearch = ({
                     type="button"
                     size="small"
                     className={styles.addAgentButton}
-                    onClick={() => updateAgent(searchResult.npn)}
+                    onClick={() => updateAgent(searchResult.email)}
                 >
                     <Icon
                         type={IconType.ADD}

@@ -1,4 +1,3 @@
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { isValidDate } from '@xd/utils/dist';
 import { capitalize } from '@xd/utils/src/strings';
 import {
@@ -8,6 +7,7 @@ import {
     FieldData,
     FieldSize,
     Label,
+    Loader,
     Select,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
@@ -20,17 +20,16 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-import {
-    formatDateDescriptionList,
-    isNullEmptyUndefinedOrDefault,
-} from '@deps/helpers/string.helpers';
+import { formatDateDescriptionList } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     IllustrationAgentDetails,
     IllustrationInsuredDetails,
     IllustrationsClientCase,
 } from '@deps/types/illustrations';
+import { PartyReference } from '@deps/types/party-reference';
 
 import styles from './create-client-case-form.module.css';
 import { AgentSearch } from '../agent-search/agent-search';
@@ -46,12 +45,11 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
     caseManagementCaseId: '',
     eAppId: '',
     agentDetails: {
-        // TODO: update the agent values. This is handled in another ticket.
-        firstName: '--',
-        lastName: '--',
-        agencyId: '--',
-        npn: '--',
-        email: '--',
+        firstName: DEFAULT_ERROR_STRING,
+        lastName: DEFAULT_ERROR_STRING,
+        sellingCode: DEFAULT_ERROR_STRING,
+        email: DEFAULT_ERROR_STRING,
+        npn: DEFAULT_ERROR_STRING,
     },
     insuredDetails: {
         firstName: '',
@@ -64,6 +62,10 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
     lastModified: '',
 };
 
+const AOR_IDENTIFIER_LABEL = 'AOR';
+const SELLING_CODE_IDENTIFIER_LABEL = 'SELLING_CODE';
+const UPN_IDENTIFIER_LABEL = 'UPN';
+
 function calculateIssueAge(dateOfBirth: Date | null): number {
     if (!dateOfBirth) return 0;
 
@@ -71,53 +73,75 @@ function calculateIssueAge(dateOfBirth: Date | null): number {
     return today.diff(dateOfBirth, 'year');
 }
 
+const getUserIdentifiers = (partyReference: PartyReference) => {
+    let aor = '';
+    let upn = '';
+    let sellingCode = '';
+    const { alias, email } = partyReference;
+    const userAlias = alias.find((alias) => alias.email === email);
+
+    if (userAlias) {
+        const { externalPartyIds } = userAlias;
+        if (externalPartyIds) {
+            const userSellingCodeExternalParty = externalPartyIds.find(
+                (externalParty) =>
+                    externalParty.key === SELLING_CODE_IDENTIFIER_LABEL
+            );
+            const userAORExternalParty = externalPartyIds.find(
+                (externalParty) => externalParty.key === AOR_IDENTIFIER_LABEL
+            );
+
+            const userUPNExternalParty = externalPartyIds.find(
+                (externalParty) => externalParty.key === UPN_IDENTIFIER_LABEL
+            );
+
+            if (userSellingCodeExternalParty) {
+                sellingCode = userSellingCodeExternalParty.value;
+            }
+            if (userAORExternalParty) {
+                aor = userAORExternalParty.value;
+            }
+            if (userUPNExternalParty) {
+                upn = userUPNExternalParty.value;
+            }
+        }
+    }
+
+    return {
+        aor,
+        upn,
+        sellingCode,
+    };
+};
+
 const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     onSubmit,
     onCancel,
     clientCase,
 }: CreateClientCaseFormProps) => {
-    const { user } = useUser();
-
-    // TODO: review once agent search is ready for implementation
-    const currentAgent: IllustrationAgentDetails =
-        clientCase?.agentDetails &&
-        (!isNullEmptyUndefinedOrDefault(clientCase?.agentDetails?.firstName) ||
-            !isNullEmptyUndefinedOrDefault(
-                clientCase?.agentDetails?.lastName
-            ) ||
-            !isNullEmptyUndefinedOrDefault(clientCase?.agentDetails?.email))
-            ? {
-                  firstName: clientCase.agentDetails.firstName || '--',
-                  lastName: clientCase.agentDetails.lastName || '--',
-                  agencyId: clientCase.agentDetails.agencyId || '',
-                  npn: clientCase.agentDetails.npn || '',
-                  email: clientCase.agentDetails.email || '--',
-              }
-            : {
-                  firstName: (user?.given_name as string) || '',
-                  lastName: (user?.family_name as string) || '',
-                  agencyId: (user?.agencyId as string) || DEFAULT_ERROR_STRING,
-                  npn: (user?.npn as string) || DEFAULT_ERROR_STRING,
-                  email: (user?.email as string) || '',
-              };
-
+    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { partyReferenceData } = usePermissionsContext();
+    const { aor, upn, sellingCode } = getUserIdentifiers(
+        partyReferenceData as PartyReference
+    );
+    const isEdit = !!clientCase;
     const mergedCase = {
         ...clientCaseInitialState,
         ...clientCase,
-        ...{ agentDetails: currentAgent },
     };
 
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const [currentAgent, setCurrentAgent] =
+        useState<IllustrationAgentDetails>();
     const [clientCaseData, setClientCaseData] =
         useState<Partial<IllustrationsClientCase>>(mergedCase);
     const [currentAge, setCurrentAge] = useState(0);
+    const [somethingChanged, setSomethingChanged] = useState(false);
 
+    const usStatesSelectList = getStateCodesForSelectInput();
     const insuredDetailsClassname = clsx(
         styles.formSection,
         styles.insuredDetails
     );
-    const usStatesSelectList = getStateCodesForSelectInput();
-    const [somethingChanged, setSomethingChanged] = useState(false);
 
     const updateClientCaseData = (
         dataToUpdate:
@@ -142,7 +166,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 'firstName',
                 'lastName',
                 'agencyId',
-                'npn',
+                'sellingCode',
                 'email',
             ];
 
@@ -213,7 +237,10 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
     const onSubmitForm = () => {
         if (onSubmit) {
-            onSubmit(clientCaseData);
+            onSubmit({
+                ...clientCaseData,
+                agentDetails: { ...currentAgent },
+            });
         }
     };
 
@@ -229,6 +256,36 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        // for Edit use clientCase data
+        if (isEdit && clientCase?.agentDetails) {
+            setCurrentAgent({
+                firstName:
+                    clientCase.agentDetails.firstName ?? DEFAULT_ERROR_STRING,
+                lastName:
+                    clientCase.agentDetails.lastName ?? DEFAULT_ERROR_STRING,
+                email: clientCase.agentDetails.email ?? DEFAULT_ERROR_STRING,
+                sellingCode: clientCase.agentDetails.sellingCode ?? '',
+            });
+        }
+
+        // for New pulls PartyReference data
+        if (!isEdit && partyReferenceData) {
+            let agentSellingCode = '';
+            if (sellingCode) {
+                agentSellingCode = sellingCode;
+            } else if (aor && upn) {
+                agentSellingCode = aor + upn;
+            }
+            setCurrentAgent({
+                firstName: partyReferenceData.firstName ?? DEFAULT_ERROR_STRING,
+                lastName: partyReferenceData.lastName ?? DEFAULT_ERROR_STRING,
+                email: partyReferenceData.email ?? DEFAULT_ERROR_STRING,
+                sellingCode: agentSellingCode ?? '',
+            });
+        }
+    }, [isEdit, clientCase, partyReferenceData, sellingCode, aor, upn]);
 
     return (
         <form className={styles.formContainer}>
@@ -251,10 +308,17 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     maxLength={60}
                     value={clientCaseData.title}
                 />
-                <AgentSearch
-                    currentAgentData={currentAgent}
-                    onSelectAgent={updateClientCaseData}
-                />
+
+                {currentAgent ? (
+                    <AgentSearch
+                        currentAgentData={currentAgent}
+                        onSelectAgent={updateClientCaseData}
+                    />
+                ) : (
+                    <div className={styles.loaderContainer}>
+                        <Loader />
+                    </div>
+                )}
             </section>
             <section className={insuredDetailsClassname}>
                 <Typography

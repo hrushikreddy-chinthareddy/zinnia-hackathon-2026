@@ -189,7 +189,7 @@ const buildClientCaseFromNewBusiness = async (
                         ) {
                             agentSellingCode =
                                 agentAORExternalParty.value +
-                                agentAORExternalParty.value;
+                                agentUPNExternalParty.value;
                         }
                     }
                 }
@@ -236,6 +236,7 @@ const buildClientCaseFromNewBusiness = async (
             firstName: agentFirstName,
             lastName: agentLastName,
             email: agentPreferedEmail,
+            sellingCode: agentSellingCode,
         };
 
         businessClientCasePayload = {

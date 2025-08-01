@@ -69,3 +69,8 @@
     align-items: center;
     gap: var(--measure-dimension-gap-xl, 24px);
 }
+
+.loaderContainer {
+    display: flex;
+    justify-content: center;
+}
