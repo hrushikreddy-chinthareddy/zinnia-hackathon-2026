@@ -5164,6 +5164,7 @@
             "bpm500Error": "Error BPM 500",
             "current": "Actual",
             "frequency": "Frecuencia",
+            "fundAllocation": "Asignación de fondos",
             "paymentFrequency": "Frecuencia de pago",
             "label": "Resumen",
             "autopayAmount": "Monto del pago automático de prima",
