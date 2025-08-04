@@ -72,10 +72,36 @@ const BeneficiaryCardContainer = ({
     const { setIsPeopleView } = useBeneChange();
     const router = useRouter();
 
+    const navigateToBeneChange = () => {
+        setIsPeopleView(false);
+        router.push(
+            {
+                pathname: `${router.pathname}/benechange`,
+                query: router.query,
+            },
+            undefined,
+            { shallow: true }
+        );
+    };
+
     return (
         <div className={classNames}>
             <div className="flex items-center justify-between">
                 <span className={classes}>{toSentenceCase(title)}</span>
+                {!isRereg && showManageBeneficiary && (
+                    <span className="bg-gray-50 p-2 mb-1 text-center">
+                        <NavElement
+                            type={NavElementType.Button}
+                            size={NavElementSize.Small}
+                            startIcon={null}
+                            className="flex items-start"
+                            onClick={navigateToBeneChange}
+                            disabled={!enableManageBeneficiary}
+                        >
+                            {t('quickActions.people.manageBeneficiaries')}
+                        </NavElement>
+                    </span>
+                )}
             </div>
             {showAllocationBar && <AllocationColorBar colors={colors} />}
             <PeopleCardContainer
