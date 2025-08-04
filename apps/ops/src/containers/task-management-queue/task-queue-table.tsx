@@ -69,22 +69,28 @@ const TaskQueueTable = ({
         keyPrefix: 'tasksView',
     });
     const paginationControls = () => {
-        window.scrollTo(0, 0);
         const goToPage = (pageNumber: number) => {
             const newOffset = (pageNumber - 1) * limit;
             const filterData = filters?.additionalFilters
                 ? { ...filters?.additionalFilters }
                 : { ...additionalData?.taskListingParams };
 
-            const payload = {
-                ...filters,
-                ...filterData,
+            let payload = Object.assign({}, filters, filterData, {
                 limit,
                 offset: newOffset,
-            };
+            });
+
             delete payload.additionalFilters;
 
-            getTasks(true, payload);
+            payload = Object.assign(payload, {
+                queues:
+                    payload.queues || additionalData?.taskListingParams?.queues,
+                carriers:
+                    payload.carriers ||
+                    additionalData?.taskListingParams?.carriers,
+            });
+
+            getTasks(true, payload, undefined, true);
         };
 
         return (
@@ -101,13 +107,17 @@ const TaskQueueTable = ({
 
     const manageTableAfterAction = async (
         taskId: string,
-        assigneePartyId: string
+        assigneePartyId: string,
+        updatedTask: AssignedTask | UnassignedTask
     ) => {
         const newTasks = [...tasks].map((task) => {
-            if (task.id === taskId) {
+            if (task.id === updatedTask.id) {
+                task.updatedAt = updatedTask.updatedAt;
+
                 if (!assigneePartyId) {
                     delete task?.assigneePartyId;
                     task.assignee = NO_ASSIGNEE;
+
                     return task;
                 } else {
                     task.assigneePartyId = assigneePartyId;
@@ -123,6 +133,7 @@ const TaskQueueTable = ({
         if (newTasksWithUpdatedUsers.length > 0) {
             setTaskDetails(newTasksWithUpdatedUsers);
         }
+
         return true;
     };
 
@@ -151,6 +162,7 @@ const TaskQueueTable = ({
                         </TableRow>
                     )}
                     {!isLoading &&
+                        tasks.length > 0 &&
                         tasks?.map((task, index) => {
                             return (
                                 task && (

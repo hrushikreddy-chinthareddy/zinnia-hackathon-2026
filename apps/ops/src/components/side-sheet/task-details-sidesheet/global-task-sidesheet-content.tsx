@@ -655,27 +655,28 @@ export default function GlobalTaskSideSheet({
                 {((task.status === TaskStatus.Pending &&
                     task.scheduledReason) ||
                     (task.status === TaskStatus.Canceled &&
-                        task.cancellationReason)) && (
-                    <>
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]">
-                            {' '}
-                            {t('sideSheet.task.reasonLabel')}{' '}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySm}
-                            className="col-span-2"
-                        >
-                            <Content
-                                truncate
-                                details={statusReason}
-                                variant={ContentVariant.BodySm}
-                                popoverBody={statusReason}
-                                popoverClassName="background-white w-full "
-                                pii={true}
-                            />
-                        </Typography>
-                    </>
-                )}
+                        task.cancellationReason)) &&
+                    !isOpsManagerView && (
+                        <>
+                            <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                                {' '}
+                                {t('sideSheet.task.reasonLabel')}{' '}
+                            </div>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="col-span-2"
+                            >
+                                <Content
+                                    truncate
+                                    details={statusReason}
+                                    variant={ContentVariant.BodySm}
+                                    popoverBody={statusReason}
+                                    popoverClassName="background-white w-full "
+                                    pii={true}
+                                />
+                            </Typography>
+                        </>
+                    )}
 
                 {renderTaskStatus(task.status)}
 

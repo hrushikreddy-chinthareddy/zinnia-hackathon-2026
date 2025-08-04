@@ -145,7 +145,8 @@ const useTaskManagementQueue = ({
     const getManagerTask = async (
         handleLoader: boolean,
         searchParams: Record<string, any> = {},
-        newOffset = 0
+        newOffset = 0,
+        isScrollReset?: boolean
     ) => {
         if (handleLoader) setIsLoading(true);
         setErrorMessage('');
@@ -166,21 +167,30 @@ const useTaskManagementQueue = ({
             setTaskDetails(tasksWithAssignees);
             setTotal(total || 0);
             setOffset(searchParams?.offset || newOffset);
+
+            if (isScrollReset) {
+                window.scrollTo(0, 0);
+            }
         } catch (error) {
             setErrorMessage(t('fetchTaskError') ?? '');
         } finally {
             if (handleLoader) setIsLoading(false);
         }
     };
-
     const getTasks = async (
         handleLoader: boolean,
         searchParams?: Record<string, any>,
-        newOffset = 0
+        newOffset = 0,
+        isScrollReset?: boolean
     ) => {
         setErrorMessage('');
         isOpsManagerView
-            ? await getManagerTask(handleLoader, searchParams, newOffset)
+            ? await getManagerTask(
+                  handleLoader,
+                  searchParams,
+                  newOffset,
+                  isScrollReset
+              )
             : await getRegularTasks(handleLoader);
     };
 

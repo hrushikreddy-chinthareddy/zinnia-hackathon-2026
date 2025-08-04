@@ -168,21 +168,23 @@ const AssigneePopover = ({
                             }
                             variant={ContentVariant.BodySm}
                         />
-                        <Tooltip
-                            placement={TooltipPlacement.TopRight}
-                            tooltipClassName="!w-auto"
-                            triggerClassName="!z-10"
-                            trigger={
-                                <IconButton
-                                    className="text-secondary"
-                                    onClick={handleUnassignClick}
-                                >
-                                    <CancelIcon height={18} width={18} />
-                                </IconButton>
-                            }
-                        >
-                            <span className="text-md">Unassign</span>
-                        </Tooltip>
+                        {isPopoverAllowed && (
+                            <Tooltip
+                                placement={TooltipPlacement.TopRight}
+                                tooltipClassName="!w-auto"
+                                triggerClassName="!z-10"
+                                trigger={
+                                    <IconButton
+                                        className="text-secondary"
+                                        onClick={handleUnassignClick}
+                                    >
+                                        <CancelIcon height={18} width={18} />
+                                    </IconButton>
+                                }
+                            >
+                                <span className="text-md">Unassign</span>
+                            </Tooltip>
+                        )}
                     </div>
                 ) : (
                     <Content

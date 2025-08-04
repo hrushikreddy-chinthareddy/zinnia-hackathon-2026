@@ -322,7 +322,8 @@ const TaskQueueTableRow = ({
             if (updatedTask) {
                 const result = await manageTableAfterAction(
                     taskId,
-                    assigneePartyId
+                    assigneePartyId,
+                    updatedTask
                 );
                 if (result) {
                     setActionLoader(false);
@@ -348,7 +349,11 @@ const TaskQueueTableRow = ({
                 assigneePartyId
             );
             if (updatedTask) {
-                const result = await manageTableAfterAction(taskId);
+                const result = await manageTableAfterAction(
+                    taskId,
+                    null,
+                    updatedTask
+                );
                 if (result) {
                     setActionLoader(false);
                 }
