@@ -85,7 +85,7 @@ export const caseSearchSanitizer = (
     }
 };
 
-const sanitizeBankDetails = (
+export const sanitizeBankDetails = (
     bankDetails: BankAccount[] | undefined
 ): BankAccount[] | undefined => {
     return bankDetails?.map(

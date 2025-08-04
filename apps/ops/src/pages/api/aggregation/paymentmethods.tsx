@@ -7,6 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { aggregationApiBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
+import { sanitizeBankDetails } from '@deps/utils/sanitizers';
 import {
     logError,
     logTrace,
@@ -69,14 +70,18 @@ export default withAuthAndLogging(
                 duration: performance.now() - now,
             });
 
-            if (!response.data) {
+            const bankDetails = response.data;
+
+            const sanitizedBankDetails = sanitizeBankDetails(bankDetails);
+
+            if (!response.data || !sanitizedBankDetails) {
                 throw new Error(
                     'No data returned trying to retrieve payment methods.'
                 );
             }
 
             return res.json({
-                data: response.data,
+                data: sanitizedBankDetails,
                 error: null,
             });
         } catch (error) {
