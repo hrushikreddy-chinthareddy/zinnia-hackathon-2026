@@ -1,3 +1,5 @@
+'use client';
+
 import { Status } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
