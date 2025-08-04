@@ -239,14 +239,7 @@ const farmersEntitiesSchema = t.object(
             t.undefined
         )
     ),
-    t.optionalProperty(
-        'deathBenefitOption',
-        t.object(
-            t.property('from', t.union(t.number, t.string)),
-            t.property('thru', t.union(t.number, t.string)),
-            t.property('value', t.union(t.number, t.string))
-        )
-    ),
+    t.optionalProperty('deathBenefitOption', t.union(t.string, t.undefined)),
     t.optionalProperty('solveForPremiumType', t.union(t.string, t.undefined)),
 
     t.optionalProperty('targetCashValueOption', t.union(t.string, t.undefined)),
@@ -303,7 +296,7 @@ const FARMERS_HARDCODED_DATA = {
 } as const;
 
 // TODO: these constants are shared across all blueprints.
-const SUBSTANDARD_PREMIUM_CLASSES = ['StandardNonTobacco', 'StandardTobacco'];
+const SUBSTANDARD_PREMIUM_CLASSES = ['STANDARDNONTOBACCO', 'STANDARDTOBACCO'];
 
 function createIllustrationPayload(
     answerOutputData: unknown
@@ -408,6 +401,22 @@ function createIllustrationPayload(
         });
     }
 
+    if (
+        values?.riders?.acceleratedDeathBenefitRiderForTerminalIllness?.values
+            ?.length
+    ) {
+        riders.push({
+            coverageId:
+                values.riders.acceleratedDeathBenefitRiderForTerminalIllness
+                    ?.values[0],
+            participants: [
+                {
+                    ...baseParticipantForRiders,
+                },
+            ],
+        });
+    }
+
     const flatExtras = [];
 
     if (
@@ -440,6 +449,14 @@ function createIllustrationPayload(
                 value: item.firstColumn,
             })
         );
+    } else {
+        deathBenefitSchedule = [
+            {
+                from: 1,
+                through: 120,
+                value: values.deathBenefitOption,
+            },
+        ];
     }
 
     const modalPremiumTable = values?.modalPremiumTable?.map((item) => ({
@@ -458,8 +475,11 @@ function createIllustrationPayload(
                 offset: item.through,
                 basis: 'DURATION',
             },
-            amountType: !item.firstColumn ? 'MAX' : 'AMOUNT',
-            ...(item.firstColumn && { requestedAmount: item.firstColumn }),
+            amountType:
+                !item.firstColumn && item.firstColumn !== 0 ? 'MAX' : 'AMOUNT',
+            ...((item.firstColumn || item.firstColumn === 0) && {
+                requestedAmount: item.firstColumn,
+            }),
             funding: values.distributionOptions,
         })
     );
@@ -512,13 +532,6 @@ function createIllustrationPayload(
                 lastName: values.agent.lastName,
                 roleCode: NonInsuredRoleCodes.AGENT,
             },
-            // ...(values.riders?.ownerWaiverOfDeductionRider?.values?.length && {
-            //     partyId: uuid(),
-            //     partyTypeCode: FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
-            //     // TODO: missing date of birth in the blueprint
-            //     // dateOfBirth: values.riders.ownerWaiverOfDeductionRider?.ownerDateOfBirth,
-            //     roleCode: InsuredRoleCodes.OWNER,
-            // }),
         ],
         options: {
             revisedIllustration: FARMERS_HARDCODED_DATA.revisedIllustration,
@@ -554,14 +567,13 @@ function createIllustrationPayload(
                 doli: 'GPT',
                 preventModifiedEndowment: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
-                ...(hasDeathBenefitOption &&
-                    deathBenefitSchedule && {
-                        deathBenefitOption: {
-                            frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
-                            basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                            sequence: deathBenefitSchedule,
-                        },
-                    }),
+                ...(deathBenefitSchedule && {
+                    deathBenefitOption: {
+                        frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
+                        basis: FARMERS_HARDCODED_DATA.premiumBasis,
+                        sequence: deathBenefitSchedule,
+                    },
+                }),
             }),
             ...(values.solveFor === 'PREMIUM' && {
                 paymentMode: values.paymentMode,
@@ -603,20 +615,18 @@ function createIllustrationPayload(
                 doli: 'GPT',
                 preventModifiedEndowment: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
-                ...(hasDeathBenefitOption &&
-                    deathBenefitSchedule && {
-                        deathBenefitOption: {
-                            frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
-                            basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                            sequence: deathBenefitSchedule,
-                        },
-                    }),
+                ...(deathBenefitSchedule && {
+                    deathBenefitOption: {
+                        frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
+                        basis: FARMERS_HARDCODED_DATA.premiumBasis,
+                        sequence: deathBenefitSchedule,
+                    },
+                }),
             }),
             ...(values.solveFor === 'FACE' && {
                 paymentMode: values.paymentMode,
                 discountIndicator: values.discountIndicator?.[0] || 'NON',
                 paymentMethod: values.paymentMethod,
-                // premiumDuration: premiumDuration,
                 premiumDurationOption: 'YEARS',
                 faceAmount: {
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
@@ -633,13 +643,6 @@ function createIllustrationPayload(
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
                     basis: FARMERS_HARDCODED_DATA.premiumBasis,
                     sequence: modalPremiumTable,
-                    // sequence: [
-                    //     {
-                    //         from: FARMERS_HARDCODED_DATA.premiumFrom,
-                    //         through: premiumDuration,
-                    //         value: values.modalPremiumValue,
-                    //     },
-                    // ],
                 },
                 targetCashValueOption: 'SPECIFY_AMOUNT',
                 targetCashValueAtOption: values.targetCashValueAtOption,
@@ -653,14 +656,13 @@ function createIllustrationPayload(
                 doli: 'GPT',
                 preventModifiedEndowment: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
-                ...(hasDeathBenefitOption &&
-                    deathBenefitSchedule && {
-                        deathBenefitOption: {
-                            frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
-                            basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                            sequence: deathBenefitSchedule,
-                        },
-                    }),
+                ...(deathBenefitSchedule && {
+                    deathBenefitOption: {
+                        frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
+                        basis: FARMERS_HARDCODED_DATA.premiumBasis,
+                        sequence: deathBenefitSchedule,
+                    },
+                }),
             }),
             exchanges: {
                 internalAmount: values.internal1035ExchangeAmount,

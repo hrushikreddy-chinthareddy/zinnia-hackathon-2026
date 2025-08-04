@@ -29,6 +29,7 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import {
+    logError,
     LoggingContext,
     logWarn,
     parseErrorInformation,
@@ -267,6 +268,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         }
                     }
                 } catch (error: any) {
+                    logError(error.message, {
+                        ...loggingContext,
+                        error: error,
+                    });
+
                     return {
                         props: {
                             locale,

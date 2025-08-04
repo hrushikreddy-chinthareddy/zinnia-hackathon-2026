@@ -124,7 +124,7 @@ export const farmersBlueprintIU0101 = {
                                     id: 'af14ff42-5af7-4c68-97a9-25fb0235238f',
                                     partName:
                                         'custom-c839d414-0126-466b-9f9f-af3e591b1715',
-                                    validateAs: 'string',
+                                    validateAs: 'custom',
                                     customProperties: {
                                         tagNodeIds: [
                                             'insured-first-name',
@@ -162,7 +162,7 @@ export const farmersBlueprintIU0101 = {
                                     id: '594d0c5d-0d13-4d61-a11c-81c0fdc848b6',
                                     partName:
                                         'custom-795fd778-ee97-4e0b-b58d-d7ce2bc0b1e4',
-                                    validateAs: 'string',
+                                    validateAs: 'custom',
                                     customProperties: {
                                         tagNodeIds: ['insured-age-tag'],
                                     },
@@ -196,7 +196,7 @@ export const farmersBlueprintIU0101 = {
                                     id: '7ae202f9-d12f-47c0-ae30-19a7d6c27707',
                                     partName:
                                         'custom-5e8d3264-9503-41d9-8dc4-87b28d2852cf',
-                                    validateAs: 'string',
+                                    validateAs: 'custom',
                                     customProperties: {
                                         tagNodeIds: ['sex'],
                                     },
@@ -2884,6 +2884,7 @@ export const farmersBlueprintIU0101 = {
                                     customName: 'IllustrationScheduler',
                                     answerNodeId: 'modalPremiumTable',
                                     outputPath: 'modalPremiumTable',
+                                    validateAs: 'custom',
                                     defaultValue: [
                                         {
                                             id: '2b7d2fb8-5186-4986-b8c4-60d12ee191db',
@@ -4025,15 +4026,78 @@ export const farmersBlueprintIU0101 = {
                                     defaultValue: 'no',
                                 },
                                 {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Death Benefit Option',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'death-benefit-option',
+                                    outputPath: 'deathBenefitOption',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 9,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '8d1fafbc-3396-4e68-9745-ad025e0e2522',
+                                    partName:
+                                        'custom-aab9385c-a4b9-4046-826d-3f6a6ec16a24',
+                                    selectOptions: [
+                                        {
+                                            value: 'LEVEL',
+                                            text: {
+                                                en: 'Level',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'INCREASING',
+                                            text: {
+                                                en: 'Increasing',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    defaultValue: 'LEVEL',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'no',
+                                                isEqual: true,
+                                                targetNodeId:
+                                                    'schedule-death-benefit-option',
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
                                     id: 'cae207c7-bb34-496b-8360-64ea609ea792',
                                     fieldType: 'custom',
                                     customName: 'IllustrationScheduler',
                                     answerNodeId: 'death-benefit-scheduler',
                                     outputPath: 'deathBenefitSchedulerValue',
+                                    validateAs: 'custom',
                                     defaultValue: [
                                         {
                                             id: 'a0999c14-57a3-4fdc-b660-1cbc5f19fc0e',
-                                            firstColumn: 'level',
+                                            firstColumn: 'LEVEL',
                                             fromYear: 1,
                                             through: 120,
                                         },
@@ -4049,11 +4113,11 @@ export const farmersBlueprintIU0101 = {
                                             },
                                             options: [
                                                 {
-                                                    value: 'level',
+                                                    value: 'LEVEL',
                                                     label: { en: 'Level' },
                                                 },
                                                 {
-                                                    value: 'increasing',
+                                                    value: 'INCREASING',
                                                     label: { en: 'Increasing' },
                                                 },
                                             ],
@@ -4700,6 +4764,7 @@ export const farmersBlueprintIU0101 = {
                                     layout: {
                                         size: 12,
                                         forceNewLine: false,
+                                        indent: 3,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -5774,6 +5839,7 @@ export const farmersBlueprintIU0101 = {
                                     customName: 'IllustrationScheduler',
                                     answerNodeId: 'distribution-amount-table',
                                     outputPath: 'distributionAmountTable',
+                                    validateAs: 'custom',
                                     defaultValue: [
                                         {
                                             id: '99090f2c-248f-4884-ad22-dbaef302c849',

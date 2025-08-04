@@ -148,7 +148,7 @@ const getEventHandlingFunction = (
 
                     if (nextRow) {
                         if (previousRow.through) {
-                            nextRow.fromYear = previousRow.through + 1;
+                            nextRow.fromYear = previousRow.through;
                         } else if (nextRow.fromYear) {
                             previousRow.through = nextRow.fromYear - 1;
                         }
@@ -190,7 +190,7 @@ const getEventHandlingFunction = (
                 }
 
                 if (event.row - 1 >= 0) {
-                    answer[event.row - 1].through = event.value - 1;
+                    answer[event.row - 1].through = event.value;
                 }
                 break;
             }
@@ -202,7 +202,7 @@ const getEventHandlingFunction = (
                 }
 
                 if (event.row + 1 < answer.length) {
-                    answer[event.row + 1].fromYear = event.value + 1;
+                    answer[event.row + 1].fromYear = event.value;
                 }
                 break;
             }
@@ -311,7 +311,7 @@ function validateSequence(
                 };
             }
 
-            if (row.through + 1 !== nextRow.fromYear) {
+            if (row.through !== nextRow.fromYear) {
                 return {
                     message: `${pluralize(i + 1)} row "${
                         customProperties.fromYear.label['en']
