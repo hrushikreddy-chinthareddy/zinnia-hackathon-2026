@@ -17,6 +17,8 @@ import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
+import styles from './styles.module.css';
+
 interface CasePageHeaderProps {
     caseId: string;
     status: PolicyStatus | string;
@@ -52,6 +54,7 @@ const CasePageHeader = ({
                         size={NavElementSize.Default}
                         startIcon={<LeftArrow height={24} width={24} />}
                         type={NavElementType.Link}
+                        className={styles.breadcrumb}
                     />
                 </Tooltip>
             )}

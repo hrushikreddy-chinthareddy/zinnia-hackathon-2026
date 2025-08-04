@@ -1,3 +1,7 @@
 .container {
     background-color: var(--color-base-surface-surface-primary);
 }
+
+.breadcrumb:hover:after {
+    content: none;
+}
