@@ -5,7 +5,6 @@ import {
     OptimizelyDecision,
 } from '@optimizely/optimizely-sdk';
 
-import { ENVIRONMENT_NAME, isQA, isUat } from '../environment.helpers';
 import {
     logError,
     LoggingContext,
@@ -27,26 +26,14 @@ export type FeatureFlagVariableType = {
     };
 };
 
-const getVeriableByEnviroment = (variableName: string): string => {
-    const envSuffix = isQA()
-        ? `-${ENVIRONMENT_NAME.QA}`
-        : isUat()
-        ? `-${ENVIRONMENT_NAME.UAT}`
-        : '';
-    return variableName + envSuffix;
-};
-
 export const isFeatureFlagVariableActive = (
     featureFlagVariables: FeatureFlagVariableType,
     featureFlag: string,
     key: string,
     value: string
 ): boolean => {
-    const flagVariableWithEnv = getVeriableByEnviroment(key);
     return (
-        featureFlagVariables?.[featureFlag]?.variables?.[flagVariableWithEnv]?.[
-            value
-        ] ?? false
+        featureFlagVariables?.[featureFlag]?.variables?.[key]?.[value] ?? false
     );
 };
 
@@ -57,11 +44,10 @@ export const getFeatureFlagByKey = async (
     userId: string,
     loggingContext: LoggingContext
 ) => {
-    const flagVariableWithEnv = getVeriableByEnviroment(variableKey);
     const featureFlagVariables =
         await optimizelyService.getFeatureFlagVariables(
             featureFlag,
-            flagVariableWithEnv,
+            variableKey,
             userId,
             loggingContext
         );
