@@ -1,7 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
-  "globalEnv": ["NODE_ENV"],
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
+  "globalEnv": [
+    "NODE_ENV"
+  ],
   "tasks": {
     "build": {
       "outputs": [
@@ -48,7 +52,9 @@
         "VERCEL_BRANCH_URL",
         "NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL"
       ],
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "ops#build": {
       "env": [
@@ -83,48 +89,74 @@
         "WELLABE_TOPPAN_MERRILL_KEY",
         "CALL_LOG_X_API_KEY"
       ],
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "@zinnia/utils#build": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "@zinnia/pom#build": {
-      "dependsOn": ["^build"],
-      "env": ["NEXT_PUBLIC_BASE_URL"]
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "NEXT_PUBLIC_BASE_URL"
+      ]
     },
     "lint": {},
     "prettier": {},
     "prettier:fix": {},
     "consumer-experience#lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": [
+        "^lint"
+      ]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "pre-commit": {
-      "dependsOn": ["^build", "lint", "prettier"]
+      "dependsOn": [
+        "^build",
+        "lint",
+        "prettier"
+      ]
     },
     "pre-push": {},
     "consumer-experience#pre-commit": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "consumer-experience#dev": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "@zinnia/utils#dev": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "ops#test": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "test": {},
     "build-storybook": {},
     "consumer-experience#test": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "ops#dev": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     }
   }
 }

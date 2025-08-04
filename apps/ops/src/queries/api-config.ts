@@ -7,6 +7,7 @@ export const apiServerBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const apiServerUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${apiVersion}`;
 export const se2ApiServerUrl = `${process.env.NEXT_PUBLIC_SE2_BACKEND_URL}/case/${apiVersion}`;
 export const AUDIENCE = process.env.NEXT_PUBLIC_AUTH0_AUDIENCE;
+export const aggregationApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/aggregation/${apiVersion}`;
 export const policyApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/${apiVersion}/policies`;
 export const integrationApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/integration/${apiVersion}`;
 export const calculatorApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/rmd-calculation/${apiVersion}`;

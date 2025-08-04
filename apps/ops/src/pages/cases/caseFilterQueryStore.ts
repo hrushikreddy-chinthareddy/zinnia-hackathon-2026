@@ -12,6 +12,7 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import useQueryFilters from '@deps/utils/queryStoreFilters';
 
 export enum QueryKeys {
+    bankDetails = 'bankDetails',
     brokerDealerName = 'brokerDealerName',
     carrier = 'carrier',
     caseStatus = 'caseStatus',

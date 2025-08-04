@@ -5697,10 +5697,12 @@
             "addressDetailsLabel": "Détails de l'adresse",
             "addressError": "Sélectionnez une adresse pour effectuer ce paiement.",
             "bankError": "Sélectionnez un compte bancaire pour effectuer ce paiement.",
-            "paymentMethodError": "Sélectionnez un mode de paiement pour effectuer ce paiement.",
+            "getBankError": "Nous ne pouvons pas obtenir les modes de paiement actuellement. Veuillez essayer plus tard.",
+            "getBankEmpty": "Aucun mode de paiement disponible.",
             "heading": "Mode de paiement",
             "label": "Sélectionner le compte de paiement",
             "moneyOutLabel": "Où devons-nous envoyer le paiement?",
+            "paymentMethodError": "Sélectionnez un mode de paiement pour effectuer ce paiement.",
             "bankDataCard": {
                 "accountNumber": "Numéro de compte",
                 "endingIn": "Se terminant par "

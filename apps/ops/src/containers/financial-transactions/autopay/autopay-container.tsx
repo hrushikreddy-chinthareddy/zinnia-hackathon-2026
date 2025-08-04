@@ -144,6 +144,11 @@ const AutopayContainer = ({
         ? 'Withdrawal'
         : 'RMD';
 
+    let PaymentStepComponent = PaymentStep;
+    if (parentPage === ParentPage.Withdrawals && wireCheckPaymentsEnabled) {
+        PaymentStepComponent = PaymentStepMoneyOut;
+    }
+
     const steps: Step[] = [
         {
             component: (
@@ -223,38 +228,23 @@ const AutopayContainer = ({
             text: payorLabel,
         },
         {
-            component:
-                parentPage === ParentPage.Withdrawals ? (
-                    wireCheckPaymentsEnabled ? (
-                        <PaymentStepMoneyOut
-                            parentPage={ParentPage.Withdrawals}
-                            policy={policy}
-                            setState={setAutopay as PaymentStepSetState}
-                            state={autopay}
-                            validateTransaction={validateCall}
-                        />
-                    ) : (
-                        <PaymentStep
-                            parentPage={ParentPage.Withdrawals}
-                            policy={policy}
-                            setState={setAutopay as PaymentStepSetState}
-                            state={autopay}
-                            validateTransaction={validateCall}
-                        />
-                    )
-                ) : (
-                    <PaymentStep
-                        parentPage={parentPage}
-                        policy={policy}
-                        setState={setAutopay as unknown as PaymentStepSetState}
-                        state={autopay}
-                        validateTransaction={validateCall}
-                        trackEventProps={{
-                            type: transactionType,
-                            step: TransactionStep.Payment,
-                        }}
-                    />
-                ),
+            component: (
+                <PaymentStepComponent
+                    parentPage={parentPage}
+                    policy={policy}
+                    setState={setAutopay as PaymentStepSetState}
+                    state={autopay}
+                    validateTransaction={validateCall}
+                    trackEventProps={
+                        parentPage !== ParentPage.Withdrawals
+                            ? {
+                                  type: transactionType,
+                                  step: TransactionStep.Payment,
+                              }
+                            : undefined
+                    }
+                />
+            ),
             screenReaderLabel: paymentLabel,
             index: 3,
             text: paymentLabel,

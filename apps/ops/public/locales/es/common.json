@@ -5604,10 +5604,12 @@
             "addressDetailsLabel": "Detalles de la dirección",
             "addressError": "Selecciona una dirección para realizar este pago.",
             "bankError": "Selecciona una cuenta bancaria para realizar este pago.",
-            "paymentMethodError": "Selecciona un método de pago para realizar este pago.",
+            "getBankError": "No podemos obtener los métodos de pago actuales. Inténtalo de nuevo.",
+            "getBankEmpty": "No hay métodos de pago disponibles.",
             "heading": "Método de Pago",
             "label": "Seleccionar cuenta de pago",
             "moneyOutLabel": "¿Dónde debemos enviar el pago?",
+            "paymentMethodError": "Selecciona un método de pago para realizar este pago.",
             "bankDataCard": {
                 "accountNumber": "Número de cuenta",
                 "endingIn": "Terminando en "
