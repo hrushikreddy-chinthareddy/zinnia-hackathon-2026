@@ -79,22 +79,24 @@ const IllustrationMenu = ({
 
     return (
         <MenuContextual triggerLabel={<Icon type={IconType.MENU_HORIZONTAL} />}>
-            {isSelectForApplicationVisible && (
-                <MenuContextualItem
-                    disabled={isLoadingSelectForApplication}
-                    onClick={handleSelectIllustration}
-                    content={t(
-                        'clientCase.illustrationDetails.selectForApplication'
-                    )}
-                    icon={
-                        <Icon
-                            type={IconType.CIRCLE_CHECKMARK}
-                            height={20}
-                            width={20}
-                        />
-                    }
-                />
-            )}
+            {isSelectForApplicationVisible &&
+                selectedIllustration?.illustration.status !==
+                    IllustrationStatuses.SELECTED && (
+                    <MenuContextualItem
+                        disabled={isLoadingSelectForApplication}
+                        onClick={handleSelectIllustration}
+                        content={t(
+                            'clientCase.illustrationDetails.selectForApplication'
+                        )}
+                        icon={
+                            <Icon
+                                type={IconType.CIRCLE_CHECKMARK}
+                                height={20}
+                                width={20}
+                            />
+                        }
+                    />
+                )}
             {selectedIllustration?.illustration.status ===
                 IllustrationStatuses.ACTIVE && (
                 <MenuContextualItem

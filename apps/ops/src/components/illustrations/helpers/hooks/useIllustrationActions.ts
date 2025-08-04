@@ -17,6 +17,7 @@ export const useIllustrationActions = () => {
         setIsLoadingSelectForApplication,
         selectedIllustration,
         newBusinessCaseId,
+        eAppLink,
     } = useSelectedIllustration();
 
     const selectIllustrationMutation = useMutation({
@@ -81,6 +82,15 @@ export const useIllustrationActions = () => {
             queryClient.invalidateQueries({
                 queryKey: ['clientCaseData', clientCaseId],
             });
+
+            // Using this method to open a link to avoid popup blockers
+            const myAnchor = document.createElement('a');
+            myAnchor.href = eAppLink ?? '';
+            myAnchor.target = '_blank';
+            myAnchor.rel = 'noopener noreferrer';
+            document.body.appendChild(myAnchor);
+            myAnchor.click();
+            document.body.removeChild(myAnchor);
         },
         onError: () => {
             setIsLoadingSelectForApplication(false);

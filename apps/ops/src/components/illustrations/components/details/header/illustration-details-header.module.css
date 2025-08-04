@@ -27,10 +27,23 @@
 }
 
 .goToSureify {
-    &:hover {
-        &:not(:disabled):after {
-            content: none;
-        }
+    font: var(--typography-buttons-button-sm);
+    color: var(--color-states-inactive-text-inactive-text);
+    cursor: not-allowed;
+
+    &:link,
+    &:visited {
+        cursor: pointer;
+        color: var(--color-base-text-text-link);
+    }
+    &.enabled:hover {
+        color: var(--color-states-hover-text-hover-text-link);
+    }
+
+    & span {
+        display: flex;
+        align-items: center;
+        gap: var(--measure-dimension-gap-sm);
     }
 }
 

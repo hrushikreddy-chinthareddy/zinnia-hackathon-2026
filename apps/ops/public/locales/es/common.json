@@ -6840,7 +6840,9 @@
             "selected": "Seleccionado",
             "unArchive": "Desarchivar",
             "valuePerYear": "{{value}} / año",
-            "numYears": "{{years}} años"
+            "numYears": "{{years}} años",
+            "ariaGoToEApp": "Enlace para ir al eApp",
+            "selectBeforeGoToEApp": "Por favor seleccione un ilustración antes de continuar al eApplication."
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "Nuevo Client Case",

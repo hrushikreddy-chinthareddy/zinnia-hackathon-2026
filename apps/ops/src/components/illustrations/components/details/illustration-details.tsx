@@ -24,7 +24,7 @@ export default function IllustrationDetails({
     clientCaseId,
     eAppId,
 }: IllustrationDetailsProps) {
-    const { selectedIllustration, setNewBusinessCaseId } =
+    const { selectedIllustration, setNewBusinessCaseId, setEAppLink } =
         useSelectedIllustration();
     const illustration = selectedIllustration?.illustration;
     const product = selectedIllustration?.product;
@@ -51,6 +51,7 @@ export default function IllustrationDetails({
     useEffect(() => {
         if (newBusinesResponse) {
             setNewBusinessCaseId(newBusinesResponse.caseId);
+            setEAppLink(getEAppLink());
         }
     }, [newBusinesResponse]);
 
@@ -76,6 +77,11 @@ export default function IllustrationDetails({
         )?.value;
     };
 
+    const hasIllustrationSelected = () => {
+        if (!eAppId) return undefined;
+        return !!newBusinesResponse?.illustrations?.illustrationId;
+    };
+
     return (
         <IllustrationDetailProvider value={fullIllustration ?? null}>
             <div>
@@ -94,6 +100,7 @@ export default function IllustrationDetails({
                         }
                         eAppId={eAppId}
                         eAppLink={getEAppLink()}
+                        hasIllustrationSelected={hasIllustrationSelected()}
                     />
                 </Skeleton>
                 <Skeleton loading={isLoading}>

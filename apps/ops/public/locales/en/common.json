@@ -900,8 +900,8 @@
                     "pensionplan": "Pension Plan",
                     "ira-simple": "SIMPLE IRA (Savings Incentive Match Plan for Employees)",
                     "BannerLink": {
-                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
-                }
+                        "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+                    }
                 },
                 "notFound": "We couldn't find a contract or policy that matches your search.",
                 "tryAgain": "Check your input and try again.",
@@ -5061,7 +5061,6 @@
             "coverageLimitTooltip": "Owners can withdraw this amount without impacting their coverage. In other words, they can withdraw this amount and still keep their death benefit intact.",
             "statusTooltip": "This policy's status {{status}} doesn't allow this transaction type.",
             "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
-
         },
         "upcoming": {
             "manageAutopay": "$t(premium.upcoming.manageAutopay)",
@@ -5073,7 +5072,7 @@
             "cancelWithdrawalAutopayTitle": "Cancel Systematic {{type}}",
             "cancelAutopay": "Cancel autopay",
             "transactions": {
-                    "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+                "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
             }
         },
         "exchange1035": "Start a 1035 Exchange",
@@ -7011,7 +7010,9 @@
             "expired": "Expired",
             "selectForApplication": "Select for application",
             "valuePerYear": "{{value}} / year",
-            "numYears": "{{years}} years"
+            "numYears": "{{years}} years",
+            "ariaGoToEApp": "Go to eApp link",
+            "selectBeforeGoToEApp": "Please select an illustration before continuing to the eApplication."
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "New Client Case",

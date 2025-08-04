@@ -13,6 +13,7 @@ type SelectedIllustrationContextValue = {
     selectedIllustration: SelectedIllustrationsState;
     isLoadingSelectForApplication: boolean;
     newBusinessCaseId: string | null;
+    eAppLink: string | undefined;
     onSelectedIllustrationChange: (data: SelectedIllustrationsState) => void;
     handleSelectIllustration: (
         product: Product,
@@ -20,6 +21,7 @@ type SelectedIllustrationContextValue = {
     ) => void;
     setIsLoadingSelectForApplication: (isLoading: boolean) => void;
     setNewBusinessCaseId: (caseId: string) => void;
+    setEAppLink: (eAppLink: string | undefined) => void;
 };
 
 const SelectedIllustrationContext =
@@ -35,6 +37,7 @@ export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
     const [newBusinessCaseId, setNewBusinessCaseId] = useState<string | null>(
         null
     );
+    const [eAppLink, setEAppLink] = useState<string | undefined>(undefined);
 
     const handleSelectIllustration = (
         product: Product,
@@ -56,6 +59,7 @@ export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
                 selectedIllustration,
                 isLoadingSelectForApplication,
                 newBusinessCaseId,
+                eAppLink,
                 onSelectedIllustrationChange: (data) =>
                     setSelectedIllustration(data),
                 handleSelectIllustration,
@@ -63,6 +67,8 @@ export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
                     setIsLoadingSelectForApplication(isLoading),
                 setNewBusinessCaseId: (caseId: string) =>
                     setNewBusinessCaseId(caseId),
+                setEAppLink: (eappLink: string | undefined) =>
+                    setEAppLink(eappLink),
             }}
         >
             {props.children}

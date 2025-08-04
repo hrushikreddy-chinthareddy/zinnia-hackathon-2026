@@ -1,12 +1,12 @@
 import {
     CarrierAvatar,
     CarrierName,
-    FieldStatus,
     Heading,
     HeadingVariant,
     Icon,
     IconType,
-    Label,
+    Tooltip,
+    TooltipPlacement,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -26,6 +26,7 @@ type IllustrationDetailsHeaderProps = {
     planType: string;
     eAppId?: string;
     eAppLink?: string;
+    hasIllustrationSelected?: boolean;
 };
 
 export default function IllustrationDetailsHeader({
@@ -35,8 +36,33 @@ export default function IllustrationDetailsHeader({
     planType,
     eAppId,
     eAppLink,
+    hasIllustrationSelected,
 }: IllustrationDetailsHeaderProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+
+    const eappHtmlLink = (
+        <a
+            aria-disabled={hasIllustrationSelected}
+            key={'eapp-link'}
+            data-testid="eapp-link"
+            aria-label={
+                t('clientCase.illustrationDetails.ariaGoToEApp') as string
+            }
+            className={clsx(
+                style.goToSureify,
+                hasIllustrationSelected && style.enabled
+            )}
+            href={hasIllustrationSelected ? eAppLink : undefined}
+            role={!hasIllustrationSelected ? 'link' : undefined}
+            rel="noreferrer"
+            target="_blank"
+        >
+            <span>
+                {`App #${eAppId}`}
+                <Icon type={IconType.EXTERNAL_LINK}></Icon>
+            </span>
+        </a>
+    );
 
     return (
         <div className={style.headerWrapper}>
@@ -50,29 +76,22 @@ export default function IllustrationDetailsHeader({
                         </div>
                     </div>
                     <div className={style.centerLine}>
-                        {!!eAppId && !!eAppLink && (
-                            <Label
-                                interactiveElements={[
-                                    <a
-                                        key={'eapp-link'}
-                                        data-testid="eapp-link"
-                                        aria-label={t('') as string}
-                                        className={clsx(style.goToSureify)}
-                                        href={eAppLink}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <Icon
-                                            type={IconType.EXTERNAL_LINK}
-                                        ></Icon>
-                                    </a>,
-                                ]}
-                                status={FieldStatus.INACTIVE}
-                                size="sm"
-                            >
-                                {`App #${eAppId}`}
-                            </Label>
-                        )}
+                        {!!eAppId &&
+                            !!eAppLink &&
+                            (hasIllustrationSelected ? (
+                                eappHtmlLink
+                            ) : (
+                                <Tooltip
+                                    placement={TooltipPlacement.BottomLeft}
+                                    trigger={eappHtmlLink}
+                                >
+                                    {
+                                        t(
+                                            'clientCase.illustrationDetails.selectBeforeGoToEApp'
+                                        ) as string
+                                    }
+                                </Tooltip>
+                            ))}
                         <span>
                             <IllustrationMenu
                                 isSelectForApplicationVisible={!!eAppId}
