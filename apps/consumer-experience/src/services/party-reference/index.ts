@@ -23,7 +23,11 @@ export const getPartyReferenceData = withLogging(
       });
     }
 
-    const rawResponse = await ServerApi.get(url, undefined, loggingCtx);
+    const rawResponse = await ServerApi.get(
+      url,
+      { cache: 'force-cache' },
+      loggingCtx
+    );
     const response: PartyReferenceDataModel =
       await parseAPIResponse(rawResponse);
 

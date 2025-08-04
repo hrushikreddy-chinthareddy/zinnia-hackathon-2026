@@ -285,6 +285,22 @@ export const autopayBankId = (policy: Policy) => {
   return autopayPayor?.bankId;
 };
 
+export const banksByPartyId = (
+  policy: Policy,
+  partyId?: string
+): BankDetail[] => {
+  const partyInfo = policy.parties?.find(p => p.partyId === partyId);
+  return (partyInfo?.bankDetails || [])
+    .map((b: BankAccount) => {
+      return {
+        ...b,
+        accountNumber: bankAccountNumberSanitizer(b?.accountNumber),
+        autopayEnabled: b.bankId === autopayBankId(policy),
+      };
+    })
+    .filter(bank => !isEndDatedAndEndDateUpcoming(bank.endDate));
+};
+
 export const allPolicyOwnerBanks = (policy: Policy): BankDetail[] => {
   const ownerInfo = policyOwner(policy);
 

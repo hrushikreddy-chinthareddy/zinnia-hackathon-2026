@@ -14,6 +14,8 @@ import { Emails } from '@/components/person-data/Emails';
 import { Phones } from '@/components/person-data/Phones';
 import { FullName } from '@/components/pii/FullName';
 import { getCarrierConfig } from '@/services/carrier-config';
+import { getComponentVisibility } from '@/services/display-rules';
+import { ComponentName } from '@/services/display-rules/types';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]';
 import { PaymentProvider } from '@/types/carrier-config';
@@ -21,6 +23,7 @@ import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { filterPayorViewParties, formatPartyRoles } from '@/utils/party';
 
 export const ProfileView = async ({
   lineOfBusiness,
@@ -133,12 +136,19 @@ export const ProfileView = async ({
     );
   };
 
-  const parties = () => {
+  const parties = async () => {
     const { parties } = profileData;
+    const visibility = await getComponentVisibility(policyNumber, planCode);
+    const hasPayorView =
+      visibility?.[ComponentName.PROFILE_PAYOR_PARTY_ROLES]();
 
     if (!parties) {
       return null;
     }
+
+    const filteredParties = hasPayorView
+      ? filterPayorViewParties(parties)
+      : parties;
 
     return (
       <AccordionDetails
@@ -150,12 +160,17 @@ export const ProfileView = async ({
                 People on this policy
               </span>
             ),
-            content: <PartyList parties={parties} />,
+            content: <PartyList parties={filteredParties} />,
           },
         ]}
       />
     );
   };
+
+  const loggedInParty = profileData.parties.find(
+    party => party.partyId === profileData.partyId
+  );
+  const roles = formatPartyRoles(loggedInParty?.partyRoles);
 
   return (
     <div>
@@ -167,7 +182,7 @@ export const ProfileView = async ({
       <div className="info-card-container">
         <div>
           <h2 className="mb-lg">Name</h2>
-          <FieldData Label={<Label>Owner</Label>}>
+          <FieldData Label={<Label>{roles}</Label>}>
             <p className="typography-content-body-sm">
               <FullName
                 firstName={profileData?.name?.firstName}

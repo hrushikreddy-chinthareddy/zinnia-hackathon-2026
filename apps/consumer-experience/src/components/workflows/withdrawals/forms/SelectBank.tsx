@@ -67,7 +67,7 @@ export const SelectBank = ({
   });
 
   const addBankUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile#addBankSection`;
-  const ownerProfileUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile`;
+  const profileUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile`;
 
   const selectedPartyId = state.payeeStep?.payeePartyId;
   const selectedParty = parties.find(
@@ -296,8 +296,8 @@ export const SelectBank = ({
           <div className={`my-lg mb-none ${styles.disclaimer}`}>
             <p className="typography-content-body-sm">
               Want to send a check to another address? Go to{' '}
-              <Link isInternal href={ownerProfileUrl}>
-                Owner Profile
+              <Link isInternal href={profileUrl}>
+                Your Profile
               </Link>{' '}
               to add. If you&apos;re not seeing the address you want to mail to,
               give us a call at <CarrierPhoneNumber />.

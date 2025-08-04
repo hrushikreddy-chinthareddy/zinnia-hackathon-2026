@@ -3,22 +3,14 @@ import {
   Policy,
   ProductType,
 } from '@xd/api-types/dist/generated-types/sor';
-import * as jose from 'jose';
 
-import { UserClaims } from '@/types/auth';
-import { getAccessToken } from '@/utils/auth';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { isPayorOnly } from '@/utils/party';
 
 import { ComponentName } from './types';
-import { getPartyReferenceData } from '../party-reference';
-import {
-  getPartyRolesByPolicyNumber,
-  getPolicyPartyIdByPolicyNumber,
-} from '../party-reference/transformers';
-import { getPolicyByPlanCodeAndId } from '../policy';
-import { getPartyRolesFromPolicyPartyId } from '../policy/transformers';
+import { getLoggedInUserPolicyAndPartyData } from '../policy';
+import { getLoggedInUserPolicyAndPartyDataErrors } from '../policy/types';
 
 /**
  * Core function to evaluate component visibility rules
@@ -28,7 +20,8 @@ import { getPartyRolesFromPolicyPartyId } from '../policy/transformers';
  */
 export const evaluateRules = (
   policy: Policy,
-  partyRoles: PartyRole[]
+  partyRoles: PartyRole[],
+  skip?: boolean //An alternate skip option to override every option and force it to show
 ): Record<ComponentName, () => boolean> => {
   const isPayorNotOwner = isPayorOnly(partyRoles);
   // This means that we are defaulting to the owner view for any
@@ -39,17 +32,20 @@ export const evaluateRules = (
 
   // Evaluate all rules at once
   return {
-    [ComponentName.OWNER_PROFILE]: () => isNotPayor,
-    [ComponentName.PAYOR_PROFILE]: () => isPayorNotOwner,
-    [ComponentName.OVERVIEW_PAYMENT_HISTORY]: () => isPayorNotOwner,
-    [ComponentName.OVERVIEW_PREMIUM_LINK]: () => isNotPayor || isPayorNotOwner,
-    [ComponentName.OVERVIEW_PREMIUM_DETAILED_VIEW]: () => isPayorNotOwner,
+    [ComponentName.OVERVIEW_PROFILE]: () => true,
+    [ComponentName.OVERVIEW_PAYMENT_HISTORY]: () => isPayorNotOwner || !!skip,
+    [ComponentName.OVERVIEW_PREMIUM_LINK]: () => true,
+    [ComponentName.OVERVIEW_PREMIUM_DETAILED_VIEW]: () =>
+      isPayorNotOwner || !!skip,
     [ComponentName.OVERVIEW_ACCOUNT_VALUE]: () =>
-      isNotPayor && policy.product?.productType !== ProductType.TERM,
-    [ComponentName.OVERVIEW_COVERAGE]: () => isNotPayor,
-    [ComponentName.OVERVIEW_BENEFICIARIES]: () => isNotPayor,
-    [ComponentName.OVERVIEW_RIDERS]: () => isNotPayor,
-    [ComponentName.OVERVIEW_DOCUMENTS]: () => isNotPayor,
+      (isNotPayor && policy.product?.productType !== ProductType.TERM) ||
+      !!skip,
+    [ComponentName.OVERVIEW_COVERAGE]: () => isNotPayor || !!skip,
+    [ComponentName.OVERVIEW_BENEFICIARIES]: () => isNotPayor || !!skip,
+    [ComponentName.OVERVIEW_RIDERS]: () => isNotPayor || !!skip,
+    [ComponentName.OVERVIEW_DOCUMENTS]: () => isNotPayor || !!skip,
+    [ComponentName.PROFILE_PAYOR_PARTY_ROLES]: () => isPayorNotOwner,
+    [ComponentName.PREMIUM_PAYOR_BACK_URL]: () => isPayorNotOwner,
   };
 };
 
@@ -58,66 +54,30 @@ export const getComponentVisibility = async (
   planCode: string
 ): Promise<Record<ComponentName, () => boolean> | null> => {
   try {
-    // Get the access token party ID
-    const { accessToken } = await getAccessToken();
-
-    if (!accessToken) {
-      throw new Error('No accessToken found: getAccessToken');
-    }
-
-    let partyId;
-    try {
-      const decodedToken = jose.decodeJwt(accessToken) as UserClaims;
-      partyId = decodedToken.partyId;
-    } catch (tokenError) {
-      throw new Error(`Error decoding JWT: ${tokenError}`);
-    }
-
     const loggingContext = await buildCommonLogContext();
 
-    logTrace('displa-rules::start', {
+    logTrace('display-rules::start', {
       ...loggingContext,
       planCode,
       policyNumber,
     });
 
-    const [{ data: partyRefData }, { data: policyData }] = await Promise.all([
-      getPartyReferenceData(partyId, loggingContext),
-      getPolicyByPlanCodeAndId(
-        {
-          planCode,
-          policyNumber,
-        },
-        loggingContext
-      ),
-    ]);
-
-    if (!partyRefData) {
-      throw new Error('No party reference data found: getPartyReferenceData');
-    }
-
-    // try to get partyRoles from the party reference API
-    let partyRoles = getPartyRolesByPolicyNumber(partyRefData, policyNumber);
-
-    // if no roles come back, we need to cross reference the partyId from party reference with the policy partyRoles
-    if (!partyRoles) {
-      const policyPartyId = getPolicyPartyIdByPolicyNumber(
-        partyRefData,
-        policyNumber
-      );
-
-      if (!policyData) {
-        throw new Error('No policy found: getPolicyPartyIdByPolicyNumber');
-      }
-      partyRoles = getPartyRolesFromPolicyPartyId(policyPartyId, policyData);
-    }
-
-    if (!policyData) {
-      throw new Error('No party roles found: getPartyRolesFromPolicyPartyId');
-    }
+    const { data, error } = await getLoggedInUserPolicyAndPartyData(
+      { planCode, policyNumber },
+      loggingContext
+    );
 
     // Evaluate all rules at once
-    const visibility = evaluateRules(policyData, partyRoles);
+    const visibility = evaluateRules(
+      data?.policy ?? {},
+      data?.partyRoles || [],
+      error?.cause === getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_ID_FOUND
+      // ^^^ Why are we doing this? Party Ref API had a situation where it wasnt returning a reference to a policy I had access to.
+      // This short circuits the check and just returns true for everything in visibility
+      // TODO: This might be a bad idea in the future if we have more separate components that cant all be displayed at once.
+      // In that scenario, we might want to make it so that the check is done for each component separately.
+      // https://se2llc-global.slack.com/archives/C08DTEEK0SZ/p1753979626786329
+    );
     return visibility;
   } catch (error) {
     logError(

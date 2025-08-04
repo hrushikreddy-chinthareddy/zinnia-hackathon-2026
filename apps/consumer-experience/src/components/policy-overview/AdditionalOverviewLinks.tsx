@@ -39,8 +39,6 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
 
   const visibility = await getComponentVisibility(policyNumber, planCode);
 
-  const showOwnerProfile = visibility?.[ComponentName.OWNER_PROFILE]();
-  const showPayorProfile = visibility?.[ComponentName.PAYOR_PROFILE]();
   const showBeneficiaries =
     visibility?.[ComponentName.OVERVIEW_BENEFICIARIES]() &&
     !!beneficiaryCount &&
@@ -62,20 +60,10 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
 
     {
       url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/profile`,
-      urlLabel: 'owner profile',
+      urlLabel: 'my profile',
       isInternal: true,
       iconType: IconType.CIRCLE_USER,
-      linkText: 'Owner Profile',
-      visibility: showOwnerProfile,
-    },
-
-    {
-      url: `/coverage/${lineOfBusinessURL}/${planCode}/${policyNumber}/profile`,
-      urlLabel: 'payor profile',
-      isInternal: true,
-      iconType: IconType.CIRCLE_USER,
-      linkText: 'Payor Profile',
-      visibility: showPayorProfile,
+      linkText: 'My Profile',
     },
 
     {

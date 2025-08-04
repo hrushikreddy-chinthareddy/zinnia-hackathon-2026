@@ -11,6 +11,8 @@ import { CanceledFreelook } from '@/components/policy-overview/non-active-status
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { getPolicyForHeaderDetails } from '@/services';
+import { getComponentVisibility } from '@/services/display-rules';
+import { ComponentName } from '@/services/display-rules/types';
 import { LineOfBusinessPath } from '@/types';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
@@ -38,6 +40,8 @@ export default async function Page({
     },
     loggingContext
   );
+
+  const visibility = await getComponentVisibility(policyNumber, planCode);
 
   if (error) {
     return (
@@ -82,21 +86,23 @@ export default async function Page({
 
     return (
       <div className="card-container">
-        <ClickableCardContainer>
-          <ClickableCardContainer.LinkContent
-            linkTo={{
-              url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/account`,
-              label: 'go to account value page',
-            }}
-          >
-            <AccountValue
-              planCode={planCode}
-              policyNumber={policyNumber}
-              isLink
-              showIcon
-            />
-          </ClickableCardContainer.LinkContent>
-        </ClickableCardContainer>
+        {visibility?.[ComponentName.OVERVIEW_ACCOUNT_VALUE]() && (
+          <ClickableCardContainer>
+            <ClickableCardContainer.LinkContent
+              linkTo={{
+                url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/account`,
+                label: 'go to account value page',
+              }}
+            >
+              <AccountValue
+                planCode={planCode}
+                policyNumber={policyNumber}
+                isLink
+                showIcon
+              />
+            </ClickableCardContainer.LinkContent>
+          </ClickableCardContainer>
+        )}
 
         <AdditionalOverviewLinks
           planCode={planCode}

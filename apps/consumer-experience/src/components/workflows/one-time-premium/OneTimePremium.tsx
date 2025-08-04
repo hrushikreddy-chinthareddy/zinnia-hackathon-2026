@@ -4,7 +4,9 @@ import { useRouter } from 'next/navigation';
 
 import { OttpSteps } from '@/components/providers/one-time-premium-payment/types';
 import { SteppedWorkflow } from '@/components/stepped-workflow/SteppedWorkflow';
+import { useComponentVisibility } from '@/hooks/use-component-visibility';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
+import { ComponentName } from '@/services/display-rules/types';
 
 import { stepsInfo } from './steps';
 
@@ -23,6 +25,7 @@ export const OneTimePremium = ({
 }: OneTimePremiumProps) => {
   const router = useRouter();
   const { lineOfBusinessUrl, planCode, policyNumber } = usePolicyUrlInputs();
+  const { data } = useComponentVisibility(planCode, policyNumber);
 
   OttpStages[OttpSteps.SUBMITTED].actions = {
     primary: {
@@ -45,7 +48,10 @@ export const OneTimePremium = ({
     },
   };
 
-  const cancelUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/premium`;
+  const cancelUrl = data?.[ComponentName.PREMIUM_PAYOR_BACK_URL]
+    ? `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}`
+    : `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/premium`;
+
   const baseTransactionUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/premium`;
 
   return (

@@ -117,7 +117,7 @@ export const routeMap: Record<RouteKey, RouteMap> = {
   [RouteKey.PROFILE]: {
     destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/profile',
     source: '/profile',
-    title: 'Owner Profile',
+    title: 'My Profile',
   },
   [RouteKey.RIDERS]: {
     destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/riders',

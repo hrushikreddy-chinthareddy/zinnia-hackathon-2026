@@ -1,11 +1,10 @@
-'use-client';
 import { PartyRole, PartyType } from '@zinnia/api-types/types/sor';
 import { Button, Icon, IconType, SideSheet } from '@zinnia/bloom/components';
-import React, { CSSProperties } from 'react';
+import { CSSProperties } from 'react';
 
 import { PolicyParty } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
-import { toTitleCase } from '@/utils/strings';
+import { formatPartyRoles } from '@/utils/party';
 
 import styles from './PartyList.module.css';
 import { Addresses } from '../person-data/Addresses';
@@ -16,27 +15,6 @@ import { FullName } from '../pii/FullName';
 export interface PartyListProps {
   parties: PolicyParty[];
 }
-
-const partyRoleDisplayText: { [key in PartyRole]?: string } = {
-  [PartyRole.CONTINGENTBENEFICIARY]: 'Contingent Beneficiary',
-  [PartyRole.PRIMARYBENEFICIARY]: 'Primary Beneficiary',
-  [PartyRole.PRIMARYWRITINGAGENT]: 'Agent of Record',
-  [PartyRole.PRIMARYSERVICINGAGENT]: 'Primary Servicing agent',
-  [PartyRole.ADDITIONALWRITINGGAGENT]: 'Additional Writing agent',
-  [PartyRole.ADDITIONALSERVICINGAGENT]: 'Additional Servicing agent',
-  [PartyRole.OWNER]: 'Owner',
-  [PartyRole.PAYEE]: 'Payee',
-  [PartyRole.PAYOR]: 'Payor',
-  [PartyRole.INSURED]: 'Insured',
-  [PartyRole.ANNUITANT]: 'Annuitant',
-  [PartyRole.JOINTOWNER]: 'Joint-owner',
-  [PartyRole.JOINTANNUITANT]: 'Joint Annuitant',
-  [PartyRole.COVERAGEINSURED]: 'Coverage Insured',
-  [PartyRole.THIRDPARTYDESIGNEE]: 'Third Party Designee',
-  [PartyRole.ASSIGNEE]: 'Assignee',
-  [PartyRole.EXCHANGECOMPANY]: 'Exchange Company',
-  [PartyRole.AGENT]: 'Agent',
-};
 
 /**
  * Sorts parties by the following order:
@@ -61,8 +39,6 @@ const sortPartiesByRoles = (parties: PolicyParty[]) => {
 };
 
 export const PartyList = ({ parties }: PartyListProps) => {
-  const key = React.useId();
-
   if (parties.length === 0) {
     return null;
   }
@@ -84,19 +60,13 @@ export const PartyList = ({ parties }: PartyListProps) => {
   return (
     <div className={styles.container}>
       {sortedParties.map(party => {
-        return <Party key={key} party={party} />;
+        return <Party key={party.partyId} party={party} />;
       })}
     </div>
   );
 };
 
-export const Party = ({
-  key,
-  party,
-}: {
-  key?: string | null;
-  party: PolicyParty;
-}) => {
+export const Party = ({ party }: { party: PolicyParty }) => {
   const {
     partyId,
     partyRoles,
@@ -112,15 +82,11 @@ export const Party = ({
 
   // Format roles as a comma-separated string
   // Ex: "Owner, Payor, and Primary Beneficiary"
-  const roles = partyRoles
-    ?.map(role => toTitleCase(partyRoleDisplayText[role]))
-    .join(', ')
-    .replace(/, ([^,]*)$/, ', and $1'); // replace the last comma with 'and'
+  const roles = formatPartyRoles(partyRoles);
 
   const filteredAddresses = filterItemsWithPastEndDate(addresses);
   const fileteredPhones = filterItemsWithPastEndDate(phones);
   const filteredEmails = filterItemsWithPastEndDate(emails);
-  const id = React.useId();
 
   const name =
     partyType === PartyType.INDIVIDUAL ? { firstName, lastName } : { fullName };
@@ -136,7 +102,7 @@ export const Party = ({
       partyRoles?.includes(PartyRole.CONTINGENTBENEFICIARY));
 
   return (
-    <div key={key ?? id}>
+    <div key={partyId}>
       <SideSheet
         header="Person Details"
         trigger={
@@ -150,9 +116,14 @@ export const Party = ({
           </div>
         }
       >
-        <div style={{
-          '--cols': 1,
-        } as CSSProperties} className={styles.personDetails}>
+        <div
+          style={
+            {
+              '--cols': 1,
+            } as CSSProperties
+          }
+          className={styles.personDetails}
+        >
           <div className={styles.name}>
             <h2 className="mb-lg">Name</h2>
             <div>

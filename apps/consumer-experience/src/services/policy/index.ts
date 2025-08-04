@@ -45,6 +45,7 @@ import {
   sortPoliciesByIssuedDate,
   transformPolicyForProfile,
   transformPolicyForSurrender,
+  getPartyRolesFromPolicyPartyId,
 } from '@/services/policy/transformers';
 import { ServerApi } from '@/services/server-http';
 import { ApiResponse } from '@/services/types';
@@ -85,12 +86,18 @@ import { withLogging } from '@/utils/logging/with-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { getFeatureFlags } from '../feature-flags';
+import { getLoggedInUserPolicyAndPartyDataErrors } from './types';
 import { mockAnnuityResponse } from '../mocks/annuity';
 import { MockMetricsResponse } from '../mocks/metrics';
 import {
   mockCompletedTransactions,
   mockPendingTransactions,
 } from '../mocks/transactions';
+import { getPartyReferenceData } from '../party-reference';
+import {
+  getPartyRolesByPolicyNumber,
+  getPolicyPartyIdByPolicyNumber,
+} from '../party-reference/transformers';
 
 const FILE_NAME = '/src/services/policy/index.ts';
 
@@ -570,18 +577,21 @@ export const getPolicyProfileData = withLogging(
       const product = isTestAnnuitiesEnabled()
         ? mockAnnuityResponse
         : mockPolicyResponse;
-      return transformPolicyForProfile(product);
+      return transformPolicyForProfile(product, ''); //TODO: How to mock this? Pass in a partyId that matches the mock data?
     }
 
-    const policyResponse = await getPolicyByPlanCodeAndId(options, loggingCtx);
+    const { data, error } = await getLoggedInUserPolicyAndPartyData(
+      options,
+      loggingCtx
+    );
 
-    if (policyResponse.error || !policyResponse.data) {
+    if (error || !data.policy) {
       throw new Error('Failed to fetch policy data for profile.', {
-        cause: { ...options, error: policyResponse.error },
+        cause: { ...options, error },
       });
     }
 
-    return transformPolicyForProfile(policyResponse.data);
+    return transformPolicyForProfile(data.policy, data.policyPartyId);
   },
   { file: FILE_NAME, functionName: 'getPolicyProfileData' }
 );
@@ -1181,4 +1191,57 @@ export const getPolicyDetails = withLogging(
     return transformPolicyDetails(policyResponse.data);
   },
   { file: FILE_NAME, functionName: 'getPolicyDetails' }
+);
+
+/**
+ * Returns a list of the roles and the policy partyId for the logged in user associated with a particular policy.
+ */
+export const getLoggedInUserPolicyAndPartyData = withLogging(
+  async (options: PolicyRequestInputs, loggingCtx: CommonLogContext) => {
+    const session = await getSession();
+    const partyId = session?.user?.partyId || '';
+    const { planCode, policyNumber } = options;
+    const [{ data: partyRefData }, { data: policyData }] = await Promise.all([
+      getPartyReferenceData(partyId, loggingCtx),
+      getPolicyByPlanCodeAndId(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingCtx
+      ),
+    ]);
+
+    if (!partyRefData) {
+      throw new Error(
+        getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_REFERENCE_DATA_FOUND
+      );
+    }
+
+    // try to get partyRoles from the party reference API
+    let partyRoles = getPartyRolesByPolicyNumber(partyRefData, policyNumber);
+
+    const policyPartyId =
+      getPolicyPartyIdByPolicyNumber(partyRefData, policyNumber) || '';
+
+    if (!policyData) {
+      throw new Error(getLoggedInUserPolicyAndPartyDataErrors.NO_POLICY_FOUND);
+    }
+    if (!policyPartyId) {
+      throw new Error(
+        getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_ID_FOUND
+      );
+    }
+    partyRoles = getPartyRolesFromPolicyPartyId(policyPartyId, policyData);
+
+    return {
+      partyRoles,
+      policyPartyId,
+      policy: policyData,
+    };
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'getLoggedInUserPartyRole',
+  }
 );

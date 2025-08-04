@@ -48,6 +48,7 @@ import {
   policyHasVested,
   allPolicyOwnerBanks,
   isEndDatedAndEndDateUpcoming,
+  banksByPartyId,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -201,22 +202,26 @@ export const policyParties = (policy: Policy): PolicyParty[] => {
   });
 };
 
-export const transformPolicyForProfile = (policy: Policy): PolicyProfile => {
-  const ownerInfo = policyOwner(policy);
-  const bankDetails = allPolicyOwnerBanks(policy);
+export const transformPolicyForProfile = (
+  policy: Policy,
+  partyId?: string
+): PolicyProfile => {
+  const partyInfo = policy.parties?.find(p => p.partyId === partyId);
+
+  const bankDetails = banksByPartyId(policy, partyId);
   const parties = policyParties(policy);
 
   return {
-    preferredAddressIndicator: ownerInfo?.preferredAddressIndicator || '',
-    partyId: ownerInfo?.partyId || '',
+    preferredAddressIndicator: partyInfo?.preferredAddressIndicator || '',
+    partyId: partyInfo?.partyId || '',
     name: {
-      firstName: ownerInfo?.firstName || '',
-      lastName: ownerInfo?.lastName || '',
+      firstName: partyInfo?.firstName || '',
+      lastName: partyInfo?.lastName || '',
     },
-    addresses: ownerInfo?.addresses || [],
+    addresses: partyInfo?.addresses || [],
     bankDetails,
-    emails: ownerInfo?.emails || [],
-    phones: ownerInfo?.phones || [],
+    emails: partyInfo?.emails || [],
+    phones: partyInfo?.phones || [],
     parties: parties || [],
   };
 };
