@@ -67,6 +67,8 @@ export function FieldTemplate(props: FieldTemplateProps) {
         ''
     );
 
+    const isInlineWithoutLabel = !uiOptions?.label && uiOptions?.inline;
+
     if (uiOptions.isQuoted && formData && typeof formData === 'string') {
         formData = `"${formData}"`;
     }
@@ -107,7 +109,8 @@ export function FieldTemplate(props: FieldTemplateProps) {
                         {readonly &&
                         typeof formData === 'string' &&
                         !(schema.enum || uiOptions.format === 'numeric') &&
-                        !isLink
+                        !isLink &&
+                        !isInlineWithoutLabel
                             ? formData
                             : children}
                         {!hideError && errors}
