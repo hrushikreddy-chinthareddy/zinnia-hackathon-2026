@@ -432,10 +432,7 @@ const getWithdrawalDetailsValues = (
         requestedAmount,
         totalChargeAmount,
     } = transactionAmounts ?? {};
-    const amount =
-        transactionType === TransactionType.FULL_SURRENDER
-            ? requestedAmount
-            : appliedAmount;
+    const amount = appliedAmount;
     const actualWithdrawalAmount = getActualWithdrawalAmount(
         appliedAmount,
         disbursementType,
