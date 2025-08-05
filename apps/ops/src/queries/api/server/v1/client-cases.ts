@@ -11,11 +11,7 @@ import {
     IllustraionsClientCaseSearchResponse,
     IllustrationsClientCase,
 } from '@deps/types/illustrations';
-import {
-    AddressObject,
-    EmailObject,
-    NewBusiness,
-} from '@deps/types/new-business';
+import { NewBusiness } from '@deps/types/new-business';
 import { LoggingContext } from '@deps/utils/server-logging';
 
 import { getPartyReferenceByPartyId } from './party-reference';
@@ -33,6 +29,34 @@ const SELLING_CODE_IDENTIFIER_LABEL = 'SELLING_CODE';
 const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
 const MAIN_AGENCY_ROLE = 'GeneralAgency';
 
+/**
+ * Returns an array with the readable names of missing fields of an object
+ */
+const validateRequiredFields = (
+    object: any,
+    requiredFieldsPathArray: Record<string, string>
+) =>
+    Object.entries(requiredFieldsPathArray)
+        .filter(([path]) => {
+            const value = get(object, path);
+            return value === null || value === undefined || value === '';
+        })
+        .map(([_, label]) => label);
+
+const INSURED_PARTY_REQUIRED_FIELDS = {
+    firstName: 'Insured first name',
+    lastName: 'Insured last name',
+    sexAtBirth: 'Insured sex at birth',
+    dateOfBirth: 'Insured date of birth',
+    state: 'Insured state of residence',
+};
+
+const AGENT_PARTY_REQUIRED_FIELDS = {
+    firstName: 'Agent first name',
+    lastName: 'Agent last name',
+    email: 'Agent email',
+};
+
 const buildClientCaseFromNewBusiness = async (
     newBusinessObject: NewBusiness,
     eAppId: string,
@@ -42,25 +66,43 @@ const buildClientCaseFromNewBusiness = async (
         eAppId,
     };
 
+    const { parties, caseId } = newBusinessObject;
+    if (!parties) {
+        throwTypedError(
+            'New Bussiness parties property is missing',
+            NEW_BUSINESS_API_ORIGIN
+        );
+    }
+
+    if (!caseId) {
+        throwTypedError(
+            'New Bussiness caseId is missing',
+            NEW_BUSINESS_API_ORIGIN
+        );
+    }
+
     // pull Insured data
-    const insuredParty = newBusinessObject.parties.find(
+    const insuredParty = parties.find(
         (party) => party.partyRole === INSURED_BUSINESS_LABEL
     );
-    if (insuredParty) {
-        const {
-            personalInformation: insuredPersonalInformation,
-            address = {} as AddressObject,
-        } = insuredParty;
-        const {
-            firstName: insuredFirstName,
-            lastName: insuredLastName,
-            dateOfBirth = '',
-            gender = '',
-        } = insuredPersonalInformation;
+    if (!insuredParty) {
+        throwTypedError(
+            'New business does not contain insured information',
+            NEW_BUSINESS_API_ORIGIN
+        );
+    } else {
+        const { personalInformation, address } = insuredParty;
+
+        if (!address) {
+            throwTypedError(
+                'Insured address information is missing',
+                NEW_BUSINESS_API_ORIGIN
+            );
+        }
 
         // getting Insured address
         let insuredState = '';
-        const { addresses, preferredAddressId } = address;
+        const { addresses, preferredAddressId } = address ?? {};
         if (preferredAddressId !== undefined) {
             const preferedAddress = addresses.find(
                 (address) => address.id === preferredAddressId
@@ -68,16 +110,43 @@ const buildClientCaseFromNewBusiness = async (
             if (preferedAddress) {
                 insuredState = preferedAddress.state;
             }
-        } else if (addresses.length > 0) {
+        } else if (addresses && addresses.length > 0) {
             insuredState = addresses[0].state;
         }
 
         const clientCaseTitle = 'Untitled Client Case';
 
+        const {
+            firstName,
+            lastName,
+            dateOfBirth,
+            gender: sexAtBirth,
+        } = personalInformation;
+
+        const insuredPartyMissingFields = validateRequiredFields(
+            {
+                firstName,
+                lastName,
+                dateOfBirth,
+                sexAtBirth,
+                state: insuredState,
+            },
+            INSURED_PARTY_REQUIRED_FIELDS
+        );
+
+        if (insuredPartyMissingFields.length > 0) {
+            throwTypedError(
+                `There are missing insured required fields: ${insuredPartyMissingFields.join(
+                    ', '
+                )}`,
+                NEW_BUSINESS_API_ORIGIN
+            );
+        }
+
         const insuredDetails = {
-            firstName: insuredFirstName,
-            lastName: insuredLastName,
-            sexAtBirth: toTitleCase(gender),
+            firstName,
+            lastName,
+            sexAtBirth: toTitleCase(sexAtBirth),
             dateOfBirth: new Date(dateOfBirth),
             state: insuredState,
             // all this properties used on client case payload are not included in newBussiness
@@ -91,38 +160,64 @@ const buildClientCaseFromNewBusiness = async (
         businessClientCasePayload = {
             ...businessClientCasePayload,
             insuredDetails,
-            caseManagementCaseId: newBusinessObject.caseId,
+            caseManagementCaseId: caseId,
             title: clientCaseTitle,
         };
     }
 
     // pull Agent data
-    const agentParty = newBusinessObject.parties.find(
+    const agentParty = parties.find(
         (party) => party.partyRole === PRIMARY_AGENT_BUSINESS_LABEL
     );
-    if (agentParty) {
+
+    if (!agentParty) {
+        throwTypedError(
+            'New business does not have an associated agent',
+            NEW_BUSINESS_API_ORIGIN
+        );
+    } else {
         const {
             personalInformation: agentPersonalInformation,
-            email: agentEmailObject = {} as EmailObject,
+            email: agentEmailObject,
             identifiers,
             partyId,
         } = agentParty;
-        const { firstName: agentFirstName, lastName: agentLastName } =
-            agentPersonalInformation;
+        const { firstName, lastName } = agentPersonalInformation;
+
+        if (!agentEmailObject) {
+            throwTypedError(
+                'Agent party email is missing',
+                NEW_BUSINESS_API_ORIGIN
+            );
+        }
 
         // get agent main email
         const { emails, preferredEmailId } = agentEmailObject;
-        let agentPreferedEmail = '';
+        let email = '';
 
         if (preferredEmailId !== undefined && emails) {
             const preferedEmail = emails.find(
                 (email) => email.id === preferredEmailId
             );
             if (preferedEmail !== undefined) {
-                agentPreferedEmail = preferedEmail.address;
+                email = preferedEmail.address;
             }
         } else if (emails && emails.length > 0) {
-            agentPreferedEmail = emails[0].address;
+            email = emails[0].address;
+        }
+
+        const agentPartyMissingFields = validateRequiredFields(
+            { firstName, lastName, email },
+            AGENT_PARTY_REQUIRED_FIELDS
+        );
+
+        if (agentPartyMissingFields.length > 0) {
+            throwTypedError(
+                `There are missing agent required fields: ${agentPartyMissingFields.join(
+                    ', '
+                )}`,
+                NEW_BUSINESS_API_ORIGIN
+            );
         }
 
         // get Identifiers from newBusiness
@@ -148,7 +243,6 @@ const buildClientCaseFromNewBusiness = async (
 
         if (!agentSellingCode) {
             // *** Init Party Reference Section ***
-            // retrieve data from partyReference and POM to get the complete data for agent and the agencyId
             // call api reference to get all the information
             const partyReferenceResponse = await getPartyReferenceByPartyId(
                 partyId,
@@ -225,7 +319,12 @@ const buildClientCaseFromNewBusiness = async (
             if (mainAgency) {
                 // hierarchyId should be the agencyId
                 const { hierarchyId } = mainAgency;
-                if (!agencyId) {
+                if (!hierarchyId) {
+                    throwTypedError(
+                        'Agency ID was not able to be retreated',
+                        NEW_BUSINESS_API_ORIGIN
+                    );
+                } else {
                     agencyId = hierarchyId;
                 }
             }
@@ -233,9 +332,9 @@ const buildClientCaseFromNewBusiness = async (
         // *** Finish Producers Hierarchy Section ***
 
         const agentDetails = {
-            firstName: agentFirstName,
-            lastName: agentLastName,
-            email: agentPreferedEmail,
+            firstName,
+            lastName,
+            email,
             sellingCode: agentSellingCode,
         };
 
@@ -275,47 +374,6 @@ export const searchClientCaseByEappId = async (
     }
 };
 
-const CLIENT_CASE_REQUIRED_FIELDS = {
-    eAppId: 'eAppId',
-    'insuredDetails.firstName': 'Insured first name',
-    'insuredDetails.lastName': 'Insured last name',
-    'insuredDetails.sexAtBirth': 'Insured sex at birth',
-    'insuredDetails.dateOfBirth': 'Insured date of birth',
-    'insuredDetails.state': 'Insured state of residence',
-    'agentDetails.firstName': 'Agent first name',
-    'agentDetails.lastName': 'Agent last name',
-    'agentDetails.email': 'Agent email',
-    agencyId: 'Agency ID',
-    caseManagementCaseId: 'Case Management ID',
-    title: 'Title of the case',
-};
-
-const validateClientCasePayload = (
-    payload: Partial<IllustrationsClientCase>
-) => {
-    if (!payload) {
-        throwTypedError(
-            'Client case information is empty',
-            NEW_BUSINESS_API_ORIGIN
-        );
-    }
-    const missingFields: string[] = [];
-
-    for (const [path, label] of Object.entries(CLIENT_CASE_REQUIRED_FIELDS)) {
-        const value = get(payload, path);
-        if (!value) {
-            missingFields.push(label);
-        }
-    }
-
-    if (missingFields.length > 0) {
-        throwTypedError(
-            `There are missing required fields: ${missingFields.join(', ')}`,
-            NEW_BUSINESS_API_ORIGIN
-        );
-    }
-};
-
 export const createClientCaseFromNewBusiness = async (
     eAppId: string,
     token: string,
@@ -340,8 +398,6 @@ export const createClientCaseFromNewBusiness = async (
         eAppId,
         loggingContext
     );
-
-    validateClientCasePayload(newClientCasePayload);
 
     const config = {
         authorization: `Bearer ${token}`,
