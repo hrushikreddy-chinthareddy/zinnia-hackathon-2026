@@ -84,10 +84,13 @@ const TaskQueueTable = ({
 
             payload = Object.assign(payload, {
                 queues:
-                    payload.queues || additionalData?.taskListingParams?.queues,
+                    (payload.queues || []).length > 0
+                        ? payload.queues
+                        : additionalData?.taskListingParams?.queues,
                 carriers:
-                    payload.carriers ||
-                    additionalData?.taskListingParams?.carriers,
+                    (payload.carriers || []).length > 0
+                        ? payload.carriers
+                        : additionalData?.taskListingParams?.carriers,
             });
 
             getTasks(true, payload, undefined, true);
