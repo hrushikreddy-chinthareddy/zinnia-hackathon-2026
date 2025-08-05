@@ -6971,9 +6971,26 @@
             "reportIconalt": "Document report icon"
         },
         "illustrationDetails": {
+            "daily": "Daily",
+            "every-two-weeks": "Every Two Weeks",
+            "monthly": "Monthly",
+            "quarterly": "Quarterly",
+            "semi-annual": "Semi-annual",
+            "annual": "Annual",
+            "singlepayment": "Single Payment",
+            "dtcc": "DTCC",
+            "credit-card": "Credit Card",
+            "ach": "ACH",
+            "check": "Check",
+            "exchange": "Exchange",
+            "wire": "Wire",
             "edit": "Edit",
             "viewPdf": "PDF",
             "pdfError": "An error occured while generating the PDF.",
+            "deathBenefitOption": "Death Benefit Option",
+            "premiumMode": "Premium mode",
+            "paymentMode": "Payment mode",
+            "cashValue": "Cash value",
             "duplicate": "Duplicate",
             "calculating": "Calculating",
             "ariaValuePerYear": "{{value}} per year",
@@ -7006,6 +7023,10 @@
             },
             "accountValue": {
                 "title": "Account Value",
+                "atNYears": "At {{years}} years"
+            },
+            "netSurrenderValue": {
+                "title": "Net Surrender Value",
                 "atNYears": "At {{years}} years"
             },
             "unArchive": "Un-archive",

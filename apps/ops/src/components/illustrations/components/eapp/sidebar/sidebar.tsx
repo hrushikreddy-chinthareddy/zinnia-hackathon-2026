@@ -15,6 +15,15 @@ const dataToTitleMap: Record<
     faceAmount: { label: 'Face amount', type: 'money' },
     initialPremium: { label: 'Initial premium', type: 'money' },
     cashValue: { label: 'Cash value', type: 'money' },
+    paymentMode: { label: 'Payment mode', type: 'string' },
+    premiumMode: { label: 'Premium mode', type: 'string' },
+    netSurrenderValue: { label: 'Cash value', type: 'money' },
+    netSurrenderAmountt5Years: { label: 'At 5 years', type: 'money' },
+    netSurrenderAmountt10Years: { label: 'At 10 years', type: 'money' },
+    netSurrenderAmountt15Years: { label: 'At 15 years', type: 'money' },
+    netSurrenderAmountt20Years: { label: 'At 20 years', type: 'money' },
+    netSurrenderAmountt30Years: { label: 'At 30 years', type: 'money' },
+    termLength: { label: 'Term length', type: 'string' },
 };
 
 export function Sidebar() {

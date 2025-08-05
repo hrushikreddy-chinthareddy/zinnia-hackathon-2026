@@ -92,12 +92,42 @@ interface IndexedUniversalLifeCoverages extends ScenarioCoveragesBase {
     waiverOfDeduction?: OutputCoverageValues;
 }
 
+type Options = {
+    revisedIllustration: boolean;
+    solveFor: string;
+    fixedCostPeriod: number;
+    paymentMode: string;
+    discountIndicator: string;
+    paymentMethod: string;
+    premiumDuration: number;
+    premiumDurationOption: string;
+    faceAmount: {
+        basis: string;
+        frequency: string;
+        sequence: Array<{
+            from: number;
+            through: number;
+            value: number | string;
+        }>;
+    };
+    deathBenefitOption: {
+        basis: string;
+        frequency: string;
+        sequence: Array<{
+            from: number;
+            through: number;
+            value: number | string;
+        }>;
+    };
+};
+
 type IllustrationInputsBase = {
     calculationType: string;
     source: string;
     illustrationRequestDate: string;
     jurisdiction: USStates;
     planCode: string;
+    options: Options;
 };
 
 interface TermLifeScenario extends BaseScenario {

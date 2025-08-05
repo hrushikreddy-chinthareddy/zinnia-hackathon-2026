@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QuestionnaireEngine } from '@zinnia/form-engine-sdk';
 import Router from 'next/router';
-import { createContext, PropsWithChildren, useContext } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { createIllustration } from '@deps/queries/api/client/documents/v3/illustrations';
@@ -38,6 +38,7 @@ export function SubmitProvider({
     const { questionnaireEngine } = useQuestionnaireEngine();
     const queryClient = useQueryClient();
     const sideSheet = useSideSheetContext();
+    const [formInputs, setFormInputs] = useState<any>({});
 
     const createIllustrationMutation = useMutation({
         mutationKey: ['saveOrderEntryAnswers'],
@@ -64,6 +65,7 @@ export function SubmitProvider({
                     .toISOString()
                     .slice(0, 10);
             }
+            setFormInputs(answers);
 
             const createIllustrationPayload =
                 factoryHandler.createIllustrationPayloadFromAnswerOutput(
@@ -87,7 +89,7 @@ export function SubmitProvider({
             saveIllustrationToClientCase(
                 clientCase.id,
                 data.id,
-                factoryHandler.generateTitle(data),
+                factoryHandler.generateTitle(data, formInputs),
                 factoryHandler.getPlanType(), // product type
                 factoryHandler.getPlanCode() // carrierProductId
             );
@@ -131,6 +133,7 @@ export function SubmitProvider({
             }
             const answers = mappedAnswersResult.value;
             console.log('answers', answers);
+            setFormInputs(answers);
             answers.illustrationType = 'QUICK_QUOTE';
             if (!answers.illustrationRequestDate) {
                 answers.illustrationRequestDate = new Date()
@@ -157,7 +160,10 @@ export function SubmitProvider({
         },
         onSuccess: ({ data }) => {
             const illustrationData =
-                factoryHandler.getIllustrationDataFromResponse(data);
+                factoryHandler.getIllustrationDataFromResponse(
+                    data,
+                    formInputs
+                );
 
             onIllustrationDataChange(illustrationData);
         },

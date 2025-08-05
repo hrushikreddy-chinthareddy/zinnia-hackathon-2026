@@ -762,12 +762,33 @@ function mapIllustrationPayloadToEngineInputData(
 }
 
 // We are not checking the type of the return value right now so type is any
-function getIllustrationDataFromResponse(data: any) {
+function getIllustrationDataFromResponse(data: any, formInputs: any) {
+    const fiveYearIndex = 4;
+    const tenYearIndex = 9;
+    const twentyYearIndex = 19;
+    const thirtyYearIndex = 29;
+
+    const netSurrenderValue = {
+        netSurrenderAmountt5Years:
+            data?.assumed?.annualTimeSeriesData[fiveYearIndex]
+                ?.netSurrenderValue,
+        netSurrenderAmountt10Years:
+            data?.assumed?.annualTimeSeriesData[tenYearIndex]
+                ?.netSurrenderValue,
+        netSurrenderAmountt20Years:
+            data?.assumed?.annualTimeSeriesData[twentyYearIndex]
+                ?.netSurrenderValue,
+        netSurrenderAmountt30Years:
+            data?.assumed?.annualTimeSeriesData[thirtyYearIndex]
+                ?.netSurrenderValue,
+    };
+
     return {
         faceAmount:
             data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
         initialPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
+        ...netSurrenderValue,
     };
 }
 
@@ -795,8 +816,8 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return mapIllustrationPayloadToEngineInputData(data);
     }
 
-    getIllustrationDataFromResponse(data: any): any {
-        return getIllustrationDataFromResponse(data);
+    getIllustrationDataFromResponse(data: any, formInputs: any): any {
+        return getIllustrationDataFromResponse(data, formInputs);
     }
 
     getBlueprint(): QuestionnaireBlueprint {
@@ -824,9 +845,8 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return '/api/illustration/v3/indexed-universal-life/new-business';
     }
 
-    public generateTitle(data: any): string {
+    public generateTitle(data: any, formInputs: any): string {
         const assumed = data.assumed;
-        const guaranteed = data.guaranteed;
         const creationDate = new Date().toLocaleDateString();
 
         const getRidersTextList = () => {

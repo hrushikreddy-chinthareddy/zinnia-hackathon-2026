@@ -16,10 +16,10 @@ export default function IllustrationDetailsContentSection({
         <section
             className={clsx(
                 className,
-                'grid grid-cols-3 items-center content-start gap-x-6 gap-y-2 pb-6 border-border-light border-b-2'
+                'grid grid-cols-6 items-center content-start gap-x-3 gap-y-2 pb-6 border-border-light border-b-2'
             )}
         >
-            <h3 className="[font:var(--typography-titles-subtitle)]">
+            <h3 className="col-span-1 min-w-[165px] [font:var(--typography-titles-subtitle)]">
                 {title}
             </h3>
 

@@ -17,15 +17,15 @@ export default function IllustrationDetailsContentEntry({
     return (
         <>
             <dt
-                className="col-start-2 [font:var(--typography-labels-label-sm-alt)]"
+                className="col-start-3 [font:var(--typography-labels-label-sm-alt)]"
                 {...rest}
             >
                 {label}
             </dt>
             <dd
-                className="text-end [font:var(--typography-labels-label-sm-alt)]"
+                className="col-start-4 col-span-3 text-end [font:var(--typography-labels-label-sm-alt)]"
                 {...ddProps}
-                aria-label={ddAriaLabel}
+                {...(ddAriaLabel && { 'aria-label': ddAriaLabel })}
             >
                 {children}
             </dd>

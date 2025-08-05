@@ -8,6 +8,7 @@ import { ProductTypes } from '@deps/types/product';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
+import { formatIllustrationDetailYearlyCurrency } from './illustration-details-helpers';
 import { useRidersLabelMap } from './use-riders-label-map';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
@@ -58,16 +59,15 @@ export function useIllustrationCoverageData() {
     ];
 }
 
-export default function IllustrationDetailsContentCoverage() {
+export default function TermContentCoverage() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustration = useIllustrationDetail();
 
     const faceAmount =
-        illustration?.response.assumed.coverages.base.faceAmount ?? null;
+        illustration?.response?.assumed?.coverages?.base?.faceAmount ?? null;
     const faceAmountStr = numberFormatify(faceAmount);
-
     const planYears =
-        illustration?.response.assumed.annualTimeSeriesData.at(-1)?.year;
+        illustration?.inputs?.options?.fixedCostPeriod || DEFAULT_ERROR_STRING;
 
     return (
         <ContentSection
@@ -81,31 +81,19 @@ export default function IllustrationDetailsContentCoverage() {
                     )}
                     ddAriaLabel={faceAmountStr}
                 >
-                    {faceAmount != null ? (
-                        <>
-                            <span className="[font:var(--typography-content-body-bold)]">
-                                {faceAmountStr.slice(0, -3)}
-                            </span>
-                            {faceAmountStr.slice(-3)}
-                        </>
-                    ) : (
-                        faceAmountStr
-                    )}
+                    {formatIllustrationDetailYearlyCurrency(t, faceAmount)}
                 </ContentEntry>
-                {illustration &&
-                    illustration.productType === ProductTypes.TERM && (
-                        <ContentEntry
-                            label={t(
-                                'clientCase.illustrationDetails.coverage.termLength'
-                            )}
-                        >
-                            <span className="[font:var(--typography-content-body-bold)]">
-                                {t('clientCase.illustrationDetails.numYears', {
-                                    years: planYears,
-                                })}
-                            </span>
-                        </ContentEntry>
+                <ContentEntry
+                    label={t(
+                        'clientCase.illustrationDetails.coverage.termLength'
                     )}
+                >
+                    <span className="[font:var(--typography-content-body-bold)]">
+                        {t('clientCase.illustrationDetails.numYears', {
+                            years: planYears,
+                        })}
+                    </span>
+                </ContentEntry>
             </dl>
         </ContentSection>
     );

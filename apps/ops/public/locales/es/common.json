@@ -6801,9 +6801,26 @@
             "reportIconalt": "Icono documento de reporte"
         },
         "illustrationDetails": {
+            "daily": "Diario",
+            "every-two-weeks": "Cada dos semanas",
+            "monthly": "Mensual",
+            "quarterly": "Trimestral",
+            "semi-annual": "Semestral",
+            "annual": "Anual",
+            "singlepayment": "Pago único",
+            "dtcc": "DTCC",
+            "credit-card": "Tarjeta de crédito",
+            "ach": "ACH",
+            "check": "Cheque",
+            "exchange": "Intercambio",
+            "wire": "Transferencia bancaria",
             "edit": "Editar",
             "viewPdf": "PDF",
             "pdfError": "Ocurrio un error al cargar el PDF.",
+            "deathBenefitOption": "Opción de beneficio por fallecimiento",
+            "premiumMode": "Modo de prima",
+            "paymentMode": "Modo de pago",
+            "cashValue": "Valor en efectivo",
             "duplicate": "Duplicar",
             "calculating": "Calculando",
             "ariaValuePerYear": "{{value}} por año",
@@ -6836,6 +6853,10 @@
             },
             "accountValue": {
                 "title": "Valor de cuenta",
+                "atNYears": "A los {{years}} años"
+            },
+            "netSurrenderValue": {
+                "title": "Valor neto de rescate",
                 "atNYears": "A los {{years}} años"
             },
             "selectForApplication": "Seleccione para la aplicación",

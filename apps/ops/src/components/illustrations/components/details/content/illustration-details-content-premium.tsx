@@ -1,15 +1,24 @@
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypes } from '@deps/types/product';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
+import {
+    formatIllustrationDetailYearlyCurrency,
+    paymentFrequencies,
+    paymentMethods,
+} from './illustration-details-helpers';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
-export function useIllustrationPremiumData() {
+type PremiumEntry = {
+    label: string;
+    format: (isBold: boolean) => React.ReactNode;
+};
+
+export function useIllustrationPremiumData(): PremiumEntry[] {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustration = useIllustrationDetail();
 
@@ -17,85 +26,135 @@ export function useIllustrationPremiumData() {
         return [
             {
                 label: t('clientCase.illustrationDetails.premium.initial'),
-                value: null,
+                format: () => <span>{DEFAULT_ERROR_STRING}</span>,
             },
             {
                 label: t('clientCase.illustrationDetails.premium.target'),
-                value: null,
+                format: () => <span>{DEFAULT_ERROR_STRING}</span>,
             },
         ];
     }
 
+    const { options } = illustration.inputs;
+
     if (illustration.productType === ProductTypes.INDEX_UNIVERSAL_LIFE) {
-        const { annualTimeSeriesData } = illustration.response.assumed;
+        const iulData = illustration.response.assumed.annualTimeSeriesData;
+
         return [
             {
                 label: t('clientCase.illustrationDetails.premium.initial'),
-                value: annualTimeSeriesData[0].minimumPremiumAmount,
+                format: () =>
+                    formatIllustrationDetailYearlyCurrency(
+                        t,
+                        iulData[0]?.minimumPremiumAmount
+                    ),
             },
             {
                 label: t('clientCase.illustrationDetails.premium.target'),
-                value: annualTimeSeriesData.at(-1)?.minimumPremiumAmount,
+
+                format: () =>
+                    formatIllustrationDetailYearlyCurrency(
+                        t,
+                        iulData[0]?.minimumPremiumAmount
+                    ),
             },
             {
                 label: t('clientCase.illustrationDetails.premium.mec'),
-                value: annualTimeSeriesData[0].sevenPayPremiumAmount,
+                format: () =>
+                    formatIllustrationDetailYearlyCurrency(
+                        t,
+                        iulData[0]?.sevenPayPremiumAmount
+                    ),
+            },
+            {
+                label: 'Premium Mode',
+                format: (bold) => (
+                    <span className={boldClass(bold)}>
+                        {paymentFrequencies[options.paymentMode]
+                            ? t(paymentFrequencies[options.paymentMode])
+                            : DEFAULT_ERROR_STRING}
+                    </span>
+                ),
+            },
+            {
+                label: 'Payment Mode',
+                format: (bold) => (
+                    <span className={boldClass(bold)}>
+                        {paymentMethods[options.paymentMethod]
+                            ? t(paymentMethods[options.paymentMethod])
+                            : DEFAULT_ERROR_STRING}
+                    </span>
+                ),
             },
         ];
     }
 
-    const { annualTimeSeriesData, coverages } = illustration.response.assumed;
+    const baseData = illustration.response.assumed;
 
     return [
         {
             label: t('clientCase.illustrationDetails.premium.initialBase'),
-            value: coverages.base.premium,
+            format: () =>
+                formatIllustrationDetailYearlyCurrency(
+                    t,
+                    baseData.coverages.base.premium
+                ),
         },
         {
             label: t('clientCase.illustrationDetails.premium.totalInitial'),
-            value: annualTimeSeriesData[0].premiumAmount,
+            format: () =>
+                formatIllustrationDetailYearlyCurrency(
+                    t,
+                    baseData.annualTimeSeriesData[0].premiumAmount
+                ),
+        },
+        {
+            label: t('clientCase.illustrationDetails.premiumMode'),
+            format: (bold) => (
+                <span className={boldClass(bold)}>
+                    {paymentFrequencies[options.paymentMode]
+                        ? t(paymentFrequencies[options.paymentMode])
+                        : DEFAULT_ERROR_STRING}
+                </span>
+            ),
+        },
+        {
+            label: t('clientCase.illustrationDetails.paymentMode'),
+            format: (bold) => (
+                <span className={boldClass(bold)}>
+                    {paymentMethods[options.paymentMethod]
+                        ? t(paymentMethods[options.paymentMethod])
+                        : DEFAULT_ERROR_STRING}
+                </span>
+            ),
         },
     ];
 }
 
+// Utility function for font classes
+const boldClass = (bold: boolean) =>
+    bold
+        ? '[font:var(--typography-content-body-bold)]'
+        : '[font:var(--typography-content-body)]';
+
 export default function IllustrationDetailsContentPremium() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-
     const entries = useIllustrationPremiumData();
+
     return (
         <ContentSection
             title={t('clientCase.illustrationDetails.premium.title')}
         >
             <dl className="contents">
-                {entries.map(({ label, value }, idx) => {
-                    const valueStr = numberFormatify(value);
-                    const className =
-                        idx === 0
-                            ? '[font:var(--typography-content-body-bold)]'
-                            : '[font:var(--typography-content-body)]';
-                    return (
-                        <ContentEntry
-                            key={label}
-                            label={label}
-                            ddAriaLabel={
-                                t(
-                                    'clientCase.illustrationDetails.ariaValuePerYear',
-                                    { value: valueStr }
-                                ) ?? undefined
-                            }
-                        >
-                            <span className={className}>
-                                {valueStr.slice(0, -3)}
-                            </span>
-                            {value
-                                ? t(
-                                      'clientCase.illustrationDetails.valuePerYear',
-                                      { value: valueStr.slice(-3) }
-                                  )
-                                : DEFAULT_ERROR_STRING}
-                        </ContentEntry>
-                    );
-                })}
+                {entries.map(({ label, format }, idx) => (
+                    <ContentEntry
+                        key={label}
+                        label={label}
+                        ddAriaLabel={undefined} // optional, or handle per-row
+                    >
+                        {format(idx === 0)}
+                    </ContentEntry>
+                ))}
             </dl>
         </ContentSection>
     );

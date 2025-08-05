@@ -1174,7 +1174,7 @@ export const farmersBlueprintIU0101 = {
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
-                                                                    minAge: 18,
+                                                                    minAge: 1,
                                                                     maxAge: 80,
                                                                     unit: 'year',
                                                                 },
@@ -1188,7 +1188,7 @@ export const farmersBlueprintIU0101 = {
                                                     {
                                                         type: 'ageRangeCondition',
                                                         value: {
-                                                            minAge: 18,
+                                                            minAge: 1,
                                                             maxAge: 80,
                                                             unit: 'year',
                                                         },

@@ -365,11 +365,14 @@ export function mapIllustrationPayloadToEngineInputData(
 }
 
 // We are not checking the type of the return value right now so type is any
-export function getIllustrationDataFromResponse(data: any) {
+export function getIllustrationDataFromResponse(data: any, formInputs: any) {
     return {
         faceAmount:
             data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
         initialPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
+        termLength: `${
+            formInputs?.fixedCostPeriod || DEFAULT_ERROR_STRING
+        } years`,
     };
 }

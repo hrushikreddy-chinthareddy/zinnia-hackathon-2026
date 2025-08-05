@@ -1262,7 +1262,7 @@ export const farmersTermBlueprintTL0101 = {
                                                             {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
-                                                                    minAge: 18,
+                                                                    minAge: 1,
                                                                     maxAge: 75,
                                                                     unit: 'year',
                                                                 },
@@ -1277,16 +1277,9 @@ export const farmersTermBlueprintTL0101 = {
                                                         booleanOperator: 'and',
                                                         conditions: [
                                                             {
-                                                                type: 'equalityCondition',
-                                                                value: 'TR0101',
-                                                                isEqual: true,
-                                                                targetNodeId:
-                                                                    'product',
-                                                            },
-                                                            {
                                                                 type: 'ageRangeCondition',
                                                                 value: {
-                                                                    minAge: 18,
+                                                                    minAge: 1,
                                                                     maxAge: 50,
                                                                     unit: 'year',
                                                                 },

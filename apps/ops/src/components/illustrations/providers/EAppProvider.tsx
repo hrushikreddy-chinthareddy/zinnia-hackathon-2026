@@ -6,6 +6,15 @@ export type EAppData = {
     faceAmount?: number;
     initialPremium?: number;
     cashValue?: number;
+    paymentMode?: string;
+    premiumMode?: string;
+    netSurrenderValue?: number;
+    netSurrenderAmountt5Years?: number;
+    netSurrenderAmountt10Years?: number;
+    netSurrenderAmountt15Years?: number;
+    netSurrenderAmountt20Years?: number;
+    netSurrenderAmountt30Years?: number;
+    termLength?: string;
 };
 
 type EappContextValue = {

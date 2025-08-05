@@ -48,8 +48,8 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
         return mapIllustrationPayloadToEngineInputData(data);
     }
 
-    getIllustrationDataFromResponse(data: any): any {
-        return getIllustrationDataFromResponse(data);
+    getIllustrationDataFromResponse(data: any, formInputs: any): any {
+        return getIllustrationDataFromResponse(data, formInputs);
     }
 
     getBlueprint(): QuestionnaireBlueprint {
@@ -76,7 +76,7 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
         return '/api/illustration/v3/term-life/new-business';
     }
 
-    public generateTitle(data: any): string {
+    public generateTitle(data: any, formInputs: any): string {
         const assumed = data.assumed;
         const guaranteed = data.guaranteed;
         const createDate = new Date().toLocaleDateString();
@@ -97,6 +97,6 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
 
         return `${createDate}, ${numberFormatify(
             assumed.initial.totalFaceAmount
-        )}, ${guaranteed.lapse.year} years${getRidersText()}`;
+        )}, ${formInputs.fixedCostPeriod} yr${getRidersText()}`;
     }
 }

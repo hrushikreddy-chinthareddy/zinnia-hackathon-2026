@@ -373,15 +373,23 @@ export function mapIllustrationPayloadToEngineInputData(
 }
 
 // We are not checking the type of the return value right now so type is any
-export function getIllustrationDataFromResponse(data: any) {
+export function getIllustrationDataFromResponse(data: any, formInputs: any) {
+    const netSurrenderObj = data?.assumed?.annualTimeSeriesData
+        .slice()
+        .reverse()
+        .find((item: any) => item.netSurrenderValue !== 0);
+
+    const netSurrenderValue = netSurrenderObj?.netSurrenderValue;
+
     return {
         faceAmount:
             data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
         initialPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
-        cashValue:
-            data?.assumed?.annualTimeSeriesData?.accountValue ||
-            DEFAULT_ERROR_STRING,
+        termLength: `${
+            formInputs?.fixedCostPeriod || DEFAULT_ERROR_STRING
+        } years`,
+        netSurrenderValue,
     };
 }
 
@@ -410,8 +418,8 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
         return mapIllustrationPayloadToEngineInputData(data);
     }
 
-    getIllustrationDataFromResponse(data: any): any {
-        return getIllustrationDataFromResponse(data);
+    getIllustrationDataFromResponse(data: any, formInputs: any): any {
+        return getIllustrationDataFromResponse(data, formInputs);
     }
 
     getBlueprint(): QuestionnaireBlueprint {
@@ -438,9 +446,8 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
         return '/api/illustration/v3/term-life/new-business';
     }
 
-    public generateTitle(data: any): string {
+    public generateTitle(data: any, formInputs: any): string {
         const assumed = data.assumed;
-        const guaranteed = data.guaranteed;
         const createDate = new Date().toLocaleDateString();
 
         const getRidersText = () => {
@@ -459,6 +466,6 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
 
         return `${createDate}, ${numberFormatify(
             assumed.initial.totalFaceAmount
-        )}, ${guaranteed.lapse.year} years${getRidersText()}`;
+        )}, ${formInputs.fixedCostPeriod} yr${getRidersText()}`;
     }
 }

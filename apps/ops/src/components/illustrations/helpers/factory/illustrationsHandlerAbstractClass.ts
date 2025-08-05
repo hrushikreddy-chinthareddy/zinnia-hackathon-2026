@@ -34,7 +34,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
 
     // abstract mapIllustrationPayloadToEngineInputData(data: CreateIllustrationPayload): TOutputEntities;
 
-    abstract getIllustrationDataFromResponse(data: any): any;
+    abstract getIllustrationDataFromResponse(data: any, formInputs: any): any;
 
     abstract getBlueprint(): QuestionnaireBlueprint;
 
@@ -52,7 +52,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
         return this.clientCase;
     }
 
-    abstract generateTitle(data: any): string;
+    abstract generateTitle(data: any, formInputs: any): string;
 
     public mapClientCaseInsuredData() {
         const clientCase = this.clientCase;
