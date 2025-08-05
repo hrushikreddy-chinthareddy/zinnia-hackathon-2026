@@ -174,7 +174,10 @@ export default function BeneficiaryListingItem({
                     </div>
                     <div className={isCurrentRemoved ? 'invisible' : ''}>
                         <div
-                            onClick={() => setShowBeneficiary(!showBeneficiary)}
+                            onClick={() => {
+                                setShowBeneficiary(!showBeneficiary);
+                                setIsNonEditable(!isNonEditable);
+                            }}
                             className="ml-6"
                         >
                             <ChevronDown
