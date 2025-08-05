@@ -126,6 +126,12 @@ export default function useFlicSSWConfig(t: TFunction) {
                     `${ESignatureValidationTypeWithdrawal.Owner}-signPresent`
                 ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
+
+            if (ownerSignature?.isDesignationPresent === null) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
+                ] = t('formValidation.signatureDesignationMustBeSelected');
+            }
             return errors;
         },
         [t]
@@ -628,8 +634,8 @@ export default function useFlicSSWConfig(t: TFunction) {
                     key: 'owner-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'owner-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
@@ -650,8 +656,8 @@ export default function useFlicSSWConfig(t: TFunction) {
                     key: 'joint-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'joint-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,

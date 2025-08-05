@@ -235,7 +235,7 @@ describe('RSLN OFT Form Specific component', () => {
             );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
-                expect(ownerConfig?.fields).toHaveLength(6);
+                expect(ownerConfig?.fields).toHaveLength(5);
             });
         });
 
@@ -247,7 +247,7 @@ describe('RSLN OFT Form Specific component', () => {
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
-                expect(jointOwnerConfig?.fields).toHaveLength(6);
+                expect(jointOwnerConfig?.fields).toHaveLength(5);
             });
 
             it('should have shouldDisplay logic', () => {
@@ -377,7 +377,7 @@ describe('RSLN OFT Form Specific component', () => {
                         SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
                 expect(beneficiaryConfig).toBeTruthy();
-                expect(beneficiaryConfig?.fields).toHaveLength(6);
+                expect(beneficiaryConfig?.fields).toHaveLength(5);
             });
         });
     });

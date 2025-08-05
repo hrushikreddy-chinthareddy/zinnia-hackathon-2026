@@ -61,6 +61,7 @@ export const getDefaultSignature = (
         signType: {
             text: signatureType,
         },
+        isDesignationPresent: null,
         spousalConsent: {
             text: null,
         },
@@ -115,9 +116,9 @@ export default function SignatureValidations({
                 formDataContext.formErrors[
                     `${signatureType}${SignatureFieldNames.SignaturePresent}`
                 ],
-            [SignatureFieldNames.SignatureTitle]:
+            [SignatureFieldNames.SignatureDesignation]:
                 formDataContext.formErrors[
-                    `${signatureType}${SignatureFieldNames.SignatureTitle}`
+                    `${signatureType}${SignatureFieldNames.SignatureDesignation}`
                 ],
             [SignatureFieldNames.SignatureType]:
                 formDataContext.formErrors[

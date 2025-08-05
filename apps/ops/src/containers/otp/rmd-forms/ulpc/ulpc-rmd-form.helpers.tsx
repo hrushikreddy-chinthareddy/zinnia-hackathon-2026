@@ -235,8 +235,8 @@ export default function getUlpcRmdConfig(t: TFunction) {
                     key: 'owner-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'owner-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,

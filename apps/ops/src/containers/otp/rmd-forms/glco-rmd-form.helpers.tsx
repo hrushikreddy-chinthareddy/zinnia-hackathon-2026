@@ -202,10 +202,7 @@ export default function getGlcoRmdConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'owner-sign-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
-                },
+
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',

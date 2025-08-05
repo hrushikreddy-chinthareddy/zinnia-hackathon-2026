@@ -480,7 +480,7 @@ describe('gdmn withdrawal form config', () => {
             );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
-                expect(ownerConfig?.fields).toHaveLength(4);
+                expect(ownerConfig?.fields).toHaveLength(3);
             });
         });
 
@@ -492,7 +492,7 @@ describe('gdmn withdrawal form config', () => {
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
-                expect(jointOwnerConfig?.fields).toHaveLength(4);
+                expect(jointOwnerConfig?.fields).toHaveLength(3);
             });
 
             it('should have shouldDisplay logic', () => {
@@ -622,7 +622,7 @@ describe('gdmn withdrawal form config', () => {
                         SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
                 expect(beneficiaryConfig).toBeTruthy();
-                expect(beneficiaryConfig?.fields).toHaveLength(4);
+                expect(beneficiaryConfig?.fields).toHaveLength(3);
             });
         });
 

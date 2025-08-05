@@ -199,7 +199,7 @@ describe('getDlicConfig', () => {
                     c.signatureType === SignatureValidationTypeWithdrawal.Owner
             );
             expect(ownerConfig).toBeDefined();
-            expect(ownerConfig?.fields).toHaveLength(5);
+            expect(ownerConfig?.fields).toHaveLength(4);
         });
 
         it('should have joint owner config with shouldDisplay logic', () => {
@@ -209,7 +209,7 @@ describe('getDlicConfig', () => {
                     SignatureValidationTypeWithdrawal.JointOwner
             );
             expect(jointConfig).toBeDefined();
-            expect(jointConfig?.fields).toHaveLength(5);
+            expect(jointConfig?.fields).toHaveLength(4);
         });
 
         it('should have joint owner config with shouldDisplay logic', () => {
@@ -218,7 +218,7 @@ describe('getDlicConfig', () => {
                     c.signatureType === SignatureValidationTypeWithdrawal.Notary
             );
             expect(notaryConfig).toBeDefined();
-            expect(notaryConfig?.fields).toHaveLength(5);
+            expect(notaryConfig?.fields).toHaveLength(4);
         });
     });
 

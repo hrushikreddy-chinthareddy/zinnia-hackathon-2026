@@ -229,7 +229,7 @@ describe('RSLN withdrawal form config', () => {
             );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
-                expect(ownerConfig?.fields).toHaveLength(7);
+                expect(ownerConfig?.fields).toHaveLength(6);
             });
         });
 
@@ -241,7 +241,7 @@ describe('RSLN withdrawal form config', () => {
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
-                expect(jointOwnerConfig?.fields).toHaveLength(7);
+                expect(jointOwnerConfig?.fields).toHaveLength(6);
             });
 
             it('should have shouldDisplay logic', () => {

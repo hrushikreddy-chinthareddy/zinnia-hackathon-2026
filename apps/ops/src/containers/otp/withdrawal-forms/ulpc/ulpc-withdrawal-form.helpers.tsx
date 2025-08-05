@@ -210,8 +210,8 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     key: 'owner-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'owner-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
@@ -241,8 +241,8 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     key: 'joint-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'joint-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
@@ -269,8 +269,8 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     key: 'beneficiary-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'beneficiary-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'beneficiary-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,

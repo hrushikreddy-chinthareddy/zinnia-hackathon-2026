@@ -13,6 +13,12 @@ export enum SignPresent {
     Yes = 'Yes',
 }
 
+export enum DesignationPresent {
+    No = 'No',
+    Unselected = 'Unselected',
+    Yes = 'Yes',
+}
+
 export enum SignValidated {
     No = 'No',
     Unselected = 'Unselected',

@@ -826,10 +826,7 @@ export default function getRslnConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'owner-sign-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
-                },
+
                 {
                     component: SignatureFields.SignatureSsn,
                     key: 'owner-ssn',
@@ -864,10 +861,7 @@ export default function getRslnConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'joint-sign-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
-                },
+
                 {
                     component: SignatureFields.SignatureSsn,
                     key: 'joint-ssn',

@@ -2463,6 +2463,7 @@
                 "signatureCityProvided": "Ciudad/Estado",
                 "signatureCommentLabel": "Comentario sobre la firma",
                 "signGuaranteeStamp": "Garantía de firma",
+                "signDesignation": "Désignation présente",
                 "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
                 "validationReasons": {
                     "single": "Soltero, divorciado/separado legalmente, viudo o incapaz de localizar a mi cónyuge",
@@ -2495,7 +2496,7 @@
                 "cityShouldNotBeEmpty": "La ciudad no debe estar vacía",
                 "formValidationError": "La presentación del formulario se impidió debido a errores de validación. Aborde los errores anteriores e intente de nuevo.",
                 "nameIsRequired": "Se requiere el nombre",
-                "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma para las firmas presentes",
+                "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma presente",
                 "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente",
                 "accountNumberDoesNotMatch": "El número de cuenta no coincide",
                 "routingNumberDoesNotMatch": "El número de ruta no coincide",

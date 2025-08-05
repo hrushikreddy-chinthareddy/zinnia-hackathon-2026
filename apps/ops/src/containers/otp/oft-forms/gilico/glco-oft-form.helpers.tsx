@@ -69,10 +69,7 @@ export default function getGlcoOftConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'owner-sign-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
-                },
+
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
@@ -91,10 +88,7 @@ export default function getGlcoOftConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'joint-sign-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
-                },
+
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'joint-date',
@@ -118,10 +112,7 @@ export default function getGlcoOftConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'beneficiary-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'beneficiary-title',
-                },
+
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'beneficiary-date',

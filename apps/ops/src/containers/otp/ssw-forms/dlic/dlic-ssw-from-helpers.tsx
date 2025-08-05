@@ -549,10 +549,6 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
                     key: 'owner-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
-                },
-                {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
                 },
@@ -573,10 +569,6 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
                 {
                     component: SignatureFields.SignaturePresent,
                     key: 'joint-sign-present',
-                },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
                 },
                 {
                     component: SignatureFields.SignatureDate,

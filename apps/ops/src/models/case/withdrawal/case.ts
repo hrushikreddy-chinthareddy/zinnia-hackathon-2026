@@ -4,7 +4,10 @@ import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/ma
 import { RelationshipToCoveredPerson } from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person.helpers';
 import { WithdrawalTaskStatus } from '@deps/contexts/OtpWithdrawalFormContext';
 
-import { SignatureValidationTypeWithdrawal } from '../renewal/signature-validation';
+import {
+    DesignationPresent,
+    SignatureValidationTypeWithdrawal,
+} from '../renewal/signature-validation';
 import { RenewalsFormData, TaskType } from '../task';
 import { TaskStatus } from '../task-instance';
 
@@ -616,6 +619,7 @@ export interface SignatureWithdrawal {
     isSignatureCityProvided?: {
         text: boolean | null;
     };
+    isDesignationPresent?: DesignationPresent | boolean | null;
 }
 
 export interface TaxWithholding {

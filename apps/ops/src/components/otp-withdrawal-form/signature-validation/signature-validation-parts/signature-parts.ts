@@ -4,6 +4,7 @@ import SignatureValid from '@deps/components/otp-withdrawal-form/signature-valid
 import SignatureCityProvided from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-city-provided';
 import SignatureComment from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-comment';
 import SignatureDate from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-date';
+import SignatureDesignation from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-designation';
 import SignGuaranteeStamp from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-guarantee-stamp';
 import SignaturePresent from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-present';
 import SignatureSsn from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-ssn';
@@ -30,6 +31,7 @@ export interface CommissionExpireDateProps extends BaseSignatureProps {} // No a
 export interface SignatureDateProps extends BaseSignatureProps {}
 export interface SignaturePresentProps extends BaseSignatureProps {}
 export interface SignatureTitleProps extends BaseSignatureProps {}
+export interface SignatureDesignationProps extends BaseSignatureProps {}
 export interface SignatureTypeProps extends BaseSignatureProps {}
 export interface SignatureGuaranteeStampProps extends BaseSignatureProps {}
 
@@ -46,6 +48,7 @@ export enum SignatureFieldNames {
     SignatureSsn = 'SignatureSsn',
     SignaturePrintName = 'SignaturePrintName',
     SignatureCityProvided = 'SignatureCityProvided',
+    SignatureDesignation = 'SignatureDesignation',
 }
 
 export const SignatureFields = {
@@ -61,6 +64,7 @@ export const SignatureFields = {
     SignatureSsn,
     SignaturePrintName,
     SignatureCityProvided,
+    SignatureDesignation,
 };
 
 export const SignatureBonusFields = {

@@ -204,8 +204,8 @@ export const signaturesConfig = [
                 key: 'owner-sign-present',
             },
             {
-                component: SignatureFields.SignatureTitle,
-                key: 'owner-title',
+                component: SignatureFields.SignatureDesignation,
+                key: 'owner-designation',
             },
             {
                 component: SignatureFields.SignatureDate,
@@ -226,8 +226,8 @@ export const signaturesConfig = [
                 key: 'joint-sign-present',
             },
             {
-                component: SignatureFields.SignatureTitle,
-                key: 'joint-title',
+                component: SignatureFields.SignatureDesignation,
+                key: 'joint-designation',
             },
             {
                 component: SignatureFields.SignatureDate,
@@ -253,8 +253,8 @@ export const signaturesConfig = [
                 key: 'beneficiary-present',
             },
             {
-                component: SignatureFields.SignatureTitle,
-                key: 'beneficiary-title',
+                component: SignatureFields.SignatureDesignation,
+                key: 'owner-designation',
             },
             {
                 component: SignatureFields.SignatureDate,

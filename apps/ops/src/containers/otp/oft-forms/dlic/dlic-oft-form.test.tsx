@@ -233,7 +233,7 @@ describe('formValidation', () => {
             );
             it('should be in the config', () => {
                 expect(ownerConfig).toBeTruthy();
-                expect(ownerConfig?.fields).toHaveLength(5);
+                expect(ownerConfig?.fields).toHaveLength(4);
             });
         });
 
@@ -245,7 +245,7 @@ describe('formValidation', () => {
             );
             it('should be in the config', () => {
                 expect(jointOwnerConfig).toBeTruthy();
-                expect(jointOwnerConfig?.fields).toHaveLength(5);
+                expect(jointOwnerConfig?.fields).toHaveLength(4);
             });
 
             it('should have shouldDisplay logic', () => {
@@ -375,7 +375,7 @@ describe('formValidation', () => {
                         SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
                 expect(beneficiaryConfig).toBeTruthy();
-                expect(beneficiaryConfig?.fields).toHaveLength(5);
+                expect(beneficiaryConfig?.fields).toHaveLength(4);
             });
         });
 

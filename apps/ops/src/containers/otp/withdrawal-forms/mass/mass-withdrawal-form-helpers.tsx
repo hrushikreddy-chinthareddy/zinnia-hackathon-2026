@@ -124,6 +124,12 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     'formValidation.accountTypeMustBeSelected'
                 );
             }
+
+            if (ownerSignature?.isDesignationPresent === null) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
+                ] = t('formValidation.signatureDesignationMustBeSelected');
+            }
             return errors;
         },
         [t]
@@ -152,8 +158,8 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     key: 'owner-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'owner-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
@@ -174,8 +180,8 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     key: 'joint-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'joint-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,

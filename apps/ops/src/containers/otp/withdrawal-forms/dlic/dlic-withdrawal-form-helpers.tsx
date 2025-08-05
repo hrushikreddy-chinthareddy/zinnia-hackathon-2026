@@ -131,10 +131,6 @@ export default function useDlicConfig(t: TFunction) {
                     key: 'owner-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
-                },
-                {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
                 },
@@ -155,10 +151,6 @@ export default function useDlicConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignaturePresent,
                     key: 'joint-sign-present',
-                },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
                 },
                 {
                     component: SignatureFields.SignatureDate,

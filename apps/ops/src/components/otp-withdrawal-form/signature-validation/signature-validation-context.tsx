@@ -1,6 +1,9 @@
 import { createContext } from 'react';
 
-import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import {
+    DesignationPresent,
+    SignatureValidationTypeWithdrawal,
+} from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
     SignatureWithdrawal,
@@ -36,6 +39,8 @@ export interface SignatureState extends SignatureWithdrawal {
     setIsSignatureCityProvided: React.Dispatch<
         React.SetStateAction<{ text: boolean | null } | undefined>
     >;
+    isDesignationPresent: DesignationPresent | boolean | null;
+    setIsDesignationPresent: React.Dispatch<React.SetStateAction<any>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -46,6 +51,8 @@ export const defaultSignatureState = {
     isSignatureValid: null,
     isSigned: null,
     isNotaryValid: null,
+    isDesignationPresent: null,
+    setIsDesignationPresent: noop,
     setIsSignatureValid: noop,
     setIsSigned: noop,
     setIsNotaryValid: noop,

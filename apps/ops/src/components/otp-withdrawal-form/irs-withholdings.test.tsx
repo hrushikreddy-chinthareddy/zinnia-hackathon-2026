@@ -194,6 +194,7 @@ describe('IRS Withholding Component', () => {
                     signatureComment: undefined,
                     spousalConsent: { text: null },
                     ssn: undefined,
+                    isDesignationPresent: null,
                 },
             },
         ]);
@@ -321,6 +322,7 @@ describe('IRS Withholding Component', () => {
                     signatureComment: undefined,
                     spousalConsent: { text: null },
                     ssn: undefined,
+                    isDesignationPresent: null,
                 },
             },
         ]);

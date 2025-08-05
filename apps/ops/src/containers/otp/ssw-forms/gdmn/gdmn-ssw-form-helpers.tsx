@@ -92,6 +92,12 @@ export default function getGdmnConfig(t: TFunction) {
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
+        if (ownerSignature?.isDesignationPresent === null) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
+            ] = t('formValidation.signatureDesignationMustBeSelected');
+        }
+
         if (
             formDisbursement?.bank[0].accountType?.text === '' &&
             [PaymentMethod.EFT, PaymentMethod.Wire].includes(
@@ -654,10 +660,7 @@ export default function getGdmnConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'owner-sign-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
-                },
+
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
@@ -676,10 +679,7 @@ export default function getGdmnConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'joint-sign-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
-                },
+
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'joint-date',
@@ -703,10 +703,7 @@ export default function getGdmnConfig(t: TFunction) {
                     component: SignatureFields.SignaturePresent,
                     key: 'beneficiary-present',
                 },
-                {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'beneficiary-title',
-                },
+
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'beneficiary-date',

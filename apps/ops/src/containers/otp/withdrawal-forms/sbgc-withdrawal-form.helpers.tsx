@@ -57,8 +57,8 @@ export default function getSbgcConfig(t: TFunction) {
                     key: 'owner-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'owner-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
@@ -79,8 +79,8 @@ export default function getSbgcConfig(t: TFunction) {
                     key: 'joint-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'joint-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'joint-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
@@ -106,8 +106,8 @@ export default function getSbgcConfig(t: TFunction) {
                     key: 'beneficiary-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'beneficiary-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'beneficiary-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
@@ -160,6 +160,12 @@ export default function getSbgcConfig(t: TFunction) {
             errors[
                 `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
+        }
+
+        if (ownerSignature?.isDesignationPresent === null) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
+            ] = t('formValidation.signatureDesignationMustBeSelected');
         }
 
         if (

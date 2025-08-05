@@ -1,5 +1,6 @@
 import { createElement, useEffect, useState } from 'react';
 
+import { DesignationPresent } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
     SignatureWithdrawal,
@@ -62,9 +63,24 @@ export default function SignatureValidation({
         signature.isSignatureCityProvided
     );
 
+    const [isDesignationPresent, setIsDesignationPresent] = useState(
+        signature.isDesignationPresent
+            ? DesignationPresent.Yes
+            : signature.isDesignationPresent === null
+            ? DesignationPresent.Unselected
+            : DesignationPresent.No
+    );
+
     useEffect(() => {
         onDataChange(signature);
     }, [signature]);
+
+    const isSignatureDesignationPresent =
+        isDesignationPresent === DesignationPresent.Yes
+            ? true
+            : isDesignationPresent === DesignationPresent.Unselected
+            ? null
+            : false;
 
     useEffect(() => {
         setSignature({
@@ -76,6 +92,7 @@ export default function SignatureValidation({
             signDate,
             signTitle,
             signType,
+            isDesignationPresent: isSignatureDesignationPresent,
             isNotaryValid,
             commissionExpiryDate,
             signGuaranteeStamp,
@@ -91,6 +108,7 @@ export default function SignatureValidation({
         signTitle,
         signType,
         isNotaryValid,
+        isDesignationPresent,
         commissionExpiryDate,
         signGuaranteeStamp,
         ssn,
@@ -131,6 +149,8 @@ export default function SignatureValidation({
                 setSignType,
                 setSsn,
                 setIsSignatureCityProvided,
+                isDesignationPresent,
+                setIsDesignationPresent,
                 signName,
                 setSignName,
                 signatureComment,

@@ -345,8 +345,8 @@ export default function useMassMutualRmdConfig(t: TFunction) {
                     key: 'owner-sign-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'owner-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'owner-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
@@ -367,8 +367,8 @@ export default function useMassMutualRmdConfig(t: TFunction) {
                     key: 'beneficiary-present',
                 },
                 {
-                    component: SignatureFields.SignatureTitle,
-                    key: 'beneficiary-title',
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'beneficiary-designation',
                 },
                 {
                     component: SignatureFields.SignatureDate,
