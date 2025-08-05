@@ -224,17 +224,25 @@ export const getFunds = withLogging(
     }
 
     const fundIds = Object.keys(productsDetails.funds);
-    const productFundMap = new Map<string, PolicyFund | Fund>();
+    // Loop over the fund ids and if there is a matching fund from
+    // the policy funds, add the details to the object in the array
+    // this is because the call to get fund details requires an additional
+    // query string based on segment data on teh policy fund
+    const productFundMap = fundIds.map(fundId => {
+      let fundDetails = { fundId };
+      const matchingPolicyFund = policyFunds?.find(
+        policyFund => policyFund.fundId === fundId
+      );
 
-    fundIds.forEach(fundId => {
-      productFundMap.set(fundId, {
-        ...policyFunds?.find(fund => fund.fundId === fundId),
-        ...productsDetails?.funds?.[fundId],
-      });
+      if (matchingPolicyFund) {
+        fundDetails = { ...fundDetails, ...matchingPolicyFund };
+      }
+
+      return fundDetails;
     });
 
     const fundDetails = await collectAllFundDetails(
-      Array.from(productFundMap.values()),
+      productFundMap,
       carrierId,
       loggingCtx
     );

@@ -334,7 +334,6 @@ export const transformPolicyForFundDetails = (
       })
   );
   const mergedArr = Array.from(map.values());
-
   return mergedArr;
 };
 
