@@ -5380,6 +5380,7 @@
             "bpm500Error": "BPM 500 error",
             "current": "Current",
             "frequency": "Frequency",
+            "fundAllocation": "Fund allocation",
             "paymentFrequency": "Payment frequency",
             "label": "Summary",
             "autopayAmount": "Premium autopay amount",

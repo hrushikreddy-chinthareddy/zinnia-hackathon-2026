@@ -5312,6 +5312,7 @@
             "bpm500Error": "Erreur BPM 500",
             "current": "Actuel",
             "frequency": "Fréquence",
+            "fundAllocation": "Allocation des fonds",
             "paymentFrequency": "Fréquence de paiement",
             "label": "Résumé",
             "autopayAmount": "Montant du prélèvement automatique de la prime",
