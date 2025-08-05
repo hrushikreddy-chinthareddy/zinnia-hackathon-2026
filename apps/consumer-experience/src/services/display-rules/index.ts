@@ -46,6 +46,7 @@ export const evaluateRules = (
     [ComponentName.OVERVIEW_DOCUMENTS]: () => isNotPayor || !!skip,
     [ComponentName.PROFILE_PAYOR_PARTY_ROLES]: () => isPayorNotOwner,
     [ComponentName.PREMIUM_PAYOR_BACK_URL]: () => isPayorNotOwner,
+    [ComponentName.NOTIFICATIONS]: () => isNotPayor || !!skip,
   };
 };
 
