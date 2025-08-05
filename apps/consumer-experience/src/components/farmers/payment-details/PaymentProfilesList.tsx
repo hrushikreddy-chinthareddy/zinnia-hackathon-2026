@@ -8,7 +8,6 @@ import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPa
 import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
 import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { PaymentProvider } from '@/types/carrier-config';
 import { PaymentMethod } from '@/types/payment';
 
 interface PaymentProfilesListProps {
@@ -28,8 +27,7 @@ export const PaymentProfilesList: FC<PaymentProfilesListProps> = ({
 
   const { data: paymentMethods = [], isLoading } = useQuery({
     queryKey: [QueryKeys.PAYMENT_METHODS, policyNumber, planCode],
-    queryFn: () =>
-      getPaymentMethods(policyNumber, planCode, PaymentProvider.PAYMENTUS),
+    queryFn: () => getPaymentMethods(policyNumber, planCode),
     initialData: profiles,
   });
 

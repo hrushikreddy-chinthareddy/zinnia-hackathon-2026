@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getPaymentMethods } from '@/services/payment-methods';
-import { PaymentProvider } from '@/types/carrier-config';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
@@ -13,19 +12,11 @@ export async function GET(
     params: {
       planCode: string;
       policyNumber: string;
-      provider: PaymentProvider;
     };
   }
 ) {
   const loggingContext = await buildNextReqLoggingContext(_request);
-  logTrace(
-    `payment::payment-methods::${params.provider.toLowerCase()}::GET::start`,
-    loggingContext
-  );
-
-  if (!Object.values(PaymentProvider).includes(params.provider)) {
-    throw new Error('Invalid provider');
-  }
+  logTrace(`payment::payment-methods::GET::start`, loggingContext);
 
   try {
     const { data, error } = await getPaymentMethods(
@@ -42,13 +33,10 @@ export async function GET(
 
     return NextResponse.json({ data, error });
   } catch (error) {
-    logError(
-      `payment::payment-methods::${params.provider.toLowerCase()}::GET::error`,
-      {
-        ...loggingContext,
-        error,
-      }
-    );
+    logError(`payment::payment-methods::GET::error`, {
+      ...loggingContext,
+      error,
+    });
     throw error;
   }
 }

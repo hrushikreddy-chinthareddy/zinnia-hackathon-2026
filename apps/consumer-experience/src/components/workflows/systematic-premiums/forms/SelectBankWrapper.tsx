@@ -31,7 +31,7 @@ export const SelectBankWrapper = ({
       planCode,
       paymentProvider,
     ],
-    queryFn: () => getPaymentMethods(policyNumber, planCode, paymentProvider),
+    queryFn: () => getPaymentMethods(policyNumber, planCode),
     initialData: initialPaymentMethods,
   });
 

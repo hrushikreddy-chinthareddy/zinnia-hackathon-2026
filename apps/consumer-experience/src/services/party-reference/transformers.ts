@@ -11,7 +11,9 @@ export const getPolicyPartyIdByPolicyNumber = (
   partyReferenceData: PartyReferenceDataModel,
   policyNumber: string
 ) => {
-  const policy = partyReferenceData.alias.find(
+  // TODO: add logging for if there are no aliases,
+  // include the array without the first/last names
+  const policy = partyReferenceData.alias?.find(
     p => p.policyNumber === policyNumber
   );
   if (policy) {

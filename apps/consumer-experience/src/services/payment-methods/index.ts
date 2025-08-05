@@ -1,40 +1,49 @@
-import { PaymentProvider } from '@/types/carrier-config';
 import { PaymentMethod } from '@/types/payment';
 import { PolicyRequestInputs } from '@/types/policy';
-import { isProd } from '@/utils';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
+import { getSession } from '@/utils/auth';
 import { logInfo, logWarn } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { transformPaymentMethods } from './transformers';
 import { aggregationBaseUrl } from '../api-config';
+import { getFeatureFlags } from '../feature-flags';
+import { getPartyReferenceData } from '../party-reference';
+import { getPolicyPartyIdByPolicyNumber } from '../party-reference/transformers';
 import { getPaymentDetails } from '../policy';
 import { ServerApi } from '../server-http';
 
-export interface ZinniaPaymentMethodParams {
-  policyNumber: string;
+interface PaymentMethodParams {
   planCode: string;
+  policyNumber: string;
+  // This is the partyId that is associated with the user on the policy
+  // for some carriers, this may match the partyId on auth, but not
+  // for all.
+  policyPartyId: string;
 }
-
-export interface PaymentusPaymentMethodParams {
-  paymentProvider: PaymentProvider.PAYMENTUS;
-}
-
-export type PaymentMethodParams = ZinniaPaymentMethodParams;
 
 const FILE_NAME =
   'apps/consumer-experience/src/services/payment-methods/index.ts';
 
 export const getUserPaymentMethods = withLogging(
-  async (options: PolicyRequestInputs, loggingCtx: CommonLogContext) => {
-    const { planCode, policyNumber } = options;
-    const url = `${aggregationBaseUrl}/policies/${planCode}/${policyNumber}/paymentmethods`;
+  async (
+    { planCode, policyNumber, policyPartyId }: PaymentMethodParams,
+    loggingCtx: CommonLogContext
+  ) => {
+    const url = `${aggregationBaseUrl}/policies/${planCode}/${policyNumber}/paymentmethods?partyId=${policyPartyId}`;
+
     const rawResponse = await ServerApi.get(url, undefined, loggingCtx);
     const response = await parseAPIResponse(rawResponse);
+
     if (rawResponse.status === 404) {
       logWarn('No payment details found for user', {
         ...logApiNotOkDetails({ rawResponse, parsedResponse: response }),
+        ...loggingCtx,
+        planCode,
+        policyNumber,
+        policyPartyId,
       });
 
       return response;
@@ -67,15 +76,39 @@ export const getPaymentMethods = withLogging(
     params: PolicyRequestInputs,
     loggingContext: CommonLogContext
   ): Promise<PaymentMethod[]> => {
-    // TODO: THIS SHOULD BE A FEATURE FLAG BUT NONE OF US HAVE ACCESS
-    // TO CONSUMER FEATURE FLAGS RIGHT NOW
+    const flags = await getFeatureFlags();
     // What this means is that we will be using the getPaymentDetails
     // call for all carriers (so paymentus will not longer be called on farmers policies)
     // and if this is not active, you will see policy payment methods returned
     // for farmers policies
-    if (!isProd()) {
+    if (flags?.[FEATURE_FLAGS.PAYMENT_METHODS_API]) {
+      const session = await getSession();
+      const partyId = session?.user?.partyId || '';
+      const partyRefData = await getPartyReferenceData(partyId, loggingContext);
+
+      const policyPartyId = getPolicyPartyIdByPolicyNumber(
+        partyRefData.data!,
+        params.policyNumber
+      );
+
+      if (!policyPartyId) {
+        throw new Error('Party id was not found on policy', {
+          cause: {
+            partyId,
+            policyNumber: params.policyNumber,
+            planCode: params.planCode,
+            // TODO: need to parse out first/last name from this
+            // partyRefDataAliases: partyRefData.data?.alias,
+          },
+        });
+      }
+
       const { data: paymentMethods, error } = await getUserPaymentMethods(
-        { policyNumber: params.policyNumber, planCode: params.planCode },
+        {
+          policyNumber: params.policyNumber,
+          planCode: params.planCode,
+          policyPartyId,
+        },
         loggingContext
       );
 

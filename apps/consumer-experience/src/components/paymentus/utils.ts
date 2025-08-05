@@ -1,7 +1,16 @@
+import { PaymentForm } from '@xd/api-types/dist/generated-types/bpm';
 import { AccountType } from '@xd/api-types/dist/generated-types/sor';
 
 import { PaymentusAccountType } from '@/types/paymentus';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+
+type ExtendedAccountType = AccountType | PaymentusAccountType | PaymentForm;
+
+// PLEASE NOTE: there are changes in here to accomodate an unusual return
+// from the `/aggregation` endpoint that returns paymentMethods. I have
+// left the commented out code because ideally, we would get more details about
+// the accountType from the endpoint but as it stands, we are getting
+// paymentForm as accountType for farmers which uses paymentus
 
 // translate the account type enum into a ui-friendly string value
 export const accountType: Record<PaymentusAccountType, string> = {
@@ -56,9 +65,11 @@ export const getBranchName = ({
   }
 
   if (
-    [PaymentusAccountType.CHQ, PaymentusAccountType.SAV].includes(
-      type as PaymentusAccountType
-    )
+    [
+      PaymentusAccountType.CHQ,
+      PaymentusAccountType.SAV,
+      PaymentForm.ACH,
+    ].includes(type as PaymentusAccountType)
   ) {
     return bankName || DEFAULT_ERROR_STRING;
   }
@@ -69,28 +80,43 @@ export const getBranchName = ({
     return bankName || DEFAULT_ERROR_STRING;
   }
 
-  return accountType[type as PaymentusAccountType];
+  if (type === AccountType.CREDITCARD) {
+    return 'Credit Card';
+  }
+
+  return bankName || DEFAULT_ERROR_STRING;
+
+  // return accountType[type as PaymentusAccountType];
 };
 
-export const getAccountTypeDisplay = (
-  paymentType?: PaymentusAccountType | AccountType
-) => {
+export const getAccountTypeDisplay = (paymentType?: ExtendedAccountType) => {
   if (!paymentType) {
     return DEFAULT_ERROR_STRING;
   }
 
-  if (paymentType.toLowerCase().includes('debit')) {
-    return 'Debit Card';
-  }
-  if (creditCardAccountTypes.includes(paymentType)) {
+  if (paymentType === 'CREDITCARD') {
     return 'Credit Card';
   }
+
+  // if (paymentType.toLowerCase().includes('debit')) {
+  //   return 'Debit Card';
+  // }
+
+  // if (creditCardAccountTypes.includes(paymentType)) {
+  //   return 'Credit Card';
+  // }
+
+  if (paymentType === PaymentForm.ACH) {
+    return 'Bank account';
+  }
+
   if (
     paymentType === PaymentusAccountType.CHQ ||
     paymentType === AccountType.CHECKING
   ) {
     return 'Checking';
   }
+
   if (
     paymentType === PaymentusAccountType.SAV ||
     paymentType === AccountType.SAVINGS
