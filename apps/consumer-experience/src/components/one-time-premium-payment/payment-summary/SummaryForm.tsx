@@ -1,8 +1,8 @@
 'use client';
-import { Label, Loader } from '@zinnia/bloom/components';
+import { Label, LabelProps, Loader } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
@@ -35,7 +35,7 @@ const LoadingText = () => {
         setLoadingText(
           loadingText =>
             loadingStrings[
-            loadingStrings.indexOf(loadingText || 'one moment please') + 1
+              loadingStrings.indexOf(loadingText || 'one moment please') + 1
             ]
         );
       }
@@ -53,20 +53,16 @@ const LoadingText = () => {
 
 export const SummaryForm = ({
   ottpPaymentData,
-  uncollectedCharges,
+  paymentSummaryDetails,
 }: {
   ottpPaymentData: OttpState;
-  uncollectedCharges: number;
+  paymentSummaryDetails: {
+    label: React.ReactElement<LabelProps>;
+    value?: number;
+  }[];
 }) => {
-  const { effectiveDate, paymentAmount, payorBank, paymentFee } =
-    ottpPaymentData;
+  const { effectiveDate, paymentAmount, payorBank } = ottpPaymentData;
   const { pending } = useFormStatus();
-  const calculateFeeAmount = useMemo(() => {
-    if (!paymentFee) {
-      return 0;
-    }
-    return (paymentFee / 100) * paymentAmount.plain;
-  }, [paymentAmount.plain, paymentFee]);
 
   if (pending) {
     return (
@@ -82,55 +78,6 @@ export const SummaryForm = ({
         <LoadingText />
       </div>
     );
-  }
-
-  const paymentSummaryStepDetails = [
-    {
-      label: <Label>Add to account value</Label>,
-      value: paymentAmount.withFees - uncollectedCharges,
-    },
-  ];
-
-  if (calculateFeeAmount > 0) {
-    paymentSummaryStepDetails.push({
-      label: (
-        <Label
-          interactiveElements={[
-            <LabelPopover key="TEXT" title="Fees">
-              <p>
-                Premium payment fees are charged to cover costs related to sales
-                expenses and/or taxes. If your policy requires these fees, they
-                will be shown here.
-              </p>
-            </LabelPopover>,
-          ]}
-        >
-          Fees
-        </Label>
-      ),
-      value: calculateFeeAmount,
-    });
-  }
-
-  if (uncollectedCharges && uncollectedCharges > 0) {
-    paymentSummaryStepDetails.push({
-      label: (
-        <Label
-          interactiveElements={[
-            <LabelPopover key="TEXT" title="Estimated charges">
-              <p>
-                Additional charges may accrue if your policy went into pending
-                lapse. These charges are estimated here because they are
-                calculated daily.
-              </p>
-            </LabelPopover>,
-          ]}
-        >
-          Estimated charges
-        </Label>
-      ),
-      value: uncollectedCharges,
-    });
   }
 
   return (
@@ -166,7 +113,7 @@ export const SummaryForm = ({
         </div>
         <PaymentSummaryStep
           className={styles.paymentSummaryStepContainer}
-          transactionSummary={paymentSummaryStepDetails}
+          transactionSummary={paymentSummaryDetails}
           total={{
             label: (
               <Label
