@@ -24,6 +24,8 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import SswEditSelection from '../ssw-edit-selection';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
+import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 type MassWithdrawalFormProps = {
     qualType: QualTypes | FASTQualTypes | '';
 };
@@ -56,6 +58,7 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
         irsSignatureConfig,
         signVerificationReasonConfig,
         eSignatureFieldConfig,
+        w4pSignaturesConfig,
     } = useMassWithdrawalConfig(t);
 
     useEffect(() => {
@@ -86,6 +89,9 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
     const isMaritalStatusAllowances = contractIssueState
         ? validateMaritalStatusAllowances(contractIssueState as USStates)
         : false;
+
+    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -106,6 +112,12 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
                 isReadOnly={isFormStateReadOnly}
                 options={systematicWithdrawalOptions}
             />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
 
             <TaxWithholdings
                 specifiedView={true}

@@ -19,7 +19,7 @@ import {
     Carrier,
     FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import getSbgcConfig from './sbgc-ssw-form-helpers';
 import SswEditSelection from '../ssw-edit-selection';
@@ -76,7 +76,7 @@ export function SbgcSSWForm() {
         !Object.values(formTpaAuthorization).every((val) => val === null);
     const ownerStateOfResidence =
         formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

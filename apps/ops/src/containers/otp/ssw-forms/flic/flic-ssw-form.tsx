@@ -24,7 +24,7 @@ import {
     PaymentMethod,
     QualTypes,
 } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import getFlicConfig from './flic-ssw-form-helpers';
 import SswEditSelection from '../ssw-edit-selection';
@@ -107,7 +107,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
         }));
         setSswProgramFrequency(frequency);
     };
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

@@ -14,6 +14,7 @@ import FormWaivers from '@deps/components/otp-withdrawal-form/form-waivers/form-
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import SignatureVerificationReasons from '@deps/components/otp-withdrawal-form/signature-validation/signature-verification-reason';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { USStates } from '@deps/constants/geography/us-states';
@@ -24,6 +25,7 @@ import {
     QualTypes,
 } from '@deps/models/case/withdrawal/case';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { isAllowedStateWithdrawals } from '@deps/utils/renderStateW4';
 
 import useMassWithdrawalConfig from './mass-withdrawal-form-helpers';
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
@@ -52,6 +54,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         distributionReasonOptions,
         waiverItemsConfig,
         eSignatureFieldConfig,
+        w4pSignaturesConfig,
     } = useMassWithdrawalConfig(t);
     const {
         setFormValidator,
@@ -102,6 +105,11 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
     const isMaritalStatusAllowances = contractIssueState
         ? validateMaritalStatusAllowances(contractIssueState as USStates)
         : false;
+
+    const shouldStateW4pRender = isAllowedStateWithdrawals(
+        contractIssueState ?? ''
+    );
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -142,6 +150,12 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
                         }
                     />
                 </>
+            )}
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
             )}
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}

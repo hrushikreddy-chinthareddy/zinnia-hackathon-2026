@@ -19,7 +19,7 @@ import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getNasuRmdConfig from './nasu-rmd-form.helpers';
 import DistributionMethodQcd from '../qcd/qcd-distribution-method';
@@ -108,7 +108,7 @@ export default function NasuRmdWithdrawalForm() {
     const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(
         parties as LifeCadParty[]
     );
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateRMD(contractIssueState ?? '');
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 
     const rmdComponents = isRmdForm && (

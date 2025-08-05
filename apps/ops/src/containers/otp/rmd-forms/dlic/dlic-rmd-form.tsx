@@ -10,6 +10,7 @@ import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-pa
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -21,6 +22,7 @@ import {
     RMDType,
 } from '@deps/models/case/withdrawal/case';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getDlicWithdrawalConfig from './dlic-rmd-form.helpers';
 import DistributionMethodQcd from '../qcd/qcd-distribution-method';
@@ -42,6 +44,7 @@ const DlicRmdWithdrawalForm = () => {
         signaturesNotaryConfig,
         cslnCheckStates,
         eSignatureFieldConfig,
+        w4pSignaturesConfig,
     } = getDlicWithdrawalConfig(t);
     const {
         formParty,
@@ -115,6 +118,8 @@ const DlicRmdWithdrawalForm = () => {
         { label: t('rmdMethod.rmdTypes.oneTime'), value: RMDType.OneTimeRMD },
     ];
 
+    const shouldStateW4pRender = isAllowedStateRMD(contractIssueState ?? '');
+
     const rmdComponents = isRmdForm && (
         <>
             {isLC ? (
@@ -126,11 +131,17 @@ const DlicRmdWithdrawalForm = () => {
                     isLC={false}
                 />
             )}
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}
                 additionalWithHoldingConfig={additionalWithholdingAmountConfig}
-            />{' '}
+            />
             <IrsWithholding
                 signatureFields={irsSignatureConfig}
                 isFormStateReadOnly={isFormStateReadOnly}

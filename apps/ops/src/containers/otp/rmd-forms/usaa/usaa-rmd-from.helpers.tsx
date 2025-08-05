@@ -506,6 +506,21 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
 
     const cslnCheckStates = ['CA', 'MO', 'TX', 'RI'];
 
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+    ];
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -515,5 +530,6 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         signaturesConfig,
         eSignatureFieldConfig,
         cslnCheckStates,
+        w4pSignaturesConfig,
     };
 }

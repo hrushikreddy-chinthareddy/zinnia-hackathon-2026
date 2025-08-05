@@ -17,7 +17,7 @@ import {
     Carrier,
     FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getPrdnConfig from './prdn-ssw-from-helpers';
@@ -74,7 +74,7 @@ export function PrdnSSWForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
 
     return (
         <>

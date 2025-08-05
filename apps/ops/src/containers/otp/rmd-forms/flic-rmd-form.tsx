@@ -19,7 +19,7 @@ import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
 import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getFlicRmdConfig from './flic-rmd-form.helpers';
 import DistributionMethodQcd from './qcd/qcd-distribution-method';
@@ -100,7 +100,7 @@ export default function FlicRmdWithdrawalForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateRMD(contractIssueState ?? '');
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 
     const renderRmdSections = (

@@ -18,7 +18,7 @@ import {
     Carrier,
     FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getUlpcConfig from './ulpc-ssw-form-helpers';
@@ -76,7 +76,7 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

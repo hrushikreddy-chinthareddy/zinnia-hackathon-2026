@@ -19,7 +19,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { FASTQualTypes, QualTypes } from '@deps/models/case/withdrawal/case';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import useMassMutualRmdConfig from './mm-rmd-form.helpers';
 
@@ -99,7 +99,7 @@ export default function MassMutualRmdWithdrawalForm({
     const isMaritalStatusAllowances = contractIssueState
         ? validateMaritalStatusAllowances(contractIssueState as USStates)
         : false;
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateRMD(contractIssueState ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

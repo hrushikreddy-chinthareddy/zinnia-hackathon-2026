@@ -23,7 +23,7 @@ import {
     FundWithdrawnMethod,
     RMDType,
 } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getUlpcRmdConfig from './ulpc-rmd-form.helpers';
 import DistributionMethodQcd from '../qcd/qcd-distribution-method';
@@ -108,7 +108,7 @@ export default function UlpcRmdWithdrawalForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateRMD(contractIssueState ?? '');
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 
     const rmdComponents = isRmdForm && (

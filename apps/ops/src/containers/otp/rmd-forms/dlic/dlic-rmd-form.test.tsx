@@ -9,8 +9,8 @@ import { TaskType } from '@deps/models/case/task';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
-import MassWithdrawalForm from './mass-withdrawal-form';
-import { FormSubtype } from '../flic-withdrawal-form.helpers';
+import DlicRmdWithdrawalForm from './dlic-rmd-form';
+import { FormSubtype } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
 
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({
@@ -43,6 +43,7 @@ jest.mock('@deps/utils/renderStateW4', () => ({
     ...jest.requireActual('@deps/utils/renderStateW4'),
     isAllowedState: jest.fn(() => true),
 }));
+
 const baseFormContext = {
     ...defaultFormDataContext,
     formData: CaseDetails.data.formRequest.formData,
@@ -58,12 +59,13 @@ const baseFormContext = {
     formSource: CaseDetails.data.formRequest.formSource,
     formTaxWithholding: CaseDetails.data.formRequest.formTaxWithholding,
     formTpaAuthorization: CaseDetails.data.formRequest.formTpaAuthorization,
+    contractIssueState: 'CT',
     initialForm: {
         ...CaseDetails,
         caseId: 'CA0000034607',
         taskType: TaskType.Withdrawal,
         source: 'Zinnia.TaskManagement',
-        carrier: 'MASS',
+        carrier: 'RMD',
         createdDate: '',
         updatedDate: '',
         status: CaseStatus.Pending,
@@ -94,7 +96,7 @@ const renderWithContext = ({
                 setFormData,
             }}
         >
-            <MassWithdrawalForm qualType="" />
+            <DlicRmdWithdrawalForm />
         </FormDataContext.Provider>
     );
 };
@@ -102,63 +104,6 @@ const renderWithContext = ({
 describe('MassWithdrawalForm', () => {
     window.HTMLElement.prototype.hasPointerCapture = jest.fn();
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
-
-    describe('form sub types', () => {
-        it('should set the form type partial default', () => {
-            let args = {};
-            const setMockData = jest.fn((cb) => {
-                args = cb({});
-                return args;
-            });
-
-            renderWithContext({
-                formSubtype: FormSubtype.PartialWithdrawal,
-                setFormData: setMockData,
-            });
-
-            const formSubtypeSelect = screen.getByTestId('form-type');
-            expect(formSubtypeSelect).toBeInTheDocument();
-
-            const option = screen.getByText('formSubtype.partialWithdrawal', {
-                ignore: 'option',
-            });
-            expect(option).toBeInTheDocument();
-
-            expect(setMockData).toHaveReturnedWith({
-                formExtName: `MASS_REDEMPTION_${FormSubtype.PartialWithdrawal.toUpperCase()}_DIGITAL_FORM`,
-                metaData: {
-                    formId: null,
-                    formNumber: '',
-                    formType: `MASS_REDEMPTION_${FormSubtype.PartialWithdrawal.toUpperCase()}_DIGITAL_FORM`,
-                },
-            });
-        });
-
-        it('should set subtype successfully to full', () => {
-            let args = {};
-            const setMockData = jest.fn((cb) => {
-                args = cb({});
-                return args;
-            });
-
-            renderWithContext({
-                formSubtype: FormSubtype.FullWithdrawal,
-                setFormData: setMockData,
-            });
-
-            const formSelect = screen.getByTestId('form-type');
-            expect(formSelect).toBeInTheDocument();
-
-            expect(setMockData).toHaveReturnedWith({
-                formExtName: `MASS_REDEMPTION_${FormSubtype.FullWithdrawal.toUpperCase()}_DIGITAL_FORM`,
-                metaData: {
-                    formId: null,
-                    formNumber: '',
-                    formType: `MASS_REDEMPTION_${FormSubtype.FullWithdrawal.toUpperCase()}_DIGITAL_FORM`,
-                },
-            });
-        });
-    });
 
     describe('Render Form Sections', () => {
         it('should render personal information if configs is passed', () => {
@@ -171,10 +116,14 @@ describe('MassWithdrawalForm', () => {
     });
 
     describe('StateW4Form rendering', () => {
-        it('should render StateW4Form when shouldStateW4pRender is true', () => {
+        it('should render StateW4Form when shouldStateW4pRender is true', async () => {
             renderWithContext({
-                contractIssueState: 'IA',
+                formProgram: {
+                    ...baseFormContext.formProgram,
+                    programType: { text: 'RMD' },
+                },
             });
+
             expect(screen.getByTestId('w4p-checkbox')).toBeInTheDocument();
         });
     });

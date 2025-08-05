@@ -486,6 +486,21 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         auditTrial: true,
     };
 
+    const w4pSignaturesConfig = [
+        {
+            component: SignatureFields.SignatureType,
+            key: 'w4p-owner-type',
+        },
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'w4p-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'w4p-signature-sign-date',
+        },
+    ];
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -497,5 +512,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         signaturesNotaryConfig,
         cslnCheckStates,
         eSignatureFieldConfig,
+        w4pSignaturesConfig,
     };
 }

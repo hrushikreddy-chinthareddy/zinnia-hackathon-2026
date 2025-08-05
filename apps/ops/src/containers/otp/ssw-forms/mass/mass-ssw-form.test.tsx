@@ -184,4 +184,58 @@ describe('MassSSWForm', () => {
             expect(el).toBeInTheDocument();
         });
     });
+
+    describe('Should render State w4p for allowed states', () => {
+        it('should render w4p form', async () => {
+            let args = {};
+            const setMockData = jest.fn((cb) => {
+                args = cb(FormData);
+                return args;
+            });
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        formData,
+                        formDisbursement,
+                        formDistribution,
+                        formErrors,
+                        formFullSurrenderAck,
+                        formLoan,
+                        formParty,
+                        formProgram,
+                        formRestriction,
+                        formSignature,
+                        formSource,
+                        formTaxWithholding,
+                        formTpaAuthorization,
+                        contractIssueState: 'CT',
+                        initialForm: {
+                            ...CaseDetails,
+                            caseId: 'CA0000034607',
+                            taskType: TaskType.SSW,
+                            source: 'Zinnia.TaskManagement',
+                            carrier: 'MASS',
+                            createdDate: '',
+                            updatedDate: '',
+                            status: CaseStatus.Pending,
+                            taskId: '6551c49b18a0092d07bfa9db',
+                            data: {
+                                ...CaseDetails.data,
+                                agentEmailAddress: '',
+                                documentNumber: '',
+                                onbaseCaseId: '',
+                            },
+                        },
+                        setFormData: setMockData,
+                    }}
+                >
+                    <MassMutualSSWForm qualType="" />
+                </FormDataContext.Provider>
+            );
+
+            const el = await waitFor(() => screen.getByTestId('w4p-checkbox'));
+            expect(el).toBeInTheDocument();
+        });
+    });
 });

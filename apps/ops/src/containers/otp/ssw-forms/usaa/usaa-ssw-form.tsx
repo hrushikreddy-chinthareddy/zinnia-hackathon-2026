@@ -20,7 +20,7 @@ import {
     Carrier,
     FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getUsaaConfig from './usaa-ssw-form-helpers';
@@ -82,7 +82,7 @@ export function UsaaSSWForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
 
     return (
         <>

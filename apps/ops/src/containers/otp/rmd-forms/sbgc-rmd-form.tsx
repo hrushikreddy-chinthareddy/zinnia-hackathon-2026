@@ -19,7 +19,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
 import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import DistributionMethodQcd from './qcd/qcd-distribution-method';
 import SelectFormType from './rmd-form-type';
@@ -99,7 +99,7 @@ export default function SbgcRmdWithdrawalForm() {
     const ownerStateOfResidence =
         formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateRMD(contractIssueState ?? '');
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 
     const rmdComponents = isRmdForm && (

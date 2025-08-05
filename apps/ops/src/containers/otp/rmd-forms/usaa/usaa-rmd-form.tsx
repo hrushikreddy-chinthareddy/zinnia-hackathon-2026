@@ -11,6 +11,7 @@ import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-pa
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
+import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -18,6 +19,7 @@ import {
     Carrier,
     FundWithdrawnMethod,
 } from '@deps/models/case/withdrawal/case';
+import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getUsaaWithdrawalConfig from './usaa-rmd-from.helpers';
 
@@ -34,6 +36,7 @@ const UsaaRmdWithdrawalForm = () => {
         signaturesConfig,
         eSignatureFieldConfig,
         cslnCheckStates,
+        w4pSignaturesConfig,
     } = getUsaaWithdrawalConfig(t);
     const {
         formParty,
@@ -77,6 +80,8 @@ const UsaaRmdWithdrawalForm = () => {
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);
+
+    const shouldStateW4pRender = isAllowedStateRMD(contractIssueState ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -100,6 +105,12 @@ const UsaaRmdWithdrawalForm = () => {
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}
             />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
             <IrsWithholding
                 signatureFields={irsSignatureConfig}
                 isFormStateReadOnly={isFormStateReadOnly}

@@ -21,7 +21,7 @@ import {
     FundWithdrawnMethod,
     RMDType,
 } from '@deps/models/case/withdrawal/case';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getGdmnRmdConfig from './gdmn-rmd-form.helpers';
 import DistributionMethodQcd from '../qcd/qcd-distribution-method';
@@ -100,7 +100,7 @@ export default function GdmnRmdWithdrawalForm() {
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateRMD(contractIssueState ?? '');
     const isRmdForm = rmdFormType === RmdFormType.RMD;
 
     const rmdComponents = isRmdForm && (

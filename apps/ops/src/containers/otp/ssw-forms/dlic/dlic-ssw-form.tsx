@@ -26,7 +26,7 @@ import {
     PaymentMethod,
 } from '@deps/models/case/withdrawal/case';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { isAllowedState } from '@deps/utils/renderStateW4';
+import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getDlicConfig from './dlic-ssw-from-helpers';
@@ -117,7 +117,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         }));
         setSswProgramFrequency(frequency);
     };
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
     const isJointOwnerAvailable = !!formParty?.parties?.find(
         (item) => item.partyRoleType === PartyRoles.JOINT_OWNER
     );

@@ -18,11 +18,11 @@ import TaxOL4753Attachment from '@deps/components/otp-withdrawal-form/tax-ol4753
 import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import SswEditSelection from '../ssw-edit-selection';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
-import { isAllowedState } from '@deps/utils/renderStateW4';
 import W4pTaxForm from '@deps/components/w4p-tax-form/w4p-tax-form';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
+import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 export function NassauSSWForm() {
     const { t } = useTranslation(undefined, {
@@ -81,7 +81,7 @@ export function NassauSSWForm() {
     const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(
         parties as LifeCadParty[]
     );
-    const shouldStateW4pRender = isAllowedState(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
 
     return (
         <>
