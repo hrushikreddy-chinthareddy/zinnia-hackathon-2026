@@ -1,5 +1,6 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
+import { useQuery } from '@tanstack/react-query';
 import {
   CarrierAvatars,
   CarrierName,
@@ -8,16 +9,20 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import EverlyIcon from '@/app/styles/everly/assets/everly-logo-icon-new.svg';
 import WellabeIcon from '@/app/styles/wellabe/assets/wellabe-logo-icon.svg';
 import { Link } from '@/components/link/Link';
 import { UserBadge } from '@/components/user-badge/UserBadge';
-import { useFeatureFlags } from '@/hooks/use-feature-flags';
 import useMock from '@/hooks/use-mock';
+import { getPoliciesByCarrier } from '@/queries/policy-queries';
 import { CarrierNames } from '@/types/carriers';
-import { CarrierListDetail, getCarrierSubdomainByName } from '@/utils/carriers';
+import {
+  baseExperienceCarriers,
+  CarrierListDetail,
+  getCarrierSubdomainByName,
+} from '@/utils/carriers';
 
 import styles from './NavMenu.module.css';
 
@@ -41,28 +46,19 @@ const carrierIcons: Record<
 
 export const NavMenu = ({
   userName,
-  carrierPolicyDetails,
 }: {
   userName: { firstName?: string; lastName?: string };
-  carrierPolicyDetails?: CarrierListDetail[] | null;
 }) => {
-  const { data: featureFlagData } = useFeatureFlags();
   const [currentUrl, setCurrentUrl] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
   const { isMockOn } = useMock();
 
-  useEffect(() => {
-    if (window) {
-      setCurrentUrl(window.location.href);
-    }
-    // I'm not positive this will reset the currentUrl when a user switches to a different subdomain
-  }, [carrierPolicyDetails]);
-
-  if (!featureFlagData) {
-    return null;
-  }
+  const { data } = useQuery({
+    queryKey: ['carrierPolicyDetails'],
+    queryFn: () => getPoliciesByCarrier(baseExperienceCarriers),
+  });
 
   return (
     <Popover.Root
@@ -86,9 +82,9 @@ export const NavMenu = ({
           <div className="typography-nav-nav-drawer">
             <p className="typography-labels-label-sm">My Coverage</p>
             <ul>
-              {carrierPolicyDetails &&
-                carrierPolicyDetails.length > 0 &&
-                carrierPolicyDetails.map((detail: CarrierListDetail) => {
+              {data &&
+                data.length > 0 &&
+                data.map((detail: CarrierListDetail) => {
                   const CarrierIcon =
                     carrierIcons[detail.carrierName as CarrierNames];
 

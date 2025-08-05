@@ -1,6 +1,7 @@
 import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
@@ -10,6 +11,7 @@ import AdditionalOverviewLinks from '@/components/policy-overview/AdditionalOver
 import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
+import { LargeSkeleCard } from '@/components/skeleton-loader/policy-page/policy-page-skeletons';
 import { getPolicyForHeaderDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
@@ -59,56 +61,59 @@ export default async function Page({
   const overviewBody = () => {
     if (data?.policyStatus === PolicyStatus.LAPSE) {
       return (
-        <>
+        <Suspense fallback={<LargeSkeleCard />}>
           <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />
           <CallForAssistance customInstruction="for help with reinstatement." />
-        </>
+        </Suspense>
       );
     }
 
     if (data?.policyStatus === PolicyStatus.SURRENDERED) {
       return (
-        <>
+        <Suspense fallback={<LargeSkeleCard />}>
           <SurrenderedPolicy />
           <CallForAssistance customInstruction="with surrender questions." />
-        </>
+        </Suspense>
       );
     }
 
     if (data?.policyStatus === PolicyStatus.CANCELEDFREELOOK) {
       return (
-        <>
+        <Suspense fallback={<LargeSkeleCard />}>
           <CanceledFreelook />
           <CallForAssistance customInstruction="with questions." />
-        </>
+        </Suspense>
       );
     }
 
     return (
       <div className="card-container">
         {visibility?.[ComponentName.OVERVIEW_ACCOUNT_VALUE]() && (
-          <ClickableCardContainer>
-            <ClickableCardContainer.LinkContent
-              linkTo={{
-                url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/account`,
-                label: 'go to account value page',
-              }}
-            >
-              <AccountValue
-                planCode={planCode}
-                policyNumber={policyNumber}
-                isLink
-                showIcon
-              />
-            </ClickableCardContainer.LinkContent>
-          </ClickableCardContainer>
+          <Suspense fallback={<LargeSkeleCard />}>
+            <ClickableCardContainer>
+              <ClickableCardContainer.LinkContent
+                linkTo={{
+                  url: `/coverage/${LineOfBusinessPath.ANNUITIES}/${planCode}/${policyNumber}/account`,
+                  label: 'go to account value page',
+                }}
+              >
+                <AccountValue
+                  planCode={planCode}
+                  policyNumber={policyNumber}
+                  isLink
+                  showIcon
+                />
+              </ClickableCardContainer.LinkContent>
+            </ClickableCardContainer>
+          </Suspense>
         )}
-
-        <AdditionalOverviewLinks
-          planCode={planCode}
-          policyNumber={policyNumber}
-          lineOfBusiness={LineOfBusiness.ANNUITY}
-        />
+        <Suspense fallback={<LargeSkeleCard />}>
+          <AdditionalOverviewLinks
+            planCode={planCode}
+            policyNumber={policyNumber}
+            lineOfBusiness={LineOfBusiness.ANNUITY}
+          />
+        </Suspense>
       </div>
     );
   };

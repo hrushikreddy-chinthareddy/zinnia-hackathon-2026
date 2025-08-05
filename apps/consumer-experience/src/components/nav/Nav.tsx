@@ -1,14 +1,6 @@
 import { navCarrierConfig } from '@/carrier-config/nav';
 import { Link } from '@/components/link/Link';
-import { getMyPoliciesByCarrier } from '@/services';
-import { getFeatureFlags } from '@/services/feature-flags';
 import { CompanyName } from '@/types/carriers';
-import {
-  baseExperienceCarriers,
-  getCarrierListDetails,
-} from '@/utils/carriers';
-import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './Nav.module.css';
 import { NotificationIcon } from './NotificationIcon';
@@ -26,19 +18,6 @@ export async function Nav({
   userName: { firstName?: string; lastName?: string };
   themeCookie: CompanyName;
 }) {
-  const featureFlagDecisions = await getFeatureFlags();
-  let carrierDetails;
-  const loggingContext = await buildCommonLogContext();
-  const { data: policyData, error } = await getMyPoliciesByCarrier(
-    baseExperienceCarriers,
-    loggingContext
-  );
-  if (featureFlagDecisions?.[FEATURE_FLAGS.ANNUITY_MODE]) {
-    if (!error && policyData) {
-      carrierDetails = getCarrierListDetails(policyData);
-    }
-  }
-
   const carrierConfig =
     navCarrierConfig[themeCookie] ?? navCarrierConfig[CompanyName.ZINNIA];
 
@@ -60,7 +39,7 @@ export async function Nav({
       </div>
       <div className={styles.account}>
         <NotificationIcon />
-        <NavMenu userName={userName} carrierPolicyDetails={carrierDetails} />
+        <NavMenu userName={userName} />
       </div>
     </nav>
   );

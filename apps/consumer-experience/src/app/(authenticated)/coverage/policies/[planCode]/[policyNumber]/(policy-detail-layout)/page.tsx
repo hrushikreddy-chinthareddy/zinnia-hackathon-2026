@@ -1,6 +1,7 @@
 import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
@@ -12,6 +13,7 @@ import { CanceledFreelook } from '@/components/policy-overview/non-active-status
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
+import { LargeSkeleCard } from '@/components/skeleton-loader/policy-page/policy-page-skeletons';
 import { getPolicyForHeaderDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
@@ -60,77 +62,85 @@ export default async function Page({
   const overviewBody = () => {
     if (data?.policyStatus === PolicyStatus.LAPSE) {
       return (
-        <>
+        <Suspense fallback={<LargeSkeleCard />}>
           {visibility?.[ComponentName.OVERVIEW_COVERAGE]() && (
             <Coverage planCode={planCode} policyNumber={policyNumber} />
           )}
           <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />
           <CallForAssistance customInstruction="for help with reinstatement." />
-        </>
+        </Suspense>
       );
     }
 
     if (data?.policyStatus === PolicyStatus.SURRENDERED) {
       return (
-        <>
+        <Suspense fallback={<LargeSkeleCard />}>
           <SurrenderedPolicy />
           <CallForAssistance customInstruction="with surrender questions." />
-        </>
+        </Suspense>
       );
     }
 
     if (data?.policyStatus === PolicyStatus.CANCELEDFREELOOK) {
       return (
-        <>
+        <Suspense fallback={<LargeSkeleCard />}>
           <CanceledFreelook />
           <CallForAssistance customInstruction="with policy questions." />
-        </>
+        </Suspense>
       );
     }
 
     return (
       <div className="card-container">
         {visibility?.[ComponentName.OVERVIEW_PREMIUM_LINK]() && (
-          <UpcomingPremium
-            planCode={planCode}
-            policyNumber={policyNumber}
-            extended={visibility?.[
-              ComponentName.OVERVIEW_PREMIUM_DETAILED_VIEW
-            ]()}
-          />
+          <Suspense fallback={<LargeSkeleCard />}>
+            <UpcomingPremium
+              planCode={planCode}
+              policyNumber={policyNumber}
+              extended={visibility?.[
+                ComponentName.OVERVIEW_PREMIUM_DETAILED_VIEW
+              ]()}
+            />
+          </Suspense>
         )}
 
         {visibility?.[ComponentName.OVERVIEW_ACCOUNT_VALUE]() && (
-          <ClickableCardContainer>
-            <ClickableCardContainer.LinkContent
-              linkTo={{
-                url: `/coverage/${LineOfBusinessPath.POLICIES}/${planCode}/${policyNumber}/account`,
-                label: 'go to account value page',
-              }}
-            >
-              <AccountValue
-                planCode={planCode}
-                policyNumber={policyNumber}
-                isLink
-                showIcon
-              />
-            </ClickableCardContainer.LinkContent>
-          </ClickableCardContainer>
+          <Suspense fallback={<LargeSkeleCard />}>
+            <ClickableCardContainer>
+              <ClickableCardContainer.LinkContent
+                linkTo={{
+                  url: `/coverage/${LineOfBusinessPath.POLICIES}/${planCode}/${policyNumber}/account`,
+                  label: 'go to account value page',
+                }}
+              >
+                <AccountValue
+                  planCode={planCode}
+                  policyNumber={policyNumber}
+                  isLink
+                  showIcon
+                />
+              </ClickableCardContainer.LinkContent>
+            </ClickableCardContainer>
+          </Suspense>
         )}
 
         {visibility?.[ComponentName.OVERVIEW_COVERAGE]() && (
-          <Coverage
+          <Suspense fallback={<LargeSkeleCard />}>
+            <Coverage
+              planCode={planCode}
+              policyNumber={policyNumber}
+              lineOfBusiness={LineOfBusiness.LIFE}
+            />
+          </Suspense>
+        )}
+
+        <Suspense fallback={<LargeSkeleCard />}>
+          <AdditionalOverviewLinks
             planCode={planCode}
             policyNumber={policyNumber}
             lineOfBusiness={LineOfBusiness.LIFE}
           />
-        )}
-
-        <AdditionalOverviewLinks
-          planCode={planCode}
-          policyNumber={policyNumber}
-          lineOfBusiness={LineOfBusiness.LIFE}
-        />
+        </Suspense>
       </div>
     );
   };

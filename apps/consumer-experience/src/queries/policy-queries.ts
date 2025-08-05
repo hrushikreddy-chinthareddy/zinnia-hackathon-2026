@@ -10,6 +10,7 @@ import {
   PolicyWithAgent,
   UpcomingPremium,
 } from '@/types/policy';
+import { CarrierListDetail } from '@/utils/carriers';
 
 /**
  *
@@ -119,6 +120,20 @@ export const getUpcomingPremium = async ({
 }: PolicyRequestInputs) => {
   const response: ApiResponse<UpcomingPremium> = await (
     await ClientApi.get(`/api/policies/${planCode}/${policyNumber}/premiums`)
+  ).json();
+
+  if (response.error || !response) {
+    throw response.error;
+  }
+
+  return response.data;
+};
+
+export const getPoliciesByCarrier = async (carriers?: string[]) => {
+  const response: ApiResponse<CarrierListDetail[]> = await (
+    await ClientApi.get(
+      `/api/policies/by-carrier?carriers=${carriers?.join(',')}`
+    )
   ).json();
 
   if (response.error || !response) {
