@@ -6918,7 +6918,14 @@
             "valuePerYear": "{{value}} / année",
             "numYears": "{{years}} ans",
             "ariaGoToEApp": "Aller vers le lien eApp",
-            "selectBeforeGoToEApp": "Veuillez choisir une illustration avant de poursuivre vers l'eApplication."
+            "selectBeforeGoToEApp": "Veuillez choisir une illustration avant de poursuivre vers l'eApplication.",
+            "archiveIllustrationPopoverTitle": "Archivez cette illustration?",
+            "archiveIllustrationPopoverBody": "Vous pouvez l'archiver plus tard.",
+            "confirmArchive": "Archiver",
+            "cancel": "Annuler",
+            "cancelArchiveAriaLabel": "Annuler archivage de l'illustration",
+            "confirmArchiveAriaLabel": "Confirmer archivage de l'illustration",
+            "addProductAriaLabel": "Bouton pour ajouter un produit"
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "Nouveau Client Case",

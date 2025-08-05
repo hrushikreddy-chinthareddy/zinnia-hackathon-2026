@@ -7016,7 +7016,14 @@
             "valuePerYear": "{{value}} / year",
             "numYears": "{{years}} years",
             "ariaGoToEApp": "Go to eApp link",
-            "selectBeforeGoToEApp": "Please select an illustration before continuing to the eApplication."
+            "selectBeforeGoToEApp": "Please select an illustration before continuing to the eApplication.",
+            "archiveIllustrationPopoverTitle": "Archive this illustration?",
+            "archiveIllustrationPopoverBody": "You can unarchive it later.",
+            "confirmArchive": "Archive",
+            "cancel": "Cancel",
+            "cancelArchiveAriaLabel": "Cancel archive illustration button",
+            "confirmArchiveAriaLabel": "Confirm archive illustration button",
+            "addProductAriaLabel": "Add product button"
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "New Client Case",

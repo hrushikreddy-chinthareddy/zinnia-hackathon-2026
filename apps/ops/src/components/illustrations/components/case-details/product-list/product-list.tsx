@@ -199,7 +199,11 @@ const IllustrationProductList = ({
                             key={'add-product-btn'}
                             mode="link"
                             data-testid="addproduct-link-btn"
-                            aria-label={t('') as string}
+                            aria-label={
+                                t(
+                                    'clientCase.illustrationDetails.addProductAriaLabel'
+                                ) as string
+                            }
                             type="button"
                             size="small"
                             className={clsx(styles.displayProducts)}

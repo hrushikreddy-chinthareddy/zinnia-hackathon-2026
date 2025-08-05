@@ -3,9 +3,12 @@ import {
     Icon,
     IconType,
     MenuContextualItem,
+    Button,
+    Popover,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
@@ -27,6 +30,8 @@ const IllustrationMenu = ({
         setIsLoadingSelectForApplication,
         selectedIllustration,
     } = useSelectedIllustration();
+    const [openArchiveConfirmation, setOpenArchiveConfirmation] =
+        useState(false);
 
     const {
         selectIllustrationMutation,
@@ -99,13 +104,71 @@ const IllustrationMenu = ({
                 )}
             {selectedIllustration?.illustration.status ===
                 IllustrationStatuses.ACTIVE && (
-                <MenuContextualItem
-                    onClick={handleArchiveIllustration}
-                    content={t('clientCase.illustrationDetails.archived')}
-                    icon={
-                        <Icon type={IconType.ARCHIVE} height={20} width={20} />
+                <Popover
+                    open={openArchiveConfirmation}
+                    onOpenChange={setOpenArchiveConfirmation}
+                    title={
+                        t(
+                            'clientCase.illustrationDetails.archiveIllustrationPopoverTitle'
+                        ) as string
                     }
-                />
+                    trigger={
+                        <MenuContextualItem
+                            content={t(
+                                'clientCase.illustrationDetails.archived'
+                            )}
+                            icon={
+                                <Icon
+                                    type={IconType.ARCHIVE}
+                                    height={20}
+                                    width={20}
+                                />
+                            }
+                        />
+                    }
+                >
+                    <>
+                        <p className="typography-content-body">
+                            {t(
+                                'clientCase.illustrationDetails.archiveIllustrationPopoverBody'
+                            )}
+                        </p>
+                        <div className="flex justify-end gap-2">
+                            <Button
+                                onClick={handleArchiveIllustration}
+                                mode="primary"
+                                data-testid="confirm-archive-btn"
+                                aria-label={
+                                    t(
+                                        'clientCase.illustrationDetails.confirmArchiveAriaLabel'
+                                    ) as string
+                                }
+                                type="button"
+                                size="small"
+                            >
+                                {t(
+                                    'clientCase.illustrationDetails.confirmArchive'
+                                )}
+                            </Button>
+                            <Button
+                                onClick={() =>
+                                    setOpenArchiveConfirmation(false)
+                                }
+                                mode="link"
+                                data-testid="cancel-archive-btn"
+                                aria-label={
+                                    t(
+                                        'clientCase.illustrationDetails.cancelArchiveAriaLabel'
+                                    ) as string
+                                }
+                                type="button"
+                                size="small"
+                            >
+                                {t('clientCase.illustrationDetails.cancel')}
+                            </Button>
+                        </div>
+                    </>
+                </Popover>
             )}
             {selectedIllustration?.illustration.status ===
                 IllustrationStatuses.ARCHIVED && (

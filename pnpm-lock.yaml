@@ -415,8 +415,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: ^5.22.1
-        version: 5.22.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
+        specifier: ^5.24.0
+        version: 5.24.0(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
       '@zinnia/form-engine-sdk':
         specifier: 1.2.3
         version: 1.2.3(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))
@@ -6765,6 +6765,9 @@ packages:
 
   '@zinnia/bloom@5.23.0':
     resolution: {integrity: sha512-jxiFo/fBLxPqOD/jdRhRM2jTyAUjZQK32sOj05b2er1lmTPXZxL3eKtyXTHOIo0w6KxWCHn9EkCZW2dYRvm6Xw==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.23.0/ae844bcc0f855b054f693e4084040d62a1150e9a}
+
+  '@zinnia/bloom@5.24.0':
+    resolution: {integrity: sha512-WZr8MKoPZtgtEe51XPCPHMNBFqC97CDuiJz0VfOuGrIOEr5isRKgkrNxKTe0EBtdqHrp0pMt4n28CzroG+B1+g==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.24.0/a64354b96456965c0cd3c2501b1ec396c570c13b}
 
   '@zinnia/form-engine-sdk@1.2.3':
     resolution: {integrity: sha512-jFDau+Q5Jx7erL/cXoaJq/aAuoo1KOWxeNTwXXVixvkrfvhc5mpBi3rdtwZK1ktWQxVO/CtAP4JQIwmotHqi3g==, tarball: https://npm.pkg.github.com/download/@zinnia/form-engine-sdk/1.2.3/1a67488bcfb8c49c2ff64c528ab897cc25b38f5c}
@@ -22373,38 +22376,6 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/bloom@5.22.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))':
-    dependencies:
-      '@ariakit/react': 0.4.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-checkbox': 1.3.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-dialog': 1.1.14(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-dropdown-menu': 2.1.15(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-form': 0.1.7(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-popover': 1.1.14(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-primitive': 2.1.3(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-radio-group': 1.3.7(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-scroll-area': 1.2.9(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-select': 2.2.5(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-tabs': 1.1.12(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-toggle': 1.1.9(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-toggle-group': 1.1.10(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-tooltip': 1.2.7(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      clsx: 2.1.1
-      match-sorter: 8.0.3
-      react: 18.3.1
-      react-day-picker: 9.8.0(react@18.3.1)
-      react-dom: 18.3.1(react@18.3.1)
-      react-number-format: 5.4.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-use: 17.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      vite-plugin-svgr: 4.3.0(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
-    transitivePeerDependencies:
-      - '@types/react'
-      - '@types/react-dom'
-      - rollup
-      - supports-color
-      - typescript
-      - vite
-
   '@zinnia/bloom@5.23.0(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.7)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))':
     dependencies:
       '@ariakit/react': 0.4.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -22429,6 +22400,38 @@ snapshots:
       react-number-format: 5.4.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-use: 17.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       vite-plugin-svgr: 4.3.0(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.7)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - rollup
+      - supports-color
+      - typescript
+      - vite
+
+  '@zinnia/bloom@5.24.0(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))':
+    dependencies:
+      '@ariakit/react': 0.4.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-checkbox': 1.3.2(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-dialog': 1.1.14(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-dropdown-menu': 2.1.15(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-form': 0.1.7(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-popover': 1.1.14(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-primitive': 2.1.3(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-radio-group': 1.3.7(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-scroll-area': 1.2.9(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-select': 2.2.5(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-tabs': 1.1.12(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-toggle': 1.1.9(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-toggle-group': 1.1.10(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-tooltip': 1.2.7(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      clsx: 2.1.1
+      match-sorter: 8.0.3
+      react: 18.3.1
+      react-day-picker: 9.8.0(react@18.3.1)
+      react-dom: 18.3.1(react@18.3.1)
+      react-number-format: 5.4.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-use: 17.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      vite-plugin-svgr: 4.3.0(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
