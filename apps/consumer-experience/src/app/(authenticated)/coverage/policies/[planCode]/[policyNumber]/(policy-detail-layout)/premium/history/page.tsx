@@ -10,7 +10,10 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { AccountType } from '@/components/pii/AccountType';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getPaymentHistory } from '@/services';
+import {
+  getLoggedInUserPolicyAndPartyData,
+  getPaymentHistory,
+} from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatBankAccountTypeText } from '@/utils/data';
 import { sortByDate } from '@/utils/dates';
@@ -40,6 +43,12 @@ interface Props {
 export default async function PaymentHistory({ params }: Props) {
   const loggingContext = await buildCommonLogContext();
   const { data, error } = await getPaymentHistory(params, loggingContext);
+  const { data: partyRefData } = await getLoggedInUserPolicyAndPartyData(
+    { planCode: params.planCode, policyNumber: params.policyNumber },
+    loggingContext
+  );
+
+  const loggedInUserPolicyPartyId = partyRefData?.policyPartyId;
 
   if (
     error ||
@@ -89,10 +98,18 @@ export default async function PaymentHistory({ params }: Props) {
                     item?.bankDetails?.accountType
                   )}
                 />
-                {' ending in '}
-                <AccountNumber
-                  accountNumber={item?.bankDetails?.accountNumber}
-                />
+                {/*********
+                 *  Only the logged in user that matches the same policy party ID as the
+                transaction should see bank details
+                ********/}
+                {item.bankDetails?.partyId === loggedInUserPolicyPartyId && (
+                  <>
+                    {' ending in '}
+                    <AccountNumber
+                      accountNumber={item?.bankDetails?.accountNumber}
+                    />
+                  </>
+                )}
               </span>
             </>
           }
@@ -139,10 +156,18 @@ export default async function PaymentHistory({ params }: Props) {
                     item?.bankDetails?.accountType
                   )}
                 />
-                {' ending in '}
-                <AccountNumber
-                  accountNumber={item?.bankDetails?.accountNumber}
-                />
+                {/*********
+                 *  Only the logged in user that matches the same policy party ID as the
+                transaction should see bank details
+                ********/}
+                {item.bankDetails?.partyId === loggedInUserPolicyPartyId && (
+                  <>
+                    {' ending in '}
+                    <AccountNumber
+                      accountNumber={item?.bankDetails?.accountNumber}
+                    />
+                  </>
+                )}
               </span>
             </>
           }

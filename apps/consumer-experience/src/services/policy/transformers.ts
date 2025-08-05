@@ -449,7 +449,9 @@ export const transformPaymentHistory = (
     bankDetails: {
       accountType,
       accountNumber,
+      partyId: transaction?.payors?.[0]?.partyId,
     },
+
     title: DEFAULT_ERROR_STRING,
     isPending: status === ExtendedTransactionStatus.Pending,
   };

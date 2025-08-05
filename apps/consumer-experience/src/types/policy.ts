@@ -265,6 +265,7 @@ export interface PaymentHistory {
   bankDetails?: {
     accountType?: AccountType;
     accountNumber?: string;
+    partyId?: string;
   };
   title: string;
   isPending?: boolean;
