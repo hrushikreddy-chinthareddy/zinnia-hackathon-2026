@@ -10,6 +10,7 @@ import { PopoverPlacement } from '@deps/components/popover/popover';
 import BeneficiaryCardContainer from '@deps/containers/people-card-container/beneficiary-card-container';
 import PeopleCardContainer from '@deps/containers/people-card-container/people-card-container';
 import {
+    AgentType,
     BeneficiaryType,
     PeopleCardData,
 } from '@deps/containers/people-card-container/people-card-container.types';
@@ -23,13 +24,13 @@ import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { AgentData } from '@deps/types/agents';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import {
     NameTag,
+    agentDataByType,
     beneficiaryDataByType,
     combineNameAndRoles,
     convertToTagText,
@@ -114,7 +115,6 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
         );
         sideSheet.handleOpen(true);
     };
-
     // Fetch data for agents if there are any
     const agentParties = useMemo(
         () =>
@@ -129,7 +129,6 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
         [nameTags]
     );
     const clientCode = policy?.carrierId;
-
     const { data: agentData } = useQueries({
         queries: agentParties?.map((agent) => ({
             queryKey: [
@@ -161,7 +160,15 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
             };
         },
     });
+    const handleRadioClick = (value: string) => {
+        const selectedTagList = convertToTagText(value, t);
 
+        setPeopleRolesFilter({
+            filterValue: value,
+            filterTagList: selectedTagList,
+        });
+    };
+    // If `ALL` is selected, do not filter
     let filteredNameTags =
         peopleRolesFilter.filterValue === 'All'
             ? nameTags
@@ -176,15 +183,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                   'fullName',
                   'fullName'
               );
-
-    const handleRadioClick = (value: string) => {
-        const selectedTagList = convertToTagText(value, t);
-        setPeopleRolesFilter({
-            filterValue: value,
-            filterTagList: selectedTagList,
-        });
-    };
-
+    // Add agent data if there is any
     if (agentData && agentData.length > 0) {
         filteredNameTags = filteredNameTags.map((tag) => {
             const isAgent = agentData.some(
@@ -204,7 +203,6 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
     const isAgentSelected = peopleRolesFilter.filterValue === 'agent';
     const isBeneficiarySelected =
         peopleRolesFilter.filterValue === 'beneficiary';
-
     // Since policy can be undefined, we need to check if policy exists before accessing policyId
     const peopleCardData: PeopleCardData = {
         router,
@@ -214,7 +212,24 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
         accessibilityText: t('people.card.allocationText'),
         accessibilityClickText: t('ariaLabel.openPeople'),
         isBeneficiarySelected: isBeneficiarySelected,
+        isAgentSelected: isAgentSelected,
     };
+    const commissionAllocationData = agentDataByType(
+        filteredNameTags,
+        AgentType.PRIMARY
+    );
+
+    const nonCommissionAgents = filteredNameTags.filter(
+        (nameTag) =>
+            !commissionAllocationData.some(
+                (commAgent) => commAgent.partyId === nameTag.partyId
+            )
+    );
+
+    const otherSectionData = agentDataByType(
+        nonCommissionAgents,
+        AgentType.AGENT
+    );
 
     return (
         <ChipEnterContext.Provider value={{ chipEntered, setChipEntered }}>
@@ -249,21 +264,28 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
 
                     {isBeneficiarySelected && (
                         <div className="w-full">
-                            <BeneficiaryCardContainer
-                                title={t('people.primaryAllocation')}
-                                peopleCardData={peopleCardData}
-                                filteredData={beneficiaryDataByType(
-                                    filteredNameTags,
-                                    BeneficiaryType.PRIMARY
-                                )}
-                                classNames="mb-10"
-                                openAllocationSideSheet={openSidesheet}
-                                type={BeneficiaryType.PRIMARY}
-                                showManageBeneficiary={true}
-                                enableManageBeneficiary={
-                                    isEligibleBeneficiary && beneChangeEnabled
-                                }
-                            />
+                            {beneficiaryDataByType(
+                                filteredNameTags,
+                                BeneficiaryType.PRIMARY
+                            )?.length ? (
+                                <BeneficiaryCardContainer
+                                    title={t('people.primaryAllocation')}
+                                    peopleCardData={peopleCardData}
+                                    filteredData={beneficiaryDataByType(
+                                        filteredNameTags,
+                                        BeneficiaryType.PRIMARY
+                                    )}
+                                    classNames="mb-10"
+                                    openAllocationSideSheet={openSidesheet}
+                                    type={BeneficiaryType.PRIMARY}
+                                    disabled={false}
+                                    showManageBeneficiary={true}
+                                    enableManageBeneficiary={
+                                        isEligibleBeneficiary &&
+                                        beneChangeEnabled
+                                    }
+                                />
+                            ) : null}
                             {beneficiaryDataByType(
                                 filteredNameTags,
                                 BeneficiaryType.CONTIGENT
@@ -277,6 +299,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                     )}
                                     type={BeneficiaryType.CONTIGENT}
                                     openAllocationSideSheet={openSidesheet}
+                                    disabled={false}
                                     showManageBeneficiary={false}
                                     enableManageBeneficiary={
                                         isEligibleBeneficiary
@@ -288,29 +311,39 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
 
                     {isAgentSelected && (
                         <div className="w-full">
-                            <BeneficiaryCardContainer
-                                title={t('people.primaryAllocation')}
-                                peopleCardData={peopleCardData}
-                                filteredData={beneficiaryDataByType(
-                                    filteredNameTags,
-                                    BeneficiaryType.PRIMARY
-                                )}
-                                classNames="mb-10"
-                                type={BeneficiaryType.PRIMARY}
-                                showManageBeneficiary={false}
-                            />
+                            {commissionAllocationData?.length ? (
+                                <BeneficiaryCardContainer
+                                    title={t('people.commissionAllocation')}
+                                    peopleCardData={peopleCardData}
+                                    filteredData={commissionAllocationData}
+                                    classNames="mb-10"
+                                    type={AgentType.PRIMARY}
+                                    tooltip={
+                                        t(
+                                            'people.commissionAllocationTooltip'
+                                        ) as string
+                                    }
+                                    disabled={true}
+                                    cardDisableTooltip={
+                                        t('people.cardDisableTooltip') as string
+                                    }
+                                />
+                            ) : null}
 
-                            <BeneficiaryCardContainer
-                                title={'Other'}
-                                peopleCardData={peopleCardData}
-                                filteredData={filteredNameTags.filter((fd) =>
-                                    isNullEmptyOrUndefined(
-                                        fd.beneficiaryPercentage || ''
-                                    )
-                                )}
-                                showAllocationBar={false}
-                                showManageBeneficiary={false}
-                            />
+                            {otherSectionData?.length ? (
+                                <BeneficiaryCardContainer
+                                    title={t('people.other')}
+                                    peopleCardData={peopleCardData}
+                                    filteredData={otherSectionData}
+                                    type={AgentType.AGENT}
+                                    showAllocationBar={false}
+                                    tooltip={t('people.otherTooltip') as string}
+                                    disabled={true}
+                                    cardDisableTooltip={
+                                        t('people.cardDisableTooltip') as string
+                                    }
+                                />
+                            ) : null}
                         </div>
                     )}
 

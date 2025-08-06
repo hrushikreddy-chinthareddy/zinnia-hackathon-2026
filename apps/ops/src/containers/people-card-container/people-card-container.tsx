@@ -12,6 +12,7 @@ import {
     BeneficiaryType,
     PeopleCardContainerProps,
     PeopleCardData,
+    AgentType,
 } from './people-card-container.types';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
 
@@ -21,6 +22,9 @@ interface MapDataToPeopleProps {
     party: NameTag;
     peopleCard: PeopleCardData;
     isRereg?: boolean;
+    disabled?: boolean;
+    cardDisableTooltip?: string;
+    type?: BeneficiaryType | AgentType;
 }
 
 const tagsToBeneficiaryType = (tags: TagKey[]) => {
@@ -30,13 +34,26 @@ const tagsToBeneficiaryType = (tags: TagKey[]) => {
     const isContigent = tags.filter(
         (tag) => tag.text?.toLocaleLowerCase().indexOf('contigent') !== -1
     )?.length;
+    const isPrimaryAgent = tags.filter(
+        (tag) => tag.text?.toLocaleLowerCase().indexOf('agent of record') !== -1
+    )?.length;
+    const isAgent = tags.filter(
+        (tag) =>
+            tag.text?.toLocaleLowerCase().indexOf('agent') ||
+            tag.text?.toLocaleLowerCase().indexOf('servicing agent') !== -1
+    )?.length;
 
     if (isPrimary) {
         return BeneficiaryType.PRIMARY;
     }
-
     if (isContigent) {
         return BeneficiaryType.CONTIGENT;
+    }
+    if (isPrimaryAgent) {
+        return AgentType.PRIMARY;
+    }
+    if (isAgent) {
+        return AgentType.AGENT;
     }
 
     return BeneficiaryType.NONE;
@@ -48,6 +65,9 @@ const mapDataToPeopleCard = ({
     party,
     peopleCard,
     isRereg,
+    disabled,
+    cardDisableTooltip,
+    type,
 }: MapDataToPeopleProps) => {
     const {
         partyType,
@@ -57,6 +77,7 @@ const mapDataToPeopleCard = ({
         tags,
         beneficiaryPercentage,
         partyId,
+        agentPercentage,
     } = party;
     const {
         selectedTagList,
@@ -65,6 +86,7 @@ const mapDataToPeopleCard = ({
         planCode,
         policyNumber,
         isBeneficiarySelected,
+        isAgentSelected,
         router,
     } = peopleCard;
 
@@ -89,6 +111,17 @@ const mapDataToPeopleCard = ({
             break;
     }
 
+    let allocationValue: string = '';
+    if (isBeneficiarySelected) {
+        allocationValue = beneficiaryPercentage?.toString() ?? '0';
+    } else if (isAgentSelected) {
+        if (type === AgentType.PRIMARY) {
+            allocationValue = agentPercentage?.toString() ?? '0';
+        } else if (type === AgentType.AGENT) {
+            allocationValue = '';
+        }
+    }
+
     return (
         <CardPeople
             key={index}
@@ -97,9 +130,7 @@ const mapDataToPeopleCard = ({
             name={name}
             selectedTags={selectedTagList}
             beneficiaryType={tagsToBeneficiaryType(tags)}
-            allocation={
-                isBeneficiarySelected ? beneficiaryPercentage?.toString() : ''
-            }
+            allocation={allocationValue}
             accessibilityText={accessibilityText}
             accessibilityClickText={accessibilityClickText}
             onClick={() =>
@@ -111,6 +142,8 @@ const mapDataToPeopleCard = ({
             }
             shouldFocus={index === 0 && chipEntered}
             partyStatus={party.partyStatus}
+            disabled={disabled}
+            cardDisableTooltip={cardDisableTooltip}
         />
     );
 };
@@ -120,6 +153,9 @@ const PeopleCardContainer = ({
     peopleCardData,
     classNames,
     isRereg,
+    disabled,
+    cardDisableTooltip,
+    type,
 }: PeopleCardContainerProps) => {
     const { chipEntered } = useContext(ChipEnterContext);
     return (
@@ -133,6 +169,9 @@ const PeopleCardContainer = ({
                     party: nameTag,
                     peopleCard: peopleCardData,
                     isRereg,
+                    disabled,
+                    cardDisableTooltip,
+                    type,
                 })
             )}
         </div>

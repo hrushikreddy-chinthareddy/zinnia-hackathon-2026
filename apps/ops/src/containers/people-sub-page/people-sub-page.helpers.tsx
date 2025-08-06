@@ -15,7 +15,10 @@ import {
 import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-import { BeneficiaryType } from '../people-card-container/people-card-container.types';
+import {
+    AgentType,
+    BeneficiaryType,
+} from '../people-card-container/people-card-container.types';
 
 // Role Count
 
@@ -96,7 +99,13 @@ export const normalizePartyRole = (partyRole: PartyRole): string => {
         partyRole === 'CONTINGENTBENEFICIARY'
     ) {
         return 'beneficiary';
-    } else if (partyRole === 'AGENT') {
+    } else if (
+        partyRole === 'PRIMARYWRITINGAGENT' ||
+        partyRole === 'PRIMARYSERVICINGAGENT' ||
+        partyRole === 'ADDITIONALSERVICINGAGENT' ||
+        partyRole === 'ADDITIONALWRITINGGAGENT' ||
+        partyRole === 'AGENT'
+    ) {
         return 'agent';
     }
     return partyRole;
@@ -109,8 +118,12 @@ export const simplifyPartyRoles = (partyRole: PartyRole): string => {
         case PartyRole.CONTINGENTBENEFICIARY:
             return 'contingentbeneficiary';
         case PartyRole.AGENT:
+        case PartyRole.ADDITIONALSERVICINGAGENT:
+        case PartyRole.PRIMARYSERVICINGAGENT:
             return 'agent';
-
+        case PartyRole.PRIMARYWRITINGAGENT:
+        case PartyRole.ADDITIONALWRITINGGAGENT:
+            return 'agentofrecord';
         default:
             return partyRole;
     }
@@ -259,7 +272,9 @@ export const convertToTagText = (value: string, t: TFunction): string[] => {
             return [
                 t('chipFilter.partyRole.sellingagent'),
                 t('chipFilter.partyRole.commissionagent'),
-                t('chipFilter.partyRole.servicingagent'),
+                t('chipFilter.partyRole.servicingagent')?.toLocaleLowerCase(),
+                t('chipFilter.partyRole.agentOfRecord')?.toLocaleLowerCase(),
+                t('chipFilter.partyRole.agent')?.toLocaleLowerCase(),
             ];
         default:
             return [convertToChipText(value, t).toLowerCase()];
@@ -277,6 +292,20 @@ export const beneficiaryDataByType = (data: NameTag[], type: BeneficiaryType) =>
             )
         ),
         'beneficiaryPercentage',
+        'firstName',
+        'lastName'
+    );
+
+export const agentDataByType = (data: NameTag[], type: AgentType) =>
+    sortByAndThenBy<NameTag>(
+        data.filter((nameTag) =>
+            nameTag.partyRoles.some(
+                (partyRole) =>
+                    simplifyPartyRoles(partyRole as PartyRole) ===
+                    type.toLocaleLowerCase()
+            )
+        ),
+        'agentPercentage',
         'firstName',
         'lastName'
     );

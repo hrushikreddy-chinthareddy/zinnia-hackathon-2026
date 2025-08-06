@@ -4076,6 +4076,7 @@
     "chipFilter": {
         "all": "All",
         "partyRole": {
+            "agent": "Agent",
             "owner": "Owner",
             "insured": "Insured",
             "payor": "Payor",
@@ -4660,7 +4661,12 @@
         },
         "filterByRole": "Filter by role:",
         "primaryAllocation": "Primary Allocation",
-        "contingentAllocation": "Contingent Allocation"
+        "contingentAllocation": "Contingent Allocation",
+        "commissionAllocation": "Commission allocation",
+        "commissionAllocationTooltip": "Commission allocation shows the breakdown of how agents earn money for the sale of the policy. Commission rules vary by policy and carrier. Typically, agents earn a certain percentage of the owner's premiums for the first year of the policy, and then earn a smaller percentage for a set number of years following that. The commission allocation, however, is determined by the agents themselves. Commission agents are usually all agents within the same office.",
+        "cardDisableTooltip": "We're still working on this page. For now, head to MCS directly to see agent contact information and identification details.",
+        "other": "Other",
+        "otherTooltip": "Other agents on the policy don't earn commission, but may also be authorized to make changes or discuss this policy. For example, the servicing agent on the policy is the agent who works directly with the owner now that the policy is active."
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",

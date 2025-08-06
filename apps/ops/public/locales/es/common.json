@@ -4598,7 +4598,12 @@
         },
         "filterByRole": "Filtrar por rol:",
         "primaryAllocation": "Asignación primaria",
-        "contingentAllocation": "Asignación contingente"
+        "contingentAllocation": "Asignación contingente",
+        "commissionAllocation": "Asignación de comisiones",
+        "commissionAllocationTooltip": "La asignación de comisiones muestra el desglose de cómo los agentes ganan dinero por la venta de la póliza. Las reglas de la comisión varían según la póliza y el operador. Por lo general, los agentes ganan un cierto porcentaje de las primas del propietario durante el primer año de la póliza y luego ganan un porcentaje menor durante una cantidad determinada de años posteriores. La asignación de comisiones, sin embargo, la determinan los propios agentes. Los agentes de comisión suelen ser todos agentes dentro de la misma oficina.",
+        "cardDisableTooltip": "Seguimos trabajando en esta página. Por ahora, dirígete directamente a MCS para ver la información de contacto y los datos de identificación del agente.",
+        "other": "Otro",
+        "otherTooltip": "Otros agentes de la póliza no ganan comisión, pero también pueden estar autorizados a realizar cambios o discutir esta póliza. Por ejemplo, el agente de servicio de la póliza es el agente que trabaja directamente con el propietario ahora que la póliza está activa."
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",

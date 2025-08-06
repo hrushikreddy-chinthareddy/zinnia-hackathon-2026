@@ -9,7 +9,10 @@ import {
     getBeneficiaryColor,
     getContigentColor,
 } from '@deps/containers/people-card-container/people-card-container.helpers';
-import { BeneficiaryType } from '@deps/containers/people-card-container/people-card-container.types';
+import {
+    BeneficiaryType,
+    AgentType,
+} from '@deps/containers/people-card-container/people-card-container.types';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TagKey } from '@deps/types/components';
 
@@ -21,13 +24,15 @@ export interface CardPeopleProps {
     onClick?: () => void;
     accessibilityText: string;
     accessibilityClickText: string;
-    beneficiaryType?: BeneficiaryType;
+    beneficiaryType?: BeneficiaryType | AgentType;
     index: number;
     shouldFocus?: boolean;
     isSelected?: boolean;
     //TODO: remove the optional for testId, but for now we'll keep it optional for backwards compatibility
     testId?: string;
     partyStatus?: PartyStatus;
+    disabled?: boolean;
+    cardDisableTooltip?: string;
 }
 
 const PREFERRED_TAG_ORDER = {
@@ -42,8 +47,11 @@ const PREFERRED_TAG_ORDER = {
     'Third Party Designee': 9,
 } as { [key: string]: number };
 
-const getBeneficiaryColorByType = (type: BeneficiaryType, index: number) => {
-    return type === BeneficiaryType.PRIMARY
+const getBeneficiaryColorByType = (
+    type: BeneficiaryType | AgentType,
+    index: number
+) => {
+    return type === BeneficiaryType.PRIMARY || type === AgentType.PRIMARY
         ? getBeneficiaryColor(index)
         : getContigentColor(index);
 };
@@ -77,6 +85,8 @@ const CardPeople = ({
     isSelected = false,
     testId,
     partyStatus,
+    disabled,
+    cardDisableTooltip,
 }: CardPeopleProps) => {
     const hasAllocation = !isNullEmptyOrUndefined(allocation || '');
     const allocationBgClasses = hasAllocation
@@ -103,6 +113,8 @@ const CardPeople = ({
             isSelected={isSelected}
             onClick={onClick}
             testId={testId}
+            disabled={disabled}
+            cardDisableTooltip={cardDisableTooltip}
         >
             {sortedTags && (
                 <div className="flex flex-wrap gap-1">

@@ -9,4 +9,6 @@ export interface ClickContainerProps extends PropsWithChildren {
     role?: 'button' | 'link';
     isSelected?: boolean;
     testId?: string;
+    disabled?: boolean;
+    cardDisableTooltip?: string;
 }

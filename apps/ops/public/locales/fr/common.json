@@ -4611,7 +4611,12 @@
         },
         "filterByRole": "Filtrer par rôle :",
         "primaryAllocation": "Allocation Primaire",
-        "contingentAllocation": "Allocation Contingente"
+        "contingentAllocation": "Allocation Contingente",
+        "commissionAllocation": "Répartition des commissions",
+        "commissionAllocationTooltip": "L'allocation des commissions montre la répartition de la manière dont les agents gagnent de l'argent pour la vente de la police. Les règles de commission varient selon la politique et le transporteur. En règle générale, les agents gagnent un certain pourcentage des primes du propriétaire pour la première année de la police, puis gagnent un pourcentage plus faible pendant un nombre défini d'années suivantes. La répartition des commissions est toutefois déterminée par les agents eux-mêmes. Les agents à la commission sont généralement tous des agents au sein du même bureau.",
+        "cardDisableTooltip": "Nous travaillons encore sur cette page. Pour l'instant, rendez-vous directement sur MCS pour consulter les coordonnées et les informations d'identification des agents.",
+        "other": "Autre",
+        "otherTooltip": "Les autres agents participant à la police ne gagnent pas de commission, mais peuvent également être autorisés à apporter des modifications ou à discuter de cette politique. Par exemple, l'agent de gestion de la politique est l'agent qui travaille directement avec le propriétaire maintenant que la politique est active."
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",

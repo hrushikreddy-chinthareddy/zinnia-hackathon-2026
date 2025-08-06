@@ -7,12 +7,16 @@ export interface PeopleCardContainerProps {
     peopleCardData: PeopleCardData;
     classNames?: string;
     isRereg?: boolean;
+    disabled?: boolean;
+    cardDisableTooltip?: string;
+    type?: BeneficiaryType | AgentType;
 }
 
 export interface PeopleCardData {
     accessibilityClickText: string;
     accessibilityText: string;
     isBeneficiarySelected: boolean;
+    isAgentSelected?: boolean;
     planCode?: string;
     policyNumber?: string;
     router: NextRouter;
@@ -23,4 +27,10 @@ export enum BeneficiaryType {
     NONE = '',
     PRIMARY = 'BENEFICIARY',
     CONTIGENT = 'CONTINGENTBENEFICIARY',
+}
+
+export enum AgentType {
+    NONE = '',
+    PRIMARY = 'AGENTOFRECORD',
+    AGENT = 'AGENT',
 }
