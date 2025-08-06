@@ -1230,6 +1230,7 @@
             "requestAck.processFormRequestProcessing": "Traitement de la requête {{subType}}",
             "requestCompletion.deliverLetter": "Recevoir la confirmation de livraison",
             "requestCompletion.completeRequest": "Envoyer {{process}}  avec {{subType}}",
+            "finishProcessing.completeRequest": "Envoyer {{process}}  avec {{subType}}",
             "agentValidation.preValidationRules": "Confirmer l'exhaustivité des informations de l'agent",
             "agentValidation.agentAppointmentValidation": "Valider la nomination de l'agent",
             "agentValidation.agentLOBValidation": "Valider la ligne de produits de l'agent",

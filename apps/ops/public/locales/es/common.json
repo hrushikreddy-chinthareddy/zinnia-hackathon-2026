@@ -1248,6 +1248,7 @@
             "requestAck.processFormRequestProcessing": "Procesando solicitud de {{subType}}",
             "requestCompletion.deliverLetter": "Recibir confirmación de entrega",
             "requestCompletion.completeRequest": "Enviar {{process}} con {{subType}}",
+            "finishProcessing.completeRequest": "Enviar {{process}} con {{subType}}",
             "agentValidation.preValidationRules": "Confirmar integridad de los detalles del agente",
             "agentValidation.agentAppointmentValidation": "Validar nombramiento",
             "agentValidation.agentLOBValidation": "Validar línea de negocio",
