@@ -186,7 +186,7 @@ const Step = ({
 
     const openSidesheet = () => {
         sideSheet.changeSideSheetContent(
-            <Typography variant={TypographyVariant.H2}>{step.name}</Typography>,
+            <Typography variant={TypographyVariant.H3}>{step.name}</Typography>,
             <StepSideSheetContent step={step}></StepSideSheetContent>
         );
         sideSheet.handleOpen(true);

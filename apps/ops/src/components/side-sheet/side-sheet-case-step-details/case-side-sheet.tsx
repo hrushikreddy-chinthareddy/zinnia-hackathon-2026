@@ -1,11 +1,14 @@
 import {
+  
     TabGroup,
     TabList,
     TabTrigger,
     TabContent,
+  
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import StepAdditionalData, {
@@ -52,6 +55,30 @@ export const doesStepHaveSidesheet = (step: TransformedStep): boolean => {
     return getStepSidesheetViews(step).length > 0;
 };
 
+
+export const ContractDetails = ({
+    step,
+    ...rest
+}: { step: TransformedStep } & React.HTMLAttributes<HTMLDivElement>) => {
+    const { t } = useTranslation();
+    return (
+        <div className="flex flex-col w-full mb-4">
+            <h3 className="tracking-normal no-underline headline-3 mb-4">
+                {t('sideSheet.task.tabs.details')}
+            </h3>
+            <div className="flex flex-row items-start gap-16">
+                <div className="w-1/3 text-[--color-base-text-text-secondary]">
+                    {t('contractNumber')}
+                </div>
+                <div className="w-2/3">
+                    {step.stepRaw.additionalData?.surrenderContractNumber?.value || DEFAULT_ERROR_STRING}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 export default function StepSideSheetContent({
     step,
 }: {
@@ -84,6 +111,8 @@ export default function StepSideSheetContent({
                     className="w-full p-8"
                     value={StepSideSheetViews.MultiInstance}
                 >
+                    <ContractDetails step={step} />
+
                     <MultiInstanceTab step={step} />
                 </TabContent>
                 <TabContent
