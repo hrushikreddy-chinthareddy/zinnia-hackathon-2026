@@ -1,14 +1,11 @@
 import {
-  
     TabGroup,
     TabList,
     TabTrigger,
     TabContent,
-  
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import StepAdditionalData, {
@@ -16,6 +13,7 @@ import StepAdditionalData, {
     hasTransactionalAdditionalDataSideSheet,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/step-additional-data';
 import { AdditionalDataStepIds } from '@deps/models/case/additional-data-instance';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import DocumentsTab from './tabs/documents-tab';
 import MultiInstanceTab from './tabs/multi-instance-tab';
@@ -55,7 +53,6 @@ export const doesStepHaveSidesheet = (step: TransformedStep): boolean => {
     return getStepSidesheetViews(step).length > 0;
 };
 
-
 export const ContractDetails = ({
     step,
     ...rest
@@ -71,13 +68,13 @@ export const ContractDetails = ({
                     {t('contractNumber')}
                 </div>
                 <div className="w-2/3">
-                    {step.stepRaw.additionalData?.surrenderContractNumber?.value || DEFAULT_ERROR_STRING}
+                    {step.stepRaw.additionalData?.surrenderContractNumber
+                        ?.value || DEFAULT_ERROR_STRING}
                 </div>
             </div>
         </div>
     );
 };
-
 
 export default function StepSideSheetContent({
     step,

@@ -4390,7 +4390,8 @@
                     "residence": "Résidentiel",
                     "business": "Entreprise",
                     "poBox": "Boîte postale",
-                    "poBoxLower": "boîte postale"
+                    "poBoxLower": "boîte postale",
+                    "mailing": "Courrier postal"
                 },
                 "general": {
                     "add": "Ajouter",

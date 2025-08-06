@@ -186,6 +186,36 @@ describe('BusinessAddress', () => {
     });
 });
 
+describe('MailingAddress', () => {
+    it('should render the mailing address', () => {
+        const addresses = [
+            {
+                addressId: '1',
+                addressLine1: '222 Main Street',
+                addressLine2: 'Apt 4',
+                addressLine3: '',
+                addressType: AddressType.MAILING,
+                city: 'New York',
+                country: 'US',
+                endDate: endDate,
+                startDate: startDate,
+                state: 'NY',
+                zipCode: '10001',
+                zipCodeExtension: '',
+            } as Address,
+        ];
+        render(<Addresses addresses={addresses} onEditClick={onClick} />);
+        const mailingAddressElement = screen.getByText('222 Main Street');
+        expect(mailingAddressElement).toBeInTheDocument();
+    });
+
+    it('should not render anything if there are no addresses', () => {
+        render(<Addresses addresses={[]} onEditClick={onClick} />);
+        const mailingAddressElement = screen.queryByText('222 Main Street');
+        expect(mailingAddressElement).not.toBeInTheDocument();
+    });
+});
+
 describe('AddressCard', () => {
     it('should render the address card with all address types', () => {
         const addresses: Address[] = [

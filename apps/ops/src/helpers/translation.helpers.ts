@@ -251,6 +251,10 @@ export function mapAddressTypeToTranslation({
             return lowercase
                 ? t(translationString + 'business').toLocaleLowerCase()
                 : t(translationString + 'business');
+        case AddressType.MAILING:
+            return lowercase
+                ? t(translationString + 'mailing').toLocaleLowerCase()
+                : t(translationString + 'mailing');
         case AddressType.POBOX:
             return lowercase
                 ? t(translationString + 'poBoxLower')

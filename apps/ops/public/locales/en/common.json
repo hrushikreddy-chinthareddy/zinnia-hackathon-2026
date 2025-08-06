@@ -4440,7 +4440,8 @@
                     "residence": "Residential",
                     "business": "Business",
                     "poBox": "PO Box",
-                    "poBoxLower": "PO box"
+                    "poBoxLower": "PO box",
+                    "mailing": "Mailing"
                 },
                 "general": {
                     "add": "Add",
@@ -6914,6 +6915,7 @@
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
+
     "usage": {
         "date": "Date",
         "exportToCSV": "Export to CSV",
