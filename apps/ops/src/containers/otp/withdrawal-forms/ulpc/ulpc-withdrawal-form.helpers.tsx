@@ -304,12 +304,14 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
             ],
             shouldDisplay: ({
                 ownerStateOfResidence,
+                formSubtype,
             }: OtpWithdrawalFormState): boolean => {
                 return (
                     !!ownerStateOfResidence &&
                     spousalSignatureStateCodes.includes(
                         ownerStateOfResidence?.toUpperCase()
-                    )
+                    ) &&
+                    formSubtype === FormSubtype.FullWithdrawal
                 );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,

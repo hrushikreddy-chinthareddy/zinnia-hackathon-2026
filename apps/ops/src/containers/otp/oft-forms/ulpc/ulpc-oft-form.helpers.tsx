@@ -12,7 +12,10 @@ import AsOfDateComponent from '@deps/components/otp-withdrawal-form/form-program
 import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
-import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import {
+    SignatureBonusFields,
+    SignatureFields,
+} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
@@ -44,6 +47,7 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
+import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
 import {
     commonOftFormValidation,
     getQualTypeOptions,
@@ -304,6 +308,35 @@ export default function getUlpcOftConfig(t: TFunction) {
                     parties as LifeCadParty[]
                 );
             },
+        },
+        {
+            key: `sig-val-spouse`,
+            bonusField: SignatureBonusFields.SpousalConsent,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'spouse-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'spouse-present',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'spouse-date',
+                },
+            ],
+            shouldDisplay: ({
+                ownerStateOfResidence,
+            }: OtpWithdrawalFormState): boolean => {
+                return (
+                    !!ownerStateOfResidence &&
+                    spousalSignatureStateCodes.includes(
+                        ownerStateOfResidence?.toUpperCase()
+                    )
+                );
+            },
+            signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
 
