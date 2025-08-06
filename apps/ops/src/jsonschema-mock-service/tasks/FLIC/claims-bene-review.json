@@ -43,6 +43,11 @@
                                     "type": "object",
                                     "title": "",
                                     "properties": {
+                                        "contractNumber": {
+                                            "type": "string",
+                                            "title": "Contract Number",
+                                            "default": "{{contractNumber}}"
+                                        },
                                         "beneficiaries": {
                                             "title": "",
                                             "type": "array",
@@ -173,6 +178,14 @@
                     },
                     "details": {
                         "beneReview": {
+                            "contractNumber": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "label": true,
+                                    "classNames": "mb-3",
+                                    "omitValue": true
+                                }
+                            },
                             "beneficiaries": {
                                 "ui:options": {
                                     "label": false,

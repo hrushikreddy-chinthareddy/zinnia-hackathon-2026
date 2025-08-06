@@ -5840,11 +5840,12 @@
         },
         "notifierDetails": {
             "title": "Détails du Notifiant",
-            "dateOfNotification": "Date de Notification :",
-            "notifierRole": "Rôle du Notifiant :",
-            "notifierName": "Nom du Notifiant :",
-            "notifierPhoneNumber": "Numéro de Téléphone du Notifiant :",
-            "beneOnFileFlag": "Les détails du bénéficiaire sont enregistrés :"
+            "dateOfNotification": "Date de Notification:",
+            "notifierRole": "Rôle du Notifiant:",
+            "notifierName": "Nom du Notifiant:",
+            "notifierPhoneNumber": "Numéro de Téléphone du Notifiant:",
+            "beneOnFileFlag": "Les détails du bénéficiaire sont enregistrés:",
+            "relationshipToInsured": "Relation avec l'assuré:"
         },
         "ownerDetails": {
             "title": "Détails du défunt",
@@ -6671,6 +6672,7 @@
             "contactRoleLabel": "Rôle de contact",
             "callOutcome": "Résultat de l'appel",
             "noChangeRecorded": "Aucun changement enregistré",
+            "changeRecorded": "Changements enregistrés",
             "paperMail": "Paper Mail",
             "email": "Email",
             "fax": "Fax",
@@ -6737,6 +6739,7 @@
             "contactRoleLabel": "Role de contacto",
             "callOutcome": "Résultat de l'appel",
             "noChangeRecorded": "Aucun changement enregistré",
+            "changeRecorded": "Changements enregistrés",
             "paperMail": "Paper Mail",
             "email": "Email",
             "fax": "Fax",

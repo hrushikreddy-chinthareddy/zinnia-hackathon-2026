@@ -71,7 +71,9 @@ function CallForInformation({
         ? DynamicKey.BENE_CALL
         : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
     const [contactRole, setContactRole] = useState('');
-    const [filteredCallLogs, setFilteredCallLogs] = useState<CallLog[]>([]);
+    const [filteredCallLogs, setFilteredCallLogs] = useState<
+        (CallLog & { id: string })[]
+    >([]);
     const [name, setName] = useState('');
     const [phone, setPhone] = useState<Phone>({} as Phone);
     const [country, setCountry] = useState<keyof typeof countries>('US');
@@ -131,7 +133,6 @@ function CallForInformation({
                     maxCallSequence = log.callSequence;
                 }
             }
-
             updatedTask = updateCallLogs(
                 updatedTask,
                 dynamicKey,
@@ -179,7 +180,7 @@ function CallForInformation({
             contactRole !== ContactRole.OTHER
         ) {
             const selectedLog = filteredCallLogs.find(
-                (log) => log.fullName === name
+                (log) => log.fullName + log.id === name
             );
             if (selectedLog?.phone) {
                 setPhone(selectedLog.phone as Phone);
@@ -199,7 +200,12 @@ function CallForInformation({
         if (!contactRole || !task?.data?.details?.[dynamicKey]?.callLogs)
             return;
         const callLogs = task.data.details[dynamicKey].callLogs;
-        const filtered = callLogs.filter((log: CallLog) => {
+        const updatedCallLogs = callLogs.map((log: CallLog, index: number) => ({
+            ...log,
+            id: index,
+        }));
+
+        const filtered = updatedCallLogs.filter((log: CallLog) => {
             if (
                 contactRole === ContactRole.AGENT &&
                 log.partyRoleCategory === ContactRole.AGENT
@@ -230,7 +236,11 @@ function CallForInformation({
 
     return (
         <div>
-            <DisplayCompletedCalls task={task} t={t} />
+            <DisplayCompletedCalls
+                task={task}
+                t={t}
+                changeRequire={beneficiary.changeRequire || false}
+            />
 
             {/* Current call entry form */}
             <div className="grid grid-cols-4 gap-4">
@@ -265,8 +275,10 @@ function CallForInformation({
                                         const selectedLog =
                                             filteredCallLogs.find(
                                                 (log) =>
-                                                    log.fullName === newValue
+                                                    log.fullName + log.id ===
+                                                    newValue
                                             );
+
                                         if (selectedLog?.phone) {
                                             setPhone(
                                                 selectedLog.phone as Phone
@@ -275,7 +287,8 @@ function CallForInformation({
                                     }
                                 }}
                                 options={filteredCallLogs.map((log) => ({
-                                    value: `${log.fullName}`,
+                                    id: log.id,
+                                    value: `${log.fullName + log.id}`,
                                     label: log.fullName,
                                     textValue: log.fullName,
                                 }))}

@@ -19,7 +19,10 @@ import {
 import { getPolicyOwnersByRole } from '@deps/containers/death-claim-container/steps/death-claim-notifier/death-claim-notifier.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import {
+    isNullEmptyOrUndefined,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { PartyType } from '@deps/models/policy/sor-policy';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
@@ -266,6 +269,18 @@ export const DeathClaimNotificationStep = ({
                 delete prevState?.role;
                 return prevState;
             });
+        }
+
+        if (
+            notifier?.notifierRole === RoleType.Other ||
+            (notifier?.notifierRole === RoleType.Beneficiary &&
+                isNullEmptyOrUndefined(notifier.party.partyId))
+        ) {
+            notifier.party.fullName = toTitleCase(
+                [notifier.party.firstName, notifier.party.lastName]
+                    .filter(Boolean)
+                    .join(' ')
+            );
         }
         setNotifiers((prevState) => ({
             ...prevState,

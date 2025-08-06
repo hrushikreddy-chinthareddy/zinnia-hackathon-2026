@@ -29,6 +29,7 @@ export const DeceasedBeneficiaryNotification = ({
                 className="self-start"
                 label={t('caseOverview.notifications.beneficiaryDeceased')}
                 variant={BadgeVariant.WARNING}
+                data-testid="beneficiary-deceased-status-badge"
             />
             <Title
                 className="my-2 flex items-center gap-2"

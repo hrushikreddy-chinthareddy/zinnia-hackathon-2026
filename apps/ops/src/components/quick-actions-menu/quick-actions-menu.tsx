@@ -20,6 +20,7 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { ProcessType } from '@deps/models/case/enums';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkFullSurrenderWithdrawal,
@@ -38,6 +39,7 @@ import {
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import styles from './quick-actions-menu.module.css';
 
@@ -97,7 +99,15 @@ export const MenuContextualContent = ({
         featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
     const loanPaymentEnabled =
         featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
-    const isNewDeathClaim = featureFlags[FEATURE_FLAGS.NEW_DEATH_CLAIM];
+
+    const isNewDeathClaimEnabled =
+        policy.carrierId &&
+        isFormFeatureEnabled(
+            ProcessType.IDN_DEATH_CLAIM,
+            policy.carrierId as string,
+            featureFlags
+        );
+
     const serviceRequestFormEnabled =
         featureFlags[FEATURE_FLAGS.SERVICE_REQUEST_FORM_ENABLED];
     const sendCorrespondenceEnabled =
@@ -353,7 +363,7 @@ export const MenuContextualContent = ({
         );
     }
 
-    if (isNewDeathClaim && isUserPermissionedToDoTransaction) {
+    if (isNewDeathClaimEnabled && isUserPermissionedToDoTransaction) {
         transactionItems.push(
             <MenuContextualItem
                 key="new-death-claim"

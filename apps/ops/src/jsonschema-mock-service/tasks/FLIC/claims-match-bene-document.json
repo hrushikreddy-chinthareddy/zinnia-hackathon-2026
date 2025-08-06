@@ -60,12 +60,34 @@
                                                 }
                                             }
                                         },
-                                        "matchRecord": {
-                                            "type": "string",
-                                            "title": "Select associated beneficiary"
+                                        "matchRecords": {
+                                            "type": "array",
+                                            "title": "Select associated beneficiaries",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "uniqueItems": true
+                                        },
+                                        "deathCertificateReceived": {
+                                            "type": "boolean",
+                                            "enum": [true, false]
                                         }
                                     },
-                                    "required": ["matchRecord"]
+                                    "if": {
+                                        "properties": {
+                                            "deathCertificateReceived": {
+                                                "const": false
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "matchRecords": {
+                                                "minItems": 1
+                                            }
+                                        },
+                                        "required": ["matchRecords"]
+                                    }
                                 }
                             }
                         }
@@ -118,12 +140,13 @@
                                     }
                                 }
                             },
-                            "matchRecord": {
-                                "ui:widget": "radio",
+                            "matchRecords": {
+                                "ui:widget": "checkboxes",
                                 "ui:options": {
                                     "cardType": "Detailed",
                                     "icon": "CIRCLE_USER",
                                     "label": true,
+                                    "inline": false,
                                     "properties": {
                                         "beneficiaryName": {
                                             "type": "string",
@@ -155,6 +178,14 @@
                                     "customOptions": []
                                 },
                                 "ui:hideError": true
+                            },
+                            "deathCertificateReceived": {
+                                "ui:options": {
+                                    "widget": "CheckboxWidget",
+                                    "label": true,
+                                    "classNames": "mt-6",
+                                    "title": "Death Certificate received (contract-level)"
+                                }
                             }
                         }
                     }

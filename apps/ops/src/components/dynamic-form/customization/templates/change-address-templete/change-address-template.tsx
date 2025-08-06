@@ -9,6 +9,7 @@ import {
     ClaimActionTypes,
     ClaimCommunicationTypes,
 } from '@deps/containers/death-claim-container/death-claim.types';
+import { DynamicKey } from '@deps/containers/task-container/components/steps/claims/claims.type';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { DataFormattingTypes } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -52,11 +53,6 @@ export const displayAddressType: Record<AddressType, string | undefined> = {
     [AddressType.MAILING]: 'Mailing',
 };
 
-export enum DynamicKey {
-    BENE_ADDRESS = 'beneAddress',
-    BENE_FINAL_CONTACT_ATTEMPT = 'benefinalcontactattempt',
-}
-
 export function ChangeAddressTemplate({
     formContext,
 }: ChangeAddressTemplateProps) {
@@ -86,12 +82,17 @@ export function ChangeAddressTemplate({
                 dynamicKey
             ].subTaskBeneAddressChangeRequire = false;
         }
-        updatedCustomData.task.data.details[
-            dynamicKey
-        ].beneficiaryChangeDetail.notificationPreferences =
+        if (
+            !updatedCustomData.task.data.details[dynamicKey]
+                .beneficiaryChangeDetail.notificationPreferences
+        ) {
             updatedCustomData.task.data.details[
                 dynamicKey
-            ]?.beneficiary?.notificationPreferences;
+            ].beneficiaryChangeDetail.notificationPreferences =
+                updatedCustomData.task.data.details[
+                    dynamicKey
+                ]?.beneficiary?.notificationPreferences;
+        }
         const details = { details: { ...updatedCustomData.details } };
         setCustomData(details);
     }, []);
@@ -127,6 +128,7 @@ export function ChangeAddressTemplate({
 
     const handleAddressSubmit = (addressData: any) => {
         const updatedCustomData = customData;
+
         if (
             !updatedCustomData.task.data.details[dynamicKey]
                 .beneficiaryChangeDetail
@@ -151,33 +153,37 @@ export function ChangeAddressTemplate({
             return;
         }
 
-        const updatedAddress: any = {
-            addressLine1: addressData.addressLine1 ?? '',
-            addressLine2: addressData.addressLine2 ?? '',
-            addressLine3: addressData.addressLine3 ?? '',
-            city: addressData.city ?? '',
-            country: addressData.country ?? 'USA',
-            state: addressData.state ?? '',
-            zipCode: addressData.zipCode ?? '',
-            addressType: addressData.addressType,
-        };
+        const normalizeAddress = (addr: any) => ({
+            addressLine1: addr.addressLine1?.trim() || '',
+            addressLine2: addr.addressLine2?.trim() || '',
+            addressLine3: addr.addressLine3?.trim() || '',
+            city: addr.city?.trim() || '',
+            country: addr.country || 'USA',
+            state: addr.state?.trim() || '',
+            zipCode: addr.zipCode?.trim() || '',
+            addressType: addr.addressType || AddressType.RESIDENCE,
+            action: ClaimActionTypes.NONE,
+        });
+
+        const stripAddressForComparison = (addr: any) => ({
+            addressLine1: addr.addressLine1?.trim() || '',
+            addressLine2: addr.addressLine2?.trim() || '',
+            addressLine3: addr.addressLine3?.trim() || '',
+            city: addr.city?.trim() || '',
+            country: addr.country || 'USA',
+            state: addr.state?.trim() || '',
+            zipCode: addr.zipCode?.trim() || '',
+        });
+
+        const updatedAddress = normalizeAddress(addressData);
 
         const currentAddressInfo =
-            updatedCustomData.task.data.details[dynamicKey].beneficiary
-                .notificationPreferences.address;
-        const currentAddress = {
-            addressLine1: currentAddressInfo.addressLine1 ?? '',
-            addressLine2: currentAddressInfo.addressLine2 ?? '',
-            addressLine3: currentAddressInfo.addressLine3 ?? '',
-            city: currentAddressInfo.city ?? '',
-            country: currentAddressInfo.country ?? '',
-            state: currentAddressInfo.state ?? 'USA',
-            zipCode: currentAddressInfo.zipCode ?? '',
-            addressType: currentAddressInfo.addressType,
-        };
+            updatedCustomData.task.data.details[dynamicKey]?.beneficiary
+                ?.notificationPreferences?.address || {};
 
         const isEqual =
-            JSON.stringify(currentAddress) === JSON.stringify(updatedAddress);
+            JSON.stringify(stripAddressForComparison(currentAddressInfo)) ===
+            JSON.stringify(stripAddressForComparison(addressData));
 
         updatedAddress.action = isEqual
             ? ClaimActionTypes.NONE
@@ -189,13 +195,11 @@ export function ChangeAddressTemplate({
             ...updatedCustomData.task.data.details[dynamicKey].beneficiary
                 .notificationPreferences,
             address: {
-                ...updatedCustomData.task.data.details[dynamicKey].beneficiary
-                    .notificationPreferences.address,
+                ...currentAddressInfo,
                 ...updatedAddress,
             },
         } as NotificationPreferences;
 
-        // Initialize or update the notification preferences
         const notificationPrefs =
             updatedCustomData.task.data.details[dynamicKey].beneficiary
                 .notificationPreferences ||
@@ -208,30 +212,32 @@ export function ChangeAddressTemplate({
                 },
             } as NotificationPreferences);
 
-        updatedCustomData.task.data.details[
-            dynamicKey
-        ].beneficiaryChangeDetail.notificationPreferences = {
-            ...notificationPrefs,
-            address: {
-                ...notificationPrefs.address,
-                ...updatedAddress,
-            },
-        } as NotificationPreferences;
-        updatedCustomData.task.data.details[
-            dynamicKey
-        ].beneficiaryChangeDetail.notificationPreferences.notificationMethod.method =
-            ClaimCommunicationTypes.Mail;
+        if (!isEqual) {
+            updatedCustomData.task.data.details[
+                dynamicKey
+            ].beneficiaryChangeDetail.notificationPreferences = {
+                ...notificationPrefs,
+                address: {
+                    ...notificationPrefs.address,
+                    ...updatedAddress,
+                },
+                notificationMethod: {
+                    method: ClaimCommunicationTypes.Mail,
+                },
+            };
 
-        if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
-            updatedCustomData.task.data.details[
-                dynamicKey
-            ].subTaskBeneAddressChangeRequire = true;
-            updatedCustomData.task.data.details[
-                dynamicKey
-            ].beneficiaryChangeDetail.changeType = 'BENEFICIARY_ADDRESS_CHANGE';
-            updatedCustomData.task.data.details[
-                dynamicKey
-            ].beneficiaryChangeDetail.changeRequire = true;
+            if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
+                updatedCustomData.task.data.details[
+                    dynamicKey
+                ].subTaskBeneAddressChangeRequire = true;
+                updatedCustomData.task.data.details[
+                    dynamicKey
+                ].beneficiaryChangeDetail.changeType =
+                    'BENEFICIARY_ADDRESS_CHANGE';
+                updatedCustomData.task.data.details[
+                    dynamicKey
+                ].beneficiaryChangeDetail.changeRequire = true;
+            }
         }
 
         const details = { details: { ...updatedCustomData.details } };

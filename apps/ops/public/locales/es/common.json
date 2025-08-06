@@ -5746,7 +5746,8 @@
             "notifierRole": "Rol del Notificador:",
             "notifierName": "Nombre del Notificador:",
             "notifierPhoneNumber": "Número de Teléfono del Notificador:",
-            "beneOnFileFlag": "Los detalles del beneficiario están archivados:"
+            "beneOnFileFlag": "Los detalles del beneficiario están archivados:",
+            "relationshipToInsured": "Relationship to insured:"
         },
         "ownerDetails": {
             "title": "Detalles del fallecido",
@@ -6575,6 +6576,7 @@
             "contactRoleLabel": "Rôle de contact",
             "callOutcome": "Resultado de la llamada",
             "noChangeRecorded": "No se registraron cambios",
+            "changeRecorded": "Se registraron cambios",
             "paperMail": "Paper Mail",
             "email": "Email",
             "fax": "Fax",
@@ -6642,6 +6644,7 @@
             "contactRoleLabel": "Role de contacto",
             "callOutcome": "Resultado de la llamada",
             "noChangeRecorded": "No se registraron cambios",
+            "changeRecorded": "Se registraron cambios",
             "paperMail": "Paper Mail",
             "email": "Email",
             "fax": "Fax",

@@ -5913,7 +5913,8 @@
             "notifierRole": "Notifier Role:",
             "notifierName": "Notifier Name:",
             "notifierPhoneNumber": "Notifier Phone Number:",
-            "beneOnFileFlag": "Beneficiary details are on File:"
+            "beneOnFileFlag": "Beneficiary details are on File:",
+            "relationshipToInsured": "Relationship to insured"
         },
         "ownerDetails": {
             "title": "Deceased Details",
@@ -6719,6 +6720,7 @@
             "contactRoleLabel": "Contact Role",
             "callOutcome": "Call Outcome",
             "noChangeRecorded": "No change recorded",
+            "changeRecorded": "Change recorded",
             "paperMail": "Paper Mail",
             "email": "Email",
             "fax": "Fax",
@@ -6810,6 +6812,7 @@
             "contactRoleLabel": "Contact Role",
             "callOutcome": "Call Outcome",
             "noChangeRecorded": "No change recorded",
+            "changeRecorded": "Change recorded",
             "paperMail": "Paper Mail",
             "email": "Email",
             "fax": "Fax",

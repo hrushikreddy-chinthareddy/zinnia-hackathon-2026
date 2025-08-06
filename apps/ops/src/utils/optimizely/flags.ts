@@ -156,4 +156,5 @@ export enum FEATURE_FLAGS {
     SEND_CORRESPONDENCE = 'send_correspondence',
     POLICY_INDEX_TABLE_VIEW = 'policy_index_table_view',
     USAGE_STATS_DASHBOARD = 'usage_stats_dashboard',
+    IDN_DEATH_CLAIM_FLIC = 'claims-feature-flic-idn-death-claim',
 }

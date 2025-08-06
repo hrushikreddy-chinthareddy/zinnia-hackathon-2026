@@ -1,12 +1,20 @@
 import Field, { FieldVariant } from '@deps/components/fields/field';
 import { formatPhone } from '@deps/helpers/string.helpers';
 
-import { CallLog, ContactRole } from './claims.type';
+import { CallLog, ContactRole, DynamicKey } from './claims.type';
 
-export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
+export const DisplayCompletedCalls = ({
+    task,
+    t,
+    changeRequire,
+}: {
+    task: any;
+    t: any;
+    changeRequire: boolean;
+}) => {
     const dynamicKey = task?.data?.details?.beneCall
-        ? 'beneCall'
-        : 'benefinalcontactattempt';
+        ? DynamicKey.BENE_CALL
+        : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
     const callLogs = task?.data?.details?.[dynamicKey]?.callLogs || [];
     const completedCalls = callLogs.filter(
         (log: CallLog) =>
@@ -80,7 +88,12 @@ export const DisplayCompletedCalls = ({ task, t }: { task: any; t: any }) => {
                                     onChange={() => {}}
                                     variant={FieldVariant.Inactive}
                                     placeholder={t('callOutcome') as string}
-                                    value={t('noChangeRecorded')}
+                                    value={
+                                        index === sortedCalls.length - 1 &&
+                                        changeRequire
+                                            ? t('changeRecorded')
+                                            : t('noChangeRecorded')
+                                    }
                                     label={t('callOutcome') as string}
                                     className="w-full h-10 p-2"
                                 />

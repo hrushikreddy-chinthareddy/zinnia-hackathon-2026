@@ -194,8 +194,8 @@ export function CallForInformationFunctions({
         const callLogs = updatedTask.data.details[dynamicKey].callLogs;
 
         const logIndex = callLogs.findIndex(
-            (log: CallLog) =>
-                log.fullName === name &&
+            (log: CallLog, index: number) =>
+                log.fullName + index === name &&
                 (contactRole === ContactRole.AGENT
                     ? log.partyRoleCategory === ContactRole.AGENT
                     : log.partyRole === contactRole)
@@ -204,7 +204,7 @@ export function CallForInformationFunctions({
         if (logIndex !== -1 && contactRole !== ContactRole.OTHER) {
             callLogs[logIndex] = {
                 ...callLogs[logIndex],
-                callSequence: callEntriesLength + 1,
+                callSequence: callEntriesLength,
                 callDone: true,
             };
         } else {
@@ -212,7 +212,7 @@ export function CallForInformationFunctions({
                 callLogs.push({
                     fullName: name,
                     partyRole: contactRole,
-                    callSequence: callEntriesLength + 1,
+                    callSequence: callEntriesLength,
                     phone: { ...phone, countryCode: countries[country].phone },
                     partyRoleCategory: contactRole,
                     relationshipToInsured: relationshipToOwner,

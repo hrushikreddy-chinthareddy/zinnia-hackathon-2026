@@ -31,9 +31,18 @@ export const getDay150ReviewSteps = ({
 
     const readOnly = task.status === TaskStatus.Completed;
 
+    const beneAttempt = task?.data?.details?.benefinalcontactattempt ?? {};
+    const stepOneIsVisible =
+        beneAttempt?.subTaskBeneDeceasedChangeRequire === false;
+    const stepTwoIsVisible =
+        beneAttempt?.subTaskBeneAddressChangeRequire === false &&
+        stepOneIsVisible;
+
     const steps: Step[] = [
         {
-            isVisible: () => true,
+            isVisible: () => {
+                return true;
+            },
             component: (
                 <ClaimBeneStatus
                     beneficiary={beneficiary}
@@ -47,7 +56,9 @@ export const getDay150ReviewSteps = ({
             screenReaderLabel: t('tabs.beneficiaryStatus'),
         },
         {
-            isVisible: () => true,
+            isVisible: () => {
+                return stepOneIsVisible;
+            },
             component: (
                 <MemoizedTaskFormStep
                     readonly={readOnly}
@@ -55,19 +66,11 @@ export const getDay150ReviewSteps = ({
                     isSubmit={
                         readOnly
                             ? false
-                            : task.data.details.benefinalcontactattempt
-                                  ?.beneficiaryChangeDetail?.changeType ===
-                              'BENEFICIARY_ADDRESS_CHANGE'
+                            : beneAttempt?.beneficiaryChangeDetail
+                                  ?.changeType === 'BENEFICIARY_ADDRESS_CHANGE'
                     }
                     taskMetadata={taskMetadata[0]}
-                    key={`step_${0}`}
-                    stepIndex={
-                        task.data.details.benefinalcontactattempt
-                            ?.beneficiaryChangeDetail?.changeType ===
-                        'BENEFICIARY_ADDRESS_CHANGE'
-                            ? 3
-                            : 2
-                    }
+                    key={`step_${1}`}
                 ></MemoizedTaskFormStep>
             ),
             text: t('tabs.addressChange'),
@@ -75,7 +78,9 @@ export const getDay150ReviewSteps = ({
             screenReaderLabel: t('tabs.addressChange'),
         },
         {
-            isVisible: () => true,
+            isVisible: () => {
+                return stepTwoIsVisible;
+            },
             component: (
                 <Claims150Call
                     beneficiary={beneficiary}

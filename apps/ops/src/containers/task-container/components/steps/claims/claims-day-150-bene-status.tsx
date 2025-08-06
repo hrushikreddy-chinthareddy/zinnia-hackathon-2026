@@ -47,20 +47,22 @@ export const ClaimBeneStatus = ({
         setFormErrors,
     } = useContext(TaskDataContext);
 
-    const { goToNext, setCurrentStepIndex } = useWorkflow();
+    const { goToNext } = useWorkflow();
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'claimsDay150.beneStatus',
     });
     const [isBeneDeceased, setIsBeneDeceased] = useState<string>('');
 
     const handleContinueFn = async () => {
+        if (readOnly) {
+            goToNext();
+            return;
+        }
         if (isBeneDeceased === BENE_STATUS.YES) {
             const success = await updateTask(task, correlationId);
             setSubmitFailed && setSubmitFailed(!success);
-            setCurrentStepIndex(3);
-        } else {
-            goToNext();
         }
+        goToNext();
     };
 
     const validateAddress = () => {
@@ -82,6 +84,7 @@ export const ClaimBeneStatus = ({
     };
 
     useEffect(() => {
+        if (readOnly) return;
         const updatedTask = { ...task };
 
         // Initialize the nested objects if they don't exist
@@ -131,14 +134,9 @@ export const ClaimBeneStatus = ({
                 <TransactionNavigationButtons
                     className="mt-4"
                     readonly={readOnly}
-                    handleContinue={
-                        readOnly
-                            ? () => {
-                                  goToNext();
-                              }
-                            : handleContinueFn
-                    }
-                    isSubmit={false}
+                    handleContinue={handleContinueFn}
+                    isSubmit={!readOnly && isBeneDeceased === BENE_STATUS.YES}
+                    submitLabel={t('submit') as string}
                     disableContinue={
                         readOnly ? false : Object.keys(formErrors).length > 0
                     }

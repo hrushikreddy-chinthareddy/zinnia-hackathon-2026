@@ -11,6 +11,7 @@ export enum ProcessType {
     REREG = 'REREG',
     SUITABILITY = 'Suitability',
     DEFAULT_CASE = 'Operations Review',
+    IDN_DEATH_CLAIM = 'IDN_DEATH_CLAIM',
 }
 
 export enum TypeOfPayment {

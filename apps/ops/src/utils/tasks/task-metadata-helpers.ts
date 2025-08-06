@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { stringifyValue } from '@deps/helpers/csr-api-helpers';
+import { getName } from '@deps/helpers/party-info-helpers';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
+import { CaseIdentifier } from '@deps/models/case/case';
 import {
     CaseIdentifierType,
     FormMetadata,
@@ -109,6 +113,18 @@ export const TaskMetadataHelper = async (
                         task.data?.details?.documentEntityMatch?.documents;
                     const targetFormSchema = taskMetadata.formSchema;
 
+                    if (TaskStatus.Completed) {
+                        if (
+                            task.data?.details?.documentEntityMatch?.matchRecord
+                        ) {
+                            task.data.details.documentEntityMatch.matchRecords =
+                                [
+                                    task.data.details.documentEntityMatch
+                                        .matchRecord,
+                                ];
+                        }
+                    }
+
                     if (documents && targetFormSchema) {
                         const uniqueDisplayNames = Array.from(
                             new Set(
@@ -124,46 +140,21 @@ export const TaskMetadataHelper = async (
                                 )
                             )
                         );
-                        const placeholderMap: Record<string, string> = {
-                            'metadata.displayName':
-                                stringifyValue(uniqueDisplayNames[0]) ?? '',
-                            'metadata.documentSource':
-                                stringifyValue(uniqueDocumentSources[0]) ?? '',
+                        const placeholderData: Record<string, any> = {
+                            metadata: {
+                                displayName:
+                                    stringifyValue(uniqueDisplayNames[0]) ?? '',
+                                documentSource:
+                                    stringifyValue(uniqueDocumentSources[0]) ??
+                                    '',
+                            },
                             carrier: task.carrier ?? '',
                         };
-                        const replaceInline = (
-                            schema: any,
-                            map: Record<string, string>
-                        ): any => {
-                            if (!schema || typeof schema !== 'object') {
-                                if (typeof schema === 'string') {
-                                    return schema.replace(
-                                        /{{(.*?)}}/g,
-                                        (match: string, key: string) => {
-                                            const trimmedKey = key.trim();
-                                            return map[trimmedKey] !== undefined
-                                                ? map[trimmedKey]
-                                                : '';
-                                        }
-                                    );
-                                }
-                                return schema;
-                            }
-                            if (Array.isArray(schema)) {
-                                return schema.map((item) =>
-                                    replaceInline(item, map)
-                                );
-                            }
-                            const result: Record<string, any> = {};
-                            for (const [key, value] of Object.entries(schema)) {
-                                result[key] = replaceInline(value, map);
-                            }
-                            return result;
-                        };
 
-                        taskMetadata.formSchema = replaceInline(
+                        taskMetadata.formSchema = replacePlaceholders(
                             targetFormSchema,
-                            placeholderMap
+                            placeholderData,
+                            true
                         );
                     }
 
@@ -173,7 +164,8 @@ export const TaskMetadataHelper = async (
                         zlCaseId =
                             potentialMatchCriteria.identifiers?.find(
                                 (id: { identifier: string }) =>
-                                    id.identifier === 'zlCaseId'
+                                    id.identifier ===
+                                    CaseIdentifierType.ZL_CASE_ID
                             )?.value ?? '';
                         entityType = Array.isArray(
                             potentialMatchCriteria.entityType
@@ -195,28 +187,50 @@ export const TaskMetadataHelper = async (
                             beneficiaryMatches = Array.isArray(apiResult)
                                 ? apiResult
                                 : [];
-                        } catch (error) {
-                            console.error(
-                                'Failed to fetch beneficiaries:',
-                                error
-                            );
+                        } catch (error: any) {
+                            logWarn('Error in TaskMetadataHelper', {
+                                ...error,
+                                loggingContext,
+                            });
                         }
                     } else {
-                        console.warn(
-                            'Missing zlCaseId or entityType, using potentialMatches'
-                        );
                         beneficiaryMatches = Array.isArray(
                             task.data?.potentialMatches
                         )
                             ? task.data.potentialMatches
                             : [];
                     }
-                    const beneficiaryMatchesOptions =
-                        generateBeneficiaryOptions(beneficiaryMatches);
-                    matchCriteria.matchRecord['ui:options'].customOptions = [
-                        ...beneficiaryMatchesOptions,
-                    ];
 
+                    const beneficiaryOptions =
+                        generateBeneficiaryOptions(beneficiaryMatches);
+
+                    matchCriteria.matchRecords.items = {
+                        type: 'string',
+                        enum: beneficiaryOptions.map((opt) => opt.value),
+                        enumNames: beneficiaryOptions.map((opt) => opt.label),
+                    };
+
+                    matchCriteria.matchRecords['ui:options'].customOptions =
+                        beneficiaryOptions;
+
+                    return taskMetadata;
+                }
+
+                case TaskType.Claims_Bene_Review: {
+                    const formSchema = taskMetadata.formSchema || {};
+                    const contractNumber =
+                        getCaseIdentifierValue(
+                            task.identifiers,
+                            CaseIdentifier.contractNumber
+                        ) || '';
+                    const data = { contractNumber: contractNumber };
+
+                    const updatedFormSchema = replacePlaceholders(
+                        formSchema,
+                        data,
+                        true
+                    );
+                    taskMetadata.formSchema = updatedFormSchema;
                     return taskMetadata;
                 }
 
@@ -277,40 +291,21 @@ const generateBeneficiaryOptions = (
 ): any[] => {
     return beneficiaries.map((item: BeneficiaryRecord) => {
         const idField = item.recordId || item.zlCaseId || '';
-        const id = uuidv4();
-        const cardData = {
-            entityType: item.entityType || '',
-            recordId: idField,
-            entity: {
-                party: {
-                    ssn: item.entity?.party?.ssn || '',
-                    fullName:
-                        item.entity?.party?.fullName ||
-                        item.entity?.party?.firstName ||
-                        item.name ||
-                        'Unknown Beneficiary',
-                },
-            },
-        };
+        const fullName = getName(item.entity?.party);
         const data = {
-            entityType: cardData.entityType,
-            recordId: cardData.recordId,
-            beneficiaryName: cardData.entity.party.fullName,
+            entityType: item.entityType || '--',
+            recordId: idField,
+            beneficiaryName: fullName,
         };
-        const subElement = {
-            label: cardData.entity.party.fullName,
-
-            disabled: false,
-            cardType: 'Detailed',
-            icon: 'CIRCLE_USER',
-            ...cardData,
-        };
-
         return {
-            label: cardData.entity.party.fullName,
             value: stringifyValue(data),
-            id,
-            subElement,
+            label: '',
+            metadata: {
+                beneficiaryName: fullName,
+                ssn: item.entity?.party?.ssn || '--',
+                recordId: idField,
+                entityType: item.entityType || '--',
+            },
         };
     });
 };

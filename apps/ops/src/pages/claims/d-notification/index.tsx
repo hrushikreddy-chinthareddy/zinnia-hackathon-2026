@@ -8,9 +8,15 @@ import { DeathClaimProvider } from '@deps/contexts/DeathClaimContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { ProcessType } from '@deps/models/case/enums';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { initialDeathClaimExistsSsr } from '@deps/queries/api/web-non-financial';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
+import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import {
     logWarn,
     logError,
@@ -38,6 +44,11 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
 
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
             const planCode = (query.planCode as string) || '';
@@ -83,6 +94,21 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 logInfo('d-notification::Policy found', { ...logCtx });
 
+                if (
+                    !isFormFeatureEnabled(
+                        ProcessType.IDN_DEATH_CLAIM,
+                        policy.carrierId as string,
+                        featureFlagDecisions
+                    )
+                ) {
+                    logWarn('d-notification::Feature flag not enabled', logCtx);
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
                 const response = await initialDeathClaimExistsSsr(
                     policy?.policyNumber,
                     policy?.carrierId,

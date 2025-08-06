@@ -69,6 +69,7 @@ import {
     PolicyViewDetailsDto,
     TermLifeDetailsViewInfo,
 } from '@deps/data/policy-details-view';
+import { getSearchValueObject } from '@deps/helpers/case-management';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import {
     getTotalMinRequiredAmount,
@@ -85,12 +86,15 @@ import {
     formatDate,
     formatPhone,
     formatSSN,
+    isNullEmptyOrUndefined,
     toTitleCase,
 } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
 import { CardDetailsTest } from '@deps/jest/constants/test-id-constants';
+import { Statuses } from '@deps/models/case/case';
+import { ProcessType } from '@deps/models/case/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
 import {
@@ -98,7 +102,10 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
-import { getCasesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
+import {
+    getCaseSearchQuery,
+    getCasesQuery,
+} from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import {
     getPolicyQuery,
@@ -116,6 +123,7 @@ import {
     SearchViewQuery,
 } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import { ActiveQuickView } from './active-quick-view/active-quick-view';
 import AnnuityQuickView from './active-quick-view/annuity';
@@ -356,7 +364,11 @@ export const StatusBanner = ({
     const { featureFlags } = useOptimizely();
     const freeLookEnabled =
         featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
-    const isNewDeathClaimEnabled = featureFlags[FEATURE_FLAGS.NEW_DEATH_CLAIM];
+    const isNewDeathClaimEnabled = isFormFeatureEnabled(
+        ProcessType.IDN_DEATH_CLAIM,
+        policy?.carrierId as string,
+        featureFlags
+    );
     const showCaseBanner = !!casesTotal && casesTotal > 0;
 
     // TODO - BPB: Policy Features Helper Class
@@ -395,6 +407,28 @@ export const StatusBanner = ({
         policyStatus,
         isDeathClaimStatusApplicable,
     ]);
+
+    const searchValueObject = useMemo(() => {
+        if (isNullEmptyOrUndefined(zlCaseId)) {
+            return;
+        }
+        const svo = getSearchValueObject({ caseId: zlCaseId }, 'caseId');
+        return {
+            ...svo,
+            limit: 1,
+            offset: 0,
+            sortDirection: 'asc',
+            sortBy: 'createdAt',
+        };
+    }, [zlCaseId]);
+
+    const { data: caseStatus } = useQuery({
+        queryKey: ['cases', searchValueObject, featureFlags],
+        queryFn: () => getCaseSearchQuery(searchValueObject, featureFlags),
+        select: (data) => {
+            return data?.data?.[0]?.caseStatus || null;
+        },
+    });
 
     return (
         <div className={styles.bannerContainer}>
@@ -540,7 +574,8 @@ export const StatusBanner = ({
             {isNewDeathClaimEnabled &&
                 !isNewDeathClaim &&
                 zlCaseId &&
-                isDeathClaimStatusApplicable && (
+                isDeathClaimStatusApplicable &&
+                caseStatus !== Statuses.Canceled && (
                     <BannerAlert
                         variant={BannerVariant.Warning}
                         cta={

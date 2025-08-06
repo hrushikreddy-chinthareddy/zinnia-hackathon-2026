@@ -44,6 +44,7 @@ export const ScheduledNotification = ({
                 className="self-start"
                 label={t('caseOverview.notifications.contactNotEstablished')}
                 variant={BadgeVariant.WARNING}
+                data-testid="constact-not-established-status-badge"
             />
             <Title
                 className="my-2 flex items-center gap-2"

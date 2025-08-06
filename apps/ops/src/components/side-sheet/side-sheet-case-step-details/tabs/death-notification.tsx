@@ -13,9 +13,11 @@ import Typography, {
 import {
     ClaimActionTypes,
     ClaimCommunicationTypes,
+    RoleType,
 } from '@deps/containers/death-claim-container/death-claim.types';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
+import { getName } from '@deps/helpers/party-info-helpers';
 import {
     parseAndFormatDate,
     formatPhoneWithAreacode,
@@ -59,8 +61,12 @@ const DeathNotificationSidesheet = ({
                 ),
                 notifierRole: entity.notifiers?.notifierRole,
                 party: {
-                    fullName: entity.notifiers?.party?.fullName,
+                    fullName:
+                        entity.notifiers?.party?.fullName ||
+                        getName(entity.notifiers?.party),
                     phone: entity.notifiers?.party?.phone,
+                    relationshipToInsured:
+                        entity.notifiers?.party?.relationshipToInsured,
                 },
                 isPrimaryBeneInfoOnFile:
                     entity.notifiers?.isPrimaryBeneInfoOnFile || false,
@@ -81,7 +87,10 @@ const DeathNotificationSidesheet = ({
                 })) || [],
             beneficiaries:
                 entity.beneficiaries?.map((bene: any) => ({
-                    party: { fullName: bene.party?.fullName },
+                    party: {
+                        fullName:
+                            bene.party?.fullName || getName(bene.party.party),
+                    },
                     notificationMethod:
                         bene.notificationPreferences?.notificationMethod
                             ?.method,
@@ -289,6 +298,22 @@ const DeathNotificationSidesheet = ({
                             ? t('deathNotification.labels.yes')
                             : t('deathNotification.labels.no')}
                     </Typography>
+                    {data.notifiers.notifierRole === RoleType.Other && (
+                        <>
+                            <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                                {t(
+                                    'deathNotification.notifierDetails.relationshipToInsured'
+                                )}
+                            </div>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="col-span-3"
+                            >
+                                {data.notifiers.party?.relationshipToInsured ||
+                                    DEFAULT_ERROR_STRING}
+                            </Typography>
+                        </>
+                    )}
                 </div>
             </div>
 

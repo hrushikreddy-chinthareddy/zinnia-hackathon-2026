@@ -92,4 +92,5 @@ export enum ContactRole {
 export enum DynamicKey {
     BENE_CALL = 'beneCall',
     BENE_FINAL_CONTACT_ATTEMPT = 'benefinalcontactattempt',
+    BENE_ADDRESS = 'beneAddress',
 }
