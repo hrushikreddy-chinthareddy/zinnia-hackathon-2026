@@ -1309,6 +1309,43 @@ export const ParticipantCompanies = [
         code: '4550',
         companyName: 'NATIONAL INTEGRITY LIFE INSURANCE CO. (4550)',
     },
+    {
+        code: '4503',
+        companyName: 'PROTECTIVE LIFE INSURANCE COMPANY (4503)',
+    },
+    {
+        code: '4540',
+        companyName: 'PROTECTIVE LIFE AND ANNUITY INSURANCE CO (4540)',
+    },
+    {
+        code: '3286',
+        companyName: 'GLOBAL ATLANTIC / FORETHOUGHT LIFE (3286)',
+    },
+    {
+        code: '4720',
+        companyName: 'ATHENE ANNUITY AND LIFE COMPANY (4720)',
+    },
+    {
+        code: '1822',
+        companyName:
+            'EQUITABLE FINANCIAL LIFE INSURANCE COMPANY OF AMERICA (1822)',
+    },
+    {
+        code: '4609',
+        companyName: 'SYMETRA LIFE INSURANCE COMPANY (4609)',
+    },
+    {
+        code: '5949',
+        companyName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY (5949)',
+    },
+    {
+        code: '4701',
+        companyName: 'STANDARD INSURANCE COMPANY (4701)',
+    },
+    {
+        code: '0226',
+        companyName: 'National Financial Services (0226)',
+    },
 ];
 
 export enum SignVerificationReason {
