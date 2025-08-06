@@ -8,6 +8,7 @@ export interface Task {
     userId: string;
     createdDate: string;
     updatedDate: string;
+    taskType: string;
 }
 
 export interface TaskTableRow {
@@ -19,6 +20,7 @@ export interface TaskTableRow {
     statusDuration: string;
     taskDate: string;
     userId: string;
+    taskType: string;
 }
 
 export interface NoTaskFoundLabels {

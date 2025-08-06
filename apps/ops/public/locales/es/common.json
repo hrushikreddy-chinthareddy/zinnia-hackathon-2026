@@ -5685,7 +5685,8 @@
             "statusDuration": "Duración del estado",
             "dateTime": "Fecha/Hora",
             "userId": "Usuario",
-            "actions": "Acciones"
+            "actions": "Acciones",
+            "taskType": "Tipo de tarea"
         },
         "actions": {
             "edit": "Editar",

@@ -5778,7 +5778,8 @@
             "statusDuration": "Durée du statut",
             "dateTime": "Date/Heure",
             "userId": "Utilisateur",
-            "actions": "Actions"
+            "actions": "Actions",
+            "taskType": "Type de tâche"
         },
         "actions": {
             "edit": "Modifier",

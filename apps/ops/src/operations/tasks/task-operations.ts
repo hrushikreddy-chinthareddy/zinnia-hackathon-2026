@@ -65,6 +65,7 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
                 userId: task.data?.userId,
                 createdDate: task.createdAt,
                 updatedDate: task.updatedAt,
+                taskType: task.taskType,
             };
         });
     } else {
@@ -81,6 +82,7 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
                 userId: task.data?.userId,
                 createdDate: task.createdDate,
                 updatedDate: task.updatedDate,
+                taskType: task.taskType,
             };
         });
         formattedList.sort((a: TaskItem, b: TaskItem) =>

@@ -121,6 +121,7 @@ export const toFormattedTask = (
             ? getStatusDateTime(t, task.updatedDate, task.status)
             : '-',
         userId: task.userId || '-',
+        taskType: task.taskType || '-',
     };
 };
 

@@ -42,6 +42,11 @@ export default function TasksTable({ t, config, tasks }: TasksTableProps) {
                             </TableHeaderCell>
                             <TableHeaderCell>
                                 <Label>
+                                    {t('tasksListing.tableColumns.taskType')}
+                                </Label>
+                            </TableHeaderCell>
+                            <TableHeaderCell>
+                                <Label>
                                     {t('tasksListing.tableColumns.taskId')}
                                 </Label>
                             </TableHeaderCell>
@@ -82,6 +87,9 @@ export default function TasksTable({ t, config, tasks }: TasksTableProps) {
                                 <TableRow key={`task-${task.taskId}`}>
                                     <TableCell className="typography-content-body-sm">
                                         {task.status}
+                                    </TableCell>
+                                    <TableCell className="typography-content-body-sm">
+                                        {task.taskType}
                                     </TableCell>
                                     <TableCell className="typography-content-body-sm">
                                         {task.taskId}

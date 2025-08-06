@@ -5847,7 +5847,8 @@
             "statusDuration": "Status Duration",
             "dateTime": "Date/Time",
             "userId": "User",
-            "actions": "Actions"
+            "actions": "Actions",
+            "taskType": "Task Type"
         },
         "actions": {
             "edit": "Edit",

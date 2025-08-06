@@ -56,6 +56,7 @@ describe('#TasksListing', () => {
                 userId: 'B, Lee',
                 createdDate: '2024-09-24T07:29:33Z',
                 updatedDate: '2024-09-27T07:55:34Z',
+                taskType: 'WithdrawalFormInputTask',
             },
         ];
         const { queryByText } = render(
