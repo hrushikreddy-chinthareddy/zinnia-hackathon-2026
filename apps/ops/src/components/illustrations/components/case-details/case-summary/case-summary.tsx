@@ -16,8 +16,11 @@ import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
-import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
+import CreateClientCaseForm, {
+    findAllAliasesWithSellingCode,
+} from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getStateName } from '@deps/helpers/states.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
@@ -50,6 +53,9 @@ const IllustrationCaseSumary = ({
     const [agentFullName, setAgentFullName] = useState('');
     const queryClient = useQueryClient();
     const sideSheet = useSideSheetContext();
+    const { partyReferenceData } = usePermissionsContext();
+    const aliases = findAllAliasesWithSellingCode(partyReferenceData);
+    const isAgent = aliases.length > 0;
 
     useEffect(() => {
         if (
@@ -155,22 +161,24 @@ const IllustrationCaseSumary = ({
                                 'clientCase.caseSummary.untitledCase'
                             ) as string)}
                     </Heading>
-                    <Button
-                        mode="link"
-                        data-testid="edit-btn"
-                        aria-label={
-                            t(
-                                'clientCase.caseSummary.editClientCaseButton'
-                            ) as string
-                        }
-                        type="button"
-                        size="small"
-                        className={styles.linkButton}
-                        onClick={onEdit}
-                    >
-                        <Icon type={IconType.EDIT} height={24} width={24} />
-                        {t('clientCase.caseSummary.edit')}
-                    </Button>
+                    {isAgent && (
+                        <Button
+                            mode="link"
+                            data-testid="edit-btn"
+                            aria-label={
+                                t(
+                                    'clientCase.caseSummary.editClientCaseButton'
+                                ) as string
+                            }
+                            type="button"
+                            size="small"
+                            className={styles.linkButton}
+                            onClick={onEdit}
+                        >
+                            <Icon type={IconType.EDIT} height={24} width={24} />
+                            {t('clientCase.caseSummary.edit')}
+                        </Button>
+                    )}
                 </div>
             </section>
             <section className={clsx(styles.summary)}>

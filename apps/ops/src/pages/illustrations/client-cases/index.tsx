@@ -15,6 +15,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { IllustrationsClientCaseProvider } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -38,6 +39,7 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './illustrations.module.css';
+import { findAllAliasesWithSellingCode } from '@deps/components/client-case/client-case-create/create-client-case-form';
 
 type additionalDataProps = {
     user: UserProfile;
@@ -73,6 +75,9 @@ export default function Illustrations({
     const searchParams = useSearchParams();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [bannerText, setBannerText] = useState('');
+    const { partyReferenceData } = usePermissionsContext();
+    const aliases = findAllAliasesWithSellingCode(partyReferenceData);
+    const isAgent = aliases.length > 0;
 
     const bannerBodyText = (
         <Typography
@@ -119,31 +124,33 @@ export default function Illustrations({
                     />
                 )}
 
-                <div className="flex items-center justify-between">
-                    <Typography
-                        variant={TypographyVariant.H1}
-                        className="md:mb-5 mb-4"
-                    >
-                        {t('illustrations')}
-                    </Typography>
-                    <Link
-                        href={{
-                            pathname: NEW_CLIENT_CASE_URL,
-                            query: Object.fromEntries(searchParams),
-                        }}
-                        passHref
-                    >
-                        <Button
-                            mode="link"
-                            data-testid="new-client-case-btn"
-                            aria-label={t('ariaLabel.search') as string}
-                            type="button"
-                            size="small"
+                {isAgent && (
+                    <div className="flex items-center justify-between">
+                        <Typography
+                            variant={TypographyVariant.H1}
+                            className="md:mb-5 mb-4"
                         >
-                            {t('clientCase.newClientCase')}
-                        </Button>
-                    </Link>
-                </div>
+                            {t('illustrations')}
+                        </Typography>
+                        <Link
+                            href={{
+                                pathname: NEW_CLIENT_CASE_URL,
+                                query: Object.fromEntries(searchParams),
+                            }}
+                            passHref
+                        >
+                            <Button
+                                mode="link"
+                                data-testid="new-client-case-btn"
+                                aria-label={t('ariaLabel.search') as string}
+                                type="button"
+                                size="small"
+                            >
+                                {t('clientCase.newClientCase')}
+                            </Button>
+                        </Link>
+                    </div>
+                )}
                 <div className="mb-8">
                     <ClientCaseSearchBar />
                 </div>
