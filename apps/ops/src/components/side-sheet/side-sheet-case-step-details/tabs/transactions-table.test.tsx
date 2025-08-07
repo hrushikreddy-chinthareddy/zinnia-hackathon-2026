@@ -48,11 +48,6 @@ const failTransactionsMock = [
 ];
 
 describe('##TransactionsTable', () => {
-    beforeEach(() => {
-        const time = dayjs('2025-03-01T09:00:00');
-        jest.useFakeTimers();
-        jest.setSystemTime(time.toDate());
-    });
     it('#renders table headers', () => {
         render(<TransactionsTable t={mockT} transactions={transactionsMock} />);
         expect(
