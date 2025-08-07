@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { TFunction } from 'next-i18next';
-import dayjs from 'dayjs';
 
 import TransactionsTable from './transactions-table';
 
