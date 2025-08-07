@@ -5769,7 +5769,8 @@
             "processWithoutDocAssistiveText": "If you continue without a document selection, we can't update Zinnia Live case for you.",
             "processWithoutDocAssistiveTextWithOnBaseUpdate": "If you continue without a document selection, we can update Zinnia Live for you.",
             "processWithoutDocWithOnBaseDocCheckAssistiveText": "If you continue without a document selection, we can update Zinnia Live for you.",
-            "missingSelection": "Select a document (or proceed without) to continue."
+            "missingSelection": "Select a document (or proceed without) to continue.",
+            "supportingInfo": "Supporting Information"
         },
         "paymentStep": {
             "addAddress": "Add new address details",

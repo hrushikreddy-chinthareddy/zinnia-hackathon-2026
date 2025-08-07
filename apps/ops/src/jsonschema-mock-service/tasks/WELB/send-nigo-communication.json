@@ -23,12 +23,12 @@
                                 "type": "object",
                                 "title": "",
                                 "properties": {
-                                    "processingReason": {
+                                    "reason": {
                                         "type": "string",
                                         "title": "Issues",
                                         "default": ""
                                     },
-                                    "processingInstruction": {
+                                    "detailedReason": {
                                         "type": "string",
                                         "title": "Processing Instructions",
                                         "default": ""
@@ -138,14 +138,14 @@
                                 "templateType": "table",
                                 "ObjectFieldTemplate": "ObjectRowFieldTemplate"
                             },
-                            "processingReason": {
+                            "detailedReason": {
                                 "ui-widget": "ValueWidget",
                                 "ui:options": {
                                     "label": false,
                                     "inline": true
                                 }
                             },
-                            "processingInstruction": {
+                            "reason": {
                                 "ui-widget": "ValueWidget",
                                 "ui:options": {
                                     "label": false,

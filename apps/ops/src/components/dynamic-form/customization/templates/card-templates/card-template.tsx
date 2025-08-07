@@ -420,7 +420,7 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
     );
 };
 
-const DocumentActions = ({ document, t }: any) => {
+export const DocumentActions = ({ document, t }: any) => {
     const docId =
         document.documentId ||
         ((document as DocumentWithSource).documentID as string);

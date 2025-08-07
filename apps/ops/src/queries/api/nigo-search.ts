@@ -12,6 +12,7 @@ import { serverApi } from '../api-utils/serverApiClient';
 export type searchNigoExceptionsFilters = {
     category: string[];
     businessProcess: string;
+    carrier?: string;
 };
 
 const nigoBaseUrl = se2ApiServerUrl + '/exceptionrefs';
@@ -48,6 +49,7 @@ export const NigoSearch = async (
         const formData: searchNigoExceptionsFilters = {
             category: filters?.category ?? [],
             businessProcess: filters?.businessProcess,
+            carrier: filters.carrier,
         };
 
         const config = {

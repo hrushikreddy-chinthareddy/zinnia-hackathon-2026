@@ -5699,7 +5699,8 @@
             "processWithoutDocAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pourrons pas mettre à jour Zinnia Live dossier pour vous.",
             "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si vous continuez sans sélection de document, nous pouvons mettre à jour Zinnia Live pour vous.",
             "processWithoutDocWithOnBaseDocCheckAssistiveText": "Si vous continuez sans sélection de document, nous pouvons mettre à jour Zinnia Live pour vous.",
-            "missingSelection": "Sélectionnez un document (ou continuez sans) pour continuer."
+            "missingSelection": "Sélectionnez un document (ou continuez sans) pour continuer.",
+            "supportingInfo": "Informations complémentaires"
         },
         "paymentStep": {
             "addAddress": "Ajouter de nouveaux détails d'adresse",

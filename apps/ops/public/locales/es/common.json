@@ -5606,7 +5606,8 @@
             "processWithoutDocAssistiveText": "Si continúas sin una selección de documento, no podemos actualizar OnBase por ti.",
             "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si continúas sin una selección de documento, podemos actualizar OnBase por ti.",
             "processWithoutDocWithOnbaseDocCheckAssistiveText": "Si continúas sin una selección de documento, podemos actualizar OnBase por ti.",
-            "missingSelection": "Selecciona un documento (o continúa sin) para continuar."
+            "missingSelection": "Selecciona un documento (o continúa sin) para continuar.",
+            "supportingInfo": "Información complementaria"
         },
         "paymentStep": {
             "addAddress": "Agregar nuevos detalles de dirección",

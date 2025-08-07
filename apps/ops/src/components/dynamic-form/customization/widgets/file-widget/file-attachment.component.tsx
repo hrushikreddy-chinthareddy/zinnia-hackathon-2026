@@ -40,6 +40,7 @@ const FileAttachmentComponent = ({
         useState<EDSDocumentRequestBody>({} as EDSDocumentRequestBody);
     const [restricted, setRestricted] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
     const limit = 100;
     const offset = 0;
 
@@ -83,6 +84,7 @@ const FileAttachmentComponent = ({
     }, [carrier]);
 
     const onSubmitHandler = useCallback(() => {
+        setIsUploading(true);
         onSubmit(currentFormData);
     }, [currentFormData, onSubmit]);
 
@@ -190,8 +192,11 @@ const FileAttachmentComponent = ({
                     <Button
                         aria-label={t('continue') as string}
                         disabled={
-                            currentFormData?.docCategory === '' ||
-                            currentFormData?.documentType === ''
+                            isUploading ||
+                            !(
+                                currentFormData?.docCategory?.length &&
+                                currentFormData?.documentType?.length
+                            )
                         }
                         mode="primary"
                         size={ButtonSize.Small}
