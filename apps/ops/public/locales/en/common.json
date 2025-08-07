@@ -96,8 +96,12 @@
             "usage": "Usage",
             "viewDocument": "View Document",
             "withdrawals": "Withdrawals",
+            "defaultCase": "Service Request Form",
+            "ownerChange": "Owner Change",
+            "jointOwnerChange": "Joint Owner Change",
             "tasks": "Tasks",
-            "defaultCase": "Service Request Form"
+            "payorChange": "Payor Change",
+            "thirdPartyDesigneeChange": "Third Party Designee Change"
         },
         "navLinks": {
             "accessManagement": {
@@ -299,6 +303,22 @@
                 "contractValue": "Contract Value",
                 "policyDate": "Policy Date",
                 "issueState": "Issue State"
+            },
+            "owner": {
+                "text": "Manage owners",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
+            },
+            "jointOwner": {
+                "text": "Manage joint owners",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-jointowner"
+            },
+            "payor": {
+                "text": "Manage payors",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-payor"
+            },
+            "thirdPartyDesignee": {
+                "text": "Manage Third Party",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-third-party-designee"
             }
         },
         "loader": "Loading..."
@@ -478,6 +498,9 @@
                 "individualTrust": "Individual Trust",
                 "corporateTrust": "Corporate Trust",
                 "lookThrough": "Look Through Trust",
+                "testamentaryTrust": "Testamentary Trust",
+                "interVivosTrust": "Inter Vivos Trust",
+                "grantorTrust": "Grantor Trust",
                 "companyName": "Company Name",
                 "ssn": "SSN",
                 "gender": "Gender",
@@ -589,57 +612,301 @@
             }
         },
         "signature": {
+            "continue": "Continue",
             "header": "Signature Validation",
             "isIrrevocableBene": "Is there an irrevocable beneficiary ?",
-            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",
+            "leaveTransaction": "Leave this transaction",
             "signatureShouldBePresent": "Signature present option must be selected",
-            "continue": "Continue",
-            "leaveTransaction": "Leave this transaction"
+            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box."
+        },
+        "summary": {
+            "allocation": {
+                "relationshipToParty": "Relationship to party",
+                "title": "Allocation"
+            },
+            "bpm500Error": "BPM 500 error",
+            "contact": {
+                "address": "Address",
+                "phone": "Phone",
+                "title": "Contact Info"
+            },
+            "contingentBeneficiary": "Contingent beneficiary",
+            "current": "Current",
+            "header": "Summary",
+            "identification": {
+                "gender": "Gender",
+                "title": "Identification"
+            },
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
+            "overview": "Overview",
+            "primaryBeneficiary": "Primary beneficiary",
+            "reviewMessage": "Looking good! Be sure to review your entries before submitting",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "tag": {
+                "new": "New",
+                "none": "None",
+                "removed": "Removed",
+                "updated": "Updated"
+            },
+            "updated": "Updated"
+        },
+        "confirm": {
+            "close": "Close",
+            "goToCase": "Go to case",
+            "header": "Confirm",
+            "nigo": "Beneficiary updates were submitted for NIGO processing.",
+            "submit": "Submitted!",
+            "submitAddress": "Update beneficiary",
+            "successMessage": "Beneficiary updates were submitted.",
+            "title": "Success!",
+            "viewAllPeople": "View all people"
+        }
+    },
+    "roleChange": {
+        "start": {
+            "label": "Start",
+            "title": "Manage {{roleLabel}}s",
+            "subtitle": "Select a linked case, if applicable."
+        },
+        "roleDetails": {
+            "requiredDocuments": "Required supporting document(s) available?",
+            "reasonChange": "Reason for change",
+            "relationshipcurrent": "Relationship to current {{roleLabel}}",
+            "header": "{{roleLabel}} Details",
+            "changeReason": "Reason for change",
+            "documentsAvailable": "Required supporting document(s) available?",
+            "permanentResident": "Permanent resident",
+            "countryCitizenship": "Country of citizenship",
+            "partyType": "Party type",
+            "relationshipParty": "Relationship to party",
+            "usCitizen": "US Citizen",
+            "ssn": "SSN",
+            "gender": "Gender",
+            "dateOfBirth": "Birth date",
+            "firstName": "First name",
+            "lastName": "Last name",
+            "middleName": "Middle name",
+            "suffix": "Suffix",
+            "prefix": "Prefix",
+            "title": "Title",
+            "maritalStatus": "Marital status",
+            "prefferedMethod": "Preferred Contact Method",
+            "address": "Address",
+            "phone": "Phone",
+            "email": "Email",
+            "mail": "Mail",
+            "add": "Add",
+            "newRole": "New {{roleLabel}}",
+            "close": "Close",
+            "trustType": "Trust Type",
+            "trustName": "Trust name",
+            "custodianName": "Custodian Name",
+            "individualTrust": "Individual Trust",
+            "corporateTrust": "Corporate Trust",
+            "lookThrough": "Look Through Trust",
+            "testamentaryTrust": "Testamentary Trust",
+            "interVivosTrust": "Inter Vivos Trust",
+            "grantorTrust": "Grantor Trust",
+            "companyName": "Company Name",
+            "male": "Male",
+            "female": "Female",
+            "yes": "Yes",
+            "no": "No",
+            "trustDate": "Trust Date",
+            "prefferedContactMethod": "Preferred contact method",
+            "formValidations": {
+                "firstName": "First name is required",
+                "fullName": "Name is required",
+                "lastName": "Last name is required",
+                "addressLine": "Address is required",
+                "name": "Please make sure first and last or company or trustee name is updated while adding {{roleLabel}}",
+                "addressDetails": "Please make sure address details are filled properly while adding {{roleLabel}}",
+                "addRole": "Please add a {{roleLabel}} to continue",
+                "removeRole": "Please remove existing {{roleLabel}} to add new {{roleLabel}}",
+                "reason": "Please initiate Death Claim Process",
+                "relationshipToParty": "Relationship to party is required",
+                "trustDateRequired": "Trust date is required",
+                "prefferedMethod": "Preferred Contact Method is required",
+                "relationship": "Please make sure relationship to party is selected while adding {{roleLabel}}",
+                "preferredType": "Please make sure preferred contact method is selected while adding {{roleLabel}}",
+                "trustDate": "Please make sure trust date is selected while adding {{roleLabel}}",
+                "emailRequired": "Email is required",
+                "validEmail": "Please enter a valid email address",
+                "phoneRequired": "Phone is required",
+                "validPhone": "Please enter a valid phone number"
+            },
+            "relationshipToParty": {
+                "trustee": "Trustee",
+                "trusteeOfMinor": "Trustee of Minor",
+                "trusteeOfIncompetent": "Trustee of Incompetent",
+                "powerOfAttorney": "Power of Attorney",
+                "controllingPersonOfEntity": "Controlling Person of Entity",
+                "brother": "Brother",
+                "child": "Child",
+                "daughter": "Daughter",
+                "domesticPartner": "Domestic Partner",
+                "executor": "Executor",
+                "father": "Father",
+                "fiance": "Fiancé",
+                "grandchild": "Grandchild",
+                "lifePartner": "Life Partner",
+                "mother": "Mother",
+                "sister": "Sister",
+                "son": "Son",
+                "spouse": "Spouse",
+                "stepfather": "Stepfather",
+                "stepmother": "Stepmother",
+                "self": "Self",
+                "business": "Business",
+                "businessAssociate": "Business Associate",
+                "partner": "Partner",
+                "employer": "Employer",
+                "formerSpouse": "Former Spouse",
+                "grandparent": "Grandparent",
+                "parent": "Parent",
+                "owner": "Owner",
+                "sibling": "Sibling",
+                "stepchild": "Stepchild",
+                "stepparent": "Stepparent",
+                "other": "Other"
+            },
+            "prefixOptions": {
+                "dr": "Dr.",
+                "mr": "Mr.",
+                "mrs": "Mrs.",
+                "ms": "Ms."
+            },
+            "suffixOptions": {
+                "jr": "JR",
+                "sn": "SN",
+                "i": "I",
+                "ii": "II",
+                "iii": "III"
+            },
+            "partyOptions": {
+                "individual": "Individual",
+                "trust": "Trust",
+                "organization": "Estate/Organisation",
+                "custodian": "Custodian"
+            },
+            "reasonOptions": {
+                "ownerDeath": "Death of Owner",
+                "giftTransfer": "Gift Transfer",
+                "transferConsideration": "Transfer for Consideration"
+            }
+        },
+        "beneDetails": {
+            "title": "Request received for beneficiary change?",
+            "header": "Beneficiary Details"
+        },
+        "signature": {
+            "header": "Signature",
+            "selectOption": "Select",
+            "trustee": "Trustee",
+            "executor": "Executor",
+            "custodian": "Custodian",
+            "guardian": "Guardian",
+            "attorneyInFact": "Attorney-in-fact",
+            "assignee": "Assignee",
+            "poa": "POA",
+            "na": "NA",
+            "yes": "Yes",
+            "no": "No",
+            "type": "Type",
+            "designation": "Designation",
+            "signPresent": "Sign present",
+            "date": "Sign date",
+            "printName": "Printed name",
+            "isSignatureValid": "Sign validated",
+            "isNotarySignValid": "Is notary stamp valid",
+            "commissionExpiresOn": "Commission expires on",
+            "signatureComment": "Document number",
+            "signatureSsn": "SSN",
+            "signatureCityProvided": "City/State",
+            "signatureCommentLabel": "Signature comment",
+            "signGuaranteeStamp": "Signature guarantee",
+            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",
+            "signDate": "Signature date",
+            "signaturePresent": "Signature present?",
+            "validationReasons": {
+                "single": "Single, divorced/legally separated, widowed or unable to locate my spouse",
+                "marriedWithoutERISA": "Married and my Plan is not subject to ERISA (Consult with your employer if you are uncertain whether your plan is subject to ERISA)",
+                "marriedWithERISA": "Married and my Plan is subject to ERISA (Signature of spouse and Notary stamp/seal also required in this section)",
+                "signatuePresent": "All signature present options must be selected"
+            }
         },
         "summary": {
             "header": "Summary",
             "overview": "Overview",
+            "role": "{{roleLabel}}",
             "reviewMessage": "Looking good! Be sure to review your entries before submitting",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
-            "bpm500Error": "BPM 500 error",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
-            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
-            "primaryBeneficiary": "Primary beneficiary",
-            "contingentBeneficiary": "Contingent beneficiary",
+            "changeReason": "Reason for change",
+            "requiredsupportingdocument": "Required supporting document(s) available?",
+            "identification": "Identification",
+            "partytype": "Party type",
+            "trustType": "Trust type",
+            "trustDate": "Trust date",
+            "relationshipcurrent": "Relationship to party",
+            "relationship": "Relationship to {{roleLabel}}",
+            "name": "Name",
+            "uscitizen": "US citizen",
+            "ssn": "SSN",
+            "gender": "Gender",
+            "birthdate": "Birth date",
+            "prefferedMethod": "Preferred Contact Method",
+            "contactDetails": "Contact details",
+            "email": "Email",
+            "homeNumber": "Home number",
+            "BusinessAddress": "Business address",
             "current": "Current",
             "updated": "Updated",
-            "identification": {
-                "title": "Identification",
-                "gender": "Gender"
-            },
-            "allocation": {
-                "title": "Allocation",
-                "relationshipToParty": "Relationship to party"
-            },
             "contact": {
                 "title": "Contact Info",
                 "address": "Address",
-                "phone": "Phone"
+                "phone": "Phone",
+                "email": "Email",
+                "number": "Number"
             },
             "tag": {
                 "none": "None",
                 "updated": "Updated",
                 "removed": "Removed",
                 "new": "New"
-            }
+            },
+            "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "subtitle": "Looking good! Be sure to review all the transfers and resulting fund values before submitting.",
+            "effectiveDateLabel": "Effective date",
+            "validationStatusLabel": "Validation status",
+            "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
+            "internal500CTAlinkText": "Submit a help desk ticket",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on."
         },
         "confirm": {
             "header": "Confirm",
-            "successMessage": "Beneficiary updates were submitted.",
             "close": "Close",
-            "title": "Success!",
+            "title": "Got it!",
             "viewAllPeople": "View all people",
-            "submitAddress": "Update beneficiary",
+            "updateRole": "Update {{roleLabel}}",
+            "successMessage": "{{roleLabel}}  updates were submitted",
+            "for": "for",
+            "nigo": "NIGO processing.",
             "goToCase": "Go to case",
-            "submit": "Submitted!",
-            "nigo": "Beneficiary updates were submitted for NIGO processing."
-        }
+            "submit": "Submitted!"
+        },
+        "tabs": {
+            "start": "Start",
+            "roleDetails": "{{roleLabel}} Details",
+            "beneDetails": "Beneficiary Details",
+            "signature": "Signature",
+            "summary": "Summary",
+            "confirm": "Confirmation"
+        },
+        "yes": "Yes",
+        "no": "No"
     },
+
     "addressChange": {
         "common": {
             "partyRole": {
@@ -782,6 +1049,7 @@
             }
         }
     },
+
     "welcome": {
         "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
@@ -3800,7 +4068,8 @@
             "documentNumber": "Document number: ",
             "label": "Which document are you working from?",
             "noDocumentAssistiveText": "If you continue without a document selection, we can't update Zinnia Live case for you.",
-            "processWithoutDocument": "Process without a document"
+            "processWithoutDocument": "Process without a document",
+            "noCaseSelection": "Select an open case to continue or proceed without one"
         },
         "transactionCta": {
             "checkingRules": "We're checking this policy's business rules...",
@@ -4216,17 +4485,19 @@
                     "missingCaseDocument": "Select a document (or proceed without) to continue.",
                     "state": "State is missing.",
                     "streetAddress": "Street address is missing.",
-                    "zipCode": "Zip code is missing."
+                    "zipCode": "Zip code is missing.",
+                    "address": "Address is required"
                 },
                 "general": {
                     "addLine": "Add unit number, suite, floor, etc.",
+                    "addAdressLine": "Add address line (e.g. floor, suite, etc)",
                     "cancel": "Cancel"
                 },
                 "labels": {
                     "address": "Address",
                     "addressType": "Address type",
                     "city": "City",
-                    "removeAddress": "Remove this address",
+                    "removeAddress": "Remove address",
                     "setAsMailingAddress": "Set as mailing address",
                     "state": "State",
                     "type": "Type",
@@ -4300,6 +4571,7 @@
                 "labels": {
                     "email": "Email",
                     "removeEmail": "Remove this email",
+                    "remove": "Remove email",
                     "type": "Type"
                 },
                 "mainCta": {
@@ -4319,6 +4591,7 @@
                     "number": "Number",
                     "preferredTime": "Preferred time to contact",
                     "removeNumber": "Remove this phone number",
+                    "removePhone": "Remove phone",
                     "timeZone": "Time zone",
                     "type": "Type"
                 },
@@ -4441,6 +4714,7 @@
                     "business": "Business",
                     "poBox": "PO Box",
                     "poBoxLower": "PO box",
+                    "seasonal": "Seasonal",
                     "mailing": "Mailing"
                 },
                 "general": {
@@ -4668,7 +4942,8 @@
         "commissionAllocationTooltip": "Commission allocation shows the breakdown of how agents earn money for the sale of the policy. Commission rules vary by policy and carrier. Typically, agents earn a certain percentage of the owner's premiums for the first year of the policy, and then earn a smaller percentage for a set number of years following that. The commission allocation, however, is determined by the agents themselves. Commission agents are usually all agents within the same office.",
         "cardDisableTooltip": "We're still working on this page. For now, head to MCS directly to see agent contact information and identification details.",
         "other": "Other",
-        "otherTooltip": "Other agents on the policy don't earn commission, but may also be authorized to make changes or discuss this policy. For example, the servicing agent on the policy is the agent who works directly with the owner now that the policy is active."
+        "otherTooltip": "Other agents on the policy don't earn commission, but may also be authorized to make changes or discuss this policy. For example, the servicing agent on the policy is the agent who works directly with the owner now that the policy is active.",
+        "managePeople": "Manage people"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
@@ -5769,7 +6044,12 @@
             "processWithoutDocAssistiveText": "If you continue without a document selection, we can't update Zinnia Live case for you.",
             "processWithoutDocAssistiveTextWithOnBaseUpdate": "If you continue without a document selection, we can update Zinnia Live for you.",
             "processWithoutDocWithOnBaseDocCheckAssistiveText": "If you continue without a document selection, we can update Zinnia Live for you.",
-            "missingSelection": "Select a document (or proceed without) to continue."
+            "missingSelection": "Select a document (or proceed without) to continue.",
+            "processWithoutCase": "Proceed without linking case",
+            "missingCaseSelection": "Select a case (or proceed without) to continue.",
+            "processWithoutCaseAssistiveText": "If you continue without a case selection, we can't update Zinnia Live case for you.",
+            "caseSelectionLabel": "Select a linked case, if applicable",
+            "supportingInfo": "Supporting Information"
         },
         "paymentStep": {
             "addAddress": "Add new address details",

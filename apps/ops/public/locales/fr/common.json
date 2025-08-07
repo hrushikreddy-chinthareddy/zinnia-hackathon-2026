@@ -96,7 +96,11 @@
             "usage": "Usage",
             "viewDocument": "Voir le document",
             "withdrawals": "Retraits",
-            "defaultCase": "Formulaire de demande de service"
+            "defaultCase": "Formulaire de demande de service",
+            "ownerChange": "Changement de propriétaire",
+            "jointOwnerChange": "Changement de copropriétaire",
+            "payorChange": "Changement de payeur",
+            "thirdPartyDesigneeChange": "Changement de tiers désigné"
         },
         "navLinks": {
             "accessManagement": {
@@ -735,6 +739,238 @@
             "submit": "Soumis!",
             "nigo": "Les mises à jour des bénéficiaires ont été soumises pour le traitement NIGO."
         }
+    },
+    "roleChange": {
+        "start": {
+            "label": "Démarrer",
+            "title": "Gérer les {{roleLabel}}",
+            "subtitle": "Sélectionnez un dossier lié, si applicable."
+        },
+        "roleDetails": {
+            "requiredDocuments": "Document(s) de soutien requis disponible(s)?",
+            "reasonChange": "Motif du changement",
+            "relationshipcurrent": "Relation avec le {{roleLabel}} actuel",
+            "header": "{{roleLabel}} Détails",
+            "ssn": "NSS",
+            "gender": "Genre",
+            "dateOfBirth": "Date de naissance",
+            "firstName": "Prénom",
+            "lastName": "Nom",
+            "middleName": "Deuxième prénom",
+            "suffix": "Suffixe",
+            "prefix": "Préfixe",
+            "title": "Titre",
+            "maritalStatus": "Statut marital",
+            "prefferedMethod": "Méthode de contact préférée",
+            "address": "Adresse",
+            "phone": "Téléphone",
+            "email": "Courriel",
+            "add": "Ajouter",
+            "newRole": "Nouveau {{roleLabel}}",
+            "close": "Fermer",
+            "trustType": "Type de fideicomiso",
+            "trustName": "Nom du fideicomiso",
+            "custodianName": "Nom du tuteur",
+            "individualTrust": "Fideicomiso individuel",
+            "corporateTrust": "Fideicomiso corporatif",
+            "lookThrough": "Fideicomiso de mirada atrás",
+            "companyName": "Nom de l'entreprise",
+            "partyType": "Type de partie",
+             "masculin": "Masculin",
+            "féminin": "Féminin",
+            "oui": "Oui",
+            "non": "Non",
+            "dateDeConfiance": "Date de confiance",
+            "méthodeDeContactPréférée": "Méthode de contact préférée",
+            "formValidations": {
+                "prénom": "Le prénom est obligatoire",
+                "nomComplet": "Le nom est obligatoire",
+                "nomDeFamille": "Le nom de famille est obligatoire",
+                "ligneDAdresse": "L'adresse est obligatoire",
+                "nom": "Veuillez vous assurer que le prénom et le nom de famille ou le nom de l'entreprise ou du fiduciaire sont mis à jour lors de l'ajout/mise à jour du {{roleLabel}}",
+                "détailsDeLAdresse": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du {{roleLabel}}",
+                "ajouterRole": "Veuillez ajouter un {{roleLabel}} pour continuer",
+                "supprimerRole": "Veuillez supprimer le {{roleLabel}} existant pour ajouter un nouveau {{roleLabel}}",
+                "motif": "Veuillez lancer le processus de réclamation de décès",
+                "relationAvecLaPartie": "La relation avec la partie est obligatoire",
+                "dateDeConfianceObligatoire": "La date de confiance est obligatoire",
+                "méthodeDeContactPréféréeObligatoire": "La méthode de contact préférée est obligatoire",
+                "relation": "Veuillez vous assurer que la relation avec la partie est sélectionnée lors de l'ajout/mise à jour du {{roleLabel}}",
+                "typeDeContactPréféré": "Veuillez vous assurer que le type de contact préféré est sélectionné lors de l'ajout/mise à jour du {{roleLabel}}",
+                "dateDeConfiance": "Veuillez vous assurer que la date de confiance est sélectionnée lors de l'ajout/mise à jour du {{roleLabel}}"
+            },
+            "relationshipToParty": {
+                "trustee": "Tuteur",
+                "trusteeOfMinor": "Tuteur d'un mineur",
+                "trusteeOfIncompetent": "Tuteur d'un inapte",
+                "powerOfAttorney": "Procuration",
+                "controllingPersonOfEntity": "Personne contrôlante de l'entité",
+                "brother": "Frère",
+                "child": "Enfant",
+                "daughter": "Fille",
+                "domesticPartner": "Partenaire domestique",
+                "executor": "Exécuteur",
+                "father": "Père",
+                "fiance": "Fiancé",
+                "grandchild": "Petit-enfant",
+                "lifePartner": "Partenaire de vie",
+                "mother": "Mère",
+                "sister": "Sœur",
+                "son": "Fils",
+                "spouse": "Conjoint",
+                "stepfather": "Beau-père",
+                "stepmother": "Belle-mère",
+                "self": "Soi-même",
+                "business": "Entreprise",
+                "businessAssociate": "Collègue d'affaires",
+                "partner": "Partenaire",
+                "employer": "Employeur",
+                "formerSpouse": "Ex-conjoint",
+                "grandparent": "Grand-parent",
+                "parent": "Parent",
+                "owner": "Propriétaire",
+                "sibling": "Frère ou sœur",
+                "stepchild": "Enfant adoptif",
+                "stepparent": "Beau-parent",
+                "other": "Autre"
+            },
+            "prefixOptions": {
+                "dr": "Dr.",
+                "mr": "M.",
+                "mrs": "Mme.",
+                "ms": "Mme."
+            },
+            "suffixOptions": {
+                "jr": "JR",
+                "sr": "SR",
+                "i": "I",
+                "ii": "II",
+                "iii": "III"
+            },
+            "partyOptions": {
+                "individual": "Individu",
+                "trust": "Fideicomiso",
+                "estate/Organisation": "Estate/Organisation",
+                "custodian": "Tuteur"
+            },
+            "resonOptions": {
+                "ownerDeath": "Décès du propriétaire",
+                "giftTransfer": "Transfert de don",
+                "transferConsideration": "Transfert pour considération"
+            },
+            "yes":"Oui",
+            "no": "Non"
+        },
+        "beneDetails": {
+            "title": "Requête reçue pour changer de bénéficiaire?",
+            "header": "Détails du bénéficiaire"
+        },
+        "signature": {
+            "header": "Signature",
+            "selectOption": "Sélectionner",
+            "trustee": "Tuteur",
+            "executor": "Exécuteur",
+            "custodian": "Tuteur",
+            "guardian": "Tuteur",
+            "attorneyInFact": "Procuration",
+            "assignee": "Cessionnaire",
+            "poa": "Procuration",
+            "na": "NA",
+            "yes": "Oui",
+            "no": "Non",
+            "type": "Type",
+            "designation": "Désignation",
+            "signPresent": "Signature présente",
+            "date": "Date de signature",
+            "printName": "Nom imprimé",
+            "isSignatureValid": "Signature validée",
+            "isNotarySignValid": "Est-ce que le timbre du notaire est valide?",
+            "commissionExpiresOn": "La commission expire le",
+            "signatureComment": "Commentaire du document",
+            "signatureSsn": "NSS",
+            "signatureCityProvided": "Ville/État",
+            "signatureCommentLabel": "Commentaire de signature",
+            "signGuaranteeStamp": "Timbre de signature garantie",
+            "spouseConsentText": "Si vous n'avez pas de conjoint, ou si votre conjoint est décédé, cochez cette case.",
+            "signDate": "Date de signature",
+            "signaturePresent": "Signature présente?",
+            "validationReasons": {
+                "single": "Célibataire, divorcé/légalement séparé, veuf ou incapable de localiser mon conjoint",
+                "marriedWithoutERISA": "Marié et mon Plan n'est pas soumis à ERISA (Consultez votre employeur si vous êtes incertain quant à la soumission de votre plan à ERISA)",
+                "marriedWithERISA": "Marié et mon Plan est soumis à ERISA (Signature de mon conjoint et timbre du notaire/timbre/seal également requis dans cette section)",
+                "signatuePresent": "Toutes les options de signature présente doivent être sélectionnées"
+            }
+        },
+         "summary": {
+            "header": "Résumé",
+            "overview": "Aperçu",
+            "role": "{{roleLabel}}",
+            "reviewMessage": "C'est bon! Assurez-vous de vérifier vos entrées avant de soumettre",
+            "changeReason": "Raison du changement",
+            "requiredsupportingdocument": "Document(s) de soutien requis disponible(s)?",
+            "identification": "Identification",
+            "partytype": "Type de partie",
+            "trustType": "Type de fiducie",
+            "trustDate": "Date de la fiducie",
+            "relationshipcurrent": "Relation avec la partie",
+            "relationship": "Relation avec {{roleLabel}}",
+            "name": "Nom",
+            "uscitizen": "Citoyen des États-Unis",
+            "ssn": "NSS",
+            "gender": "Genre",
+            "birthdate": "Date de naissance",
+            "prefferedMethod": "Méthode de contact préférée",
+            "contactDetails": "Coordonnées",
+            "email": "Courriel",
+            "homeNumber": "Numéro de téléphone personnel",
+            "BusinessAddress": "Adresse professionnelle",
+            "current": "Actuel",
+            "updated": "Mis à jour",
+            "contact": {
+                "title": "Informations de contact",
+                "address": "Adresse",
+                "phone": "Téléphone",
+                "email": "Courriel",
+                "number": "Numéro"
+            },
+            "tag": {
+                "none": "Aucun",
+                "updated": "Mis à jour",
+                "removed": "Supprimé",
+                "new": "Nouveau"
+            },
+            "status200subtitle": "C'est bon! Assurez-vous de vérifier vos entrées avant de soumettre",
+            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Veuillez consulter l'erreur ci-dessous.",
+            "subtitle": "C'est bon! Assurez-vous de vérifier toutes les transferts et les valeurs de fonds résultantes avant de soumettre.",
+            "effectiveDateLabel": "Date d'effet",
+            "validationStatusLabel": "Statut de validation",
+            "internal500Error": "Les services sont en panne, nous ne pouvons pas continuer. Vous pouvez soumettre un ticket d'assistance. Veuillez quitter cette transaction et réessayer plus tard.",
+            "internal500CTAlinkText": "Soumettre un ticket d'assistance",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée suive.",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
+        } ,
+         "confirm": {
+            "header": "Confirmer",
+            "close": "Fermer",
+            "title": "C'est compris!",
+            "viewAllPeople": "Voir toutes les personnes",
+            "submitAddress": "Mettre à jour le bénéficiaire",
+            "successMessage": "Les mises à jour {{roleLabel}} ont été soumises",
+            "for": "pour",
+            "nigo": "Traitement NIGO.",
+            "goToCase": "Aller au dossier",
+            "submit": "Soumis!"
+        },
+        "tabs": {
+            "start": "Démarrer",
+            "roleDetails": "Détails {{roleLabel}}",
+            "beneDetails": "Détails du bénéficiaire",
+            "signature": "Signature",
+            "summary": "Résumé",
+            "confirm": "Confirmation"
+        },
+        "yes": "Oui",
+        "no": "Non"
     },
     "addressChange": {
         "common": {
@@ -4161,16 +4397,18 @@
                 "updated": "mis à jour"
             },
             "address": {
-                "errors": {
+                 "errors": {
                     "city": "La ville est manquante.",
                     "invalidZip": "Le code postal doit comporter au moins 5 chiffres.",
                     "missingCaseDocument": "Sélectionnez un document (ou continuez sans) pour continuer.",
-                    "state": "L'État est manquant.",
-                    "streetAddress": "L'adresse est manquante.",
-                    "zipCode": "Le code postal est manquant."
+                    "state": "L'état est manquant.",
+                    "streetAddress": "L'adresse de la rue est manquante.",
+                    "zipCode": "Le code postal est manquant.",
+                    "address": "L'adresse est requise"
                 },
                 "general": {
-                    "addLine": "Ajoutez le numéro d'unité, la suite, l'étage, etc.",
+                    "addLine": "Ajouter un numéro d'unité, un étage, un immeuble, etc.",
+                    "addAdressLine": "Ajouter une ligne d'adresse (par exemple, un étage, un immeuble, etc)",
                     "cancel": "Annuler"
                 },
                 "labels": {
@@ -4618,7 +4856,8 @@
         "commissionAllocationTooltip": "L'allocation des commissions montre la répartition de la manière dont les agents gagnent de l'argent pour la vente de la police. Les règles de commission varient selon la politique et le transporteur. En règle générale, les agents gagnent un certain pourcentage des primes du propriétaire pour la première année de la police, puis gagnent un pourcentage plus faible pendant un nombre défini d'années suivantes. La répartition des commissions est toutefois déterminée par les agents eux-mêmes. Les agents à la commission sont généralement tous des agents au sein du même bureau.",
         "cardDisableTooltip": "Nous travaillons encore sur cette page. Pour l'instant, rendez-vous directement sur MCS pour consulter les coordonnées et les informations d'identification des agents.",
         "other": "Autre",
-        "otherTooltip": "Les autres agents participant à la police ne gagnent pas de commission, mais peuvent également être autorisés à apporter des modifications ou à discuter de cette politique. Par exemple, l'agent de gestion de la politique est l'agent qui travaille directement avec le propriétaire maintenant que la politique est active."
+        "otherTooltip": "Les autres agents participant à la police ne gagnent pas de commission, mais peuvent également être autorisés à apporter des modifications ou à discuter de cette politique. Par exemple, l'agent de gestion de la politique est l'agent qui travaille directement avec le propriétaire maintenant que la politique est active.",
+        "managePeople": "Gérer les gens"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
@@ -5699,7 +5938,8 @@
             "processWithoutDocAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pourrons pas mettre à jour Zinnia Live dossier pour vous.",
             "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si vous continuez sans sélection de document, nous pouvons mettre à jour Zinnia Live pour vous.",
             "processWithoutDocWithOnBaseDocCheckAssistiveText": "Si vous continuez sans sélection de document, nous pouvons mettre à jour Zinnia Live pour vous.",
-            "missingSelection": "Sélectionnez un document (ou continuez sans) pour continuer."
+            "missingSelection": "Sélectionnez un document (ou continuez sans) pour continuer.",
+            "supportingInfo": "Informations complémentaires"
         },
         "paymentStep": {
             "addAddress": "Ajouter de nouveaux détails d'adresse",

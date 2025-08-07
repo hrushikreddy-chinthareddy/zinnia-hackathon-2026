@@ -106,6 +106,9 @@ export enum Processes {
     CancelAutoPay = 'CancelAutoPay',
     BeneficiaryUpdate = 'Beneficiary Update',
     AgentOnboarding = 'Agent Onboarding',
+    OwnerChange = 'Owner Change',
+    PayorChange = 'Payor Change',
+    ThirdPartyDesigneeChange = 'Third Party Designee',
 }
 
 export enum Actions {

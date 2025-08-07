@@ -142,6 +142,27 @@ export const getAddressTypeOptions = ({ t }: GetAddressTypeOptions) => {
     ];
 };
 
+export const getNewAddressTypeOptions = ({ t }: GetAddressTypeOptions) => {
+    return [
+        {
+            label: t('people.card.address.addressOptions.residence') as string,
+            value: AddressType.RESIDENCE,
+        },
+        {
+            label: t('people.card.address.addressOptions.business') as string,
+            value: AddressType.BUSINESS,
+        },
+        {
+            label: t('people.card.address.addressOptions.seasonal') as string,
+            value: AddressType.SEASONAL,
+        },
+        {
+            label: t('people.card.address.addressOptions.poBox') as string,
+            value: AddressType.POBOX,
+        },
+    ];
+};
+
 export const getFormErrors = ({
     address,
     caseId,

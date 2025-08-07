@@ -249,7 +249,7 @@ function FileWidget<
                 );
             }
 
-            sideSheet.onClose();
+            sideSheet.handleOpen(false);
         });
     };
 
@@ -286,7 +286,7 @@ function FileWidget<
 
                         <FileAttachmentComponent
                             carrier={formContext?.customData?.carrier || ''}
-                            onClose={() => sideSheet.onClose()}
+                            onClose={() => sideSheet.handleOpen(false)}
                             onSubmit={(formData: EDSDocumentRequestBody) =>
                                 onSubmit(formData, newValue)
                             }

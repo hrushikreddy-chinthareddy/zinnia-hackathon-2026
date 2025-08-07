@@ -82,6 +82,10 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         : policyDetails.systematicPrograms.getProgramsByType(
               TempAnnuityArrangementTypes.WITHDRAWAL
           );
+    const hasWithdrawalProgram =
+        !!withdrawalProgram && withdrawalProgram.arrangementId !== undefined;
+    const hasRmdProgram =
+        !!rmdProgram && rmdProgram.arrangementId !== undefined;
 
     const { data: withdrawalEligibility } = useQuery({
         queryKey: [
@@ -269,6 +273,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                             },
                         ]}
                         displayCardWithZeroAmount={true}
+                        hasProgram={hasWithdrawalProgram}
                     />
                 </>
             )}
@@ -323,6 +328,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                             },
                         ]}
                         displayCardWithZeroAmount={false}
+                        hasProgram={hasRmdProgram}
                     />
                 </>
             )}

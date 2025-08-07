@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
+import { findAllAliasesWithSellingCode } from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { ClientCasePaginator } from '@deps/components/client-case/client-case-list/paginator/client-case-paginator';
 import ClientCaseSearchBar from '@deps/components/client-case/client-case-list/search-bar/client-case-search-bar';
 import { ClientCaseTable } from '@deps/components/client-case/client-case-list/table/client-case-table';
@@ -39,7 +40,6 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './illustrations.module.css';
-import { findAllAliasesWithSellingCode } from '@deps/components/client-case/client-case-create/create-client-case-form';
 
 type additionalDataProps = {
     user: UserProfile;

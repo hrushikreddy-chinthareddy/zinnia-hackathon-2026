@@ -1,0 +1,5 @@
+.checkboxGroupRoot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg, 1rem);
+}

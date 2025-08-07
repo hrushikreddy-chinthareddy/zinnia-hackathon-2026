@@ -24,34 +24,118 @@
                         "process": {
                             "type": "string",
                             "title": "process"
+                        },
+                        "processSubType": {
+                            "type": "string"
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": { "type": "string" },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": [
+                                "All sections are complete and ready for data entry.",
+                                "All sections are not complete."
+                            ],
+                            "title": "Is the Paper application form complete?",
+                            "default": true
                         }
                     },
                     "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "declineReason": {
+                                            "title": "What is the issue with the form?",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "exceptionSubRefs": {
+                                                        "type": "array",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "additionalProperties": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "value",
+                                                    "exceptionSubRefs"
+                                                ]
+                                            },
+                                            "minItems": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        },
                         "process": {
                             "if": {
                                 "properties": {
-                                    "process": {
-                                        "const": "Policy Update"
+                                    "issueResolved": {
+                                        "const": true
                                     }
                                 }
                             },
                             "then": {
-                                "properties": {
-                                    "dataEntryForm": {
-                                        "type": "string",
-                                        "title": "Open Form for Data Entry",
-                                        "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/people?correlationId={{customData.correlationId}}"
-                                    }
-                                }
-                            },
-                            "else": {
                                 "if": {
                                     "properties": {
                                         "process": {
-                                            "enum": [
-                                                "Withdrawal",
-                                                "Full Surrender"
-                                            ]
+                                            "const": "Policy Update"
                                         }
                                     }
                                 },
@@ -60,7 +144,7 @@
                                         "dataEntryForm": {
                                             "type": "string",
                                             "title": "Open Form for Data Entry",
-                                            "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/withdrawals/new-withdrawal?correlationId={{customData.correlationId}}"
+                                            "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/people?correlationId={{customData.correlationId}}"
                                         }
                                     }
                                 },
@@ -69,7 +153,8 @@
                                         "properties": {
                                             "process": {
                                                 "enum": [
-                                                    "Systematic Program Update"
+                                                    "Withdrawal",
+                                                    "Full Surrender"
                                                 ]
                                             }
                                         }
@@ -79,16 +164,61 @@
                                             "dataEntryForm": {
                                                 "type": "string",
                                                 "title": "Open Form for Data Entry",
-                                                "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/policy-details"
+                                                "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/withdrawals/new-withdrawal?correlationId={{customData.correlationId}}&taskId={{customData.task.id}}"
                                             }
                                         }
                                     },
                                     "else": {
-                                        "properties": {
-                                            "dataEntryForm": {
-                                                "type": "string",
-                                                "title": "Open Form for Data Entry",
-                                                "default": "/policies?isReset=true?correlationId={{customData.correlationId}}"
+                                        "if": {
+                                            "properties": {
+                                                "process": {
+                                                    "enum": [
+                                                        "Systematic Program Update"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "dataEntryForm": {
+                                                    "type": "string",
+                                                    "title": "Open Form for Data Entry",
+                                                    "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/policy-details"
+                                                }
+                                            }
+                                        },
+                                        "else": {
+                                            "if": {
+                                                "properties": {
+                                                    "process": {
+                                                        "const": "New Business"
+                                                    },
+                                                    "processSubType": {
+                                                        "const": "Free Look Cancellation"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "process",
+                                                    "processSubType"
+                                                ]
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "dataEntryForm": {
+                                                        "type": "string",
+                                                        "title": "Open Form for Data Entry",
+                                                        "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/freelook/cancel-freelook"
+                                                    }
+                                                }
+                                            },
+                                            "else": {
+                                                "properties": {
+                                                    "dataEntryForm": {
+                                                        "type": "string",
+                                                        "title": "Open Form for Data Entry",
+                                                        "default": "/policies?isReset=true?correlationId={{customData.correlationId}}"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -114,7 +244,20 @@
                         }
                     },
                     "process": {
-                        "ui:widget": "hidden"
+                        "ui:widget": "hidden",
+                        "ui:dataPath": ["process"]
+                    },
+                    "processSubType": {
+                        "ui:widget": "hidden",
+                        "ui:dataPath": ["processSubType"]
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:dataPath": ["issueResolved"],
+                        "ui:hideError": true
                     },
                     "dataEntryForm": {
                         "ui:options": {
@@ -123,6 +266,41 @@
                             "omitValue": true
                         },
                         "ui:widget": "HyperLinkWidget"
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false
+                            },
+                            "ui:dataPath": ["documents"]
+                        },
+                        "ui:dataPath": ["details"]
                     }
                 }
             }

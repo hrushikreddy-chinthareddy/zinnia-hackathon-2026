@@ -58,6 +58,7 @@ const UpcomingPaymentCard = ({
     titleCase = true,
     requestSubTypes,
     displayCardWithZeroAmount = false,
+    hasProgram,
 }: UpcomingPaymentCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'premium.upcoming',
@@ -101,7 +102,8 @@ const UpcomingPaymentCard = ({
                 headerContent={<h2 className="headline-2">{title}</h2>}
                 footerContent={footerLinks}
             >
-                {hasUpcomingPayment || displayCardWithZeroAmount ? (
+                {hasProgram &&
+                (hasUpcomingPayment || displayCardWithZeroAmount) ? (
                     <>
                         <ResponsiveFlex
                             data-testid={UpcomingPaymentCardTest.ACTIVE}

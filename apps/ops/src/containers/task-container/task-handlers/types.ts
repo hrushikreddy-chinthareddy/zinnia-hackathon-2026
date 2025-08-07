@@ -23,4 +23,5 @@ export interface TaskHandler<RequestPayload, ResponseData> {
 export interface ReviewPayload {
     category: string[];
     businessProcess: string;
+    carrier?: string;
 }

@@ -294,6 +294,7 @@ export const PremiumsSubPage = () => {
                     'Systematic Program Setup',
                     'Systematic Program Update',
                 ]}
+                hasProgram={!!upcomingPayment}
             />
 
             {!isTerm && !isAnnuity && (

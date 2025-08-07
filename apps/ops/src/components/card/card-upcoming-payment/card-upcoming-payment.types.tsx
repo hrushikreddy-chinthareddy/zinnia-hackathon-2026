@@ -39,4 +39,5 @@ export type UpcomingPaymentCardProps = {
     footerLinks: FooterContent[];
     requestSubTypes?: string[];
     displayCardWithZeroAmount?: boolean;
+    hasProgram?: boolean;
 } & ClassNameProps;

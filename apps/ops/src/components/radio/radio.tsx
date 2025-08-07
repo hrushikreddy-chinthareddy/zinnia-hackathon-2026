@@ -34,6 +34,7 @@ export type RadioProps = {
     readonly?: boolean;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     alignItems?: string;
+    id?: string;
 } & Omit<RadioGroupProps, 'onChange'>;
 
 export default function Radio({
@@ -50,92 +51,117 @@ export default function Radio({
     readonly,
     className,
     alignItems = 'items-start',
+    id = '',
 }: RadioProps) {
     const classes = radioClasses(variant);
 
     const flexDirection =
         orientation === RadioOrientation.Vertical ? 'flex-col' : 'flex-row';
 
+    const createRadioChangeEvent = (
+        value: string,
+        currentValue: string | null | undefined
+    ): React.ChangeEvent<HTMLInputElement> => {
+        return {
+            target: {
+                value,
+                checked: currentValue === value,
+            },
+        } as React.ChangeEvent<HTMLInputElement>;
+    };
+
+    const handleKeyDown = (
+        e: React.KeyboardEvent<HTMLDivElement>,
+        item: { value: string | null },
+        variant: RadioVariant,
+        onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+        value?: string | null
+    ) => {
+        if (variant === RadioVariant.Inactive) {
+            return;
+        }
+
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onChange(createRadioChangeEvent(item?.value || '', value));
+        }
+    };
+
     return (
-        <div
-            className={`flex ${flexDirection} ${alignItems} gap-4`}
-            data-testid={RadioTest.Radio}
-        >
-            <FieldLabel label={label} required={required} classNames="!mb-0" />
-            {items.map((item, index) => {
-                const containerClasses = clsx('flex flex-row gap-3', {
-                    'items-start': !!item.subElement,
-                    'items-center': !item.subElement,
-                });
+        <div>
+            <FieldLabel label={label} required={required} classNames="!mb-2" />
+            <div
+                className={`flex ${flexDirection} items-start gap-4`}
+                data-testid={RadioTest.Radio}
+            >
+                {items.map((item, index) => {
+                    const containerClasses = clsx('flex flex-row gap-3', {
+                        'items-start': !!item.subElement,
+                        'items-center': !item.subElement,
+                    });
 
-                const disabledClass =
-                    item?.disabled ?? disabled
-                        ? 'cursor-not-allowed opacity-50'
-                        : 'cursor-pointer';
+                    const disabledClass =
+                        item?.disabled ?? disabled
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'cursor-pointer';
 
-                const readonlyClass = readonly
-                    ? '!cursor-not-allowed opacity-50'
-                    : '';
+                    const labelClasses = clsx('body-sm', {
+                        hidden: !!item.subElement,
+                        'pointer-events-none':
+                            disabled || variant === RadioVariant.Inactive,
+                    });
 
-                const labelClasses = clsx('body-sm', {
-                    hidden: !!item.subElement,
-                    'pointer-events-none':
-                        disabled || variant === RadioVariant.Inactive,
-                });
+                    const readonlyClass = readonly
+                        ? '!cursor-not-allowed opacity-50'
+                        : '';
 
-                return (
-                    <div
-                        key={item.value}
-                        className={`${containerClasses} ${className}`}
-                    >
-                        <input
-                            type="radio"
-                            value={item.value}
-                            className={`${classes} ${disabledClass} ${readonlyClass}`}
-                            tabIndex={0}
-                            checked={value === item.value}
-                            data-testid={dataTestId}
-                            name={name || label}
-                            id={`radio-${label}-${index}`}
-                            onChange={() => undefined}
-                            disabled={item?.disabled ?? disabled}
-                            onClick={() => {
-                                if (readonly) return;
-                                const event = {
-                                    target: {
-                                        value: item.value,
-                                        checked: value === item.value,
-                                    },
-                                } as React.ChangeEvent<HTMLInputElement>;
-                                onChange(event);
-                            }}
-                            onKeyDown={(e) => {
-                                if (variant === RadioVariant.Inactive) return;
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-
-                                    const event = {
-                                        target: {
-                                            value: item.value,
-                                            checked: value === item.value,
-                                        },
-                                    } as React.ChangeEvent<HTMLInputElement>;
-                                    onChange(event);
-                                }
-                            }}
-                        />
-                        {item.subElement}
-                        <label
-                            className={labelClasses}
-                            aria-label={`Select ${item.value}`}
-                            htmlFor={`radio-${label}-${index}`}
-                            {...(disabled && { 'aria-disabled': 'true' })}
+                    return (
+                        <div
+                            key={item.value}
+                            className={`${containerClasses} ${className}`}
                         >
-                            {item.label}
-                        </label>
-                    </div>
-                );
-            })}
+                            <input
+                                type="radio"
+                                value={item.value}
+                                className={`${classes} ${disabledClass}${readonlyClass}`}
+                                tabIndex={0}
+                                checked={value === item.value}
+                                data-testid={dataTestId}
+                                name={name || label}
+                                id={`radio-${label}-${index}-${id}`}
+                                onChange={() => undefined}
+                                disabled={item?.disabled ?? disabled}
+                                onClick={() => {
+                                    onChange(
+                                        createRadioChangeEvent(
+                                            item.value,
+                                            value
+                                        )
+                                    );
+                                }}
+                                onKeyDown={(e) =>
+                                    handleKeyDown(
+                                        e,
+                                        item,
+                                        variant,
+                                        onChange,
+                                        value
+                                    )
+                                }
+                            />
+                            {item.subElement}
+                            <label
+                                className={labelClasses}
+                                aria-label={`Select ${item.value}`}
+                                htmlFor={`radio-${label}-${index}-${id}`}
+                                {...(disabled && { 'aria-disabled': 'true' })}
+                            >
+                                {item.label}
+                            </label>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }

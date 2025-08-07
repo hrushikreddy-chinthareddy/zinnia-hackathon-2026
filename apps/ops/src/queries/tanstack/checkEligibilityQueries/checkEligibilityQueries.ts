@@ -7,6 +7,7 @@ import {
     checkEligibilitySystematicProgram,
     SystematicProgramRequestQuery,
     checkEligibilityFullSurrender,
+    checkEligibilityManageRole,
 } from '@deps/queries/api/bpm';
 import { checkEligibilityBeneficiary } from '@deps/queries/api/bpm-non-financial';
 import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
@@ -92,4 +93,12 @@ export const checkSystematicProgramEligibilityQuery = async (
         arrangementId,
         query
     );
+};
+
+export const checkManagRoleEligibilityQuery = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    role: string
+) => {
+    return await checkEligibilityManageRole(planCode, policyNumber, role);
 };
