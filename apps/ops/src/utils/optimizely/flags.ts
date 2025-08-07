@@ -157,4 +157,8 @@ export enum FEATURE_FLAGS {
     POLICY_INDEX_TABLE_VIEW = 'policy_index_table_view',
     USAGE_STATS_DASHBOARD = 'usage_stats_dashboard',
     IDN_DEATH_CLAIM_FLIC = 'claims-feature-flic-idn-death-claim',
+    OWNER_CHANGE_TRANSACTION = 'owner_change_transaction',
+    JOINT_OWNER_CHANGE_TRANSACTION = 'joint_owner_change_transaction',
+    PAYOR_CHANGE_TRANSACTION = 'payor_change_transaction',
+    THIRD_PARTY_DESIGNEE_TRANSACTION = 'third_party_designee_transaction',
 }

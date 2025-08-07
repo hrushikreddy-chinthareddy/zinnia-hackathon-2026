@@ -18,6 +18,7 @@ import TransactionNavigationButtons, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { SourceType } from '@deps/constants/policy';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
@@ -50,6 +51,7 @@ interface StartStepProps extends TransactionClickProps {
     isContinueDisabled?: boolean;
     leaveTransactionLink?: string;
     processSubType?: string[];
+    type?: SourceType;
 }
 
 const StartStep = ({
@@ -65,6 +67,7 @@ const StartStep = ({
     isContinueDisabled = false,
     leaveTransactionLink,
     processSubType,
+    type = SourceType.Document,
 }: StartStepProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -92,7 +95,10 @@ const StartStep = ({
     useEffect(() => {
         async function populateCaseSelect() {
             const noDocument = {
-                documentNumber: t('workflows.start.processWithoutDocument'),
+                documentNumber:
+                    type == SourceType.Case
+                        ? t('workflows.start.processWithoutCase')
+                        : t('workflows.start.processWithoutDocument'),
                 caseId: '',
                 value: PROCESS_WITHOUT_CASE_DOCUMENT,
             };
@@ -173,7 +179,6 @@ const StartStep = ({
             setShowSelectionError(true);
             return;
         }
-
         setShowSelectionError(false);
         goToNext();
     };
@@ -229,7 +234,13 @@ const StartStep = ({
                     <div className="flex flex-col">
                         <Label
                             className="mb-4"
-                            label={t('workflows.start.documentSelectionLabel')}
+                            label={
+                                type == 'case'
+                                    ? t('workflows.start.caseSelectionLabel')
+                                    : t(
+                                          'workflows.start.documentSelectionLabel'
+                                      )
+                            }
                             sentenceCase={false}
                             variant={LabelVariant.LabelLg}
                         />
@@ -256,7 +267,11 @@ const StartStep = ({
                                     <AssistiveText
                                         variant={AssistiveTextVariant.Info}
                                         text={
-                                            isOnBaseUpdateAssistiveText
+                                            type == 'case'
+                                                ? t(
+                                                      'workflows.start.processWithoutCaseAssistiveText'
+                                                  )
+                                                : isOnBaseUpdateAssistiveText
                                                 ? t(
                                                       'workflows.start.processWithoutDocAssistiveTextWithOnBaseUpdate'
                                                   )
@@ -269,9 +284,15 @@ const StartStep = ({
                                 {showSelectionError && (
                                     <AssistiveText
                                         variant={AssistiveTextVariant.Error}
-                                        text={t(
-                                            'workflows.start.missingSelection'
-                                        )}
+                                        text={
+                                            type == SourceType.Case
+                                                ? t(
+                                                      'workflows.start.missingCaseSelection'
+                                                  )
+                                                : t(
+                                                      'workflows.start.missingSelection'
+                                                  )
+                                        }
                                     />
                                 )}
                             </div>

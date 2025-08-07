@@ -28,6 +28,7 @@ import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQu
 import { AgentData } from '@deps/types/agents';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import ManagePeople from './manage-people';
 import {
     NameTag,
     agentDataByType,
@@ -262,97 +263,124 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                         </RadioGroup.Root>
                     </div>
 
-                    {isBeneficiarySelected && (
-                        <div className="w-full">
-                            {beneficiaryDataByType(
-                                filteredNameTags,
-                                BeneficiaryType.PRIMARY
-                            )?.length ? (
-                                <BeneficiaryCardContainer
-                                    title={t('people.primaryAllocation')}
-                                    peopleCardData={peopleCardData}
-                                    filteredData={beneficiaryDataByType(
+                    <div className="flex flex-col h-fit w-full mx-4 my-6 gap-6 md:mx-6 lg:mx-8">
+                        <div className="flex w-full flex-row items-center gap-8 bg-gray-50 px-8 py-4 align-middle">
+                            <ManagePeople policy={policyDetails} />
+                        </div>
+
+                        <div>
+                            {isBeneficiarySelected && (
+                                <div className="w-full">
+                                    {beneficiaryDataByType(
                                         filteredNameTags,
                                         BeneficiaryType.PRIMARY
-                                    )}
-                                    classNames="mb-10"
-                                    openAllocationSideSheet={openSidesheet}
-                                    type={BeneficiaryType.PRIMARY}
-                                    disabled={false}
-                                    showManageBeneficiary={true}
-                                    enableManageBeneficiary={
-                                        isEligibleBeneficiary &&
-                                        beneChangeEnabled
-                                    }
-                                />
-                            ) : null}
-                            {beneficiaryDataByType(
-                                filteredNameTags,
-                                BeneficiaryType.CONTIGENT
-                            )?.length ? (
-                                <BeneficiaryCardContainer
-                                    title={t('people.contingentAllocation')}
-                                    peopleCardData={peopleCardData}
-                                    filteredData={beneficiaryDataByType(
+                                    )?.length ? (
+                                        <BeneficiaryCardContainer
+                                            title={t(
+                                                'people.primaryAllocation'
+                                            )}
+                                            peopleCardData={peopleCardData}
+                                            filteredData={beneficiaryDataByType(
+                                                filteredNameTags,
+                                                BeneficiaryType.PRIMARY
+                                            )}
+                                            classNames="mb-10"
+                                            openAllocationSideSheet={
+                                                openSidesheet
+                                            }
+                                            type={BeneficiaryType.PRIMARY}
+                                            disabled={false}
+                                            showManageBeneficiary={true}
+                                            enableManageBeneficiary={
+                                                isEligibleBeneficiary &&
+                                                beneChangeEnabled
+                                            }
+                                        />
+                                    ) : null}
+                                    {beneficiaryDataByType(
                                         filteredNameTags,
                                         BeneficiaryType.CONTIGENT
-                                    )}
-                                    type={BeneficiaryType.CONTIGENT}
-                                    openAllocationSideSheet={openSidesheet}
-                                    disabled={false}
-                                    showManageBeneficiary={false}
-                                    enableManageBeneficiary={
-                                        isEligibleBeneficiary
-                                    }
-                                />
-                            ) : null}
-                        </div>
-                    )}
+                                    )?.length ? (
+                                        <BeneficiaryCardContainer
+                                            title={t(
+                                                'people.contingentAllocation'
+                                            )}
+                                            peopleCardData={peopleCardData}
+                                            filteredData={beneficiaryDataByType(
+                                                filteredNameTags,
+                                                BeneficiaryType.CONTIGENT
+                                            )}
+                                            type={BeneficiaryType.CONTIGENT}
+                                            openAllocationSideSheet={
+                                                openSidesheet
+                                            }
+                                            showManageBeneficiary={false}
+                                            enableManageBeneficiary={
+                                                isEligibleBeneficiary
+                                            }
+                                        />
+                                    ) : null}
+                                </div>
+                            )}
 
-                    {isAgentSelected && (
-                        <div className="w-full">
-                            {commissionAllocationData?.length ? (
-                                <BeneficiaryCardContainer
-                                    title={t('people.commissionAllocation')}
+                            {isAgentSelected && (
+                                <div className="w-full">
+                                    {commissionAllocationData?.length ? (
+                                        <BeneficiaryCardContainer
+                                            title={t(
+                                                'people.commissionAllocation'
+                                            )}
+                                            peopleCardData={peopleCardData}
+                                            filteredData={
+                                                commissionAllocationData
+                                            }
+                                            classNames="mb-10"
+                                            type={AgentType.PRIMARY}
+                                            tooltip={
+                                                t(
+                                                    'people.commissionAllocationTooltip'
+                                                ) as string
+                                            }
+                                            disabled={true}
+                                            cardDisableTooltip={
+                                                t(
+                                                    'people.cardDisableTooltip'
+                                                ) as string
+                                            }
+                                        />
+                                    ) : null}
+
+                                    {otherSectionData?.length ? (
+                                        <BeneficiaryCardContainer
+                                            title={t('people.other')}
+                                            peopleCardData={peopleCardData}
+                                            filteredData={otherSectionData}
+                                            type={AgentType.AGENT}
+                                            showAllocationBar={false}
+                                            tooltip={
+                                                t(
+                                                    'people.otherTooltip'
+                                                ) as string
+                                            }
+                                            disabled={true}
+                                            cardDisableTooltip={
+                                                t(
+                                                    'people.cardDisableTooltip'
+                                                ) as string
+                                            }
+                                        />
+                                    ) : null}
+                                </div>
+                            )}
+
+                            {!isBeneficiarySelected && !isAgentSelected && (
+                                <PeopleCardContainer
                                     peopleCardData={peopleCardData}
-                                    filteredData={commissionAllocationData}
-                                    classNames="mb-10"
-                                    type={AgentType.PRIMARY}
-                                    tooltip={
-                                        t(
-                                            'people.commissionAllocationTooltip'
-                                        ) as string
-                                    }
-                                    disabled={true}
-                                    cardDisableTooltip={
-                                        t('people.cardDisableTooltip') as string
-                                    }
+                                    filteredData={filteredNameTags}
                                 />
-                            ) : null}
-
-                            {otherSectionData?.length ? (
-                                <BeneficiaryCardContainer
-                                    title={t('people.other')}
-                                    peopleCardData={peopleCardData}
-                                    filteredData={otherSectionData}
-                                    type={AgentType.AGENT}
-                                    showAllocationBar={false}
-                                    tooltip={t('people.otherTooltip') as string}
-                                    disabled={true}
-                                    cardDisableTooltip={
-                                        t('people.cardDisableTooltip') as string
-                                    }
-                                />
-                            ) : null}
+                            )}
                         </div>
-                    )}
-
-                    {!isBeneficiarySelected && !isAgentSelected && (
-                        <PeopleCardContainer
-                            peopleCardData={peopleCardData}
-                            filteredData={filteredNameTags}
-                        />
-                    )}
+                    </div>
                 </div>
             )}
         </ChipEnterContext.Provider>

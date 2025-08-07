@@ -100,7 +100,7 @@ export const getHeaderText = (
             return <PiiWrapper>{toTitleCase(partyInfo?.fullName)}</PiiWrapper>;
 
         case PartyType.TRUST:
-            return partyType;
+            return <PiiWrapper>{toTitleCase(partyInfo?.fullName)}</PiiWrapper>;
         default:
             return partyType ?? '';
     }

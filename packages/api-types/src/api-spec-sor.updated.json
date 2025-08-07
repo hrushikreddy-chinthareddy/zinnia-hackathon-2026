@@ -14499,7 +14499,8 @@
         "enum": [
           "INDIVIDUAL",
           "ORGANIZATION",
-          "TRUST"
+          "TRUST",
+          "CUSTODIAN"
         ],
         "description": "Defines Party type example individual or Organization. For Insured this should always be Individual"
       },

@@ -717,3 +717,29 @@ export const reverseRecreateTransaction = async (
         return { status: e.response?.status };
     }
 };
+
+export const checkEligibilityManageRole = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    role: string
+): Promise<TransactionResponse> => {
+    try {
+        const { data } = await client.post<TransactionRequest, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/parties/${role}/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            `checkEligibilityManageRole::Error checking eligibility for ${role}`,
+            {
+                ...parseErrorInformation(error),
+                planCode,
+                policyNumber,
+                role,
+                file: 'bpm::checkEligibilityManageRole',
+            }
+        );
+
+        return error?.response?.data || error?.data;
+    }
+};

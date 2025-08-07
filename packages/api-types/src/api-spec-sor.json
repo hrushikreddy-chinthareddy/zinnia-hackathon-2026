@@ -13992,7 +13992,7 @@
       },
       "PartyType": {
         "type": "string",
-        "enum": ["INDIVIDUAL", "ORGANIZATION", "TRUST"],
+        "enum": ["INDIVIDUAL", "ORGANIZATION", "TRUST", "CUSTODIAN"],
         "description": "Defines Party type example individual or Organization. For Insured this should always be Individual"
       },
       "PayeeOrBeneficiary": {

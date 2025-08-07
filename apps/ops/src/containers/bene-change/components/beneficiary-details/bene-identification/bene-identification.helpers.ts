@@ -1,5 +1,7 @@
-import { Gender } from '@zinnia/api-types/types/sor';
+import { Gender, Suffix } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
+
+import { NewTrustType } from '@deps/constants/policy';
 
 export interface Errors {
     firstName?: string;
@@ -10,6 +12,13 @@ export enum TrustType {
     Corporate = 'Corporate Trust',
     Individual = 'Individual Trust',
     LookThrough = 'Look Through Trust',
+}
+
+export enum Prefix {
+    'DR' = 'DR',
+    'MR' = 'MR',
+    'MRS' = 'MRS',
+    'MS' = 'MS',
 }
 
 export const prefixOption = (t: TFunction) => [
@@ -28,6 +37,25 @@ export const prefixOption = (t: TFunction) => [
     {
         label: t('prefixOptions.ms'),
         value: 'Ms.',
+    },
+];
+
+export const newPrefixOption = (t: TFunction) => [
+    {
+        label: t('prefixOptions.dr'),
+        value: Prefix.DR,
+    },
+    {
+        label: t('prefixOptions.mr'),
+        value: Prefix.MR,
+    },
+    {
+        label: t('prefixOptions.mrs'),
+        value: Prefix.MRS,
+    },
+    {
+        label: t('prefixOptions.ms'),
+        value: Prefix.MS,
     },
 ];
 
@@ -60,23 +88,46 @@ export const trustOption = (t: TFunction) => [
 export const suffixOptions = (t: TFunction) => [
     {
         label: t('suffixOptions.jr'),
-        value: 'JR',
+        value: Suffix.JR,
     },
     {
         label: t('suffixOptions.sn'),
-        value: 'SN',
+        value: Suffix.SN,
     },
     {
         label: t('suffixOptions.i'),
-        value: 'I',
+        value: Suffix.I,
     },
     {
         label: t('suffixOptions.ii'),
-        value: 'II',
+        value: Suffix.II,
     },
     {
         label: t('suffixOptions.iii'),
-        value: 'III',
+        value: Suffix.III,
+    },
+];
+
+export const newTrustOptions = (t: TFunction) => [
+    {
+        label: t('individualTrust'),
+        value: NewTrustType.Individual,
+    },
+    {
+        label: t('corporateTrust'),
+        value: NewTrustType.Corporate,
+    },
+    {
+        label: t('testamentaryTrust'),
+        value: NewTrustType.Testamentary,
+    },
+    {
+        label: t('interVivosTrust'),
+        value: NewTrustType.InterVivos,
+    },
+    {
+        label: t('grantorTrust'),
+        value: NewTrustType.Grantor,
     },
 ];
 
