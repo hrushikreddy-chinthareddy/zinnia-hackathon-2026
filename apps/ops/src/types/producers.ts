@@ -40,6 +40,7 @@ export interface Upline {
     hierarchyId: string;
     level: number;
     role: string;
+    sellingCode: string;
 }
 
 export interface Address {

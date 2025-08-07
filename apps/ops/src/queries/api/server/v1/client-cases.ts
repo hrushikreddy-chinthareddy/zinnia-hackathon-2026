@@ -1,7 +1,7 @@
 import { toTitleCase } from '@xd/utils/dist';
 import { AxiosResponse } from 'axios';
-import { sortBy } from 'lodash';
 import get from 'lodash/get';
+import sortBy from 'lodash/sortBy';
 
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
@@ -224,7 +224,6 @@ const buildClientCaseFromNewBusiness = async (
         }
 
         // get Identifiers from newBusiness
-        let agencyId = '';
         let agentSellingCode = '';
 
         if (identifiers) {
@@ -307,12 +306,12 @@ const buildClientCaseFromNewBusiness = async (
             loggingContext
         );
 
-        if (agentHierarchy) {
-            // search to see if the agent is the actual main agency
-            // if (agentHierarchy.role === MAIN_AGENCY_ROLE) {
-            // where do i get the agencyId/hierarchyId?
-            // }
-            const { upline } = agentHierarchy;
+        const { role, upline, sellingCode } = agentHierarchy ?? {};
+        let agencyId = '';
+
+        if (role === MAIN_AGENCY_ROLE && sellingCode) {
+            agencyId = sellingCode;
+        } else if (upline) {
             const mainAgencies = upline.filter(
                 (upline) => upline.role === MAIN_AGENCY_ROLE
             );
@@ -320,19 +319,19 @@ const buildClientCaseFromNewBusiness = async (
             const mainAgency = sortedAgencies[0];
 
             if (mainAgency) {
-                // hierarchyId should be the agencyId
-                const { hierarchyId } = mainAgency;
-                if (!hierarchyId) {
-                    throwTypedError(
-                        'Agency ID was not able to be retreated',
-                        NEW_BUSINESS_API_ORIGIN
-                    );
-                } else {
-                    agencyId = hierarchyId;
-                }
+                // get the sellingCode of the maing agency to get the agencyId
+                const { sellingCode } = mainAgency;
+                agencyId = sellingCode;
             }
         }
         // *** Finish Producers Hierarchy Section ***
+
+        if (!agencyId) {
+            throwTypedError(
+                'Agency ID was not able to be retrieved',
+                NEW_BUSINESS_API_ORIGIN
+            );
+        }
 
         const agentDetails = {
             firstName,
