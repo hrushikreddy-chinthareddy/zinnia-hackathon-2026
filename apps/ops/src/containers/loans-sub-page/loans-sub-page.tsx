@@ -267,6 +267,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         'Setup Loan Repayment',
                         'Update Loan Repayment',
                     ]}
+                    hasProgram={!!upcomingLoanRepayment}
                 />
             )}
             <LoanRulesCard currency={currency} loanValues={loanValues} />

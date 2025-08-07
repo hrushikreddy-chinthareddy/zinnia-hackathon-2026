@@ -114,6 +114,7 @@ export const AnnuitizationSubPage = () => {
                     undefined
                 }
                 title={t('upcoming.title') as string}
+                hasProgram={!!upcomingPayout}
             />
             <CardSection
                 headerContent={
