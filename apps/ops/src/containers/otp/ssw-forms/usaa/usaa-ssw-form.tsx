@@ -82,7 +82,7 @@ export function UsaaSSWForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
 
     return (
         <>

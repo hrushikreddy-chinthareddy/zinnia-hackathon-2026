@@ -49,7 +49,7 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
         setFormData,
         initialForm,
         isFormStateReadOnly,
-        contractIssueState,
+        ownerStateOfResidence,
         formErrors,
         formESignatureData,
         setFormESignatureData,
@@ -75,7 +75,7 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

@@ -48,7 +48,6 @@ export function SbgcSSWForm() {
         setFormData,
         initialForm,
         isFormStateReadOnly,
-        contractIssueState,
         formESignatureData,
         setFormESignatureData,
         formErrors,
@@ -76,7 +75,7 @@ export function SbgcSSWForm() {
         !Object.values(formTpaAuthorization).every((val) => val === null);
     const ownerStateOfResidence =
         formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
