@@ -1,4 +1,3 @@
-import { FundAccountTypeEnum } from '@xd/api-types/dist/generated-types/funds';
 import {
   PartyRole,
   Policy,
@@ -14,7 +13,6 @@ import {
   FeatureType,
   LineOfBusiness,
   Frequency,
-  FundAccountType,
 } from '@zinnia/api-types/types/sor';
 import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
@@ -313,39 +311,16 @@ export const transformPolicyForFundDetails = (
   const map = new Map<string, PolicyFund>();
 
   //Loop over allocations and make sure to set percentage
-  policyAlloc.forEach(item => {
-    if (
-      !item?.fundId ||
-      !item?.fundAccountType ||
-      !isEndDatedAndEndDateUpcoming(item?.endDate)
-    ) {
-      return;
-    }
-
-    let allocationPercentage = item.allocationPercentage;
-
-    if (
-      [FundAccountType.FIXED, FundAccountTypeEnum.HOLDING].includes(
-        item.fundAccountType
-      )
-    ) {
-      const fund = policyFunds.find(fund => fund.fundId === item.fundId);
-      const segment = fund?.fundSegments?.find(
-        // holding and fixed fund types have one rate for all segments
-        // that may not be true in the future
-        // in which case this will have to change
-        segment => segment.segmentId === '1'
-      );
-      const rate = segment?.startingPrice;
-      allocationPercentage = rate;
-    }
-
-    map.set(item.fundId, {
-      ...item,
-      fundName: item?.fundName,
-      allocationPercentage: allocationPercentage,
-    });
-  });
+  policyAlloc.forEach(
+    item =>
+      item.fundId &&
+      !isEndDatedAndEndDateUpcoming(item.endDate) &&
+      map.set(item.fundId, {
+        ...item,
+        fundName: item?.fundName,
+        allocationPercentage: item?.allocationPercentage,
+      })
+  );
 
   //Loop over the funds and make sure to set total fund value
   policyFunds.forEach(
