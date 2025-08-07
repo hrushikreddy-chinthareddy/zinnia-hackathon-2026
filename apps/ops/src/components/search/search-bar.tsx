@@ -2,21 +2,15 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
-import {
-    ChangeEvent,
-    HTMLAttributes,
-    useCallback,
-    useEffect,
-    useState,
-} from 'react';
+import { HTMLAttributes, useCallback, useEffect, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
 import styles from './search-bar.module.css';
-import SearchFieldToggle from './search-field-toggle/search-field-toggle';
 import Typography, { TypographyVariant } from '../typography/typography';
+import SearchField from './search-field/search-field';
 
 export const SearchBarInitialValues: SearchViewQuery = {};
 
@@ -88,23 +82,9 @@ const SearchBar = ({
         event.preventDefault();
     };
 
-    const handleNewValue = (
-        e: ChangeEvent<HTMLInputElement>,
-        value: string,
-        key: PolicySearchKeys
-    ) => {
-        const labelsToNoTrim = ['firmName', 'taskName'];
+    const handleChange = (value: string, key: PolicySearchKeys) => {
         handleError?.(false); // reset field error message on change
-        if (!labelsToNoTrim.includes(activeLabels?.value as string)) {
-            value = (value || '').trim();
-        }
-
         setValues((prevValues) => ({ ...prevValues, [key]: value || '' }));
-
-        if (e?.target?.value?.length === 0 && typeof onClear === 'function') {
-            const activeLabelValue = activeLabels?.value;
-            onClear(activeLabelValue);
-        }
     };
 
     const handleToggle = useCallback(
@@ -171,11 +151,11 @@ const SearchBar = ({
                         </DropdownMenu.Content>
                     </DropdownMenu.Portal>
                 </DropdownMenu.Root>
-                <SearchFieldToggle
+                <SearchField
                     activeLabels={activeLabels}
-                    handleChange={handleNewValue}
                     values={values}
                     onClear={onClear}
+                    onChange={handleChange}
                 />
             </div>
             <Button

@@ -49,7 +49,12 @@ export const PolicySearchFiltersProvider = ({ children }: any) => {
 
     const clearFilters = () => {
         setShowFieldErrorMessage(false);
-        setPolicySearchFilters({ ...initialFilters });
+        const prevToggleValue = policySearchFilters.toggleValue;
+        // We want to reset all values, except for the toggle field
+        setPolicySearchFilters({
+            ...initialFilters,
+            toggleValue: prevToggleValue,
+        });
     };
 
     useEffect(() => {

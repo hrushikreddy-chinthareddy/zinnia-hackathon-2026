@@ -7,7 +7,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { ChangeEvent, useContext, useRef } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
@@ -15,27 +15,22 @@ import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
-import styles from './search-field-toggle.module.css';
+import styles from './search-field.module.css';
 
-interface SearchFieldToggleProps {
-    handleChange: (
-        e: ChangeEvent<HTMLInputElement>,
-        value: string,
-        key: PolicySearchKeys
-    ) => void;
+interface SearchFieldProps {
     activeLabels: LabelValue<PolicySearchKeys>;
+    onChange?: (value: string, key: PolicySearchKeys) => void;
     onClear?: (searchField: PolicySearchKeys | undefined) => void;
     values: SearchViewQuery;
     inputClasses?: string;
 }
 
 export const SearchFieldContainer = ({
-    handleChange,
     activeLabels,
+    onChange,
     onClear,
-    values,
     inputClasses,
-}: SearchFieldToggleProps) => {
+}: SearchFieldProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
     const {
@@ -45,11 +40,6 @@ export const SearchFieldContainer = ({
         errorMessage,
     } = activeLabels;
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const inputValue = values[activeLabels?.value || ''] || '';
-
-    const inputType = () => {
-        return 'text';
-    };
 
     const inputClass = () => {
         switch (activeLabels.value) {
@@ -67,10 +57,18 @@ export const SearchFieldContainer = ({
             inputRef.current.value = '';
         }
     };
-    const hasValue = !!inputValue;
 
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.target.value = e.target.value.replace(/[^0-9-]/g, '');
+    const [hasValue, setHasValue] = useState(false);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value !== '') {
+            setHasValue(true);
+        } else {
+            setHasValue(false);
+        }
+        if (onChange) {
+            const text = e?.target?.value || '';
+            onChange(text, policyKey as PolicySearchKeys);
+        }
     };
 
     return (
@@ -83,22 +81,16 @@ export const SearchFieldContainer = ({
             <input
                 // We're using an aria attribute here because if there are multiple inputs they couldn't use one label attached to them both
                 aria-labelledby="case-search-label"
-                type={inputType()}
                 placeholder={placeholder ? placeholder : toSentenceCase(label)}
                 className={clsx(
                     styles.input,
                     inputClass(),
-                    'text-body-sm focus:!ring-0',
+                    'text-body-sm',
                     inputClasses
                 )}
-                onChange={(e) => {
-                    const text = (e.target as HTMLInputElement).value;
-                    handleChange(e, text, policyKey as PolicySearchKeys);
-                }}
                 key={activeLabels.value}
                 ref={inputRef}
-                value={inputValue}
-                onInput={activeLabels.value === 'ssn' ? handleInput : undefined}
+                onChange={handleChange}
             />
             {hasValue && (
                 <Button
@@ -123,11 +115,7 @@ export const SearchFieldContainer = ({
     );
 };
 
-const SearchFieldToggle = ({
-    activeLabels,
-    values,
-    ...rest
-}: SearchFieldToggleProps) => {
+const SearchField = ({ activeLabels, values, ...rest }: SearchFieldProps) => {
     let fields;
 
     if (activeLabels) {
@@ -160,4 +148,4 @@ const SearchFieldToggle = ({
     return <>{fields}</>;
 };
 
-export default SearchFieldToggle;
+export default SearchField;

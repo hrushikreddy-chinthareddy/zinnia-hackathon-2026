@@ -15,7 +15,7 @@ import { ChangeEvent, useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ClickContainer from '@deps/components/click-container/click-container';
-import inputStyles from '@deps/components/search/search-field-toggle/search-field-toggle.module.css';
+import inputStyles from '@deps/components/search/search-field/search-field.module.css';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { browserLogError } from '@deps/utils/browser-logging';

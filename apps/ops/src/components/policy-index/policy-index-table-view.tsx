@@ -208,6 +208,9 @@ export const PolicyIndexTableView = ({
         // This removes all falsy values from the search query
         // This feels like the wrong location to strip the values but I'm isolating to Policy.
         Object.keys(value).forEach((key) => {
+            const trimmedValue = value[key as keyof typeof value]?.trim();
+            value[key as keyof typeof value] = trimmedValue;
+
             if (isNullEmptyOrUndefined(value[key as keyof typeof value])) {
                 delete value[key as keyof typeof value];
             }
@@ -242,6 +245,11 @@ export const PolicyIndexTableView = ({
         setPolicySearchFilters(newSearchValues);
     };
 
+    const handleClear = async () => {
+        await removePolicyNumberFromQuery(router);
+        clearPolicySearchFilters();
+    };
+
     const showPagination = !!policyData?.total && !!policyData?.results?.length;
 
     return (
@@ -258,10 +266,7 @@ export const PolicyIndexTableView = ({
                     onSearch={handleSearch}
                     toggleLabels={toggleLabels}
                     initialToggleValue={policySearchFilters.toggleValue}
-                    onClear={async () => {
-                        await removePolicyNumberFromQuery(router);
-                        clearPolicySearchFilters();
-                    }}
+                    onClear={handleClear}
                     onToggle={onToggle}
                     handleError={setShowFieldErrorMessage}
                 />
