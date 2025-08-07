@@ -243,7 +243,7 @@ export const getFormattedDateTime = (date: Date) => {
     const formatter = new Intl.DateTimeFormat('en-US', {
         dateStyle: 'medium',
         timeStyle: 'short',
-        timeZone: 'CST',
+        timeZone: 'CST', // FIXME: this probably should not be hardcoded to Central Standard Time
     });
     return formatter.format(date);
 };

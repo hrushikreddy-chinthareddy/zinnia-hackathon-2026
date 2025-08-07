@@ -11,7 +11,7 @@ const transactionsMock = [
         arrangementType: 'Sys Partial Wthdrwl (Gross)',
         amountType: '4',
         amount: 1000,
-        terminateDate: '2025-08-03',
+        terminateDate: '2025-08-03T09:00:00',
         action: 'DELETE',
         actionStatus: 'SUCCESS',
     },
@@ -20,7 +20,7 @@ const transactionsMock = [
         arrangementType: 'Sys Partial Wthdrwl (Net)',
         amountType: '4',
         amount: 101,
-        terminateDate: '2025-08-04',
+        terminateDate: '2025-08-04T09:00:00',
         action: 'TERMINATE',
         actionStatus: 'SUCCESS',
     },
@@ -32,7 +32,7 @@ const failTransactionsMock = [
         arrangementType: 'Sys Partial Wthdrwl (Gross)',
         amountType: '4',
         amount: 1000,
-        terminateDate: '2025-08-03',
+        terminateDate: '2025-08-05T09:00:00',
         action: 'DELETE',
         actionStatus: 'FAIL',
     },
@@ -41,7 +41,7 @@ const failTransactionsMock = [
         arrangementType: 'Sys Partial Wthdrwl (Net)',
         amountType: '4',
         amount: 101,
-        terminateDate: undefined,
+        terminateDate: '2025-08-06T09:00:00',
         action: 'TERMINATE',
         actionStatus: 'FAIL',
     },
@@ -83,7 +83,7 @@ describe('##TransactionsTable', () => {
             screen.getByText('transactionListing.labels.terminated')
         ).toBeInTheDocument();
         expect(
-            screen.getByText('transactionListing.labels.on August 3, 2025')
+            screen.getByText('transactionListing.labels.on August 4, 2025')
         ).toBeInTheDocument();
         expect(screen.getByText('$101.00')).toBeInTheDocument();
     });
@@ -100,7 +100,7 @@ describe('##TransactionsTable', () => {
             screen.getByText('transactionListing.labels.deleteFailed')
         ).toBeInTheDocument();
         expect(
-            screen.getByText('transactionListing.labels.on August 3, 2025')
+            screen.getByText('transactionListing.labels.on August 5, 2025')
         ).toBeInTheDocument();
         expect(screen.getByText('$1,000.00')).toBeInTheDocument();
 
@@ -112,7 +112,7 @@ describe('##TransactionsTable', () => {
             screen.getByText('transactionListing.labels.terminateFailed')
         ).toBeInTheDocument();
         expect(
-            screen.getByText('transactionListing.labels.on August 3, 2025')
+            screen.getByText('transactionListing.labels.on August 6, 2025')
         ).toBeInTheDocument();
         expect(screen.getByText('$101.00')).toBeInTheDocument();
     });
@@ -125,7 +125,7 @@ describe('##TransactionsTable', () => {
                 arrangementType: 'Sys Partial Wthdrwl (Net)',
                 amountType: '4',
                 amount: 100 + i,
-                terminateDate: '2025-08-04',
+                terminateDate: '2025-08-04T09:00:00',
                 action: 'TERMINATE',
                 actionStatus: 'SUCCESS',
             };
@@ -149,7 +149,7 @@ describe('##TransactionsTable', () => {
                 arrangementType: 'Sys Partial Wthdrwl (Net)',
                 amountType: '4',
                 amount: 100 + i,
-                terminateDate: '2025-08-04',
+                terminateDate: '2025-08-04T09:00:00',
                 action: 'TERMINATE',
                 actionStatus: 'SUCCESS',
             };
