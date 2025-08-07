@@ -36,7 +36,6 @@ export default function SbgcWithdrawalForm() {
         setFormData,
         initialForm,
         isFormStateReadOnly,
-        contractIssueState,
         formProgram,
         formESignatureData,
         setFormESignatureData,
@@ -84,7 +83,7 @@ export default function SbgcWithdrawalForm() {
     const ownerStateOfResidence =
         formParty?.parties?.[0]?.addresses?.[0]?.state;
     const ownerIsVirginiaResident = ownerStateOfResidence === USStates.VIRGINIA;
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedState(ownerStateOfResidence ?? '');
 
     return (
         <>

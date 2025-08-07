@@ -46,7 +46,6 @@ export function PrdnSSWForm() {
         isFormStateReadOnly,
         ownerStateOfResidence,
         setOwnerStateOfResidence,
-        contractIssueState,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -74,7 +73,7 @@ export function PrdnSSWForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
 
     return (
         <>

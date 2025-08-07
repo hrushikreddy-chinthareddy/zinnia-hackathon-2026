@@ -117,7 +117,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         }));
         setSswProgramFrequency(frequency);
     };
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
     const isJointOwnerAvailable = !!formParty?.parties?.find(
         (item) => item.partyRoleType === PartyRoles.JOINT_OWNER
     );

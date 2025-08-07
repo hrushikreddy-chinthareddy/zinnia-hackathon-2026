@@ -50,10 +50,10 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
         setFormData,
         initialForm,
         isFormStateReadOnly,
-        contractIssueState,
         formErrors,
         formESignatureData,
         setFormESignatureData,
+        ownerStateOfResidence,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -76,7 +76,7 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

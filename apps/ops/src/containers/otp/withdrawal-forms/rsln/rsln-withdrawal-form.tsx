@@ -100,7 +100,7 @@ export default function RslnWithdrawalForm() {
         },
         [setOwnerAcknowledgement]
     );
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedState(ownerStateOfResidence ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

@@ -50,7 +50,6 @@ export function RslnSSWForm() {
         isFormStateReadOnly,
         ownerStateOfResidence,
         setOwnerStateOfResidence,
-        contractIssueState,
         formTpaAuthorization,
         formESignatureData,
         setFormESignatureData,
@@ -82,7 +81,7 @@ export function RslnSSWForm() {
         }
     }, [formParty]);
 
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);

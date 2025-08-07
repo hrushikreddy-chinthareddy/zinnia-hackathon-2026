@@ -98,7 +98,7 @@ export default function NasuWithdrawalForm() {
               parties as any[],
               partyRoles as PolicyPartyRoles[]
           );
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedState(ownerStateOfResidence ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

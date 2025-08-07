@@ -81,7 +81,7 @@ export function NassauSSWForm() {
     const shouldShowDOBInOl4573 = handleShouldShowDOBInOl4573(
         parties as LifeCadParty[]
     );
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
 
     return (
         <>
