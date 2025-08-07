@@ -1,0 +1,49 @@
+import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+
+import { SelectBankWrapper } from '@/components/workflows/surrender/forms/SelectBankWrapper';
+import Surrender from '@/components/workflows/surrender/Surrender';
+import { getPolicyProfileData } from '@/services';
+import { getCarrierConfig } from '@/services/carrier-config';
+import { getPaymentMethods } from '@/services/payment-methods';
+import { PolicyRequestInputsParams } from '@/types/policy';
+import { filterItemsWithPastEndDate } from '@/utils/data';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
+
+const BankPage = async ({ params }: PolicyRequestInputsParams) => {
+  const { planCode, policyNumber } = params;
+  const loggingContext = await buildCommonLogContext();
+  const { payment } = await getCarrierConfig();
+
+  const { data: initialPaymentMethods } = await getPaymentMethods(
+    {
+      policyNumber,
+      planCode,
+    },
+    loggingContext
+  );
+
+  const { data: policyData } = await getPolicyProfileData(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
+
+  const addresses = filterItemsWithPastEndDate(policyData?.addresses);
+
+  return (
+    <Surrender currentStepOverride={4}>
+      <SelectBankWrapper
+        policyNumber={policyNumber}
+        planCode={planCode}
+        initialPaymentMethods={initialPaymentMethods || []}
+        lineOfBusiness={LineOfBusiness.LIFE}
+        paymentProvider={payment.provider}
+        activeAddresses={addresses}
+      />
+    </Surrender>
+  );
+};
+
+export default BankPage;

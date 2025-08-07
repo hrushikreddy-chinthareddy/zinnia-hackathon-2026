@@ -28,7 +28,9 @@ export const SystematicPremiums = ({
     primary: {
       text: 'Back to contract overview',
       onClick: () => {
-        router.push(`/coverage/policies/${planCode}/${policyNumber}`);
+        router.push(
+          `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}`
+        );
       },
     },
     secondary: null,
@@ -38,7 +40,8 @@ export const SystematicPremiums = ({
   const baseTransactionUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/systematic-premium`;
 
   if (!state.activeArrangementId?.length) {
-    SystematicPremiumStages[SystematicPremiumSteps.AMOUNT].title = 'Manage Premium Autopay'
+    SystematicPremiumStages[SystematicPremiumSteps.AMOUNT].title =
+      'Manage Premium Autopay';
   }
 
   return (

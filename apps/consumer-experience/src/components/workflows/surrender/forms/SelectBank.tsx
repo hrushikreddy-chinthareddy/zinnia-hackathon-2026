@@ -4,136 +4,73 @@ import {
   DisbursementPaymentForm,
   PaymentForm,
 } from '@xd/api-types/dist/generated-types/bpm';
-import { Address as AddressType } from '@xd/api-types/dist/generated-types/sor';
-import { toSentenceCase } from '@xd/utils';
-import { countryCodeToName } from '@xd-components/utils/Adresses';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { Address } from '@xd/api-types/dist/generated-types/sor';
+import { toSentenceCase } from '@xd/utils/dist';
+import { countryCodeToName } from '@xd/xd-components/src/utils/Adresses';
 import {
   AssistiveText,
   AssistiveTextVariant,
   IconType,
   Radio,
   Label,
+  Address as AddressComponent,
 } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
-import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
+import { EditBankSidesheet } from '@/components/edit-bank/EditBankSidesheet';
 import { FieldData } from '@/components/field-data/FieldData';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
-import { BankDetail } from '@/components/person-data/types';
+import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPaymentMethod';
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { AccountType } from '@/components/pii/AccountType';
-import { Address } from '@/components/pii/Address';
 import { BankName } from '@/components/pii/BankName';
 import {
   distributionMethodStepSchema,
-  WithdrawalsAction,
-} from '@/components/providers/withdrawals/types';
-import { useWithdrawals } from '@/components/providers/withdrawals/useWithdrawals';
+  SurrenderAction,
+} from '@/components/providers/surrender/types';
+import { useSurrender } from '@/components/providers/surrender/useSurrender';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
-import { PolicyParty } from '@/types/policy';
+import { PaymentMethod } from '@/types/payment';
 
-import { default as styles } from '../Withdrawals.module.css';
+import { default as styles } from '../Surrender.module.css';
 
 export const SelectBank = ({
-  activeAddresses,
   activeBanks,
-  parties = [],
+  activeAddresses,
+  addBankEnabled = false,
+  editBankEnabled = false,
+  onAddPaymentMethod,
 }: {
-  parties?: PolicyParty[];
-  activeAddresses: AddressType[];
-  activeBanks: BankDetail[];
-  lineOfBusiness: LineOfBusiness;
+  activeBanks: PaymentMethod[];
+  activeAddresses: Address[];
+  addBankEnabled?: boolean;
+  editBankEnabled?: boolean;
+  onAddPaymentMethod: () => void;
 }) => {
-  const { state, dispatch } = useWithdrawals();
+  const { state, dispatch } = useSurrender();
   const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
   const { planCode, policyNumber, lineOfBusinessUrl } = usePolicyUrlInputs();
 
   const defaultBank = activeBanks[0];
+  const defaultAddress = activeAddresses[0];
   const form = useForm<z.infer<typeof distributionMethodStepSchema>>({
     resolver: zodResolver(distributionMethodStepSchema),
     defaultValues: {
       distributionType: state.distributionMethodStep.distributionType || 'ACH',
     },
   });
+  const distributionMethod = form.watch('distributionType');
 
   const addBankUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile#addBankSection`;
-  const profileUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile`;
-
-  const selectedPartyId = state.payeeStep?.payeePartyId;
-  const selectedParty = parties.find(
-    party => party.partyId === selectedPartyId
-  );
-  const defaultAddress = selectedParty?.addresses?.[0];
-
-  useEffect(() => {
-    if (!selectedParty) return;
-    const payload = {
-      distributionType: state.distributionMethodStep.distributionType,
-      address: state.distributionMethodStep.address,
-      bank: state.distributionMethodStep.bank,
-    };
-
-    const selectedAddress = payload.address?.addressId;
-    const selectedBank = payload.bank?.accountNumber;
-
-    if (selectedBank && selectedAddress) {
-      return;
-    }
-
-    if (!selectedAddress) {
-      const defaultAddress = activeAddresses[0];
-
-      payload.address = {
-        addressId: defaultAddress?.addressId,
-        addrCountry: defaultAddress?.country,
-        city: defaultAddress?.city,
-        state: defaultAddress?.state,
-        zipCode: defaultAddress?.zipCode,
-        addrLine1: defaultAddress?.addressLine1,
-        addrLine2: defaultAddress?.addressLine2,
-        addrLine3: defaultAddress?.addressLine3,
-        zipExt: defaultAddress?.zipCodeExtension,
-      };
-    }
-
-    if (!selectedBank) {
-      const defaultBank = activeBanks[0];
-      payload.bank = {
-        accountNumber: defaultBank?.accountNumber,
-        bankId: defaultBank?.bankId,
-        branchName: defaultBank?.branchName,
-        accountType: defaultBank?.accountType,
-        autopayEnabled: defaultBank?.autopayEnabled,
-      };
-    }
-
-    dispatch({
-      type: WithdrawalsAction.SET_WITHDRAWAL_DISTRIBUTION_METHOD_STEP,
-      payload: {
-        distributionMethodStep: payload,
-      },
-    });
-  }, [
-    activeAddresses,
-    activeBanks,
-    dispatch,
-    selectedParty,
-    state.distributionMethodStep.address,
-    state.distributionMethodStep.bank,
-    state.distributionMethodStep.bank?.accountNumber,
-    state.distributionMethodStep.distributionType,
-  ]);
-
-  const distributionMethod = form.watch('distributionType');
+  const ownerProfileUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/profile`;
 
   const onSubmit: SubmitHandler<
     z.infer<typeof distributionMethodStepSchema>
@@ -149,17 +86,11 @@ export const SelectBank = ({
       ) || defaultAddress;
 
     dispatch({
-      type: WithdrawalsAction.SET_WITHDRAWAL_DISTRIBUTION_METHOD_STEP,
+      type: SurrenderAction.SET_SURRENDER_DISTRIBUTION_METHOD_STEP,
       payload: {
         distributionMethodStep: {
           distributionType: data.distributionType,
-          bank: {
-            accountNumber: selectedBank?.accountNumber,
-            bankId: selectedBank?.bankId,
-            branchName: selectedBank?.branchName,
-            accountType: selectedBank?.accountType,
-            autopayEnabled: selectedBank?.autopayEnabled,
-          },
+          bank: selectedBank,
           address: {
             addressId: selectedAddress?.addressId,
             addrCountry: selectedAddress?.country,
@@ -174,7 +105,6 @@ export const SelectBank = ({
         },
       },
     });
-
     router.push(stepInfo.nextStepUrl);
   };
 
@@ -191,7 +121,16 @@ export const SelectBank = ({
         ></AssistiveText>
       )}
       <div radioGroup="payee" className={styles.radioGroup}>
-        <Label labelFor="payee">How should the withdrawal be sent?</Label>
+        <Label
+          interactiveElements={[
+            <LabelPopover key="info" title="popover title">
+              this is some very Who info
+            </LabelPopover>,
+          ]}
+          labelFor="payee"
+        >
+          How should the payment be sent?
+        </Label>
         <Controller
           control={form.control}
           name="distributionType"
@@ -208,7 +147,6 @@ export const SelectBank = ({
                   value: PaymentForm.ACH,
                 },
                 {
-                  disabled: !defaultAddress?.addressLine1?.length,
                   key: PaymentForm.CHECK,
                   label: 'Paper check (mailed to your address)',
                   ariaLabel: 'Paper check (mailed to your address)',
@@ -254,7 +192,7 @@ export const SelectBank = ({
                         </Label>
                       }
                     >
-                      <Address
+                      <AddressComponent
                         addrCountry={countryCodeToName(address.country)}
                         city={address.city}
                         state={address.state}
@@ -286,8 +224,8 @@ export const SelectBank = ({
           <div className={`my-lg mb-none ${styles.disclaimer}`}>
             <p className="typography-content-body-sm">
               Want to send a check to another address? Go to{' '}
-              <Link isInternal href={profileUrl}>
-                Your Profile
+              <Link isInternal href={ownerProfileUrl}>
+                Owner Profile
               </Link>{' '}
               to add. If you&apos;re not seeing the address you want to mail to,
               give us a call at <CarrierPhoneNumber />.
@@ -345,6 +283,7 @@ export const SelectBank = ({
                         />
                       )}
                       <input
+                        {...form.register('bank.accountNumber')}
                         style={{ position: 'absolute', opacity: 0 }}
                         value={bankDetail.accountNumber}
                         type="radio"
@@ -354,30 +293,64 @@ export const SelectBank = ({
                           defaultBank?.accountNumber ===
                           bankDetail.accountNumber
                         }
-                        {...form.register('bank.accountNumber')}
+                        onChange={e => {
+                          const selectedBank = activeBanks.find(
+                            bank => bank.accountNumber === e.target.value
+                          );
+                          if (!selectedBank) {
+                            form.setError('bank.accountNumber', {
+                              message: 'Bank account not found',
+                            });
+                          }
+                          form.setValue('bank.accountNumber', e.target.value);
+                          form.setValue('bank.bankId', selectedBank?.bankId);
+                          form.setValue(
+                            'bank.branchName',
+                            selectedBank?.branchName
+                          );
+                          form.setValue(
+                            'bank.accountType',
+                            selectedBank?.accountType
+                          );
+                          form.setValue(
+                            'bank.autopayEnabled',
+                            selectedBank?.autopayEnabled
+                          );
+                        }}
                       />
+                      {editBankEnabled && <EditBankSidesheet />}
                     </label>
                   );
                 })}
               </div>
+              {form.formState.errors.bank?.accountNumber?.message && (
+                <AssistiveText
+                  text={form.formState.errors.bank.accountNumber.message}
+                  variant={AssistiveTextVariant.Error}
+                ></AssistiveText>
+              )}
             </div>
           )}
-          <div className={`my-lg mb-none ${styles.disclaimer}`}>
-            <p className="typography-content-body-sm">
-              Want to pay with another bank account? Go to to{' '}
-              <ConfirmDialog
-                confirmCallback={() => router.push(addBankUrl)}
-                inline
-                linkText="banking details"
-                confirmDescription="Navigate to the profile page and open the add bank sidesheet"
-                message="If you leave now, your withrawal won't be submitted and you will have to start over."
-                cancelDescription="Stay on the withdrawal page"
-                title="Leave withdrawal?"
-              ></ConfirmDialog>{' '}
-              to add. If you're not seeing the account you want to pay with,
-              give us a call at <CarrierPhoneNumber />.
-            </p>
-          </div>
+
+          {addBankEnabled ? (
+            <div className={styles.addBank}>
+              <PaymentusAddPaymentMethod
+                policyNumber={policyNumber}
+                onAddPaymentMethod={onAddPaymentMethod}
+              />
+            </div>
+          ) : (
+            <div className={`my-lg mb-none ${styles.disclaimer}`}>
+              <p className="typography-content-body-sm">
+                Want to pay with another bank account? Go to to{' '}
+                <Link href={addBankUrl} isInternal>
+                  banking details
+                </Link>{' '}
+                to add. If you're not seeing the account you want to pay with,
+                give us a call at <CarrierPhoneNumber />.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </form>

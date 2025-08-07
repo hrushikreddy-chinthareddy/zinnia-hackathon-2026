@@ -1,32 +1,35 @@
 'use client';
 
+import { LineOfBusiness } from '@xd/api-types/dist/generated-types/bpm';
 import { useRouter } from 'next/navigation';
 
-import { WithdrawalSteps } from '@/components/providers/withdrawals/types';
+import { SurrenderSteps } from '@/components/providers/surrender/types';
 import { SteppedWorkflow } from '@/components/stepped-workflow/SteppedWorkflow';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 
 import { stepsInfo } from './steps';
 
-interface WithdrawalsProps {
+interface SurrenderProps {
   currentStepOverride: number;
-  planCode: string;
-  policyNumber: string;
   children?: React.ReactNode;
 }
+const SurrenderStages = stepsInfo;
 
-const WithdrawalStages = stepsInfo;
-
-export const Withdrawals = ({
+export default function Surrender({
   currentStepOverride,
   children,
-}: WithdrawalsProps) => {
+}: SurrenderProps) {
   const router = useRouter();
   const { lineOfBusinessUrl, planCode, policyNumber } = usePolicyUrlInputs();
 
-  WithdrawalStages[WithdrawalSteps.SUBMITTED].actions = {
+  const submitBtnText =
+    lineOfBusinessUrl === LineOfBusiness.ANNUITY
+      ? 'Back to contract overview'
+      : 'Back to policy overview';
+
+  SurrenderStages[SurrenderSteps.SUBMITTED].actions = {
     primary: {
-      text: 'Back to contract overview',
+      text: submitBtnText,
       onClick: () => {
         router.push(
           `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}`
@@ -36,21 +39,21 @@ export const Withdrawals = ({
     secondary: null,
   };
 
-  const cancelUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}`;
-  const baseUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/withdrawal`;
+  const cancelUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/account/surrender`;
+  const baseUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/account/surrender`;
   const returnUrl = cancelUrl;
 
   return (
     <SteppedWorkflow
       returnUrl={returnUrl}
       baseUrl={baseUrl}
-      cancelTitleText="Leave this withdrawal?"
-      cancelBodyText="Are you sure you want to cancel this withdrawal?"
+      cancelTitleText="Leave this surrender?"
+      cancelBodyText="Are you sure you want to cancel surrendering your policy?"
       cancelUrl={cancelUrl}
       currentStepOverride={currentStepOverride}
-      workflowSteps={Object.values(WithdrawalStages)}
+      workflowSteps={Object.values(SurrenderStages)}
     >
       {children}
     </SteppedWorkflow>
   );
-};
+}

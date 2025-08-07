@@ -109,7 +109,7 @@ export default async function SurrenderPolicy({
               {isEligibleForSurrender ? (
                 <Link
                   // @TODO: CUI-919 replace with correct route when implementing surrender flow with stepped workflow
-                  href={`/coverage/policies/${planCode}/${policyNumber}/surrender/confirm`}
+                  href={`/coverage/policies/${planCode}/${policyNumber}/surrender/information`}
                   role="link"
                   text="Surrender policy"
                 />
