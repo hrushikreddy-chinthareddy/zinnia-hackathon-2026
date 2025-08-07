@@ -103,16 +103,16 @@ const buildClientCaseFromNewBusiness = async (
             NEW_BUSINESS_API_ORIGIN
         );
     } else {
-        const { personalInformation, address } = insuredParty;
+        const { personalInformation } = insuredParty;
 
-        if (!address) {
+        const issueState = newBusinessObject?.policy?.issueState; // ZDR-2590
+
+        if (!issueState) {
             throwTypedError(
-                'Insured address information is missing',
+                'Issue State is missing',
                 NEW_BUSINESS_API_ORIGIN
             );
         }
-
-        const issueState = newBusinessObject?.policy?.issueState; // ZDR-2590
 
         const clientCaseTitle = 'Untitled Client Case';
 
