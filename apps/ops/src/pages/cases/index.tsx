@@ -502,6 +502,7 @@ const CaseManagementDashboard = ({
                 authorizedCarriers={authorizedCarriers}
                 filters={caseManagementFilters.additionalFilters}
                 setCaseManagementFilters={setCaseManagementFilters}
+                currentSearchValue={currentSearchValue}
                 closeSideSheet={() => sideSheet.handleOpen(false)}
             />
         );
