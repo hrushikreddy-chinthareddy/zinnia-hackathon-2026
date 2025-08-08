@@ -1342,10 +1342,6 @@ export const ParticipantCompanies = [
         code: '4701',
         companyName: 'STANDARD INSURANCE COMPANY (4701)',
     },
-    {
-        code: '0226',
-        companyName: 'National Financial Services (0226)',
-    },
 ];
 
 export enum SignVerificationReason {

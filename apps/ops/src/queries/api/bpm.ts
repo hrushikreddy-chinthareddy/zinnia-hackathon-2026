@@ -324,7 +324,7 @@ export const checkEligibilityFullSurrender = async (
                     disbursementType: '',
                     disbursementPaymentForm: '',
                 },
-                
+
                 charges: null,
             }
         );
