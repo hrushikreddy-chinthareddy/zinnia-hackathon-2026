@@ -117,7 +117,7 @@ const buildClientCaseFromNewBusiness = async (
             firstName,
             lastName,
             dateOfBirth,
-            gender: sexAtBirth,
+            birthSex: sexAtBirth,
         } = personalInformation;
 
         const insuredPartyMissingFields = validateRequiredFields(
