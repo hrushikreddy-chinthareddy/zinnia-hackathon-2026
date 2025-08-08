@@ -54,7 +54,7 @@ export interface SideSheetRefineResultsProps {
     setCaseManagementFilters: Dispatch<SetStateAction<CaseSearchFilters>>;
     closeSideSheet: () => void;
     authorizedCarriers: string[];
-    currentSearchValue: SearchViewQuery;
+    currentSearchValue?: SearchViewQuery;
 }
 
 export default function SideSheetRefineResults({
@@ -66,8 +66,6 @@ export default function SideSheetRefineResults({
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
-
-    console.log({ currentSearchValue });
 
     const carrierFilterItems = authorizedCarriers.map((carrierCode: string) => {
         const valueAndDisplay =
@@ -442,7 +440,7 @@ export default function SideSheetRefineResults({
 
         setCaseManagementFilters((prevFilters) => ({
             ...prevFilters,
-            searchValue: currentSearchValue,
+            searchValue: currentSearchValue || {},
             offset: 0,
             additionalFilters,
         }));
@@ -511,7 +509,7 @@ export default function SideSheetRefineResults({
     const handleReset = () => {
         setCaseManagementFilters((prevFilters) => ({
             ...prevFilters,
-            searchValue: currentSearchValue,
+            searchValue: currentSearchValue || {},
             offset: 0,
             additionalFilters: initialAdditionalFilters,
         }));
