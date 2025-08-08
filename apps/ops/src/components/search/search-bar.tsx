@@ -25,6 +25,7 @@ interface SearchBarProps
     formClasses?: string;
     handleError?: (bool: boolean) => void;
     disabled?: boolean;
+    onChangeCallback?: (value: string, key: PolicySearchKeys) => void;
 }
 
 const SearchBar = ({
@@ -37,6 +38,7 @@ const SearchBar = ({
     className,
     handleError,
     disabled = false,
+    onChangeCallback,
 }: SearchBarProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const getToggleLabel = useCallback(
@@ -84,6 +86,7 @@ const SearchBar = ({
 
     const handleChange = (value: string, key: PolicySearchKeys) => {
         handleError?.(false); // reset field error message on change
+        onChangeCallback?.(value, key);
         setValues((prevValues) => ({ ...prevValues, [key]: value || '' }));
     };
 
