@@ -57,9 +57,7 @@ const SignatureStep = ({
             role.toUpperCase() === Roles.PAYOR
                 ? ''
                 : existingRoleData?.[0]?.party?.partyId ?? '',
-            role.toUpperCase() === Roles.THIRDPARTYDESIGNEE
-                ? PolicyRole.THIRDPARTYDESIGNEE
-                : (toTitleCase(role) as PolicyRole),
+            role,
             buildRoleChangeRequestBody(roleData, role)
         );
     };

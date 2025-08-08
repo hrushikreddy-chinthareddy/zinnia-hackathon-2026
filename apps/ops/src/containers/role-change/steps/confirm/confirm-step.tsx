@@ -1,4 +1,3 @@
-import { toTitleCase } from '@xd/utils/dist';
 import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -65,9 +64,7 @@ const ConfirmStep = ({
         const response = await submitRoleChange(
             policy.product?.planCode,
             policy.policyNumber,
-            role.toUpperCase() === Roles.THIRDPARTYDESIGNEE
-                ? PolicyRole.THIRDPARTYDESIGNEE
-                : (toTitleCase(role) as PolicyRole),
+            role,
             role.toUpperCase() === Roles.THIRDPARTYDESIGNEE ? '' : partyId,
             roleBody
         );
