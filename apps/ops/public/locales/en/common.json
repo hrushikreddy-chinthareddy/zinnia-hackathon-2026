@@ -881,7 +881,8 @@
             "validationStatusLabel": "Validation status",
             "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlinkText": "Submit a help desk ticket",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on."
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
             "header": "Confirm",

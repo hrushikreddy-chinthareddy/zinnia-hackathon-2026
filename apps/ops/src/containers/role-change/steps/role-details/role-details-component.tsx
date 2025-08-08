@@ -219,8 +219,7 @@ const RoleDetailsComponent = ({
                         ) : (
                             <label
                                 className={`${labelClasses} ${
-                                    role ==
-                                    PolicyRole.THIRDPARTYDESIGNEE.toUpperCase()
+                                    role == PolicyRole.THIRDPARTYDESIGNEE
                                         ? 'pointer-events-none opacity-50 cursor-not-allowed'
                                         : 'cursor-pointer'
                                 }`}

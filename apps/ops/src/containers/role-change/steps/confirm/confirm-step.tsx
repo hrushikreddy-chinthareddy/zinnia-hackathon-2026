@@ -65,9 +65,7 @@ const ConfirmStep = ({
         const response = await submitRoleChange(
             policy.product?.planCode,
             policy.policyNumber,
-            role.toUpperCase() === Roles.THIRDPARTYDESIGNEE
-                ? PolicyRole.THIRDPARTYDESIGNEE
-                : (toTitleCase(role) as PolicyRole),
+            role,
             role.toUpperCase() === Roles.THIRDPARTYDESIGNEE ? '' : partyId,
             roleBody
         );
