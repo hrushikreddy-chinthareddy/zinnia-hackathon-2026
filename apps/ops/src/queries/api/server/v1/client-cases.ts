@@ -108,10 +108,7 @@ const buildClientCaseFromNewBusiness = async (
         const issueState = newBusinessObject?.policy?.issueState; // ZDR-2590
 
         if (!issueState) {
-            throwTypedError(
-                'Issue State is missing',
-                NEW_BUSINESS_API_ORIGIN
-            );
+            throwTypedError('Issue State is missing', NEW_BUSINESS_API_ORIGIN);
         }
 
         const clientCaseTitle = 'Untitled Client Case';

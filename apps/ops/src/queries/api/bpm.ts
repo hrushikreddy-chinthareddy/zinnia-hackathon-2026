@@ -328,8 +328,7 @@ export const checkEligibilityFullSurrender = async (
             }
         );
         return data;
-    } 
-    catch (error: any) {
+    } catch (error: any) {
         browserLogError('FullSurrender::Eligibility check failed', {
             ...parseErrorInformation(error),
             payload: { planCode, policyNumber },
