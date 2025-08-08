@@ -1,17 +1,16 @@
 import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
-import { CarrierName } from '@zinnia/bloom/components';
 import { useEffect } from 'react';
 
 import { getIllustrationQueryOptions } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
+import { ProductTypes } from '@deps/types/product';
 
 import IllustrationDetailsContent from './content/illustration-details-content';
 import IllustrationDetailsHeader from './header/illustration-details-header';
 import NoIllustration from './no-illustration';
 import IllustrationDetailsToolbar from './toolbar/illustration-details-toolbar';
+import { getProductCarrierName } from '../../helpers/get-product-carrier-name';
 import { IllustrationDetailProvider } from '../../providers/IllustrationDetailProvider';
 import { useSelectedIllustration } from '../../providers/SelectedIllustrationProvider';
 
@@ -55,27 +54,16 @@ export default function IllustrationDetails({
         }
     }, [newBusinesResponse]);
 
-    if (!illustration) {
-        return <NoIllustration />;
-    }
-
-    const getCarrierName = (carrierCode?: string) => {
-        if (!carrierCode) {
-            return CarrierName.ZINNIA;
-        }
-        const carriers = new Map([
-            ['ZIN', CarrierName.ZINNIA],
-            ['FNWL', CarrierName.FARMERS],
-        ]);
-        return carriers.get(carrierCode) ?? CarrierName.ZINNIA;
-    };
-
     const getEAppLink = () => {
         if (!eAppId) return undefined;
         return newBusinesResponse?.illustrations?.customIdentifiers?.find(
             (identifier) => identifier.key.toLowerCase() === 'redirectionurl'
         )?.value;
     };
+
+    if (!illustration || !product) {
+        return <NoIllustration />;
+    }
 
     const hasIllustrationSelected = () => {
         if (!eAppId) return undefined;
@@ -88,16 +76,7 @@ export default function IllustrationDetails({
                 <Skeleton loading={isLoading}>
                     <IllustrationDetailsHeader
                         title={illustration.title}
-                        carrier={getCarrierName(product?.carrier)}
-                        label={
-                            product?.productMarketingName ??
-                            DEFAULT_ERROR_STRING
-                        }
-                        planType={
-                            ProductTypeLabel.get(
-                                product?.productType ?? ProductTypes.TERM
-                            ) ?? DEFAULT_ERROR_STRING
-                        }
+                        carrier={getProductCarrierName(product)}
                         eAppId={eAppId}
                         eAppLink={getEAppLink()}
                         hasIllustrationSelected={hasIllustrationSelected()}
@@ -109,7 +88,6 @@ export default function IllustrationDetails({
                         isLoading={isLoading}
                         clientCaseId={clientCaseId}
                         illustrationId={illustration.id}
-                        productType={product?.productType}
                         eAppId={eAppId}
                     />
                 </Skeleton>

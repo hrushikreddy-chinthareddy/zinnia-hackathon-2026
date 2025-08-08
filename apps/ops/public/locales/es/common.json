@@ -7092,6 +7092,7 @@
                 "title": "Adicionales",
                 "includedInPremiumsFootNote": "(incluido en primas)",
                 "noRiders": "Sin adicionales",
+                "included": "Incluido",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
                 "acceleratedDeathBenefitForTerminalIllness": "Beneficio de muerte acelerado por enfermedad terminal",
@@ -7126,6 +7127,15 @@
             "cancelArchiveAriaLabel": "Cancelar archivado de ilustración",
             "confirmArchiveAriaLabel": "Confirmar archivado de ilustración",
             "addProductAriaLabel": "Boton para agregar un producto"
+        },
+        "illustrationSelectForApplication": {
+            "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",
+            "cancel": "Cancelar",
+            "submit": "Enviar",
+            "title": "Seleccione para aplicar",
+            "warning": "Una vez enviado, las otras ilustraciones serán archivadas",
+            "ariaSubmit": "Enviar solicitud",
+            "ariaCancel": "Cancelar envío"
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "Nuevo Client Case",

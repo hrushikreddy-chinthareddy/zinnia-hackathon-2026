@@ -13,24 +13,59 @@ import {
 } from './illustration-details-helpers';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
-type PremiumEntry = {
+type PremiumEntryBase = {
     label: string;
-    format: (isBold: boolean) => React.ReactNode;
+    format: (isBold?: boolean) => React.ReactNode;
 };
+
+type PremiumEntry = PremiumEntryBase &
+    (
+        | {
+              value: number | null;
+              type: 'currency';
+          }
+        | {
+              value: string | null;
+              type: 'text';
+          }
+    );
 
 export function useIllustrationPremiumData(): PremiumEntry[] {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustration = useIllustrationDetail();
 
+    const formatters = {
+        currency:
+            (value: number | null) =>
+            (bold: boolean = false) =>
+                value == null ? (
+                    <span>{DEFAULT_ERROR_STRING}</span>
+                ) : (
+                    formatIllustrationDetailYearlyCurrency(t, value, bold)
+                ),
+        text:
+            (value: string | null) =>
+            (bold: boolean = false) =>
+                (
+                    <span className={boldClass(bold)}>
+                        {value ? t(value) : DEFAULT_ERROR_STRING}
+                    </span>
+                ),
+    };
+
     if (!illustration) {
         return [
             {
                 label: t('clientCase.illustrationDetails.premium.initial'),
-                format: () => <span>{DEFAULT_ERROR_STRING}</span>,
+                format: formatters.currency(null),
+                value: null,
+                type: 'currency',
             },
             {
                 label: t('clientCase.illustrationDetails.premium.target'),
-                format: () => <span>{DEFAULT_ERROR_STRING}</span>,
+                format: formatters.currency(null),
+                value: null,
+                type: 'currency',
             },
         ];
     }
@@ -40,95 +75,87 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
     if (illustration.productType === ProductTypes.INDEX_UNIVERSAL_LIFE) {
         const iulData = illustration.response.assumed.annualTimeSeriesData;
 
-        return [
-            {
-                label: t('clientCase.illustrationDetails.premium.initial'),
-                format: () =>
-                    formatIllustrationDetailYearlyCurrency(
-                        t,
-                        iulData[0]?.minimumPremiumAmount
-                    ),
-            },
-            {
-                label: t('clientCase.illustrationDetails.premium.target'),
-
-                format: () =>
-                    formatIllustrationDetailYearlyCurrency(
-                        t,
-                        iulData[0]?.minimumPremiumAmount
-                    ),
-            },
-            {
-                label: t('clientCase.illustrationDetails.premium.mec'),
-                format: () =>
-                    formatIllustrationDetailYearlyCurrency(
-                        t,
-                        iulData[0]?.sevenPayPremiumAmount
-                    ),
-            },
-            {
-                label: 'Premium Mode',
-                format: (bold) => (
-                    <span className={boldClass(bold)}>
-                        {paymentFrequencies[options.paymentMode]
-                            ? t(paymentFrequencies[options.paymentMode])
-                            : DEFAULT_ERROR_STRING}
-                    </span>
-                ),
-            },
-            {
-                label: 'Payment Mode',
-                format: (bold) => (
-                    <span className={boldClass(bold)}>
-                        {paymentMethods[options.paymentMethod]
-                            ? t(paymentMethods[options.paymentMethod])
-                            : DEFAULT_ERROR_STRING}
-                    </span>
-                ),
-            },
-        ];
+        return (
+            [
+                {
+                    label: t('clientCase.illustrationDetails.premium.initial'),
+                    value: iulData[0]?.minimumPremiumAmount,
+                    type: 'currency',
+                },
+                {
+                    label: t('clientCase.illustrationDetails.premium.target'),
+                    value: iulData.at(-1)?.minimumPremiumAmount ?? null,
+                    type: 'currency',
+                },
+                {
+                    label: t('clientCase.illustrationDetails.premium.mec'),
+                    value: iulData[0]?.sevenPayPremiumAmount,
+                    type: 'currency',
+                },
+                {
+                    label: t('clientCase.illustrationDetails.premiumMode'),
+                    value: paymentFrequencies[options.paymentMode],
+                    type: 'text',
+                },
+                {
+                    label: t('clientCase.illustrationDetails.paymentMode'),
+                    value: paymentMethods[options.paymentMethod],
+                    type: 'text',
+                },
+            ] as const
+        ).map((item) =>
+            item.type === 'currency'
+                ? {
+                      ...item,
+                      format: formatters.currency(item.value),
+                  }
+                : {
+                      ...item,
+                      format: formatters.text(item.value),
+                  }
+        );
     }
 
     const baseData = illustration.response.assumed;
 
-    return [
-        {
-            label: t('clientCase.illustrationDetails.premium.initialBase'),
-            format: () =>
-                formatIllustrationDetailYearlyCurrency(
-                    t,
-                    baseData.coverages.base.premium
-                ),
-        },
-        {
-            label: t('clientCase.illustrationDetails.premium.totalInitial'),
-            format: () =>
-                formatIllustrationDetailYearlyCurrency(
-                    t,
-                    baseData.annualTimeSeriesData[0].premiumAmount
-                ),
-        },
-        {
-            label: t('clientCase.illustrationDetails.premiumMode'),
-            format: (bold) => (
-                <span className={boldClass(bold)}>
-                    {paymentFrequencies[options.paymentMode]
-                        ? t(paymentFrequencies[options.paymentMode])
-                        : DEFAULT_ERROR_STRING}
-                </span>
-            ),
-        },
-        {
-            label: t('clientCase.illustrationDetails.paymentMode'),
-            format: (bold) => (
-                <span className={boldClass(bold)}>
-                    {paymentMethods[options.paymentMethod]
-                        ? t(paymentMethods[options.paymentMethod])
-                        : DEFAULT_ERROR_STRING}
-                </span>
-            ),
-        },
-    ];
+    return (
+        [
+            {
+                label: t('clientCase.illustrationDetails.premium.initialBase'),
+
+                value: baseData.coverages.base.premium,
+                type: 'currency',
+            },
+            {
+                label: t('clientCase.illustrationDetails.premium.totalInitial'),
+
+                value: baseData.annualTimeSeriesData[0].premiumAmount,
+                type: 'currency',
+            },
+            {
+                label: t('clientCase.illustrationDetails.premiumMode'),
+
+                value: paymentFrequencies[options.paymentMode],
+                type: 'text',
+            },
+            {
+                label: t('clientCase.illustrationDetails.paymentMode'),
+
+                value: paymentMethods[options.paymentMethod],
+                type: 'text',
+            },
+        ] as const
+    ).map((item) =>
+        item.type === 'currency'
+            ? {
+                  ...item,
+                  format: formatters.currency(item.value),
+              }
+            : {
+                  ...item,
+                  format: formatters.text(item.value),
+              }
+    );
 }
 
 // Utility function for font classes

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 
 import { IllustrationSummary } from '@deps/types/illustrations';
 import { Product } from '@deps/types/product';
@@ -7,10 +7,10 @@ import { Product } from '@deps/types/product';
 type SelectedIllustrationsState = {
     illustration: IllustrationSummary;
     product: Product;
-} | null;
+};
 
 type SelectedIllustrationContextValue = {
-    selectedIllustration: SelectedIllustrationsState;
+    selectedIllustration: SelectedIllustrationsState | null;
     isLoadingSelectForApplication: boolean;
     newBusinessCaseId: string | null;
     eAppLink: string | undefined;
@@ -24,10 +24,10 @@ type SelectedIllustrationContextValue = {
     setEAppLink: (eAppLink: string | undefined) => void;
 };
 
-const SelectedIllustrationContext =
+export const SelectedIllustrationContext =
     createContext<SelectedIllustrationContextValue | null>(null);
 
-export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
+export function SelectedIllustrationProvider(props: { children: ReactNode }) {
     const router = useRouter();
     const { clientCaseId } = router.query;
     const [selectedIllustration, setSelectedIllustration] =
@@ -46,6 +46,12 @@ export function SelectedIllustrationProvider(props: PropsWithChildren<{}>) {
         if (!clientCaseId || Array.isArray(clientCaseId)) return;
 
         setSelectedIllustration({ illustration, product });
+
+        if (selectedIllustration?.illustration?.id === illustration.id) {
+            // Idempotency to avoid emitting redundant router events
+            return;
+        }
+
         router.push(
             `/illustrations/client-cases/${clientCaseId}/illustrate/${illustration.id}`,
             undefined,

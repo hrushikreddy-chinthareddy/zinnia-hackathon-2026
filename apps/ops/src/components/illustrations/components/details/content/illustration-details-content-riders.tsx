@@ -1,16 +1,19 @@
 import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { OutputCoverageValues } from '@deps/queries/api/client/documents/v3/illustrations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { ProductTypes } from '@deps/types/product';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
+import { formatIllustrationDetailYearlyCurrency } from './illustration-details-helpers';
 import { useRidersLabelMap } from './use-riders-label-map';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export function useIllustrationRidersData() {
+    const { t } = useTranslation(TranslationFiles.COMMON, {});
+
     const ridersLabelMap = useRidersLabelMap();
     const illustration = useIllustrationDetail();
 
@@ -28,16 +31,17 @@ export function useIllustrationRidersData() {
     return (Object.keys(coverages) as Keys<typeof coverages>[])
         .filter((k) => k !== 'base')
         .map((riderName) => {
-            const { premium } =
-                (
-                    coverages as unknown as Record<
-                        string,
-                        OutputCoverageValues | undefined
-                    >
-                )[riderName] ?? {};
+            const { premium } = (
+                coverages as unknown as Record<
+                    string,
+                    OutputCoverageValues | undefined
+                >
+            )[riderName] ?? { premium: null };
             return {
                 label: ridersLabelMap?.[riderName] ?? riderName,
-                value: numberFormatify(premium),
+                format: () =>
+                    formatIllustrationDetailYearlyCurrency(t, premium),
+                value: premium,
             };
         });
 }
@@ -50,6 +54,10 @@ export default function IllustrationDetailsContentRiders({
 }: IllustrationDetailsContentRidersProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const entries = useIllustrationRidersData();
+    const illustration = useIllustrationDetail();
+
+    const isIUL =
+        illustration?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE;
 
     return (
         <ContentSection
@@ -66,27 +74,28 @@ export default function IllustrationDetailsContentRiders({
                         {DEFAULT_ERROR_STRING}
                     </ContentEntry>
                 )}
-                {entries.map(({ label, value }) => (
+                {entries.map(({ label, format }) => (
                     <ContentEntry
                         key={label}
                         label={label}
                         ddAriaLabel={
-                            t(
-                                'clientCase.illustrationDetails.ariaValuePerYear',
-                                { value }
-                            ) ?? undefined
+                            (!isIUL &&
+                                t(
+                                    'clientCase.illustrationDetails.ariaValuePerYear',
+                                    { value: format() }
+                                )) ||
+                            undefined
                         }
                     >
-                        <span className="[font:var(--typography-content-body)]">
-                            {value.slice(0, -3)}
-                        </span>
-                        {t('clientCase.illustrationDetails.valuePerYear', {
-                            value: value.slice(-3),
-                        })}
+                        {!isIUL
+                            ? format()
+                            : t(
+                                  'clientCase.illustrationDetails.riders.included'
+                              )}
                     </ContentEntry>
                 ))}
             </dl>
-            {!!entries.length && (
+            {!!entries.length && !isIUL && (
                 <div className="col-span-3 col-start-4 text-end [font:var(--typography-labels-label-sm-alt)] [color:var(--color-base-text-text-secondary)]">
                     {t(
                         'clientCase.illustrationDetails.riders.includedInPremiumsFootNote'

@@ -57,6 +57,10 @@ export const useIllustrationActions = () => {
     });
 
     const setSelectedIllustrationOnNewBusiness = useMutation({
+        mutationKey: [
+            'selectIllustrationOnNewBusiness',
+            selectedIllustration?.illustration.id,
+        ],
         mutationFn: ({
             eAppId,
             illustrationId,

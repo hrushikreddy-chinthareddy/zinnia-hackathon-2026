@@ -1,0 +1,67 @@
+.headerSection {
+    display: flex;
+    gap: var(--measure-dimension-z-space-2);
+}
+
+.headerSectionSubtitleRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--measure-dimension-z-space-2);
+}
+
+.headerSectionProductType {
+    font: var(--typography-content-body-sm);
+}
+
+.headerSectionTitle {
+    font: var(--typography-titles-subtitle);
+}
+
+.contentSection {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    gap: var(--measure-dimension-z-space-2);
+    padding-bottom: var(--measure-dimension-z-space-6);
+    border-color: var(--color-base-border-border-light);
+    border-bottom-width: 1px;
+
+    h3 {
+        font: var(--typography-labels-label-lg);
+    }
+}
+
+.contentSectionContainer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: var(--measure-dimension-z-space-2);
+}
+
+.contentEntryTerm {
+    grid-column-start: 1;
+    font: var(--typography-labels-label-sm-alt);
+}
+
+.contentEntryDetails {
+    text-align: end;
+    font: var(--typography-labels-label-sm-alt);
+}
+
+.coverageSection {
+    gap: var(--measure-dimension-z-space-4);
+}
+
+.iulCoverageTableContainer {
+    grid-column: span 2 / span 2;
+    grid-column-start: 1;
+}
+
+.ridersSectionFootnote {
+    grid-column: span 2 / span 2;
+    grid-column-start: 1;
+    text-align: end;
+    font: var(--typography-labels-label-sm-alt);
+    color: var(--color-base-text-text-secondary);
+}

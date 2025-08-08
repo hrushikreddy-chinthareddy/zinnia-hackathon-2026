@@ -3,21 +3,51 @@ import { TFunction } from 'next-i18next';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-export const formatIllustrationDetailYearlyCurrency = (
+export const formatIllustrationDetailCurrencyBold = (
     t: TFunction,
-    value: number | string | null
+    value: number | null
 ) => {
+    if (value == null) {
+        return DEFAULT_ERROR_STRING;
+    }
     const formattedValue = numberFormatify(value);
+
+    const [intSlice, fracSlice = '00'] = formattedValue.split('.');
+
     return (
         <>
-            <span className="[font:var(--typography-content-body-bold)]">
-                {formattedValue.slice(0, -3)}
+            <span className="typography-content-body-bold">{intSlice}</span>
+            {`.${fracSlice}`}
+        </>
+    );
+};
+
+export const formatIllustrationDetailYearlyCurrency = (
+    t: TFunction,
+    value: number | string | null,
+    bold?: boolean
+) => {
+    if (value == null) {
+        return DEFAULT_ERROR_STRING;
+    }
+    const formattedValue = numberFormatify(value);
+
+    const [intSlice, fracSlice = '00'] = formattedValue.split('.');
+
+    return (
+        <>
+            <span
+                className={
+                    bold
+                        ? 'typography-content-body-bold'
+                        : 'typography-content-body'
+                }
+            >
+                {intSlice}
             </span>
-            {value
-                ? t('clientCase.illustrationDetails.valuePerYear', {
-                      value: formattedValue.slice(-3),
-                  })
-                : DEFAULT_ERROR_STRING}
+            {t('clientCase.illustrationDetails.valuePerYear', {
+                value: `.${fracSlice}`,
+            })}
         </>
     );
 };

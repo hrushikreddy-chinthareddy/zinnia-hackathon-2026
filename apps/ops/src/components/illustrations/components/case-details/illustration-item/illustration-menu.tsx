@@ -5,10 +5,11 @@ import {
     MenuContextualItem,
     Button,
 } from '@zinnia/bloom/components';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
+import { useClientCaseId } from '@deps/components/illustrations/helpers/hooks/use-client-case-id';
+import { useSelectIllustrationForApplication } from '@deps/components/illustrations/helpers/hooks/use-select-illustration-for-application';
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { Modal } from '@deps/components/modal/modal';
@@ -23,36 +24,14 @@ const IllustrationMenu = ({
     isSelectForApplicationVisible,
 }: IllustrationMenuProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const router = useRouter();
-    const { clientCaseId } = router.query;
-    const {
-        isLoadingSelectForApplication,
-        setIsLoadingSelectForApplication,
-        selectedIllustration,
-    } = useSelectedIllustration();
+    const clientCaseId = useClientCaseId();
+    const { isLoadingSelectForApplication, selectedIllustration } =
+        useSelectedIllustration();
     const [openArchiveConfirmation, setOpenArchiveConfirmation] =
         useState(false);
 
-    const {
-        selectIllustrationMutation,
-        archiveIllustrationMutation,
-        unarchiveIllustrationMutation,
-    } = useIllustrationActions();
-
-    const handleSelectIllustration = () => {
-        if (
-            isLoadingSelectForApplication ||
-            !selectedIllustration ||
-            !clientCaseId
-        )
-            return;
-
-        setIsLoadingSelectForApplication(true);
-        selectIllustrationMutation.mutateAsync({
-            clientCaseId: clientCaseId?.toString() || '',
-            illustrationId: selectedIllustration?.illustration.id || '',
-        });
-    };
+    const { archiveIllustrationMutation, unarchiveIllustrationMutation } =
+        useIllustrationActions();
 
     const handleArchiveIllustration = () => {
         if (
@@ -83,6 +62,7 @@ const IllustrationMenu = ({
             illustrationId: selectedIllustration?.illustration.id || '',
         });
     };
+    const handleSelectForApplication = useSelectIllustrationForApplication();
 
     if (openArchiveConfirmation) {
         return (
@@ -150,7 +130,7 @@ const IllustrationMenu = ({
                         IllustrationStatuses.SELECTED && (
                         <MenuContextualItem
                             disabled={isLoadingSelectForApplication}
-                            onClick={handleSelectIllustration}
+                            onClick={handleSelectForApplication}
                             content={t(
                                 'clientCase.illustrationDetails.selectForApplication'
                             )}

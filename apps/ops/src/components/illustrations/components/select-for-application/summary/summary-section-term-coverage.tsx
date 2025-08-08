@@ -1,15 +1,16 @@
 import { useTranslation } from 'next-i18next';
 
+import { useIllustrationDetail } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-import ContentEntry from './illustration-details-content-entry';
-import ContentSection from './illustration-details-content-section';
-import { formatIllustrationDetailCurrencyBold } from './illustration-details-helpers';
-import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
+import ContentEntry from './content-entry';
+import ContentSection from './content-section';
+import styles from './summary.module.css';
+import { formatIllustrationDetailCurrencyBold } from '../../details/content/illustration-details-helpers';
 
-export default function TermContentCoverage() {
+export default function IllustrationSelectForApplicationSectionTermCoverage() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustration = useIllustrationDetail();
 
@@ -20,10 +21,10 @@ export default function TermContentCoverage() {
 
     return (
         <ContentSection
-            className="min-h-28"
+            className={styles.coverageSection}
             title={t('clientCase.illustrationDetails.coverage.title')}
         >
-            <dl className="contents">
+            <dl className={styles.contentSectionContainer}>
                 <ContentEntry
                     label={t(
                         `clientCase.illustrationDetails.coverage.faceAmount`
@@ -37,7 +38,7 @@ export default function TermContentCoverage() {
                         'clientCase.illustrationDetails.coverage.termLength'
                     )}
                 >
-                    <span className="[font:var(--typography-content-body-bold)]">
+                    <span className="typography-content-body-bold">
                         {planYears != null
                             ? t('clientCase.illustrationDetails.numYears', {
                                   years: planYears,

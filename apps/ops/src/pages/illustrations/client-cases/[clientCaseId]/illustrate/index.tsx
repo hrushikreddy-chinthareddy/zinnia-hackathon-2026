@@ -1,7 +1,7 @@
 import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -9,6 +9,7 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import IllustrationCaseSumary from '@deps/components/illustrations/components/case-details/case-summary/case-summary';
 import IllustrationProductList from '@deps/components/illustrations/components/case-details/product-list/product-list';
 import IllustrationDetails from '@deps/components/illustrations/components/details/illustration-details';
+import { useClientCaseId } from '@deps/components/illustrations/helpers/hooks/use-client-case-id';
 import { SelectedIllustrationProvider } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { getUserData } from '@deps/helpers/query-data.helpers';
@@ -40,7 +41,7 @@ export default function ClientCaseIllustrations({
     additionalData,
 }: ClientCaseIllustrationsPageProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const params = useParams<{ clientCaseId: string }>();
+    const clientCaseId = useClientCaseId();
     const searchParams = useSearchParams();
     const carrierProductId = searchParams.get('planCode') || '';
 
@@ -50,9 +51,9 @@ export default function ClientCaseIllustrations({
         isError,
         isFetching,
     } = useQuery({
-        queryKey: ['clientCaseData', params.clientCaseId],
+        queryKey: ['clientCaseData', clientCaseId],
         queryFn: () => {
-            const response = getClientCase(params.clientCaseId);
+            const response = getClientCase(clientCaseId);
             return response;
         },
         select: (data) => data.data,

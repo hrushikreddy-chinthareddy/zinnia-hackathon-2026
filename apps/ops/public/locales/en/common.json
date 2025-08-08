@@ -907,7 +907,6 @@
         "yes": "Yes",
         "no": "No"
     },
-
     "addressChange": {
         "common": {
             "partyRole": {
@@ -1050,7 +1049,6 @@
             }
         }
     },
-
     "welcome": {
         "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
@@ -7196,7 +7194,6 @@
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
-
     "usage": {
         "date": "Date",
         "exportToCSV": "Export to CSV",
@@ -7306,6 +7303,7 @@
                 "title": "Riders",
                 "includedInPremiumsFootNote": "(included in premiums)",
                 "noRiders": "No Riders",
+                "included": "Included",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
                 "acceleratedDeathBenefitForTerminalIllness": "Accelerated Death Benefit for Terminal Illness",
@@ -7340,6 +7338,15 @@
             "cancelArchiveAriaLabel": "Cancel archive illustration button",
             "confirmArchiveAriaLabel": "Confirm archive illustration button",
             "addProductAriaLabel": "Add product button"
+        },
+        "illustrationSelectForApplication": {
+            "title": "Select for Application",
+            "subtitle": "This illustration will be sent to associate with an application.",
+            "warning": "Once submitted, the other illustrations will be archived",
+            "submit": "Submit",
+            "ariaSubmit": "Submit for application",
+            "cancel": "Cancel",
+            "ariaCancel": "Cancel submission"
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "New Client Case",

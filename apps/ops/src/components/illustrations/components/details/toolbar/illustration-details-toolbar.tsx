@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import { useSelectIllustrationForApplication } from '@deps/components/illustrations/helpers/hooks/use-select-illustration-for-application';
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
@@ -30,7 +31,6 @@ type IllustrationDetailsToolbarProps = {
     status?: IllustrationStatus;
     clientCaseId: string;
     illustrationId: string;
-    productType?: string;
     eAppId?: string;
 };
 
@@ -39,16 +39,17 @@ export default function IllustrationDetailsToolbar({
     status = IllustrationStatuses.ACTIVE,
     clientCaseId,
     illustrationId,
-    productType = '',
     eAppId,
 }: IllustrationDetailsToolbarProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [isPdfGenerationErrorVisible, setIsPdfGenerationErrorVisible] =
         useState<boolean>(false);
-    const { isLoadingSelectForApplication, setIsLoadingSelectForApplication } =
+    const { isLoadingSelectForApplication, selectedIllustration } =
         useSelectedIllustration();
-    const { selectIllustrationMutation, unarchiveIllustrationMutation } =
-        useIllustrationActions();
+    const { product } = selectedIllustration ?? {};
+    const { unarchiveIllustrationMutation } = useIllustrationActions();
+
+    const handleSelectForApplication = useSelectIllustrationForApplication();
 
     const { data: isPdfReportAvailable, isError } = useQuery({
         queryKey: ['illustrationProcessingStatus', illustrationId],
@@ -68,8 +69,7 @@ export default function IllustrationDetailsToolbar({
             return true;
         },
         retry: 3,
-        enabled:
-            !!productType && productType === ProductTypes.INDEX_UNIVERSAL_LIFE,
+        enabled: product?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE,
     });
 
     const handleDownloadPdf = async () => {
@@ -105,14 +105,6 @@ export default function IllustrationDetailsToolbar({
         }
     };
 
-    const handleSelectIllustration = () => {
-        setIsLoadingSelectForApplication(true);
-        selectIllustrationMutation.mutateAsync({
-            clientCaseId,
-            illustrationId,
-        });
-    };
-
     useEffect(() => {
         if (isError) {
             setIsPdfGenerationErrorVisible(true);
@@ -136,17 +128,16 @@ export default function IllustrationDetailsToolbar({
     return (
         <>
             <div className="flex justify-start items-center gap-4 py-6 pl-6 pr-4 border-border-light border-b-2">
-                {productType &&
-                    productType === ProductTypes.INDEX_UNIVERSAL_LIFE && (
-                        <ToolbarButton
-                            disabled={isLoading || !isPdfReportAvailable}
-                            icon={IconType.DOCUMENT_REPORT}
-                            className={styles.linkButton}
-                            onClick={handleDownloadPdf}
-                        >
-                            {t('clientCase.illustrationDetails.viewPdf')}
-                        </ToolbarButton>
-                    )}
+                {product?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE && (
+                    <ToolbarButton
+                        disabled={isLoading || !isPdfReportAvailable}
+                        icon={IconType.DOCUMENT_REPORT}
+                        className={styles.linkButton}
+                        onClick={handleDownloadPdf}
+                    >
+                        {t('clientCase.illustrationDetails.viewPdf')}
+                    </ToolbarButton>
+                )}
                 <ToolbarButton
                     disabled={true}
                     icon={IconType.DOCUMENT_DUPLICATE}
@@ -157,6 +148,7 @@ export default function IllustrationDetailsToolbar({
 
                 {status === IllustrationStatuses.ARCHIVED ? (
                     <ToolbarButton
+                        disabled={isLoading}
                         onClick={handleUnarchiveIllustration}
                         icon={IconType.REFRESH}
                         className={styles.linkButton}
@@ -192,7 +184,7 @@ export default function IllustrationDetailsToolbar({
                             <Button
                                 mode="primary"
                                 size="small"
-                                onClick={handleSelectIllustration}
+                                onClick={handleSelectForApplication}
                             >
                                 {t(
                                     'clientCase.illustrationDetails.selectForApplication'

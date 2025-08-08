@@ -4,9 +4,9 @@ import { useIllustrationDetail } from '@deps/components/illustrations/providers/
 import { TranslationFiles } from '@deps/config/translations';
 import { ProductTypes } from '@deps/types/product';
 
-import IulContentCoverage from './illustraion-iul-coverage';
-import IllustrationDetailsContentCashValue from './illustration-details-content-cash-value';
+import ContentCashValue from './illustration-details-content-cash-value';
 import CoverageSection from './illustration-details-content-coverage';
+import IulContentCoverage from './illustration-details-content-iul-coverage';
 import ContentPremium from './illustration-details-content-premium';
 import ContentRiders from './illustration-details-content-riders';
 type IllustrationDetailsContentProps = {
@@ -25,7 +25,7 @@ export default function IllustrationDetailsContent({
                 <IulContentCoverage />
                 <ContentPremium />
                 <ContentRiders isLoading={isLoading} />
-                <IllustrationDetailsContentCashValue />
+                <ContentCashValue />
             </div>
         );
     }
@@ -34,7 +34,7 @@ export default function IllustrationDetailsContent({
             <CoverageSection />
             <ContentPremium />
             <ContentRiders isLoading={isLoading} />
-            <IllustrationDetailsContentCashValue
+            <ContentCashValue
                 title={t('clientCase.illustrationDetails.cashValue')}
             />
         </div>

@@ -15,15 +15,16 @@ import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
 
 import style from './illustration-details-header.module.css';
+import { useSelectedIllustration } from '../../../providers/SelectedIllustrationProvider';
 import IllustrationMenu from '../../case-details/illustration-item/illustration-menu';
 
 type IllustrationDetailsHeaderProps = {
     title?: string;
     carrier: CarrierName;
     label?: string;
-    planType: string;
     eAppId?: string;
     eAppLink?: string;
     hasIllustrationSelected?: boolean;
@@ -32,13 +33,16 @@ type IllustrationDetailsHeaderProps = {
 export default function IllustrationDetailsHeader({
     title,
     carrier,
-    label,
-    planType,
     eAppId,
     eAppLink,
     hasIllustrationSelected,
 }: IllustrationDetailsHeaderProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { selectedIllustration } = useSelectedIllustration();
+    const { product } = selectedIllustration ?? {};
+    const planType =
+        ProductTypeLabel.get(product?.productType ?? ProductTypes.TERM) ??
+        DEFAULT_ERROR_STRING;
 
     const eappHtmlLink = (
         <a
@@ -72,7 +76,8 @@ export default function IllustrationDetailsHeader({
                     <div className={style.centerLine}>
                         <Badge variant={BadgeVariant.Brand} label={planType} />
                         <div className="typography-content-body-sm">
-                            {label ?? DEFAULT_ERROR_STRING}
+                            {product?.productMarketingName ??
+                                DEFAULT_ERROR_STRING}
                         </div>
                     </div>
                     <div className={style.centerLine}>

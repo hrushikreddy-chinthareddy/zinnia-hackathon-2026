@@ -776,7 +776,7 @@
             "lookThrough": "Fideicomiso de mirada atrás",
             "companyName": "Nom de l'entreprise",
             "partyType": "Type de partie",
-             "masculin": "Masculin",
+            "masculin": "Masculin",
             "féminin": "Féminin",
             "oui": "Oui",
             "non": "Non",
@@ -858,7 +858,7 @@
                 "giftTransfer": "Transfert de don",
                 "transferConsideration": "Transfert pour considération"
             },
-            "yes":"Oui",
+            "yes": "Oui",
             "no": "Non"
         },
         "beneDetails": {
@@ -901,7 +901,7 @@
                 "signatuePresent": "Toutes les options de signature présente doivent être sélectionnées"
             }
         },
-         "summary": {
+        "summary": {
             "header": "Résumé",
             "overview": "Aperçu",
             "role": "{{roleLabel}}",
@@ -948,8 +948,8 @@
             "internal500CTAlinkText": "Soumettre un ticket d'assistance",
             "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée suive.",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
-        } ,
-         "confirm": {
+        },
+        "confirm": {
             "header": "Confirmer",
             "close": "Fermer",
             "title": "C'est compris!",
@@ -4397,7 +4397,7 @@
                 "updated": "mis à jour"
             },
             "address": {
-                 "errors": {
+                "errors": {
                     "city": "La ville est manquante.",
                     "invalidZip": "Le code postal doit comporter au moins 5 chiffres.",
                     "missingCaseDocument": "Sélectionnez un document (ou continuez sans) pour continuer.",
@@ -7163,7 +7163,9 @@
             },
             "riders": {
                 "title": "Avenants de politique",
+                "includedInPremiumsFootNote": "(inclus dans les primes)",
                 "noRiders": "Pas de frais supplémentaires",
+                "included": "Compris",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
                 "acceleratedDeathBenefitForTerminalIllness": "Prestation de décès accéléré pour les maladies en phase terminale",
@@ -7172,8 +7174,7 @@
                 "childrensTerm": "Assurance à terme pour enfants",
                 "overloanProtection": "Overloan Protection",
                 "waiverOfDeduction": "Déduction",
-                "waiverOfPremium": "Renonciation à la prime",
-                "includedInPremiumsFootNote": "(inclus dans les primes)"
+                "waiverOfPremium": "Renonciation à la prime"
             },
             "accountValue": {
                 "atNYears": "À {{years}} ans",
@@ -7199,6 +7200,15 @@
             "cancelArchiveAriaLabel": "Annuler archivage de l'illustration",
             "confirmArchiveAriaLabel": "Confirmer archivage de l'illustration",
             "addProductAriaLabel": "Bouton pour ajouter un produit"
+        },
+        "illustrationSelectForApplication": {
+            "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",
+            "cancel": "Annuler",
+            "submit": "Soumettre",
+            "title": "Sélectionnez pour l'application",
+            "warning": "Une fois soumis, les autres illustrations seront archivées",
+            "ariaSubmit": "Soumettre pour demande",
+            "ariaCancel": "Annuler la soumission"
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "Nouveau Client Case",

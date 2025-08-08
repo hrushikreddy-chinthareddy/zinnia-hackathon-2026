@@ -10,6 +10,7 @@
 .centerLine {
     display: flex;
     column-gap: var(--measure-dimension-gap-md);
+    z-index: 0;
 }
 
 .topLine {
@@ -36,6 +37,7 @@
         cursor: pointer;
         color: var(--color-base-text-text-link);
     }
+
     &.enabled:hover {
         color: var(--color-states-hover-text-hover-text-link);
     }

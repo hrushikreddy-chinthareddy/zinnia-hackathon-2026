@@ -40,7 +40,7 @@ export default function IllustrationDetailsContentCashValue({
 
     const entries = useIllustrationCashValueData();
 
-    if (entries.length === 0) {
+    if (!entries.length) {
         return null;
     }
 
