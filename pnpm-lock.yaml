@@ -418,8 +418,8 @@ importers:
         specifier: ^5.24.0
         version: 5.24.0(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(rollup@4.45.0)(typescript@5.8.3)(vite@6.3.5(@types/node@18.11.18)(jiti@1.21.7)(less@4.3.0)(terser@5.43.1)(yaml@2.8.0))
       '@zinnia/form-engine-sdk':
-        specifier: 1.2.3
-        version: 1.2.3(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))
+        specifier: 2.0.0
+        version: 2.0.0(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))
       '@zinnia/pom':
         specifier: workspace:*
         version: link:../../packages/pom
@@ -6769,8 +6769,8 @@ packages:
   '@zinnia/bloom@5.24.0':
     resolution: {integrity: sha512-WZr8MKoPZtgtEe51XPCPHMNBFqC97CDuiJz0VfOuGrIOEr5isRKgkrNxKTe0EBtdqHrp0pMt4n28CzroG+B1+g==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/5.24.0/a64354b96456965c0cd3c2501b1ec396c570c13b}
 
-  '@zinnia/form-engine-sdk@1.2.3':
-    resolution: {integrity: sha512-jFDau+Q5Jx7erL/cXoaJq/aAuoo1KOWxeNTwXXVixvkrfvhc5mpBi3rdtwZK1ktWQxVO/CtAP4JQIwmotHqi3g==, tarball: https://npm.pkg.github.com/download/@zinnia/form-engine-sdk/1.2.3/1a67488bcfb8c49c2ff64c528ab897cc25b38f5c}
+  '@zinnia/form-engine-sdk@2.0.0':
+    resolution: {integrity: sha512-vLt72OEhHKPHkR5eBMiqm/ixtorBOrEjAe1fy49GuWZxRxvpCau+JVL/M5T/cRa03uOJCR2o07buH5GkfWVUiQ==, tarball: https://npm.pkg.github.com/download/@zinnia/form-engine-sdk/2.0.0/be119fe62cf762edebebbfe78b8f081550eec5b1}
 
   '@zinnia/prettier-config@0.0.1':
     resolution: {integrity: sha512-H/90EcMEPKpyeXV5MQJQMqcSaKfvNKqi9Os90sBqp6dEkSaB8vdnTMKdJ6BJUSAr6jwvu/aSXkNintZFYuwQng==, tarball: https://npm.pkg.github.com/download/@zinnia/prettier-config/0.0.1/ab3051a974dc3c08ce02fb490d620bbd5fc2e1a0}
@@ -13682,11 +13682,11 @@ packages:
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
-  typegate@0.0.47:
-    resolution: {integrity: sha512-BZdQDGK5E3H6W0+kaQpuAFSlJIcRZ8gMLq9MH3VjMESvB4rDnmQ3/yupkKwQlkoIVjffZwWm/4eIxAsCsBCXrg==}
-
   typegate@0.0.50:
     resolution: {integrity: sha512-Yhm6qYEhdDDfJFgTgtJmEuzBnpbUYhxWuAw43YtPYcj7laAFKMIWzEEw2KUkBPELol6/n+YyNP2zd0DIzQ5R/g==}
+
+  typegate@0.0.53:
+    resolution: {integrity: sha512-x4InYZukdiWKRymhlh6oqXkctwM54z+q/qDggLBGyFWAtDt1Wgdqpde2RkBbxrQtEBwb6G75vmHJnL8mURUnaA==}
 
   typescript-eslint@8.37.0:
     resolution: {integrity: sha512-TnbEjzkE9EmcO0Q2zM+GE8NQLItNAJpMmED1BdgoBMYNdqMhzlbqfdSwiRlAzEK2pA9UzVW0gzaaIzXWg2BjfA==}
@@ -22440,7 +22440,7 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/form-engine-sdk@1.2.3(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))':
+  '@zinnia/form-engine-sdk@2.0.0(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3))':
     dependencies:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.14
@@ -22452,7 +22452,7 @@ snapshots:
       luhn-generator: 0.6.0
       parse-decimal-number: 1.0.0
       ts-jest: 29.4.0(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.0))(esbuild@0.18.20)(jest-util@29.7.0)(jest@29.7.0(@types/node@18.11.18)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.8.3)))(typescript@5.8.3)
-      typegate: 0.0.47
+      typegate: 0.0.53
       typescript: 5.8.3
       typescript-json-schema: 0.65.1(@swc/core@1.12.14(@swc/helpers@0.5.17))
       uuid: 8.3.2
@@ -31128,9 +31128,9 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typegate@0.0.47: {}
-
   typegate@0.0.50: {}
+
+  typegate@0.0.53: {}
 
   typescript-eslint@8.37.0(eslint@9.31.0(jiti@1.21.7))(typescript@5.6.3):
     dependencies:

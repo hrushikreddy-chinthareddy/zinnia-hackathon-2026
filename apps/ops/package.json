@@ -1,32 +1,4 @@
 {
-    "name": "ops",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build --no-lint",
-        "start": "next start",
-        "lint": "next lint",
-        "lint:fix": "next lint --fix",
-        "lint:test": "eslint 'src/**/*.{js,ts,jsx,tsx}' --max-warnings=0 --no-ignore",
-        "clean": "./scripts/clean.sh",
-        "test": "cd ../.. pnpm run build && cd apps/ops && jest --verbose=true --maxWorkers=50% --coverage",
-        "test-watch": "pnpm run test -- --watch",
-        "prettier": "prettier --check --cache --loglevel=warn ./src",
-        "prettier:fix": "prettier --write --cache ./src",
-        "lint-staged": "lint-staged",
-        "tokenize": "style-dictionary build",
-        "storybook": "storybook dev -p 6006",
-        "build-storybook": "storybook build",
-        "typecheck": "tsc --project ./tsconfig.json",
-        "check": "pnpm --filter \"./apps/**\" --filter \"@zinnia/*\" build && pnpm run lint && pnpm run typecheck && pnpm run test",
-        "login:gh-pkg": "pnpm login --scope=@zinnia --registry=https://npm.pkg.github.com",
-        "orval": "orval",
-        "pre-push": "pnpm check",
-        "pre-commit": "pnpm run lint-staged",
-        "cypress": "bash ./e2e/scripts/cypress-tests.sh",
-        "cypress:local": "bash ./e2e/scripts/cypress-tests.sh --local"
-    },
     "dependencies": {
         "@ariakit/react": "^0.4.4",
         "@auth0/nextjs-auth0": "^2.2.0",
@@ -65,7 +37,7 @@
         "@typescript-eslint/eslint-plugin": "^6.18.1",
         "@zinnia/api-types": "workspace:*",
         "@zinnia/bloom": "^5.24.0",
-        "@zinnia/form-engine-sdk": "1.2.3",
+        "@zinnia/form-engine-sdk": "2.0.0",
         "@zinnia/pom": "workspace:*",
         "@zinnia/utils": "workspace:*",
         "@zinnia/xd-components": "workspace:*",
@@ -117,18 +89,6 @@
         "xml2js": "^0.6.2",
         "xss": "^1.0.14",
         "zustand": "^4.5.4"
-    },
-    "lint-staged": {
-        "src/**/*.{ts,tsx,js,jsx}": [
-            "eslint --fix",
-            "prettier --write"
-        ],
-        "src/**/*.{css,scss}": [
-            "prettier --write"
-        ]
-    },
-    "eslintConfig": {
-        "extends": "react-app"
     },
     "devDependencies": {
         "@datadog/datadog-ci": "^2.19.1",
@@ -194,5 +154,45 @@
         "tailwindcss": "^3.2.7",
         "ts-jest": "^29.1.1",
         "tsconfig-paths-webpack-plugin": "^4.0.1"
-    }
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "lint-staged": {
+        "src/**/*.{css,scss}": [
+            "prettier --write"
+        ],
+        "src/**/*.{ts,tsx,js,jsx}": [
+            "eslint --fix",
+            "prettier --write"
+        ]
+    },
+    "name": "ops",
+    "private": true,
+    "scripts": {
+        "build": "next build --no-lint",
+        "build-storybook": "storybook build",
+        "check": "pnpm --filter \"./apps/**\" --filter \"@zinnia/*\" build && pnpm run lint && pnpm run typecheck && pnpm run test",
+        "clean": "./scripts/clean.sh",
+        "cypress": "bash ./e2e/scripts/cypress-tests.sh",
+        "cypress:local": "bash ./e2e/scripts/cypress-tests.sh --local",
+        "dev": "next dev",
+        "lint": "next lint",
+        "lint-staged": "lint-staged",
+        "lint:fix": "next lint --fix",
+        "lint:test": "eslint 'src/**/*.{js,ts,jsx,tsx}' --max-warnings=0 --no-ignore",
+        "login:gh-pkg": "pnpm login --scope=@zinnia --registry=https://npm.pkg.github.com",
+        "orval": "orval",
+        "pre-commit": "pnpm run lint-staged",
+        "pre-push": "pnpm check",
+        "prettier": "prettier --check --cache --loglevel=warn ./src",
+        "prettier:fix": "prettier --write --cache ./src",
+        "start": "next start",
+        "storybook": "storybook dev -p 6006",
+        "test": "cd ../.. pnpm run build && cd apps/ops && jest --verbose=true --maxWorkers=50% --coverage",
+        "test-watch": "pnpm run test -- --watch",
+        "tokenize": "style-dictionary build",
+        "typecheck": "tsc --project ./tsconfig.json"
+    },
+    "version": "0.1.0"
 }
