@@ -5,10 +5,7 @@ import ClickWrapper from './click-wrapper';
 
 // This component, ClickContainer (an opinionated component), adds a border and some padding
 // around the children of the ClickWrapper (base component)
-const ClickContainer: React.FC<ClickContainerProps> = ({
-    disabled,
-    ...props
-}) => {
+const ClickContainer: React.FC<ClickContainerProps> = ({ ...props }) => {
     const containerClasses = clsx(
         'rounded border-2 border-gray-100 bg-white !p-0',
         props.classes
@@ -19,7 +16,6 @@ const ClickContainer: React.FC<ClickContainerProps> = ({
             {...props}
             classes={containerClasses}
             data-testid={props.testId}
-            disabled={disabled}
         >
             <div className="p-4" data-testid="bank-details-container">
                 {props.children}

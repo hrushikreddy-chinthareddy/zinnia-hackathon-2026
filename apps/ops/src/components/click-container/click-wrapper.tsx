@@ -18,33 +18,30 @@ const ClickWrapper: React.FC<ClickWrapperProps> = ({
     divRef,
     classes,
     role = 'button',
-    disabled,
-    cardDisableTooltip,
     testId,
 }) => {
-    const effectiveDisabled = disabled || isDisabled;
     const containerClasses = clsx(
         'group relative z-10',
         {
-            'cursor-not-allowed focus-visible:outline-0': effectiveDisabled,
+            'cursor-not-allowed focus-visible:outline-0': isDisabled,
             'cursor-pointer p-0.5 hover:border-2 hover:border-accent1 hover:p-0 active:border-2  active:border-primary active:p-0':
-                !effectiveDisabled,
+                !isDisabled,
             'border-2 border-primary p-0': isSelected,
 
             // accessibility classes
             'focus-visible:z-20 focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-semantic-focus':
-                !effectiveDisabled,
+                !isDisabled,
         },
         classes
     );
 
     const handleOnKeyDown = (e: KeyboardEvent<Element>) => {
-        if (!effectiveDisabled) {
+        if (!isDisabled) {
             handleKeyDown(e, onClick);
         }
     };
 
-    const clickProps = effectiveDisabled
+    const clickProps = isDisabled
         ? {
               onClick: undefined,
           }
@@ -58,10 +55,9 @@ const ClickWrapper: React.FC<ClickWrapperProps> = ({
             className={containerClasses}
             role={role}
             aria-label={ariaLabel}
-            aria-hidden={effectiveDisabled}
+            aria-hidden={isDisabled}
             ref={divRef}
             onKeyDown={handleOnKeyDown}
-            title={disabled ? cardDisableTooltip : ''}
             {...clickProps}
         >
             {children}
