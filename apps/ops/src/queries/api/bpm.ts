@@ -310,7 +310,23 @@ export const checkEligibilityFullSurrender = async (
             FullSurrenderEligibilityRequest,
             AxiosResponse
         >(
-            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`
+            `${baseUrl}/policies/${planCode}/${policyNumber}/fullsurrender/eligibilitycheck`,
+            {
+                correlationId: '',
+                effectiveDate: '',
+                reverseInitiator: false,
+                taxWithholdingInstructions: [],
+                payeeOrBeneficiary: null,
+                parties: [],
+                transactionAmounts: {
+                    requestedAmount: null,
+                    amountType: '',
+                    disbursementType: '',
+                    disbursementPaymentForm: '',
+                },
+                
+                charges: null,
+            }
         );
         return data;
     } catch (error: any) {
