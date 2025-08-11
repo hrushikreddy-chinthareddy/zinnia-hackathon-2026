@@ -21,6 +21,7 @@
     display: flex;
     align-items: center;
     margin-bottom: var(--measure-dimension-margin-xxs);
+
     > * {
         margin-right: var(--measure-dimension-gap-md);
     }
@@ -36,8 +37,10 @@
 }
 
 .applicationWrapper {
-    container-type: size; /* enables container queries */
-    container-name: application-wrapper; /* optional, but helpful */
+    container-type: size;
+    /* enables container queries */
+    container-name: application-wrapper;
+    /* optional, but helpful */
     display: flex;
     flex-grow: 1;
     flex-direction: row;
@@ -53,7 +56,9 @@
 
 .applicationBody {
     flex-grow: 1;
+    overflow: auto;
 }
+
 .applicationSidebar {
     width: 200px;
     background-color: var(--color-base-surface-surface-secondary);
