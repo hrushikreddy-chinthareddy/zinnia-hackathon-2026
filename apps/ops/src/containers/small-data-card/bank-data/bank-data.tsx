@@ -92,11 +92,11 @@ const BankDataCard = ({
 
     const handleClick = () => {
         if (onCardClick) {
-            onCardClick(bankDetails.accountNumber);
+            onCardClick(bankDetails.bankId);
         }
     };
 
-    const isSelected = bankDetails.accountNumber === selectedId;
+    const isSelected = bankDetails.bankId === selectedId;
     const selectedClass = clsx('w-full', {
         'border-primary hover:border-primary ': isSelected,
     });

@@ -1,15 +1,13 @@
 import {
     PaymentForm,
-    Policy,
     ArrangementType,
-    BankAccount,
     Status,
     SystematicProgram,
 } from '@zinnia/api-types/types/sor';
 import { FieldData, FieldSize, Radio } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -20,12 +18,13 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import AddressDataCard from '@deps/containers/small-data-card/address-data/address-data';
-import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 
+import { BankDetailsCards } from './bank-details-cards';
 import { PaymentMethodType, PaymentStepProps } from './types';
+import { useBankDetails } from './use-bank-details';
 import WorkflowCard from '../workflow-card/workflow-card';
 
 const PaymentStepMoneyOut = ({
@@ -38,46 +37,37 @@ const PaymentStepMoneyOut = ({
 }: PaymentStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
+    const [formError, setFormError] = useState(false);
 
-    const { policyNumber, product, systematicPrograms } = policy as Policy;
+    const { policyNumber, product, systematicPrograms } = policy;
+
     const {
-        paymentAccountNumber: currentPaymentAccountNumber,
+        paymentBankId,
         payeePartyId,
         paymentForm,
         paymentAddressId: currentPaymentAddressId,
         fboFfc,
         arrangementType = ArrangementType.PAYMENT,
     } = state;
-    const [formError, setFormError] = useState(false);
 
     const party = policy?.parties?.find(
         (party) => party.partyId === payeePartyId
     );
+
     const paymentProgram = systematicPrograms?.find(
         (program) =>
             program.arrangementType === arrangementType &&
             program.status === Status.ACTIVE
-    ) as SystematicProgram;
-    const programBankId = paymentProgram?.party?.find(
-        (party) => party.partyId === payeePartyId
     );
 
-    const bankDetails = useMemo(() => {
-        const currentBankDetails = party?.bankDetails?.filter((bank: any) => {
-            return !isEndDated(bank?.endDate);
-        });
-
-        return currentBankDetails?.sort((a, b) => {
-            if (a.bankId === programBankId) return -1;
-            if (b.bankId === programBankId) return 1;
-
-            if (dayjs(b.startDate).isSame(a.startDate)) {
-                return a.bankId?.localeCompare(b.bankId || '') || 1;
-            }
-
-            return dayjs(b.startDate).isBefore(a.startDate) ? 1 : -1;
-        });
-    }, [party?.bankDetails, programBankId]);
+    const {
+        data: bankDetails,
+        isLoading: bankDetailsLoading,
+        isError: bankDetailsError,
+    } = useBankDetails({
+        state,
+        policy,
+    });
 
     const addresses = useMemo(() => {
         const currentAddresses = party?.addresses?.filter((address: any) => {
@@ -99,10 +89,7 @@ const PaymentStepMoneyOut = ({
                 return;
             }
         } else {
-            if (
-                !currentPaymentAccountNumber ||
-                currentPaymentAccountNumber === ''
-            ) {
+            if (!paymentBankId?.length) {
                 setFormError(true);
                 return;
             }
@@ -144,31 +131,57 @@ const PaymentStepMoneyOut = ({
         [currentPaymentAddressId, setState, setFormError]
     );
 
-    const handleBankSelection = useCallback(
-        ({
-            paymentAccountNumber,
-            paymentBranchName,
-            paymentBankId,
-        }: PaymentMethodType) => {
-            if (paymentAccountNumber === currentPaymentAccountNumber) {
-                setState((prevState) => ({
-                    ...prevState,
-                    paymentAccountNumber: undefined,
-                    paymentBranchName: undefined,
-                    paymentBankId: undefined,
-                }));
+    const handleBankSelection = ({ paymentBankId }: PaymentMethodType) => {
+        const parties:
+            | SystematicProgram['parties']
+            | SystematicProgram['party']
+            | undefined = paymentProgram?.parties || paymentProgram?.party;
+        const paymentParty = parties?.[0];
+        const selectedBank = bankDetails
+            ? bankDetails?.find((b) => b.bankId === paymentBankId) ||
+              bankDetails[0]
+            : {};
+
+        // if clicked on the same bank
+        if (paymentBankId === state.paymentBankId) {
+            // clear the payment details
+            setState((prevState) => ({
+                ...prevState,
+                paymentAccountNumber: undefined,
+                paymentBranchName: undefined,
+                paymentBankId: undefined,
+            }));
+        } else {
+            const newState: PaymentMethodType = {
+                paymentAccountNumber: selectedBank.accountNumber,
+                paymentBranchName: selectedBank.branchName,
+                paymentBankId: selectedBank.bankId,
+            };
+
+            if (paymentParty && 'addressId' in paymentParty) {
+                const selectedAddress =
+                    paymentParty.paymentForm === PaymentForm.CHECK && addresses
+                        ? addresses?.find(
+                              (a) => a.addressId === paymentParty.addressId
+                          ) || addresses[0]
+                        : {};
+
+                newState.fboFfc = paymentParty.forBenefitOfOrForFurtherCredit;
+                newState.paymentAddressId = selectedAddress?.addressId;
+                newState.paymentAddress = selectedAddress;
+                newState.paymentForm = paymentParty.paymentForm;
             } else {
-                setState((prevState) => ({
-                    ...prevState,
-                    paymentAccountNumber,
-                    paymentBranchName,
-                    paymentBankId,
-                }));
-                setFormError(false);
+                newState.paymentForm = PaymentForm.ACH;
             }
-        },
-        [currentPaymentAccountNumber, setState, setFormError]
-    );
+
+            setFormError(false);
+
+            setState((prevState) => ({
+                ...prevState,
+                ...newState,
+            }));
+        }
+    };
 
     const handleFboFfcChange = ({
         target: { value: fboFfcValue },
@@ -189,45 +202,6 @@ const PaymentStepMoneyOut = ({
             fboFfc: undefined,
         }));
     };
-
-    useEffect(() => {
-        if (paymentProgram && paymentProgram?.parties?.[0]) {
-            const party = paymentProgram.parties[0];
-            const selectedBank = bankDetails
-                ? bankDetails?.find((b) => b.bankId === party.bankId) ||
-                  bankDetails[0]
-                : {};
-            const selectedAddress =
-                party.paymentForm === PaymentForm.CHECK && addresses
-                    ? addresses?.find((a) => a.addressId === party.addressId) ||
-                      addresses[0]
-                    : {};
-
-            setState((prevState) => ({
-                ...prevState,
-                paymentAccountNumber: selectedBank?.accountNumber,
-                paymentBankId: selectedBank?.bankId,
-                paymentBranchName: selectedBank?.branchName,
-                paymentForm: party.paymentForm as PaymentForm,
-                fboFfc: party.forBenefitOfOrForFurtherCredit ?? undefined,
-                paymentAddressId: selectedAddress?.addressId,
-                paymentAddress: selectedAddress,
-            }));
-        } else if (paymentProgram && paymentProgram?.party?.[0]) {
-            const party = paymentProgram.party[0];
-            const selectedBank = bankDetails
-                ? bankDetails?.find((b) => b.bankId === party.bankId) ||
-                  bankDetails[0]
-                : {};
-            setState((prevState) => ({
-                ...prevState,
-                paymentAccountNumber: selectedBank?.accountNumber,
-                paymentBankId: selectedBank?.bankId,
-                paymentBranchName: selectedBank?.branchName,
-                paymentForm: 'ACH' as PaymentForm,
-            }));
-        }
-    }, [paymentProgram]);
 
     const paymentMethodOptions = useMemo(() => {
         return [
@@ -347,43 +321,15 @@ const PaymentStepMoneyOut = ({
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3">
-                                        {bankDetails?.map((details) => (
-                                            <BankDataCard
-                                                bankDetails={
-                                                    details as BankAccount
-                                                }
-                                                onCardClick={() => {
-                                                    handleBankSelection({
-                                                        paymentAccountNumber:
-                                                            details.accountNumber,
-                                                        paymentBankId:
-                                                            details.bankId,
-                                                        paymentBranchName:
-                                                            details.branchName,
-                                                    });
-                                                }}
-                                                key={details.accountNumber}
-                                                selectedId={
-                                                    currentPaymentAccountNumber
-                                                }
-                                                accessibilityClickText={t(
-                                                    'ariaLabel.select'
-                                                )}
-                                            />
-                                        ))}
-                                        <div
-                                            aria-hidden
-                                            className="flex cursor-not-allowed items-center justify-center gap-1 rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-8 text-gray-300"
-                                        >
-                                            <AddIcon height={24} width={24} />
-                                            <p className="font-primary text-base font-semibold">
-                                                {t(
-                                                    'workflows.paymentStep.addBank'
-                                                )}
-                                            </p>
-                                        </div>
-                                    </div>
+                                    <BankDetailsCards
+                                        bankDetails={bankDetails}
+                                        bankDetailsError={bankDetailsError}
+                                        bankDetailsLoading={bankDetailsLoading}
+                                        paymentBankId={paymentBankId}
+                                        dataTestid="payment-methods-money-out"
+                                        handleSelection={handleBankSelection}
+                                        t={t}
+                                    />
                                 )}
                                 <div className="flex w-1/2">
                                     <FieldData
