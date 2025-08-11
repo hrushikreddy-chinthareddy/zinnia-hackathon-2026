@@ -1,3 +1,4 @@
+import { PartyRole } from '@xd/api-types/dist/generated-types/sor/models/PartyRole';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -128,7 +129,7 @@ const RoleDetailsComponent = ({
                 removeRole,
                 t,
                 roleLabel,
-                role as any
+                role.toUpperCase() as PartyRole
             );
             if (setCurrentErrors) {
                 setCurrentErrors(errors);

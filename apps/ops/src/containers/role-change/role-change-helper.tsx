@@ -624,13 +624,17 @@ export const validate = (
         trustDate,
         preferredCommunicationType,
     } = party;
+    const allowedRolesForRemove: (Roles | PartyRole)[] = [
+        Roles.THIRDPARTYDESIGNEE,
+        Roles.NEWTHIRDPARTYDESIGNEE,
+    ];
 
     if (addRole === true) {
         currentErrors['owner'] = t('formValidations.addRole', { roleLabel });
         return currentErrors;
     }
 
-    if (removeRole === false) {
+    if (!removeRole && !allowedRolesForRemove.includes(role)) {
         currentErrors['removeOwner'] = t('formValidations.removeRole', {
             roleLabel,
         });
@@ -668,10 +672,13 @@ export const validate = (
                 currentErrors['lastName'] = t('formValidations.lastName');
             }
         } else {
+            const allowedRoles: (Roles | PartyRole)[] = [
+                Roles.PAYOR,
+                Roles.THIRDPARTYDESIGNEE,
+                Roles.NEWTHIRDPARTYDESIGNEE,
+            ];
             if (
-                ![PartyRole.PAYOR, PartyRole.THIRDPARTYDESIGNEE].includes(
-                    role
-                ) &&
+                !allowedRoles.includes(role) &&
                 (!firstName?.trim() || !lastName?.trim())
             ) {
                 currentErrors['name'] = t('formValidations.name', {
