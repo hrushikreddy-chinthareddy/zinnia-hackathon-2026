@@ -126,8 +126,8 @@ const IllustrationMenu = ({
                 triggerLabel={<Icon type={IconType.MENU_HORIZONTAL} />}
             >
                 {isSelectForApplicationVisible &&
-                    selectedIllustration?.illustration.status !==
-                        IllustrationStatuses.SELECTED && (
+                    selectedIllustration?.illustration.status ===
+                        IllustrationStatuses.ACTIVE && (
                         <MenuContextualItem
                             disabled={isLoadingSelectForApplication}
                             onClick={handleSelectForApplication}
