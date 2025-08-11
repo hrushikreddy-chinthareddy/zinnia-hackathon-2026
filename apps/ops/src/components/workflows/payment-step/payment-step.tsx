@@ -1,11 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { ArrangementType, Status } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    Status,
+    Policy,
+    BankAccount,
+} from '@zinnia/api-types/types/sor';
 import { Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -15,11 +20,13 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { QueryKeys } from '@deps/pages/cases/caseFilterQueryStore';
 import { getPaymentMethods } from '@deps/queries/api/aggregation';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { PaymentMethodType, PaymentStepProps } from './types';
 import WorkflowCard from '../workflow-card/workflow-card';
@@ -38,7 +45,11 @@ const PaymentStep = ({
     const router = useRouter();
     const [formError, setFormError] = useState(false);
 
-    const { policyNumber, product, systematicPrograms } = policy;
+    const { featureFlags } = useOptimizely();
+    const showPaymentUSFeature = featureFlags[FEATURE_FLAGS.PAYMENTUS_FEATURE];
+
+    const { parties, policyNumber, product, systematicPrograms } =
+        policy as Policy;
 
     const {
         paymentBankId,
@@ -56,14 +67,16 @@ const PaymentStep = ({
             program.status === Status.ACTIVE
     );
 
+    const party = parties?.find((party) => party.partyId === payPartyId);
+
     const programBankId = paymentProgram?.party?.find(
         (party) => party.partyId === payPartyId
     );
 
     const {
-        data: bankDetails = [],
-        isLoading: bankDetailsLoading,
-        isError: bankDetailsError,
+        data: paymentUSBankDetails = [],
+        isLoading: paymentUSBankDetailsLoading,
+        isError: paymentUSBankDetailsError,
     } = useQuery({
         queryKey: [
             QueryKeys.bankDetails,
@@ -77,33 +90,33 @@ const PaymentStep = ({
                 planCode: product?.planCode || '',
                 policyNumber: policyNumber || '',
             }),
-        enabled:
-            !!payPartyId?.length &&
-            !!product?.planCode?.length &&
-            !!policyNumber?.length,
-        select: (data) => {
-            if (!Array.isArray(data)) throw new Error('data is not an array');
-            const currentBankDetails = data?.filter((bank: any) => {
-                return !isEndDated(bank?.endDate);
-            });
-            return currentBankDetails?.sort((currentBank, prevBank) => {
-                if (currentBank.bankId === programBankId) return -1;
-                if (prevBank.bankId === programBankId) return 1;
-
-                if (dayjs(prevBank.startDate).isSame(currentBank.startDate)) {
-                    return (
-                        currentBank.bankId?.localeCompare(
-                            prevBank.bankId || ''
-                        ) || 1
-                    );
-                }
-
-                return dayjs(prevBank.startDate).isBefore(currentBank.startDate)
-                    ? 1
-                    : -1;
-            });
-        },
     });
+
+    const localBankDetails = useMemo(() => {
+        const currentBankDetails = party?.bankDetails?.filter((bank: any) => {
+            return !isEndDated(bank?.endDate);
+        });
+        return currentBankDetails?.sort((a, b) => {
+            if (a.bankId === programBankId) return -1;
+            if (b.bankId === programBankId) return 1;
+
+            if (dayjs(b.startDate).isSame(a.startDate)) {
+                return a.bankId?.localeCompare(b.bankId || '') || 1;
+            }
+
+            return dayjs(b.startDate).isBefore(a.startDate) ? 1 : -1;
+        });
+    }, [party?.bankDetails, programBankId]);
+
+    const bankDetails = (
+        showPaymentUSFeature ? paymentUSBankDetails : localBankDetails
+    ) as BankAccount[];
+    const bankDetailsLoading = showPaymentUSFeature
+        ? paymentUSBankDetailsLoading
+        : false;
+    const bankDetailsError = showPaymentUSFeature
+        ? paymentUSBankDetailsError
+        : false;
 
     if (bankDetails.length > 0) {
         const selectedBank =
