@@ -2,6 +2,7 @@ import { RegistryWidgetsType } from '@rjsf/utils';
 
 import ArithmeticOperationWidget from './arithmetic-operation-widget/arithmetic-operation-widget';
 import CheckboxWidget from './checkbox-widget/checkbox-widget';
+import CheckBoxesSelectWidget from './checkboxes-select-widget/checkboxes-select-widget';
 import CheckboxesWidget from './checkboxes-widget/checkboxes-widget';
 import DateWidget from './date-widget/date-widget';
 import AutoCompleteWidget from './file-widget/autocomplete-widget';
@@ -18,6 +19,7 @@ export function generateWidgets(): RegistryWidgetsType {
     return {
         CheckboxWidget,
         CheckboxesWidget,
+        CheckBoxesSelectWidget,
         TextWidget,
         TextareaWidget,
         SelectWidget,

@@ -12,5 +12,6 @@ export const useComponentVisibility = (
     queryFn: () => {
       return getComponentVisibilityQuery(planCode, policyNumber);
     },
+    enabled: !!planCode && !!policyNumber,
   });
 };

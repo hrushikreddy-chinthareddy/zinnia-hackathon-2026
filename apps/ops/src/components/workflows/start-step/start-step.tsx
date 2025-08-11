@@ -1,4 +1,5 @@
 import { Policy } from '@zinnia/api-types/types/sor';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
@@ -14,14 +15,21 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import TransactionNavigationButtons, {
     ParentPage,
 } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
+import { SourceType } from '@deps/constants/policy';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
+import { ManagementTask } from '@deps/models/case/task-instance';
 import { getCases } from '@deps/queries/api/cases';
+import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
 
+import DocumentCard from '../document/document-card';
 import WorkflowCard from '../workflow-card/workflow-card';
 
 export interface StartType {
@@ -43,6 +51,7 @@ interface StartStepProps extends TransactionClickProps {
     isContinueDisabled?: boolean;
     leaveTransactionLink?: string;
     processSubType?: string[];
+    type?: SourceType;
 }
 
 const StartStep = ({
@@ -58,6 +67,7 @@ const StartStep = ({
     isContinueDisabled = false,
     leaveTransactionLink,
     processSubType,
+    type = SourceType.Document,
 }: StartStepProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -70,11 +80,25 @@ const StartStep = ({
     const [showSelectionError, setShowSelectionError] =
         useState<boolean>(false);
     const [caseOptions, setCaseOptions] = useState<CaseDocumentOption[]>([]);
+    const router = useRouter();
+    const { taskId } = router.query;
+    const [task, setTask] = useState<ManagementTask | null>(null);
+
+    useEffect(() => {
+        const getTaskData = async () => {
+            const data = await getTaskInstance({ taskId });
+            setTask(data);
+        };
+        getTaskData();
+    }, [taskId]);
 
     useEffect(() => {
         async function populateCaseSelect() {
             const noDocument = {
-                documentNumber: t('workflows.start.processWithoutDocument'),
+                documentNumber:
+                    type == SourceType.Case
+                        ? t('workflows.start.processWithoutCase')
+                        : t('workflows.start.processWithoutDocument'),
                 caseId: '',
                 value: PROCESS_WITHOUT_CASE_DOCUMENT,
             };
@@ -155,79 +179,128 @@ const StartStep = ({
             setShowSelectionError(true);
             return;
         }
-
         setShowSelectionError(false);
         goToNext();
     };
 
     return (
-        <WorkflowCard
-            title={title}
-            subtitle={subtitle}
-            footerContent={
-                <TransactionNavigationButtons
-                    handleContinue={handleContinue}
-                    planCode={product?.planCode}
-                    policyNumber={policyNumber}
-                    parentPage={parentPage}
-                    disableContinue={isContinueDisabled}
-                    trackEventProps={trackEventProps}
-                    leaveTransactionLink={leaveTransactionLink}
-                />
-            }
-        >
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-col">
-                    <Label
-                        className="mb-4"
-                        label={t('workflows.start.documentSelectionLabel')}
-                        sentenceCase={false}
-                        variant={LabelVariant.LabelLg}
+        <>
+            {task?.data.details.documents?.length && (
+                <div className="px-8 pt-8">
+                    <Typography
+                        variant={TypographyVariant.BodyBold}
+                        className="pb-4"
+                    >
+                        {t('workflows.start.supportingInfo')}
+                    </Typography>
+                    {taskId?.length &&
+                        task?.data.details.documents.map(
+                            (doc: {
+                                documentId: any;
+                                documentName: any;
+                                documentExt: any;
+                            }) => (
+                                <DocumentCard
+                                    key={doc.documentId}
+                                    document={{
+                                        documentId: doc.documentId,
+                                        documentName: doc.documentName,
+                                        displayName: doc.documentName,
+                                        documentExt: doc.documentExt,
+                                        carrier: task?.carrier ?? '',
+                                    }}
+                                />
+                            )
+                        )}
+                </div>
+            )}
+
+            <WorkflowCard
+                title={title}
+                subtitle={subtitle}
+                footerContent={
+                    <TransactionNavigationButtons
+                        handleContinue={handleContinue}
+                        planCode={product?.planCode}
+                        policyNumber={policyNumber}
+                        parentPage={parentPage}
+                        disableContinue={isContinueDisabled}
+                        trackEventProps={trackEventProps}
+                        leaveTransactionLink={leaveTransactionLink}
                     />
-                    <div className="grid max-w-[436px] gap-2">
-                        {caseOptions.map((option) => (
-                            <CardCaseDocument
-                                caseDocumentOption={option}
-                                isSelected={state.caseId === option.value}
-                                key={option.value}
-                                onChange={() =>
-                                    handleSelection(
-                                        option.value as string,
-                                        option.documentNumber as string
-                                    )
-                                }
-                            />
-                        ))}
-                    </div>
-                    {(selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT ||
-                        showSelectionError) && (
-                        <div className="flex flex-col gap-2 mt-2">
-                            {selectedCaseId ===
-                                PROCESS_WITHOUT_CASE_DOCUMENT && (
-                                <AssistiveText
-                                    variant={AssistiveTextVariant.Info}
-                                    text={
-                                        isOnBaseUpdateAssistiveText
-                                            ? t(
-                                                  'workflows.start.processWithoutDocAssistiveTextWithOnBaseUpdate'
-                                              )
-                                            : t(
-                                                  'workflows.start.processWithoutDocAssistiveText'
-                                              )
+                }
+            >
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col">
+                        <Label
+                            className="mb-4"
+                            label={
+                                type == 'case'
+                                    ? t('workflows.start.caseSelectionLabel')
+                                    : t(
+                                          'workflows.start.documentSelectionLabel'
+                                      )
+                            }
+                            sentenceCase={false}
+                            variant={LabelVariant.LabelLg}
+                        />
+                        <div className="grid max-w-[436px] gap-2">
+                            {caseOptions.map((option) => (
+                                <CardCaseDocument
+                                    caseDocumentOption={option}
+                                    isSelected={state.caseId === option.value}
+                                    key={option.value}
+                                    onChange={() =>
+                                        handleSelection(
+                                            option.value as string,
+                                            option.documentNumber as string
+                                        )
                                     }
                                 />
-                            )}
-                            {showSelectionError && (
-                                <AssistiveText
-                                    variant={AssistiveTextVariant.Error}
-                                    text={t('workflows.start.missingSelection')}
-                                />
-                            )}
+                            ))}
                         </div>
-                    )}
+                        {(selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT ||
+                            showSelectionError) && (
+                            <div className="flex flex-col gap-2 mt-2">
+                                {selectedCaseId ===
+                                    PROCESS_WITHOUT_CASE_DOCUMENT && (
+                                    <AssistiveText
+                                        variant={AssistiveTextVariant.Info}
+                                        text={
+                                            type == 'case'
+                                                ? t(
+                                                      'workflows.start.processWithoutCaseAssistiveText'
+                                                  )
+                                                : isOnBaseUpdateAssistiveText
+                                                ? t(
+                                                      'workflows.start.processWithoutDocAssistiveTextWithOnBaseUpdate'
+                                                  )
+                                                : t(
+                                                      'workflows.start.processWithoutDocAssistiveText'
+                                                  )
+                                        }
+                                    />
+                                )}
+                                {showSelectionError && (
+                                    <AssistiveText
+                                        variant={AssistiveTextVariant.Error}
+                                        text={
+                                            type == SourceType.Case
+                                                ? t(
+                                                      'workflows.start.missingCaseSelection'
+                                                  )
+                                                : t(
+                                                      'workflows.start.missingSelection'
+                                                  )
+                                        }
+                                    />
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </WorkflowCard>
+            </WorkflowCard>
+        </>
     );
 };
 

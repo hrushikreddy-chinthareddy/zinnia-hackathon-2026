@@ -9,7 +9,10 @@ import {
     getBeneficiaryColor,
     getContigentColor,
 } from '@deps/containers/people-card-container/people-card-container.helpers';
-import { BeneficiaryType } from '@deps/containers/people-card-container/people-card-container.types';
+import {
+    BeneficiaryType,
+    AgentType,
+} from '@deps/containers/people-card-container/people-card-container.types';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TagKey } from '@deps/types/components';
 
@@ -21,7 +24,7 @@ export interface CardPeopleProps {
     onClick?: () => void;
     accessibilityText: string;
     accessibilityClickText: string;
-    beneficiaryType?: BeneficiaryType;
+    beneficiaryType?: BeneficiaryType | AgentType;
     index: number;
     shouldFocus?: boolean;
     isSelected?: boolean;
@@ -42,8 +45,11 @@ const PREFERRED_TAG_ORDER = {
     'Third Party Designee': 9,
 } as { [key: string]: number };
 
-const getBeneficiaryColorByType = (type: BeneficiaryType, index: number) => {
-    return type === BeneficiaryType.PRIMARY
+const getBeneficiaryColorByType = (
+    type: BeneficiaryType | AgentType,
+    index: number
+) => {
+    return type === BeneficiaryType.PRIMARY || type === AgentType.PRIMARY
         ? getBeneficiaryColor(index)
         : getContigentColor(index);
 };

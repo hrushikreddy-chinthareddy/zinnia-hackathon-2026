@@ -45,6 +45,7 @@ const hasSideSheet = (fundType: string | undefined) =>
     fundType === FundTypes.Index || fundType === FundTypes.Variable;
 
 const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
+    const sideSheet = useSideSheetContext();
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'policy.funds.fundsTable',
     });
@@ -60,8 +61,6 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
             </div>
         );
     }
-
-    const sideSheet = useSideSheetContext();
 
     const hasSomeAllocation = funds?.some(
         (fund) => fund.allocation !== DEFAULT_ERROR_STRING
@@ -197,7 +196,7 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {loading && (
+                {loading ? (
                     <TableRow>
                         <TableCell colSpan={5}>
                             <div className={styles.loaderContainer}>
@@ -214,9 +213,7 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                             </div>
                         </TableCell>
                     </TableRow>
-                )}
-
-                {!loading &&
+                ) : (
                     funds?.map((fund, index) => {
                         return (
                             <TableRow key={`fund-${fund.fundId}-${index}`}>
@@ -297,7 +294,8 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
                                 )}
                             </TableRow>
                         );
-                    })}
+                    })
+                )}
             </TableBody>
         </Table>
     );

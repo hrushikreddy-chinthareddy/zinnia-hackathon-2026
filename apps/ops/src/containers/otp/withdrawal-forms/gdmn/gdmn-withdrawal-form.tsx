@@ -56,7 +56,6 @@ export default function GdmnWithdrawalForm() {
         setOwnerStateOfResidence,
         isFormStateReadOnly,
         formTpaAuthorization,
-        contractIssueState,
         formESignatureData,
         setFormESignatureData,
         formErrors,
@@ -92,7 +91,7 @@ export default function GdmnWithdrawalForm() {
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedState(ownerStateOfResidence ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}

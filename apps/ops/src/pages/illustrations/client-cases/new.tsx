@@ -16,7 +16,6 @@ export default function NewClientCase(
     props: ComponentProps<typeof IllustrationsPage>
 ) {
     const router = useRouter();
-    const queryClient = useQueryClient();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const sideSheet = useSideSheetContext();
     const searchParams = useSearchParams();

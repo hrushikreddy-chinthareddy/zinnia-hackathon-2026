@@ -1,3 +1,7 @@
+import {
+    AliasModel,
+    PartyReferenceDataModel,
+} from '@xd/api-types/dist/generated-types/partyreference';
 import { isValidDate } from '@xd/utils/dist';
 import { capitalize } from '@xd/utils/src/strings';
 import {
@@ -29,7 +33,6 @@ import {
     IllustrationInsuredDetails,
     IllustrationsClientCase,
 } from '@deps/types/illustrations';
-import { PartyReference } from '@deps/types/party-reference';
 
 import styles from './create-client-case-form.module.css';
 import { AgentSearch } from '../agent-search/agent-search';
@@ -45,11 +48,11 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
     caseManagementCaseId: '',
     eAppId: '',
     agentDetails: {
-        firstName: DEFAULT_ERROR_STRING,
-        lastName: DEFAULT_ERROR_STRING,
-        sellingCode: DEFAULT_ERROR_STRING,
-        email: DEFAULT_ERROR_STRING,
-        npn: DEFAULT_ERROR_STRING,
+        firstName: undefined,
+        lastName: undefined,
+        sellingCode: undefined,
+        email: undefined,
+        npn: undefined,
     },
     insuredDetails: {
         firstName: '',
@@ -62,10 +65,6 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
     lastModified: '',
 };
 
-const AOR_IDENTIFIER_LABEL = 'AOR';
-const SELLING_CODE_IDENTIFIER_LABEL = 'SELLING_CODE';
-const UPN_IDENTIFIER_LABEL = 'UPN';
-
 function calculateIssueAge(dateOfBirth: Date | null): number {
     if (!dateOfBirth) return 0;
 
@@ -73,46 +72,37 @@ function calculateIssueAge(dateOfBirth: Date | null): number {
     return today.diff(dateOfBirth, 'year');
 }
 
-const getUserIdentifiers = (partyReference: PartyReference) => {
-    let aor = '';
-    let upn = '';
-    let sellingCode = '';
-    const { alias, email } = partyReference;
-    const userAlias = alias.find((alias) => alias.email === email);
-
-    if (userAlias) {
-        const { externalPartyIds } = userAlias;
-        if (externalPartyIds) {
-            const userSellingCodeExternalParty = externalPartyIds.find(
-                (externalParty) =>
-                    externalParty.key === SELLING_CODE_IDENTIFIER_LABEL
-            );
-            const userAORExternalParty = externalPartyIds.find(
-                (externalParty) => externalParty.key === AOR_IDENTIFIER_LABEL
-            );
-
-            const userUPNExternalParty = externalPartyIds.find(
-                (externalParty) => externalParty.key === UPN_IDENTIFIER_LABEL
-            );
-
-            if (userSellingCodeExternalParty) {
-                sellingCode = userSellingCodeExternalParty.value;
-            }
-            if (userAORExternalParty) {
-                aor = userAORExternalParty.value;
-            }
-            if (userUPNExternalParty) {
-                upn = userUPNExternalParty.value;
-            }
-        }
+const SELLING_CODE = 'SELLING_CODE';
+export function findAllAliasesWithSellingCode(
+    party: PartyReferenceDataModel | undefined
+): AliasModel[] {
+    if (!party) {
+        return [];
     }
+    return party.alias.filter((alias) =>
+        alias.externalPartyIds?.some((id) => id.key === SELLING_CODE)
+    );
+}
 
-    return {
-        aor,
-        upn,
-        sellingCode,
-    };
-};
+export function getAllSellingCodes(
+    party: PartyReferenceDataModel | undefined
+): string[] {
+    if (!party) {
+        return [];
+    }
+    return party.alias.flatMap(
+        (alias) =>
+            alias.externalPartyIds
+                ?.filter((id) => id.key === SELLING_CODE)
+                .map((id) => id.value) || []
+    );
+}
+
+export function findSellingCodeFromAlias(
+    alias: AliasModel
+): string | undefined {
+    return alias.externalPartyIds?.find((id) => id.key === SELLING_CODE)?.value;
+}
 
 const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     onSubmit,
@@ -121,9 +111,12 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 }: CreateClientCaseFormProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { partyReferenceData } = usePermissionsContext();
-    const { aor, upn, sellingCode } = getUserIdentifiers(
-        partyReferenceData as PartyReference
-    );
+
+    const aliases = findAllAliasesWithSellingCode(partyReferenceData);
+    const sellingCodes = getAllSellingCodes(partyReferenceData);
+
+    const isAgent = aliases.length > 0;
+
     const isEdit = !!clientCase;
     const mergedCase = {
         ...clientCaseInitialState,
@@ -226,6 +219,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         const validDate = isValidDate(formattedDate);
 
         return !(
+            isAgent &&
+            currentAgent?.firstName &&
+            currentAgent?.lastName &&
             somethingChanged &&
             title &&
             insuredDetails?.sexAtBirth &&
@@ -270,22 +266,23 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             });
         }
 
-        // for New pulls PartyReference data
+        // for New client-cases we pull the logged in user, who should be an agent, and use their data from the party reference service
         if (!isEdit && partyReferenceData) {
-            let agentSellingCode = '';
-            if (sellingCode) {
-                agentSellingCode = sellingCode;
-            } else if (aor && upn) {
-                agentSellingCode = aor + upn;
+            const agentAlias = aliases.length > 0 ? aliases[0] : null;
+
+            if (agentAlias) {
+                setCurrentAgent({
+                    firstName: agentAlias.firstName,
+                    lastName: agentAlias.lastName,
+                    email: agentAlias.email,
+                    sellingCode: findSellingCodeFromAlias(agentAlias),
+                });
             }
-            setCurrentAgent({
-                firstName: partyReferenceData.firstName ?? DEFAULT_ERROR_STRING,
-                lastName: partyReferenceData.lastName ?? DEFAULT_ERROR_STRING,
-                email: partyReferenceData.email ?? DEFAULT_ERROR_STRING,
-                sellingCode: agentSellingCode ?? '',
-            });
+
+            // For Farmers, we can build the selling code by combining the AOR + UPN
+            // confirm if we should take in consideration this case scenario
         }
-    }, [isEdit, clientCase, partyReferenceData, sellingCode, aor, upn]);
+    }, [isEdit, clientCase, partyReferenceData]);
 
     return (
         <form className={styles.formContainer}>
@@ -300,10 +297,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     fieldSize={FieldSize.Small}
                     name="title"
                     onChange={getDataToUpdate}
+                    id="client-case-title"
                     label={
-                        <Typography variant={TypographyVariant.FieldLabel}>
+                        <Label>
                             {t('clientCase.createClientCaseForm.titleLabel')}
-                        </Typography>
+                        </Label>
                     }
                     maxLength={60}
                     value={clientCaseData.title}
@@ -333,11 +331,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     name="firstName"
                     onChange={getDataToUpdate}
                     label={
-                        <Typography variant={TypographyVariant.FieldLabel}>
+                        <Label>
                             {t(
                                 'clientCase.createClientCaseForm.firstNameLabel'
                             )}
-                        </Typography>
+                        </Label>
                     }
                     defaultValue={clientCaseData.insuredDetails?.firstName}
                 />
@@ -347,9 +345,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     name="lastName"
                     onChange={getDataToUpdate}
                     label={
-                        <Typography variant={TypographyVariant.FieldLabel}>
+                        <Label>
                             {t('clientCase.createClientCaseForm.lastNameLabel')}
-                        </Typography>
+                        </Label>
                     }
                     defaultValue={clientCaseData.insuredDetails?.lastName}
                 />
@@ -384,7 +382,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         updateClientCaseData({ sexAtBirth: v as string });
                     }}
                     label={
-                        <Label labelFor="buttonGroupTest">
+                        <Label labelFor="sexAtBirth">
                             {t(
                                 'clientCase.createClientCaseForm.sexAssignedLabel'
                             )}
@@ -437,11 +435,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     <Select
                         options={usStatesSelectList}
                         label={
-                            <Typography variant={TypographyVariant.FieldLabel}>
+                            <Label>
                                 {t(
                                     'clientCase.createClientCaseForm.stateLabel'
                                 )}
-                            </Typography>
+                            </Label>
                         }
                         onValueChange={(v) => {
                             updateClientCaseData({ state: v });

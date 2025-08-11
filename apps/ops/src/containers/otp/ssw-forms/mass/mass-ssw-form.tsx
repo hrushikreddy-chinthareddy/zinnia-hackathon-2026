@@ -90,7 +90,7 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
         ? validateMaritalStatusAllowances(contractIssueState as USStates)
         : false;
 
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
 
     return (
         <>

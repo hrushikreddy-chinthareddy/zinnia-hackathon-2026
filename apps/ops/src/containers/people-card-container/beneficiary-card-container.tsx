@@ -18,6 +18,7 @@ import {
     getContigentColor,
 } from './people-card-container.helpers';
 import {
+    AgentType,
     BeneficiaryType,
     PeopleCardContainerProps,
 } from './people-card-container.types';
@@ -27,9 +28,12 @@ import { NameTag } from '../people-sub-page/people-sub-page.helpers';
 interface BeneficiaryCardContainerProps extends PeopleCardContainerProps {
     openAllocationSideSheet?: () => void;
     title: string;
-    type?: BeneficiaryType;
+    type?: BeneficiaryType | AgentType;
     showAllocationBar?: boolean;
     isRereg?: boolean;
+    tooltip?: string;
+    disabled?: boolean;
+    cardDisableTooltip?: string;
     manageBeneficiary?: () => void;
     showManageBeneficiary?: boolean;
     enableManageBeneficiary?: boolean;
@@ -37,15 +41,25 @@ interface BeneficiaryCardContainerProps extends PeopleCardContainerProps {
 
 const peopleDataToColors = (
     filteredData: NameTag[],
-    type: BeneficiaryType
+    type: BeneficiaryType | AgentType
 ): AllocationColor[] => {
-    return filteredData.map((nt, index) => ({
-        allocationPercentage: nt.beneficiaryPercentage?.toString() || '0',
-        className:
-            type === BeneficiaryType.PRIMARY
-                ? getBeneficiaryColor(index)
-                : getContigentColor(index),
-    }));
+    return filteredData.map((nt, index) => {
+        const allocationPercentageValue =
+            type === BeneficiaryType.PRIMARY ||
+            type === BeneficiaryType.CONTIGENT
+                ? nt.beneficiaryPercentage?.toString()
+                : nt.agentPercentage?.toString();
+
+        const finalAllocationPercentage = allocationPercentageValue ?? '0';
+
+        return {
+            allocationPercentage: finalAllocationPercentage,
+            className:
+                type === BeneficiaryType.PRIMARY || type === AgentType.PRIMARY
+                    ? getBeneficiaryColor(index)
+                    : getContigentColor(index),
+        };
+    });
 };
 
 const BeneficiaryCardContainer = ({
@@ -56,6 +70,7 @@ const BeneficiaryCardContainer = ({
     peopleCardData,
     showAllocationBar = true,
     isRereg = false,
+    tooltip,
     showManageBeneficiary = false,
     enableManageBeneficiary = false,
 }: BeneficiaryCardContainerProps) => {
@@ -63,6 +78,7 @@ const BeneficiaryCardContainer = ({
     const colors: AllocationColor[] = showAllocationBar
         ? peopleDataToColors(filteredData, type)
         : [];
+    const { isAgentSelected } = peopleCardData;
 
     const classes = clsx(
         'mb-[9px]',
@@ -108,7 +124,8 @@ const BeneficiaryCardContainer = ({
                 classNames="mt-6"
                 filteredData={filteredData}
                 peopleCardData={peopleCardData}
-                isRereg={true}
+                isRereg={!isAgentSelected}
+                type={type}
             />
         </div>
     );

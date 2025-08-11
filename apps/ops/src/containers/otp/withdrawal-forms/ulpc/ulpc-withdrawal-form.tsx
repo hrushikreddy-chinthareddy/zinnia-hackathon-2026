@@ -106,7 +106,7 @@ export default function UlpcWithdrawalForm() {
         }
     }, [formParty, ownerStateOfResidence]);
 
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedState(ownerStateOfResidence ?? '');
 
     return (
         <>

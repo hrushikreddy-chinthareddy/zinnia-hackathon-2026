@@ -931,12 +931,6 @@ export default function getRSLNOftConfig(t: TFunction) {
                     maxLength: 40,
                 },
                 {
-                    fieldName: BankingFields.FboDetails,
-                    fieldLabel: t('distributionMethod.fboDetails'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 35,
-                },
-                {
                     fieldName: BankingFields.ParticipantId,
                     fieldLabel: t('distributionMethod.participantId'),
                     component: DisbursementFields.SelectParticipantId,

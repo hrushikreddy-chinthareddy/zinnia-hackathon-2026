@@ -196,6 +196,19 @@ const getPolicyReferencesByCarrier = withLogging(
 export const getPolicyByPlanCodeAndId = withLogging(
   async (options: PolicyRequestInputs, loggingCtx: CommonLogContext) => {
     const { planCode, policyNumber } = options;
+
+    if (!planCode) {
+      throw new Error('Missing plan code to get policy', {
+        cause: { options },
+      });
+    }
+
+    if (!policyNumber) {
+      throw new Error('Missing policyNumber to get policy', {
+        cause: { options },
+      });
+    }
+
     const url = `${policyApiBaseUrl}/${planCode}/${policyNumber}?viewDetails=true`;
 
     if (isMockErrorEnabled(ApiEndpoints.POLICY)) {
@@ -376,21 +389,43 @@ export const getMyPoliciesByCarrier = withLogging(
       ? await getPolicyReferencesByCarrierEnterprise(loggingCtx)
       : await getPolicyReferencesByCarrier(loggingCtx);
 
-    if (!response || !response.results || !!error) {
+    if (!response && !error) {
+      throw new Error(
+        'No response returned when fetching policy references by carrier.'
+      );
+    }
+
+    if (error) {
       throw new Error('Failed to fetch policy references by carrier.', {
         cause: { error },
       });
+    }
+
+    if (response && !response.results) {
+      throw new Error(
+        'No results returned when fetching policy references by carrier.'
+      );
     }
 
     // TODO: why did we do it this way rather than passing carrierId array to the search?
     const filteredPolicies: Promise<ApiResponse<Policy>>[] = response.results
       .filter((p: Policy) => carrierId.includes(p.carrierId || ''))
       .map(
-        (carrierPolicy: PolicyReferenceData): Promise<ApiResponse<Policy>> => {
+        ({
+          planCode,
+          policyNumber,
+        }: PolicyReferenceData): Promise<ApiResponse<Policy>> => {
+          if (!planCode || planCode === 'undefined') {
+            throw new Error('Missing plan code in policy reference data');
+          }
+
+          if (!policyNumber || policyNumber === 'undefined') {
+            throw new Error('Missing policy number in policy reference data');
+          }
           return getPolicyByPlanCodeAndId(
             {
-              planCode: carrierPolicy.planCode || '',
-              policyNumber: carrierPolicy.policyNumber,
+              planCode,
+              policyNumber,
             },
             loggingCtx
           );

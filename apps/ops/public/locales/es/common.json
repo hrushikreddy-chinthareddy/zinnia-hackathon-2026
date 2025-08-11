@@ -25,6 +25,7 @@
     "yes": "Sí",
     "no": "No",
     "cancel": "Cancelar",
+    "contractNumber": "Contract number",
     "illustrations": "Ilustraciones",
     "site": {
         "name": "Zinnia Live",
@@ -95,7 +96,11 @@
             "usage": "Uso",
             "viewDocument": "Ver Documento",
             "withdrawals": "Retiros",
-            "defaultCase": "Formulario de Solicitud de Servicio"
+            "defaultCase": "Formulario de Solicitud de Servicio",
+            "ownerChange": "Cambio de Propietario",
+            "jointOwnerChange": "Cambio de Copropietario",
+            "payorChange": "Cambio de pagador",
+            "thirdPartyDesigneeChange": "Cambio de designado por terceros"
         },
         "navLinks": {
             "accessManagement": {
@@ -659,6 +664,237 @@
             "viewAllPeople": "Ver todas las personas",
             "submitAddress": "Actualizar beneficiario"
         }
+    },
+    "roleChange": {
+        "start": {
+            "label": "Iniciar",
+            "title": "Administrar {{roleLabel}}s",
+            "subtitle": "Seleccione un caso vinculado, si corresponde."
+        },
+        "roleDetails": {
+            "requiredDocuments": "¿Están disponibles los documentos de soporte requeridos?",
+            "reasonChange": "Motivo del cambio",
+            "relationshipcurrent": "Relación con el {{roleLabel}} actual",
+            "header": "{{roleLabel}} Detalles",
+            "ssn": "SSN",
+            "gender": "Género",
+            "dateOfBirth": "Fecha de nacimiento",
+            "firstName": "Primer nombre",
+            "lastName": "Apellido",
+            "middleName": "Segundo nombre",
+            "suffix": "Sufijo",
+            "prefix": "Prefijo",
+            "title": "Título",
+            "maritalStatus": "Estado civil",
+            "prefferedMethod": "Método de contacto preferido",
+            "address": "Dirección",
+            "phone": "Teléfono",
+            "email": "Correo electrónico",
+            "add": "Agregar",
+            "newRole": "Nuevo {{roleLabel}}",
+            "close": "Cerrar",
+            "trustType": "Tipo de fideicomiso",
+            "trustName": "Nombre del fideicomiso",
+            "custodianName": "Nombre del custodio",
+            "individualTrust": "Fideicomiso individual",
+            "corporateTrust": "Fideicomiso corporativo",
+            "lookThrough": "Fideicomiso de mirada atrás",
+            "companyName": "Nombre de la empresa",
+            "masculino": "Masculino",
+            "femenino": "Femenino",
+            "si": "Sí",
+            "no": "No",
+            "fechaDeFideicomiso": "Fecha de fideicomiso",
+            "métodoDeContactoPreferido": "Método de contacto preferido",
+            "formValidations": {
+                "firstName": "Primer nombre es requerido",
+                "fullName": "Nombre es requerido",
+                "lastName": "Apellido es requerido",
+                "addressLine": "Dirección es requerida",
+                "name": "Por favor, asegúrese de que el nombre y el apellido o el nombre de la empresa o el nombre del fiduciario estén actualizados al agregar {{roleLabel}}",
+                "addressDetails": "Por favor, asegúrese de que los detalles de la dirección estén correctamente llenados al agregar {{roleLabel}}",
+                "addRole": "Por favor, agregue un {{roleLabel}} para continuar",
+                "removeRole": "Por favor, elimine el {{roleLabel}} existente para agregar un nuevo {{roleLabel}}",
+                "reason": "Por favor, inicie el proceso de reclamo de muerte",
+                "relationshipToParty": "La relación con la parte es requerida",
+                "trustDateRequired": "La fecha de fideicomiso es requerida",
+                "prefferedMethod": "El método de contacto preferido es requerido",
+                "relationship": "Por favor, asegúrese de que la relación con la parte esté seleccionada al agregar {{roleLabel}}",
+                "preferredType": "Por favor, asegúrese de que el método de contacto preferido esté seleccionado al agregar {{roleLabel}}",
+                "trustDate": "Por favor, asegúrese de que la fecha de fideicomiso esté seleccionada al agregar {{roleLabel}}"
+            },
+            "relationshipToParty": {
+                "trustee": "Fiduciario",
+                "trusteeOfMinor": "Fiduciario de menor",
+                "trusteeOfIncompetent": "Fiduciario de incapacitado",
+                "powerOfAttorney": "Poder notarial",
+                "controllingPersonOfEntity": "Persona controladora de la entidad",
+                "brother": "Hermano",
+                "child": "Hijo",
+                "daughter": "Hija",
+                "domesticPartner": "Pareja doméstica",
+                "executor": "Ejecutor",
+                "father": "Padre",
+                "fiance": "Novio/a",
+                "grandchild": "Nieto/a",
+                "lifePartner": "Pareja de vida",
+                "mother": "Madre",
+                "sister": "Hermana",
+                "son": "Hijo",
+                "spouse": "Cónyuge",
+                "stepfather": "Padrastro",
+                "stepmother": "Madrastra",
+                "self": "Yo",
+                "business": "Negocio",
+                "businessAssociate": "Asociado de negocios",
+                "partner": "Socio",
+                "employer": "Empleador",
+                "formerSpouse": "Ex cónyuge",
+                "grandparent": "Abuelo/a",
+                "parent": "Padre/madre",
+                "owner": "Dueño",
+                "sibling": "Hermano/a",
+                "stepchild": "Hijastro/a",
+                "stepparent": "Padrastro/a",
+                "other": "Otro"
+            },
+            "prefixOptions": {
+                "dr": "Dr.",
+                "mr": "Sr.",
+                "mrs": "Sra.",
+                "ms": "Sra."
+            },
+            "suffixOptions": {
+                "jr": "JR",
+                "sr": "SR",
+                "i": "I",
+                "ii": "II",
+                "iii": "III"
+            },
+            "partyOptions": {
+                "individual": "Persona",
+                "trust": "Fideicomiso",
+                "organisation": "Patrimonio/Organización",
+                "custodian": "Custodio"
+            },
+            "resonOptions": {
+                "ownerDeath": "Muerte del dueño",
+                "giftTransfer": "Transferencia de regalo",
+                "transferConsideration": "'Transferencia por consideración'"
+            },
+            "yes": "Sí",
+            "no": "No"
+        },
+        "beneDetails": {
+            "title": "Se recibió una solicitud de cambio de beneficiario?",
+            "header": "Detalles del beneficiario"
+        },
+        "signature": {
+            "header": "Firma",
+            "selectOption": "Seleccione",
+            "trustee": "Fiduciario",
+            "executor": "Ejecutor",
+            "custodian": "Custodio",
+            "guardian": "Tutor",
+            "attorneyInFact": "Abogado en hechos",
+            "assignee": "Asignado",
+            "poa": "POA",
+            "na": "NA",
+            "yes": "Sí",
+            "no": "No",
+            "type": "Tipo",
+            "designation": "Designación",
+            "signPresent": "Firma presente",
+            "date": "Fecha de la firma",
+            "printName": "Nombre impreso",
+            "isSignatureValid": "Firma validada",
+            "isNotarySignValid": "Sello del notario validado",
+            "commissionExpiresOn": "Vencimiento de la comisión",
+            "signatureComment": "Comentario de la firma",
+            "signatureSsn": "SSN",
+            "signatureCityProvided": "Ciudad/Estado",
+            "signatureCommentLabel": "Comentario de la firma",
+            "signGuaranteeStamp": "Sello de garantía",
+            "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
+            "signDate": "Fecha de la firma",
+            "signaturePresent": "¿La firma está presente?",
+            "validationReasons": {
+                "single": "Soltero/a, divorciado/a, viudo/a o no tiene cónyuge",
+                "marriedWithoutERISA": "Casado/a y el Plan no está sujeto a ERISA (Consulte con su empleador si no está seguro de si su plan está sujeto a ERISA)",
+                "marriedWithERISA": "Casado/a y el Plan está sujeto a ERISA (Se requiere la firma del cónyuge y el sello del notario en este caso)",
+                "signatuePresent": "Todas las opciones de firma presente deben ser seleccionadas"
+            }
+        },
+        "summary": {
+            "header": "Resumen",
+            "overview": "Resumen",
+            "role": "{{roleLabel}}",
+            "reviewMessage": "Muy bien! Asegúrese de revisar sus entradas antes de enviar",
+            "changeReason": "Motivo del cambio",
+            "requiredsupportingdocument": "Documentos de apoyo necesarios disponibles?",
+            "identification": "Identificación",
+            "partytype": "Tipo de parte",
+            "trustType": "Tipo de fideicomiso",
+            "trustDate": "Fecha del fideicomiso",
+            "relationshipcurrent": "Relación con la parte",
+            "relationship": "Relación con {{roleLabel}}",
+            "name": "Nombre",
+            "uscitizen": "Ciudadano de los EE. UU.",
+            "ssn": "SSN",
+            "gender": "Género",
+            "birthdate": "Fecha de nacimiento",
+            "prefferedMethod": "Método de contacto preferido",
+            "contactDetails": "Detalles de contacto",
+            "email": "Correo electrónico",
+            "homeNumber": "Número de teléfono en casa",
+            "BusinessAddress": "Dirección comercial",
+            "current": "Actual",
+            "updated": "Actualizado",
+            "contact": {
+                "title": "Información de contacto",
+                "address": "Dirección",
+                "phone": "Teléfono",
+                "email": "Correo electrónico",
+                "number": "Número"
+            },
+            "tag": {
+                "none": "Ninguno",
+                "updated": "Actualizado",
+                "removed": "Eliminado",
+                "new": "Nuevo"
+            },
+            "status200subtitle": "Muy bien! Asegúrese de revisar sus entradas antes de enviar",
+            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "subtitle": "Muy bien! Asegúrese de revisar todas las transferencias y los valores de los fondos resultantes antes de enviar.",
+            "effectiveDateLabel": "Fecha efectiva",
+            "validationStatusLabel": "Estado de validación",
+            "internal500Error": "Los servicios están fuera de línea, por lo que no podemos continuar. Puede enviar un ticket de ayuda. Por favor, salga de esta transacción y vuelva a intentarlo más tarde.",
+            "internal500CTAlinkText": "Enviar un ticket de ayuda",
+            "submitWithErrorsText": "Enviar con errores y crear un NIGO task para que el equipo de seguimiento lo siga.",
+            "missingCheckToConfirm": "Para enviar, confirme que desea enviar con errores y crear un NIGO task."
+        },
+        "confirm": {
+            "header": "Confirmar",
+            "close": "Cerrar",
+            "title": "¡Entendido!",
+            "viewAllPeople": "Ver todas las personas",
+            "submitAddress": "Actualizar beneficiario",
+            "successMessage": "Se enviaron actualizaciones de {{roleLabel}}",
+            "for": "para",
+            "nigo": "Procesamiento NIGO.",
+            "goToCase": "Ir al caso",
+            "submit": "¡Enviado!"
+        },
+        "tabs": {
+            "start": "Inicio",
+            "roleDetails": "Detalles de {{roleLabel}}",
+            "beneDetails": "Detalles del beneficiario",
+            "signature": "Firma",
+            "summary": "Resumen",
+            "confirm": "Confirmación"
+        },
+        "yes": "Sí",
+        "no": "No"
     },
     "addressChange": {
         "common": {
@@ -4147,15 +4383,17 @@
             },
             "address": {
                 "errors": {
-                    "city": "Falta la ciudad.",
+                    "city": "La ciudad está vacía.",
                     "invalidZip": "El código postal debe tener al menos 5 dígitos.",
-                    "missingCaseDocument": "Selecciona un documento (o procede sin él) para continuar.",
-                    "state": "Falta el estado.",
-                    "streetAddress": "Falta la dirección.",
-                    "zipCode": "Falta el código postal."
+                    "missingCaseDocument": "Seleccione un documento (o continúe sin él) para continuar.",
+                    "state": "El estado está vacío.",
+                    "streetAddress": "La dirección de la calle está vacía.",
+                    "zipCode": "El código postal está vacío.",
+                    "address": "La dirección es requerida"
                 },
                 "general": {
                     "addLine": "Agregar número de unidad, suite, piso, etc.",
+                    "addAdressLine": "Agregar línea de dirección (por ejemplo, piso, suite, etc)",
                     "cancel": "Cancelar"
                 },
                 "labels": {
@@ -4376,7 +4614,8 @@
                     "residence": "Residencial",
                     "business": "Negocios",
                     "poBox": "Apartado postal",
-                    "poBoxLower": "apartado postal"
+                    "poBoxLower": "apartado postal",
+                    "mailing": "Correo postal"
                 },
                 "general": {
                     "add": "Añadir",
@@ -4598,7 +4837,13 @@
         },
         "filterByRole": "Filtrar por rol:",
         "primaryAllocation": "Asignación primaria",
-        "contingentAllocation": "Asignación contingente"
+        "contingentAllocation": "Asignación contingente",
+        "commissionAllocation": "Asignación de comisiones",
+        "commissionAllocationTooltip": "La asignación de comisiones muestra el desglose de cómo los agentes ganan dinero por la venta de la póliza. Las reglas de la comisión varían según la póliza y el operador. Por lo general, los agentes ganan un cierto porcentaje de las primas del propietario durante el primer año de la póliza y luego ganan un porcentaje menor durante una cantidad determinada de años posteriores. La asignación de comisiones, sin embargo, la determinan los propios agentes. Los agentes de comisión suelen ser todos agentes dentro de la misma oficina.",
+        "cardDisableTooltip": "Seguimos trabajando en esta página. Por ahora, dirígete directamente a MCS para ver la información de contacto y los datos de identificación del agente.",
+        "other": "Otro",
+        "otherTooltip": "Otros agentes de la póliza no ganan comisión, pero también pueden estar autorizados a realizar cambios o discutir esta póliza. Por ejemplo, el agente de servicio de la póliza es el agente que trabaja directamente con el propietario ahora que la póliza está activa.",
+        "managePeople": "Gestionar personas"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
@@ -5599,7 +5844,8 @@
             "processWithoutDocAssistiveText": "Si continúas sin una selección de documento, no podemos actualizar OnBase por ti.",
             "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si continúas sin una selección de documento, podemos actualizar OnBase por ti.",
             "processWithoutDocWithOnbaseDocCheckAssistiveText": "Si continúas sin una selección de documento, podemos actualizar OnBase por ti.",
-            "missingSelection": "Selecciona un documento (o continúa sin) para continuar."
+            "missingSelection": "Selecciona un documento (o continúa sin) para continuar.",
+            "supportingInfo": "Información complementaria"
         },
         "paymentStep": {
             "addAddress": "Agregar nuevos detalles de dirección",

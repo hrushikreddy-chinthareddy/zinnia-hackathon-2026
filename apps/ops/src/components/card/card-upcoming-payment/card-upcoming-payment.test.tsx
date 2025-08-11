@@ -105,6 +105,7 @@ describe('UpcomingPaymentCard', () => {
             paymentDateText,
             bankDetails,
             displayCardWithZeroAmount: false,
+            hasProgram: true,
         };
 
         it('renders correct content', () => {
@@ -145,6 +146,7 @@ describe('UpcomingPaymentCard', () => {
                 paymentText,
                 paymentDateText,
                 bankDetails,
+                hasProgram: true,
             };
             const { getByTestId } = renderComponent(props);
             const activeElement = getByTestId(UpcomingPaymentCardTest.ACTIVE);
@@ -158,19 +160,20 @@ describe('UpcomingPaymentCard', () => {
         const inactiveText = 'Body Text';
         const inactiveHeaderText = 'Header';
         const inactiveIcon = 'Icon';
-        beforeEach(() => {
-            props = {
-                ...defaultProps,
-                paymentDate: undefined,
-                inactiveIcon,
-                inactiveText,
-                inactiveHeaderText,
-            };
-            const { getByTestId } = renderComponent(props);
-            element = getByTestId(UpcomingPaymentCardTest.INACTIVE);
-        });
+
+        const inactiveProps = {
+            ...defaultProps,
+            paymentDate: undefined,
+            inactiveIcon,
+            inactiveText,
+            inactiveHeaderText,
+            displayCardWithZeroAmount: false,
+            hasProgram: false,
+        };
 
         it('renders correct content', () => {
+            const { getByTestId } = renderComponent(inactiveProps);
+            element = getByTestId(UpcomingPaymentCardTest.INACTIVE);
             expect(element).toBeInTheDocument();
             [
                 // title cased
@@ -181,6 +184,24 @@ describe('UpcomingPaymentCard', () => {
             expect(element).toHaveTextContent(inactiveText);
             expect(element).toHaveTextContent(toTitleCase(inactiveHeaderText));
             expect(element).toHaveTextContent(inactiveIcon);
+        });
+
+        it('renders inactive state when hasProgram is false, even if displayCardWithZeroAmount is true', () => {
+            const props = {
+                ...defaultProps,
+                autopayAmount: 0,
+                additionalCharges: [],
+                displayCardWithZeroAmount: true,
+                hasProgram: false,
+                paymentDate: undefined,
+                inactiveText,
+                inactiveHeaderText,
+            };
+            const { getByTestId } = renderComponent(props);
+            element = getByTestId(UpcomingPaymentCardTest.INACTIVE);
+            expect(element).toBeInTheDocument();
+            expect(element).toHaveTextContent(inactiveText);
+            expect(element).toHaveTextContent(inactiveHeaderText);
         });
     });
 
@@ -206,6 +227,7 @@ describe('UpcomingPaymentCard', () => {
                 paymentFrequencyText,
                 additionalChargesTitle,
                 additionalCharges,
+                hasProgram: true,
             };
             const { getByTestId } = renderComponent(props);
             element = getByTestId(CardTransactionsTest.Container);

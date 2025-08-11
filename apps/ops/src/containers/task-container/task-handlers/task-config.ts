@@ -24,4 +24,5 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Ops_Review,
     TaskType.Day_150_Review,
     TaskType.Policyupdate_Partydetails_Review,
+    TaskType.Initiate_Postissue_Transaction,
 ]);

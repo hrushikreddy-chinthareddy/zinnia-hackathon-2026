@@ -78,7 +78,7 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
 
     const ownerStateOfResidence =
         formParty?.parties?.[0]?.addresses?.[0]?.state;
-    const shouldStateW4pRender = isAllowedState(contractIssueState);
+    const shouldStateW4pRender = isAllowedState(ownerStateOfResidence ?? '');
     const showHasPreviousNigo = hasPreviousNigoPlanCodes.includes(planCode);
     return (
         <>

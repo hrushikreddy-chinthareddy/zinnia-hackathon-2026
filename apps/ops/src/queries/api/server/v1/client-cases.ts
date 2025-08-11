@@ -22,12 +22,24 @@ import {
 } from '../v2/new-business';
 
 const INSURED_BUSINESS_LABEL = 'INSURED';
-const PRIMARY_AGENT_BUSINESS_LABEL = 'PRIMARYWRITINGAGENT';
+enum AgentBusinessLabel {
+    PRIMARY_WRITING_AGENT = 'PRIMARYWRITINGAGENT',
+    PRIMARY_SERVICING_AGENT = 'PRIMARYSERVICINGAGENT',
+    ADDITIONAL_SERVICING_AGENT = 'ADDITIONALSERVICINGAGENT',
+    ADDITIONAL_WRITING_AGENT = 'ADDITIONALWRITINGAGENT',
+}
+
 const AOR_IDENTIFIER_LABEL = 'AOR';
 const UPN_IDENTIFIER_LABEL = 'UPN';
 const SELLING_CODE_IDENTIFIER_LABEL = 'SELLING_CODE';
 const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
 const MAIN_AGENCY_ROLE = 'GeneralAgency';
+
+function isAgentBusinessLabel(value: string): value is AgentBusinessLabel {
+    return Object.values(AgentBusinessLabel).includes(
+        value as AgentBusinessLabel
+    );
+}
 
 /**
  * Returns an array with the readable names of missing fields of an object
@@ -99,21 +111,11 @@ const buildClientCaseFromNewBusiness = async (
                 NEW_BUSINESS_API_ORIGIN
             );
         }
+        const issueState = newBusinessObject?.policy?.issueState; // ZDR-2590
 
-        // getting Insured address
-        let insuredState = '';
-        const { addresses, preferredAddressId } = address ?? {};
-        if (preferredAddressId !== undefined) {
-            const preferedAddress = addresses.find(
-                (address) => address.id === preferredAddressId
-            );
-            if (preferedAddress) {
-                insuredState = preferedAddress.state;
-            }
-        } else if (addresses && addresses.length > 0) {
-            insuredState = addresses[0].state;
+        if (!issueState) {
+            throwTypedError('Issue State is missing', NEW_BUSINESS_API_ORIGIN);
         }
-
         const clientCaseTitle = 'Untitled Client Case';
 
         const {
@@ -129,7 +131,7 @@ const buildClientCaseFromNewBusiness = async (
                 lastName,
                 dateOfBirth,
                 sexAtBirth,
-                state: insuredState,
+                state: issueState,
             },
             INSURED_PARTY_REQUIRED_FIELDS
         );
@@ -148,7 +150,7 @@ const buildClientCaseFromNewBusiness = async (
             lastName,
             sexAtBirth: toTitleCase(sexAtBirth),
             dateOfBirth: new Date(dateOfBirth),
-            state: insuredState,
+            state: issueState,
             // all this properties used on client case payload are not included in newBussiness
             // nicotineUser
             // illustrateAtOlderAge
@@ -166,9 +168,12 @@ const buildClientCaseFromNewBusiness = async (
     }
 
     // pull Agent data
-    const agentParty = parties.find(
-        (party) => party.partyRole === PRIMARY_AGENT_BUSINESS_LABEL
+    const agentParties = parties.filter((party) =>
+        isAgentBusinessLabel(party.partyRole)
     );
+
+    const agentParty =
+        agentParties.length > 0 ? agentParties.at(-1) : undefined;
 
     if (!agentParty) {
         throwTypedError(

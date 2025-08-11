@@ -300,6 +300,15 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "onlyZinniaADUsers",
+            "required": false,
+            "in": "query",
+            "description": "return only Zinnia AD users",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "requestBody": {
@@ -401,6 +410,45 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PartyReferenceDataModel"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Party Reference"
+        ],
+        "security": [
+          {
+            "Auth0": []
+          }
+        ]
+      }
+    },
+    "/party/v1/parties/reference/batch-get": {
+      "post": {
+        "operationId": "batchGetPartiesByIds",
+        "summary": "",
+        "description": "Get multiple parties by their IDs with configurable response fields",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "List of party IDs to fetch with optional fields to include",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchGetPartyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchGetPartyResponse"
                 }
               }
             }
@@ -533,6 +581,25 @@
           "entityName"
         ]
       },
+      "ExternalPartyId": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "External party ID key",
+            "example": "ECN"
+          },
+          "value": {
+            "type": "string",
+            "description": "External party ID value",
+            "example": "12345"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ]
+      },
       "UserPartyReferenceRequest": {
         "type": "object",
         "properties": {
@@ -545,6 +612,11 @@
             "type": "string",
             "description": "party last name",
             "example": "Burdell"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "party full name",
+            "example": "Nick Burdell"
           },
           "email": {
             "type": "string",
@@ -560,6 +632,18 @@
             "type": "string",
             "description": "phone number of the party",
             "example": "000000000"
+          },
+          "externalPartyId": {
+            "description": "External party identifiers",
+            "example": {
+              "key": "ecn",
+              "value": "12345"
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExternalPartyId"
+              }
+            ]
           }
         },
         "required": [
@@ -579,6 +663,11 @@
             "type": "string",
             "description": "alias last name",
             "example": "Burdell"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "alias full name",
+            "example": "Nick Burdell"
           },
           "email": {
             "type": "string",
@@ -634,6 +723,19 @@
             "type": "string",
             "description": "alias agent organization name",
             "example": "name"
+          },
+          "externalPartyIds": {
+            "description": "External party identifiers",
+            "example": [
+              {
+                "key": "ecn",
+                "value": "12345"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
           }
         }
       },
@@ -665,6 +767,11 @@
             "description": "authentication user last name",
             "example": "Burdell"
           },
+          "fullName": {
+            "type": "string",
+            "description": "authentication user full name",
+            "example": "Nick Burdell"
+          },
           "entityName": {
             "type": "string",
             "description": "authentication entity name",
@@ -689,6 +796,11 @@
             "type": "string",
             "description": "Type of Tax id, SSN, EIN, etc",
             "example": "SSN"
+          },
+          "npn": {
+            "type": "string",
+            "description": "National Producer Number",
+            "example": "000000000"
           },
           "alias": {
             "description": "Party Alias List for custom parties by unique policy",
@@ -743,6 +855,11 @@
             "description": "authentication user last name",
             "example": "Burdell"
           },
+          "fullName": {
+            "type": "string",
+            "description": "authentication user full name",
+            "example": "Nick Burdell"
+          },
           "entityName": {
             "type": "string",
             "description": "authentication entity name",
@@ -767,6 +884,11 @@
             "type": "string",
             "description": "Type of Tax id, SSN, EIN, etc",
             "example": "SSN"
+          },
+          "npn": {
+            "type": "string",
+            "description": "National Producer Number",
+            "example": "000000000"
           },
           "alias": {
             "description": "Party Alias List for custom parties by unique policy",
@@ -816,6 +938,11 @@
             "description": "authentication user last name",
             "example": "Burdell"
           },
+          "fullName": {
+            "type": "string",
+            "description": "authentication user full name",
+            "example": "Nick Burdell"
+          },
           "entityName": {
             "type": "string",
             "description": "authentication entity name",
@@ -836,6 +963,11 @@
             "description": "Type of Tax id, SSN, EIN, etc",
             "example": "SSN"
           },
+          "npn": {
+            "type": "string",
+            "description": "National Producer Number",
+            "example": "000000000"
+          },
           "alias": {
             "description": "Party Alias List for custom parties by unique policy",
             "example": [
@@ -845,16 +977,6 @@
             "items": {
               "$ref": "#/components/schemas/AliasModel"
             }
-          },
-          "lastUpdated": {
-            "format": "date-time",
-            "type": "string",
-            "description": "last time party was updated"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "time party was created"
           }
         },
         "required": [
@@ -915,6 +1037,10 @@
             "type": "string",
             "description": "party last name"
           },
+          "fullName": {
+            "type": "string",
+            "description": "party full name"
+          },
           "lastUpdated": {
             "format": "date-time",
             "type": "string",
@@ -927,6 +1053,10 @@
           "taxIdType": {
             "type": "string",
             "description": "party tax id type"
+          },
+          "npn": {
+            "type": "string",
+            "description": "national producer number"
           },
           "id": {
             "type": "string",
@@ -944,6 +1074,19 @@
             "type": "string",
             "description": "auth id of the party"
           },
+          "externalPartyIds": {
+            "description": "External party identifiers",
+            "example": [
+              {
+                "key": "ecn",
+                "value": "12345"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
           "policyNumber": {
             "type": "string",
             "description": "policy/contract number"
@@ -951,6 +1094,14 @@
           "planCode": {
             "type": "string",
             "description": "plan code"
+          },
+          "externalId": {
+            "type": "string",
+            "description": "agent external id"
+          },
+          "carrier": {
+            "type": "string",
+            "description": "carrier"
           }
         }
       },
@@ -982,6 +1133,90 @@
           "next",
           "previous",
           "results"
+        ]
+      },
+      "BatchGetPartyRequest": {
+        "type": "object",
+        "properties": {
+          "partyIds": {
+            "description": "List of party IDs to fetch (maximum 250)",
+            "example": [
+              "123456789",
+              "987654321"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fields": {
+            "type": "array",
+            "description": "Optional list of fields to include in the response",
+            "example": [
+              "firstName",
+              "lastName",
+              "email",
+              "fullName"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "partyId",
+                "firstName",
+                "lastName",
+                "fullName",
+                "entityName",
+                "email",
+                "phoneNumber",
+                "taxId",
+                "taxIdType",
+                "npn",
+                "lastUpdated",
+                "createdAt",
+                "alias",
+                "id"
+              ]
+            }
+          }
+        },
+        "required": [
+          "partyIds"
+        ]
+      },
+      "BatchGetPartyResponse": {
+        "type": "object",
+        "properties": {
+          "parties": {
+            "type": "object",
+            "description": "List of party information",
+            "additionalProperties": true,
+            "example": {
+              "123456789": {
+                "firstName": "John",
+                "lastName": "Doe",
+                "id": "123456789"
+              },
+              "987654321": {
+                "firstName": "Jane",
+                "lastName": "Smith",
+                "id": "987654321"
+              }
+            }
+          },
+          "partiesNotFound": {
+            "description": "List of party IDs that were not found",
+            "example": [
+              "111111111"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "parties",
+          "partiesNotFound"
         ]
       },
       "PatchPartyReferenceEmailDataModel": {

@@ -107,7 +107,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
         }));
         setSswProgramFrequency(frequency);
     };
-    const shouldStateW4pRender = isAllowedStateSSW(contractIssueState ?? '');
+    const shouldStateW4pRender = isAllowedStateSSW(ownerStateOfResidence ?? '');
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
