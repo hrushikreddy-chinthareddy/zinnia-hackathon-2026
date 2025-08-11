@@ -111,6 +111,7 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
                                         {(replacePlaceholders(
                                             props.title,
                                             props?.formData,
+                                            true,
                                             true
                                         ) ||
                                             defaultItemLabel) ??

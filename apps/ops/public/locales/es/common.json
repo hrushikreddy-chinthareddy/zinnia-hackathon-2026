@@ -6955,6 +6955,7 @@
         }
     },
     "usage": {
+
         "date": "Fecha",
         "exportToCSV": "Exportar a CSV",
         "tabs": {
@@ -7162,6 +7163,15 @@
                 "notFound": "No se encontró ningún agente \"{{agentName}}\"",
                 "current": "Usuario actual"
             }
+        }
+    },
+    "updateSuitabilityDataEntry": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Los datos de idoneidad se han enviado.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
         }
     }
 }

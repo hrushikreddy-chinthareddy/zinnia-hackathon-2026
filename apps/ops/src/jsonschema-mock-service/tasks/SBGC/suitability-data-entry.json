@@ -878,7 +878,7 @@
                                         },
                                         "annualPaymentAmt": {
                                             "type": "string",
-                                            "title": "Annual payment amount"
+                                            "title": "Anticipated Amount"
                                         }
                                     },
                                     "required": [
@@ -921,7 +921,7 @@
                                 },
                                 "fiscalData": {
                                     "type": "object",
-                                    "title": "Fiscal Data",
+                                    "title": "Financial Information",
                                     "properties": {
                                         "annualIncome": {
                                             "type": "string",
@@ -963,7 +963,7 @@
                                         },
                                         "sourceOfFunds": {
                                             "type": "array",
-                                            "title": "Source of funds",
+                                            "title": "Source of Premium",
                                             "minItems": 1,
                                             "items": {
                                                 "type": "string",
@@ -978,7 +978,7 @@
                                         },
                                         "surrPeriodMaterialChangeExp": {
                                             "type": "string",
-                                            "title": "Material change expected",
+                                            "title": "Do you expect a material change in living expenses?",
                                             "$ref": "#/definitions/fiscalData_surrPeriodMaterialChangeExp"
                                         }
                                     },
@@ -996,8 +996,15 @@
                                             "then": {
                                                 "properties": {
                                                     "sourceOfIncomeOther": {
-                                                        "type": "string",
-                                                        "title": "Other sources of income"
+                                                        "type": "object",
+                                                        "title": "Other sources of income",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "title": "Other sources of income"
+                                                            }
+                                                        },
+                                                        "required": ["type"]
                                                     }
                                                 }
                                             }
@@ -1014,9 +1021,9 @@
                                             },
                                             "then": {
                                                 "properties": {
-                                                    "sourceOfFundsOther": {
+                                                    "sourceOfFundsOthers": {
                                                         "type": "string",
-                                                        "title": "Other sources of funds"
+                                                        "title": "Other sources of premium"
                                                     }
                                                 }
                                             }
@@ -1336,8 +1343,7 @@
                                                 }
                                             }
                                         }
-                                    },
-                                    "required": ["maApplicationQuestionnaire"]
+                                    }
                                 },
                                 "additionalInfo": {
                                     "type": "object",
@@ -1505,7 +1511,10 @@
                                                             "soldPoliciesToApplicant"
                                                         ]
                                                     }
-                                                }
+                                                },
+                                                "required": [
+                                                    "maApplicationQuestionnaire"
+                                                ]
                                             }
                                         }
                                     }
@@ -1762,7 +1771,7 @@
                                 "totalDebt",
                                 "netWorth",
                                 "sourceOfFunds",
-                                "sourceOfFundsOther",
+                                "sourceOfFundsOthers",
                                 "federalTaxBand",
                                 "surrPeriodMaterialChangeExp",
                                 "surrPeriodMaterialChangeReason"
@@ -1780,6 +1789,7 @@
                                 }
                             },
                             "netWorth": {
+                                "ui:disabled": true,
                                 "ui:hideError": false,
                                 "ui:widget": "ArithmeticOperationWidget",
                                 "ui:options": {
@@ -1830,7 +1840,10 @@
                                 }
                             },
                             "sourceOfIncomeOther": {
-                                "ui:hideError": false
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "type": {}
                             },
                             "surrPeriodMaterialChangeExp": {
                                 "ui:hideError": false,
@@ -1865,10 +1878,10 @@
                                 }
                             },
                             "disposableIncome": {
+                                "ui:disabled": true,
                                 "ui:hideError": false,
                                 "ui:widget": "ArithmeticOperationWidget",
                                 "ui:options": {
-                                    "omitValue": true,
                                     "formContext": {
                                         "keyName": "customData",
                                         "details": "details",
@@ -1903,7 +1916,7 @@
                                     ]
                                 }
                             },
-                            "sourceOfFundsOther": {
+                            "sourceOfFundsOthers": {
                                 "ui:hideError": false
                             },
                             "federalTaxBand": {

@@ -7243,6 +7243,7 @@
         "tabs": {
             "logins": "Connexions",
             "pageViews": "Pages vues"
+
         },
         "logins": {
             "zinniaLive": {
@@ -7262,6 +7263,15 @@
             "zinniaLiveCaseViews": {
                 "title": "Vues de cas Zinnia Live par transaction"
             }
+        }
+    },
+    "updateSuitabilityDataEntry": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "Les données d'adéquation ont été soumises.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
         }
     }
 }

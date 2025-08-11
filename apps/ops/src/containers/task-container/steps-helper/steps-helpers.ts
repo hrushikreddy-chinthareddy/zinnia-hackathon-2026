@@ -16,6 +16,7 @@ import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
 import { getTOANigoSteps } from './toa-nigo';
 import { GetStepsProps } from './types';
+import { getUpdateSuitabilityDataSteps } from './update-suitability-data';
 
 export const getFormSteps = (
     taskType: TaskType,
@@ -91,6 +92,9 @@ export const getFormSteps = (
             break;
         case TaskType.Day_150_Review:
             steps = getDay150ReviewSteps(props);
+            break;
+        case TaskType.Update_Suitability_DataEntry:
+            steps = getUpdateSuitabilityDataSteps(props);
             break;
         default:
             steps = getDefaultTaskSteps(props);

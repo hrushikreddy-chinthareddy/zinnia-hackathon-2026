@@ -6,6 +6,7 @@ import Field, {
     FieldFormat,
     FieldSize,
     FieldType,
+    FieldVariant,
 } from '@deps/components/fields/field';
 
 const enum ArithmeticOperation {
@@ -88,9 +89,7 @@ const ArithmeticOperationWidget = function (props: WidgetProps) {
     }, [value]);
 
     if (typeof value === 'number') {
-        return (disabled as boolean) ? (
-            <div>{value}</div>
-        ) : readonly ? (
+        return readonly ? (
             <>{formatNumber(value)}</>
         ) : (
             <div className="">
@@ -111,10 +110,16 @@ const ArithmeticOperationWidget = function (props: WidgetProps) {
                         disabled={disabled}
                         required={required}
                         readOnly={readonly}
+                        isReadOnly={disabled}
                         placeholder={placeholder}
                         onChange={(e) => onChange(e.target.value)}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
+                        variant={
+                            disabled
+                                ? FieldVariant.Inactive
+                                : FieldVariant.Default
+                        }
                     />
                 </div>
                 {!hideError && errors}

@@ -73,7 +73,7 @@ export default forwardRef(function FieldInterior(
         {
             'cursor-pointer select-none caret-transparent': preventEditing,
             'cursor-auto': !preventEditing,
-            'text-gray-300': isReadOnly,
+            'text-gray-700': isReadOnly,
         }
     );
 
@@ -130,6 +130,7 @@ export default forwardRef(function FieldInterior(
                     onBlur={handleOnBlur}
                     onFocus={handleOnFocus}
                     data-testid={dataTestId}
+                    readOnly={isReadOnly}
                 />
             );
         } else {

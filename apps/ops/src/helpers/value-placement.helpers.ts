@@ -3,7 +3,8 @@ import { AddressFormFields } from '@deps/models/case/task';
 export const replacePlaceholders = (
     template: any,
     data: Record<string, any>,
-    returnEmptyOnNoMatch: boolean = false
+    returnEmptyOnNoMatch: boolean = false,
+    replaceUnderscores: boolean = false
 ): any => {
     if (typeof template === 'string') {
         return template.replace(/{{(.*?)}}/g, (match, p1) => {
@@ -33,6 +34,9 @@ export const replacePlaceholders = (
             }
             if (typeof result === 'object' && result !== null) {
                 return JSON.stringify(result);
+            }
+            if (replaceUnderscores) {
+                return result.replace(/_/g, ' ');
             }
             return result;
         });

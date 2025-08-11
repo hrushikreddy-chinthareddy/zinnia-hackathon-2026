@@ -63,6 +63,7 @@ export enum TaskType {
     Ops_Review = 'OPS_REVIEW',
     Default_Case_DataEntry = 'DEFAULT_CASE_DATA_ENTRY',
     Policyupdate_Partydetails_Review = 'POLICYUPDATE_PARTYDETAILS_REVIEW',
+    Update_Suitability_DataEntry = 'UPDATE_SUITABILITY_DATA_ENTRY',
 }
 
 export enum EarlyTaskType {

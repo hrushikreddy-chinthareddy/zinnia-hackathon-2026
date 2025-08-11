@@ -6509,6 +6509,7 @@
             "submitTask": "Submit"
         }
     },
+
     "nbAttachmentNigo": {
         "confirmStep": {
             "title": "Got It!",
@@ -7197,6 +7198,7 @@
     "usage": {
         "date": "Date",
         "exportToCSV": "Export to CSV",
+
         "tabs": {
             "logins": "Logins",
             "pageViews": "Page Views"
@@ -7373,6 +7375,15 @@
                 "notFound": "No agent \"{{agentName}}\" found",
                 "current": "Current user"
             }
+        }
+    },
+    "updateSuitabilityDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Update suitability data was submitted.",
+            "cta": "Go to case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
         }
     }
 }

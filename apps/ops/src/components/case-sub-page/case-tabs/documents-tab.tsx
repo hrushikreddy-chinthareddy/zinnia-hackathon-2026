@@ -162,9 +162,7 @@ export default function DocumentsTab({
                 policyOffset,
                 useV3
             ),
-        enabled:
-            !!policyDocumentSearchBody?.policyNumber &&
-            !!policyDocumentSearchBody?.planCode,
+        enabled: !!policyDocumentSearchBody?.policyNumber,
     });
 
     return (

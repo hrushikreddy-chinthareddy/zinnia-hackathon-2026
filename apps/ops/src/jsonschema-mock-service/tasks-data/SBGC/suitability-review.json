@@ -1,53 +1,217 @@
 {
-    "id": "TA000000021601",
-    "caseId": "CA0000400709",
+    "id": "TA000000041433",
+    "caseId": "CA0000450203",
     "source": "BPM.Suitability",
-    "templateId": "65e984aa9b4013b316b7b4bb",
+    "templateId": "112f0fa7-a63f-4ae3-8dfa-303e8ab509cc",
     "process": "New Business",
     "carrier": "SBGC",
     "taskType": "SUITABILITY_REVIEW",
     "taskName": "Suitability Review",
     "status": "NEW",
     "data": {
-        "suitabilityRules": [
-            {
-                "issue": "Future Distribution Plan",
-                "rule": "FutureDistribution = 3-4 Years",
-                "applicationValue": "3-4 years",
-                "nmid": "SU.EM.039",
-                "externalId": "ae6c6010-8ced-47ea-9f9f-5a7be8238186"
-            },
-            {
-                "issue": "Withdrawal Understanding",
-                "rule": "WithdrawalUnderstanding  = NO",
-                "applicationValue": "NO",
-                "nmid": "SU.EM.037",
-                "externalId": "d0641107-4dd7-4925-b6e3-8260fc2f5f2a"
-            }
-        ],
-        "nigos": ["EX000000002744", "EX000000002745"],
+        "result": "ACCEPT",
+        "partialAcceptance": false,
+        "attachments": [],
         "notes": [
             {
-                "note": "Hi Notes 99",
-                "createdAt": "2025-03-18T07:52:16Z",
-                "user": "Shubham Bansal"
+                "note": "select only Yes, accept",
+                "createdAt": "2025-07-30T13:39:15Z",
+                "user": "Neha Welekar"
             }
-        ]
+        ],
+        "rules": [
+            {
+                "issue": "Resident state",
+                "rule": "MA resident with prior purchase from MA Financial Professionals. Ineligible.",
+                "applicationValue": "YES",
+                "nmid": "SU.EM.004",
+                "externalId": "7f9bd114-3452-474e-bdad-a2a322c88ca8"
+            }
+        ],
+        "details": {
+            "suitabilityRequest": {
+                "parties": [
+                    {
+                        "partyType": "PERSON",
+                        "roleType": "OWNER",
+                        "fullName": "Goward R Etzkowitz",
+                        "govtIdInfo": [
+                            {
+                                "govtId": "131994279",
+                                "govtIdType": "SSN",
+                                "govtIdExpDate": "2025-07-01"
+                            }
+                        ],
+                        "addresses": [
+                            {
+                                "addressType": "RESIDENCE",
+                                "line1": "100 CHERRY HILL DR",
+                                "city": "SEEKONK",
+                                "state": "MA",
+                                "country": "US",
+                                "zip": "027712226"
+                            }
+                        ],
+                        "employment": {
+                            "employmentStatus": "RETIRED"
+                        },
+                        "person": {
+                            "firstName": "Goward",
+                            "middleName": "R",
+                            "lastName": "Etzkowitz",
+                            "gender": "MALE",
+                            "age": "60"
+                        }
+                    },
+                    {
+                        "partyType": "PERSON",
+                        "roleType": "PRIMARY_SERVICING_AGENT",
+                        "fullName": "MICHAEL FISCHER",
+                        "govtIdInfo": [
+                            {
+                                "govtId": "211520427",
+                                "govtIdType": "SSN",
+                                "govtIdExpDate": "2025-07-08"
+                            }
+                        ],
+                        "addresses": [],
+                        "person": {
+                            "firstName": "MICHAEL",
+                            "lastName": "FISCHER",
+                            "gender": "MALE",
+                            "age": "125"
+                        }
+                    }
+                ],
+                "policyData": {
+                    "productType": "Advanced Choice Annuity",
+                    "qualPlanType": "QUALIFIED",
+                    "annualPaymentAmt": "50000",
+                    "productCode": "677"
+                },
+                "applicationInfo": {
+                    "replacementInd": "NO"
+                },
+                "fiscalData": {
+                    "annualIncome": "300",
+                    "netWorth": "350.00",
+                    "liquidNetWorth": "400",
+                    "sourceOfIncome": ["SALARY"],
+                    "totalAssets": "400",
+                    "totalDebt": "50",
+                    "annualExpenses": "50",
+                    "disposableIncome": "250.00",
+                    "sourceOfFunds": ["FUTURE_INCOME"],
+                    "federalTaxBand": "24"
+                },
+                "financialExperience": {
+                    "rateChangeAcknowledgment": "YES",
+                    "totalAnnuityValue": "425000",
+                    "financialProducts": {
+                        "assetsDistribution": [
+                            {
+                                "productType": "LIFE_INSURENCE",
+                                "qualificationType": "QUALIFIED",
+                                "amount": "100000"
+                            },
+                            {
+                                "productType": "REAL_STATE",
+                                "qualificationType": "QUALIFIED",
+                                "amount": "100000"
+                            }
+                        ],
+                        "totalAsset": [
+                            {
+                                "qualificationType": "QUALIFIED",
+                                "amount": "100000"
+                            }
+                        ]
+                    }
+                },
+                "investmentRiskInfo": {
+                    "riskTolerance": "MODERATE_CONSERVATIVE",
+                    "annuityFitsRiskTolerance": "YES"
+                },
+                "financialObjectives": {
+                    "purchaseReason": []
+                },
+                "liquidityOptions": {
+                    "futureDistributionMethods": [
+                        {
+                            "distributionMethods": "WITHDRAWALS_MORE_THAN_FREE"
+                        }
+                    ],
+                    "benefitAnnuityQuestions": {
+                        "planForIncomeDecreaseAfter10Years": []
+                    }
+                },
+                "agentAcknowledgment": {
+                    "maApplicationQuestionnaire": {
+                        "soldPoliciesToApplicant": "YES",
+                        "saleInLast5Years": "YES",
+                        "saleDetails": "Sale details  test MA"
+                    }
+                },
+                "additionalInfo": {
+                    "currentResidenceOption": "PERSONAL_RESIDENCE",
+                    "extraFundAvailable": "NO",
+                    "resideInNursingHomeOrAssistedLiving": "NO",
+                    "extraFundAvailableDetails": "Extra fund available-no"
+                },
+                "signatureInfo": [
+                    {
+                        "signatureRoleCode": "OWNER",
+                        "signatureDate": "2025-07-08",
+                        "signatureState": "MA",
+                        "signatoryDesignation": "EXECUTOR"
+                    }
+                ],
+                "applicationId": "AAKK516627K99",
+                "suitabilityId": "787f0a43-e6a0-486b-ba7e-1e0b789d0387",
+                "correlationId": "94c572e3-42c5-4850-9309-c3c99d70dc37",
+                "clientId": "SBGC",
+                "adminClient": "OTP_NB_SBGC",
+                "policyNumber": "9450007841"
+            },
+            "documents": []
+        },
+        "nigos": ["EX000000032481"]
     },
-    "mappedExceptions": ["EX000000002744", "EX000000002745"],
+    "mappedExceptions": ["EX000000032481"],
     "mappedDocuments": [],
+    "queue": "suitability_review",
+    "etcDate": "2025-08-04",
+    "priority": "MEDIUM",
     "escalated": false,
+    "assigneeFirstName": "Neha",
+    "assigneeLastName": "Welekar",
+    "assignee": "Neha.Welekar@zinnia.com",
+    "assigneePartyId": "5b7a36e772e3464fbbf8ee719905f68a",
+    "assignedAt": "2025-07-30T13:37:51Z",
     "createdBy": "SYSTEM",
     "createdByPartyId": "SYSTEM",
-    "createdAt": "2024-12-02T07:28:46Z",
-    "updatedBy": "SYSTEM",
-    "updatedByPartyId": "SYSTEM",
-    "updatedAt": "2024-12-02T07:28:46Z",
+    "createdAt": "2025-07-30T13:30:42Z",
+    "updatedBy": "Neha.Welekar@zinnia.com",
+    "updatedByPartyId": "5b7a36e772e3464fbbf8ee719905f68a",
+    "updatedAt": "2025-07-30T13:39:20Z",
     "identifiers": [
         {
+            "identifier": "contractNumber",
+            "value": "9450007841"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "9450007841"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "AAKK516627K99"
+        },
+        {
             "identifier": "zlCaseId",
-            "value": "CA0000379935"
+            "value": "CA0000450203"
         }
     ],
-    "externalId": "e9bd47f5-7eba-4f6b-9cbd-83eda0d40816"
+    "linkedTasks": [],
+    "externalId": "8e96584a-0ff1-4e9b-a54a-7400a5504067"
 }
