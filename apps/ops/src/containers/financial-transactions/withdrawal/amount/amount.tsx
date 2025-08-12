@@ -75,7 +75,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
     const toggleLabels = (t: TFunction): LabelValue<WithdrawalType>[] => [
         {
             label: `${t('surrender')} (${numberFormatify(
-                policy.accountValues?.surrenderValue || 0
+                policy.withdrawalValues?.maximumWithdrawalAmount || 0
             )})`,
             value: WithdrawalType.Surrender,
             testId: WithdrawalType.Surrender,
