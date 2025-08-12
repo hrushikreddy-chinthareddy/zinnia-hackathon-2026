@@ -31,14 +31,14 @@ export default function SignatureDate({
     return (
         <SignatureDateCore
             errors={errors}
-            signDate={signDate.text}
+            signDate={signDate?.text}
             setSignDate={setSignDateHandler}
-            signType={signType.text}
+            signType={signType?.text}
             fieldName={SignatureFieldNames.SignatureDate}
             label={t('date') as string}
             testId={'signature-date'}
             variant={selectVarientByConfig({
-                value: signDate.text || '',
+                value: signDate?.text || '',
                 isFormStateReadOnly,
                 error: errors[SignatureFieldNames.SignatureDate],
             })}

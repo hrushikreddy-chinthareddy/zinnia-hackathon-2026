@@ -102,7 +102,7 @@ export default function SignatureValidationContainer({
                         };
                     }
                     if (
-                        signProcessing.signType.text ===
+                        signProcessing.signType?.text ===
                             SignatureValidationTypeWithdrawal.Annuitant &&
                         annuitantName
                     ) {

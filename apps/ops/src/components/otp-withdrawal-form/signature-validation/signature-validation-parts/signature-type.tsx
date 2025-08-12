@@ -22,7 +22,7 @@ export default function SignatureType({
             label={t('type') as string}
             onChange={() => undefined}
             size={FieldSize.Small}
-            value={signType.text || ''}
+            value={signType?.text || ''}
             variant={FieldVariant.Inactive}
             type={FieldType.BaseActive}
             data-testid={`${signType.text}-type`}
