@@ -51,7 +51,7 @@ export const ConsentAvailable = ({
     );
     const initialSignature = {
         isSigned: disbursementConsent.isSigned.text,
-        signDate: { text: disbursementConsent.signDate.text as string | null },
+        signDate: { text: disbursementConsent.signDate?.text as string | null },
         signExtension: null,
         signName: disbursementConsent.name.text as string | null,
         signOtherTitle: null,
@@ -88,8 +88,8 @@ export const ConsentAvailable = ({
                 },
                 signDate: {
                     text:
-                        isConsent && signature.signDate.text
-                            ? signature.signDate.text
+                        isConsent && signature.signDate?.text
+                            ? signature.signDate?.text
                             : '',
                 },
             },

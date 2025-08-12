@@ -39,7 +39,7 @@ const convertDateFromValue = (
 
     return (
         signature?.signDate?.text &&
-        dayjs(signature.signDate.text, ZAHARA_API_DATE_FORMAT).format(
+        dayjs(signature.signDate?.text, ZAHARA_API_DATE_FORMAT).format(
             DATE_PICKER_FORMAT
         )
     );

@@ -129,7 +129,7 @@ export const transformSignatureStateToPayload = (
             ? getPolicySignatureType(item.signType?.text)
             : null,
         isSignedPresent: item.isSigned || false,
-        signDate: item.signDate.text || null,
+        signDate: item.signDate?.text || null,
         signPrintName: item.signName || null,
         signGurantee:
             item.signTitle.text === SignatureDesignation.AttorneyInFact
