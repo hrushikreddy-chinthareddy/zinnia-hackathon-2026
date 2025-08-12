@@ -288,11 +288,9 @@ const Summary = ({ policy }: SummaryProps) => {
                         ) as DisbursementPaymentForm
                     }
                     ownerTaxState={ownerTaxState}
-                    requestedAmountDollarAmount={
-                        numberFormatify(
-                            policy.withdrawalValues?.maximumWithdrawalAmount
-                        ) || 0
-                    }
+                    requestedAmountDollarAmount={numberFormatify(
+                        policy.withdrawalValues?.maximumWithdrawalAmount || 0
+                    )}
                     // TODO MG: confirm this comment is valid
                     // Hardcoded for MVP - get back null usually (should that be 100?)
                     totalAllocationAmount={totalPayment}
