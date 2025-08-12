@@ -170,8 +170,6 @@ const PaymentStepMoneyOut = ({
                 newState.paymentAddressId = selectedAddress?.addressId;
                 newState.paymentAddress = selectedAddress;
                 newState.paymentForm = paymentParty.paymentForm;
-            } else {
-                newState.paymentForm = PaymentForm.ACH;
             }
 
             setFormError(false);
