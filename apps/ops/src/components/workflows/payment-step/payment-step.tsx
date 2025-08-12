@@ -12,15 +12,15 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import PaymentStepUS from './payment-step-us';
 import { PaymentMethodType, PaymentStepProps } from './types';
 import WorkflowCard from '../workflow-card/workflow-card';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import PaymentStepUS from './payment-step-us';
 
 const PaymentStep = ({
     parentPage,
@@ -208,7 +208,7 @@ const PaymentStep = ({
                                         });
                                     }}
                                     key={details.accountNumber}
-                                    selectedId={currentPaymentAccountNumber}
+                                    selectedId={paymentBankId}
                                     accessibilityClickText={t(
                                         'ariaLabel.select'
                                     )}
