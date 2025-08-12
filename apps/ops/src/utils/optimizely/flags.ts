@@ -161,4 +161,5 @@ export enum FEATURE_FLAGS {
     JOINT_OWNER_CHANGE_TRANSACTION = 'joint_owner_change_transaction',
     PAYOR_CHANGE_TRANSACTION = 'payor_change_transaction',
     THIRD_PARTY_DESIGNEE_TRANSACTION = 'third_party_designee_transaction',
+    PAYMENTUS_FEATURE = 'paymentus-feature',
 }

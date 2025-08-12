@@ -71,8 +71,6 @@ const BeneficiaryCardContainer = ({
     showAllocationBar = true,
     isRereg = false,
     tooltip,
-    disabled,
-    cardDisableTooltip,
     showManageBeneficiary = false,
     enableManageBeneficiary = false,
 }: BeneficiaryCardContainerProps) => {
@@ -80,6 +78,7 @@ const BeneficiaryCardContainer = ({
     const colors: AllocationColor[] = showAllocationBar
         ? peopleDataToColors(filteredData, type)
         : [];
+    const { isAgentSelected } = peopleCardData;
 
     const classes = clsx(
         'mb-[9px]',
@@ -125,9 +124,7 @@ const BeneficiaryCardContainer = ({
                 classNames="mt-6"
                 filteredData={filteredData}
                 peopleCardData={peopleCardData}
-                isRereg={true}
-                disabled={disabled}
-                cardDisableTooltip={cardDisableTooltip}
+                isRereg={!isAgentSelected}
                 type={type}
             />
         </div>

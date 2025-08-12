@@ -65,8 +65,6 @@ const mapDataToPeopleCard = ({
     party,
     peopleCard,
     isRereg,
-    disabled,
-    cardDisableTooltip,
     type,
 }: MapDataToPeopleProps) => {
     const {
@@ -142,8 +140,6 @@ const mapDataToPeopleCard = ({
             }
             shouldFocus={index === 0 && chipEntered}
             partyStatus={party.partyStatus}
-            disabled={disabled}
-            cardDisableTooltip={cardDisableTooltip}
         />
     );
 };
@@ -153,8 +149,6 @@ const PeopleCardContainer = ({
     peopleCardData,
     classNames,
     isRereg,
-    disabled,
-    cardDisableTooltip,
     type,
 }: PeopleCardContainerProps) => {
     const { chipEntered } = useContext(ChipEnterContext);
@@ -169,8 +163,6 @@ const PeopleCardContainer = ({
                     party: nameTag,
                     peopleCard: peopleCardData,
                     isRereg,
-                    disabled,
-                    cardDisableTooltip,
                     type,
                 })
             )}

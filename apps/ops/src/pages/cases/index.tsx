@@ -201,9 +201,19 @@ const CaseManagementDashboard = ({
             caseManagementFilters.searchValue,
             caseManagementFilters.toggleValue
         );
-        const additionalFilters = getAdditionalFilters(
+        let additionalFilters = getAdditionalFilters(
             caseManagementFilters.additionalFilters
         );
+
+        if (isAdvisorsExcel) {
+            const advisorsExcelParams = getAdvisorsExcelCaseParams(
+                enableAdditionalAdvisorsExcelCarriers
+            );
+            additionalFilters = {
+                ...additionalFilters,
+                ...advisorsExcelParams,
+            };
+        }
 
         return {
             ...svo,
