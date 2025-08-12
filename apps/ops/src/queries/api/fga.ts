@@ -176,7 +176,7 @@ export const checkWritePolicyPermissionQuery = async (
 
     const body = {
         user: `party:${partyId}`,
-        relation: 'write_policy',
+        relation: 'write_all_transactions',
         policyNumber,
         planCode,
     };
@@ -198,14 +198,14 @@ export const checkWritePolicyPermissionQuery = async (
             response.error = {
                 status: fgaCheck.status,
                 message: fgaCheck.statusText,
-                name: 'Error checking write_policy permission',
+                name: 'Error checking write_all_transactions permission',
             };
         }
 
         return response;
     } catch (e: any) {
         browserLogError(
-            'checkWritePolicyPermissionQuery::An error occurred while checking write_policy permission',
+            'checkWritePolicyPermissionQuery::An error occurred while checking write_all_transactions permission',
             {
                 file: 'queries/api/fga.ts',
                 function: 'checkWritePolicyPermissionQuery',
@@ -224,7 +224,7 @@ export const checkWritePolicyPermissionQuery = async (
             error: {
                 status: 500,
                 message: e.message,
-                name: 'Exception during write_policy check',
+                name: 'Exception during write_all_transactions check',
             },
         };
     }
