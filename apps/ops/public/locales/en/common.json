@@ -7275,7 +7275,7 @@
             "annual": "Annual",
             "singlepayment": "Single Payment",
             "dtcc": "DTCC",
-            "credit-card": "Credit Card",
+            "creditcard": "Credit Card",
             "ach": "ACH",
             "check": "Check",
             "exchange": "Exchange",
