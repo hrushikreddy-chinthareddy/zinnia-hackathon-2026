@@ -110,7 +110,6 @@ const buildClientCaseFromNewBusiness = async (
         if (!issueState) {
             throwTypedError('Issue State is missing', NEW_BUSINESS_API_ORIGIN);
         }
-
         const clientCaseTitle = 'Untitled Client Case';
 
         const {

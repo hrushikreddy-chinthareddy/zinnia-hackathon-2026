@@ -72,7 +72,6 @@ const ContactDetailsComponent = ({
         key: K,
         value: any
     ) => {
-        console.log(arrayKey, index, key, value, 'arrayvalue11');
         const updatedArray = [...(roleData.party[arrayKey] || [])];
         if (!updatedArray[index]) {
             updatedArray[index] = {};

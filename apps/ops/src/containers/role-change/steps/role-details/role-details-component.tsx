@@ -1,3 +1,4 @@
+import { PartyRole } from '@xd/api-types/dist/generated-types/sor/models/PartyRole';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -24,7 +25,6 @@ import {
     defaultRoleValue,
     RoleData,
 } from '@deps/contexts/RoleChangeContext';
-import { getName } from '@deps/helpers/party-info-helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
@@ -128,7 +128,7 @@ const RoleDetailsComponent = ({
                 removeRole,
                 t,
                 roleLabel,
-                role as any
+                role.toUpperCase() as PartyRole
             );
             if (setCurrentErrors) {
                 setCurrentErrors(errors);
@@ -167,7 +167,7 @@ const RoleDetailsComponent = ({
     return (
         <div
             className={
-                removeRole && !role?.toLowerCase().includes('new')
+                removeRole && !role?.toLowerCase().includes(NEW)
                     ? 'my-4 w-full rounded-sm border-2 bg-gray-50 p-8'
                     : 'my-4 w-full rounded-sm border-2 p-8'
             }
@@ -219,8 +219,7 @@ const RoleDetailsComponent = ({
                         ) : (
                             <label
                                 className={`${labelClasses} ${
-                                    role ==
-                                    PolicyRole.THIRDPARTYDESIGNEE.toUpperCase()
+                                    role == PolicyRole.THIRDPARTYDESIGNEE
                                         ? 'pointer-events-none opacity-50 cursor-not-allowed'
                                         : 'cursor-pointer'
                                 }`}
