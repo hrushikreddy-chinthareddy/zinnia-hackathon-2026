@@ -29,6 +29,7 @@ export const SearchFieldContainer = ({
     activeLabels,
     onChange,
     onClear,
+    values,
     inputClasses,
 }: SearchFieldProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -40,6 +41,7 @@ export const SearchFieldContainer = ({
         errorMessage,
     } = activeLabels;
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const inputValue = values[activeLabels?.value || ''] || '';
 
     const inputClass = () => {
         switch (activeLabels.value) {
@@ -89,6 +91,7 @@ export const SearchFieldContainer = ({
                 key={activeLabels.value}
                 ref={inputRef}
                 onChange={handleChange}
+                value={inputValue}
             />
             {hasValue && (
                 <Button
