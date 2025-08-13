@@ -511,6 +511,19 @@
                     "firstName": "First name is required",
                     "lastName": "Name is required",
                     "last": "Last name is required"
+                },
+                "entityType": "Entity Type",
+                "entityTypeOptions": {
+                    "soleProprietorship": "Sole Proprietorship",
+                    "generalPartnership": "General Partnership",
+                    "limitedPartnership": "Limited Partnership",
+                    "sCorporation": "S Corporation",
+                    "cCorporation": "C Corporation",
+                    "limitedLiabilityCompany": "Limited Liability Company",
+                    "charitableOrganization": "Charitable Organization",
+                    "estate": "Estate",
+                    "corporation": "Corporation",
+                    "other": "Other"
                 }
             },
             "contactInfo": {
@@ -715,6 +728,19 @@
             "no": "No",
             "trustDate": "Trust Date",
             "prefferedContactMethod": "Preferred contact method",
+            "entityType": "Entity Type",
+            "entityTypeOptions": {
+                "soleProprietorship": "Sole Proprietorship",
+                "generalPartnership": "General Partnership",
+                "limitedPartnership": "Limited Partnership",
+                "sCorporation": "S Corporation",
+                "cCorporation": "C Corporation",
+                "limitedLiabilityCompany": "Limited Liability Company",
+                "charitableOrganization": "Charitable Organization",
+                "estate": "Estate",
+                "corporation": "Corporation",
+                "other": "Other"
+            },
             "formValidations": {
                 "firstName": "First name is required",
                 "fullName": "Name is required",
