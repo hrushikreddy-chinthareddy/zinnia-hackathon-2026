@@ -5,6 +5,7 @@ import { ServerApi } from '@/services/server-http';
 import { UserClaims } from '@/types/auth';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getAccessToken } from '@/utils/auth';
+import { logTrace } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
@@ -31,6 +32,17 @@ export const getPreferencesByPlanCode = withLogging(
     );
     const rawResponse = await ServerApi.get(url, undefined, loggingContext);
     const response = await parseAPIResponse(rawResponse);
+
+    if (rawResponse.status === 404) {
+      logTrace('Could not find preferences for policy', {
+        planCode,
+        policyNumber,
+        partyId,
+        loggingContext,
+      });
+
+      return response;
+    }
 
     if (!rawResponse?.ok) {
       throw new Error(

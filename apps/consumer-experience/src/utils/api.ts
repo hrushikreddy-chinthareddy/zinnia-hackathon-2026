@@ -20,22 +20,27 @@ export const parseAPIResponse = async (response: Response) => {
   }
 };
 
+interface ApiNotOkDetails {
+  apiMessage?: string;
+  statusText: string;
+  status: number;
+  url: string;
+}
+
 export const logApiNotOkDetails = async ({
   rawResponse,
   parsedResponse,
 }: {
   rawResponse: Response;
   parsedResponse: unknown;
-}) => {
-  const sessionInfo = await userSessionForLogging();
+}): Promise<ApiNotOkDetails> => {
   const { message } = parsedResponse as { message?: string };
   const { statusText, status, url } = rawResponse;
 
   return {
     apiMessage: message,
     statusText,
-    statusCode: status,
+    status,
     url,
-    ...sessionInfo,
   };
 };

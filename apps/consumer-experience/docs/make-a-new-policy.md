@@ -1,3 +1,6 @@
+# You will need to request access to make and lifecycle policies first
+https://zinnia.atlassian.net/wiki/spaces/ZAHARA/pages/5231738943/Requesting+Access+to+Zahara+UI+via+ConductorOne
+
 # Create a new Policy
 
 1. go to https://qa-zahara-ui.zinnia.io/

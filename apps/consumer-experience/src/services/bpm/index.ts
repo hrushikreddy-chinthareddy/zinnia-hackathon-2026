@@ -240,9 +240,7 @@ export const submitOneTimePremiumPayment = withLogging(
 
       throw new Error('Error submitting one time premium.', {
         cause: {
-          status: rawResponse.status,
           name: 'submitOneTimePremiumPayment Error',
-          message: response.message,
           ...moreDetails,
           submissionDetails: submitDetails,
         },
