@@ -1,12 +1,15 @@
 import {
     IdentificationType,
+    PartyType,
     PhoneBase,
     Policy,
 } from '@zinnia/api-types/types/sor';
+import { FieldSize } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import Field, { FieldType, FieldVariant } from '@deps/components/fields/field';
 import AddressEntry, {
     DEFAULT_ADDRESS,
 } from '@deps/components/otp-withdrawal-form/address-entry';
@@ -15,9 +18,12 @@ import { SingleParty } from '@deps/components/otp-withdrawal-form/form-party/par
 import PartyPhone, {
     DEFAULT_PHONE,
 } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
+import { RadioOrientation } from '@deps/components/radio/radio';
+import SelectSimple from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { isEndDated } from '@deps/helpers/date.helpers';
@@ -35,6 +41,11 @@ import {
     ENTERPRISE_ADDRESS_TYPE,
     EnterpriseAddress,
 } from '../../beneficiary-details/address-details/address-details.helpers';
+import {
+    trustOption,
+    TrustType,
+} from '../../beneficiary-details/bene-identification/bene-identification.helpers';
+import PartyTypes from '../../beneficiary-details/bene-identification/party-type';
 import { ENTERPRISE_PHONE_TYPE } from '../../beneficiary-details/phone-details/phone-details.helpers';
 
 export const DEFAULT_PARTY = [
@@ -52,6 +63,7 @@ export const DEFAULT_PARTY = [
         maritalStatus: { text: null },
         addresses: [],
         phones: [],
+        partyType: PartyType.INDIVIDUAL,
     },
 ];
 
@@ -60,6 +72,14 @@ interface OwnerInformationProps {
     isFormStateReadOnly?: boolean;
     policy: Policy;
 }
+
+type UpdatePartyPropertyFn = (
+    party: Party,
+    key: keyof Party,
+    value: any
+) => void;
+
+type TranslationFunction = (key: string) => string;
 
 const formatAddress = (address: EnterpriseAddress) => {
     return {
@@ -178,27 +198,46 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
         policyParty?.emails?.filter((email) => !isEndDated(email.endDate)) ||
         [];
 
+    const partyType = policyParty?.partyType;
+
+    const lastName =
+        policyParty?.lastName ||
+        (partyType !== PartyType.INDIVIDUAL ? policyParty?.fullName : null) ||
+        null;
+
+    const {
+        firstName = '',
+        middleName = '',
+        fullName = '',
+        dateOfBirth = null,
+        identifications = [],
+        preferredAddressIndicator = null,
+        trustType = undefined,
+    } = policyParty || {};
+
+    const taxId = identifications.find(
+        (identification) =>
+            identification.identificationType === IdentificationType.SSN
+    )?.identificationValue;
+
     return {
         partyRoleType: role,
-        firstName: policyParty?.firstName || '',
-        middleName: policyParty?.middleName || '',
-        lastName: policyParty?.lastName || '',
-        fullName: policyParty?.fullName || '',
+        firstName,
+        middleName,
+        lastName,
+        fullName,
         maritalStatus: {
             text: null,
         },
-        dob: { text: policyParty?.dateOfBirth || null },
-        taxId:
-            policyParty?.identifications?.find(
-                (identification) =>
-                    identification.identificationType === IdentificationType.SSN
-            )?.identificationValue || undefined,
+        dob: { text: dateOfBirth },
+        taxId: taxId || undefined,
         email: validemails?.length > 0 ? validemails[0].emailAddress : '',
         addresses: formattedAddresses ?? [],
         phones: phones ?? [],
         id: id,
-        preferredAddressIndicator:
-            policyParty?.preferredAddressIndicator || null,
+        preferredAddressIndicator,
+        partyType,
+        trustType,
     };
 };
 const getInitialParty = (policy: Policy, configs: any) => {
@@ -253,6 +292,7 @@ export default function OwnerInformation({
                     taxId: val.taxId,
                     maritalStatus: val.maritalStatus,
                     addresses: val.addresses,
+                    trustType: val.trustType,
                 };
                 return parties.map((item, index) =>
                     index === existingItemIndex ? newItem : item
@@ -285,15 +325,54 @@ export default function OwnerInformation({
         setPartyInformation(updatedParty);
     };
 
+    const updatePartyProperty = (
+        party: Party,
+        key: keyof Party,
+        value: string
+    ): void => {
+        const updatedParty = {
+            ...party,
+            [key]: value,
+        };
+        setPartyInformation(updatedParty);
+    };
+
+    const renderNameField = (
+        party: Party,
+        updatePartyProperty: UpdatePartyPropertyFn,
+        t2: TranslationFunction
+    ) => (
+        <div className="my-4 grid w-full grid-cols-2">
+            <Field
+                label={
+                    party.partyType === PartyType.TRUST
+                        ? t2(`trustName`) || ''
+                        : t2(`companyName`) || ''
+                }
+                onChange={(event) => {
+                    updatePartyProperty(party, 'lastName', event.target.value);
+                }}
+                size={FieldSize.Small}
+                type={FieldType.BaseActive}
+                value={party?.lastName || ''}
+                maxLength={40}
+                variant={FieldVariant.Default}
+            />
+        </div>
+    );
+
     useEffect(() => {
         const parties = partyInfo.map((party) => {
             const mappedparty = { ...party };
             delete mappedparty.id;
             return mappedparty;
         });
-
         setOwnerInfo(() => [...parties]);
     }, [partyInfo, setOwnerInfo]);
+
+    const { t: t2 } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'beneChange.beneDetails.identification',
+    });
 
     return (
         <CardContainer
@@ -304,7 +383,6 @@ export default function OwnerInformation({
                 const party = partyInfo.find(
                     (party) => party.partyRoleType === config.partyRoleType
                 );
-
                 if (party) {
                     return (
                         <div key={index} className="mb-4">
@@ -316,6 +394,41 @@ export default function OwnerInformation({
                                 {config.title || t(`personalDetails.title`)}
                             </Typography>
                             <div>
+                                <PartyTypes
+                                    partyIdentification={party.partyType}
+                                    onPartyChange={() => {}}
+                                    isReadOnly={true}
+                                    orientation={RadioOrientation.Horizontal}
+                                    variant={TypographyVariant.H6}
+                                />
+                                {party.partyType !== PartyType.INDIVIDUAL &&
+                                    renderNameField(
+                                        party,
+                                        updatePartyProperty,
+                                        t2
+                                    )}
+                                {party.partyType == PartyType.TRUST && (
+                                    <div className="my-4 grid w-full grid-cols-2">
+                                        <SelectSimple
+                                            label={t2('trustType') as string}
+                                            options={trustOption(t2)}
+                                            onChange={(event) => {
+                                                updatePartyProperty(
+                                                    party,
+                                                    'trustType',
+                                                    event
+                                                );
+                                            }}
+                                            size={FieldSize.Small}
+                                            value={
+                                                party.trustType ??
+                                                TrustType.Individual
+                                            }
+                                            variant={FieldVariant.Default}
+                                            disabled={false}
+                                        />
+                                    </div>
+                                )}
                                 <SingleParty
                                     fields={config.fields}
                                     isFormStateReadOnly={isFormStateReadOnly}
@@ -334,11 +447,11 @@ export default function OwnerInformation({
                                             `dob${party?.partyRoleType}`
                                         ],
                                     }}
-                                    onDataChange={(val) =>
-                                        setPartyInformation(val)
-                                    }
+                                    onDataChange={(val: Party) => {
+                                        setPartyInformation(val);
+                                    }}
+                                    partyType={party.partyType}
                                 />
-
                                 {config?.phones?.map(
                                     (field: any, phoneIndex: number) => {
                                         return (

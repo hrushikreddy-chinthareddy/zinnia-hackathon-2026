@@ -213,7 +213,8 @@ export const getContractInfo = (ownerInfo: any, policy: Policy) => {
             (element: any) => element
         );
 
-        const { prefix, firstName, middleName, lastName, suffix } = item;
+        const { prefix, firstName, middleName, lastName, suffix, partyType } =
+            item;
         const fullName = toTitleCase(
             [prefix, firstName, middleName, lastName, suffix]
                 .filter(Boolean)
@@ -243,6 +244,8 @@ export const getContractInfo = (ownerInfo: any, policy: Policy) => {
                       },
                   ]
                 : [],
+            trustType:
+                partyType === PartyType.TRUST ? item?.trustType || null : null,
         };
     });
 
@@ -335,10 +338,11 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
             lastName: item?.party?.info?.lastName || null,
             trustType:
                 item.action === 'ADD'
-                    ? item?.party?.info?.trustType ?? TrustType.Individual
-                    : selectedPartyType === PartyType.TRUST
-                    ? item?.party?.info?.trustType
-                    : 'NONE',
+                    ? selectedPartyType === PartyType.TRUST
+                        ? item?.party?.info?.trustType ?? TrustType.Individual
+                        : null
+                    : item?.party?.info?.trustType || null,
+
             fullName: fullName || null,
             prefix:
                 selectedPartyType == PartyType.INDIVIDUAL
