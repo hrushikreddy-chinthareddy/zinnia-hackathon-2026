@@ -4,6 +4,7 @@ import allstate from '@deps/styles/elements/icons/carriers/allstate.svg';
 import arcus from '@deps/styles/elements/icons/carriers/arcus.svg';
 import delaware from '@deps/styles/elements/icons/carriers/delaware.svg';
 import empower from '@deps/styles/elements/icons/carriers/empower.svg';
+import everglades from '@deps/styles/elements/icons/carriers/everglades.svg';
 import everly from '@deps/styles/elements/icons/carriers/everly.svg';
 import farmers from '@deps/styles/elements/icons/carriers/farmers.svg';
 import globalAtlantic from '@deps/styles/elements/icons/carriers/global-atlantic.svg';
@@ -32,6 +33,8 @@ const carriers = {
     ALLS: 'Allstate',
     CWA: 'Commonwealth',
     DLIC: 'Delaware',
+    EVGA: 'Everglades',
+    EVGL: 'Everglades',
     ELIC: 'Everly', // DEPU-2067 - used by Policy Management until we get a carrier API integration
     EMRS: 'Empower',
     FLIC: 'Forethought',
@@ -148,6 +151,10 @@ export const getCarrierLogoByClientId = (clientId: string): string => {
         case 'ELIC':
         case 'SBUL':
             return everly;
+        case 'EVGL':
+        case 'EVG':
+        case 'EVGA':
+            return everglades;
         case 'FLIC':
         case 'ALLM':
             return globalAtlantic;

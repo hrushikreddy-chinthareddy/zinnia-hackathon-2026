@@ -10,6 +10,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { allowTestHarness } from '@deps/utils/test-harness/utils';
 
 export const useMainNavItems = (): NavGroup[] => {
     const {
@@ -25,6 +26,7 @@ export const useMainNavItems = (): NavGroup[] => {
         showToppanMerrill,
         isAllowReadIllustrations,
         hasUsagePermission,
+        hasTestHarnessAccess,
     } = usePermissionsContext();
 
     const { user } = useUser();
@@ -33,6 +35,8 @@ export const useMainNavItems = (): NavGroup[] => {
     const showHomeNavBtn = featureFlags?.[FEATURE_FLAGS.SHOW_HOME_NAV_BTN];
     const showIllustrationsNavBtn =
         featureFlags?.[FEATURE_FLAGS.ILLUSTRATIONS_EXPERIENCE];
+
+    const showTestHarness = allowTestHarness(hasTestHarnessAccess);
 
     if (!permissionsLoadingComplete) {
         return [];
@@ -172,6 +176,19 @@ export const useMainNavItems = (): NavGroup[] => {
         ),
     };
 
+    const testHarnessLink = {
+        id: 'test-harness',
+        display: 'Test Harness',
+        icon: IconType.ALERT_EXCLAMATION,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={'/test-harness'}
+                onClick={() => handleAnalytics('Test Harness Click')}
+            />
+        ),
+    };
+
     const accessManagementLink = {
         id: accessManagement,
         display: accessManagement,
@@ -228,6 +245,7 @@ export const useMainNavItems = (): NavGroup[] => {
                 ...(hasUsagePermission ? [usageLink] : []),
                 ...(isSuperAdmin ? [accessManagementLink] : []),
                 ...(showToppanMerrill ? [toppanMerrillLink] : []),
+                ...(showTestHarness ? [testHarnessLink] : []),
                 userContextMenu,
             ],
             alignEnd: true,

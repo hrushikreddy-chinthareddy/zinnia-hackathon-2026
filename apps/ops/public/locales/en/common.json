@@ -7387,5 +7387,9 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "testHarness": {
+        "h1": "Test Harness",
+        "description": "Click to generate a new test policy with a random policy number."
     }
 }

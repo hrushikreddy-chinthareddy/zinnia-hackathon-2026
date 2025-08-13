@@ -55,3 +55,19 @@ pnpm run test-watch
 -   To switch document API calls from v2 to v3 format, use the `documents-v3-update-client-wise` flag with supported carriers in the `clients` variable in Optimizely.
 -   Ensure the carrier codes are properly mapped.
 -   Confirm with the EDS team that the v3 API supports the required carrier operations.
+
+## Running Demo Environment + Test Harness Locally
+
+1. Ask an engineer (Ed) for their `.env.demo.local` file.
+2. Save this locally.
+3. To run the demo instance, replace `.env.development.local` with the demo values
+4. `pnpm run dev:ops`
+
+This will start up a local instance pointed to the demo environment variables.
+
+You might find that you are missing a lot of stuff. You will need to make sure your logged in user has all of the correct entitlements. Bother someone else who has super admin access to add your entitlements in demo access management: https://demo-access-management.vercel.app/
+
+You will need:
+
+-   Everglades Processor
+-   Zinnia Live Test Harness

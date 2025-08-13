@@ -5,6 +5,8 @@ export enum ENVIRONMENT_URLS {
     QA = 'https://qa.api.zinnia.io',
     UAT = 'https://uat.api.zinnia.io',
     DEV = 'https://dev.api.zinnia.io',
+    DEMO = 'https://dev.api.zinnia.io/demo',
+    FARMERS_TRAINING = 'https://dev.api.zinnia.io/farmers-training',
 }
 
 export enum ENVIRONMENT_NAME {
@@ -12,6 +14,8 @@ export enum ENVIRONMENT_NAME {
     QA = 'qa',
     UAT = 'uat',
     DEV = 'dev',
+    DEMO = 'demo',
+    FARMERS_TRAINING = 'farmers-training',
 }
 
 export const environmentUrls: Record<ENVIRONMENT_NAME, ENVIRONMENT_URLS> = {
@@ -19,6 +23,8 @@ export const environmentUrls: Record<ENVIRONMENT_NAME, ENVIRONMENT_URLS> = {
     [ENVIRONMENT_NAME.QA]: ENVIRONMENT_URLS.QA,
     [ENVIRONMENT_NAME.UAT]: ENVIRONMENT_URLS.UAT,
     [ENVIRONMENT_NAME.DEV]: ENVIRONMENT_URLS.DEV,
+    [ENVIRONMENT_NAME.DEMO]: ENVIRONMENT_URLS.DEMO,
+    [ENVIRONMENT_NAME.FARMERS_TRAINING]: ENVIRONMENT_URLS.FARMERS_TRAINING,
 };
 
 // TODO: this and the method below should be changed to use the process.env.NODE_ENV
@@ -40,6 +46,36 @@ export const isProd = () => {
     return (
         process.env.NEXT_PUBLIC_BACKEND_URL ===
         environmentUrls[ENVIRONMENT_NAME.PROD]
+    );
+};
+
+export const isDemo = () => {
+    const nonDemoEnvs = [
+        ENVIRONMENT_NAME.PROD,
+        ENVIRONMENT_NAME.QA,
+        ENVIRONMENT_NAME.UAT,
+        ENVIRONMENT_NAME.DEV,
+    ];
+
+    const currentBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+    // Check if the current URL is NOT in the list of production environment URLs
+    return !nonDemoEnvs.some(
+        (env) => environmentUrls[env] === currentBackendUrl
+    );
+};
+
+export const isEvglDemo = () => {
+    return (
+        process.env.NEXT_PUBLIC_BACKEND_URL ===
+        environmentUrls[ENVIRONMENT_NAME.DEMO]
+    );
+};
+
+export const isFarmersTraining = () => {
+    return (
+        process.env.NEXT_PUBLIC_BACKEND_URL ===
+        environmentUrls[ENVIRONMENT_NAME.FARMERS_TRAINING]
     );
 };
 

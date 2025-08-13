@@ -891,7 +891,9 @@ const SankeyChart = ({
 
         let l1Grouping: CaseCountOutputLevel1[] = [];
         // L1: sort the groupings by count
+
         caseGroupingState?.data.sort((a, b) => b.count - a.count);
+
         // TODO: should use the container height / blockHeight+blockStroke to determine how many we can show
         if (caseGroupingState?.data?.length > maxItems) {
             l1Grouping = caseGroupingState?.data.slice(0, maxItems);

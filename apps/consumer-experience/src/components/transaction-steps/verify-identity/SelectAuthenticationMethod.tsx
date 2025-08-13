@@ -85,7 +85,9 @@ export const SelectAuthenticationMethod = ({
         For your security, we're sending a one-time code to the phone number
         associated with your account.
         {transactionDescription && (
-          <span>This helps us confirm it's you {transactionDescription}</span>
+          <span>
+            &nbsp;This helps us confirm it's you {transactionDescription}
+          </span>
         )}
       </p>
       <div className="my-lg">

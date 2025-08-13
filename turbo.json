@@ -87,7 +87,9 @@
         "PINO_LOG_LEVEL",
         "TOPPAN_MERRILL_POST_URL",
         "WELLABE_TOPPAN_MERRILL_KEY",
-        "CALL_LOG_X_API_KEY"
+        "CALL_LOG_X_API_KEY",
+        "CARRIER_ROLE",
+        "NEXT_PUBLIC_FAVICON_PATH"
       ],
       "dependsOn": [
         "^build"

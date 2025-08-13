@@ -72,4 +72,13 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
       height: '32px',
     },
   },
+  [CarrierName.EVERGLADES]: {
+    homePageHref: '/',
+    hrefAriaLabel: 'Go back to home',
+    image: CarrierLogos[CarrierName.EVERGLADES],
+    logoProps: {
+      title: 'Everglades Logo',
+      height: '32px',
+    },
+  },
 };

@@ -38,6 +38,7 @@ import {
     PolicyClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 
@@ -297,6 +298,7 @@ export const MenuContextualContent = ({
                 zlCaseId: data?.zlCaseId || null,
             };
         },
+        enabled: !isDemo(), //TODO: Remove this check when demo endpoint is available
     });
 
     const transactionItems: JSX.Element[] = [];
