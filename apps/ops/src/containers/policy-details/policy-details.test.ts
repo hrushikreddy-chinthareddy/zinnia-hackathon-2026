@@ -11,7 +11,46 @@ import {
 
 const tSpy = jest.fn((str) => str);
 
-let policyDetails: PolicyDetails;
+const setupTest = <T>(props: T) => {
+    const { coverage, parties, partyRoles, policyFeatures } = mockPolicy;
+    const policy = {
+        issueState: 'NY',
+        policyNumber: '12345',
+        currency: 'USD',
+        accountValues: {
+            endingAccountValue: 1000,
+            cumulativePremiumSinceIssue: 500,
+            totalYearToDatePremiumAmount: 250,
+        },
+        coverage, //: { totalCoverageAmount: 200000 },
+        loanValues: { totalNumberOfLoan: 2, totalLoanBalance: 10000 },
+        withdrawalValues: {
+            numberOfWithdrawal: 3,
+            totalWithdrawalAmount: 2000,
+        },
+        policyDates: {
+            issueDate: '2023-01-01',
+            maturityDate: '2033-01-01',
+        },
+        policyYear: 10,
+        policyTerm: 20,
+        product: {
+            generalLedgerPlanCode: 'GLP1',
+            planCode: 'SBFIXUL1',
+            marketingName: 'Policy A',
+            planName: 'Plan A',
+            productType: 'Type A',
+            distribution: 'THIRDPARTYDIRECTTOCONSUMER',
+        },
+        carrierId: 'C1',
+        partyRoles,
+        parties,
+        fixedCostPeriod: 20,
+        policyFeatures,
+        ...props,
+    };
+    return new PolicyDetails(policy as Policy);
+};
 describe('policy details helpers', () => {
     describe('buildTransactionCards', () => {
         it('should build the transaction cards for the policy', () => {
@@ -61,45 +100,8 @@ describe('policy details helpers', () => {
 
     // Write similar tests for other functions...
     describe('policyDetails', () => {
-        beforeAll(() => {
-            const { coverage, parties, partyRoles } = mockPolicy;
-            const policy = {
-                issueState: 'NY',
-                policyNumber: '12345',
-                currency: 'USD',
-                accountValues: {
-                    endingAccountValue: 1000,
-                    cumulativePremiumSinceIssue: 500,
-                    totalYearToDatePremiumAmount: 250,
-                },
-                coverage, //: { totalCoverageAmount: 200000 },
-                loanValues: { totalNumberOfLoan: 2, totalLoanBalance: 10000 },
-                withdrawalValues: {
-                    numberOfWithdrawal: 3,
-                    totalWithdrawalAmount: 2000,
-                },
-                policyDates: {
-                    issueDate: '2023-01-01',
-                    maturityDate: '2033-01-01',
-                },
-                policyYear: 10,
-                policyTerm: 20,
-                product: {
-                    generalLedgerPlanCode: 'GLP1',
-                    planCode: 'SBFIXUL1',
-                    marketingName: 'Policy A',
-                    planName: 'Plan A',
-                    productType: 'Type A',
-                    distribution: 'THIRDPARTYDIRECTTOCONSUMER',
-                },
-                carrierId: 'C1',
-                partyRoles,
-                parties,
-                fixedCostPeriod: 20,
-            };
-            policyDetails = new PolicyDetails(policy as Policy);
-        });
         it('should properly map sales channel', () => {
+            const policyDetails = setupTest({});
             const result = getApplicationDetailsData(policyDetails, tSpy);
             expect(result).toEqual({
                 applicationSource: '--',
@@ -108,10 +110,64 @@ describe('policy details helpers', () => {
                 originalPolicyNumber: '--',
                 salesChannel:
                     'policy.distributionType.thirdPartyDirectToConsumer',
-                multiPolicyDiscount: null,
+                multiPolicyDiscount: 'yes',
+            });
+        });
+        describe('CUSTOMFEATURES for MultiPolicyDiscount', () => {
+            it('should render No when feature has endDate', () => {
+                const mockDetails = setupTest({
+                    // @ts-expect-error this property exist in the mock and isn't undefined
+                    policyFeatures: [mockPolicy.policyFeatures[0]],
+                });
+                const result = getApplicationDetailsData(mockDetails, tSpy);
+                expect(result).toEqual({
+                    applicationSource: '--',
+                    applicationSourceDetails: '--',
+                    issueState: 'New York',
+                    originalPolicyNumber: '--',
+                    salesChannel:
+                        'policy.distributionType.thirdPartyDirectToConsumer',
+                    multiPolicyDiscount: 'no',
+                });
+            });
+
+            it('should render Yes when multiple features exist and one has NO endDate', () => {
+                const mockDetails = setupTest({});
+                const result = getApplicationDetailsData(mockDetails, tSpy);
+                expect(result).toEqual({
+                    applicationSource: '--',
+                    applicationSourceDetails: '--',
+                    issueState: 'New York',
+                    originalPolicyNumber: '--',
+                    salesChannel:
+                        'policy.distributionType.thirdPartyDirectToConsumer',
+                    multiPolicyDiscount: 'yes',
+                });
+            });
+
+            it('should render Yes no matter the order in the policyFeatures array', () => {
+                const mockDetails = setupTest({
+                    policyFeatures: [
+                        // @ts-expect-error this property exist in the mock and isn't undefined
+                        mockPolicy.policyFeatures[1],
+                        // @ts-expect-error this property exist in the mock and isn't undefined
+                        mockPolicy.policyFeatures[0],
+                    ],
+                });
+                const result = getApplicationDetailsData(mockDetails, tSpy);
+                expect(result).toEqual({
+                    applicationSource: '--',
+                    applicationSourceDetails: '--',
+                    issueState: 'New York',
+                    originalPolicyNumber: '--',
+                    salesChannel:
+                        'policy.distributionType.thirdPartyDirectToConsumer',
+                    multiPolicyDiscount: 'yes',
+                });
             });
         });
         it('should map the policy details to the corresponding props', () => {
+            const policyDetails = setupTest({});
             const result = mapPolicyTimelineValues(policyDetails, tSpy);
 
             expect(result).toEqual({

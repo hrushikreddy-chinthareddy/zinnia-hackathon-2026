@@ -16,6 +16,7 @@ export function PolicyApplicationDetailsCard({
 }: BasePolicyComponentArgs) {
     const { t } = useTranslation();
     const applicationDetailsData = getApplicationDetailsData(policy, t);
+
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
             <Typography variant={TypographyVariant.H2}>
