@@ -1,4 +1,3 @@
-import { PartyRole } from '@xd/api-types/dist/generated-types/sor/models/PartyRole';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -33,7 +32,6 @@ import { ReactComponent as ChevronUp } from '@deps/styles/elements/icons/icons_o
 import ContactDetailsComponent from './contact-details-component';
 import RoleIdentification from './role-identification';
 import {
-    validate,
     BooleanOptions,
     getPartyName,
     ReasonOptions,
@@ -83,16 +81,7 @@ const RoleDetailsComponent = ({
     const sectionClasses = 'flex flex-col p-4 md:p-6 lg:p-8';
     const labelClasses = 'flex items-center space-x-2';
 
-    const keyToValidate = [
-        'firstName',
-        'lastName',
-        'emailAddress',
-        'dialNumber',
-    ];
-
     const handleChange = (key: any, value: any) => {
-        console.log('handleChange key, value', key, value);
-
         setRoleData((prevState: any) => {
             if (
                 [
@@ -115,25 +104,6 @@ const RoleDetailsComponent = ({
                 };
             }
         });
-        if (keyToValidate.includes(key)) {
-            const errors = validate(
-                {
-                    ...roleData,
-                    party: {
-                        ...roleData.party,
-                        [key]: value,
-                    },
-                },
-                addRole,
-                removeRole,
-                t,
-                roleLabel,
-                role.toUpperCase() as PartyRole
-            );
-            if (setCurrentErrors) {
-                setCurrentErrors(errors);
-            }
-        }
     };
 
     const handleRolePartyChange = <

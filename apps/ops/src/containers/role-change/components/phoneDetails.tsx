@@ -30,7 +30,11 @@ import { ExtendedPhone, useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import { ANYTIME, DEFAULT_COUNTRY_CODE } from '../role-change-helper';
+import {
+    ANYTIME,
+    DEFAULT_COUNTRY_CODE,
+    getVariant,
+} from '../role-change-helper';
 
 export type PhoneProps = {
     phoneDetails: ExtendedPhone;
@@ -137,7 +141,11 @@ function PhoneDetails({
                             frequentOptions={frequentCountryOptions}
                             label={t('fieldLabels.number') as string}
                             leading={countries[country].emoji}
-                            message={currentErrors?.phone}
+                            message={
+                                !phone?.dialNumber?.trim()?.length && !disabled
+                                    ? currentErrors?.phone
+                                    : ''
+                            }
                             onChange={(e) =>
                                 handleCombinedPhoneChange(e.target.value)
                             }
@@ -154,14 +162,18 @@ function PhoneDetails({
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={formatPhoneNumberRaw(phone as Phone)}
-                            variant={
+                            variant={getVariant(
+                                PhoneField.DialNumber,
+                                currentErrors?.phone
+                                    ? phone
+                                    : {
+                                          [PhoneField.DialNumber]:
+                                              'placeholder',
+                                      },
                                 disabled
-                                    ? FieldVariant.Inactive
-                                    : currentErrors?.phone
-                                    ? FieldVariant.Error
-                                    : FieldVariant.Default
-                            }
+                            )}
                             disabled={disabled}
+                            required
                         />
                         <Transition
                             as="div"
