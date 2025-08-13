@@ -8,7 +8,7 @@ import ContentCashValue from './illustration-details-content-cash-value';
 import CoverageSection from './illustration-details-content-coverage';
 import IulContentCoverage from './illustration-details-content-iul-coverage';
 import ContentPremium from './illustration-details-content-premium';
-import ContentRiders from './illustration-details-content-riders';
+import ContentRiders from './riders-section';
 type IllustrationDetailsContentProps = {
     isLoading: boolean;
 };
@@ -24,7 +24,7 @@ export default function IllustrationDetailsContent({
             <div className="flex flex-col p-6 gap-6">
                 <IulContentCoverage />
                 <ContentPremium />
-                <ContentRiders isLoading={isLoading} />
+                <ContentRiders />
                 <ContentCashValue />
             </div>
         );
@@ -33,7 +33,7 @@ export default function IllustrationDetailsContent({
         <div className="flex flex-col p-6 gap-6">
             <CoverageSection />
             <ContentPremium />
-            <ContentRiders isLoading={isLoading} />
+            <ContentRiders />
             <ContentCashValue
                 title={t('clientCase.illustrationDetails.cashValue')}
             />
