@@ -14,7 +14,10 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { checkManagRoleEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import {
+    checkBeneficiaryEligibilityQuery,
+    checkManagRoleEligibilityQuery,
+} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import {
     PolicyClickedEvent,
     SegmentTrackedEventName,
@@ -33,6 +36,8 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
         featureFlags[FEATURE_FLAGS.PAYOR_CHANGE_TRANSACTION];
     const shouldShowThirdPartyDesigneeChange =
         featureFlags[FEATURE_FLAGS.THIRD_PARTY_DESIGNEE_TRANSACTION];
+    const shouldShowBeneficiaryChange =
+        featureFlags[FEATURE_FLAGS.BENEFICIARY_CHANGE_TRANSACTION];
 
     const useRoleManagementEligibility = (
         policy: { planCode?: string; policyNumber?: string },
@@ -45,18 +50,30 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
         const eligibilityKey = `isEligibleManage${role}` as const;
 
         return useQuery({
-            queryKey: [
-                `checkManage${role}EligibilityQuery`,
-                policy.planCode ?? '',
-                policy.policyNumber ?? '',
-                role,
-            ],
+            queryKey:
+                role === PolicyRole.BENEFICIARY
+                    ? [
+                          'beneficiaryEligibility',
+                          policy.planCode ?? '',
+                          policy.policyNumber ?? '',
+                      ]
+                    : [
+                          `checkManage${role}EligibilityQuery`,
+                          policy.planCode ?? '',
+                          policy.policyNumber ?? '',
+                          role,
+                      ],
             queryFn: () =>
-                checkManagRoleEligibilityQuery(
-                    policy.planCode ?? '',
-                    policy.policyNumber ?? '',
-                    role
-                ),
+                role === PolicyRole.BENEFICIARY
+                    ? checkBeneficiaryEligibilityQuery(
+                          policy.planCode ?? '',
+                          policy.policyNumber ?? ''
+                      )
+                    : checkManagRoleEligibilityQuery(
+                          policy.planCode ?? '',
+                          policy.policyNumber ?? '',
+                          role
+                      ),
             placeholderData: (previousData) => previousData,
             select: (data) => ({
                 ...data,
@@ -82,6 +99,10 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
     );
     const { data: manageThirdPartyDesigneeEligibility } =
         useRoleManagementEligibility(policy, PolicyRole.THIRDPARTYDESIGNEE);
+    const { data: manageBeneficiaryEligibility } = useRoleManagementEligibility(
+        policy,
+        PolicyRole.BENEFICIARY
+    );
 
     const links = [
         {
@@ -124,6 +145,17 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
             isEligible:
                 manageThirdPartyDesigneeEligibility?.isEligibleManageThirdPartyDesignee,
             shouldShow: shouldShowThirdPartyDesigneeChange,
+        },
+        {
+            href: t('site.navLinks.beneficiary.link', {
+                id: policy.policyNumber,
+                planCode: policy.planCode,
+            }),
+            name: t('site.navLinks.beneficiary.text'),
+            hideLabel: false,
+            isEligible:
+                manageBeneficiaryEligibility?.isEligibleManageBeneficiary,
+            shouldShow: shouldShowBeneficiaryChange,
         },
     ];
 

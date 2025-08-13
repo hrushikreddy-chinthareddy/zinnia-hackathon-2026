@@ -36,6 +36,7 @@ export enum PolicyRole {
     JOINTOWNER = 'JointOwner',
     PAYOR = 'Payor',
     THIRDPARTYDESIGNEE = 'ThirdPartyDesignee',
+    BENEFICIARY = 'Beneficiary',
 }
 
 export enum BooleanValue {
