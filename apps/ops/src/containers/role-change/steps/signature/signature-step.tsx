@@ -115,8 +115,6 @@ const SignatureStep = ({
         goToNext();
     };
 
-    console.log('roleData', roleData);
-
     return (
         <WorkflowCard
             title={t('header')}

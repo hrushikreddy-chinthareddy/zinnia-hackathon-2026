@@ -10,9 +10,7 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
-import FieldDateSelect, {
-    DATE_PICKER_FORMAT,
-} from '@deps/components/fields/field-date-select/field-date-select';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import FileUpload from '@deps/components/file-upload/file-upload';
 import Radio, {
     RadioOrientation,
@@ -62,6 +60,8 @@ import {
     normalizeRole,
     NO,
     IDENTIFICATIONS,
+    CLIENT_COPY,
+    NEW_BUSINESS,
 } from '../../role-change-helper';
 
 const DEFAULT_PARTY_INSTANCE = {
@@ -190,8 +190,8 @@ const RoleIdentification = ({
                 zinniaLiveCaseId: '',
                 parentCarrierCode: policy.carrierId ?? '',
                 correlationId: uuidV4() || '',
-                docAccessLevel: 'CLIENT_COPY',
-                docCategory: 'NEW_BUSINESS',
+                docAccessLevel: CLIENT_COPY,
+                docCategory: NEW_BUSINESS,
                 documentType: '',
             };
 
@@ -200,7 +200,6 @@ const RoleIdentification = ({
                     metaData,
                     base64Results[index]
                 );
-                console.log('document', response, 'metaData', metaData);
 
                 if (response?.documentId) {
                     const attachment = {

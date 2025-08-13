@@ -121,8 +121,7 @@ const RoleDetailsStep = ({
                     <NavElement
                         onClick={() => {
                             if (
-                                String(role) !==
-                                String(Roles.THIRDPARTYDESIGNEE)
+                                role.toUpperCase() !== Roles.THIRDPARTYDESIGNEE
                             ) {
                                 setAddRole(!addRole),
                                     !removeRole

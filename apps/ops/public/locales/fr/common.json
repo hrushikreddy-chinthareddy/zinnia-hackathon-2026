@@ -7133,7 +7133,7 @@
             "annual": "Annuel",
             "singlepayment": "Paiement unique",
             "dtcc": "DTCC",
-            "credit-card": "Carte de crédit",
+            "creditcard": "Carte de crédit",
             "ach": "ACH",
             "check": "Chèque",
             "exchange": "Échange",
@@ -7243,7 +7243,6 @@
         "tabs": {
             "logins": "Connexions",
             "pageViews": "Pages vues"
-
         },
         "logins": {
             "zinniaLive": {

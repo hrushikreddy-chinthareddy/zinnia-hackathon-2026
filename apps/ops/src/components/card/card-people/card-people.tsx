@@ -31,8 +31,6 @@ export interface CardPeopleProps {
     //TODO: remove the optional for testId, but for now we'll keep it optional for backwards compatibility
     testId?: string;
     partyStatus?: PartyStatus;
-    disabled?: boolean;
-    cardDisableTooltip?: string;
 }
 
 const PREFERRED_TAG_ORDER = {
@@ -85,8 +83,6 @@ const CardPeople = ({
     isSelected = false,
     testId,
     partyStatus,
-    disabled,
-    cardDisableTooltip,
 }: CardPeopleProps) => {
     const hasAllocation = !isNullEmptyOrUndefined(allocation || '');
     const allocationBgClasses = hasAllocation
@@ -113,8 +109,6 @@ const CardPeople = ({
             isSelected={isSelected}
             onClick={onClick}
             testId={testId}
-            disabled={disabled}
-            cardDisableTooltip={cardDisableTooltip}
         >
             {sortedTags && (
                 <div className="flex flex-wrap gap-1">

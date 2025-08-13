@@ -6955,7 +6955,6 @@
         }
     },
     "usage": {
-
         "date": "Fecha",
         "exportToCSV": "Exportar a CSV",
         "tabs": {
@@ -7061,7 +7060,7 @@
             "annual": "Anual",
             "singlepayment": "Pago único",
             "dtcc": "DTCC",
-            "credit-card": "Tarjeta de crédito",
+            "creditcard": "Tarjeta de crédito",
             "ach": "ACH",
             "check": "Cheque",
             "exchange": "Intercambio",

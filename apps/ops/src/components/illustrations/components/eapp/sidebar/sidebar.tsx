@@ -1,6 +1,8 @@
 import { Button, Loader } from '@zinnia/bloom/components';
 import { useEffect, useMemo } from 'react';
 
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+
 import style from './sidebar.module.css';
 import { EAppData, useEapp } from '../../../providers/EAppProvider';
 import { useQuestionnaireEngine } from '../../../providers/QuestionnaireEngineProvider';
@@ -67,9 +69,10 @@ export function Sidebar() {
                                 <p className="typography-content-body-sm-bold">
                                     {dataToTitleMap[d as keyof EAppData]
                                         .type === 'money'
-                                        ? '$'
-                                        : ''}
-                                    {data[d as keyof EAppData]}
+                                        ? numberFormatify(
+                                              data[d as keyof EAppData]
+                                          )
+                                        : data[d as keyof EAppData]}
                                 </p>
                             </div>
                         ))}

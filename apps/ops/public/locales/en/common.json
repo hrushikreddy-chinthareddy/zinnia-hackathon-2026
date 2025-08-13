@@ -907,6 +907,7 @@
         "yes": "Yes",
         "no": "No"
     },
+
     "addressChange": {
         "common": {
             "partyRole": {
@@ -1049,6 +1050,7 @@
             }
         }
     },
+
     "welcome": {
         "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
@@ -7273,7 +7275,7 @@
             "annual": "Annual",
             "singlepayment": "Single Payment",
             "dtcc": "DTCC",
-            "credit-card": "Credit Card",
+            "creditcard": "Credit Card",
             "ach": "ACH",
             "check": "Check",
             "exchange": "Exchange",

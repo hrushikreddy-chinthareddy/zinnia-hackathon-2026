@@ -271,32 +271,22 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                         <div>
                             {isBeneficiarySelected && (
                                 <div className="w-full">
-                                    {beneficiaryDataByType(
-                                        filteredNameTags,
-                                        BeneficiaryType.PRIMARY
-                                    )?.length ? (
-                                        <BeneficiaryCardContainer
-                                            title={t(
-                                                'people.primaryAllocation'
-                                            )}
-                                            peopleCardData={peopleCardData}
-                                            filteredData={beneficiaryDataByType(
-                                                filteredNameTags,
-                                                BeneficiaryType.PRIMARY
-                                            )}
-                                            classNames="mb-10"
-                                            openAllocationSideSheet={
-                                                openSidesheet
-                                            }
-                                            type={BeneficiaryType.PRIMARY}
-                                            disabled={false}
-                                            showManageBeneficiary={true}
-                                            enableManageBeneficiary={
-                                                isEligibleBeneficiary &&
-                                                beneChangeEnabled
-                                            }
-                                        />
-                                    ) : null}
+                                    <BeneficiaryCardContainer
+                                        title={t('people.primaryAllocation')}
+                                        peopleCardData={peopleCardData}
+                                        filteredData={beneficiaryDataByType(
+                                            filteredNameTags,
+                                            BeneficiaryType.PRIMARY
+                                        )}
+                                        classNames="mb-10"
+                                        openAllocationSideSheet={openSidesheet}
+                                        type={BeneficiaryType.PRIMARY}
+                                        showManageBeneficiary={true}
+                                        enableManageBeneficiary={
+                                            isEligibleBeneficiary &&
+                                            beneChangeEnabled
+                                        }
+                                    />
                                     {beneficiaryDataByType(
                                         filteredNameTags,
                                         BeneficiaryType.CONTIGENT
@@ -341,12 +331,6 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                                     'people.commissionAllocationTooltip'
                                                 ) as string
                                             }
-                                            disabled={true}
-                                            cardDisableTooltip={
-                                                t(
-                                                    'people.cardDisableTooltip'
-                                                ) as string
-                                            }
                                         />
                                     ) : null}
 
@@ -360,12 +344,6 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                             tooltip={
                                                 t(
                                                     'people.otherTooltip'
-                                                ) as string
-                                            }
-                                            disabled={true}
-                                            cardDisableTooltip={
-                                                t(
-                                                    'people.cardDisableTooltip'
                                                 ) as string
                                             }
                                         />

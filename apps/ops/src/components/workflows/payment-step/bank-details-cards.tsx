@@ -75,7 +75,7 @@ export const BankDetailsCards = ({
                         ) : bankDetails?.length > 0 ? (
                             t('workflows.paymentStep.addBank')
                         ) : (
-                            t('workflows.paymentStep.empty')
+                            t('workflows.paymentStep.getBankEmpty')
                         )}
                     </p>
                 </>

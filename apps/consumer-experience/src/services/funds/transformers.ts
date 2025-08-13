@@ -2,6 +2,7 @@ import {
   FundAccountTypeEnum,
   ProductRules,
 } from '@zinnia/api-types/types/funds';
+import { FundAccountType } from '@zinnia/api-types/types/sor';
 
 import { PolicyFund } from '@/types/policy';
 import { getNextOccurrenceOfDay } from '@/utils/dates';
@@ -9,6 +10,11 @@ import { findPropertyValue } from '@/utils/objects';
 
 import { ApiResponse } from '..';
 import { FundDetails, Fund } from './types';
+
+const FundAccountTypesForPolicyDetailsData: (
+  | FundAccountType
+  | FundAccountTypeEnum
+)[] = [FundAccountType.FIXED, FundAccountTypeEnum.HOLDING];
 
 interface CombineFundArgs {
   fundDetails: (FundDetails | null | undefined)[];
@@ -67,20 +73,35 @@ export const combineFundData = ({
   );
 
   //Loop over allocations and make sure to set percentage
-  fundDetails.forEach(
-    item =>
-      item &&
-      item.fundId &&
-      map.set(item.fundId, {
-        ...map.get(item.fundId), //get the previous mapped value if it exists and spread the object out
-        ...item,
-        fundName: item?.fundAccountName,
-        interestRate: findPropertyValue<FundDetails | undefined | null, number>(
-          item,
-          'interestRate'
-        ),
-      })
-  );
+  fundDetails.forEach(item => {
+    if (!item) return;
+    let interestRate = findPropertyValue<
+      FundDetails | undefined | null,
+      number
+    >(item, 'interestRate');
+
+    const policyFund = map.get(item.fundId);
+
+    if (
+      policyFund?.fundAccountType &&
+      FundAccountTypesForPolicyDetailsData.includes(policyFund.fundAccountType)
+    ) {
+      const segment = policyFund?.fundSegments?.find(
+        // holding and fixed fund types have one rate for all segments
+        // that may not be true in the future
+        // in which case this will have to change
+        segment => segment.segmentId === '1'
+      );
+      interestRate = segment?.startingPrice;
+    }
+
+    map.set(item.fundId, {
+      ...map.get(item.fundId), //get the previous mapped value if it exists and spread the object out
+      ...item,
+      fundName: item?.fundAccountName,
+      interestRate,
+    });
+  });
 
   return {
     data: Array.from(map.values()),

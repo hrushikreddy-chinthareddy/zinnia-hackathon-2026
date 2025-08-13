@@ -1,6 +1,8 @@
+import { ArrangementType, Policy, Status } from '@zinnia/api-types/types/sor';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -9,11 +11,15 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import { BankDetailsCards } from './bank-details-cards';
+import PaymentStepUS from './payment-step-us';
 import { PaymentMethodType, PaymentStepProps } from './types';
-import { useBankDetails } from './use-bank-details';
 import WorkflowCard from '../workflow-card/workflow-card';
 
 const PaymentStep = ({
@@ -25,41 +31,71 @@ const PaymentStep = ({
     validateTransaction,
     trackEventProps,
 }: PaymentStepProps) => {
+    const { featureFlags } = useOptimizely();
+    const showPaymentUSFeature = featureFlags[FEATURE_FLAGS.PAYMENTUS_FEATURE];
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
     const router = useRouter();
+
+    const { parties, policyNumber, product, systematicPrograms } =
+        policy as Policy;
+    const {
+        paymentBankId,
+        paymentAccountNumber: currentPaymentAccountNumber,
+        payeePartyId,
+        payorPartyId,
+        arrangementType = ArrangementType.PAYMENT,
+    } = state;
     const [formError, setFormError] = useState(false);
 
-    const { policyNumber, product } = policy;
+    const payPartyId = payeePartyId || payorPartyId;
+    const party = parties?.find((party) => party.partyId === payPartyId);
 
-    const { paymentBankId } = state;
+    const paymentProgram = systematicPrograms?.find(
+        (program) =>
+            program.arrangementType === arrangementType &&
+            program.status === Status.ACTIVE
+    );
+    const programBankId = paymentProgram?.party?.find(
+        (party) => party.partyId === payPartyId
+    );
+    const bankDetails = useMemo(() => {
+        const currentBankDetails = party?.bankDetails?.filter((bank: any) => {
+            return !isEndDated(bank?.endDate);
+        });
+        return currentBankDetails?.sort((a, b) => {
+            if (a.bankId === programBankId) return -1;
+            if (b.bankId === programBankId) return 1;
 
-    const {
-        data: bankDetails = [],
-        isLoading: bankDetailsLoading,
-        isError: bankDetailsError,
-    } = useBankDetails({
-        state,
-        policy,
-    });
+            if (dayjs(b.startDate).isSame(a.startDate)) {
+                return a.bankId?.localeCompare(b.bankId || '') || 1;
+            }
 
-    if (bankDetails.length > 0) {
-        const selectedBank =
-            bankDetails?.find((bank) => bank.bankId === paymentBankId) ||
-            bankDetails?.[0];
+            return dayjs(b.startDate).isBefore(a.startDate) ? 1 : -1;
+        });
+    }, [party?.bankDetails, programBankId]);
 
-        if (selectedBank.bankId !== state.paymentBankId) {
-            setState((prevState) => ({
-                ...prevState,
-                paymentAccountNumber: selectedBank?.accountNumber,
-                paymentBankId: selectedBank?.bankId,
-                paymentBranchName: selectedBank?.branchName,
-            }));
+    useEffect(() => {
+        if (!bankDetails?.length) {
+            return;
         }
-    }
+
+        const selectedBank =
+            bankDetails.find((bank) => bank.bankId === paymentBankId) ||
+            bankDetails[0];
+
+        setState((prevState) => ({
+            ...prevState,
+            paymentAccountNumber: selectedBank?.accountNumber,
+            paymentBankId: selectedBank?.bankId,
+            paymentBranchName: selectedBank?.branchName,
+        }));
+        // We only want to run this on mount. Removing the dependency array will result in an infinate loop
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleContinue = async () => {
-        if (paymentBankId === '') {
+        if (currentPaymentAccountNumber === '') {
             setFormError(true);
             return;
         }
@@ -80,8 +116,12 @@ const PaymentStep = ({
         goToNext();
     };
 
-    const handleSelection = ({ paymentBankId }: PaymentMethodType) => {
-        if (paymentBankId === state.paymentBankId) {
+    const handleSelection = ({
+        paymentAccountNumber,
+        paymentBranchName,
+        paymentBankId,
+    }: PaymentMethodType) => {
+        if (paymentAccountNumber === currentPaymentAccountNumber) {
             setState((prevState) => ({
                 ...prevState,
                 paymentAccountNumber: '',
@@ -89,15 +129,11 @@ const PaymentStep = ({
                 paymentBankId: '',
             }));
         } else {
-            const selectedBank = bankDetails?.find(
-                (bank) => bank.bankId === paymentBankId
-            );
-
             setState((prevState) => ({
                 ...prevState,
-                paymentAccountNumber: selectedBank?.accountNumber,
-                paymentBranchName: selectedBank?.branchName,
-                paymentBankId: selectedBank?.bankId,
+                paymentAccountNumber,
+                paymentBranchName,
+                paymentBankId,
             }));
             setFormError(false);
         }
@@ -117,7 +153,20 @@ const PaymentStep = ({
         },
     };
 
-    const stopLoading = paymentBankId === '' || formError;
+    const stopLoading = currentPaymentAccountNumber === '' || formError;
+    if (showPaymentUSFeature) {
+        return (
+            <PaymentStepUS
+                parentPage={parentPage}
+                policy={policy}
+                setState={setState}
+                state={state}
+                subtitle={subtitle}
+                validateTransaction={validateTransaction}
+                trackEventProps={trackEventProps}
+            />
+        );
+    }
 
     return (
         <WorkflowCard
@@ -142,15 +191,39 @@ const PaymentStep = ({
                             {t('workflows.paymentStep.label')}
                         </Typography>
 
-                        <BankDetailsCards
-                            bankDetails={bankDetails}
-                            bankDetailsError={bankDetailsError}
-                            bankDetailsLoading={bankDetailsLoading}
-                            paymentBankId={paymentBankId}
-                            handleSelection={handleSelection}
-                            t={t}
-                            dataTestid="payment-methods"
-                        />
+                        <div
+                            className="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3"
+                            data-testid="payment-methods"
+                        >
+                            {bankDetails?.map((details) => (
+                                <BankDataCard
+                                    bankDetails={details}
+                                    onCardClick={() => {
+                                        handleSelection({
+                                            paymentAccountNumber:
+                                                details.accountNumber,
+                                            paymentBankId: details.bankId,
+                                            paymentBranchName:
+                                                details.branchName,
+                                        });
+                                    }}
+                                    key={details.accountNumber}
+                                    selectedId={paymentBankId}
+                                    accessibilityClickText={t(
+                                        'ariaLabel.select'
+                                    )}
+                                />
+                            ))}
+                            <div
+                                aria-hidden
+                                className="flex cursor-not-allowed items-center justify-center gap-1 rounded-md border-2 border-gray-200 bg-gray-100 px-4 py-8 text-gray-300"
+                            >
+                                <AddIcon height={24} width={24} />
+                                <p className="font-primary text-base font-semibold">
+                                    {t('workflows.paymentStep.addBank')}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {formError && (
