@@ -42,6 +42,7 @@ const carrierIcons: Record<
   [CarrierNames.FARMERS]: CarrierAvatars[CarrierName.FARMERS],
   [CarrierNames.SECURITY_BENEFIT]: CarrierAvatars[CarrierName.SECURITY_BENEFIT],
   [CarrierNames.ZINNIA]: CarrierAvatars[CarrierName.ZINNIA],
+  [CarrierNames.EVERGLADES]: CarrierAvatars[CarrierName.EVERGLADES],
 };
 
 export const NavMenu = ({

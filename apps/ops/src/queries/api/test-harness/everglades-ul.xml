@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<TXLife xmlns="http://ACORD.org/Standards/Life/2">
+	<TXLifeRequest PrimaryObjectID="Holding_1">
+		<TransRefGUID>AU22045154TB370JK</TransRefGUID>
+		<TransType tc="103">New Business Submission</TransType>
+		<TransSubType tc="10301">New Business Submission - Life</TransSubType>
+		<TransExeDate>2025-05-09</TransExeDate>
+		<TransExeTime>04:30:26</TransExeTime>
+		<OLifE>
+			<SourceInfo>
+				<SourceInfoName>ESB</SourceInfoName>
+				<SourceInfoDescription>FAST Deliver</SourceInfoDescription>
+			</SourceInfo>
+			<Holding id="Holding_1">
+				<HoldingTypeCode tc="2">Policy</HoldingTypeCode>
+				<HoldingForm tc="1">Individual</HoldingForm>
+				<Policy>
+					<PolNumber>EVUL00000004</PolNumber>
+					<LineOfBusiness tc="1">Life</LineOfBusiness>
+					<ProductType tc="3">Universal Life</ProductType>
+					<ProductCode>EVUL101</ProductCode>
+					<ProductVersionCode>2021.10.15</ProductVersionCode>
+					<CarrierCode>EVGL</CarrierCode>
+					<PlanName>Everglades UL</PlanName>
+					<ShortName>Everglades UL</ShortName>
+					<PolicyStatus tc="25">Issued</PolicyStatus>
+					<IssueType tc="1">FULL_UNDERWRITING</IssueType>
+					<Jurisdiction tc="20">KS</Jurisdiction>
+					<Life>
+						<QualPlanType tc="1">Non-Qualified</QualPlanType>
+						<GDBValue>300000.0</GDBValue>
+						<FaceAmt>300000.0</FaceAmt>
+						<Coverage id="Base_Coverage">
+							<PlanName>Everglades UL</PlanName>
+							<ProductCode>EVUL101</ProductCode>
+							<IndicatorCode tc="1">Base</IndicatorCode>
+							<DeathBenefitOptType tc="1">Level</DeathBenefitOptType>
+							<CurrentAmt>300000.0</CurrentAmt>
+							<ModalPremAmt>99.00</ModalPremAmt>
+							<EffDate>2025-05-09</EffDate>
+							<PayToYear>20</PayToYear>
+							<LifeParticipant id="LP_Insured_1" PartyID="Party_PI_1">
+								<LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+								<IssueAge>43</IssueAge>
+								<TobaccoPremiumBasis tc="1">Non-Smoker</TobaccoPremiumBasis>
+								<TempTableRating tc="1">None</TempTableRating>
+								<TempFlatExtraAmt>0</TempFlatExtraAmt>
+								<UnderwritingClass tc="10">Preferred Non-Tobacco</UnderwritingClass>
+								<UnderwritingStatus tc="6">Approved</UnderwritingStatus>
+								<TempFlatExtraDuration>0</TempFlatExtraDuration>
+							</LifeParticipant>
+							<LifeParticipant id="LP_Primary_Bene_1" PartyID="Party_PB_Primary_Bene_1">
+								<LifeParticipantRoleCode tc="7">Primary Beneficiary</LifeParticipantRoleCode>
+							</LifeParticipant>
+						</Coverage>
+
+
+						<Coverage id="Rider_SBLOPR">
+							<PlanName>Overloan Protection Rider</PlanName>
+							<ProductCode>SBLOPR</ProductCode>
+							<LifeCovStatus tc="1">Active</LifeCovStatus>
+							<IndicatorCode tc="2">Rider</IndicatorCode>
+							<LifeParticipant id="OPR_Insured_1" PartyID="Party_PI_1">
+								<LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+								<IssueAge>43</IssueAge>
+							</LifeParticipant>
+							<OLifEExtension VendorCode="154">
+								<SelectionInd tc="1">True</SelectionInd>
+							</OLifEExtension>
+						</Coverage>
+
+						<LifeUSA>
+						   <DefLifeInsMethod tc="1">GPT</DefLifeInsMethod>
+						</LifeUSA>
+
+						<OLifEExtension VendorCode="154">
+							<MatchValueVersion>2021.10.15</MatchValueVersion>
+							<MatchPercentage>1</MatchPercentage>
+						</OLifEExtension>
+
+					</Life>
+					<ApplicationInfo>
+						<ApplicationType tc="1">New</ApplicationType>
+						<SignedDate>2025-05-09</SignedDate>
+						<MaxRiskAmt>1000000.0</MaxRiskAmt>
+						<SignatureInfo>
+							<SignatureRoleCode tc="18">Owner</SignatureRoleCode>
+							<SignatureDate>2025-05-09</SignatureDate>
+						</SignatureInfo>
+					</ApplicationInfo>
+				</Policy>
+				<Investment>
+					<InvestType tc="32">Investment Account</InvestType>
+					<SubAccount id="SubAcct1">
+						<SubAccountKey>EVGF007</SubAccountKey>
+						<ProductFullName>Fixed UL Fund</ProductFullName>
+						<InvestType tc="22">Fixed Rate</InvestType>
+						<AllocPercent>100</AllocPercent>
+					</SubAccount>
+				</Investment>
+				<Arrangement id="Arr_1">
+					<ArrMode tc="4">Monthly</ArrMode>
+					<ArrType tc="19">Initial Payment</ArrType>
+					<StartDate>2025-05-09</StartDate>
+					<ModalAmt>99.00</ModalAmt>
+					<PaymentForm tc="7">ACH</PaymentForm>
+				</Arrangement>
+				<Banking id="Bank_1" AppliesToPartyID="Party_PI_1">
+					<BankAcctType tc="2">Checking</BankAcctType>
+					<AccountNumber>34567876545678</AccountNumber>
+					<RoutingNum>021000021</RoutingNum>
+					<BankName>JPMORGAN CHASE</BankName>
+						<OLifEExtension VendorCode="154">
+						<BillAmtType tc="7">Premium Billing</BillAmtType>
+					</OLifEExtension>
+				</Banking>
+			</Holding>
+			<Party id="Party_PI_1">
+				<PartyTypeCode tc="1">Person</PartyTypeCode>
+				<FullName>KAREN BATES</FullName>
+				<GovtID>583025127</GovtID>
+				<GovtIDTC tc="1">Social Security Number</GovtIDTC>
+				<PrefComm tc="3">Email</PrefComm>
+				<IDReferenceNo>0017b000010N4bCAAS</IDReferenceNo>
+				<IDReferenceType tc="35">Customer Number</IDReferenceType>
+				<Person>
+					<FirstName>qIee</FirstName>
+					<MiddleName>vkZO</MiddleName>
+					<LastName>gfSK</LastName>
+					<Gender tc="2">Female</Gender>
+					<BirthDate>1978-09-24</BirthDate>
+					<DriversLicenseNum>K00580441</DriversLicenseNum>
+					<DriversLicenseState tc="20">KS</DriversLicenseState>
+					<BirthCountry tc="1">US</BirthCountry>
+				</Person>
+				<Address id="Party_PI_Address_1">
+					<AddressTypeCode tc="1">Residence</AddressTypeCode>
+					<Line1>1609 Summit St</Line1>
+					<City>Garden City</City>
+					<AddressState>KS</AddressState>
+					<AddressStateTC tc="20">KS</AddressStateTC>
+					<Zip>67846</Zip>
+					<PrefAddr tc="1">true</PrefAddr>
+				</Address>
+				<Phone id="Party_PI_Phone_1">
+					<PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+					<PhoneValue>318-987-3960</PhoneValue>
+				</Phone>
+				<EMailAddress id="Party_PI_EmailAddress_1">
+					<EMailType tc="2">Personal</EMailType>
+					<AddrLine>secben585+0502v1@gmail.com</AddrLine>
+				</EMailAddress>
+				<Risk>
+					<ExistingInsuranceInd tc="0">No</ExistingInsuranceInd>
+				</Risk>
+			</Party>
+			<Party id="Party_PB_Primary_Bene_1">
+				<PartyTypeCode tc="1">Person</PartyTypeCode>
+				<Person>
+					<FirstName>WILL</FirstName>
+					<MiddleName>Andrew</MiddleName>
+					<LastName>WHEETON</LastName>
+					<Gender tc="1">Male</Gender>
+					<BirthDate>1985-06-10</BirthDate>
+				</Person>
+			</Party>
+			<Party id="Party_Agent_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>PETER</FirstName>
+          <LastName>ANTHONY</LastName>
+          <Gender tc="1">Male</Gender>
+        </Person>
+        <Producer>
+          <ProducerKey>Agent1</ProducerKey>
+          <License>
+            <LicenseNum>6376559</LicenseNum>
+          </License>
+          <CarrierAppointment>
+            <CompanyProducerID>PG0010028</CompanyProducerID>
+            <CarrierCode>EVGL</CarrierCode>
+            <DistributionChannelInfo>
+              <DistributionChannel tc="13">Bank</DistributionChannel>
+            </DistributionChannelInfo>
+          </CarrierAppointment>
+          <ProducerAgreement>
+            <ProducerType tc="2">Broker</ProducerType>
+          </ProducerAgreement>
+        </Producer>
+        <OLifEExtension VendorCode="154">
+          <StartDate>2025-05-09</StartDate>
+          <EndDate>2060-02-28</EndDate>
+        </OLifEExtension>
+      </Party>
+			<Relation id="Relation_PI_Insured" OriginatingObjectID="Holding_1" RelatedObjectID="Party_PI_1">
+				<OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+				<RelatedObjectType tc="6">Party</RelatedObjectType>
+				<RelationRoleCode tc="32">Insured</RelationRoleCode>
+			</Relation>
+			<Relation id="Relation_PI_Owner" OriginatingObjectID="Holding_1" RelatedObjectID="Party_PI_1">
+				<OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+				<RelatedObjectType tc="6">Party</RelatedObjectType>
+				<RelationRoleCode tc="8">Owner</RelationRoleCode>
+			</Relation>
+			<Relation id="Relation_Holding_Payor" OriginatingObjectID="Holding_1" RelatedObjectID="Party_PI_1">
+				<OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+				<RelatedObjectType tc="6">Party</RelatedObjectType>
+				<RelationRoleCode tc="31">Payer</RelationRoleCode>
+			</Relation>
+			<Relation id="Relation_Holding_Primary_Bene_1" OriginatingObjectID="Holding_1" RelatedObjectID="Party_PB_Primary_Bene_1">
+				<OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+				<RelatedObjectType tc="6">Party</RelatedObjectType>
+				<RelationRoleCode tc="34">Primary Beneficiary</RelationRoleCode>
+				<InterestPercent>100</InterestPercent>
+			</Relation>
+			<Relation id="Relation_PI_Primary_Bene_1" OriginatingObjectID="Party_PI_1" RelatedObjectID="Party_PB_Primary_Bene_1">
+				<OriginatingObjectType tc="6">Party</OriginatingObjectType>
+				<RelatedObjectType tc="6">Party</RelatedObjectType>
+				<RelationRoleCode tc="4">Sibling</RelationRoleCode>
+				<RelationDescription tc="7">Brother</RelationDescription>
+			</Relation>
+		</OLifE>
+	</TXLifeRequest>
+</TXLife>

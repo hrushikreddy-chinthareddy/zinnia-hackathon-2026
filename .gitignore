@@ -12,6 +12,7 @@ generated-types
 # Local env files
 .env
 .env.local
+.env.demo.local
 .env.development.local
 .env.test.local
 .env.production.local

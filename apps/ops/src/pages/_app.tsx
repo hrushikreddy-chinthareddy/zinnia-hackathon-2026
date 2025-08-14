@@ -79,7 +79,10 @@ const AppHead = () => {
                 content="width=device-width, initial-scale=1"
             />
             ({!isProd() && <meta name="robots" content="noindex, nofollow" />})
-            <link rel="icon" href="/favicon.ico" />
+            <link
+                rel="icon"
+                href={process.env.NEXT_PUBLIC_FAVICON_PATH || '/favicon.ico'}
+            />
             <link rel="alternate" hrefLang="x-default" href="/" />
             <link rel="alternate" hrefLang="en" href="/en/" />
             <link rel="alternate" hrefLang="fr" href="/fr/" />

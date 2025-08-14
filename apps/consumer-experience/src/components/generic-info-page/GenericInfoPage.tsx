@@ -59,6 +59,18 @@ const getCarrierConfig = (carrier: CompanyName): CarrierConfig => {
         theme: styles.securityBenefit,
         showBranding: true,
       };
+    case CompanyName.EVERGLADES:
+      return {
+        logo: (
+          <CarrierLogo
+            carrier={CarrierName.EVERGLADES}
+            width={334}
+            height={63}
+          />
+        ),
+        theme: styles.everglades,
+        showBranding: true,
+      };
     default:
       return {
         logo: null,

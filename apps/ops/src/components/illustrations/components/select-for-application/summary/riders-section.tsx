@@ -8,7 +8,7 @@ import { ProductTypes } from '@deps/types/product';
 import ContentEntry from './content-entry';
 import ContentSection from './content-section';
 import styles from './summary.module.css';
-import { useIllustrationRidersData } from '../../details/content/illustration-details-content-riders';
+import { useIllustrationRidersData } from '../../details/content/use-riders-data';
 
 export default function IllustrationSelectForApplicationSectionRiders() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});

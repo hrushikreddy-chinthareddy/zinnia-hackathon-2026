@@ -7371,7 +7371,7 @@
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
-            "subtitle": "This illustration will be sent to associate with an application.",
+            "subtitle": "This illustration will be included with the application.",
             "warning": "Once submitted, the other illustrations will be archived",
             "submit": "Submit",
             "ariaSubmit": "Submit for application",
@@ -7413,5 +7413,9 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "testHarness": {
+        "h1": "Test Harness",
+        "description": "Click to generate a new test policy with a random policy number."
     }
 }

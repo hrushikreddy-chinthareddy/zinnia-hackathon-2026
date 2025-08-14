@@ -2,7 +2,7 @@
 
 type ErrorWithMessageAndCause = {
   message: string;
-  cause: unknown;
+  cause: Record<string, unknown>;
 };
 
 function isErrorWithMessage(error: unknown): error is ErrorWithMessageAndCause {

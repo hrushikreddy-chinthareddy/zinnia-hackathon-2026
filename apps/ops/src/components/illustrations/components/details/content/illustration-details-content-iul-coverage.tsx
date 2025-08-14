@@ -29,9 +29,15 @@ export default function IulContentCoverage() {
             (option, id) => {
                 return (
                     <TableRow key={id}>
-                        <TableCell> {option?.value}</TableCell>
-                        <TableCell> {option?.from}</TableCell>
-                        <TableCell> {option?.through}</TableCell>
+                        <TableCell style={{ textAlign: 'left' }}>
+                            {option?.value}
+                        </TableCell>
+                        <TableCell style={{ textAlign: 'right' }}>
+                            {option?.from}
+                        </TableCell>
+                        <TableCell style={{ textAlign: 'right' }}>
+                            {option?.through}
+                        </TableCell>
                     </TableRow>
                 );
             }
@@ -60,9 +66,15 @@ export default function IulContentCoverage() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHeaderCell>Value</TableHeaderCell>
-                                <TableHeaderCell>From year</TableHeaderCell>
-                                <TableHeaderCell>Through</TableHeaderCell>
+                                <TableHeaderCell style={{ textAlign: 'left' }}>
+                                    Value
+                                </TableHeaderCell>
+                                <TableHeaderCell style={{ textAlign: 'right' }}>
+                                    From year
+                                </TableHeaderCell>
+                                <TableHeaderCell style={{ textAlign: 'right' }}>
+                                    Through
+                                </TableHeaderCell>
                             </TableRow>
                         </TableHeader>
                         <TableBody>{deathBenefitOption}</TableBody>
