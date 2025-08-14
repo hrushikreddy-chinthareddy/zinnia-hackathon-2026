@@ -1,5 +1,6 @@
 import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import {
     Address,
     Email,
@@ -91,7 +92,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
-import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { CardDetailsTest } from '@deps/jest/constants/test-id-constants';
 import { Statuses } from '@deps/models/case/case';
 import { ProcessType } from '@deps/models/case/enums';
@@ -382,7 +383,11 @@ export const StatusBanner = ({
         deathClaimApplicableStatuses.includes(policyStatus);
 
     const { isPermissioned: isUserPermissionedToWrite } =
-        useWritePolicyPermissionCheck(policy.policyNumber, policy.planCode);
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteAllTransactions,
+            policy.policyNumber,
+            policy.planCode
+        );
 
     useEffect(() => {
         const checkIsNewDeathClaim = async () => {

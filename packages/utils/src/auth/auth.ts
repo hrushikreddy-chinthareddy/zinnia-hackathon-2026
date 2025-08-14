@@ -1,27 +1,33 @@
 export enum FgaRoles {
-  CASE_STATS_DASHBOARD_ENTITY = 'entity:case_stats_dashboard',
-  CASE_INSIGHTS_ENTITY = 'entity:case_insights',
-  ADVISORS_EXCEL = 'role:advisors_excel_imo_support',
-  SUPER_ADMIN = 'role:zinnia_super_admin',
-  CASE_MANAGEMENT_ZL_ENTITY = 'entity:zinnia_live_case_management',
-  POLICY_MANAGEMENT_ZL_ENTITY = 'entity:zinnia_live_policy_management',
-  POLICY_INDEX_ZL_ENTITY = 'entity:zinnia_live_policy_index',
-  WELB_SALES_MATERIALS = 'entity:welb_sales_materials',
-  CALL_LOG_ACCESS = 'entity:zinnia_live_call_log_audio',
-  ILLUSTRATIONS_EXPERIENCE = 'entity:zinnia_live_illustrations_experience',
-  USAGE_DASHBOARD_ENTITY = 'entity:zinnia_live_usage_dashboard',
-  TEST_HARNESS_ACCESS = 'entity:zinnia_live_test_harness',
+  CASE_STATS_DASHBOARD_ENTITY = "entity:case_stats_dashboard",
+  CASE_INSIGHTS_ENTITY = "entity:case_insights",
+  ADVISORS_EXCEL = "role:advisors_excel_imo_support",
+  SUPER_ADMIN = "role:zinnia_super_admin",
+  CASE_MANAGEMENT_ZL_ENTITY = "entity:zinnia_live_case_management",
+  POLICY_MANAGEMENT_ZL_ENTITY = "entity:zinnia_live_policy_management",
+  POLICY_INDEX_ZL_ENTITY = "entity:zinnia_live_policy_index",
+  WELB_SALES_MATERIALS = "entity:welb_sales_materials",
+  CALL_LOG_ACCESS = "entity:zinnia_live_call_log_audio",
+  ILLUSTRATIONS_EXPERIENCE = "entity:zinnia_live_illustrations_experience",
+  USAGE_DASHBOARD_ENTITY = "entity:zinnia_live_usage_dashboard",
+  TEST_HARNESS_ACCESS = "entity:zinnia_live_test_harness",
 }
 
 export enum FgaRelation {
-  Party = 'party',
-  UiAccess = 'ui_access',
+  Party = "party",
+  UiAccess = "ui_access",
 }
 
 export interface FGA_Tuple {
   user: string;
   relation: string;
   object: string;
+}
+
+export enum TransactionPermission {
+  WriteAllTransactions = "write_all_transactions",
+  WriteNotificationOfDeathClaim = "write_notification_of_death_claim",
+  // Add future ones here
 }
 
 export interface BulkCheckTuple extends FGA_Tuple {

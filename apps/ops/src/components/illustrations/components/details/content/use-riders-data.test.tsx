@@ -1,8 +1,10 @@
 import { render, renderHook, screen } from '@testing-library/react';
-import { useIllustrationRidersData } from './use-riders-data';
+import { format } from 'path';
+
 import { IllustrationDetailProvider } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
 import { Illustration } from '@deps/queries/api/client/documents/v3/illustrations';
-import { format } from 'path';
+
+import { useIllustrationRidersData } from './use-riders-data';
 
 type DeepPartial<T> = T extends object
     ? {

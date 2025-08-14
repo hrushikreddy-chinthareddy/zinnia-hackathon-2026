@@ -1,5 +1,6 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery } from '@tanstack/react-query';
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import { Reason } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -19,7 +20,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { ProcessType } from '@deps/models/case/enums';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
@@ -139,7 +140,17 @@ export const MenuContextualContent = ({
     };
 
     const { isPermissioned: isUserPermissionedToDoTransaction } =
-        useWritePolicyPermissionCheck(policy.policyNumber, policy.planCode);
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteAllTransactions,
+            policy.policyNumber,
+            policy.planCode
+        );
+    const { isPermissioned: isUserPermissionedToSubmitDeathClaim } =
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteNotificationOfDeathClaim,
+            policy.policyNumber,
+            policy.planCode
+        );
 
     const premiumProgram = policy.systematicPrograms.getProgramsByReason(
         Reason.PREMIUM
@@ -365,7 +376,12 @@ export const MenuContextualContent = ({
         );
     }
 
-    if (isNewDeathClaimEnabled && isUserPermissionedToDoTransaction) {
+    if (
+        isNewDeathClaimEnabled &&
+        isUserPermissionedToSubmitDeathClaim &&
+        initialDeathClaimEligibility?.isEligibleNewDeathClaim &&
+        deathClaimApplicableStatuses.includes(policy.policyStatus)
+    ) {
         transactionItems.push(
             <MenuContextualItem
                 key="new-death-claim"

@@ -1,3 +1,4 @@
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import {
     TransactionStatus,
     TransactionType,
@@ -15,7 +16,7 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { withdrawalFinancialTransactions } from '@deps/helpers/transaction-types.helpers';
-import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { Statuses } from '@deps/models/case/case';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
@@ -78,7 +79,8 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     const { status, transactionType } = transaction || {};
 
     const { isPermissioned: isUserPermissionedToDoTransaction } =
-        useWritePolicyPermissionCheck(
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteAllTransactions,
             policy?.policyNumber,
             policy?.product?.planCode
         );

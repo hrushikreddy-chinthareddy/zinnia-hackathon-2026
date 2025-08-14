@@ -1,3 +1,4 @@
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import { AxiosResponse } from 'axios';
 
 import { UserPermission } from '@deps/models/user-profile';
@@ -167,16 +168,17 @@ export const getCarrierList = async (
     }
 };
 
-export const checkWritePolicyPermissionQuery = async (
+export const checkTransactionPermissionQuery = async (
     partyId: string,
     policyNumber: string | undefined,
-    planCode: string | undefined
+    planCode: string | undefined,
+    relation: TransactionPermission
 ): Promise<ApiResponse<boolean>> => {
     const url = `${baseUrl}/check-policy`;
 
     const body = {
         user: `party:${partyId}`,
-        relation: 'write_all_transactions',
+        relation,
         policyNumber,
         planCode,
     };
