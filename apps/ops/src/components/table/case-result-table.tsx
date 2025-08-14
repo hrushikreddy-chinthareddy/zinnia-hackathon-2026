@@ -431,30 +431,30 @@ export const CaseResultTable = ({
             <TableHeader>
                 <TableRow>
                     {/* This header cell is needed so the link can come first in the Table Row, without it the table body will shift right one column too far */}
-                    <TableHeaderCell className="sr-only">
+                    <TableHeaderCell scope="col" className="sr-only">
                         {t('caseManagementDashboard.case.viewCaseDetails')}
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderCell scope="col">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('caseManagementDashboard.case.case/ID')}
                         </Typography>
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderCell scope="col">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('caseManagementDashboard.case.caseStatus')}
                         </Typography>
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderCell scope="col">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('caseManagementDashboard.case.ownerSsn')}
                         </Typography>
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderCell scope="col">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('caseManagementDashboard.case.policy')}
                         </Typography>
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderCell scope="col">
                         <Typography variant={TypographyVariant.BodySmBold}>
                             {t('caseManagementDashboard.case.agentSsn')}
                         </Typography>
