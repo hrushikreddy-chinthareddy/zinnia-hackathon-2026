@@ -234,6 +234,10 @@ const RoleIdentification = ({
         setUploadedFiles(files);
     };
 
+    const onEntityTypeChange = (value: string) => {
+        handleChange(RoleField.EntityType, value);
+    };
+
     return (
         <div key={index}>
             <Typography variant={TypographyVariant.H2}>
@@ -524,12 +528,7 @@ const RoleIdentification = ({
                                         <SelectSimple
                                             label={t('entityType') as string}
                                             options={entityType}
-                                            onChange={(value) =>
-                                                handleChange(
-                                                    RoleField.EntityType,
-                                                    value
-                                                )
-                                            }
+                                            onChange={onEntityTypeChange}
                                             size={FieldSize.Small}
                                             value={
                                                 party?.entityType ??

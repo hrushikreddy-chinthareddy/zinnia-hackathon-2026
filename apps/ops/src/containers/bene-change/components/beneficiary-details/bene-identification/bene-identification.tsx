@@ -150,6 +150,24 @@ const BeneficiaryIdentification = ({
             : FieldVariant.Default;
     };
 
+    const onCompanyNameChange = (event: any) => {
+        setCurrentErrors((prevState: any) => {
+            const { lastName, ...errors } = prevState ?? {};
+            return errors;
+        });
+        setParty((prevState: any) => ({
+            ...prevState,
+            lastName: event.target.value,
+        }));
+    };
+
+    const onEntityTypeChange = (value: string) => {
+        setParty((prevState: any) => ({
+            ...prevState,
+            entityType: value,
+        }));
+    };
+
     return (
         <div>
             <div className={containerClasses}>
@@ -314,17 +332,7 @@ const BeneficiaryIdentification = ({
                                 <Field
                                     label={t(`companyName`) as string}
                                     message={currentErrors?.lastName}
-                                    onChange={(event) => {
-                                        setCurrentErrors((prevState: any) => {
-                                            const { lastName, ...errors } =
-                                                prevState ?? {};
-                                            return errors;
-                                        });
-                                        setParty((prevState: any) => ({
-                                            ...prevState,
-                                            lastName: event.target.value,
-                                        }));
-                                    }}
+                                    onChange={onCompanyNameChange}
                                     size={FieldSize.Small}
                                     type={FieldType.BaseActive}
                                     value={party?.lastName || ''}
@@ -341,12 +349,7 @@ const BeneficiaryIdentification = ({
                                 <SelectSimple
                                     label={t('entityType') as string}
                                     options={entityTypeOptions(t)}
-                                    onChange={(value) =>
-                                        setParty((prevState: any) => ({
-                                            ...prevState,
-                                            entityType: value,
-                                        }))
-                                    }
+                                    onChange={onEntityTypeChange}
                                     size={FieldSize.Small}
                                     value={
                                         party?.entityType ??
