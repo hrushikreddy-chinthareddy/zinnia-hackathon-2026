@@ -39,7 +39,7 @@ describe('standardDateMonthDayYear', () => {
   });
 
   it('should return formatted date string when given a valid Date object', () => {
-    const date = new Date('2024-02-26');
+    const date = new Date('2024-02-26T09:00:00');
     const result = standardDateMonthDayYear(date);
     expect(result).toBe('2/26/2024');
   });
