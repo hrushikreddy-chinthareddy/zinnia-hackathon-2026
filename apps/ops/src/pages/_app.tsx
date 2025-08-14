@@ -12,11 +12,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AppProps } from 'next/app';
 import { Lato } from 'next/font/google';
 import Head from 'next/head';
-import { appWithTranslation } from 'next-i18next';
+import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
 
 import GaMouseflowTrackingScript from '@deps/components/analytics/GaMouseflowTrackingScript';
 import SegmentAnalyticsScript from '@deps/components/analytics/SegmentAnalyticsScript';
+import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_PAGE_TITLE } from '@deps/constants/page-title';
 import { ApplicationDataProvider } from '@deps/contexts/ApplicationContext';
 import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
@@ -48,9 +49,12 @@ if (process.env.NODE_ENV === NODE_ENV_PRODUCTION) {
     datadogRum.startSessionReplayRecording();
 }
 
-const AppHead = () => {
+const AppHead = ({ pageProps }: AppProps) => {
     // DEPU-1025 to clean up only required user fields once we start collecting data
     const { user } = useUser();
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'site.pageTitles',
+    });
     useEffect(() => {
         const rumId = user && user.sub ? user.sub : null;
         const rumEmail = user?.email ? user?.email : null;
@@ -67,9 +71,13 @@ const AppHead = () => {
         }
     }, [user]);
 
+    const title = pageProps?.subPageTitleKey
+        ? `${t(pageProps.subPageTitleKey)} | ${DEFAULT_PAGE_TITLE}`
+        : DEFAULT_PAGE_TITLE;
+
     return (
         <Head>
-            <title>{DEFAULT_PAGE_TITLE}</title>
+            <title>{title}</title>
             <meta
                 name="description"
                 content="Creating a modern experience today"
@@ -122,7 +130,7 @@ const App = (props: AppProps) => {
         <QueryClientProvider client={queryClient}>
             <section className={`${lato.variable} relative`}>
                 <UserProvider>
-                    <AppHead />
+                    <AppHead {...props} />
                     <AppBody {...props} />
                     {process.env.NEXT_PUBLIC_GOOGLEANALYTICS_ENV ===
                         NODE_ENV_PRODUCTION && (
