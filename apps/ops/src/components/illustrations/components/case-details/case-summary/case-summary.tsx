@@ -103,6 +103,7 @@ const IllustrationCaseSumary = ({
                 onCancel={closeSideSheet}
                 onSubmit={onSubmitForm}
                 clientCase={clientCase}
+                isEdit
             />
         );
         sideSheet.handleOpen(true, 500);

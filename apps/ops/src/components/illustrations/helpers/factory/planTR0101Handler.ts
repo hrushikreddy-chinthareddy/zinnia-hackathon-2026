@@ -443,7 +443,7 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
     }
 
     getIllustrationApiPath(): string {
-        return '/api/illustration/v3/term-life/new-business';
+        return 'api/illustration/v3/term-life/new-business';
     }
 
     public generateTitle(data: any, formInputs: any): string {

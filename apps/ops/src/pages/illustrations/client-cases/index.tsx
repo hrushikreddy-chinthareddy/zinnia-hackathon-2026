@@ -1,6 +1,4 @@
-import { getAccessToken } from '@auth0/nextjs-auth0';
 import { BannerAlert, BannerVariant, Button } from '@zinnia/bloom/components';
-import { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
@@ -17,26 +15,17 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { IllustrationsClientCaseProvider } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserProfile } from '@deps/models/user-profile';
-import {
-    createClientCaseFromNewBusiness,
-    searchClientCaseByEappId,
-} from '@deps/queries/api/server/v1/client-cases';
+import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
-import {
-    logError,
-    LoggingContext,
-    logWarn,
-    parseErrorInformation,
-    withPageAuthAndLogging,
-} from '@deps/utils/server-logging';
+import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { toLowerCaseSearchParams } from '@deps/utils/url';
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './illustrations.module.css';
@@ -58,6 +47,7 @@ type IllustrationsPageProps = {
     additionalData: additionalDataProps;
     fetchingErrorMessage: string;
     fetchingErrorOrigin: ErrorOrigin;
+    clientCase?: IllustrationsClientCase;
 };
 
 const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';
@@ -111,6 +101,9 @@ export default function Illustrations({
         }
     }, [fetchingErrorMessage, fetchingErrorOrigin]);
 
+    const createClientCaseSearchParams = toLowerCaseSearchParams(searchParams);
+    createClientCaseSearchParams.delete('eappid');
+
     return (
         <>
             <IllustrationsClientCaseProvider>
@@ -135,7 +128,7 @@ export default function Illustrations({
                         <Link
                             href={{
                                 pathname: NEW_CLIENT_CASE_URL,
-                                query: Object.fromEntries(searchParams),
+                                query: createClientCaseSearchParams.toString(),
                             }}
                             passHref
                         >
@@ -164,25 +157,6 @@ export default function Illustrations({
         </>
     );
 }
-
-const getAuthToken = async (
-    context: GetServerSidePropsContext,
-    loggingContext: LoggingContext
-) => {
-    try {
-        const { accessToken = '' } = await getAccessToken(
-            context.req,
-            context.res
-        );
-        return accessToken;
-    } catch (e) {
-        logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
-            ...parseErrorInformation(e),
-            ...loggingContext,
-        });
-        return serverSidePropsLogout();
-    }
-};
 
 export const getServerSideProps = withPageAuthAndLogging(
     {
@@ -224,74 +198,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                     : '';
 
             if (_eAppId) {
-                // Step 1: Search existing client cases if and eAppId is on the query string
-                const getAuthTokenResponse = await getAuthToken(
-                    context,
-                    loggingContext
-                );
-                if (typeof getAuthTokenResponse !== 'string') {
-                    return getAuthTokenResponse;
-                }
-
-                try {
-                    const clientCases = await searchClientCaseByEappId(
-                        _eAppId,
-                        getAuthTokenResponse,
-                        loggingContext
-                    );
-                    // Step 2: if a client case already exists, redirect to the client case
-                    if (
-                        clientCases &&
-                        clientCases.length > 0 &&
-                        clientCases[0].id
-                    ) {
-                        return {
-                            redirect: {
-                                destination: `/illustrations/client-cases/${clientCases[0].id}/illustrate`,
-                                permanent: false,
-                            },
-                        };
-                    } else {
-                        // Step 3: if no client case exists, pull data from the new business API, create a new client case with the data then redirect
-                        const newCaseResponse =
-                            await createClientCaseFromNewBusiness(
-                                _eAppId,
-                                getAuthTokenResponse,
-                                loggingContext
-                            );
-                        if (newCaseResponse) {
-                            const { id, planCode } = newCaseResponse;
-                            const baseRedirectionUrl = `/illustrations/client-cases/${id}/illustrate`;
-                            const destination =
-                                planCode !== ''
-                                    ? `${baseRedirectionUrl}?planCode=${planCode}`
-                                    : baseRedirectionUrl;
-                            return {
-                                redirect: {
-                                    destination,
-                                    permanent: false,
-                                },
-                            };
-                        }
-                    }
-                } catch (error: any) {
-                    logError(error.message, {
-                        ...loggingContext,
-                        error: error,
-                    });
-
-                    return {
-                        props: {
-                            locale,
-                            ...translations,
-                            featureFlagDecisions,
-                            additionalData,
-                            fetchingErrorMessage: error.message,
-                            fetchingErrorOrigin:
-                                error.origin ?? 'internal-error',
-                        },
-                    };
-                }
+                return {
+                    redirect: {
+                        destination: `/illustrations/client-cases/new?eappid=${_eAppId}`,
+                        permanent: false,
+                    },
+                };
             }
             return {
                 props: {
