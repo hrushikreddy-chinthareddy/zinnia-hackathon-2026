@@ -162,4 +162,5 @@ export enum FEATURE_FLAGS {
     PAYOR_CHANGE_TRANSACTION = 'payor_change_transaction',
     THIRD_PARTY_DESIGNEE_TRANSACTION = 'third_party_designee_transaction',
     PAYMENTUS_FEATURE = 'paymentus-feature',
+    BENE_TRUST_TYPE_ENUM = 'bene_trust_type_enum',
 }

@@ -9,11 +9,9 @@ export interface Errors {
 }
 
 export enum TrustType {
-    Corporate = 'CORPORATETRUST',
-    Individual = 'INDIVIDUALTRUST',
-    Testamentary = 'TESTAMENTARYTRUST',
-    InterVivos = 'INTERVIVOSTRUST',
-    Grantor = 'GRANTORTRUST',
+    Corporate = 'Corporate Trust',
+    Individual = 'Individual Trust',
+    LookThrough = 'Look Through Trust',
 }
 
 export enum Prefix {
@@ -74,24 +72,16 @@ export const genderOption = (t: TFunction) => [
 
 export const trustOption = (t: TFunction) => [
     {
-        label: t('individualTrust'),
-        value: TrustType.Individual,
-    },
-    {
         label: t('corporateTrust'),
         value: TrustType.Corporate,
     },
     {
-        label: t('testamentaryTrust'),
-        value: TrustType.Testamentary,
+        label: t('individualTrust'),
+        value: TrustType.Individual,
     },
     {
-        label: t('interVivosTrust'),
-        value: TrustType.InterVivos,
-    },
-    {
-        label: t('grantorTrust'),
-        value: TrustType.Grantor,
+        label: t('lookThrough'),
+        value: TrustType.LookThrough,
     },
 ];
 
