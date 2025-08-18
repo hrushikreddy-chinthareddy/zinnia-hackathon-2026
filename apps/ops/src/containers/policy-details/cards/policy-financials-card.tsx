@@ -41,8 +41,8 @@ export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
         select: (visibility) => buildTransactionCards(policy, t, visibility),
     });
 
-    const qualificationTypeValue = t(
-        `${qualificationType?.toLocaleLowerCase()}`
+    const qualificationTypeValue = tRaw(
+        `dashboard.search.results.policySummaryCard.${qualificationType?.toLocaleLowerCase()}`
     );
 
     const renderField = (

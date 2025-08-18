@@ -1172,6 +1172,8 @@
                     "q403b": "403(b) Qualified Plan",
                     "q457deferredcomp": "457 Deferred Compensation Plan",
                     "pensionplan": "Pension Plan",
+                    "inheritedrothindividualretirementaccount": "Inherited Roth Individual Retirement Account",
+                    "inheritedindividualretirementaccount": "Inherited Individual Retirement Account",
                     "convertedrothira": "Converted Roth IRA",
                     "corporatedeferredcomp(404)": "Corporate Deferred Compensation (404)",
                     "corporatepension": "Corporate Pension Plan",

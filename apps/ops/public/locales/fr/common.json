@@ -578,8 +578,8 @@
                 "individualTrust": "Fiducie individuelle",
                 "corporateTrust": "Fiducie d'entreprise",
                 "lookThrough": "Regardez à travers la confiance",
-                "testamentaryTrust" : "Fiducie testamentaire",
-                "interVivosTrust" : "Fiducie inter vivos",
+                "testamentaryTrust": "Fiducie testamentaire",
+                "interVivosTrust": "Fiducie inter vivos",
                 "grantorTrust": "Fiducie du grantor",
                 "companyName": "Nom de l’entreprise",
                 "ssn": "SSN",
@@ -1265,6 +1265,7 @@
                     "vulnq": "Assurance vie universelle variable non qualifiée",
                     "ira-simple": "IRA SIMPLE",
                     "inheritedrothindividualretirementaccount": "Compte de retraite individuel Roth hérité",
+                    "inheritedindividualretirementaccount": "Compte de retraite individuel hérité",
                     "qlacira": "QLAC IRA (contrat de rente de longévité qualifié)",
                     "BannerLink": {
                         "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."

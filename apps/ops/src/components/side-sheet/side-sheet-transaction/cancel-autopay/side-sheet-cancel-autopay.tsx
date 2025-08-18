@@ -48,6 +48,7 @@ import {
     TransactionContinueClickedEvent,
     TransactionStep,
 } from '@deps/types/segment-analytics';
+
 import { CancelAutopayDetails } from './cancel-autopay-details';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
 import ApiErrorState from '../states/api-error-state';
