@@ -21,6 +21,7 @@
     "./types/bpm": "./dist/generated-types/bpm/index.js",
     "./types/funds": "./dist/generated-types/funds/index.js",
     "./types/case": "./dist/generated-types/case/index.js",
+    "./types/case-v2": "./dist/generated-types/case-v2/index.js",
     "./types/preferences": "./dist/generated-types/preferences/index.js",
     "./types/partyreference": "./dist/generated-types/partyreference/index.js",
     "./types/transaction-store": "./dist/generated-types/transaction-store/index.js",
@@ -56,6 +57,9 @@
       "./types/case": [
         "dist/generated-types/case/index.d.ts"
       ],
+      "./types/case-v2": [
+        "dist/generated-types/case-v2/index.d.ts"
+      ],
       "./types/transaction-store": [
         "dist/generated-types/transaction-store/index.d.ts"
       ],
@@ -85,12 +89,13 @@
     "generate-types:bpm": "npx openapi --input ./src/api-spec-bpm.yaml --output ./src/generated-types/bpm --exportCore false --exportServices false",
     "generate-types:funds": "npx openapi --input ./src/api-spec-funds.yaml --output ./src/generated-types/funds --exportCore false --exportServices false",
     "generate-types:case": "npx openapi --input ./src/api-spec-case.yaml --output ./src/generated-types/case --exportCore false --exportServices false",
+    "generate-types:case-v2": "npx openapi --input ./src/api-spec-case-v2.yaml --output ./src/generated-types/case-v2 --exportCore false --exportServices false",
     "generate-types:transaction-store": "npx openapi --input ./src/api-spec-transaction-store.yaml --output ./src/generated-types/transaction-store --exportCore false --exportServices false",
     "generate-types:preferences": "npx openapi --input ./src/api-spec-preferences.yaml --output ./src/generated-types/preferences --exportCore false --exportServices false",
     "generate-types:partyreference": "npx openapi --input ./src/api-spec-partyreference.json --output ./src/generated-types/partyreference --exportCore false --exportServices false",
     "generate-types:analytics": "npx openapi --input ./src/api-spec-analytics.yaml --output ./src/generated-types/analytics --exportCore false --exportServices false",
     "generate-types:contact-management": "npx openapi --input ./src/api-spec-contact-management.json --output ./src/generated-types/contact-management --exportCore false --exportServices false",
-    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:preferences && pnpm run generate-types:partyreference && pnpm run generate-types:transaction-store && pnpm run generate-types:analytics && pnpm run generate-types:contact-management",
+    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:case-v2 && pnpm run generate-types:preferences && pnpm run generate-types:partyreference && pnpm run generate-types:transaction-store && pnpm run generate-types:analytics && pnpm run generate-types:contact-management",
     "clean": "rm -rf ./dist"
   },
   "devDependencies": {

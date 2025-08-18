@@ -73,12 +73,15 @@ export const getCallLogsQuery = async (policyNumber?: string, limit = 10) => {
     };
 };
 
-export const getCaseDetailsQuery = async (caseId: string) => {
+export const getCaseDetailsQuery = async (
+    caseId: string,
+    featureFlags?: FeatureFlags
+) => {
     if (!caseId) {
         throw 'No caseId provided';
     }
 
-    const response = await getCaseDetails(caseId);
+    const response = await getCaseDetails(caseId, featureFlags);
 
     if (!response) {
         throw 'No data in response';
