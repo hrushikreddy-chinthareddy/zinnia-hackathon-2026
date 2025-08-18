@@ -7120,7 +7120,8 @@
             "noProductsIconAlt": "Icon de no hay productos para listar",
             "noProductsAvailable": "No se han podido cargar ilustraciones. Por favor intente nuevamente despues.",
             "addIllustrationButton": "Boton de agregar illustracion",
-            "seeProducts": "Agregar un producto"
+            "seeProducts": "Agregar un producto",
+            "addIllustration": "Agregar ilustracion"
         },
         "caseSummary": {
             "edit": "Editar",
