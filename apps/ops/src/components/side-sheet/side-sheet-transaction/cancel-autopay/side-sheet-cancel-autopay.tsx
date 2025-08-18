@@ -48,7 +48,6 @@ import {
     TransactionContinueClickedEvent,
     TransactionStep,
 } from '@deps/types/segment-analytics';
-
 import { CancelAutopayDetails } from './cancel-autopay-details';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
 import ApiErrorState from '../states/api-error-state';
@@ -189,10 +188,6 @@ const SideSheetCancelAutopay = ({
                 endDate: effectiveDateFormatted,
                 previousProgramDate: systematicProgram?.previousProgramDate,
                 nextProgramDate: effectiveDateFormatted,
-                party: {
-                    bankId: systematicProgram?.party?.[0]?.bankId,
-                    partyId: systematicProgram?.party?.[0]?.partyId,
-                },
                 ...(systematicProgram?.parties && {
                     parties: systematicProgram.parties,
                 }),

@@ -91,7 +91,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
     const systematicProgram = policy.systematicPrograms?.find(
         (sp) => sp.reason === systematicProgramReason
     );
-    const currentPayor = (systematicProgram?.party || [])[0];
+    const currentPayor = (systematicProgram?.parties || [])[0];
     const currentPayorParty = policy?.parties?.find(
         (party) => party.partyId === currentPayor?.partyId
     );
