@@ -319,6 +319,10 @@
             "thirdPartyDesignee": {
                 "text": "Manage Third Party",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-third-party-designee"
+            },
+            "beneficiary": {
+                "text": "Manage beneficiaries",
+                "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             }
         },
         "loader": "Loading..."
