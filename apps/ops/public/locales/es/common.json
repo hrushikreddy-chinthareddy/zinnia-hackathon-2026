@@ -1922,6 +1922,7 @@
                 "ceding carrier": "Transportista Cedente: {{label}}",
                 "premium source": "Fuente de Financiamiento: {{label}}",
                 "re-illustration": "Re-Ilustración: {{label}}",
+                "linked case": "Caso vinculado: {{label}}",
                 "bene": "Notifier {{label}}"
             },
             "reviewIssues": "Revisión",
