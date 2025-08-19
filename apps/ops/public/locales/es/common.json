@@ -1891,6 +1891,7 @@
             "notes": "Notas",
             "otherIssues": "Resoluciones Pendientes",
             "openSince": "Abierto desde {{date}}",
+            "pendingTill": "Pendiente",
             "percentComplete": "{{percent}} Completado",
             "postedOnBy": "Publicado el {{date}} por",
             "progress": "Progreso",

@@ -1908,6 +1908,7 @@
             "notes": "Notes",
             "otherIssues": "Outstanding Resolutions",
             "openSince": "Open since {{date}}",
+            "pendingTill": "Pending",
             "percentComplete": "{{percent}} Complete",
             "postedOnBy": "Posted on {{date}} by",
             "progress": "Progress",
