@@ -1939,6 +1939,7 @@
                 "ceding carrier": "Ceding Carrier",
                 "premium source": "Funding Source",
                 "re-illustration": "Re-Illustration",
+                "linked case": "Linked Case",
                 "bene": "Notify"
             },
             "reviewIssues": "Review",
@@ -3930,6 +3931,7 @@
                 "minRequiredPercentage": "Min required ({{percent}}%)",
                 "actualSurrenderAmount": "Actual surrender amount",
                 "checkingEndingIn": "Checking ending in {{ accountNumber }}",
+                "check": "CHECK",
                 "COSTOFINSURANCE": "Cost of insurance",
                 "EXPENSECHARGE": "Expense charge",
                 "MARKETVALUEADJUSTMENT": "Market value adjustment",

@@ -1922,6 +1922,7 @@
                 "ceding carrier": "Transportista Cedente: {{label}}",
                 "premium source": "Fuente de Financiamiento: {{label}}",
                 "re-illustration": "Re-Ilustración: {{label}}",
+                "linked case": "Caso vinculado: {{label}}",
                 "bene": "Notifier {{label}}"
             },
             "reviewIssues": "Revisión",
@@ -3880,6 +3881,7 @@
                 "minRequiredPercentage": "Mínimo requerido ({{percent}}%)",
                 "actualSurrenderAmount": "Monto de rescate real",
                 "checkingEndingIn": "Cuenta corriente terminando en {{ accountNumber }}",
+                "check": "CHEQUE",
                 "COSTOFINSURANCE": "Costo del seguro",
                 "EXPENSECHARGE": "Cargo por gastos",
                 "MARKETVALUEADJUSTMENT": "Ajuste de valor de mercado",

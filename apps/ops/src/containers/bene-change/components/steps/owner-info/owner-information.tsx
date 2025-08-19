@@ -174,7 +174,9 @@ const getFormattedAddresses = (policyParty: any) => {
 
 const getPartyInfo = (policy: Policy, role: PartyRoles) => {
     const id = policy?.partyRoles?.find(
-        (partyRole) => partyRole.partyRole === role.replace('_', '')
+        (partyRole) =>
+            partyRole.partyRole === role.replace('_', '') &&
+            !isEndDated(partyRole.endDate)
     )?.partyId;
     if (!id) {
         return null;
@@ -242,6 +244,7 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
 };
 const getInitialParty = (policy: Policy, configs: any) => {
     const initialParties: any = [];
+
     configs?.map((config: any) => {
         const party = getPartyInfo(policy, config.partyRoleType);
         //const jointOwnerParty = getPartyInfo(policy, PartyRoles.JOINT_OWNER);
@@ -271,6 +274,7 @@ export default function OwnerInformation({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'beneChange.ownerInfo',
     });
+
     const parties =
         ownerInfo.length > 0 ? ownerInfo : getInitialParty(policy, configs);
 
@@ -367,6 +371,7 @@ export default function OwnerInformation({
             delete mappedparty.id;
             return mappedparty;
         });
+
         setOwnerInfo(() => [...parties]);
     }, [partyInfo, setOwnerInfo]);
 
