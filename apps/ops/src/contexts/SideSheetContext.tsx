@@ -144,7 +144,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
             setContentComponent(body);
         }
 
-        setShowHeader(!!showHeader);
+        setShowHeader(showHeader !== undefined ? !!showHeader : true);
     };
 
     const openSecondarySideSheet = (
