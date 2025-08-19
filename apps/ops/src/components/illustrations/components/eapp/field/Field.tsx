@@ -146,10 +146,10 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         value: answer,
                         effects: field.effects,
                         blueprintIdScope:
-                            field.metadata.repeatedInstanceIdentifierContext
+                            field.scope.repeatedInstanceIdentifierContext
                                 .byBlueprintId,
                         nodeIdScope:
-                            field.metadata.repeatedInstanceIdentifierContext
+                            field.scope.repeatedInstanceIdentifierContext
                                 .byNodeId,
                         triggerStepNavigation: triggerStepNavigation,
                     },
@@ -162,8 +162,8 @@ export function InnerField(props: FieldProps): ReactElement | null {
             field.blueprintId,
             field.nodeId,
             field.effects,
-            field.metadata.repeatedInstanceIdentifierContext.byBlueprintId,
-            field.metadata.repeatedInstanceIdentifierContext.byNodeId,
+            field.scope.repeatedInstanceIdentifierContext.byBlueprintId,
+            field.scope.repeatedInstanceIdentifierContext.byNodeId,
             onAnswerChange,
         ]
     );
@@ -566,7 +566,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
         //         boldedBorder={isFocusedIncompleteField}
         //         onAutocompleteAnswerChange={onAnswerChange}
         //         nodeIdScope={
-        //           field.metadata.repeatedInstanceIdentifierContext.byNodeId
+        //           field.scope.repeatedInstanceIdentifierContext.byNodeId
         //         }
         //         countryCode={countryCode}
         //         nodeIdsToUpdate={nodeIdsToUpdate}

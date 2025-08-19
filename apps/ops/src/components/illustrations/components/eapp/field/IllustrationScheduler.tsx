@@ -213,9 +213,8 @@ const getEventHandlingFunction = (
             blueprintId: field.blueprintId,
             value: answer,
             blueprintIdScope:
-                field.metadata.repeatedInstanceIdentifierContext.byBlueprintId,
-            nodeIdScope:
-                field.metadata.repeatedInstanceIdentifierContext.byNodeId,
+                field.scope.repeatedInstanceIdentifierContext.byBlueprintId,
+            nodeIdScope: field.scope.repeatedInstanceIdentifierContext.byNodeId,
         });
     };
 };
