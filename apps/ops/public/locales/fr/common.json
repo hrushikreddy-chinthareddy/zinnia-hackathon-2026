@@ -7307,7 +7307,7 @@
             "firstNameTooltip": "info-bulle du prénom",
             "lastNameLabel": "Nom de famille (optionnel)",
             "lastNameTooltip": "info-bulle du nom de famille",
-            "sexAssignedLabel": "Sexe assigné à la naissance",
+            "sexAssignedLabel": "Sexe à la naissance",
             "maleButton": "Homme",
             "femaleButton": "Femme",
             "dateLabel": "Date de naissance",

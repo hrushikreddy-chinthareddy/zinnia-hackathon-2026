@@ -7235,7 +7235,7 @@
             "firstNameTooltip": "tooltip del nombre",
             "lastNameLabel": "Apellido (opcional)",
             "lastNameTooltip": "tooltip del apellido",
-            "sexAssignedLabel": "Sexo asignado al nacer",
+            "sexAssignedLabel": "Sexo al nacer",
             "maleButton": "Masculino",
             "femaleButton": "Femenino",
             "dateLabel": "Fecha de nacimiento",

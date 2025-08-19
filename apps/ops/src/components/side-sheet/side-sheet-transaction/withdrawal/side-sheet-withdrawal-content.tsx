@@ -43,7 +43,9 @@ const getPayeeAddress = (policy: Policy, addressId: string) => {
 
     if (!address) return DEFAULT_ERROR_STRING;
 
-    return `${address.addressLine1} ${address?.addressLine2 || ''} ${address?.addressLine3 || ''} ${address?.city || ''} ${address?.state || ''} ${address?.zipCode || ''}`;
+    return `${address.addressLine1} ${address?.addressLine2 || ''} ${
+        address?.addressLine3 || ''
+    } ${address?.city || ''} ${address?.state || ''} ${address?.zipCode || ''}`;
 };
 
 const SideSheetWithdrawalContent = ({
