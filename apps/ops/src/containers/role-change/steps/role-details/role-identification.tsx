@@ -161,7 +161,7 @@ const RoleIdentification = ({
             Roles.PAYOR,
             Roles.NEWPAYOR,
             Roles.THIRDPARTYDESIGNEE,
-            // Roles.NEWTHIRDPARTYDESIGNEE,   Add the trust date for thirdpartyAssignee
+            // Roles.NEWTHIRDPARTYDESIGNEE,
         ].includes(role.toUpperCase() as Roles);
 
     const handleFilesChange = async (files: File[]) => {
