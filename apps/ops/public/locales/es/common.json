@@ -368,35 +368,43 @@
                 "telephoneNumber": "Número de Teléfono"
             },
             "summary": {
-                "header": "Resumen",
-                "overview": "Resumen",
-                "reviewMessage": "Todo bien! Asegúrese de revisar sus entradas antes de enviar",
-                "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
-                "bpm500Error": "Error BPM 500",
-                "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente la siga.",
-                "missingCheckToConfirm": "Para enviar, confirme que desea enviar con errores y crear una tarea NIGO.",
-                "primaryBeneficiary": "Beneficiario Principal",
-                "contingentBeneficiary": "Beneficiario Contingente",
-                "current": "Actual",
-                "updated": "Actualizado",
-                "identification": {
-                    "title": "Identificación",
-                    "gender": "Género"
-                },
                 "allocation": {
-                    "title": "Asignación",
-                    "relationshipToInsured": "Relación con el asegurado"
+                    "relationshipToParty": "Relación con la parte",
+                    "title": "Asignación"
                 },
+                "bpm500Error": "Error BPM 500",
                 "contact": {
-                    "title": "Información de Contacto",
                     "address": "Dirección",
-                    "phone": "Teléfono"
+                    "phone": "Teléfono",
+                    "title": "Información de contacto",
+                    "email": "Correo electrónico"
                 },
+                "contingentBeneficiary": "Beneficiario contingente",
+                "current": "Actual",
+                "header": "Resumen",
+                "identification": {
+                    "gender": "Género",
+                    "title": "Identificación",
+                    "ssn": "SSN",
+                    "dateOfBirth": "Fecha de nacimiento"
+                },
+                "missingCheckToConfirm": "Para enviar, confirme que desea enviar con errores y crear una tarea de NIGO.",
+                "overview": "Resumen",
+                "primaryBeneficiary": "Beneficiario principal",
+                "reviewMessage": "Todo bien! Asegúrese de revisar sus entradas antes de enviar",
+                "status400subtitle": "Vaya, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+                "submitWithErrorsText": "Enviar con errores y crear una tarea de NIGO para que el equipo correspondiente siga trabajando en ella.",
                 "tag": {
+                    "new": "Nuevo",
                     "none": "Ninguno",
-                    "updated": "Actualizado",
                     "removed": "Eliminado",
-                    "new": "Nuevo"
+                    "updated": "Actualizado"
+                },
+                "updated": "Actualizado",
+                "beneficiaryInformation": {
+                    "title": "Información del beneficiario",
+                    "perStirpes": "Por estirpe",
+                    "irrevocable": "Irevocable"
                 }
             },
             "confirm": {

@@ -81,8 +81,8 @@ const SummaryStep = ({
                     ? t('reviewMessage')
                     : t('status400subtitle')}
             </p>
-            <SummaryOverview />
-            <BeneficiarySummary />
+            <SummaryOverview policy={policy} />
+            <BeneficiarySummary policy={policy} />
             {!validationSucceeded && (
                 <div className="mt-10 flex flex-col gap-6">
                     {validationResponse?.validationResult ? (

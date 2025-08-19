@@ -632,14 +632,17 @@
             "contact": {
                 "address": "Address",
                 "phone": "Phone",
-                "title": "Contact Info"
+                "title": "Contact Info",
+                "email": "Email"
             },
             "contingentBeneficiary": "Contingent beneficiary",
             "current": "Current",
             "header": "Summary",
             "identification": {
                 "gender": "Gender",
-                "title": "Identification"
+                "title": "Identification",
+                "ssn": "SSN",
+                "dateOfBirth": "Date of birth"
             },
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "overview": "Overview",
@@ -653,7 +656,13 @@
                 "removed": "Removed",
                 "updated": "Updated"
             },
-            "updated": "Updated"
+            "updated": "Updated",
+            "beneficiaryInformation": {
+                "title": "Beneficiary Information",
+                "perStirpes": "Per Stirpes",
+                "irrevocable": "Irrevocable"
+            }
+
         },
         "confirm": {
             "close": "Close",

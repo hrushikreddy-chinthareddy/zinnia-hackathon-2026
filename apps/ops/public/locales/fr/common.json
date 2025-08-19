@@ -700,35 +700,43 @@
             "leaveTransaction": "Quitter cette transaction"
         },
         "summary": {
-            "header": "Résumé",
-            "overview": "Aperçu",
-            "reviewMessage": "Tout semble en ordre ! Assurez-vous de revoir vos saisies avant de soumettre",
-            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Veuillez examiner l'erreur ci-dessous.",
-            "bpm500Error": "Erreur BPM 500",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée suive",
-            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO.",
-            "primaryBeneficiary": "Bénéficiaire principal",
-            "contingentBeneficiary": "Bénéficiaire contingent",
-            "current": "Actuel",
-            "updated": "Mis à jour",
-            "identification": {
-                "title": "Identification",
-                "gender": "Genre"
-            },
             "allocation": {
-                "title": "Allocation",
-                "relationshipToParty": "Relation avec la partie"
+                "relationshipToParty": "Relation avec la partie",
+                "title": "Allocation"
             },
+            "bpm500Error": "Erreur BPM 500",
             "contact": {
-                "title": "Informations de contact",
                 "address": "Adresse",
-                "phone": "Téléphone"
+                "phone": "Téléphone",
+                "title": "Informations de contact",
+                "email": "Courriel"
             },
+            "contingentBeneficiary": "Bénéficiaire conditionnel",
+            "current": "Actuel",
+            "header": "Résumé",
+            "identification": {
+                "gender": "Genre",
+                "title": "Identification",
+                "ssn": "NSS",
+                "dateOfBirth": "Date de naissance"
+            },
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche de NIGO.",
+            "overview": "Aperçu",
+            "primaryBeneficiary": "Bénéficiaire principal",
+            "reviewMessage": "Bien joué! Assurez-vous de passer en revue vos entrées avant de soumettre",
+            "status400subtitle": "Hum, nous avons trouvé un problème lors de la vérification des règles de cette police. Veuillez examiner l'erreur ci-dessous.",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche de NIGO pour que l'équipe appropriée suive",
             "tag": {
+                "new": "Nouveau",
                 "none": "Aucun",
-                "updated": "Mis à jour",
                 "removed": "Supprimé",
-                "new": "Nouveau"
+                "updated": "Mise à jour"
+            },
+            "updated": "Mise à jour",
+            "beneficiaryInformation": {
+                "title": "Informations sur le bénéficiaire",
+                "perStirpes": "Par Stirpes",
+                "irrevocable": "Irrévocable"
             }
         },
         "confirm": {

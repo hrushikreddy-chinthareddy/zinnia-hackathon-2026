@@ -161,3 +161,11 @@ export enum SignatureField {
 export enum Links {
     Internal500CTAlink = 'https://zinnia.atlassian.net/servicedesk/customer/portal/6',
 }
+
+export enum Action {
+    ADD = 'ADD',
+    REMOVE = 'REMOVE',
+    UPDATE = 'UPDATE',
+    NONE = 'NONE',
+    DELETE = 'DELETE',
+}
