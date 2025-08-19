@@ -27,6 +27,13 @@ const StepSideSheetViews = {
     Overview: 'overview',
     StepAdditionalData: 'stepAdditionalData',
 };
+const entityTypes = {
+    CedingCarrier: 'Ceding Carrier',
+    Insured: 'Insured',
+    Policy: 'Policy',
+    Program: 'Program',
+    Transaction: 'Transaction',
+};
 
 const getStepSidesheetViews = (step: TransformedStep): string[] => {
     const sideSheetViews = [];
@@ -108,7 +115,10 @@ export default function StepSideSheetContent({
                     className="w-full p-8"
                     value={StepSideSheetViews.MultiInstance}
                 >
-                    <ContractDetails step={step} />
+                    {step.stepRaw.instanceInfo?.entityType ===
+                        entityTypes.CedingCarrier && (
+                        <ContractDetails step={step} />
+                    )}
 
                     <MultiInstanceTab step={step} />
                 </TabContent>
