@@ -7229,6 +7229,7 @@
             "editClientCaseSideSheetTitle": "Editar caso del cliente",
             "clientCaseSection": "Detalles del caso del cliente",
             "titleLabel": "Título",
+            "agencyLabel": "Agencia",
             "insuredDetailsSection": "Detalles del asegurado",
             "firstNameLabel": "Nombre (opcional)",
             "firstNameTooltip": "tooltip del nombre",

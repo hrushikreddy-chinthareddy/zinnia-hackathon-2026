@@ -7301,6 +7301,7 @@
             "editClientCaseSideSheetTitle": "Modifier le dossier client",
             "clientCaseSection": "Détails du dossier client",
             "titleLabel": "Titre",
+            "agencyLabel": "Agence",
             "insuredDetailsSection": "Détails de l'assuré",
             "firstNameLabel": "Prénom (optionnel)",
             "firstNameTooltip": "info-bulle du prénom",
