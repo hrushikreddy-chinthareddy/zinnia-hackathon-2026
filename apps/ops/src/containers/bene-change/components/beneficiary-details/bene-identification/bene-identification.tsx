@@ -15,12 +15,15 @@ import FieldDateSelect, {
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import {
     Errors,
     formatPrefix,
     genderOption,
+    newTrustOptions,
     prefixOption,
     suffixOptions,
     trustOption,
@@ -78,6 +81,9 @@ const BeneficiaryIdentification = ({
     const [currentErrors, setCurrentErrors] = useState<Errors>();
 
     const isRolePartyCheck = !rolePartyCheck(party?.partyType as PartyType);
+    const { featureFlags } = useOptimizely();
+
+    const trustEnumFlag = featureFlags[FEATURE_FLAGS.BENE_TRUST_TYPE_ENUM];
 
     useEffect(() => {
         if (
@@ -291,7 +297,11 @@ const BeneficiaryIdentification = ({
                                 />
                                 <SelectSimple
                                     label={t('trustType') as string}
-                                    options={trustOption(t)}
+                                    options={
+                                        trustEnumFlag
+                                            ? trustOption(t)
+                                            : newTrustOptions(t)
+                                    }
                                     onChange={(value) =>
                                         setParty((prevState: any) => ({
                                             ...prevState,

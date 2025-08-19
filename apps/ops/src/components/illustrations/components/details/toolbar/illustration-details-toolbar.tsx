@@ -180,6 +180,8 @@ export default function IllustrationDetailsToolbar({
                             <Loader />
                         </>
                     ) : status === IllustrationStatuses.ACTIVE ? (
+                        selectedIllustration?.illustration?.productType !==
+                            ProductTypes.TERM &&
                         !!eAppId && (
                             <Button
                                 mode="primary"

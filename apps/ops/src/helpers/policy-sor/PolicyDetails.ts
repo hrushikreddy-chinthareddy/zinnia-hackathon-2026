@@ -79,6 +79,7 @@ export class PolicyDetails {
     public surrenderValue: number | undefined;
     public systematicPrograms: SystematicPrograms;
     public investmentType?: string;
+    public isTPA: boolean;
 
     constructor(policy: Policy = {}) {
         this.policyRaw = policy;
@@ -141,6 +142,7 @@ export class PolicyDetails {
         this.riders = policy?.riders;
         this.investmentType = policy?.allocation?.investmentType;
         this.qualificationType = policy?.qualificationType;
+        this.isTPA = policy?.thirdPartyAdministratorId !== 'Non-Zinnia';
     }
 
     public get carrierName(): string | undefined {

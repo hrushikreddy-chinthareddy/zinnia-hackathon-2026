@@ -11,7 +11,7 @@ export const getBankDetails = (
     systematicProgram: SystematicProgram | undefined
 ) =>
     party?.bankDetails?.find(
-        (bank) => bank.bankId === systematicProgram?.party?.[0]?.bankId
+        (bank) => bank.bankId === systematicProgram?.parties?.[0]?.bankId
     );
 
 export const getFlatExtra = (coverage: PolicyCoverage | undefined) =>
@@ -24,5 +24,5 @@ export const getParty = (
     systematicProgram: SystematicProgram | undefined
 ) =>
     parties?.find(
-        (party) => party.partyId === systematicProgram?.party?.[0]?.partyId
+        (party) => party.partyId === systematicProgram?.parties?.[0]?.partyId
     );

@@ -33,6 +33,14 @@ jest.mock('@deps/helpers/policy-sor/Features', () => ({
 }));
 
 let policyDetails: PolicyDetails;
+
+const tpaMocks = [
+    ['Zinnia', { value: 'Zinnia', result: true }],
+    ['null', { value: 'null', result: true }], // NOTE: Confirm with BE team that the value is always a string or can be null / have to update the type
+    ['SE2', { value: 'tpa-12345', result: true }],
+    ['Non-Zinnia', { value: 'Non-Zinnia', result: false }],
+] as const;
+
 describe('PolicyDetails', () => {
     beforeAll(() => {
         policyDetails = new PolicyDetails(mockPolicy);
@@ -78,4 +86,16 @@ describe('PolicyDetails', () => {
         policyDetails.getFeaturesByType('mockType' as any);
         expect(mockGetFeaturesByType).toHaveBeenCalledWith('mockType');
     });
+
+    test.each(tpaMocks)(
+        'determines whether the policy is thirdPartyAdministered when the ID is %s',
+        (_, { value, result }) => {
+            const mock = Object.assign(
+                {},
+                { ...mockPolicy, thirdPartyAdministratorId: value }
+            );
+            const mockedPolicy = new PolicyDetails(mock);
+            expect(mockedPolicy.isTPA).toBe(result);
+        }
+    );
 });
