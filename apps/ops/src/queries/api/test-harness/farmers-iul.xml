@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<TXLife xmlns="http://ACORD.org/Standards/Life/2">
+  <TXLifeRequest PrimaryObjectID="Holding_1">
+    <TransRefGUID>99wm2220-s28exVfx-g728-Z3DDg-XA7H77Z0</TransRefGUID>
+    <TransType tc="103">New Business Submission</TransType>
+    <TransSubType tc="10301">New Business Submission - Life</TransSubType>
+    <TransExeDate>2025-07-07</TransExeDate>
+    <TransExeTime>04:30:26</TransExeTime>
+    <OLifE>
+      <SourceInfo>
+        <SourceInfoName>Outbound</SourceInfoName>
+        <SourceInfoDescription>PG</SourceInfoDescription>
+      </SourceInfo>
+      <Holding id="Holding_1">
+        <HoldingTypeCode tc="2">Policy</HoldingTypeCode>
+        <HoldingForm tc="1">Individual</HoldingForm>
+        <Policy>
+          <PolNumber>FIUL305051735</PolNumber>
+          <LineOfBusiness tc="1">Life</LineOfBusiness>
+          <ProductType tc="5">Indexed Universal Life</ProductType>
+          <ProductCode>IU0101</ProductCode>
+          <ProductVersionCode>2024.01.01</ProductVersionCode>
+          <CarrierCode>FNWL</CarrierCode>
+          <PlanName>Farmers Index Universal Life</PlanName>
+          <ShortName>Farmers Index Universal Life</ShortName>
+          <PolicyStatus tc="25">Issued</PolicyStatus>
+          <IssueType tc="1">FULL_UNDERWRITING</IssueType>
+          <Jurisdiction tc="6">CA</Jurisdiction>
+          <Life>
+            <QualPlanType tc="1">Non-Qualified</QualPlanType>
+            <GDBValue>50000</GDBValue>
+            <FaceAmt>50000</FaceAmt>
+            <Coverage id="Base_Coverage">
+              <PlanName>Farmers Index Universal Life</PlanName>
+              <ProductCode>IU0101</ProductCode>
+              <IndicatorCode tc="1">Base</IndicatorCode>
+              <!--for Framers each Coverage will have different Coverage Amount-->
+              <DeathBenefitOptType tc="2">Increasing</DeathBenefitOptType>
+              <CurrentAmt>50000</CurrentAmt>
+              <ModalPremAmt>5000</ModalPremAmt>
+              <EffDate>2025-07-07</EffDate>
+              <PayToYear>20</PayToYear>
+              <LifeParticipant PartyID="Party_PI_1" id="LP_Insured_1">
+                <LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+                <IssueAge>80</IssueAge>
+                <TobaccoPremiumBasis tc="1">Non-Smoker</TobaccoPremiumBasis>
+                <TempTableRating tc="1">None</TempTableRating>
+                <UnderwritingClass tc="7">Elite Non-Tobacco</UnderwritingClass>
+                <UnderwritingStatus tc="6">Approved</UnderwritingStatus>
+              </LifeParticipant>
+              <LifeParticipant PartyID="Party_PB_Primary_Bene_1" id="LP_Primary_Bene_1">
+                <LifeParticipantRoleCode tc="7">Primary Beneficiary</LifeParticipantRoleCode>
+              </LifeParticipant>
+              <BenefitLimit>
+                <!--This is mapped to new field Approved Coverage Amount. This is approvedFaceAmountMaximum in Farmers ACORD-->
+                <MaxBenefitAmt>250000</MaxBenefitAmt>
+                <!--Product level term-->
+              </BenefitLimit>
+            </Coverage>
+            <Coverage id="Rider_ADR">
+              <PlanName>Accidental Death Benefit Rider</PlanName>
+              <ProductCode>R1ADBR</ProductCode>
+              <LifeCovStatus tc="1">Active</LifeCovStatus>
+              <IndicatorCode tc="2">Rider</IndicatorCode>
+              <CurrentAmt>20000</CurrentAmt>
+              <LifeParticipant PartyID="Party_PI_1" id="ADB_Insured_1">
+                <LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+                <IssueAge>80</IssueAge>
+                <TempTableRating tc="4">Table B</TempTableRating>
+              </LifeParticipant>
+              <BenefitLimit>
+                <MaxBenefitAmt>25000</MaxBenefitAmt>
+              </BenefitLimit>
+              <OLifEExtension VendorCode="154">
+                <UnderwritingApproved tc="1">Approved</UnderwritingApproved>
+                <SelectionInd tc="1">True</SelectionInd>
+              </OLifEExtension>
+            </Coverage>
+            <Coverage id="Rider_CTR">
+              <PlanName>Children's Term Insurance Rider</PlanName>
+              <ProductCode>R1CTIR</ProductCode>
+              <LifeCovStatus tc="1">Active</LifeCovStatus>
+              <IndicatorCode tc="2">Rider</IndicatorCode>
+              <CurrentAmt>5000</CurrentAmt>
+              <EffDate>2025-07-07</EffDate>
+              <LifeParticipant PartyID="Party_CI_Coverage_Ins_1" id="CTR_Insured_1">
+                <LifeParticipantRoleCode tc="33">Coverage Insured</LifeParticipantRoleCode>
+                <IssueAge>1</IssueAge>
+              </LifeParticipant>
+              <BenefitLimit>
+                <MaxBenefitAmt>25000</MaxBenefitAmt>
+              </BenefitLimit>
+              <OLifEExtension VendorCode="154">
+                <UnderwritingApproved tc="1">Approved</UnderwritingApproved>
+                <SelectionInd tc="1">True</SelectionInd>
+              </OLifEExtension>
+            </Coverage>
+            <Coverage id="Rider_CGR">
+              <PlanName>Charitable Giving Rider</PlanName>
+              <ProductCode>R1CGVR</ProductCode>
+              <LifeCovStatus tc="1">Active</LifeCovStatus>
+              <IndicatorCode tc="2">Rider</IndicatorCode>
+              <LifeParticipant PartyID="Party_PI_1" id="CGR_Insured_1">
+                <LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+                <IssueAge>80</IssueAge>
+              </LifeParticipant>
+              <OLifEExtension VendorCode="154">
+                <UnderwritingApproved tc="1">Approved</UnderwritingApproved>
+                <SelectionInd tc="1">True</SelectionInd>
+              </OLifEExtension>
+            </Coverage>
+            <LifeUSA>
+              <DefLifeInsMethod tc="1">GPT</DefLifeInsMethod>
+            </LifeUSA>
+          </Life>
+          <ApplicationInfo>
+            <ApplicationType tc="1">New</ApplicationType>
+            <SignedDate>2025-07-07</SignedDate>
+            <MaxRiskAmt>50000.0</MaxRiskAmt>
+            <SignatureInfo>
+              <SignatureRoleCode tc="18">Owner</SignatureRoleCode>
+              <SignatureDate>2025-07-07</SignatureDate>
+            </SignatureInfo>
+          </ApplicationInfo>
+        </Policy>
+        <Investment>
+          <InvestType tc="32">Investment Account</InvestType>
+          <SubAccount id="SubAcct1">
+            <SubAccountKey>FLH001</SubAccountKey>
+            <ProductFullName>Short Term Holding Account</ProductFullName>
+            <InvestType tc="22">Fixed Rate</InvestType>
+            <AllocPercent>0</AllocPercent>
+          </SubAccount>
+          <SubAccount id="SubAcct1">
+            <SubAccountKey>FLF001</SubAccountKey>
+            <ProductFullName>Fixed Account</ProductFullName>
+            <InvestType tc="22">Fixed Rate</InvestType>
+            <AllocPercent>50</AllocPercent>
+          </SubAccount>
+          <SubAccount id="SubAcct2">
+            <SubAccountKey>FLI001</SubAccountKey>
+            <ProductFullName>S&amp;P 500</ProductFullName>
+            <InvestType tc="74">Indexed</InvestType>
+            <AllocPercent>25</AllocPercent>
+          </SubAccount>
+          <SubAccount id="SubAcct3">
+            <SubAccountKey>FLI002</SubAccountKey>
+            <ProductFullName>S&amp;P MARC 5% ER</ProductFullName>
+            <InvestType tc="74">Indexed</InvestType>
+            <AllocPercent>25</AllocPercent>
+          </SubAccount>
+        </Investment>
+        <Arrangement id="Arr_1">
+          <ArrMode tc="4">Monthly</ArrMode>
+          <ArrType tc="19">Initial Payment</ArrType>
+          <StartDate>2025-07-07</StartDate>
+          <ModalAmt>5000</ModalAmt>
+          <PaymentForm tc="7">ACH</PaymentForm>
+        </Arrangement>
+        <Banking AppliesToPartyID="Party_PI_1" id="Bank_1">
+          <BankAcctType tc="2">Checking</BankAcctType>
+          <AccountNumber>560487452</AccountNumber>
+          <RoutingNum>121000248</RoutingNum>
+          <BankName>WELLS FERGO</BankName>
+          <OLifEExtension VendorCode="154">
+            <BillAmtType tc="7">Premium Billing</BillAmtType>
+          </OLifEExtension>
+        </Banking>
+      </Holding>
+      <Party id="Party_PI_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>ZaharaAutomation 0727235711</FullName>
+        <GovtID>245057845</GovtID>
+        <GovtIDTC tc="1">Social Security Number</GovtIDTC>
+        <PrefComm tc="3">Email</PrefComm>
+        <IDReferenceNo>0022b0089076GHT345NN</IDReferenceNo>
+        <IDReferenceType tc="35">Customer Number</IDReferenceType>
+        <Person>
+          <!--This is for gender identity-->
+          <PersonKey>Male</PersonKey>
+          <FirstName>ZaharaAutomation</FirstName>
+          <LastName>0727235711</LastName>
+          <Prefix>Mr</Prefix>
+          <Suffix>IV</Suffix>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1945-03-05</BirthDate>
+          <DriversLicenseNum>CA085409537</DriversLicenseNum>
+          <DriversLicenseState tc="6">CA</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>988 RHOADS DR</Line1>
+          <City>BELLEMEAD</City>
+          <AddressState>CA</AddressState>
+          <AddressStateTC tc="6">CA</AddressStateTC>
+          <Zip>08502</Zip>
+          <!--Preferred Address Flag-->
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>564</AreaCode>
+          <DialNumber>5472354</DialNumber>
+          <Ext>0919</Ext>
+          <!--Preferred Phone Flag-->
+          <PrefPhone tc="1">true</PrefPhone>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <Phone id="2">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>318</AreaCode>
+          <DialNumber>9873960</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <Phone id="3">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>318</AreaCode>
+          <DialNumber>9873960</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>KARISHMA.KUKU@gmail.com</AddrLine>
+          <!--Preferred Email Flag-->
+          <PrefEMailAddr tc="1">true</PrefEMailAddr>
+        </EMailAddress>
+        <Risk>
+          <ExistingInsuranceInd tc="0">No</ExistingInsuranceInd>
+        </Risk>
+        <!--Identification section-->
+        <GovtIDInfo>
+          <GovtIDInfoKey>ECN</GovtIDInfoKey>
+          <GovtID>0048745MKH98078SSK</GovtID>
+          <GovtIDTC tc="25">External</GovtIDTC>
+          <GovtIDTCDesc>ECN</GovtIDTCDesc>
+        </GovtIDInfo>
+      </Party>
+      <Party id="Party_PB_Primary_Bene_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>Carter Smith</FullName>
+        <Person>
+          <FirstName>MANIK</FirstName>
+          <LastName>MALIK</LastName>
+          <BirthDate>1945-03-05</BirthDate>
+          <Gender tc="1">Male</Gender>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <GovtIDInfo>
+          <GovtIDInfoKey>ECN</GovtIDInfoKey>
+          <GovtID>0048745MKH98078HHE</GovtID>
+          <GovtIDTC tc="25">External</GovtIDTC>
+          <GovtIDTCDesc>ECN</GovtIDTCDesc>
+        </GovtIDInfo>
+      </Party>
+      <Party id="Party_CI_Coverage_Ins_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>ANA</FirstName>
+          <LastName>MALIK</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1945-03-05</BirthDate>
+        </Person>
+        <Risk>
+          <ExistingInsuranceInd tc="0">No</ExistingInsuranceInd>
+        </Risk>
+        <GovtIDInfo>
+          <GovtIDInfoKey>ECN</GovtIDInfoKey>
+          <GovtID>0048745MKH98078HLK</GovtID>
+          <GovtIDTC tc="25">External</GovtIDTC>
+          <GovtIDTCDesc>ECN</GovtIDTCDesc>
+        </GovtIDInfo>
+      </Party>
+      <Party id="Party_Agent_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>PETER</FirstName>
+          <LastName>ANTHONY</LastName>
+          <Gender tc="1">Male</Gender>
+        </Person>
+        <Producer>
+          <ProducerKey>Agent1</ProducerKey>
+          <License>
+            <LicenseNum>6376559</LicenseNum>
+          </License>
+          <CarrierAppointment>
+            <CompanyProducerID>PG0010028</CompanyProducerID>
+            <CarrierCode>FNWL</CarrierCode>
+            <DistributionChannelInfo>
+              <DistributionChannel tc="13">Bank</DistributionChannel>
+            </DistributionChannelInfo>
+          </CarrierAppointment>
+          <ProducerAgreement>
+            <ProducerType tc="2">Broker</ProducerType>
+          </ProducerAgreement>
+        </Producer>
+        <GovtIDInfo>
+          <GovtIDInfoKey>Series Code</GovtIDInfoKey>
+          <GovtID>0048745</GovtID>
+          <GovtIDTC tc="25">External</GovtIDTC>
+          <GovtIDTCDesc>Series Code</GovtIDTCDesc>
+        </GovtIDInfo>
+        <OLifEExtension VendorCode="154">
+          <StartDate>2025-07-07</StartDate>
+          <EndDate>2060-02-28</EndDate>
+        </OLifEExtension>
+      </Party>
+      <PolicyProduct id="Product">
+        <LifeProduct>
+          <FeatureTransactionProduct>
+            <FeatureProductInfo>
+              <FeatureCode>MultiplePolicyDiscount</FeatureCode>
+              <TransmissableInd tc="0">false</TransmissableInd>
+            </FeatureProductInfo>
+            <FeatureProductInfo>
+              <FeatureCode>ControlBusinessIndicator</FeatureCode>
+              <TransmissableInd tc="1">true</TransmissableInd>
+            </FeatureProductInfo>
+          </FeatureTransactionProduct>
+        </LifeProduct>
+      </PolicyProduct>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PI_1" id="Relation_PI_Insured">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="32">Insured</RelationRoleCode>
+        <PrimaryAddressID>Party_PI_Address_1</PrimaryAddressID>
+        <PrimaryPhoneToCallID>Party_PI_Phone_1</PrimaryPhoneToCallID>
+        <PrimaryEmailID>Party_PI_EmailAddress_1</PrimaryEmailID>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PI_1" id="Relation_Holding_Payor">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="31">Payer</RelationRoleCode>
+        <PrimaryAddressID>Party_PI_Address_1</PrimaryAddressID>
+        <PrimaryPhoneToCallID>Party_PI_Phone_1</PrimaryPhoneToCallID>
+        <PrimaryEmailID>Party_PI_EmailAddress_1</PrimaryEmailID>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PB_Primary_Bene_1" id="Relation_Holding_Primary_Bene_1">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="34">Primary Beneficiary</RelationRoleCode>
+        <InterestPercent>100</InterestPercent>
+        <PrimaryAddressID>Party_PB_Primary_Bene_Address_1</PrimaryAddressID>
+        <PrimaryPhoneToCallID>Party_PB_Primary_Bene_Phone_1</PrimaryPhoneToCallID>
+        <PrimaryEmailID>Party_PB_Primary_Bene_EmailAddress_1</PrimaryEmailID>
+      </Relation>
+      <Relation OriginatingObjectID="Party_PI_1" RelatedObjectID="Party_PB_Primary_Bene_1" id="Relation_PI_Primary_Bene_1">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="4">Sibling</RelationRoleCode>
+        <RelationDescription tc="7">Brother</RelationDescription>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_CI_Coverage_Ins_1" id="Relation_Holding_Coverage_Ins_1">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="33">Coverage Insured</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_Agent_1" id="Relation_Holding_Agent_1">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="37">PrimaryWritingAgent</RelationRoleCode>
+        <InterestPercent>100</InterestPercent>
+      </Relation>
+      <Party id="Party_PO_Owner_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>Cleveland Harris</FullName>
+        <GovtID>639-68-3364</GovtID>
+        <GovtIDTC tc="1">Social Security Number</GovtIDTC>
+        <PrefComm tc="3">Email</PrefComm>
+        <IDReferenceNo>8137B81429880AKM996SY</IDReferenceNo>
+        <IDReferenceType tc="35">Customer Number</IDReferenceType>
+        <Person>
+          <FirstName>Cleveland</FirstName>
+          <LastName>Harris</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>2004-06-25</BirthDate>
+          <Citizenship tc="1">United States of America</Citizenship>
+          <EstGrossAnnualOtherIncome>0.00</EstGrossAnnualOtherIncome>
+          <DriversLicenseNum>422-46-5793</DriversLicenseNum>
+          <DriversLicenseState tc="23">AL</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>630 Kacey Isle</Line1>
+          <City>Port Willischester</City>
+          <AddressState>VT</AddressState>
+          <AddressStateTC tc="23">VT</AddressStateTC>
+          <Zip>51395-9861</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>036</AreaCode>
+          <DialNumber>0527851</DialNumber>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 5:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>jerica.yundt@gmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PO_Owner_1" id="Relation_Owner">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="8">Owner</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Party_PI_1" RelatedObjectID="Party_PO_Owner_1" id="Relation_Ann_Owner">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="4">Sibling</RelationRoleCode>
+        <RelationDescription tc="7">Brother</RelationDescription>
+      </Relation>
+    </OLifE>
+  </TXLifeRequest>
+</TXLife>

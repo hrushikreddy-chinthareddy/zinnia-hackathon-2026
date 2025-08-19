@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { checkWritePolicyPermissionQuery } from '@deps/queries/api/fga';
+import { checkTransactionPermissionQuery } from '@deps/queries/api/fga';
 import { FIVE_MINUTES_IN_MS } from '@deps/types/constants';
 
-export const useWritePolicyPermissionCheck = (
+export const useTransactionPermissionCheck = (
+    relation: TransactionPermission,
     policyNumber?: string,
     planCode?: string
 ) => {
@@ -13,12 +15,18 @@ export const useWritePolicyPermissionCheck = (
     const { data, isLoading } = useQuery({
         queryKey: [
             'checkWritePolicyPermission',
+            relation,
             partyId,
             policyNumber,
             planCode,
         ],
         queryFn: async () =>
-            checkWritePolicyPermissionQuery(partyId, policyNumber, planCode),
+            checkTransactionPermissionQuery(
+                partyId,
+                policyNumber,
+                planCode,
+                relation
+            ),
         enabled: !!partyId && !!policyNumber,
         staleTime: FIVE_MINUTES_IN_MS, // //TODO: Do we want to cache this? For how long?
     });

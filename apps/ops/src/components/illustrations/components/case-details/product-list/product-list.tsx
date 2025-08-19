@@ -66,8 +66,9 @@ const IllustrationProductList = ({
     const handleNewIllustration = (planCode: string) => {
         if (planCode && clientCase) {
             sideSheet.changeSideSheetContent(
-                'Add Illustration',
-                <EappContainer planCode={planCode} clientCase={clientCase} />
+                t('clientCase.productList.addIllustration'),
+                <EappContainer planCode={planCode} clientCase={clientCase} />,
+                false
             );
             sideSheet.handleOpen(true, '50%');
         } else {

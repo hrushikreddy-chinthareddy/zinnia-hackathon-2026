@@ -8,6 +8,7 @@ import { TFunction } from 'next-i18next';
 import { ApplicationDetailsCardData } from '@deps/containers/policy-details/cards/application-details/types';
 import { PolicyTimelineCardData } from '@deps/containers/policy-details/cards/timeline-card.types';
 import { TransactionCardProps } from '@deps/containers/policy-details/cards/transaction-card';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getStateName } from '@deps/helpers/states.helpers';
@@ -242,16 +243,34 @@ export const getApplicationDetailsData = (
     t: TFunction
 ): ApplicationDetailsCardData => {
     const customFeatures = policy.getFeaturesByType(FeatureType.CUSTOMFEATURE);
-    const multiplePolicyDiscountFeature = customFeatures.find(
+    const multiplePolicyDiscountFeature = customFeatures.filter(
         (feature) =>
             feature.featureSubType ===
             PolicyFeatureBase.featureSubType.MULTIPLEPOLICYDISCOUNT
     );
 
+    const multiplePolicyDiscountIndicator =
+        multiplePolicyDiscountFeature.reduce(
+            (acc: Pick<PolicyFeatureBase, 'featureIndicator'>, curr) => {
+                if (
+                    curr.featureSubType ===
+                    PolicyFeatureBase.featureSubType.MULTIPLEPOLICYDISCOUNT
+                ) {
+                    const { endDate, featureIndicator } = curr;
+
+                    if (!isEndDated(endDate)) {
+                        return { featureIndicator };
+                    }
+                }
+                return acc;
+            },
+            { featureIndicator: false }
+        );
+
     // Group discount should only be shown for policies where the feature exists (DEPU-5046)
     let multiPolicyDiscount = null;
-    if (multiplePolicyDiscountFeature) {
-        multiPolicyDiscount = multiplePolicyDiscountFeature.featureIndicator
+    if (multiplePolicyDiscountFeature.length) {
+        multiPolicyDiscount = multiplePolicyDiscountIndicator.featureIndicator
             ? t('yes')
             : t('no');
     }

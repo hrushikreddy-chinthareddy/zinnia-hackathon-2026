@@ -1,3 +1,4 @@
+import { PartyType } from '@xd/api-types/dist/generated-types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
@@ -61,7 +62,6 @@ export function usePartyFields(
     const [maritalStatus, setMaritalStatus] = useState(
         party?.maritalStatus?.text || ''
     );
-
     const [currentParty, setCurrentParty] = useState(party);
 
     useEffect(() => {
@@ -125,23 +125,25 @@ export function usePartyFields(
         />
     );
 
-    const lastNameField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
-        <Field
-            className={
-                formErrors?.name &&
-                'border-2 border-solid border-semantic-error'
-            }
-            label={label || (t(`lastName`) as string)}
-            onChange={(e) => setLastName(e.target.value)}
-            size={FieldSize.Small}
-            type={FieldType.BaseActive}
-            value={lastName}
-            variant={selectVarientByConfig({
-                value: lastName,
-                isFormStateReadOnly,
-            })}
-        />
-    );
+    const lastNameField = ({ label, isFormStateReadOnly }: IFieldConfig) => {
+        return (
+            <Field
+                className={
+                    formErrors?.name &&
+                    'border-2 border-solid border-semantic-error'
+                }
+                label={label || (t(`lastName`) as string)}
+                onChange={(e) => setLastName(e.target.value)}
+                size={FieldSize.Small}
+                type={FieldType.BaseActive}
+                value={lastName}
+                variant={selectVarientByConfig({
+                    value: lastName,
+                    isFormStateReadOnly,
+                })}
+            />
+        );
+    };
 
     const emailField = ({ label, isFormStateReadOnly }: IFieldConfig) => (
         <Field
@@ -314,6 +316,7 @@ interface SinglePartyProps {
     formErrors: FormValidationErrors;
     onDataChange: (value: Party) => void;
     isFormStateReadOnly?: boolean;
+    partyType?: PartyType;
 }
 
 export function SingleParty({
@@ -322,6 +325,7 @@ export function SingleParty({
     formParty,
     isFormStateReadOnly,
     onDataChange,
+    partyType,
 }: SinglePartyProps) {
     const { renderField, currentParty } = usePartyFields(formParty, formErrors);
 
@@ -329,9 +333,22 @@ export function SingleParty({
         onDataChange(currentParty);
     }, [currentParty]);
 
+    const individualFields = ['firstName', 'lastName', 'middleName'];
+
     return (
         <div className="my-4 grid w-full grid-cols-3 gap-2">
-            {fields?.map((field) => renderField(field, isFormStateReadOnly))}
+            {fields
+                ?.filter((field) => {
+                    if (
+                        partyType &&
+                        partyType !== PartyType.INDIVIDUAL &&
+                        individualFields.includes(field.fieldName)
+                    ) {
+                        return false;
+                    }
+                    return true;
+                })
+                .map((field) => renderField(field, isFormStateReadOnly))}
         </div>
     );
 }

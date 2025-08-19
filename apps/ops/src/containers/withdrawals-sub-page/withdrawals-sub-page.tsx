@@ -1,4 +1,5 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import {
     ArrangementType,
     FlatExtra,
@@ -26,7 +27,7 @@ import {
     getParty,
 } from '@deps/helpers/payments.helpers';
 import { TempAnnuityArrangementTypes } from '@deps/helpers/policy-sor/SystematicPrograms';
-import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -213,7 +214,11 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         sideSheet.handleOpen(true);
     };
     const { isPermissioned: isUserPermissionedToWithdraw } =
-        useWritePolicyPermissionCheck(policyNumber, planCode);
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteAllTransactions,
+            policyNumber,
+            planCode
+        );
     return (
         <>
             <WithdrawalsPageHeaderContainer

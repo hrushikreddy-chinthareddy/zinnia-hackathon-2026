@@ -11,6 +11,7 @@ export const baseExperienceCarriers = [
   CarrierId.SB,
   CarrierId.SBL,
   CarrierId.WELLABE,
+  CarrierId.EVGL,
 ];
 
 // Carriers that use sso for authentication. Users will only
@@ -37,6 +38,8 @@ export const getCarrierSubdomainById = (
     case CarrierId.SB:
     case CarrierId.SBL:
       return Subdomains.SECURITY_BENEFIT;
+    case CarrierId.EVGL:
+      return Subdomains.EVERGLADES;
     default:
       return '';
   }
@@ -54,6 +57,9 @@ export const getCarrierSubdomainByName = (
       return Subdomains.FARMERS;
     case CarrierNames.SECURITY_BENEFIT:
       return Subdomains.SECURITY_BENEFIT;
+    case CarrierNames.EVERGLADES:
+      return Subdomains.EVERGLADES;
+
     default:
       return '';
   }
@@ -83,6 +89,8 @@ export const getCarrierNameById = (
     case CarrierId.SB:
     case CarrierId.SBL:
       return CarrierNames.SECURITY_BENEFIT;
+    case CarrierId.EVGL:
+      return CarrierNames.EVERGLADES;
     default:
       return '';
   }
@@ -132,6 +140,8 @@ export const getCarrierIdsByName = (name: string | undefined) => {
       return [CarrierId.WELLABE];
     case 'Security Benefit':
       return [CarrierId.SB, CarrierId.SBL];
+    case 'Everglades':
+      return [CarrierId.EVGL];
     default:
       return [];
   }
@@ -147,9 +157,17 @@ export const getCarrierIdsByThemeCookie = (themeCookie: string | undefined) => {
       return [CarrierId.FARMERS];
     case Subdomains.SECURITY_BENEFIT:
       return [CarrierId.SB, CarrierId.SBL];
+    case Subdomains.EVERGLADES:
+      return [CarrierId.EVGL];
   }
 
-  return [CarrierId.ELIC, CarrierId.SBUL, CarrierId.WELLABE, CarrierId.FARMERS];
+  return [
+    CarrierId.ELIC,
+    CarrierId.SBUL,
+    CarrierId.WELLABE,
+    CarrierId.FARMERS,
+    CarrierId.EVGL,
+  ];
 };
 
 export const hasMultipleCarriers = (

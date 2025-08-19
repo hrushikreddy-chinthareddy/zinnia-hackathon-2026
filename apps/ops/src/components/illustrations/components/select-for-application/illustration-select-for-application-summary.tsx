@@ -1,11 +1,11 @@
 import { Product } from '@deps/types/product';
 
 import styles from './illustration-select-for-application.module.css';
+import SectionRiders from './summary/riders-section';
 import SummaryHeader from './summary/summary-header';
 import SectionCashValue from './summary/summary-section-cash-value';
 import SectionCoverage from './summary/summary-section-coverage';
 import SectionPremium from './summary/summary-section-premium';
-import SectionRiders from './summary/summary-section-riders';
 
 type IllustrationContentSummaryProps = {
     product: Product;

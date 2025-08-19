@@ -1,3 +1,4 @@
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
@@ -18,7 +19,7 @@ import {
     getSexAtBirth,
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
-import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 
@@ -80,7 +81,11 @@ export const PersonSubPage = ({
         );
 
     const { isPermissioned: isUserAllowedToEditCards } =
-        useWritePolicyPermissionCheck(policyNumber, planCode);
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteAllTransactions,
+            policyNumber,
+            planCode
+        );
 
     if (isAgent) {
         return <AgentSubPage partyId={partyId} />;

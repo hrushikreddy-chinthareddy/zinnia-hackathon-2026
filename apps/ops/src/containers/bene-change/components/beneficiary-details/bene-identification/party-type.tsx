@@ -1,7 +1,10 @@
 import { PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
-import Radio, { RadioVariant } from '@deps/components/radio/radio';
+import Radio, {
+    RadioOrientation,
+    RadioVariant,
+} from '@deps/components/radio/radio';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -16,6 +19,8 @@ const PartyTypes = ({
     partyIdentification,
     onPartyChange,
     isReadOnly,
+    orientation = RadioOrientation.Vertical,
+    variant = TypographyVariant.H4,
 }: any) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.beneDetails.identification',
@@ -38,7 +43,7 @@ const PartyTypes = ({
 
     return (
         <div className="">
-            <Typography variant={TypographyVariant.H4}>Party type</Typography>
+            <Typography variant={variant}>Party type</Typography>
             <div className="my-2 flex">
                 <Radio
                     items={partyTypes}
@@ -52,6 +57,7 @@ const PartyTypes = ({
                             ? RadioVariant.Inactive
                             : RadioVariant.Default
                     }
+                    orientation={orientation}
                 />
             </div>
         </div>

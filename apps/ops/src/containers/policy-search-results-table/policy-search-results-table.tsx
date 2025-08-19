@@ -39,22 +39,26 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHeaderCell className="sr-only">
+                    <TableHeaderCell scope="col" className="sr-only">
                         View policy
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderCell scope="col">
                         {t('dashboard.search.results.table.policyContract')}
                     </TableHeaderCell>
-                    <TableHeaderCell className={styles.statusHeader}>
+                    <TableHeaderCell
+                        scope="col"
+                        className={styles.statusHeader}
+                    >
                         {t('dashboard.search.results.table.status')}
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderCell scope="col">
                         {t('dashboard.search.results.table.ownerSSN')}
                     </TableHeaderCell>
-                    <TableHeaderCell>
+                    <TableHeaderCell scope="col">
                         {t('dashboard.search.results.table.openCases')}
                     </TableHeaderCell>
                     <TableHeaderCell
+                        scope="col"
                         sortable
                         onClick={() => handleSort(PolicySortBy.LAST_UPDATED)}
                     >
@@ -68,7 +72,7 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
                             color="#00628B"
                         />
                     </TableHeaderCell>
-                    <TableHeaderCell></TableHeaderCell>
+                    <TableHeaderCell scope="col"></TableHeaderCell>
                 </TableRow>
             </TableHeader>
             <TableBody>

@@ -842,7 +842,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
     }
 
     getIllustrationApiPath(): string {
-        return '/api/illustration/v3/indexed-universal-life/new-business';
+        return 'api/illustration/v3/indexed-universal-life/new-business';
     }
 
     public generateTitle(data: any, formInputs: any): string {

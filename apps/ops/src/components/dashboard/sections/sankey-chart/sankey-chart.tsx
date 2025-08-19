@@ -891,7 +891,9 @@ const SankeyChart = ({
 
         let l1Grouping: CaseCountOutputLevel1[] = [];
         // L1: sort the groupings by count
+
         caseGroupingState?.data.sort((a, b) => b.count - a.count);
+
         // TODO: should use the container height / blockHeight+blockStroke to determine how many we can show
         if (caseGroupingState?.data?.length > maxItems) {
             l1Grouping = caseGroupingState?.data.slice(0, maxItems);
@@ -981,22 +983,39 @@ const SankeyChart = ({
                                     {
                                         value: GroupByOptions.BrokerDealerName.toString(),
                                         label: 'Broker Dealer',
+                                        disabled:
+                                            l2SelectValue ===
+                                            GroupByOptions.BrokerDealerName.toString(),
                                     },
                                     {
                                         value: GroupByOptions.Carrier.toString(),
                                         label: 'Carrier',
+                                        disabled:
+                                            l2SelectValue ===
+                                            GroupByOptions.Carrier.toString(),
                                     },
                                     {
                                         value: GroupByOptions.Process.toString(),
                                         label: 'Case Type',
+                                        disabled:
+                                            l2SelectValue ===
+                                                GroupByOptions.Process.toString() ||
+                                            l3SelectValue ===
+                                                GroupByOptions.Process.toString(),
                                     },
                                     {
                                         value: GroupByOptions.ProductName.toString(),
                                         label: 'Product Name',
+                                        disabled:
+                                            l2SelectValue ===
+                                            GroupByOptions.ProductName.toString(),
                                     },
                                     {
                                         value: GroupByOptions.ProcessSubType.toString(),
                                         label: 'Sub Case Type',
+                                        disabled:
+                                            l2SelectValue ===
+                                            GroupByOptions.ProcessSubType.toString(),
                                     },
                                 ]}
                                 onChange={handleL1SelectChange}
@@ -1011,22 +1030,39 @@ const SankeyChart = ({
                                     {
                                         value: GroupByOptions.BrokerDealerName.toString(),
                                         label: 'Broker Dealer',
+                                        disabled:
+                                            l1SelectValue ===
+                                            GroupByOptions.BrokerDealerName.toString(),
                                     },
                                     {
                                         value: GroupByOptions.Carrier.toString(),
                                         label: 'Carrier',
+                                        disabled:
+                                            l1SelectValue ===
+                                            GroupByOptions.Carrier.toString(),
                                     },
                                     {
                                         value: GroupByOptions.Process.toString(),
                                         label: 'Case Type',
+                                        disabled:
+                                            l1SelectValue ===
+                                                GroupByOptions.Process.toString() ||
+                                            l3SelectValue ===
+                                                GroupByOptions.Process.toString(),
                                     },
                                     {
                                         value: GroupByOptions.ProductName.toString(),
                                         label: 'Product Name',
+                                        disabled:
+                                            l1SelectValue ===
+                                            GroupByOptions.ProductName.toString(),
                                     },
                                     {
                                         value: GroupByOptions.ProcessSubType.toString(),
                                         label: 'Sub Case Type',
+                                        disabled:
+                                            l1SelectValue ===
+                                            GroupByOptions.ProcessSubType.toString(),
                                     },
                                 ]}
                                 onChange={handleL2SelectChange}
@@ -1045,6 +1081,11 @@ const SankeyChart = ({
                                     {
                                         value: GroupByOptions.Process.toString(),
                                         label: 'Case Type',
+                                        disabled:
+                                            l2SelectValue ===
+                                                GroupByOptions.Process.toString() ||
+                                            l1SelectValue ===
+                                                GroupByOptions.Process.toString(),
                                     },
                                 ]}
                                 onChange={handleL3SelectChange}

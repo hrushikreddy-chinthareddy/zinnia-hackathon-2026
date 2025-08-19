@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<TXLife>
+  <TXLifeRequest PrimaryObjectID="Holding_1">
+    <TransRefGUID>r2NNmf2T-0v09880l-0F8J-22Q2h-81kLkpH5</TransRefGUID>
+    <TransType tc="103">New Business Submission</TransType>
+    <TransSubType tc="10301">New Business Submission - Life</TransSubType>
+    <TransExeDate>2025-07-08</TransExeDate>
+    <TransExeTime>04:30:26</TransExeTime>
+    <OLifE>
+      <SourceInfo>
+        <!--These fields are mapped to new fields related to Inbound and Outbound-->
+        <SourceInfoName>Inbound</SourceInfoName>
+      </SourceInfo>
+      <Holding id="Holding_1">
+        <HoldingTypeCode tc="2">Policy</HoldingTypeCode>
+        <HoldingForm tc="1">Individual</HoldingForm>
+        <Policy>
+          <PolNumber>FTL2200009720</PolNumber>
+          <LineOfBusiness tc="1">Life</LineOfBusiness>
+          <ProductType tc="2">Term</ProductType>
+          <ProductCode>TL0101</ProductCode>
+          <ProductVersionCode>2025.01.01</ProductVersionCode>
+          <CarrierCode>FNWL</CarrierCode>
+          <PlanName>Farmers Term Life</PlanName>
+          <ShortName>FNWLTL</ShortName>
+          <PolicyStatus tc="25">Issued</PolicyStatus>
+          <!--This is used when UW detects its in Aviation category-->
+          <IssueType tc="10">AVIATION</IssueType>
+          <Jurisdiction tc="6">CA</Jurisdiction>
+          <!--Commision Indicator-->
+          <!--NonStdCommTaken tc="1">True</NonStdCommTaken-->
+          <Life>
+            <!--Non Forfieture-->
+            <!--NonFortProv tc = '4'>Automatic Policy Loan</NonFortProv-->
+            <QualPlanType tc="1">Non-Qualified</QualPlanType>
+            <GDBValue>150000</GDBValue>
+            <FaceAmt>150000</FaceAmt>
+            <Coverage id="Base_Coverage">
+              <PlanName>Farmers Term Life</PlanName>
+              <ProductCode>TL0101</ProductCode>
+              <IndicatorCode tc="1">Base</IndicatorCode>
+              <!--for Framers each Coverage will have different Coverage Amount-->
+              <CurrentAmt>150000</CurrentAmt>
+              <ModalPremAmt>155.4</ModalPremAmt>
+              <EffDate>2025-07-08</EffDate>
+              <PayToYear>10</PayToYear>
+              <LifeParticipant PartyID="Party_PI_1" id="LP_Insured_1">
+                <LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+                <IssueAge>18</IssueAge>
+                <PermFlatExtraAmt>1</PermFlatExtraAmt>
+                <TobaccoPremiumBasis tc="2">Smoker</TobaccoPremiumBasis>
+                <TempTableRating tc="4">Table B</TempTableRating>
+                <UnderwritingClass tc="14">Standard Tobacco </UnderwritingClass>
+                <UnderwritingStatus tc="6">Approved</UnderwritingStatus>
+              </LifeParticipant>
+              <LifeParticipant PartyID="Party_PB_Primary_Bene_1" id="LP_Primary_Bene_1">
+                <LifeParticipantRoleCode tc="7">Primary Beneficiary</LifeParticipantRoleCode>
+              </LifeParticipant>
+              <BenefitLimit>
+                <!--This is mapped to new field Approved Coverage Amount. This is approvedFaceAmountMaximum in Farmers ACORD-->
+                <MaxBenefitAmt>250000</MaxBenefitAmt>
+                <!--Product level term-->
+                <MaxBenefitDurPeriod tc="48">10</MaxBenefitDurPeriod>
+              </BenefitLimit>
+            </Coverage>
+            <Coverage id="Rider_CGR">
+              <PlanName>Charitable Giving Rider</PlanName>
+              <ProductCode>R1CGVR</ProductCode>
+              <LifeCovStatus tc="1">Active</LifeCovStatus>
+              <IndicatorCode tc="2">Rider</IndicatorCode>
+              <LifeParticipant PartyID="Party_PI_1" id="CGR_Insured_1">
+                <LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+                <IssueAge>18</IssueAge>
+              </LifeParticipant>
+              <OLifEExtension VendorCode="154">
+                <UnderwritingApproved tc="1">Approved</UnderwritingApproved>
+                <SelectionInd tc="1">True</SelectionInd>
+              </OLifEExtension>
+            </Coverage>
+            <Coverage id="Rider_ABRCHR">
+              <PlanName>Chronic Illness Accelerated Death Benefit Rider</PlanName>
+              <ProductCode>R1ABRC</ProductCode>
+              <LifeCovStatus tc="1">Active</LifeCovStatus>
+              <IndicatorCode tc="2">Rider</IndicatorCode>
+              <LifeParticipant PartyID="Party_PI_1" id="CHR_Insured_1">
+                <LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+                <IssueAge>18</IssueAge>
+              </LifeParticipant>
+              <OLifEExtension VendorCode="154">
+                <UnderwritingApproved tc="1">Approved</UnderwritingApproved>
+                <SelectionInd tc="1">True</SelectionInd>
+              </OLifEExtension>
+            </Coverage>
+            <Coverage id="Rider_ABRTRM">
+              <PlanName>Accelerated Death Benefit for Terminal Illness</PlanName>
+              <ProductCode>R1ABRT</ProductCode>
+              <LifeCovStatus tc="1">Active</LifeCovStatus>
+              <IndicatorCode tc="2">Rider</IndicatorCode>
+              <LifeParticipant PartyID="Party_PI_1" id="TRM_Insured_1">
+                <LifeParticipantRoleCode tc="1">Insured</LifeParticipantRoleCode>
+                <IssueAge>18</IssueAge>
+              </LifeParticipant>
+              <OLifEExtension VendorCode="154">
+                <UnderwritingApproved tc="1">Approved</UnderwritingApproved>
+                <SelectionInd tc="1">True</SelectionInd>
+              </OLifEExtension>
+            </Coverage>
+            <OLifEExtension VendorCode="154">
+              <MatchValueVersion>2021.10.15</MatchValueVersion>
+              <MatchPercentage>1</MatchPercentage>
+            </OLifEExtension>
+          </Life>
+          <ApplicationInfo>
+            <ApplicationType tc="1">New</ApplicationType>
+            <SignedDate>2025-07-08</SignedDate>
+            <MaxRiskAmt>200000.0</MaxRiskAmt>
+            <SignatureInfo>
+              <SignatureRoleCode tc="18">Owner</SignatureRoleCode>
+              <SignatureDate>2025-07-08</SignatureDate>
+            </SignatureInfo>
+          </ApplicationInfo>
+        </Policy>
+        <Arrangement id="Arr_1">
+          <ArrMode tc="3">Quarterly</ArrMode>
+          <ArrType tc="19">Initial Payment</ArrType>
+          <NextActivityDate>2025-07-08</NextActivityDate>
+          <StartDate>2025-07-08</StartDate>
+          <ModalAmt>155.4</ModalAmt>
+          <PaymentForm tc="25">Credit Card</PaymentForm>
+        </Arrangement>
+        <!--Banking info is optional-->
+        <Banking AppliesToPartyID="Party_PI_1" id="Bank_1">
+          <BankAcctType tc="2">Checking</BankAcctType>
+          <AccountNumber>002640541</AccountNumber>
+          <RoutingNum>005874516</RoutingNum>
+          <BankName>Wells Fargo</BankName>
+          <OLifEExtension VendorCode="154">
+            <BillAmtType tc="7">Premium Billing</BillAmtType>
+          </OLifEExtension>
+        </Banking>
+      </Holding>
+      <Party id="Party_PI_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>ZaharaAutomation 0728000928</FullName>
+        <GovtID>599054812</GovtID>
+        <GovtIDTC tc="1">Social Security Number</GovtIDTC>
+        <PrefComm tc="3">Email</PrefComm>
+        <IDReferenceNo>0048745MKH98658TSE</IDReferenceNo>
+        <IDReferenceType tc="35">Customer Number</IDReferenceType>
+        <Person>
+          <!--This is for gender identity-->
+          <PersonKey>Non Binary</PersonKey>
+          <FirstName>ZaharaAutomation</FirstName>
+          <LastName>0728000928</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>2006-10-09</BirthDate>
+          <DriversLicenseNum>CA085409537</DriversLicenseNum>
+          <DriversLicenseState tc="6">CA</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>18 MACK DR</Line1>
+          <City>Olathe</City>
+          <AddressState>CA</AddressState>
+          <AddressStateTC tc="6">CA</AddressStateTC>
+          <Zip>33132</Zip>
+          <!--Preferred Address Flag-->
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>318</AreaCode>
+          <DialNumber>9873960</DialNumber>
+          <Ext>0919</Ext>
+          <PrefPhone tc="1">true</PrefPhone>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <Phone id="2">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>318</AreaCode>
+          <DialNumber>9873960</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <Phone id="3">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>318</AreaCode>
+          <DialNumber>9873960</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>John.Smith@gmail.com</AddrLine>
+          <!--Preferred Email Flag-->
+          <PrefEMailAddr tc="1">true</PrefEMailAddr>
+        </EMailAddress>
+        <!--Identification section-->
+        <Risk>
+          <ExistingInsuranceInd tc="0">No</ExistingInsuranceInd>
+        </Risk>
+        <GovtIDInfo>
+          <GovtIDInfoKey>ECN</GovtIDInfoKey>
+          <GovtID>0048745MKH98078SSK</GovtID>
+          <GovtIDTC tc="25">External</GovtIDTC>
+          <GovtIDTCDesc>ECN</GovtIDTCDesc>
+        </GovtIDInfo>
+      </Party>
+      <Party id="Party_PB_Primary_Bene_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>Carter Smith</FullName>
+        <GovtID>999999999</GovtID>
+        <GovtIDTC tc="1">Social Security Number</GovtIDTC>
+        <PrefComm tc="3">Email</PrefComm>
+        <IDReferenceNo>0048745MKH98078HHE</IDReferenceNo>
+        <IDReferenceType tc="35">Customer Number</IDReferenceType>
+        <Person>
+          <FirstName>Carter</FirstName>
+          <LastName>Smith</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>2006-10-09</BirthDate>
+          <DriversLicenseNum>CA085409537</DriversLicenseNum>
+          <DriversLicenseState tc="6">CA</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <!--Identification section-->
+        <GovtIDInfo>
+          <GovtIDInfoKey>ECN</GovtIDInfoKey>
+          <GovtID>0048745MKH98078HHE</GovtID>
+          <GovtIDTC tc="25">External</GovtIDTC>
+          <GovtIDTCDesc>ECN</GovtIDTCDesc>
+        </GovtIDInfo>
+      </Party>
+      <Party id="Party_Agent_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>PETER</FirstName>
+          <LastName>ANTHONY</LastName>
+          <Gender tc="1">Male</Gender>
+        </Person>
+        <Producer>
+          <ProducerKey>Agent1</ProducerKey>
+          <License>
+            <LicenseNum>6376559</LicenseNum>
+          </License>
+          <CarrierAppointment>
+            <CompanyProducerID>PG0010028</CompanyProducerID>
+            <CarrierCode>FNWL</CarrierCode>
+            <DistributionChannelInfo>
+              <DistributionChannel tc="13">Bank</DistributionChannel>
+            </DistributionChannelInfo>
+          </CarrierAppointment>
+          <ProducerAgreement>
+            <ProducerType tc="2">Broker</ProducerType>
+          </ProducerAgreement>
+        </Producer>
+        <!--Identification section-->
+        <GovtIDInfo>
+          <GovtIDInfoKey>Series Code</GovtIDInfoKey>
+          <GovtID>0048745</GovtID>
+          <GovtIDTC tc="25">External</GovtIDTC>
+          <GovtIDTCDesc>Series Code</GovtIDTCDesc>
+        </GovtIDInfo>
+        <OLifEExtension VendorCode="154">
+          <StartDate>2025-07-08</StartDate>
+          <EndDate>2060-02-28</EndDate>
+        </OLifEExtension>
+      </Party>
+      <!--New Custom Feature info for Multi policy Discount and Commsission Indicator-->
+      <PolicyProduct id="Feature1">
+        <LifeProduct>
+          <FeatureTransactionProduct>
+            <FeatureProductInfo>
+              <FeatureCode>MultiplePolicyDiscount</FeatureCode>
+              <TransmissableInd tc="1">true</TransmissableInd>
+            </FeatureProductInfo>
+            <FeatureProductInfo>
+              <FeatureCode>ControlBusinessIndicator</FeatureCode>
+              <TransmissableInd tc="1">true</TransmissableInd>
+            </FeatureProductInfo>
+          </FeatureTransactionProduct>
+        </LifeProduct>
+      </PolicyProduct>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PI_1" id="Relation_PI_Insured">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="32">Insured</RelationRoleCode>
+        <!-- Newly ID Preferred ID fields-->
+        <PrimaryAddressID>Party_PI_Address_1</PrimaryAddressID>
+        <PrimaryPhoneToCallID>Party_PI_Phone_1</PrimaryPhoneToCallID>
+        <PrimaryEmailID>Party_PI_EmailAddress_1</PrimaryEmailID>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PI_1" id="Relation_Holding_Payor">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="31">Payer</RelationRoleCode>
+        <!-- Newly ID Preferred ID fields-->
+        <PrimaryAddressID>Party_PI_Address_1</PrimaryAddressID>
+        <PrimaryPhoneToCallID>Party_PI_Phone_1</PrimaryPhoneToCallID>
+        <PrimaryEmailID>Party_PI_EmailAddress_1</PrimaryEmailID>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PB_Primary_Bene_1" id="Relation_Holding_Primary_Bene_1">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="34">Primary Beneficiary</RelationRoleCode>
+        <InterestPercent>100</InterestPercent>
+        <!-- Newly ID Preferred ID fields-->
+        <PrimaryAddressID>Party_PB_Primary_Bene_Address_1</PrimaryAddressID>
+        <PrimaryPhoneToCallID>Party_PB_Primary_Bene_Phone_1</PrimaryPhoneToCallID>
+        <PrimaryEmailID>Party_PB_Primary_Bene_EmailAddress_1</PrimaryEmailID>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_Agent_1" id="Relation_Holding_PI_Agent_1">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="37">PrimaryWritingAgent</RelationRoleCode>
+        <InterestPercent>100</InterestPercent>
+      </Relation>
+      <Relation OriginatingObjectID="Party_PI_1" RelatedObjectID="Party_PB_Primary_Bene_1" id="Relation_PI_Primary_Bene_1">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="4">Sibling</RelationRoleCode>
+        <RelationDescription tc="7">Brother</RelationDescription>
+      </Relation>
+      <Party id="Party_PO_Owner_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>Maisha Schinner</FullName>
+        <GovtID>324-71-8305</GovtID>
+        <GovtIDTC tc="1">Social Security Number</GovtIDTC>
+        <PrefComm tc="3">Email</PrefComm>
+        <IDReferenceNo>9599B29738857JFJ106JZ</IDReferenceNo>
+        <IDReferenceType tc="35">Customer Number</IDReferenceType>
+        <Person>
+          <FirstName>Maisha</FirstName>
+          <LastName>Schinner</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>2011-04-25</BirthDate>
+          <Citizenship tc="1">United States of America</Citizenship>
+          <EstGrossAnnualOtherIncome>0.00</EstGrossAnnualOtherIncome>
+          <DriversLicenseNum>680-24-5531</DriversLicenseNum>
+          <DriversLicenseState tc="23">KY</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>11225 Gretta Valley</Line1>
+          <City>Swiftmouth</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="23">MT</AddressStateTC>
+          <Zip>66999</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>352</AreaCode>
+          <DialNumber>8908498</DialNumber>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 5:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>gertrudis.stroman@hotmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PO_Owner_1" id="Relation_Owner">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="8">Owner</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Party_PI_1" RelatedObjectID="Party_PO_Owner_1" id="Relation_Ann_Owner">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="4">Sibling</RelationRoleCode>
+        <RelationDescription tc="7">Brother</RelationDescription>
+      </Relation>
+    </OLifE>
+  </TXLifeRequest>
+</TXLife>

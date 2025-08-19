@@ -1,6 +1,6 @@
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
-const DEFAULT_CARRIER = 'WELB';
+const DEFAULT_CARRIER = 'DEFAULT';
 
 export const getTaskFormMetadataSSRMock = async (
     clientId: string,
@@ -10,18 +10,42 @@ export const getTaskFormMetadataSSRMock = async (
     if (clientId) {
         carrier = clientId;
     }
+    const schemaFileName = taskType.toLowerCase().replace(/_/g, '-');
     try {
-        const schemaFileName = taskType.toLowerCase().replace(/_/g, '-');
         const schema = await import(
             `@deps/jsonschema-mock-service/tasks/${carrier}/${schemaFileName}.json`
+        );
+        console.info(
+            `getTaskFormMetadataSSRMock::${carrier} carrier schema found for task type: ${taskType}. Returning default schema.`
         );
         return schema.default as unknown as FormMetadata;
     } catch (error) {
         console.warn(
-            `No schema found for task type: ${taskType}. Returning default schema.`,
+            `getTaskFormMetadataSSRMock::No ${carrier} carrier schema found for task type: ${taskType}. Returning default schema.`,
             error
         );
-        return null; // Or return a default schema if applicable
+        return await getDefaultTaskFormMetadataSSRMock(taskType);
+    }
+};
+
+export const getDefaultTaskFormMetadataSSRMock = async (
+    taskType: TaskType
+): Promise<FormMetadata | null> => {
+    const schemaFileName = taskType.toLowerCase().replace(/_/g, '-');
+    try {
+        const defaultSchema = await import(
+            `@deps/jsonschema-mock-service/tasks/${DEFAULT_CARRIER}/${schemaFileName}.json`
+        );
+        console.info(
+            `getDefaultTaskFormMetadataSSRMock::${DEFAULT_CARRIER} carrier schema found for task type: ${taskType}. Returning null schema.`
+        );
+        return defaultSchema.default as unknown as FormMetadata;
+    } catch (error) {
+        console.warn(
+            `getDefaultTaskFormMetadataSSRMock::No ${DEFAULT_CARRIER} carrier schema found for task type: ${taskType}.`,
+            error
+        );
+        return null;
     }
 };
 

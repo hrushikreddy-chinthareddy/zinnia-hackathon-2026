@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -22,7 +23,7 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helpers';
-import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkFullSurrenderWithdrawal,
@@ -73,7 +74,11 @@ const WithdrawalsPageHeaderContainer = ({
     });
 
     const { isPermissioned: isUserPermissionedToWithdraw } =
-        useWritePolicyPermissionCheck(policyNumber, planCode);
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteAllTransactions,
+            policyNumber,
+            planCode
+        );
 
     const withdrawalsValues = mapWithdrawalsSubPage({
         isEligible:

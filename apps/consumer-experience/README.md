@@ -40,7 +40,7 @@ Add to your settings.json
 
 ### Setup
 
-- Get the env variables from your favorite or least favorite local developer.
+- Get the env variables from your favorite or least favorite local developer and add to `.env` file
 
 ### Local subdomains
 
@@ -51,7 +51,7 @@ We swap themes based on subdomain. You can get subdomains locally by doing the f
 From your user directory:
 
 ```
-sudo nano /etc/hosts or open the file from terminal
+sudo nano /etc/hosts or open the file from terminal using `code /etc/hosts`
 ```
 
 Add the following lines to the bottom of your file
@@ -66,11 +66,13 @@ Add the following lines to the bottom of your file
 Then go to `.env.local` and change these values to match:
 
 ```
-AUTH0_COOKIE_DOMAIN='zinniatech.local'
 AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW='mypolicyview.local'
 ```
 
-Now you can run the project and open `http://everly.zinniatech.local:3000/` to view the subdomain locally.
+
+Now you can run the project. If you are at the root, use `pnpm dev:cui` or if you are in the consumer-experience app, use `pnpm dev`
+
+Now you should be able to open `http://everly.mypolicyview.local:3000/` to view the subdomain locally.
 
 # Local development
 

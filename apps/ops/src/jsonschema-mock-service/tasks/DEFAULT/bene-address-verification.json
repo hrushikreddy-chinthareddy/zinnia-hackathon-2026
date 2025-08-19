@@ -2,7 +2,6 @@
     "process": "Claims",
     "taskType": "BENE_ADDRESS_VERIFICATION",
     "formId": "e408fdaa-d193-4f20-b663-408ce9708a15",
-    "carrier": "FLIC",
     "formSchema": {
         "type": "object"
     },

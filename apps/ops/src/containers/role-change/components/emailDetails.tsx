@@ -3,11 +3,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import Field, {
-    FieldSize,
-    FieldType,
-    FieldVariant,
-} from '@deps/components/fields/field';
+import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import Radio, {
     RadioOrientation,
     RadioVariant,
@@ -18,6 +14,8 @@ import { getEmailTypes } from '@deps/containers/people-data-cards/email-card/sid
 import { ExtendedEmail, useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+import { getVariant } from '../role-change-helper';
 
 export type EmailProps = {
     emailDetails: ExtendedEmail;
@@ -86,7 +84,11 @@ const EmailDetails = ({
                     <Field
                         aria-label={t('labels.email') as string}
                         label={t('labels.email') as string}
-                        message={currentErrors?.email}
+                        message={
+                            !email?.emailAddress?.trim()?.length && !disabled
+                                ? currentErrors?.email
+                                : ''
+                        }
                         onChange={(event) => {
                             emailChangeHandler(
                                 EmailField.EmailAddress,
@@ -96,14 +98,15 @@ const EmailDetails = ({
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
                         value={emailAddress}
-                        variant={
+                        variant={getVariant(
+                            EmailField.EmailAddress,
+                            currentErrors?.email
+                                ? email
+                                : { [EmailField.EmailAddress]: 'placeholder' },
                             disabled
-                                ? FieldVariant.Inactive
-                                : currentErrors?.email
-                                ? FieldVariant.Error
-                                : FieldVariant.Default
-                        }
+                        )}
                         disabled={disabled}
+                        required
                     />
                 </div>
             </div>

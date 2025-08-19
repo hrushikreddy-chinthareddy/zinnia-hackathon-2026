@@ -2,7 +2,6 @@
     "process": "Claims",
     "taskType": "DAY_150_REVIEW",
     "formId": "78265f24-6757-4126-8a63-744742adce50",
-    "carrier": "FLIC",
     "formSchema": {
         "type": "object"
     },

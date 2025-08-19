@@ -16,8 +16,8 @@ import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Case } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
+import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
-import getCase from '@deps/queries/server/case/get-case';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
 import {
@@ -119,14 +119,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                 TranslationFiles.COMMON,
                 TranslationFiles.COLDEFS,
             ]);
-            const caseDetails = await getCase({
-                partyId: user.partyId,
-                caseId: id,
-                accessToken: accessToken as string,
+            const caseDetails = await getCaseDetailsSSR(
+                id,
+                accessToken as string,
                 loggingContext,
-            });
+                featureFlagDecisions
+            );
 
-            if (!caseDetails?.data) {
+            if (!caseDetails) {
                 return {
                     redirect: {
                         destination: '/404',
@@ -147,7 +147,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             return {
                 props: {
                     ...translations,
-                    caseDetails: caseDetails.data,
+                    caseDetails,
                     id,
                     tab,
                     user,

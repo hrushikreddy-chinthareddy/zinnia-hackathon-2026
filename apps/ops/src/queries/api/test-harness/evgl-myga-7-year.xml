@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<TXLife xmlns="http://ACORD.org/Standards/Life/2">
+  <TXLifeRequest PrimaryObjectID="Holding_1">
+    <TransRefGUID>c9acdbfa-2d6a-425b-a636-02f2082ac907</TransRefGUID>
+    <TransType tc="103">New Business Submission</TransType>
+    <TransSubType tc="10302">New Business Submission - Annuity</TransSubType>
+    <TransExeDate>2025-05-09</TransExeDate>
+    <TransExeTime>04:30:26</TransExeTime>
+    <OLifE>
+      <SourceInfo>
+        <SourceInfoName>PG</SourceInfoName>
+        <SourceInfoDescription>PG</SourceInfoDescription>
+      </SourceInfo>
+      <Holding id="Holding_1">
+        <HoldingTypeCode tc="2">Policy</HoldingTypeCode>
+        <!--<HoldingForm tc="1">Individual</HoldingForm> -->
+        <Policy>
+          <PolNumber>EVG71000506</PolNumber>
+          <LineOfBusiness tc="2">Annuity</LineOfBusiness>
+          <ProductType tc="9">Fixed Annuity</ProductType>
+          <!-- We had modelled MYGA -->
+          <ProductCode>EVGFDAV07</ProductCode>
+          <!--ProductVersionCode>2024.01.01</ProductVersionCode -->
+          <CarrierCode>EVGL</CarrierCode>
+          <PlanName>Everglades 7 Year MYGA</PlanName>
+          <ShortName>Everglades7MYGA</ShortName>
+          <PolicyStatus tc="25">Issued</PolicyStatus>
+          <Jurisdiction tc="20">KS</Jurisdiction>
+          <Annuity id="Base_Annuity">
+            <QualPlanType tc="5">IRA-Regular</QualPlanType>
+            <!-- Initial lump sum -->
+            <InitDepositAmt>75000</InitDepositAmt>
+            <InitDepositDate>2025-05-09</InitDepositDate>
+            <!-- Rate Lock Indicator -->
+            <LockedInInd tc="1">true</LockedInInd>
+            <!-- NOTE: Every immediate annuity should have at least one Payout object. -->
+            <Payout>
+              <IncomeOption tc="2">Life With Period Certain</IncomeOption>
+              <!-- represents 20 years -->
+              <PeriodCertainMode tc="1">Annual</PeriodCertainMode>
+              <PeriodCertainPeriods>20</PeriodCertainPeriods>
+              <!--Mode is given to give unit to period-->
+              <Participant PartyID="Party_Annuitant_1" id="P_Annuitant_1">
+                <ParticipantRoleCode tc="27">Annuitant</ParticipantRoleCode>
+                <IssueAge>75</IssueAge>
+              </Participant>
+            </Payout>
+            <!-- (WAABRTRM) Terminal Illness Accelerated Death Benefit -->
+          </Annuity>
+          <ApplicationInfo>
+            <ApplicationType tc="1">New</ApplicationType>
+            <SignedDate>2025-05-09</SignedDate>
+            <ApplicationCollectionDate>2025-05-09</ApplicationCollectionDate>
+            <SignatureInfo>
+              <SignatureRoleCode tc="18">Owner</SignatureRoleCode>
+              <SignatureDate>2025-05-09</SignatureDate>
+            </SignatureInfo>
+            <!-- IGO Date-->
+            <OLifEExtension VendorCode="154">
+              <ApplicationIGODate>2025-05-09</ApplicationIGODate>
+            </OLifEExtension>
+          </ApplicationInfo>
+        </Policy>
+        <Investment>
+          <InvestType tc="48">Annuity Contract</InvestType>
+          <SubAccount id="SubAcct1">
+            <SubAccountKey>EVGF003</SubAccountKey>
+            <ProductFullName>7 Year guarantee period</ProductFullName>
+            <InvestType tc="22">Fixed Rate</InvestType>
+            <AllocPercent>100</AllocPercent>
+          </SubAccount>
+        </Investment>
+        <Banking AppliesToPartyID="Party_PO_Owner_1" id="Bank_1">
+          <BankAcctType tc="2">Checking</BankAcctType>
+          <AccountNumber>560487452</AccountNumber>
+          <RoutingNum>121000248</RoutingNum>
+          <BankName>WELLS FARGO</BankName>
+          <OLifEExtension VendorCode="154">
+            <BillAmtType tc="7">Premium Billing</BillAmtType>
+          </OLifEExtension>
+        </Banking>
+      </Holding>
+      <!-- Holding for 1035 Exchange -->
+      <Holding id="Exchanged_Holding_1">
+        <HoldingTypeCode tc="2">Policy</HoldingTypeCode>
+        <Policy CarrierPartyID="Exchanged_Party_Carrier_1"/>
+      </Holding>
+      <!-- Below is for Exchanged Company Name -->
+      <Party id="Exchanged_Party_Carrier_1">
+        <PartyTypeCode tc="2">Organization</PartyTypeCode>
+        <FullName>New York Life Insurance Company</FullName>
+        <Organization>
+          <OrgForm tc="4">Private Corporation</OrgForm>
+          <AbbrName>NYL</AbbrName>
+          <DBA>New York Life Insurance Company</DBA>
+          <OrgCode>NYL012</OrgCode>
+          <OrgCodeName>New York Life Insurance Company</OrgCodeName>
+        </Organization>
+        <Address id="Party_PI_Address_1">
+          <AddressTypeCode tc="2">Business</AddressTypeCode>
+          <Line1>51 Madison Avenue</Line1>
+          <City>New York City</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="20">KS</AddressStateTC>
+          <Zip>10010</Zip>
+          <AddressCountryTC tc="1">United States of America</AddressCountryTC>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+      </Party>
+      <Party id="Party_Annuitant_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>ZaharaAutomation 0220195752</FullName>
+        <GovtID>245057845</GovtID>
+        <GovtIDTC tc="1">Social Security Number</GovtIDTC>
+        <PrefComm tc="3">Email</PrefComm>
+        <IDReferenceNo>0022b0089076GHT345NN</IDReferenceNo>
+        <IDReferenceType tc="35">Customer Number</IDReferenceType>
+        <Person>
+          <FirstName>ZaharaAutomation</FirstName>
+          <LastName>0220195752</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1949-09-10</BirthDate>
+          <Citizenship tc="1">United States of America</Citizenship>
+          <EstGrossAnnualOtherIncome>0.00</EstGrossAnnualOtherIncome>
+          <DriversLicenseNum>KS058700548745</DriversLicenseNum>
+          <DriversLicenseState tc="20">KS</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+          <OLifEExtension VendorCode="154">
+            <!-- W-4P fields -->
+            <TotalClaimsAndOtherCredits>890.50</TotalClaimsAndOtherCredits>
+            <OtherDeduction>250.75</OtherDeduction>
+            <OtherIncome>7500.80</OtherIncome>
+          </OLifEExtension>
+        </Person>
+        <Address id="Annuitant_1_Address_1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>988 RHOADS DR</Line1>
+          <City>BELLEMEAD</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="20">KS</AddressStateTC>
+          <Zip>08502</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="Annuitant_1_Phone_1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>564</AreaCode>
+          <DialNumber>5472354</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="Annuitant_1_EmailAddress_1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>KARISHMA.KUKU@gmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Party id="Party_PB_Primary_Bene_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>MANIK</FirstName>
+          <LastName>MALIK</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1998-06-10</BirthDate>
+          <DriversLicenseNum>KS058700548745</DriversLicenseNum>
+          <DriversLicenseState tc="20">KS</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="Party_PB_Primary_Bene_1_Address_1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>988 RHOADS DR</Line1>
+          <City>BELLEMEAD</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="20">KS</AddressStateTC>
+          <Zip>08502</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="Party_PB_Primary_Bene_1_Phone_1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>564</AreaCode>
+          <DialNumber>5472354</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="Party_PB_Primary_Bene_1_EmailAddress_1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>KARISHMA.KUKU@gmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Party id="Party_PB_Bene_2">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>MANIK</FirstName>
+          <LastName>MALIK-1</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1998-06-10</BirthDate>
+          <DriversLicenseNum>KS058700548745</DriversLicenseNum>
+          <DriversLicenseState tc="20">KS</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="Party_PB_Bene_2_Address_1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>988 RHOADS DR</Line1>
+          <City>BELLEMEAD</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="20">KS</AddressStateTC>
+          <Zip>08502</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="Party_PB_Bene_2_Phone_1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>564</AreaCode>
+          <DialNumber>5472354</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="Party_PB_Bene_2_EmailAddress_1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>KARISHMA.KUKU@gmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Party id="Party_Agent_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>Ali</FirstName>
+          <LastName>Khatami</LastName>
+        </Person>
+        <Producer>
+          <ProducerKey>Agent1</ProducerKey>
+          <License>
+            <LicenseNum>P086951</LicenseNum>
+          </License>
+          <CarrierAppointment>
+            <CompanyProducerID>W000100001</CompanyProducerID>
+            <CarrierCode>EVGL</CarrierCode>
+            <DistributionChannelInfo>
+              <DistributionChannel tc="13">Bank</DistributionChannel>
+            </DistributionChannelInfo>
+          </CarrierAppointment>
+          <ProducerAgreement>
+            <ProducerType tc="2">Broker</ProducerType>
+          </ProducerAgreement>
+        </Producer>
+        <OLifEExtension VendorCode="154">
+          <StartDate>2025-05-09</StartDate>
+          <EndDate>2060-02-28</EndDate>
+        </OLifEExtension>
+      </Party>
+      <Party id="Party_CB_Bene_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>MANIK</FirstName>
+          <LastName>MALIK-2</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1998-06-10</BirthDate>
+          <DriversLicenseNum>KS058700548745</DriversLicenseNum>
+          <DriversLicenseState tc="20">KS</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="Party_CB_Bene_1_Address_1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>988 RHOADS DR</Line1>
+          <City>BELLEMEAD</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="20">KS</AddressStateTC>
+          <Zip>08502</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="Party_CB_Bene_1_Phone_1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>564</AreaCode>
+          <DialNumber>5472354</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="Party_CB_Bene_1_EmailAddress_1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>KARISHMA.KUKU@gmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Party id="Party_CB_Bene_2">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <Person>
+          <FirstName>MANIK</FirstName>
+          <LastName>MALIK-3</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1998-06-10</BirthDate>
+          <DriversLicenseNum>KS058700548745</DriversLicenseNum>
+          <DriversLicenseState tc="20">KS</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="Party_CB_Bene_2_Address_1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>988 RHOADS DR</Line1>
+          <City>BELLEMEAD</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="20">KS</AddressStateTC>
+          <Zip>08502</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="Party_CB_Bene_2_Phone_1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>564</AreaCode>
+          <DialNumber>5472354</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="Party_CB_Bene_2_EmailAddress_1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>KARISHMA.KUKU@gmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Party id="Party_PO_Owner_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>ZaharaQA 294</FullName>
+        <GovtID>245057846</GovtID>
+        <GovtIDTC tc="1">Social Security Number</GovtIDTC>
+        <PrefComm tc="3">Email</PrefComm>
+        <IDReferenceNo>0022b0089076GHT345NN</IDReferenceNo>
+        <IDReferenceType tc="35">Customer Number</IDReferenceType>
+        <Person>
+          <FirstName>ZaharaQA</FirstName>
+          <LastName>294</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1998-06-10</BirthDate>
+          <DriversLicenseNum>KS058700548745</DriversLicenseNum>
+          <DriversLicenseState tc="20">KS</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="Party_PO_Owner_Address_1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>300 Wood Lane</Line1>
+          <Line2>Apt 519</Line2>
+          <City>Monmouth Junction</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="20">KS</AddressStateTC>
+          <Zip>08855</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="Party_PO_Owner_Phone_1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>564</AreaCode>
+          <DialNumber>5472354</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="Party_PO_Owner_EmailAddress_1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>WWilliamson@gmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Party id="Party_PP_Payor_1">
+        <PartyTypeCode tc="1">Person</PartyTypeCode>
+        <FullName>ZaharaQA 29</FullName>
+        <GovtID>245057846</GovtID>
+        <GovtIDTC tc="1">Social Security Number</GovtIDTC>
+        <PrefComm tc="3">Email</PrefComm>
+        <IDReferenceNo>0022b0089076GHT345NN</IDReferenceNo>
+        <IDReferenceType tc="35">Customer Number</IDReferenceType>
+        <Person>
+          <FirstName>ZaharaQA</FirstName>
+          <LastName>29</LastName>
+          <Gender tc="1">Male</Gender>
+          <BirthDate>1998-06-10</BirthDate>
+          <DriversLicenseNum>KS058700548745</DriversLicenseNum>
+          <DriversLicenseState tc="20">KS</DriversLicenseState>
+          <BirthCountry tc="1">US</BirthCountry>
+        </Person>
+        <Address id="Party_PP_Payor_1_Address_1">
+          <AddressTypeCode tc="1">Residence</AddressTypeCode>
+          <Line1>300 Wood Lane</Line1>
+          <Line2>Apt 519</Line2>
+          <City>Monmouth Junction</City>
+          <AddressState>KS</AddressState>
+          <AddressStateTC tc="20">KS</AddressStateTC>
+          <Zip>08855</Zip>
+          <PrefAddr tc="1">true</PrefAddr>
+        </Address>
+        <Phone id="Party_PP_Payor_1_Phone_1">
+          <PhoneTypeCode tc="12">Mobile</PhoneTypeCode>
+          <CountryCode>1</CountryCode>
+          <AreaCode>564</AreaCode>
+          <DialNumber>5472354</DialNumber>
+          <Ext>0919</Ext>
+          <OLifEExtension VendorCode="154">
+            <BestTimeToCall>Any time after 7:00pm</BestTimeToCall>
+          </OLifEExtension>
+        </Phone>
+        <EMailAddress id="Party_PP_Payor_1_EmailAddress_1">
+          <EMailType tc="2">Personal</EMailType>
+          <AddrLine>LWilliamson@gmail.com</AddrLine>
+        </EMailAddress>
+      </Party>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_Annuitant_1" id="Relation_Ann_Annuitant">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="35">Annuitant</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PO_Owner_1" id="Relation_Ann_Owner">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="8">Owner</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Party_Annuitant_1" RelatedObjectID="Party_PO_Owner_1" id="Relation_OwnerToIns_1">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="3">Parent</RelationRoleCode>
+        <RelationDescription tc="4">Mother</RelationDescription>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PP_Payor_1" id="Relation_Holding_Payor">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="31">Payer</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Party_Annuitant_1" RelatedObjectID="Party_PP_Payor_1" id="Relation_PayorToIns_1">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="3">Parent</RelationRoleCode>
+        <RelationDescription tc="3">Father</RelationDescription>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PB_Primary_Bene_1" id="Relation_Holding_Primary_Bene_1">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="34">Primary Beneficiary</RelationRoleCode>
+        <InterestPercent>50</InterestPercent>
+      </Relation>
+      <Relation OriginatingObjectID="Party_Annuitant_1" RelatedObjectID="Party_PB_Primary_Bene_1" id="Relation_Ann_Primary_Bene_1">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="4">Sibling</RelationRoleCode>
+        <RelationDescription tc="7">Brother</RelationDescription>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_PB_Bene_2" id="Relation_Holding_Bene_2">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="34">Primary Beneficiary</RelationRoleCode>
+        <InterestPercent>50</InterestPercent>
+      </Relation>
+      <Relation OriginatingObjectID="Party_Annuitant_1" RelatedObjectID="Party_PB_Bene_2" id="Relation_PI_Bene_2">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="1">Spouse</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_CB_Bene_1" id="Relation_Holding_Bene_3">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="36">Contingent Beneficiary</RelationRoleCode>
+        <InterestPercent>50</InterestPercent>
+      </Relation>
+      <Relation OriginatingObjectID="Party_Annuitant_1" RelatedObjectID="Party_CB_Bene_1" id="Relation_PI_Bene_3">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="2">Child</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_CB_Bene_2" id="Relation_Holding_Bene_4">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="36">Contingent Beneficiary</RelationRoleCode>
+        <InterestPercent>50</InterestPercent>
+      </Relation>
+      <Relation OriginatingObjectID="Party_Annuitant_1" RelatedObjectID="Party_CB_Bene_2" id="Relation_PI_Bene_4">
+        <OriginatingObjectType tc="6">Party</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="2">Child</RelationRoleCode>
+      </Relation>
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Party_Agent_1" id="Relation_Holding_Agent_1">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="37">Primary Writing Agent</RelationRoleCode>
+        <InterestPercent>100</InterestPercent>
+      </Relation>
+      <!-- Exchanged Holding Relation -->
+      <Relation OriginatingObjectID="Holding_1" RelatedObjectID="Exchanged_Holding_1" id="Relation_Exchanged_Holding_1">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="4">Holding</RelatedObjectType>
+        <RelationRoleCode tc="68">Exchanged For</RelationRoleCode>
+      </Relation>
+      <!--Exchange Holding Party Relation-->
+      <Relation OriginatingObjectID="Exchanged_Holding_1" RelatedObjectID="Exchanged_Party_Carrier_1" id="Relation_ExchAnn_Annuitant">
+        <OriginatingObjectType tc="4">Holding</OriginatingObjectType>
+        <RelatedObjectType tc="6">Party</RelatedObjectType>
+        <RelationRoleCode tc="2000">Exchange Company</RelationRoleCode>
+      </Relation>
+    </OLifE>
+  </TXLifeRequest>
+</TXLife>

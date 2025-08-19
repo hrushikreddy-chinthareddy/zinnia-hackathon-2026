@@ -1,57 +1,15 @@
 import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { OutputCoverageValues } from '@deps/queries/api/client/documents/v3/illustrations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypes } from '@deps/types/product';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
-import { formatIllustrationDetailYearlyCurrency } from './illustration-details-helpers';
-import { useRidersLabelMap } from './use-riders-label-map';
+import { useIllustrationRidersData } from './use-riders-data';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
-export function useIllustrationRidersData() {
-    const { t } = useTranslation(TranslationFiles.COMMON, {});
-
-    const ridersLabelMap = useRidersLabelMap();
-    const illustration = useIllustrationDetail();
-
-    if (!illustration) {
-        return [];
-    }
-
-    const { coverages } = illustration.response.assumed;
-
-    if (Object.keys(coverages).length === 1) {
-        return [];
-    }
-    type Keys<T> = T extends any ? keyof T : never;
-
-    return (Object.keys(coverages) as Keys<typeof coverages>[])
-        .filter((k) => k !== 'base')
-        .map((riderName) => {
-            const { premium } = (
-                coverages as unknown as Record<
-                    string,
-                    OutputCoverageValues | undefined
-                >
-            )[riderName] ?? { premium: null };
-            return {
-                label: ridersLabelMap?.[riderName] ?? riderName,
-                format: () =>
-                    formatIllustrationDetailYearlyCurrency(t, premium),
-                value: premium,
-            };
-        });
-}
-type IllustrationDetailsContentRidersProps = {
-    isLoading: boolean;
-};
-
-export default function IllustrationDetailsContentRiders({
-    isLoading,
-}: IllustrationDetailsContentRidersProps) {
+export default function IllustrationDetailsContentRiders() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const entries = useIllustrationRidersData();
     const illustration = useIllustrationDetail();

@@ -121,7 +121,7 @@ export async function middleware(req: NextRequest) {
   // which forces them to authenticate and go through the sso app before landing
   // in mypolicyview with active session
   // TODO: use the carrier config with `requiresSSO` property and `redirectAfterLogout`
-  if (!session && currentSubDomain === Subdomains.FARMERS && !isMockAllowed()) {
+  if (!session && currentSubDomain === Subdomains.FARMERS) {
     return NextResponse.redirect(
       `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/my-profile`
     );

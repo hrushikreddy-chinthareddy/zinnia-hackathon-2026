@@ -23,6 +23,26 @@ export default handleAuth({
             file: '[...auth0]',
             function: 'login',
         } as LoggingContext;
+
+        // Most of the time carrierRole will be set based on the `connection` value from the query params
+        // The below is more specific to vercel training environments.
+        // We set it here, but this can be overridden by the connection query param below.
+        const carrierRole = process.env.CARRIER_ROLE;
+        if (carrierRole) {
+            setCookie('role', carrierRole, {
+                req,
+                res,
+                maxAge: 60 * 60 * 24 * 30, // 30 days
+                path: '/',
+                sameSite: 'lax',
+            });
+
+            logTrace('Set role cookie from env', {
+                ...loggingContext,
+                role: carrierRole,
+            });
+        }
+
         // remove the "broken" cookie for now
         // setCookie(PERMISSIONS_COOKIE_NAME, DEFAULT_PERMISSIONS_COOKIE, {
         //     req,

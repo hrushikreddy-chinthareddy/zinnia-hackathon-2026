@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 
@@ -13,16 +13,16 @@ export function useRidersLabelMap() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const labelMap = {
         accidentalDeathBenefit: t(
-            `clientCase.illustrationDetails.riders.accidentalDeathBenefit`
+            'clientCase.illustrationDetails.riders.accidentalDeathBenefit'
         ),
         acceleratedDeathBenefit: t(
             'clientCase.illustrationDetails.riders.acceleratedDeathBenefit'
         ),
         acceleratedDeathBenefitForTerminalIllness: t(
-            `clientCase.illustrationDetails.riders.acceleratedDeathBenefitForTerminalIllness`
+            'clientCase.illustrationDetails.riders.acceleratedDeathBenefitForTerminalIllness'
         ),
         acceleratedDeathBenefitForChronicIllness: t(
-            `clientCase.illustrationDetails.riders.acceleratedDeathBenefitForChronicIllness`
+            'clientCase.illustrationDetails.riders.acceleratedDeathBenefitForChronicIllness'
         ),
         charitableGiving: t(
             'clientCase.illustrationDetails.riders.charitableGiving'

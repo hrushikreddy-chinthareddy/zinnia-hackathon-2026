@@ -249,6 +249,9 @@ const Taxes = ({ policy }: TaxesProps) => {
                                     setFederalTaxWithholdings((prevState) => ({
                                         ...prevState,
                                         withholdMinimum: checked,
+                                        withholdNone: checked
+                                            ? false
+                                            : prevState.withholdNone,
                                     }))
                                 }
                             />
@@ -261,6 +264,11 @@ const Taxes = ({ policy }: TaxesProps) => {
                                     setFederalTaxWithholdings((prevState) => ({
                                         ...prevState,
                                         withholdNone: checked,
+                                        withholdMinimum: checked
+                                            ? false
+                                            : prevState.withholdMinimum,
+                                        dollarAmount: checked ? xss('0') : '',
+                                        percentAmount: checked ? xss('0') : '',
                                     }))
                                 }
                             />
@@ -405,6 +413,9 @@ const Taxes = ({ policy }: TaxesProps) => {
                                     setStateTaxWithholdings((prevState) => ({
                                         ...prevState,
                                         withholdMinimum: checked,
+                                        withholdNone: checked
+                                            ? false
+                                            : prevState.withholdNone,
                                     }))
                                 }
                             />
@@ -415,6 +426,11 @@ const Taxes = ({ policy }: TaxesProps) => {
                                     setStateTaxWithholdings((prevState) => ({
                                         ...prevState,
                                         withholdNone: checked,
+                                        withholdMinimum: checked
+                                            ? false
+                                            : prevState.withholdMinimum,
+                                        dollarAmount: checked ? xss('0') : '',
+                                        percentAmount: checked ? xss('0') : '',
                                     }))
                                 }
                             />

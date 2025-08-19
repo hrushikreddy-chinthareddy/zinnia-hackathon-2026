@@ -54,6 +54,7 @@ export interface PermissionsContextProps {
     hasPolicyIndexPageAccess: boolean;
     isAllowReadIllustrations: boolean;
     hasUsagePermission: boolean;
+    hasTestHarnessAccess: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -178,10 +179,15 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     } = useQuery({
         queryKey: ['fgaRoles', partyId],
         queryFn: async () => {
-            const data = await bulkCheckPermissionsQuery(
-                createBulkCheckBodyRequest(partyId)
-            );
-
+            const tuples = [
+                ...createBulkCheckBodyRequest(partyId).tuples,
+                {
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.UiAccess,
+                    object: 'entity:zinnia_live_test_harness',
+                },
+            ];
+            const data = await bulkCheckPermissionsQuery({ tuples });
             const superAdmin = checkIfUserIsSuperAdmin(data);
             const hasDashboard = checkIfUserHasDashboardAccess(data);
             const hasCaseInsight = checkIfUserHasCaseInsightsAccess(data);
@@ -200,6 +206,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRelation.UiAccess
             );
 
+            const hasTestHarnessAccess = !!checkRelation(
+                data,
+                FgaRoles.TEST_HARNESS_ACCESS,
+                FgaRelation.UiAccess
+            );
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
@@ -210,6 +221,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasPolicyIndexPageAccess: !!hasPolicyIndexPageAccess,
                 isAllowReadIllustrations,
                 hasUsagePermission: !!hasUsage,
+                hasTestHarnessAccess,
             };
         },
         enabled: !!partyId,
@@ -249,6 +261,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     ? !!getMasterAgentNumber(partyReferenceData)
                     : false,
                 partyReferenceData,
+                hasTestHarnessAccess: !!fgaRoleData?.hasTestHarnessAccess,
                 permissionsLoadingComplete,
                 hasPolicyIndexPageAccess:
                     !!fgaRoleData?.hasPolicyIndexPageAccess,

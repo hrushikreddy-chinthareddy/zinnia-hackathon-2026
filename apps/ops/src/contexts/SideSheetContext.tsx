@@ -24,7 +24,8 @@ export interface SideSheetContextProps {
     events: Emitter<MittEvents>;
     changeSideSheetContent: (
         header: string | React.ReactNode,
-        body?: React.ReactNode
+        body?: React.ReactNode,
+        showHeader?: boolean
     ) => void;
     handleLocation: (location: SideSheetLocation) => void;
     handleOpen: (isOpen: boolean, width?: number | string) => void;
@@ -33,6 +34,7 @@ export interface SideSheetContextProps {
         body?: React.ReactNode
     ) => void;
     onClose: () => void;
+    header: string | undefined | React.ReactNode;
 }
 
 export const SideSheetContext = createContext<SideSheetContextProps>(
@@ -53,6 +55,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
     const [headerComponent, setHeaderComponent] = useState<React.ReactNode>(
         <></>
     );
+    const [showHeader, setShowHeader] = useState(true);
     const [contentComponent, setContentComponent] = useState<React.ReactNode>(
         <></>
     );
@@ -126,7 +129,8 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
 
     const handleComponentChange = (
         header: string | React.ReactNode,
-        body?: React.ReactNode
+        body?: React.ReactNode,
+        showHeader?: boolean
     ) => {
         if (typeof header == 'string') {
             setHeaderComponent(null);
@@ -139,6 +143,8 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
         if (body) {
             setContentComponent(body);
         }
+
+        setShowHeader(!!showHeader);
     };
 
     const openSecondarySideSheet = (
@@ -165,6 +171,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
                 changeSideSheetContent: handleComponentChange,
                 openSecondarySideSheet,
                 onClose,
+                header: header,
             }}
         >
             {children}
@@ -176,6 +183,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
                 closeOnEscape={!secondarySideSheetOpen}
                 location={location}
                 width={width}
+                showHeader={showHeader}
             >
                 {ComponentToRender || <></>}
             </SideSheet>

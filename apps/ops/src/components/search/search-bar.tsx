@@ -117,6 +117,8 @@ const SearchBar = ({
                             styles.dropdownTrigger,
                             'typography-content-body-sm whitespace-nowrap'
                         )}
+                        role="combobox"
+                        aria-controls="filter-dropdown"
                     >
                         <label id="case-search-label">
                             <Typography variant={TypographyVariant.BodySm}>
@@ -132,7 +134,16 @@ const SearchBar = ({
                     </DropdownMenu.Trigger>
 
                     <DropdownMenu.Portal>
-                        <DropdownMenu.Content className={styles.dropdownMenu}>
+                        <DropdownMenu.Content
+                            className={styles.dropdownMenu}
+                            id="filter-dropdown"
+                            role="listbox"
+                            aria-label={
+                                t(
+                                    'caseManagementDashboard.search.searchKeyType'
+                                ) || 'Search by'
+                            }
+                        >
                             {dropdownLabels.map((item, index) => (
                                 <DropdownMenu.Item
                                     className={styles.dropdownItem}

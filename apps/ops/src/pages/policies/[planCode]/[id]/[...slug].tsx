@@ -67,6 +67,7 @@ import nextI18nextConfig from 'next-i18next.config';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
     policy: Policy;
+    subPageTitleKey: string;
     permissions: {
         [UserPermission.AllowReadPolicyAdmin]: boolean;
         [UserPermission.AllowEditPolicy]: boolean;
@@ -74,18 +75,36 @@ interface PolicyPageProps extends SegmentTrackedPageProps {
     selectedPolicyParty?: Party;
 }
 
+const parseSlugToKey = (slug: string[] | undefined): string => {
+    if (!slug || slug.length === 0) return 'policyDetails';
+    const [alphaSlug, omegaSlug] = slug;
+    switch (alphaSlug) {
+        case 'people':
+            return omegaSlug ? 'partyDetails' : alphaSlug;
+        case 'transactions':
+        case 'policy':
+            // NOTE: policy-extras should map to ridersAndFeatures
+            return omegaSlug === 'policy-extras'
+                ? 'ridersAndFeatures'
+                : omegaSlug.replace(/-([a-z])/g, (_, letter) =>
+                      letter.toUpperCase()
+                  );
+        case 'activity':
+        case 'documents':
+            return alphaSlug;
+        default:
+            return 'policyDetails';
+    }
+};
+
 const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     user,
+    subPageTitleKey,
 }: PolicyPageProps) => {
     const router = useRouter();
     const { query } = router;
     const { id, slug, planCode } = query;
     const { partyId } = usePermissionsContext();
-
-    useSegmentPageTracker(user, SegmentPageName.PolicyDetails, {
-        planCode: planCode,
-        policyNumber: id,
-    });
 
     const {
         data: policy,
@@ -111,12 +130,18 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
+    useSegmentPageTracker(user, SegmentPageName.PolicyDetails, {
+        planCode: planCode,
+        policyNumber: id,
+    });
+
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
 
     if (loading) {
         return (
             <PolicyLayout loading={true}>
                 <div className="flex h-[500px] w-full items-center justify-center">
+                    <PageHead titleKey={subPageTitleKey} />
                     <PageLoader variant={PageLoaderVariant.Center} />
                 </div>
             </PolicyLayout>
@@ -136,12 +161,10 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     }
 
     let subPageContent = null;
-    let subPageTitleKey = '';
 
     // policies/id/... with no slug
     if (!slug || slug.length === 0) {
         subPageContent = <PolicyDetailsContainer />;
-        subPageTitleKey = 'policyDetails';
     } else if (Array.isArray(slug)) {
         // policies/id/slug
         switch (slug[0]) {
@@ -163,18 +186,15 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                             </BeneChangeProvider>
                         ))
                     );
-                subPageTitleKey = slug[1] ? 'partyDetails' : 'people';
                 break;
             case 'transactions':
             case 'policy':
                 if (slug[1] === 'coverage') {
                     subPageContent = <CoverageSubPage policy={policy} />;
-                    subPageTitleKey = 'coverage';
                 }
 
                 if (slug[1] === 'policy-details') {
                     subPageContent = <PolicyDetailsContainer />;
-                    subPageTitleKey = 'policyDetails';
                 }
 
                 // policy-extras is an old link.  Leaving it here for backwards compatibility
@@ -182,44 +202,35 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                     ['riders-and-features', 'policy-extras'].includes(slug[1])
                 ) {
                     subPageContent = <RidersAndFeaturesSubPage />;
-                    subPageTitleKey = 'ridersAndFeatures';
                 }
 
                 if (slug[1] === 'funds') {
                     subPageContent = <FundsSubPage policy={policyDetails} />;
-                    subPageTitleKey = 'funds';
                 }
                 if (slug[1] === 'premiums') {
                     subPageContent = <PremiumsSubPage />;
-                    subPageTitleKey = 'premiums';
                 }
 
                 if (slug[1] === 'withdrawals') {
                     subPageContent = <WithdrawalsSubPage policy={policy} />;
-                    subPageTitleKey = 'withdrawals';
                 }
 
                 if (slug[1] === 'loans') {
                     subPageContent = <LoansSubPage policy={policy} />;
-                    subPageTitleKey = 'loans';
                 }
 
                 if (slug[1] === 'annuitization') {
                     subPageContent = <AnnuitizationSubPage />;
-                    subPageTitleKey = 'annuitization';
                 }
                 break;
             case 'activity':
                 subPageContent = <ActivitySubPage />;
-                subPageTitleKey = 'activity';
                 break;
             case 'documents':
                 subPageContent = <DocumentsSubPage policy={policy} />;
-                subPageTitleKey = 'documents';
                 break;
             default:
                 subPageContent = <PolicyDetailsContainer />;
-                subPageTitleKey = 'policyDetails';
                 break;
         }
     }
@@ -250,7 +261,9 @@ export const getServerSideProps = withPageAuthAndLogging(
         getServerSideProps: async (context, loggingContext) => {
             // Get the user object from the Auth0 Session
             const user = await getUserData(context);
-            const { locale = DEFAULT_LOCALE, res, req } = context;
+            const { locale = DEFAULT_LOCALE, res, req, query } = context;
+            const { slug } = query;
+
             try {
                 (await getAccessToken(req, res)).accessToken;
             } catch (e) {
@@ -308,6 +321,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                     props: {
                         ...translations,
                         user,
+                        subPageTitleKey:
+                            parseSlugToKey(
+                                typeof slug === 'string' ? [slug] : slug
+                            ) ?? null,
                     },
                 };
             } catch (error) {

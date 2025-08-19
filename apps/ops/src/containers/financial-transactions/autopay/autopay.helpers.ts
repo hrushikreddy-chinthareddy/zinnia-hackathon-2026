@@ -43,10 +43,7 @@ export const buildSystematicProgramUpdateRequestBody = (
             endDate: systematicProgram?.endDate,
             previousProgramDate: systematicProgram?.previousProgramDate,
             nextProgramDate: effectiveDateFormatted,
-            party: {
-                bankId: autopay.paymentBankId,
-                partyId: autopay.payorPartyId,
-            },
+
             parties: [
                 {
                     allocationPercentage: 100,
@@ -99,10 +96,6 @@ export const buildSystematicWithdrawalProgramUpdateRequestBody = (
             endDate: systematicProgram?.endDate,
             previousProgramDate: systematicProgram?.previousProgramDate,
             nextProgramDate: effectiveDateFormatted,
-            party: {
-                bankId: autopay.paymentBankId,
-                partyId: autopay.payeePartyId,
-            },
             parties: [
                 {
                     allocationPercentage: 100,

@@ -3,7 +3,6 @@ import { AxiosResponse } from 'axios';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 
-import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
@@ -16,10 +15,7 @@ import { LoggingContext } from '@deps/utils/server-logging';
 
 import { getPartyReferenceByPartyId } from './party-reference';
 import { getHierarchyBySellingCode } from './producers';
-import {
-    getNewBusinessById,
-    NEW_BUSINESS_API_ORIGIN,
-} from '../v2/new-business';
+import { NEW_BUSINESS_API_ORIGIN } from '../v2/new-business';
 
 const INSURED_BUSINESS_LABEL = 'INSURED';
 enum AgentBusinessLabel {
@@ -58,7 +54,6 @@ const validateRequiredFields = (
 const INSURED_PARTY_REQUIRED_FIELDS = {
     firstName: 'Insured first name',
     lastName: 'Insured last name',
-    sexAtBirth: 'Insured sex at birth',
     dateOfBirth: 'Insured date of birth',
     state: 'Insured state of residence',
 };
@@ -69,7 +64,7 @@ const AGENT_PARTY_REQUIRED_FIELDS = {
     email: 'Agent email',
 };
 
-const buildClientCaseFromNewBusiness = async (
+export const buildClientCaseFromNewBusiness = async (
     newBusinessObject: NewBusiness,
     eAppId: string,
     loggingContext: LoggingContext
@@ -124,7 +119,6 @@ const buildClientCaseFromNewBusiness = async (
                 firstName,
                 lastName,
                 dateOfBirth,
-                sexAtBirth,
                 state: issueState,
             },
             INSURED_PARTY_REQUIRED_FIELDS
@@ -372,55 +366,27 @@ export const searchClientCaseByEappId = async (
     }
 };
 
-export const createClientCaseFromNewBusiness = async (
-    eAppId: string,
+export const createClientCase = async (
+    clientCaseData: Partial<IllustrationsClientCase>,
     token: string,
     loggingContext: LoggingContext
 ) => {
-    const newBusinessResponseObject = await getNewBusinessById(
-        eAppId,
-        loggingContext
-    );
-
-    if (isEmptyObject(newBusinessResponseObject)) {
-        throwTypedError('New Business not found', NEW_BUSINESS_API_ORIGIN);
-    } else if (newBusinessResponseObject.message) {
-        throwTypedError(
-            newBusinessResponseObject.message,
-            NEW_BUSINESS_API_ORIGIN
-        );
-    }
-
-    const newClientCasePayload = await buildClientCaseFromNewBusiness(
-        newBusinessResponseObject,
-        eAppId,
-        loggingContext
-    );
-
-    const config = {
-        authorization: `Bearer ${token}`,
-        headers: {
-            'Content-type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-        },
-    };
-
     try {
         const { data } = await serverApi.post(
             `${apiServerBaseUrl}/client-case-manager/v1/client-case`,
-            newClientCasePayload,
-            config,
+            clientCaseData,
+            {
+                authorization: `Bearer ${token}`,
+                headers: {
+                    'Content-type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            },
             loggingContext
         );
 
-        // get plancode to preselect the product of the illustration
-        const planCode = newBusinessResponseObject?.policy?.planCode ?? '';
-
-        return { ...data, planCode };
+        return data;
     } catch (error: any) {
-        throwTypedError(
-            error.message,
-            error.origin ?? CLIENT_CASE_MANAGER_API_ORIGIN
-        );
+        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
     }
 };

@@ -27,6 +27,7 @@ export interface SideSheetProps {
     closeOnEscape?: boolean;
     closeOnOutsideClick?: boolean;
     width?: number | string;
+    showHeader?: boolean;
 }
 
 const transformStyle = (
@@ -64,6 +65,7 @@ export default function SideSheet({
     closeOnEscape = true,
     closeOnOutsideClick = true,
     width = 500,
+    showHeader = true,
 }: SideSheetProps) {
     const [isDelayedMount, setIsDelayedMount] = useState(false);
     const { t } = useTranslation();
@@ -121,6 +123,7 @@ export default function SideSheet({
     );
     const widthStyle = typeof width === 'number' ? `${width}px` : width;
     // TODO: the side-sheet needs to accept and accessible name for the modal
+
     return (
         <div
             className="absolute z-20"
@@ -150,54 +153,56 @@ export default function SideSheet({
                             style={{ width: widthStyle, transform }}
                         >
                             <div className="flex h-full flex-col bg-white">
-                                <div className="z-20 px-8 py-6 shadow-elevation-light-08">
-                                    <div className="flex flex-row-reverse items-center justify-between">
-                                        <div className="min-w-content ml-4 flex h-7 shrink-0 transition-all duration-300 ease-in-out">
-                                            <IconButton
-                                                onClick={handleClose}
-                                                aria-label={
-                                                    t(
-                                                        'ariaLabel.closeSideSheet'
-                                                    ) as string
-                                                }
-                                                data-testid="close-button"
-                                            >
-                                                <CancelIcon
-                                                    width={24}
-                                                    height={24}
-                                                />
-                                            </IconButton>
-                                        </div>
-                                        <div className="grow-1 flex min-w-0">
-                                            {headerElement ? (
-                                                headerElement
-                                            ) : (
-                                                <PopoverOnTruncate
-                                                    title={`${header}${
-                                                        displayItemCount
-                                                            ? ' items.length'
-                                                            : ''
-                                                    }`}
+                                {showHeader && (
+                                    <div className="z-20 px-8 py-6 shadow-elevation-light-08">
+                                        <div className="flex flex-row-reverse items-center justify-between">
+                                            <div className="min-w-content ml-4 flex h-7 shrink-0 transition-all duration-300 ease-in-out">
+                                                <IconButton
+                                                    onClick={handleClose}
+                                                    aria-label={
+                                                        t(
+                                                            'ariaLabel.closeSideSheet'
+                                                        ) as string
+                                                    }
+                                                    data-testid="close-button"
                                                 >
-                                                    <div className="text-left">
-                                                        <Typography
-                                                            variant={
-                                                                TypographyVariant.H2
-                                                            }
-                                                            className="text-gray-900"
-                                                        >
-                                                            {`${header}${
-                                                                displayItemCount
-                                                                    ? ' items.length'
-                                                                    : ''
-                                                            }`}
-                                                        </Typography>
-                                                    </div>
-                                                </PopoverOnTruncate>
-                                            )}
+                                                    <CancelIcon
+                                                        width={24}
+                                                        height={24}
+                                                    />
+                                                </IconButton>
+                                            </div>
+                                            <div className="grow-1 flex min-w-0">
+                                                {headerElement ? (
+                                                    headerElement
+                                                ) : (
+                                                    <PopoverOnTruncate
+                                                        title={`${header}${
+                                                            displayItemCount
+                                                                ? ' items.length'
+                                                                : ''
+                                                        }`}
+                                                    >
+                                                        <div className="text-left">
+                                                            <Typography
+                                                                variant={
+                                                                    TypographyVariant.H2
+                                                                }
+                                                                className="text-gray-900"
+                                                            >
+                                                                {`${header}${
+                                                                    displayItemCount
+                                                                        ? ' items.length'
+                                                                        : ''
+                                                                }`}
+                                                            </Typography>
+                                                        </div>
+                                                    </PopoverOnTruncate>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                )}
                                 {children && (
                                     <div className="z-10 h-full overflow-y-scroll">
                                         {children}

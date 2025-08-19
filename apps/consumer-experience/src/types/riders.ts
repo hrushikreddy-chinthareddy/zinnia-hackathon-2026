@@ -26,6 +26,7 @@ export interface PolicyRider {
   status?: Status;
   title?: string;
   isOwner: boolean;
+  unbornChildIndicator?: boolean | null;
 }
 
 export interface RidersAndBenefits {

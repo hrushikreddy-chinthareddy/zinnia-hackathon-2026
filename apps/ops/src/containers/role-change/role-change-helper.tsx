@@ -25,7 +25,11 @@ import {
     RoleLabel,
     Roles,
 } from '@deps/constants/policy';
-import { RoleData } from '@deps/contexts/RoleChangeContext';
+import {
+    ExtendedEmail,
+    ExtendedPhone,
+    RoleData,
+} from '@deps/contexts/RoleChangeContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
@@ -568,11 +572,10 @@ export const buildRoleChangeRequestBody = (
         beneDetailsReqInd: false,
         documents: partyType === PartyType.TRUST ? documents : [],
         supportingDocumentAttached:
-            partyType === PartyType.TRUST &&
+            ((!isRoleCheck && partyType === PartyType.TRUST) || isRoleCheck) &&
             supportingDocumentAttached === BooleanValue.Yes
                 ? true
-                : partyType === PartyType.TRUST &&
-                  supportingDocumentAttached === BooleanValue.No
+                : supportingDocumentAttached === BooleanValue.No
                 ? false
                 : null,
         relationshipToParty,
@@ -623,6 +626,8 @@ export const validate = (
         addresses,
         trustDate,
         preferredCommunicationType,
+        phones,
+        emails,
     } = party;
     const allowedRolesForRemove: (Roles | PartyRole)[] = [
         Roles.THIRDPARTYDESIGNEE,
@@ -725,11 +730,18 @@ export const validate = (
     }
 
     if (preferredCommunicationType === PreferredCommunicationType.EMAIL) {
-        if (!party.emails || party.emails.length === 0) {
-            currentErrors['email'] = t('formValidations.emailRequired');
+        if (
+            !emails ||
+            emails.length === 0 ||
+            !emails.some((email: ExtendedEmail) => email.remove !== true)
+        ) {
+            currentErrors['emailRequired'] = t('formValidations.emailRequired');
         } else {
-            const invalidEmail = party.emails.some((email: any) => {
-                return !email.emailAddress || email.emailAddress.trim() === '';
+            const invalidEmail = emails.some((email: any) => {
+                return (
+                    email.remove !== true &&
+                    (!email.emailAddress || email.emailAddress.trim() === '')
+                );
             });
             if (invalidEmail) {
                 currentErrors['email'] = t('formValidations.validEmail');
@@ -738,11 +750,18 @@ export const validate = (
     } else if (
         preferredCommunicationType === PreferredCommunicationType.PHONE
     ) {
-        if (!party.phones || party.phones.length === 0) {
-            currentErrors['phone'] = t('formValidations.phoneRequired');
+        if (
+            !phones ||
+            phones.length === 0 ||
+            !phones.some((phone: ExtendedPhone) => phone.remove !== true)
+        ) {
+            currentErrors['phoneRequired'] = t('formValidations.phoneRequired');
         } else {
             const invalidPhone = party.phones.some((phone: any) => {
-                return !phone.dialNumber || phone.dialNumber.trim() === '';
+                return (
+                    (phone.remove !== true && !phone.dialNumber) ||
+                    phone.dialNumber.trim() === ''
+                );
             });
             if (invalidPhone) {
                 currentErrors['phone'] = t('formValidations.validPhone');

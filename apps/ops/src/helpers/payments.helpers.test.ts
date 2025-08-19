@@ -14,7 +14,7 @@ describe('payments.helper.ts', () => {
                 bankDetails: [{ accountNumber: '12345', bankId: '1' }],
             };
             const systematicProgram: SystematicProgram = {
-                party: [{ bankId: '1' }],
+                parties: [{ bankId: '1' }],
             };
             expect(getBankDetails(party, systematicProgram)).toEqual({
                 accountNumber: '12345',
@@ -29,7 +29,7 @@ describe('payments.helper.ts', () => {
         it('should return undefined if party has no bankDetails', () => {
             const party: Party = {};
             const systematicProgram: SystematicProgram = {
-                party: [{ bankId: '1' }],
+                parties: [{ bankId: '1' }],
             };
             expect(getBankDetails(party, systematicProgram)).toBeUndefined();
         });
@@ -91,7 +91,7 @@ describe('payments.helper.ts', () => {
                 { partyId: '2', firstName: 'Party-2' },
             ];
             const systematicProgram: SystematicProgram = {
-                party: [{ partyId: '2' }],
+                parties: [{ partyId: '2' }],
             };
             expect(getParty(parties, systematicProgram)).toEqual({
                 partyId: '2',
