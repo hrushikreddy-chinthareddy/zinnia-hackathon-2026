@@ -43,6 +43,10 @@ const Checkbox = ({
     };
 
     useEffect(() => {
+        setIsChecked(checked);
+    }, [checked]);
+
+    useEffect(() => {
         if (checkboxRef && checkboxRef.current) {
             checkboxRef.current.indeterminate = indeterminate;
         }

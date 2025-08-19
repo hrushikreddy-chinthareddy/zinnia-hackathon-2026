@@ -537,6 +537,7 @@ export const transformRiders = (policy: Policy): RidersAndBenefits => {
         firstName: insuredParty?.firstName,
         lastName: insuredParty?.lastName,
       },
+      unbornChildIndicator: rider.unbornChildIndicator,
     };
   });
 

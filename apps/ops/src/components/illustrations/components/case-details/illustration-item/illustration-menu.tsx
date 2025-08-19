@@ -15,6 +15,7 @@ import { useSelectedIllustration } from '@deps/components/illustrations/provider
 import { Modal } from '@deps/components/modal/modal';
 import { TranslationFiles } from '@deps/config/translations';
 import { IllustrationStatuses } from '@deps/types/illustrations';
+import { ProductTypes } from '@deps/types/product';
 
 interface IllustrationMenuProps {
     isSelectForApplicationVisible?: boolean;
@@ -126,6 +127,8 @@ const IllustrationMenu = ({
                 triggerLabel={<Icon type={IconType.MENU_HORIZONTAL} />}
             >
                 {isSelectForApplicationVisible &&
+                    selectedIllustration?.illustration.productType !==
+                        ProductTypes.TERM &&
                     selectedIllustration?.illustration.status ===
                         IllustrationStatuses.ACTIVE && (
                         <MenuContextualItem

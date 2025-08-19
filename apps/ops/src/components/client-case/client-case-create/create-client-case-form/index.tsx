@@ -41,6 +41,7 @@ interface CreateClientCaseFormProps {
     onCancel: () => void;
     onSubmit?: (clientCaseData: Partial<IllustrationsClientCase>) => void;
     clientCase?: IllustrationsClientCase;
+    isEdit: boolean;
 }
 
 const clientCaseInitialState: Partial<IllustrationsClientCase> = {
@@ -62,7 +63,6 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
         nicotineUser: false,
         state: '',
     },
-    lastModified: '',
 };
 
 function calculateIssueAge(dateOfBirth: Date | null): number {
@@ -108,6 +108,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     onSubmit,
     onCancel,
     clientCase,
+    isEdit,
 }: CreateClientCaseFormProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { partyReferenceData } = usePermissionsContext();
@@ -117,7 +118,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
     const isAgent = aliases.length > 0;
 
-    const isEdit = !!clientCase;
     const mergedCase = {
         ...clientCaseInitialState,
         ...clientCase,
@@ -222,7 +222,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             isAgent &&
             currentAgent?.firstName &&
             currentAgent?.lastName &&
-            somethingChanged &&
+            (!isEdit || somethingChanged) &&
             title &&
             insuredDetails?.sexAtBirth &&
             insuredDetails?.dateOfBirth &&
@@ -364,7 +364,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 </span>
                             ),
                             id: 'male',
-                            value: 'Male',
+                            value: 'MALE',
                         },
                         {
                             children: (
@@ -375,7 +375,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 </span>
                             ),
                             id: 'female',
-                            value: 'Female',
+                            value: 'FEMALE',
                         },
                     ]}
                     onClick={(v) => {
@@ -388,9 +388,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                             )}
                         </Label>
                     }
-                    defaultValue={capitalize(
-                        clientCaseData.insuredDetails?.sexAtBirth
-                    )}
+                    defaultValue={clientCaseData.insuredDetails?.sexAtBirth}
                 />
                 <div className={styles.datePickerContainer}>
                     <div className={styles.datePicker}>

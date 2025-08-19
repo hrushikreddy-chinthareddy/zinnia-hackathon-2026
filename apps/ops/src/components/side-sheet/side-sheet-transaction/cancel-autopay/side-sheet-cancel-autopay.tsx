@@ -189,10 +189,6 @@ const SideSheetCancelAutopay = ({
                 endDate: effectiveDateFormatted,
                 previousProgramDate: systematicProgram?.previousProgramDate,
                 nextProgramDate: effectiveDateFormatted,
-                party: {
-                    bankId: systematicProgram?.party?.[0]?.bankId,
-                    partyId: systematicProgram?.party?.[0]?.partyId,
-                },
                 ...(systematicProgram?.parties && {
                     parties: systematicProgram.parties,
                 }),

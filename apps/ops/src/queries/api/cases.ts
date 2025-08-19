@@ -45,12 +45,15 @@ import {
     baseAppUrl,
     enterpriseSearchApiServerUrl,
     se2ApiServerUrl,
+    apiServerBaseUrl,
 } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
 
 const baseCasesUrl = `${baseAppUrl}/api/case/v1/cases`;
-const ssrCasesUrl = `${se2ApiServerUrl}/cases`;
+const baseCasesUrl2 = `${baseAppUrl}/api/case/v2/cases`;
+const ssrCasesUrl = `${apiServerBaseUrl}/case/v1/cases`;
+const ssrCasesUrlV2 = `${apiServerBaseUrl}/case/v2/cases`;
 
 export type ReferenceDataQuery = {
     carrier?: string[];
@@ -211,10 +214,18 @@ export const getCaseTimingData = async (
     }
 };
 
-export const getCaseDetails = async (id: string): Promise<Case | null> => {
+//DEPU-6442 Leaving Case as of now, will be changed to CaseInstance type at all the places
+export const getCaseDetails = async (
+    id: string,
+    featureFlags?: FeatureFlags
+): Promise<Case | null> => {
     try {
-        const url = `${baseCasesUrl}/case-by-id/${id}`;
+        const useCaseDetailsV2 =
+            featureFlags?.[FEATURE_FLAGS.CASE_DETAILS_V2] || false;
 
+        const url = useCaseDetailsV2
+            ? `${baseCasesUrl2}/case-by-id/${id}`
+            : `${baseCasesUrl}/case-by-id/${id}`;
         const { data } = await client.get<null, AxiosResponse>(url);
 
         return data;
@@ -232,14 +243,20 @@ export const getCaseDetails = async (id: string): Promise<Case | null> => {
 export const getCaseDetailsSSR = async (
     id: string,
     accessToken: string,
-    loggingContext: LoggingContext
+    loggingContext: LoggingContext,
+    featureFlags?: FeatureFlags
 ): Promise<Case | null> => {
     try {
         if (isMockCaseDetailsRequestEnabled()) {
             return mockCaseDetails;
         }
 
-        const url = `${ssrCasesUrl}/${id}`;
+        const useCaseDetailsV2 =
+            featureFlags?.[FEATURE_FLAGS.CASE_DETAILS_V2] || false;
+        const url = useCaseDetailsV2
+            ? `${ssrCasesUrlV2}/${id}`
+            : `${ssrCasesUrl}/${id}`;
+
         logInfo('getCaseDetailsSSR', {
             ...loggingContext,
             file: 'queries/api/cases',

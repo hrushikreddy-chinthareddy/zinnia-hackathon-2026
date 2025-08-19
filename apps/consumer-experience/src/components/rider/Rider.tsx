@@ -21,9 +21,6 @@ import { LabelPopover } from '../label-popover/LabelPopover';
 
 interface RiderProps extends PolicyRider {
   hidePopover?: boolean;
-  // special client specific field for Everly
-  // see [DEPU-4946](https://zinnia.atlassian.net/browse/DEPU-4946)
-  futureChildren?: boolean | null;
 }
 
 export const Rider = ({
@@ -32,7 +29,7 @@ export const Rider = ({
   coverageId,
   description,
   effectiveDate,
-  futureChildren,
+  unbornChildIndicator,
   insured,
   status,
   title,
@@ -72,9 +69,10 @@ export const Rider = ({
             {showChildRiderField && (
               <FieldData Label={<Label>Future children covered</Label>}>
                 <span className="typography-content-body-sm mt-sm">
-                  {futureChildren === undefined || futureChildren === null
+                  {unbornChildIndicator === undefined ||
+                  unbornChildIndicator === null
                     ? DEFAULT_ERROR_STRING
-                    : futureChildren
+                    : unbornChildIndicator
                       ? 'Yes'
                       : 'No'}
                 </span>

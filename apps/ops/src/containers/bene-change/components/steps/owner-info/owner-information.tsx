@@ -42,7 +42,7 @@ import {
     EnterpriseAddress,
 } from '../../beneficiary-details/address-details/address-details.helpers';
 import {
-    trustOption,
+    newTrustOptions,
     TrustType,
 } from '../../beneficiary-details/bene-identification/bene-identification.helpers';
 import PartyTypes from '../../beneficiary-details/bene-identification/party-type';
@@ -411,7 +411,7 @@ export default function OwnerInformation({
                                     <div className="my-4 grid w-full grid-cols-2">
                                         <SelectSimple
                                             label={t2('trustType') as string}
-                                            options={trustOption(t2)}
+                                            options={newTrustOptions(t2)}
                                             onChange={(event) => {
                                                 updatePartyProperty(
                                                     party,

@@ -1,4 +1,5 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import {
     ArrangementType,
     Frequency,
@@ -25,7 +26,7 @@ import {
     getParty,
 } from '@deps/helpers/payments.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
-import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkLoanRepaymentOneTimeEligibilityQuery,
@@ -137,7 +138,11 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
         },
     });
     const { isPermissioned: isUserPermissionedToEditLoan } =
-        useWritePolicyPermissionCheck(policyNumber, planCode);
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteAllTransactions,
+            policyNumber,
+            planCode
+        );
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>

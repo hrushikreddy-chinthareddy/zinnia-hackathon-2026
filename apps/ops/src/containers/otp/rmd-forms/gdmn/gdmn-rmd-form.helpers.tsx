@@ -199,12 +199,6 @@ export default function getGdmnRmdConfig(t: TFunction) {
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
-        if (ownerSignature?.isDesignationPresent === null) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-            ] = t('formValidation.signatureDesignationMustBeSelected');
-        }
-
         return errors;
     };
 

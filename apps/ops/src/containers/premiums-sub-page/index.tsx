@@ -1,4 +1,5 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import {
     ArrangementType,
     FeatureType,
@@ -27,7 +28,7 @@ import {
     getFlatExtra,
     getParty,
 } from '@deps/helpers/payments.helpers';
-import { useWritePolicyPermissionCheck } from '@deps/hooks/useWritePolicyPermissionCheck';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkOneTimePremiumEligibilityQuery,
@@ -131,7 +132,11 @@ export const PremiumsSubPage = () => {
         },
     });
     const { isPermissioned: isUserPermissionedToAutopay } =
-        useWritePolicyPermissionCheck(policyNumber, planCode);
+        useTransactionPermissionCheck(
+            TransactionPermission.WriteAllTransactions,
+            policyNumber,
+            planCode
+        );
 
     const getManageAutopayTooltip = () => {
         const permissionRequired =

@@ -15,12 +15,10 @@ export const useSegmentPageTracker = (
     const [segmentAnalyticsCalled, setSegmentAnalyticsCalled] = useState(false);
 
     useEffect(() => {
-        if (segmentAnalyticsCalled) {
-            return;
-        }
-
+        if (segmentAnalyticsCalled) return;
         segmentAnalyticsIdentifyUserAndPage(user, pageName, pageProps || {});
         setSegmentAnalyticsCalled(true);
+
         // Using segmentAnalyticsCalled to prevent it but make sure theres not a better way
         // Error handling to ensure a page doesnt have components using more than one of these hooks
     }, [pageName, pageProps, segmentAnalyticsCalled, user]);

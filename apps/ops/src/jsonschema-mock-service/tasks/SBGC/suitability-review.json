@@ -2700,7 +2700,7 @@
                             "enumNames": [
                                 "Yes, accept",
                                 "No, decline",
-                                "Undecided, review suitability data entry"
+                                "Under Review – require suitability data entry update"
                             ]
                         },
                         "ui:hideError": true

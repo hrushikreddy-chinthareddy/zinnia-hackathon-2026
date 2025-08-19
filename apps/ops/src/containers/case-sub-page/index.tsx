@@ -31,7 +31,7 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
 
     const { data: caseDetailsModel } = useQuery({
         queryKey: ['caseDetails', caseDetails?.id],
-        queryFn: () => getCaseDetailsQuery(caseDetails?.id),
+        queryFn: () => getCaseDetailsQuery(caseDetails?.id, featureFlags),
         initialData: caseDetails,
         refetchInterval:
             tabVal === CaseDetailsTabValues.progress &&

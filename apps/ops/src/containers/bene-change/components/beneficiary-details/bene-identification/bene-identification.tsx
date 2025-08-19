@@ -17,12 +17,15 @@ import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { EntityTypeValue } from '@deps/constants/policy';
 import { entityTypeOptions } from '@deps/containers/role-change/role-change-helper';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import {
     Errors,
     formatPrefix,
     genderOption,
+    newTrustOptions,
     prefixOption,
     suffixOptions,
     trustOption,
@@ -77,6 +80,10 @@ const BeneficiaryIdentification = ({
         updateParty ?? DEFAULT_PARTY_INSTANCE
     );
     const [currentErrors, setCurrentErrors] = useState<Errors>();
+
+    const { featureFlags } = useOptimizely();
+
+    const trustEnumFlag = featureFlags[FEATURE_FLAGS.BENE_TRUST_TYPE_ENUM];
 
     useEffect(() => {
         if (
@@ -308,7 +315,11 @@ const BeneficiaryIdentification = ({
                                 />
                                 <SelectSimple
                                     label={t('trustType') as string}
-                                    options={trustOption(t)}
+                                    options={
+                                        trustEnumFlag
+                                            ? trustOption(t)
+                                            : newTrustOptions(t)
+                                    }
                                     onChange={(value) =>
                                         setParty((prevState: any) => ({
                                             ...prevState,
