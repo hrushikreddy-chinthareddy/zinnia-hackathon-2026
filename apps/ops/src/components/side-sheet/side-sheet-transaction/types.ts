@@ -64,4 +64,7 @@ export interface PayeePaymentDetails {
     disbursementAmount?: number;
     partyId: string;
     state?: string;
+    paymentForm?: string;
+    addressId?: string;
+    bankId?: string;
 }

@@ -3880,6 +3880,7 @@
                 "minRequiredPercentage": "Mínimo requerido ({{percent}}%)",
                 "actualSurrenderAmount": "Monto de rescate real",
                 "checkingEndingIn": "Cuenta corriente terminando en {{ accountNumber }}",
+                "check": "CHEQUE",
                 "COSTOFINSURANCE": "Costo del seguro",
                 "EXPENSECHARGE": "Cargo por gastos",
                 "MARKETVALUEADJUSTMENT": "Ajuste de valor de mercado",

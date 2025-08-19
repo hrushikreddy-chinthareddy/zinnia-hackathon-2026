@@ -3867,6 +3867,7 @@
                 "minRequiredPercentage": "Minimum requis ({{percent}}%)",
                 "actualSurrenderAmount": "Montant de rachat réel",
                 "checkingEndingIn": "Compte courant se terminant par {{accountNumber}}",
+                "check": "CHÈQUE",
                 "COSTOFINSURANCE": "Coût de l'assurance",
                 "EXPENSECHARGE": "Frais de gestion",
                 "MARKETVALUEADJUSTMENT": "Ajustement de la valeur marchande",
