@@ -89,6 +89,7 @@
             "policySearch": "Politiques & contrats",
             "premiums": "Primes",
             "ridersAndFeatures": "Avenants et Caractéristiques",
+            "sendCorrespondence": "Envoyer une correspondance",
             "sendDocument": "Envoyer un document",
             "sendStatement": "Envoyer un extrait de compte",
             "sendTaxForm": "Formulaire de taxes envoyé",
@@ -2951,6 +2952,32 @@
                 "annualAnniversaryStatement": "Déclaration annuelle/anniversaire",
                 "quarterlyStatement": "Déclaration trimestrielle"
             }
+        },
+        "sendCorrespondence": {
+            "tabs": {
+                "sendCorrespondence": "Envoyer une correspondance",
+                "confirm": "Confirmer"
+            },
+            "letterTypes": {
+                "policy.assignmentletter.notified": "Lettre de mission",
+                "policy.beneficiaryrequest.notified": "Lettre de demande de bénéficiaire",
+                "policy.divorcerequest.notified": "Lettre de divorce",
+                "policy.explanationofbenefitamount.notified": "Lettre explicative du montant des prestations",
+                "policy.fatcamailing.notified": "Lettre d'envoi FATCA",
+                "policyNotFoundLetter": "Lettre de politique non trouvée",
+                "selectOne": "Sélectionnez-en un"
+            },
+            "confirm": {
+                "titlePart1": "Le ",
+                "titlePart2": "a été soumis avec succès pour traitement et sera envoyé au(x) destinataire(s) sous peu.",
+                "cta": "Accéder à la politique",
+                "back": "Retour à la maison"
+            },
+            "error": "Sélectionnez au moins un type de lettre pour continuer",
+            "subtitle": "Instructions de traitement",
+            "body": "Sélectionnez le type de courrier à envoyer au client. Le courrier sera traité par NGC puis envoyé via le moyen de contact choisi par le client.",
+            "subtitle2": "Détails",
+            "label": "Type de lettre"
         },
         "sendTaxForms": {
             "selectTaxYear": "Sélectionner l'année fiscale",

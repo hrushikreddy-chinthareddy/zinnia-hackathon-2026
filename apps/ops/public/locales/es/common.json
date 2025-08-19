@@ -89,6 +89,7 @@
             "policySearch": "Politiques & Contratos",
             "premiums": "Primas",
             "ridersAndFeatures": "Cláusulas Adicionales y Características",
+            "sendCorrespondence": "Enviar correspondencia",
             "sendDocument": "Enviar Documento",
             "sendStatement": "Enviar Estado de Cuenta",
             "sendTaxForm": "Enviar Formulario de Impuestos",
@@ -2958,6 +2959,32 @@
                 "annualAnniversaryStatement": "Estado Anual/Aniversario",
                 "quarterlyStatement": "Estado Trimestral"
             }
+        },
+        "sendCorrespondence": {
+            "tabs": {
+                "sendCorrespondence": "Enviar correspondencia",
+                "confirm": "Confirmar"
+            },
+            "letterTypes": {
+                "policy.assignmentletter.notified": "Carta de asignación",
+                "policy.beneficiaryrequest.notified": "Carta de solicitud de beneficiario",
+                "policy.divorcerequest.notified": "Carta de divorcio",
+                "policy.explanationofbenefitamount.notified": "Carta de explicación del monto del beneficio",
+                "policy.fatcamailing.notified": "Carta de envío de FATCA",
+                "policyNotFoundLetter": "Carta de política no encontrada",
+                "selectOne": "Seleccione uno"
+            },
+            "confirm": {
+                "titlePart1": "El ",
+                "titlePart2": "se ha enviado correctamente para su procesamiento y se enviará a los destinatarios en breve.",
+                "cta": "Ir a la política",
+                "back": "De vuelta a casa"
+            },
+            "error": "Seleccione al menos un tipo de letra para continuar",
+            "subtitle": "Instrucciones de procesamiento",
+            "body": "Seleccione el tipo de carta que desea enviar al cliente. NGC procesará la carta y la enviará a través del método de contacto que prefiera el cliente.",
+            "subtitle2": "Detalles",
+            "label": "Tipo de letra"
         },
         "sendTaxForms": {
             "selectTaxYear": "Seleccione el año(s) fiscal",

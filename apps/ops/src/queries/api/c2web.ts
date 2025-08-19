@@ -1,6 +1,9 @@
 import { AxiosResponse } from 'axios';
 
-import { SendCommunicationRequestBody } from '@deps/models/case/correspondence';
+import {
+    AdhocLetterRequestBody,
+    SendCommunicationRequestBody,
+} from '@deps/models/case/correspondence';
 import {
     Confirm,
     FormDetails,
@@ -305,5 +308,41 @@ export const getSearchTransactions = async (
             }
         );
         return null;
+    }
+};
+
+export const sendAdhocLetter = async (
+    requestBody: AdhocLetterRequestBody,
+    policyNumber: string,
+    planCode: string
+): Promise<Confirm | null> => {
+    if (!requestBody?.correlationId) {
+        throw new Error('No correlationId provided');
+    }
+
+    const url =
+        baseAppUrl + `/api/c2web/v1/adhocLetter/${planCode}/${policyNumber}`;
+
+    try {
+        browserLogInfo('contactCenterSendCorrespondence', {
+            payload: requestBody,
+            url: url,
+            function: 'c2web.contactCenterSendCorrespondence',
+        });
+        const { data } = await client.post<
+            AdhocLetterRequestBody,
+            AxiosResponse<Confirm>
+        >(url, requestBody);
+
+        return data;
+    } catch (error: any) {
+        browserLogError('contactCenterSendCorrespondence', {
+            ...parseErrorInformation(error),
+            payload: requestBody,
+            url: url,
+            function: 'c2web.contactCenterSendCorrespondence',
+            error: error,
+        });
+        throw new Error(error?.data?.message || 'Error');
     }
 };

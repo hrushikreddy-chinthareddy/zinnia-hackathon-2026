@@ -89,6 +89,7 @@
             "policySearch": "Policies & Contracts",
             "premiums": "Premiums",
             "ridersAndFeatures": "Riders and Features",
+            "sendCorrespondence": "Send Correspondence",
             "sendDocument": "Send Document",
             "sendStatement": "Send Statement",
             "sendTaxForm": "Send Tax Form",
@@ -2991,6 +2992,32 @@
                 "annualAnniversaryStatement": "Annual/Anniversary Statement",
                 "quarterlyStatement": "Quarterly Statement"
             }
+        },
+        "sendCorrespondence": {
+            "tabs": {
+                "sendCorrespondence": "Send correspondence",
+                "confirm": "Confirm"
+            },
+            "letterTypes": {
+                "policy.assignmentletter.notified": "Assignment Letter",
+                "policy.beneficiaryrequest.notified": "Beneficiary Request Letter",
+                "policy.divorcerequest.notified": "Divorce Letter",
+                "policy.explanationofbenefitamount.notified": "Explanation of Benefit Amount Letter",
+                "policy.fatcamailing.notified": "FATCA Mailing Letter",
+                "policyNotFoundLetter": "Policy Not Found Letter",
+                "selectOne": "Select one"
+            },
+            "confirm": {
+                "titlePart1": "The ",
+                "titlePart2": "has been successfully submitted for processing and will be sent to the recipient(s) shortly.",
+                "cta": "Go to policy",
+                "back": "Back to home"
+            },
+            "error": "Select at least one letter type to continue",
+            "subtitle": "Processing instructions",
+            "body": "Select the type of letter to send to the customer. The letter will be processed by NGC and then sent via the customer’s preferred contact method.",
+            "subtitle2": "Details",
+            "label": "Letter type"
         },
         "sendTaxForms": {
             "selectTaxYear": "Select tax year(s)",
@@ -5896,7 +5923,7 @@
             "sendForms": "Send forms",
             "sendStatements": "Send statements",
             "sendTaxForms": "Send tax forms",
-            "sendCorrespondence": "Send Correspondence"
+            "sendCorrespondence": "Send correspondence"
         },
         "additionalActions": {
             "label": "Additional Actions",
