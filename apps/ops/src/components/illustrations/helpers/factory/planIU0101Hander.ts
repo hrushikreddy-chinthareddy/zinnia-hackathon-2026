@@ -417,20 +417,20 @@ function createIllustrationPayload(
         });
     }
 
-    const flatExtras = [];
+    const flatExtra = [];
 
     if (
         SUBSTANDARD_PREMIUM_CLASSES.includes(values.premiumClass) &&
         values.tableOrFlatExtraSelection?.[0] == 'selectTableOrFlatExtraRatings'
     ) {
         if (values.permanentFlatExtra?.amount) {
-            flatExtras.push({
+            flatExtra.push({
                 type: FARMERS_HARDCODED_DATA.permanentFlatExtraType,
                 amount: values.permanentFlatExtra.amount,
             });
         }
         if (values.temporaryFlatExtra?.amount) {
-            flatExtras.push({
+            flatExtra.push({
                 type: FARMERS_HARDCODED_DATA.temporaryFlatExtraType,
                 amount: values.temporaryFlatExtra.amount,
                 duration: values.temporaryFlatExtra?.duration,
@@ -506,7 +506,7 @@ function createIllustrationPayload(
                             substandardRating: values.subStandardRating,
                         }),
                         underwritingClass: values.premiumClass,
-                        flatExtras,
+                        flatExtra: flatExtra,
                     },
                 ],
             },

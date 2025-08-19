@@ -1823,30 +1823,42 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             id: 'ddf60c38-eb5e-439c-8a16-1412c8f72bd7',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 15,
-                                                        targetNodeId:
-                                                            'permanent-flat-extra',
-                                                        operator:
-                                                            'lessThanOrEqual',
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 15,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'greaterThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0.5,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'multipleOf',
+                                                            },
+                                                        ],
                                                     },
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0,
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
                                                         targetNodeId:
                                                             'permanent-flat-extra',
-                                                        operator:
-                                                            'greaterThanOrEqual',
-                                                    },
-                                                    {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0.5,
-                                                        targetNodeId:
-                                                            'permanent-flat-extra',
-                                                        operator: 'multipleOf',
                                                     },
                                                 ],
                                             },
