@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 import ClickContainer from '@deps/components/click-container/click-container';
 import inputStyles from '@deps/components/search/search-field/search-field.module.css';
+import { parseJsonValue } from '@deps/helpers/csr-api-helpers';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { browserLogError } from '@deps/utils/browser-logging';
@@ -294,7 +295,7 @@ export default function AutoCompleteWidget(props: WidgetProps) {
             </div>
             {value && displayAttachments && type === 'string' && (
                 <FileInfoComponent
-                    files={[JSON.parse(value)]}
+                    files={[parseJsonValue(value)]}
                     readonly={readonly || false}
                     formContext={props.formContext}
                     showDelete={false}

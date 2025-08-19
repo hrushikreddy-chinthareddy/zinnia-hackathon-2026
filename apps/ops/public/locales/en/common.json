@@ -3930,6 +3930,7 @@
                 "minRequiredPercentage": "Min required ({{percent}}%)",
                 "actualSurrenderAmount": "Actual surrender amount",
                 "checkingEndingIn": "Checking ending in {{ accountNumber }}",
+                "check": "CHECK",
                 "COSTOFINSURANCE": "Cost of insurance",
                 "EXPENSECHARGE": "Expense charge",
                 "MARKETVALUEADJUSTMENT": "Market value adjustment",

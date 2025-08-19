@@ -1,5 +1,4 @@
 import {
-    AddressType,
     AllocationOption,
     AmountType,
     DisbursementType,
@@ -62,6 +61,11 @@ const getPayeePaymentDetails = (
             ?.map((item) => item.bankId)
             .filter((id): id is string => id !== undefined) || [];
 
+    const addressIds: string[] =
+        payeeOrBeneficiaries
+            ?.map((item) => item.addressId)
+            .filter((id): id is string => id !== undefined) || [];
+
     partyIds.forEach((partyId) => {
         const party = policy.parties?.find(
             (party) => party.partyId === partyId
@@ -72,26 +76,31 @@ const getPayeePaymentDetails = (
 
         if (party) {
             const address = party.addresses?.find(
-                (address) => address.addressType === AddressType.RESIDENCE
+                (address) => address.addressId === payeeOrBeneficiary?.addressId
             );
-            const bankDetails = party.bankDetails?.find((bank) =>
-                bankIds.includes(bank.bankId as string)
+
+            const bankDetails = party.bankDetails?.find(
+                (bank) => bank.bankId === payeeOrBeneficiary?.bankId
             );
 
             results.push({
                 partyId: party.partyId as string,
-                state: address
-                    ? (address.state as string)
-                    : (t('policy.history.sidesheet.stateNotFound') as string),
-                bankDetails: {
-                    branchName: bankDetails?.branchName || '',
-                    nameOnAccount: bankDetails?.nameOnAccount as string,
-                    accountNumber: bankDetails?.accountNumber as string,
-                },
+                state:
+                    address?.state ||
+                    (t('policy.history.sidesheet.stateNotFound') as string),
+                paymentForm: payeeOrBeneficiary?.paymentForm,
+                addressId: payeeOrBeneficiary?.addressId,
+                bankId: payeeOrBeneficiary?.bankId,
+                allocationPercentage: payeeOrBeneficiary?.allocationPercentage,
                 disbursementAmount: Math.abs(
                     payeeOrBeneficiary?.disbursementAmount || 0
                 ),
-                allocationPercentage: payeeOrBeneficiary?.allocationPercentage,
+                bankDetails: {
+                    branchName: bankDetails?.branchName || '',
+                    nameOnAccount: bankDetails?.nameOnAccount || '',
+                    accountNumber: bankDetails?.accountNumber || '',
+                    accountType: bankDetails?.accountType,
+                },
             });
         }
     });

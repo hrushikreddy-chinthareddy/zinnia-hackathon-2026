@@ -281,9 +281,9 @@ export const checkForIrrevocableBeneficiaries = (
 ) => {
     const activeBeneficiaryRoles = roles.filter(
         (role: PolicyPartyRoles) =>
-            role.partyRole === PartyRole.PRIMARYBENEFICIARY ||
-            (role.partyRole === PartyRole.CONTINGENTBENEFICIARY &&
-                !role.endDate)
+            (role.partyRole === PartyRole.PRIMARYBENEFICIARY ||
+                role.partyRole === PartyRole.CONTINGENTBENEFICIARY) &&
+            !isEndDated(role.endDate)
     );
     for (const role of activeBeneficiaryRoles) {
         const party = parties.find(
@@ -737,7 +737,7 @@ export const validate = (
         ) {
             currentErrors['emailRequired'] = t('formValidations.emailRequired');
         } else {
-            const invalidEmail = emails.some((email: any) => {
+            const invalidEmail = emails.some((email: ExtendedEmail) => {
                 return (
                     email.remove !== true &&
                     (!email.emailAddress || email.emailAddress.trim() === '')
@@ -757,10 +757,10 @@ export const validate = (
         ) {
             currentErrors['phoneRequired'] = t('formValidations.phoneRequired');
         } else {
-            const invalidPhone = party.phones.some((phone: any) => {
+            const invalidPhone = party.phones.some((phone: ExtendedPhone) => {
                 return (
                     (phone.remove !== true && !phone.dialNumber) ||
-                    phone.dialNumber.trim() === ''
+                    phone?.dialNumber?.trim() === ''
                 );
             });
             if (invalidPhone) {

@@ -181,6 +181,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                 <SideSheetWithdrawalContent
                     t={t}
                     values={sideSheetValues as WithdrawalSideSheetValues}
+                    policy={policy}
                     loading={loading}
                 />
             );
