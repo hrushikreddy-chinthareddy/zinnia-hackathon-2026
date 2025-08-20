@@ -2631,6 +2631,7 @@ export const PartyType = {
     INDIVIDUAL: 'INDIVIDUAL',
     ORGANIZATION: 'ORGANIZATION',
     TRUST: 'TRUST',
+    CUSTODIAN: 'CUSTODIAN',
 } as const;
 
 /**

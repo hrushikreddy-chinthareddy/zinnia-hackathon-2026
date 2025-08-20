@@ -1,3 +1,7 @@
+import {
+    Party,
+    PolicyPartyRoles,
+} from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
@@ -21,6 +25,7 @@ import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/
 import { USStates } from '@deps/constants/geography/us-states';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { statesAndTerritories } from '@deps/helpers/states.helpers';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormProgram,
@@ -39,6 +44,8 @@ import {
     AddressTypes,
     ProgramSubType,
     RestrictionOption,
+    QualTypes,
+    FASTQualTypes,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -47,6 +54,7 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
+import { PartyRole, PartyType } from '@deps/models/policy/sor-policy';
 
 import { commonOftFormValidation } from '../../oft-forms/oft-form-helpers';
 import { createValidator } from '../../utils/helper-utils';
@@ -76,7 +84,8 @@ export const spousalSignatureStateCodes = [
 
 export default function getGilicoConfig(
     t: TFunction,
-    formSubtype: FormSubtype
+    formSubtype: FormSubtype,
+    qualType: QualTypes | FASTQualTypes | ''
 ) {
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
@@ -179,6 +188,38 @@ export default function getGilicoConfig(
         return [USStates.MICHIGAN, USStates.MINNESOTA].includes(issueState);
     };
 
+    const validatePartyTypeCompany = (
+        partyRoles: PolicyPartyRoles[],
+        parties: Party[] | LifeCadParty[]
+    ) => {
+        const partyRoleOwnerDetails = partyRoles?.find(
+            (item) => item?.partyRole === PartyRole.OWNER
+        );
+
+        const policyPartyType = parties?.find(
+            (pp) => pp?.partyId === partyRoleOwnerDetails?.partyId
+        ) as Party;
+
+        const filterAnnuitantDetails = parties?.find(
+            (pp) =>
+                pp.partyId ===
+                partyRoles?.find(
+                    (item) => item.partyRole === PartyRole.ANNUITANT
+                )?.partyId
+        );
+
+        const annuitantState =
+            filterAnnuitantDetails?.addresses?.[0]?.state?.toUpperCase() ?? '';
+
+        return (
+            qualType === FASTQualTypes.CUSTODIALINDIVIDUALRETIREMENTACCOUNT &&
+            formSubtype === FormSubtype.FullWithdrawal &&
+            (policyPartyType?.partyType === PartyType.ORGANIZATION ||
+                policyPartyType?.partyType === PartyType.CUSTODIAN) &&
+            spousalSignatureStateCodes.includes(annuitantState)
+        );
+    };
+
     const signaturesConfig: SignatureValidationConfig[] = [
         {
             key: `sig-val-owner`,
@@ -278,13 +319,21 @@ export default function getGilicoConfig(
             ],
             shouldDisplay: ({
                 ownerStateOfResidence,
+                parties,
+                partyRoles,
             }: OtpWithdrawalFormState): boolean => {
+                const validatePartyType =
+                    !!parties &&
+                    !!partyRoles &&
+                    !!validatePartyTypeCompany(partyRoles, parties);
+
                 return (
-                    !!ownerStateOfResidence &&
-                    formSubtype === FormSubtype.FullWithdrawal &&
-                    spousalSignatureStateCodes.includes(
-                        ownerStateOfResidence?.toUpperCase()
-                    )
+                    (!!ownerStateOfResidence &&
+                        formSubtype === FormSubtype.FullWithdrawal &&
+                        spousalSignatureStateCodes.includes(
+                            ownerStateOfResidence?.toUpperCase()
+                        )) ||
+                    validatePartyType
                 );
             },
             signatureType: SignatureValidationTypeWithdrawal.Spouse,

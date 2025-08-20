@@ -19,12 +19,22 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import { Carrier } from '@deps/models/case/withdrawal/case';
+import {
+    Carrier,
+    FASTQualTypes,
+    QualTypes,
+} from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getGilicoConfig, { FormSubtype } from './gilico-withdrawal-form.helpers';
 
-export default function GilicoWithdrawalForm() {
+type GlcoithdrawalFormProps = {
+    qualType: QualTypes | FASTQualTypes | '';
+};
+
+export default function GilicoWithdrawalForm({
+    qualType,
+}: GlcoithdrawalFormProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
@@ -63,7 +73,7 @@ export default function GilicoWithdrawalForm() {
         w4pSignaturesConfig,
         eSignatureFieldConfig,
         reasonOptions,
-    } = getGilicoConfig(t, formSubtype as FormSubtype);
+    } = getGilicoConfig(t, formSubtype as FormSubtype, qualType);
 
     useEffect(() => {
         setFormValidator(() => formValidation);

@@ -1,3 +1,5 @@
+import { Address } from '../policy/sor-policy';
+
 export enum SrcPartyType {
     IN = 'IN',
     TR = 'TR',
@@ -81,6 +83,8 @@ export interface LifeCadParty {
     Phone: LifeCadPhone[];
     Banking: LifeCadBanking[];
     TaxWithHolding: LifeCadTaxWitholding[];
+    addresses?: Array<Address>;
+    partyId?: string;
 }
 
 export type LifeCadBanking = {

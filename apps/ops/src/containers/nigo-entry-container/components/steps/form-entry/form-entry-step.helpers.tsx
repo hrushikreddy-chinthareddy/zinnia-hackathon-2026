@@ -75,7 +75,7 @@ export const getWithdrawalFormComponentMap = (
     [Carrier.GDMN]: <GdmnWithdrawalForm />,
     [Carrier.RSLN]: <RslnWithdrawalForm />,
     [Carrier.ULPC]: <UlpcWithdrawalForm />,
-    [Carrier.GLCO]: <GilicoWithdrawalForm />,
+    [Carrier.GLCO]: <GilicoWithdrawalForm qualType={qualType} />,
 });
 
 export const getOFTFormComponentMap = (
