@@ -356,6 +356,74 @@ describe('getDlicConfig', () => {
             });
             expect(errors).toEqual({});
         });
+        it('should return error for Life Cad where start date is after 28th of the month ', () => {
+            const errors = config.formValidation({
+                formProgram: {
+                    withdrawType: {
+                        text: 'Partial',
+                    },
+                    programType: {
+                        text: '',
+                    },
+                    programSubType: {
+                        text: null,
+                    },
+                    programFrequency: {
+                        frequency: {
+                            text: Frequency.Monthly,
+                        },
+                        beginDate: {
+                            text: '2020-01-29',
+                        },
+                        fixedPeriodYear: {
+                            text: '',
+                        },
+                    },
+                    partialAmount: {
+                        text: null,
+                        amountType: AmountType.Dollar,
+                    },
+                    partialGrossAmount: {
+                        text: null,
+                        amountType: AmountType.Dollar,
+                    },
+                    partialNetAmount: {
+                        text: null,
+                        amountType: AmountType.Dollar,
+                    },
+                    gmwbAmount: {
+                        text: null,
+                        amountType: AmountType.Dollar,
+                    },
+                },
+                formSignature: {
+                    signatures: [
+                        {
+                            signType: {
+                                text: SignatureValidationTypeWithdrawal.Owner,
+                            },
+                            isSigned: true,
+                            signDate: {
+                                text: null,
+                            },
+                            signExtension: undefined,
+                            signName: null,
+                            signOtherTitle: null,
+                            signTitle: {
+                                text: null,
+                            },
+                            signTitles: [{ text: null }],
+                            spousalConsent: {
+                                text: null,
+                            },
+                        },
+                    ],
+                },
+            });
+            expect(errors).toEqual({
+                systematicStartDate: 'sswProgram.warnings.systematicStartDate',
+            });
+        });
     });
 
     it('should have cslnCheckStates as expected', () => {
