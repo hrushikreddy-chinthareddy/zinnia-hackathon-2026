@@ -14,7 +14,7 @@ export function PreviewStep<T>({
   return (
     <div className="pom_content-wrapper">
       <h3>Review the edits</h3>
-      {Object.keys(formValues).map((key) => (
+      {Object.keys(formValues).map(key => (
         <div key={key}>
           <Label>{formValues[key as keyof T].label}</Label>
           {formValues[key as keyof T].value}

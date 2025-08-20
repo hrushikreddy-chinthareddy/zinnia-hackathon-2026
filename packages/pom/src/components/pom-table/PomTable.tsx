@@ -18,7 +18,7 @@ export type PomTableProps<T> = {
 };
 
 const createExpandedContent = <T,>(rows: PomTableRow<T>[]) => {
-  return rows.map((row) => {
+  return rows.map(row => {
     return (
       <TableRow>
         {Object.entries(row).map(([key, value]) => {
