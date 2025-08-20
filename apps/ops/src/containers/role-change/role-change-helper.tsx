@@ -671,7 +671,9 @@ export const validate = (
     if (partyType === PartyType.INDIVIDUAL) {
         if ([PartyRole.PAYOR, PartyRole.THIRDPARTYDESIGNEE].includes(role)) {
             if (!firstName?.trim()) {
-                currentErrors['name'] = t('formValidations.name', { roleLabel });
+                currentErrors['name'] = t('formValidations.name', {
+                    roleLabel,
+                });
             }
         } else {
             const allowedRoles: (Roles | PartyRole)[] = [

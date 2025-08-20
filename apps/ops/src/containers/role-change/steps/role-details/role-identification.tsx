@@ -397,7 +397,8 @@ const RoleIdentification = ({
                                 label={t('firstName') as string}
                                 message={
                                     currentErrors?.name &&
-                                    !firstNameExist && !isReadOnly
+                                    !firstNameExist &&
+                                    !isReadOnly
                                         ? t('formValidations.firstName')
                                         : ''
                                 }

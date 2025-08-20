@@ -176,9 +176,9 @@ describe('AddressDetails', () => {
 
         const { debug } = render(
             <RoleChangeProvider>
-              <AddressDetails {...propsWithLines} />
+                <AddressDetails {...propsWithLines} />
             </RoleChangeProvider>
-          );
+        );
 
         debug();
 

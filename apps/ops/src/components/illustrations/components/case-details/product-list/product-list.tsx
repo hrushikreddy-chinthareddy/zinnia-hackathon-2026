@@ -26,6 +26,37 @@ import IllustrationProductItem from './product-item';
 import styles from './product-list.module.css';
 import EappContainer from '../../eapp/eapp-container';
 
+export function isJuvenile(clientCase: IllustrationsClientCase): boolean {
+    const dob = new Date(clientCase.insuredDetails?.dateOfBirth || '');
+
+    if (!dob || dob.toString() === 'Invalid Date') {
+        return false; // no DOB provided, cannot determine age
+    }
+
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+
+    const hasHadBirthdayThisYear =
+        today.getMonth() > dob.getMonth() ||
+        (today.getMonth() === dob.getMonth() &&
+            today.getDate() >= dob.getDate());
+
+    const exactAge = hasHadBirthdayThisYear ? age : age - 1;
+
+    return exactAge < 18;
+}
+
+export function findAvailableProducts(
+    products: Product[],
+    clientCase: IllustrationsClientCase
+): Product[] {
+    return products.filter(
+        (product) =>
+            product.availableToSell &&
+            !(product.productType === 'TERM' && isJuvenile(clientCase))
+    );
+}
+
 type ProductWithIllustration = Product & {
     illustrations: IllustrationSummary[];
 };
@@ -75,6 +106,7 @@ const IllustrationProductList = ({
         }
     };
 
+    // if a carrierProductId is passed to the component, open the new illustraion panel for that product
     useEffect(() => {
         if (!isError && products.length > 0 && carrierProductId) {
             const preselectedProduct = products.find(
@@ -114,9 +146,7 @@ const IllustrationProductList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [illustrations, products]);
 
-    const availableProducts = products.filter(
-        (product) => product.availableToSell
-    );
+    const availableProducts = findAvailableProducts(products, clientCase);
 
     const productsWithIllustrations: ProductWithIllustration[] =
         availableProducts.map((product) => {
