@@ -369,7 +369,11 @@ const illustrationPayloadOptionsSchema = t.object(
     t.optionalProperty('premium', illustrationPayloadPremiumSchema),
     t.optionalProperty('targetCashValueOption', t.enum(TargetCashValueOption)),
     t.optionalProperty('targetCashValueAge', t.number),
-    t.optionalProperty('targetCashValueAmount', t.union(t.number, t.undefined))
+    t.optionalProperty('targetCashValueAmount', t.union(t.number, t.undefined)),
+    t.optionalProperty(
+        'juvenileReclassification',
+        t.union(t.boolean, t.undefined)
+    )
 );
 
 const illustrationPayloadReportsSchema = t.object(

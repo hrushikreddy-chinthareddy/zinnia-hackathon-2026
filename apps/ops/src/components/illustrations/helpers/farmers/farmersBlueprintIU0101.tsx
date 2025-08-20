@@ -1294,10 +1294,11 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     answerNodeId:
                                         'non-nicotine-conversion-at-age-18',
+                                    outputPath: 'nonNicotineConversionAtAge18',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 12,

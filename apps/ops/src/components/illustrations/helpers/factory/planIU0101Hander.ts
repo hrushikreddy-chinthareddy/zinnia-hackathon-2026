@@ -275,7 +275,11 @@ const farmersEntitiesSchema = t.object(
     t.optionalProperty('scheduleDistributions', t.union(t.string, t.undefined)),
     distributionAmountTableSchema,
 
-    t.optionalProperty('distributionOptions', t.union(t.string, t.undefined))
+    t.optionalProperty('distributionOptions', t.union(t.string, t.undefined)),
+    t.optionalProperty(
+        'nonNicotineConversionAtAge18',
+        t.union(t.array(t.string), t.undefined)
+    )
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -671,6 +675,11 @@ function createIllustrationPayload(
                 isMec: values.mec1035,
                 carryOverLoan: 1,
             },
+            ...(values.nonNicotineConversionAtAge18 && {
+                juvenileReclassification:
+                    values.nonNicotineConversionAtAge18[0] ===
+                    'non-NicotineConversionAtAge18',
+            }),
         },
         fundAllocations: [
             {
