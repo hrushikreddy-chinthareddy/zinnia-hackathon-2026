@@ -127,9 +127,14 @@
                                             "type": "string",
                                             "title": "Case ID",
                                             "minLength": 12
+                                        },
+                                        "isDuplicate": {
+                                            "type": "string",
+                                            "title": "Is this document a duplicate?",
+                                            "$ref": "#/definitions/isDuplicateEnum"
                                         }
                                     },
-                                    "required": ["caseId"]
+                                    "required": ["caseId", "isDuplicate"]
                                 },
                                 "else": {
                                     "properties": {
