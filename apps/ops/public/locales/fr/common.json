@@ -7246,8 +7246,7 @@
             "noProductsIconAlt": "Icône d'alerte sans produit",
             "noProductsAvailable": "Impossible de charger les illustrations. Veuillez réessayer ultérieurement.",
             "addIllustrationButton": "Add illustration button",
-            "seeProducts": "Ajouter un produit",
-            "addIllustration": "Ajouter une illustration"
+            "seeProducts": "Ajouter un produit"
         },
         "caseSummary": {
             "edit": "Modifier",

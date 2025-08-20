@@ -72,7 +72,6 @@ describe.skip('HistoryEventCard Component', () => {
                     openSecondarySideSheet: () => {},
                     onClose: () => {},
                     events: emitter,
-                    header: undefined,
                 }}
             >
                 <HistoryEventCard
