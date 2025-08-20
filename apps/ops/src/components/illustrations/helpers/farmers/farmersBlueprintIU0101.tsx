@@ -5408,7 +5408,7 @@ export const farmersBlueprintIU0101 = {
                                 'custom-dd916e09-5882-4f7f-a125-4b00efd38af3',
                             text: {},
                             title: {
-                                en: 'Cost-free riders',
+                                en: 'Additional premium-free riders available',
                             },
                             isCustom: true,
                             fields: [
