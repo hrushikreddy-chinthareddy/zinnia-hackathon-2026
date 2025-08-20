@@ -2032,16 +2032,18 @@
             "startNotification": "Historial",
             "sendTo": "Enviar a",
             "contactMethod": "Método de contacto",
-            "scheduledNotification": "Intento n°{{followup}} de 4 programado para el {{date}}",
+            "scheduledNotification": "Intento {{followup}} programado para {{date}}",
             "beneficiaryDeceasedNotification": "Beneficiario confirmado fallecido el {{date}}",
             "completedNotification": "Paquete de defunción recibido el {{date}}",
-            "sendNotification": "Intento n°{{followup}} de 4",
-            "resetNotification": "Método de notificación cambiado de {{old}} a {{new}} el {{date}}",
-            "resetNotificationUpdate": "{{method}} Actualizado el {{date}}",
-            "resendNotification": "Solicitud {{action}} el {{date}}",
+            "sendNotification": "Intento {{followup}}",
+            "resetNotification": "Método de notificación cambiado de {{old}} a {{new}} {{date}}",
+            "resetNotificationUpdate": "{{method}} Actualizado {{date}}",
+            "resendNotification": "Solicitud de {{action}} {{date}}.",
             "contactNotEstablished": "Contacto no establecido",
             "contactEstablished": "Contacto establecido",
-            "beneficiaryDeceased": "Beneficiario fallecido"
+            "beneficiaryDeceased": "Beneficiario fallecido",
+            "scheduledTooltip": "{{followup}} intentos restantes hasta que comience el proceso de escheatment a menos que se establezca contacto.",
+            "finalTooltip": "Último intento restante a menos que se establezca contacto."
         }
     },
     "caseRenewal": {
@@ -6076,13 +6078,13 @@
         }
     },
     "transactionListing": {
-        "loadingTransactions": "Recuperando transacciones detenidas...",
+        "loadingTransactions": "Recuperando transacciones...",
         "errorGettingTransactions": "No se pudieron recuperar los datos de las transacciones detenidas.",
         "uncashedTransactions": "Estado de cheques pendientes",
         "stoppedTransactions": "Transacciones detenidas",
         "noUncashedTransactions": "No hay cheques sin cobrar disponibles para este contrato.",
         "identificationInProgress": "La identificación de cheque(s) pendientes está en curso.",
-        "noUncashedTransactionsTableHead": "Contrato #{{contractNumber}}",
+        "contractNumberHeading": "Contrato #{{contractNumber}}",
         "noTransactionsFoundTitle": "No se encontraron transacciones",
         "noTransactionsMessage": "No hay transacciones relacionadas con este evento.",
         "labels": {
@@ -6090,12 +6092,23 @@
             "terminated": "Finalizado",
             "deleteFailed": "Eliminar fallido",
             "terminateFailed": "Terminar fallido",
-            "on": "En"
+            "on": "En",
+            "outstanding": "Outstanding",
+            "stopped": "Stopped",
+            "reversed": "Reversed",
+            "checkToEstate": "Check to Estate"
         },
-        "tableColumns": {
-            "transaction": "Transacción",
-            "status": "Estado",
-            "amount": "Cantidad"
+        "tooltips": {
+            "outstanding": "Se identificó un pago no cobrado en el sistema financiero.",
+            "stopped": "El pago se detuvo con éxito en el sistema financiero.",
+            "checkToEstate": "Dado que el pago se envió antes de la fecha de fallecimiento, el cheque se envió al patrimonio.",
+            "reversed": "Dado que el pago se envió después de la fecha de fallecimiento, se revirtió y se agregó nuevamente al acuerdo del beneficio por fallecimiento."
+        },
+        "cardLabels": {
+            "checkDate": "Consultar fecha",
+            "amount": "Cantidad",
+            "check": "Controlar #{{number}}",
+            "contract": "Contrato #{{number}}"
         }
     },
     "deathNotification": {
@@ -6649,6 +6662,10 @@
                     "yes": "Sí",
                     "no": "No"
                 }
+            },
+            "formErrors": {
+                "invalidDate": "Introduzca una fecha válida.",
+                "futureDate": "La fecha de muerte no puede ser futura."
             }
         },
         "notificationMethod": {

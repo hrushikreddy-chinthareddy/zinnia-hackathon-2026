@@ -5,6 +5,7 @@ import Badge, { BadgeProps } from '../badge';
 export interface BadgeWithTooltipProps extends BadgeProps {
     tooltip: string;
     tooltipPlacement?: PopoverPlacement;
+    testId?: string;
 }
 
 const BadgeWithTooltip = ({
@@ -15,6 +16,7 @@ const BadgeWithTooltip = ({
     tooltip,
     tooltipPlacement = PopoverPlacement.TopRight,
     variant,
+    testId,
 }: BadgeWithTooltipProps) => {
     return (
         <div className={className}>
@@ -24,6 +26,7 @@ const BadgeWithTooltip = ({
                     label={label}
                     rounded={rounded}
                     variant={variant}
+                    testId={testId}
                 />
             </Tooltip>
         </div>

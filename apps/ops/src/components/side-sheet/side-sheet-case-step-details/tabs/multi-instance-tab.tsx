@@ -21,10 +21,8 @@ import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/ico
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 
 import { BeneSideSheetStep } from './bene-notification-tab/bene-notification-tab';
+import { BeneNotification } from './transactions-step-additional-data.types';
 import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
-
-const INITIAL_BENE_NOTIFICATION = 'initiateBeneNotification';
-const BENE_ENTITY_TYPE = 'bene';
 
 const getStepStatusText = (
     step: TransformedStep,
@@ -203,7 +201,7 @@ export default function MultiInstanceTab({
         substep: TransformedStep
     ) => {
         switch (entityType?.toLowerCase()) {
-            case BENE_ENTITY_TYPE:
+            case BeneNotification.BENE_ENTITY_TYPE:
                 return <BeneSideSheetStep step={substep} />;
             default:
                 return <SideSheetStep step={substep} />;
@@ -213,7 +211,7 @@ export default function MultiInstanceTab({
     return (
         <div {...rest}>
             {step.stepRaw.instanceInfo?.entityType?.toLowerCase() !==
-                BENE_ENTITY_TYPE && (
+                BeneNotification.BENE_ENTITY_TYPE && (
                 <Typography variant={TypographyVariant.H3}>
                     {t('caseOverview.sidesheet.multiInstance')}
                 </Typography>
@@ -222,7 +220,8 @@ export default function MultiInstanceTab({
                 {step.substeps?.map((substep, index) => {
                     // need to do this as we are getting substeps with same event id which is showing duplicate ids on UI
                     if (
-                        step.parentStage.id === INITIAL_BENE_NOTIFICATION &&
+                        step.parentStage.id ===
+                            BeneNotification.INITIAL_BENE_NOTIFICATION &&
                         index >= 1
                     ) {
                         return;

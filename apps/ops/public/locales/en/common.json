@@ -663,7 +663,6 @@
                 "perStirpes": "Per Stirpes",
                 "irrevocable": "Irrevocable"
             }
-
         },
         "confirm": {
             "close": "Close",
@@ -2050,16 +2049,18 @@
             "startNotification": "History",
             "sendTo": "Send to",
             "contactMethod": "Contact Method",
-            "scheduledNotification": "Attempts #{{followup}} of 4 scheduled for {{date}}",
+            "scheduledNotification": "Attempt {{followup}} scheduled for {{date}}",
             "beneficiaryDeceasedNotification": "Beneficiary confirmed deceased on {{date}}",
             "completedNotification": "Death packet received on {{date}}",
-            "sendNotification": "Attempts #{{followup}} of 4",
+            "sendNotification": "Attempt {{followup}}",
             "resetNotification": "Notification method changed from {{old}} to {{new}} {{date}}",
             "resetNotificationUpdate": "{{method}} Updated {{date}}",
             "resendNotification": "{{action}} Request {{date}}.",
             "contactNotEstablished": "Contact Not Established",
             "contactEstablished": "Contact Established",
-            "beneficiaryDeceased": "Beneficiary deceased"
+            "beneficiaryDeceased": "Beneficiary deceased",
+            "scheduledTooltip": "{{followup}} attempts remaining until escheatment process begins unless contact is established.",
+            "finalTooltip": "Last attempt remaining unless contact is established."
         }
     },
     "caseRenewal": {
@@ -6266,13 +6267,13 @@
         }
     },
     "transactionListing": {
-        "loadingTransactions": "Retrieving stopped transactions...",
+        "loadingTransactions": "Retrieving transactions...",
         "errorGettingTransactions": "Stopped transactions data couldn't be retrieved.",
-        "uncashedTransactions": "Outstanding Checks Status",
+        "uncashedTransactions": "Uncashed Checks",
         "stoppedTransactions": "Stopped Transactions",
         "noUncashedTransactions": "No uncashed checks available for this contract.",
         "identificationInProgress": "Identification of outstanding check(s) is currently in progress.",
-        "noUncashedTransactionsTableHead": "Contract #{{contractNumber}}",
+        "contractNumberHeading": "Contract #{{contractNumber}}",
         "noTransactionsFoundTitle": "No transactions were found",
         "noTransactionsMessage": "There are no transactions related with this event.",
         "labels": {
@@ -6286,11 +6287,17 @@
             "reversed": "Reversed",
             "checkToEstate": "Check to Estate"
         },
-        "tableColumns": {
-            "transaction": "Transaction",
-            "checkNo": "Check Number / Date",
-            "status": "Status",
-            "amount": "Amount"
+        "tooltips": {
+            "outstanding": "An uncashed payment was identified in the finance system.",
+            "stopped": "The payment was successfully stopped in the finance system.",
+            "checkToEstate": "Since the payment was sent before the date of death, the check was sent to the estate.",
+            "reversed": "Since the payment was sent after the date of death, it was reversed and added back to the death benefit settlement."
+        },
+        "cardLabels": {
+            "checkDate": "Check Date",
+            "amount": "Amount",
+            "check": "Check #{{number}}",
+            "contract": "Contract #{{number}}"
         }
     },
     "deathNotification": {
@@ -6844,6 +6851,10 @@
                     "yes": "Yes",
                     "no": "No"
                 }
+            },
+            "formErrors": {
+                "invalidDate": "Enter valid date.",
+                "futureDate": "Date of Death cannot be in the future."
             }
         },
         "notificationMethod": {

@@ -2,7 +2,6 @@ import {
     INotification,
     NotificationStatus,
     NotificationsTransactionData,
-    FollowupId,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 
 export const getSendNotifications = (notifications: INotification[]) => {
@@ -18,7 +17,6 @@ export const getNextScheduledNotifications = (
         notifications.find(
             (notification) =>
                 notification.send === false &&
-                notification.followupId !== FollowupId.fifth &&
                 notification.followupStatus !== NotificationStatus.Reset &&
                 notification.followupStatus !== NotificationStatus.Resend
         ) || null
@@ -64,4 +62,22 @@ export const getFilteredTransactions = (
         received,
         hasExceptionOrNigo,
     };
+};
+
+export const getAttemptCount = (
+    notifications: INotification[],
+    currentIndex: number
+): number => {
+    let count = 0;
+    for (let i = 0; i <= currentIndex; i++) {
+        const n = notifications[i];
+        if (!n) continue;
+        if (n.send) {
+            count++;
+        } else if (i === currentIndex && !n.send && !n.receive) {
+            count++;
+        } else {
+        }
+    }
+    return count;
 };

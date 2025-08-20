@@ -2027,16 +2027,18 @@
             "startNotification": "Historique",
             "sendTo": "Envoyer à",
             "contactMethod": "Méthode de contact",
-            "scheduledNotification": "Tentative n°{{followup}} sur 4 prévue pour le {{date}}",
+            "scheduledNotification": "Tentative {{followup}} programmée pour {{date}}",
             "beneficiaryDeceasedNotification": "Bénéficiaire confirmé décédé le {{date}}",
             "completedNotification": "Dossier de décès reçu le {{date}}",
-            "sendNotification": "Tentative n°{{followup}} sur 4",
-            "resetNotification": "Méthode de notification changée de {{old}} à {{new}} le {{date}}",
-            "resetNotificationUpdate": "{{method}} Mis à jour le {{date}}",
-            "resendNotification": "Demande {{action}} le {{date}}",
+            "sendNotification": "Tentative {{followup}}",
+            "resetNotification": "Méthode de notification changée de {{old}} à {{new}} {{date}}",
+            "resetNotificationUpdate": "{{method}} Mis à jour {{date}}",
+            "resendNotification": "Demande de {{action}} {{date}}.",
             "contactNotEstablished": "Contact non établi",
             "contactEstablished": "Contact établi",
-            "beneficiaryDeceased": "Bénéficiaire décédé"
+            "beneficiaryDeceased": "Bénéficiaire décédé",
+            "scheduledTooltip": "{{followup}} tentatives restantes avant le début du processus d'escheatment sauf si un contact est établi.",
+            "finalTooltip": "Dernière tentative restante sauf si un contact est établi."
         }
     },
     "caseRenewal": {
@@ -6169,13 +6171,13 @@
         }
     },
     "transactionListing": {
-        "loadingTransactions": "Récupération des transactions arrêtées...",
+        "loadingTransactions": "Récupération des transactions...",
         "errorGettingTransactions": "Les données des transactions arrêtées n'ont pas pu être récupérées.",
         "uncashedTransactions": "Statut des chèques en attente",
         "stoppedTransactions": "Transactions arrêtées",
         "noUncashedTransactions": "Aucun chèque non encaissé disponible pour ce contrat.",
         "identificationInProgress": "L'identification des chèque(s) en attente est en cours.",
-        "noUncashedTransactionsTableHead": "Contrat #{{contractNumber}}",
+        "contractNumberHeading": "Contrat #{{contractNumber}}",
         "noTransactionsFoundTitle": "Aucune transaction trouvée",
         "noTransactionsMessage": "Il n'y a pas de transactions liées à cet événement.",
         "labels": {
@@ -6189,11 +6191,17 @@
             "reversed": "Annulé",
             "checkToEstate": "Chèque au patrimoine"
         },
-        "tableColumns": {
-            "transaction": "Transaction",
-            "checkNo": "Numéro de chèque / Date",
-            "status": "Statut",
-            "amount": "Montant"
+        "tooltips": {
+            "outstanding": "Un paiement non encaissé a été identifié dans le système financier.",
+            "stopped": "Le paiement a été arrêté avec succès dans le système financier.",
+            "checkToEstate": "Étant donné que le paiement a été envoyé avant la date du décès, le chèque a été envoyé à la succession.",
+            "reversed": "Étant donné que le paiement a été envoyé après la date du décès, il a été annulé et ajouté au règlement de la prestation de décès."
+        },
+        "cardLabels": {
+            "checkDate": "Date de vérification",
+            "amount": "Montant",
+            "check": "Vérifier #{{number}}",
+            "contract": "Contracter #{{number}}"
         }
     },
     "deathNotification": {
@@ -6740,6 +6748,10 @@
                     "yes": "Oui",
                     "no": "Non"
                 }
+            },
+            "formErrors": {
+                "invalidDate": "Entrez une date valide.",
+                "futureDate": "La date du décès ne peut pas être dans le futur."
             }
         },
         "notificationMethod": {

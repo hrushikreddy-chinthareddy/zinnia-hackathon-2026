@@ -184,12 +184,20 @@ export const DeathClaimNotificationStep = ({
         }
 
         setIsLoading(false);
-    }, [policy, notifiers, owners, beneficiaries, setCaseId, setSubmitFailed]);
+    }, [
+        policy,
+        notifiers,
+        owners,
+        beneficiaries,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+        setCaseId,
+        setSubmitFailed,
+    ]);
 
     const handleStepContinue = useCallback(async () => {
         const errors: FormValidationErrors = {};
         if (!isNullEmptyOrUndefined(notifiers?.notifierRole)) {
-            //} && notifiers?.notifierRole as RoleType !== RoleType.Other) {
             if (
                 isNullEmptyOrUndefined(notifiers?.party?.partyId) &&
                 !isNewBene &&
@@ -328,6 +336,7 @@ export const DeathClaimNotificationStep = ({
                         deceasedData={owners}
                         handleDeceased={handleOwners}
                         selectedNotifierPartyId={notifiers?.party?.partyId}
+                        setFormErrors={setFormErrors}
                     />
                 )}
                 {formErrors['deceased'] && (

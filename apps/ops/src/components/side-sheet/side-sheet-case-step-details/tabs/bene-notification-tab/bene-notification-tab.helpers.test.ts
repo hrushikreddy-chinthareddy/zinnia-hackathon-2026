@@ -2,6 +2,7 @@ import {
     getSendNotifications,
     getNextScheduledNotifications,
     getFilteredTransactions,
+    getAttemptCount,
 } from './bene-notification-tab.helpers';
 import {
     INotification,
@@ -147,6 +148,47 @@ describe('##bene-notification-tab.helpers', () => {
             expect(result.transactions).toEqual([]);
             expect(result.received).toBe(false);
             expect(result.hasExceptionOrNigo).toBe(false);
+        });
+    });
+
+    describe('#getAttemptCount', () => {
+        it('should count only send=true notifications up to the current index', () => {
+            const notifications: INotification[] = [
+                { send: true } as INotification,
+                { send: false, receive: true } as INotification,
+                { send: true } as INotification,
+                { send: false, receive: false } as INotification,
+            ];
+            const currentIndex = 3;
+
+            const result = getAttemptCount(notifications, currentIndex);
+            expect(result).toBe(3);
+        });
+
+        it('should NOT count non-send and already received notifications', () => {
+            const notifications: INotification[] = [
+                { send: false, receive: true } as INotification,
+                { send: false, receive: true } as INotification,
+            ];
+            const currentIndex = 1;
+
+            const result = getAttemptCount(notifications, currentIndex);
+            expect(result).toBe(0);
+        });
+
+        it('should only count currentIndex if send and receive are false', () => {
+            const notifications: INotification[] = [
+                { send: false, receive: false } as INotification,
+            ];
+            const currentIndex = 0;
+
+            const result = getAttemptCount(notifications, currentIndex);
+            expect(result).toBe(1);
+        });
+
+        it('should handle empty notifications list', () => {
+            const result = getAttemptCount([], 0);
+            expect(result).toBe(0);
         });
     });
 });
