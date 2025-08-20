@@ -29,7 +29,10 @@ import {
     AdditionalAddressLine,
     getNewAddressTypeOptions,
 } from '@deps/containers/people-data-cards/address-card/side-sheet/side-sheet-address.helpers';
-import { ExtendedAddress } from '@deps/contexts/RoleChangeContext';
+import {
+    ExtendedAddress,
+    useRoleChange,
+} from '@deps/contexts/RoleChangeContext';
 import { getStateCodes } from '@deps/helpers/states.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 
@@ -60,6 +63,7 @@ function AddressDetails({
     });
     const { t: defaultT } = useTranslation();
 
+    const { currentErrors, setCurrentErrors } = useRoleChange();
     const addressTypeOptions = getNewAddressTypeOptions({ t: defaultT });
     const stateOptions = getStateCodes().map((state) => ({
         label: state,
@@ -76,18 +80,7 @@ function AddressDetails({
     const isDelete = address?.remove == true;
     const disabled = isDelete || isReadOnly;
 
-    const addressCheck =
-        (address.addressLine1?.trim() || address.addressLine2?.trim()) &&
-        !disabled;
-
     const roleCheck = role.toLowerCase().includes('owner');
-
-    const currentErrors = {
-        city: addressCheck && !address.city?.trim(),
-        state: addressCheck && !address.state?.trim(),
-        zipCode: addressCheck && !address.zipCode?.trim(),
-        addressLine1: roleCheck && !address?.addressLine1?.trim() && !disabled,
-    };
 
     const addressChangeHandler = (
         key: AddressField,
