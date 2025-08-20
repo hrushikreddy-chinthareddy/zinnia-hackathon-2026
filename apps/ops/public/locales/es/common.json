@@ -517,12 +517,14 @@
                 "ssn": "SSN",
                 "gender": "Género",
                 "dateOfBirth": "Fecha de Nacimiento",
+                "trustDate": "Fecha del fideicomiso",
                 "male": "Masculino",
                 "female": "Femenino",
                 "formValidations": {
                     "firstName": "El nombre es obligatorio",
                     "lastName": "El apellido es obligatorio",
-                    "last": "El apellido es obligatorio"
+                    "last": "El apellido es obligatorio",
+                    "trustDateRequired": "La fecha de fideicomiso es requerida"
                 }
             },
             "contactInfo": {

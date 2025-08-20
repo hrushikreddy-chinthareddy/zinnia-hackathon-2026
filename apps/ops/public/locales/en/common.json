@@ -509,12 +509,14 @@
                 "ssn": "SSN",
                 "gender": "Gender",
                 "dateOfBirth": "Date of birth",
+                "trustDate":"Trust date",
                 "male": "Male",
                 "female": "Female",
                 "formValidations": {
                     "firstName": "First name is required",
                     "lastName": "Name is required",
-                    "last": "Last name is required"
+                    "last": "Last name is required",
+                    "trustDateRequired": "Trust date is required"
                 }
             },
             "contactInfo": {

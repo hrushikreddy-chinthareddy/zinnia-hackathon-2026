@@ -438,7 +438,7 @@ const BeneficiaryIdentification = ({
                                         }
                                         size={FieldSize.Small}
                                         type={FieldType.BaseActive}
-                                        value=""
+                                        value={party.trustDate || null}
                                         maxLength={10}
                                         disabled={isReadOnly}
                                         message={
