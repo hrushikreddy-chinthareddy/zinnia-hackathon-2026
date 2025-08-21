@@ -7,7 +7,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
@@ -61,12 +61,11 @@ export const SearchFieldContainer = ({
     };
 
     const [hasValue, setHasValue] = useState(false);
+    useEffect(() => {
+        setHasValue(!!inputValue);
+    }, [inputValue]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value !== '') {
-            setHasValue(true);
-        } else {
-            setHasValue(false);
-        }
         if (onChange) {
             const text = e?.target?.value || '';
             onChange(text, policyKey as PolicySearchKeys);
