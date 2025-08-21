@@ -32,6 +32,8 @@ const annuityPageTitles: Partial<Record<RouteKey, string>> = {
   [RouteKey.SURRENDER]: 'Surrender Contract',
 };
 
+// TODO: Is there a reason that we need source as a property if the value
+// always matches the RouteKey?
 export const routeMap: Record<RouteKey, RouteMap> = {
   [RouteKey.ACCOUNT]: {
     destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account',
@@ -136,6 +138,19 @@ export const routeMap: Record<RouteKey, RouteMap> = {
     source: '/withdrawals',
     title: 'Withdrawals',
   },
+};
+
+/**
+ * Returns the key of the first route in routeMap whose source is included in the given path.
+ * If no route matches, returns undefined.
+ *
+ * @param {string} path - The path to search for a matching route.
+ * @return {RouteKey | undefined} The key of the first matching route, or undefined.
+ */
+export const getRouteKeyFromUrl = (path: string) => {
+  return Object.entries(routeMap).find(([, { source }]) => {
+    return path.includes(source);
+  })?.[0];
 };
 
 export const getRedirectUrl = (
