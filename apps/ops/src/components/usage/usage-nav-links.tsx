@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 export enum UsageTabs {
     LOGINS = 'logins',
     PAGE_VIEWS = 'page-views',
-    ACTIVITY = 'activity',
+    // ACTIVITY = 'activity',
 }
 const DEFAULT_TAB = UsageTabs.LOGINS;
 
@@ -69,6 +69,8 @@ export const UsageTabNav: FC<PropsWithChildren> = ({ children }) => {
                     />
                     {toTitleCase('page views')}
                 </TabTrigger>
+                {/*
+                NOTE: This is disabled as the data provided is inaccurate: DEPU-6502 - MR
                 <TabTrigger value={UsageTabs.ACTIVITY}>
                     <Icon
                         type={IconType.COLLECTION}
@@ -77,7 +79,7 @@ export const UsageTabNav: FC<PropsWithChildren> = ({ children }) => {
                         className="hidden lg:block"
                     />
                     {toTitleCase('activity')}
-                </TabTrigger>
+                </TabTrigger> */}
             </TabList>
             {children}
         </TabGroup>

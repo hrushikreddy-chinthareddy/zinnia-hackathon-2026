@@ -6,7 +6,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect } from 'react';
 
 import { PageHead } from '@deps/components/page-title';
-import { Activity } from '@deps/components/usage/activity/activity';
 import { Logins } from '@deps/components/usage/logins/logins';
 import { UsageResponsiveLayout } from '@deps/components/usage/logins/usage-responsive-layout';
 import { PageViews } from '@deps/components/usage/page-views/page-views';
@@ -64,9 +63,11 @@ const UsagePage = ({ user }: UsagePageProps) => {
                         <TabContent value={UsageTabs.PAGE_VIEWS}>
                             <PageViews />
                         </TabContent>
+                        {/*
+                        NOTE: This is disabled as the data provided is inaccurate: DEPU-6502 - MR
                         <TabContent value={UsageTabs.ACTIVITY}>
                             <Activity />
-                        </TabContent>
+                        </TabContent> */}
                     </div>
                 </UsageTabNav>
             </UsageResponsiveLayout>
