@@ -39,21 +39,20 @@ export const useIllustrationActions = () => {
             );
             return { data: { eAppId: result?.eAppId } };
         },
+        onMutate: () => setIsLoadingSelectForApplication(true),
         onSuccess: ({
             data: { eAppId },
         }: {
             data: { eAppId: string | undefined };
         }) => {
-            if (!eAppId) return; // TODO: handle rollback when error
-            setSelectedIllustrationOnNewBusiness.mutateAsync({
+            if (!eAppId) return; // TODO: handle rollback on error
+            return setSelectedIllustrationOnNewBusiness.mutateAsync({
                 eAppId,
                 illustrationId: selectedIllustration?.illustration.id || '',
                 newBusinessCaseId: newBusinessCaseId || '',
             });
         },
-        onError: () => {
-            setIsLoadingSelectForApplication(false);
-        },
+        onSettled: () => setIsLoadingSelectForApplication(false),
     });
 
     const setSelectedIllustrationOnNewBusiness = useMutation({
@@ -77,7 +76,6 @@ export const useIllustrationActions = () => {
             );
         },
         onSuccess: () => {
-            setIsLoadingSelectForApplication(false);
             const { clientCaseId, illustrationId } = router.query;
 
             queryClient.invalidateQueries({
@@ -99,9 +97,6 @@ export const useIllustrationActions = () => {
             document.body.appendChild(myAnchor);
             myAnchor.click();
             document.body.removeChild(myAnchor);
-        },
-        onError: () => {
-            setIsLoadingSelectForApplication(false);
         },
     });
 
