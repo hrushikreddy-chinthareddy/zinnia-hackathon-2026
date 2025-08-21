@@ -37,6 +37,8 @@ export const CaseDetailsTabValues: { [key: string]: string } = {
     documents: 'documents',
     notes: 'notes',
     'call-logs': 'call-logs',
+    'raw-data': 'raw-data',
+    events: 'events',
 };
 
 export const PolicyActivityTabValues: { [key: string]: string } = {
