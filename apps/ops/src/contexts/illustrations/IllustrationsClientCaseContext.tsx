@@ -39,7 +39,7 @@ const defaultFilters: ClientCaseSearchInputs = {
     limit: DEFAULT_LIMIT,
     offset: 0,
     sortBy: 'lastModified',
-    sortDir: 'desc',
+    sortDir: 'descending',
 };
 
 export function IllustrationsClientCaseProvider({
