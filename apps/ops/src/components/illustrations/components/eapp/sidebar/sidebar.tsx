@@ -33,6 +33,7 @@ export function Sidebar() {
     const { onSubmit, onQuickQuote, isError, isLoadingQuickQuote } =
         useSubmit();
     const { data } = useEapp();
+
     const isCompleted = useMemo(() => {
         return !renderingQuestionnaire.some((renderingSectionGroup) => {
             return !renderingSectionGroup.completed;

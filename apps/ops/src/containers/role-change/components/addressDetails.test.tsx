@@ -1,6 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AddressType, Country, State } from '@zinnia/api-types/types/sor';
 
+import { RoleChangeProvider } from '@deps/contexts/RoleChangeContext';
+
 import AddressDetails from './addressDetails';
 
 jest.mock('next-i18next', () => ({
@@ -79,7 +81,11 @@ describe('AddressDetails', () => {
     });
 
     it('renders all main fields and radio buttons', () => {
-        render(<AddressDetails {...baseProps} />);
+        render(
+            <RoleChangeProvider>
+                <AddressDetails {...baseProps} />
+            </RoleChangeProvider>
+        );
         expect(screen.getByLabelText('labels.address')).toBeInTheDocument();
         expect(screen.getByLabelText('labels.city')).toBeInTheDocument();
         expect(screen.getByLabelText('labels.zip')).toBeInTheDocument();
@@ -89,7 +95,11 @@ describe('AddressDetails', () => {
     });
 
     it('calls handleAddressChange on address line 1 input', () => {
-        render(<AddressDetails {...baseProps} />);
+        render(
+            <RoleChangeProvider>
+                <AddressDetails {...baseProps} />
+            </RoleChangeProvider>
+        );
         const input = screen.getByLabelText('labels.address');
         fireEvent.change(input, { target: { value: '456 Broadway' } });
         expect(baseProps.handleAddressChange).toHaveBeenCalledWith(
@@ -101,7 +111,11 @@ describe('AddressDetails', () => {
     });
 
     it('calls handleAddressChange on city input', () => {
-        render(<AddressDetails {...baseProps} />);
+        render(
+            <RoleChangeProvider>
+                <AddressDetails {...baseProps} />
+            </RoleChangeProvider>
+        );
         const input = screen.getByLabelText('labels.city');
         fireEvent.change(input, { target: { value: 'New City' } });
         expect(baseProps.handleAddressChange).toHaveBeenCalledWith(
@@ -113,7 +127,11 @@ describe('AddressDetails', () => {
     });
 
     it('calls handleAddressChange on zip input and splits zip+ext', () => {
-        render(<AddressDetails {...baseProps} />);
+        render(
+            <RoleChangeProvider>
+                <AddressDetails {...baseProps} />
+            </RoleChangeProvider>
+        );
         const input = screen.getByLabelText('labels.zip');
         fireEvent.change(input, { target: { value: '543216789' } });
         expect(baseProps.handleAddressChange).toHaveBeenCalledWith(
@@ -131,7 +149,11 @@ describe('AddressDetails', () => {
     });
 
     it('calls handleAddressChange on address type change', () => {
-        render(<AddressDetails {...baseProps} />);
+        render(
+            <RoleChangeProvider>
+                <AddressDetails {...baseProps} />
+            </RoleChangeProvider>
+        );
         const businessRadio = screen.getByLabelText('Business');
         fireEvent.click(businessRadio);
         expect(baseProps.handleAddressChange).toHaveBeenCalledWith(
@@ -152,7 +174,11 @@ describe('AddressDetails', () => {
             },
         };
 
-        const { debug } = render(<AddressDetails {...propsWithLines} />);
+        const { debug } = render(
+            <RoleChangeProvider>
+                <AddressDetails {...propsWithLines} />
+            </RoleChangeProvider>
+        );
 
         debug();
 
@@ -170,7 +196,11 @@ describe('AddressDetails', () => {
     });
 
     it('calls handleAddressChange on removeAddress checkbox', () => {
-        render(<AddressDetails {...baseProps} />);
+        render(
+            <RoleChangeProvider>
+                <AddressDetails {...baseProps} />
+            </RoleChangeProvider>
+        );
         const checkbox = screen.getByLabelText('labels.removeAddress');
         fireEvent.click(checkbox);
         expect(baseProps.handleAddressChange).toHaveBeenCalledWith(

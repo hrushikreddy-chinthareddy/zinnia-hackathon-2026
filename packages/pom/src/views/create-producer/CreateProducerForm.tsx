@@ -83,7 +83,10 @@ export const CreateProducerForm = () => {
       : fullName;
 
   return (
-    <div id={PomStyles['producer-onboarding-maintenance']}>
+    <div
+      id={PomStyles['producer-onboarding-maintenance']}
+      className={styles.container}
+    >
       {mutation.isError && (
         <Error
           message={

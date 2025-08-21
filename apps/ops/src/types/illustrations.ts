@@ -34,7 +34,6 @@ export interface IllustrationSummary {
 export interface IllustrationAgentDetails {
     firstName?: string;
     lastName?: string;
-    agencyId?: string;
     sellingCode?: string;
     npn?: string;
     email?: string;

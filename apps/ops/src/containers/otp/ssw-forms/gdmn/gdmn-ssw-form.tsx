@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
+import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
@@ -25,7 +26,11 @@ import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 import SswEditSelection from '../ssw-edit-selection';
 import getGdmnConfig from './gdmn-ssw-form-helpers';
 
-export function GdmnSSWForm() {
+interface GdmnSSWFormProps {
+    productLine?: string;
+}
+
+export function GdmnSSWForm({ productLine }: GdmnSSWFormProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
@@ -41,7 +46,10 @@ export function GdmnSSWForm() {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         eSignatureFieldConfig,
+        cslnCheckStates,
+        productLineOptions,
     } = getGdmnConfig(t);
+
     const {
         formTpaAuthorization,
         setFormValidator,
@@ -53,6 +61,7 @@ export function GdmnSSWForm() {
         formESignatureData,
         setFormESignatureData,
         formErrors,
+        contractIssueState,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -122,6 +131,13 @@ export function GdmnSSWForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
             />
+            {(ownerStateOfResidence || contractIssueState) &&
+                [ownerStateOfResidence, contractIssueState].some(
+                    (state) => state && cslnCheckStates.includes(state)
+                ) &&
+                productLineOptions.includes(productLine ?? '') && (
+                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
+                )}
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}

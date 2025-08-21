@@ -232,32 +232,21 @@ body {
         font: var(--typography-nav-links);
         color: var(--color-base-text-text-link);
         text-decoration: none;
+
         &:hover {
             color: var(--color-states-hover-text-hover-text-link);
-        }
-        &:hover::after {
-            content: '';
-            background-color: var(--color-states-hover-text-hover-text-link);
-            height: 2px;
-            left: 0;
-            position: absolute;
-            width: 100%;
-        }
-    }
-    .nav-links,
-    .text-links {
-        &:hover::after {
+            text-decoration: underline;
             text-underline-offset: 5px;
-            bottom: -2px;
+            text-decoration-thickness: 2px;
+        }
+
+        [role='menuitem'] & {
+            text-decoration: none;
         }
     }
     .nav-links-sm,
     .text-links-sm {
         font: var(--typography-nav-links-sm);
-        &:hover::after {
-            text-underline-offset: 2px;
-            bottom: 1px;
-        }
     }
     .footer {
         font: var(--typography-content-footer);

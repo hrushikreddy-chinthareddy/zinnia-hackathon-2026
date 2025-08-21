@@ -187,24 +187,25 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
 
-            // parse the desire queryParam to lowercase and return it
-            const loweredCaseEAppIdQueryParam = Object.entries(
-                context.query
-            ).find(([key]) => key.toLowerCase() === 'eappid')?.[1];
+            const normalizedQuery = Object.fromEntries(
+                Object.entries(context.query).map(([key, value]) => [
+                    key.toLocaleLowerCase(),
+                    value,
+                ])
+            );
 
-            const _eAppId =
-                typeof loweredCaseEAppIdQueryParam === 'string'
-                    ? loweredCaseEAppIdQueryParam
-                    : '';
+            const eAppId = normalizedQuery?.eappid;
+            const hasSingleEappId = eAppId && typeof eAppId === 'string';
 
-            if (_eAppId) {
+            if (hasSingleEappId) {
                 return {
                     redirect: {
-                        destination: `/illustrations/client-cases/new?eappid=${_eAppId}`,
+                        destination: `/illustrations/client-cases/new?eappid=${eAppId}`,
                         permanent: false,
                     },
                 };
             }
+
             return {
                 props: {
                     locale,

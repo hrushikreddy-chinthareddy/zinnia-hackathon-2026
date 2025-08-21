@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query';
 import {
     Tooltip,
     Label,
@@ -16,7 +17,9 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { getUserDownlineBySellingCode } from '@deps/queries/tanstack/producerQueries/producerQueries';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+// import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
 import { IllustrationAgentDetails } from '@deps/types/illustrations';
 
 import styles from './agent-search.module.css';
@@ -28,39 +31,21 @@ interface DynamicObject {
 interface AgentSearchProps {
     currentAgentData: IllustrationAgentDetails;
     onSelectAgent: (args0: DynamicObject) => void;
+    mainAgencyId: string;
 }
-
-const MOCK_AGENTS_LIST: IllustrationAgentDetails[] = [
-    {
-        firstName: 'Tim',
-        lastName: 'Apple',
-        email: 'tim.apple@domain.com',
-        sellingCode: 'aa',
-        npn: 'a',
-    },
-    {
-        firstName: 'Cindy',
-        lastName: 'Mercer',
-        email: 'cmercer@domain.com',
-        sellingCode: 'bb',
-        npn: 'b',
-    },
-    {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@domain.com',
-        sellingCode: 'cc',
-        npn: 'c',
-    },
-];
 
 export const AgentSearch = ({
     currentAgentData,
     onSelectAgent,
+    mainAgencyId,
 }: AgentSearchProps) => {
+    // you should get the agencyId to create the client case.
+    // the initial agencyId || sellingCode is only for the inital search
+
+    // use this loggedInAgentAgencyId to search only on the agencies that the user is part of
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [isEditing, setIsEditing] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
     const [agentNameInput, setAgentNameInput] = useState('');
     const [searchResults, setSearchResults] = useState<
@@ -77,33 +62,46 @@ export const AgentSearch = ({
         styles.agentEmailResult
     );
 
-    const lookForAgent = () => {
-        const agentsFound = MOCK_AGENTS_LIST.filter((agent) => {
-            const agentFullName = `${agent.firstName} ${agent.lastName}`;
-            return agentFullName.toLocaleLowerCase().includes(agentNameInput);
-        });
-        return agentsFound;
-    };
-
-    // TODO replace with API call
-    const onSearch = () => {
-        setSearchResults([]);
-        setLoading(true);
-        setIsNotFound(false);
-        setTimeout(() => {
-            const result = lookForAgent();
-            if (result.length > 0) {
-                setSearchResults(result);
-            } else {
-                setIsNotFound(true);
+    const { mutate } = useMutation({
+        mutationFn: ({
+            agencyId,
+            agentName,
+        }: {
+            agencyId: string;
+            agentName: string;
+        }) => getUserDownlineBySellingCode(agencyId, agentName),
+        mutationKey: ['getUserDownline'],
+        onSuccess: (data) => {
+            if (data) {
+                // what are we going to do with those fullname results?
+                const formattedResponse = data.flatMap((e) => e);
+                const formattedAgents = formattedResponse.map((agent) => ({
+                    ...agent,
+                    email: agent.emailAddress,
+                }));
+                setSearchResults(formattedAgents);
             }
-            setLoading(false);
-        }, 1000);
+            setIsLoading(false);
+        },
+
+        onMutate: () => {
+            setIsLoading(true);
+            setSearchResults([]);
+            setIsNotFound(false);
+        },
+        onError: () => {
+            setIsNotFound(true);
+            setIsLoading(false);
+        },
+    });
+
+    const onSearch = () => {
+        mutate({ agencyId: mainAgencyId, agentName: agentNameInput });
     };
 
     const clearAll = () => {
         setIsEditing(false);
-        setLoading(false);
+        setIsLoading(false);
         setIsNotFound(false);
         setAgentNameInput('');
         setSearchResults([]);
@@ -159,7 +157,7 @@ export const AgentSearch = ({
     };
 
     const determineRender = () => {
-        if (loading) {
+        if (isLoading) {
             return (
                 <div className={styles.loaderContainer}>
                     <Loader />
@@ -245,7 +243,7 @@ export const AgentSearch = ({
                             aria-label={t('ariaLabel.search') as string}
                             onClick={onSearch}
                             size="small"
-                            disabled={loading}
+                            disabled={isLoading}
                         >
                             {t('dashboard.search.btnText')}
                         </Button>
@@ -277,7 +275,7 @@ export const AgentSearch = ({
                         width={'20px'}
                         className={styles.editIcon}
                         onClick={() => setIsEditing(!isEditing)}
-                    />  */}
+                    /> */}
                 </div>
             )}
         </div>

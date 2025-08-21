@@ -1294,10 +1294,11 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     answerNodeId:
                                         'non-nicotine-conversion-at-age-18',
+                                    outputPath: 'nonNicotineConversionAtAge18',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 12,
@@ -1823,30 +1824,42 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             id: 'ddf60c38-eb5e-439c-8a16-1412c8f72bd7',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 15,
-                                                        targetNodeId:
-                                                            'permanent-flat-extra',
-                                                        operator:
-                                                            'lessThanOrEqual',
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 15,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'greaterThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 0.5,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                                operator:
+                                                                    'multipleOf',
+                                                            },
+                                                        ],
                                                     },
                                                     {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0,
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
                                                         targetNodeId:
                                                             'permanent-flat-extra',
-                                                        operator:
-                                                            'greaterThanOrEqual',
-                                                    },
-                                                    {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 0.5,
-                                                        targetNodeId:
-                                                            'permanent-flat-extra',
-                                                        operator: 'multipleOf',
                                                     },
                                                 ],
                                             },
@@ -5395,7 +5408,7 @@ export const farmersBlueprintIU0101 = {
                                 'custom-dd916e09-5882-4f7f-a125-4b00efd38af3',
                             text: {},
                             title: {
-                                en: 'Cost-free riders',
+                                en: 'Additional premium-free riders available',
                             },
                             isCustom: true,
                             fields: [

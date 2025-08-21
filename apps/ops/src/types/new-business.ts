@@ -10,13 +10,13 @@ type EmailType = 'PERSONAL';
 type IdentifierType = 'EXTERNAL' | 'SSN';
 type IdentifierKeyType = 'ECN' | 'Party Id' | 'UPN' | 'AOR';
 
-interface PersonalInformation {
+export interface PersonalInformation {
     valid: boolean;
     birthSexValid: boolean;
     firstName: string;
     lastName: string;
     prefix: string;
-    dateOfBirth: Date;
+    dateOfBirth: string; // Iso string
     gender: Gender;
     birthSex: Gender;
     birthState: string;
@@ -83,7 +83,7 @@ export interface party {
 }
 
 // This interface needs to be completed
-interface Policy {
+export interface Policy {
     policyNumber: string;
     planCode: string;
     productType: string;

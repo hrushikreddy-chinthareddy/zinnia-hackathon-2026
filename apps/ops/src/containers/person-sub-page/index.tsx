@@ -72,13 +72,15 @@ export const PersonSubPage = ({
     const selectedPartyRoles = selectedPolicyPartyRoles.map((roleObject) => {
         return roleObject.partyRole?.toLowerCase();
     });
+
     const isAgent =
         selectedPartyRoles.includes(
             PartyRole.PRIMARYWRITINGAGENT.toLowerCase()
         ) ||
         selectedPartyRoles.includes(
             PartyRole.PRIMARYSERVICINGAGENT.toLowerCase()
-        );
+        ) ||
+        selectedPartyRoles.includes('ADDITIONALWRITINGAGENT'.toLowerCase());
 
     const { isPermissioned: isUserAllowedToEditCards } =
         useTransactionPermissionCheck(

@@ -158,8 +158,38 @@ export const DeathClaim = ({
         isSingleAnnuitant,
     ]);
 
+    const defaultRole = useMemo(() => {
+        let role = RoleType.Other;
+        if (allBeneficiaries?.length > 0) {
+            role = RoleType.Beneficiary;
+        } else if (allAgents?.length > 0) {
+            role = RoleType.Agent;
+        } else if (
+            (allOwners?.length === 0 || isSingleOwner || isNonIndividual) ===
+            false
+        ) {
+            role = RoleType.Owner;
+        } else if (
+            (allAnnuitants?.length === 0 ||
+                isSingleAnnuitant ||
+                isIndividual) === false
+        ) {
+            role = RoleType.Annuitant;
+        }
+        return role;
+    }, [
+        allAgents?.length,
+        allBeneficiaries?.length,
+        allOwners?.length,
+        isSingleOwner,
+        isNonIndividual,
+        allAnnuitants?.length,
+        isIndividual,
+        isSingleAnnuitant,
+    ]);
+
     const [role, setRole] = useState<RoleType>(
-        (notifiers?.notifierRole as RoleType) || RoleType.Beneficiary
+        (notifiers?.notifierRole as RoleType) || defaultRole
     );
     const [phone, setPhone] = useState<any>(
         notifiers?.party?.phone || INITIAL_PHONE

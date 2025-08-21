@@ -679,10 +679,9 @@ export const validate = (
     if (partyType === PartyType.INDIVIDUAL) {
         if ([PartyRole.PAYOR, PartyRole.THIRDPARTYDESIGNEE].includes(role)) {
             if (!firstName?.trim()) {
-                currentErrors['firstName'] = t('formValidations.firstName');
-            }
-            if (!lastName?.trim()) {
-                currentErrors['lastName'] = t('formValidations.lastName');
+                currentErrors['name'] = t('formValidations.name', {
+                    roleLabel,
+                });
             }
         } else {
             const allowedRoles: (Roles | PartyRole)[] = [
@@ -721,10 +720,20 @@ export const validate = (
                     address.addressLine2?.trim();
 
                 if (hasAddressLine) {
-                    const missingCity = !address.city?.trim();
-                    const missingState = !address.state?.trim();
-                    const missingZip = !address.zipCode?.trim();
-                    return missingCity || missingState || missingZip;
+                    if (!address.city?.trim()) {
+                        currentErrors['city'] = t('formValidations.city');
+                    }
+                    if (!address.state?.trim()) {
+                        currentErrors['state'] = t('formValidations.state');
+                    }
+                    if (!address.zipCode?.trim()) {
+                        currentErrors['zipCode'] = t('formValidations.zipCode');
+                    }
+                } else {
+                    currentErrors['addressLine1'] = t(
+                        'formValidations.addressDetails',
+                        { roleLabel }
+                    );
                 }
             }
             return false;

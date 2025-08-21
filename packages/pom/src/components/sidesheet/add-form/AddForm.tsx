@@ -23,7 +23,7 @@ export function AddForm<TFormValues extends Record<string, unknown>>({
     reset,
   } = useForm<TFormValues>();
 
-  const onFormSubmit: SubmitHandler<TFormValues> = (data) => onSubmit(data);
+  const onFormSubmit: SubmitHandler<TFormValues> = data => onSubmit(data);
 
   const handleCancel = () => {
     reset();
@@ -38,7 +38,7 @@ export function AddForm<TFormValues extends Record<string, unknown>>({
       onSubmit={handleSubmit(onFormSubmit)}
       className="pom_flex-column gap-xl"
     >
-      {Object.keys(mappedControllers).map((key) => (
+      {Object.keys(mappedControllers).map(key => (
         <div key={key}>{mappedControllers[key as keyof TFormValues]}</div>
       ))}
 

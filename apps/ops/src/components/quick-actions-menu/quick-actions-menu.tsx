@@ -540,7 +540,7 @@ export const MenuContextualContent = ({
                     {sendCorrespondenceEnabled && (
                         <MenuContextualItem
                             content={t('documents.sendCorrespondence')}
-                            href={`/contact-center/send-statement?planCode=${
+                            href={`/contact-center/send-correspondence?planCode=${
                                 policy.planCode
                             }&policyNumber=${
                                 policy.policyNumber
@@ -548,7 +548,7 @@ export const MenuContextualContent = ({
                             onClick={() => {
                                 trackClick(
                                     'Send Correspondence',
-                                    `/contact-center/send-statement?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                                    `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
                                 );
                             }}
                             openInNewTab={true}

@@ -89,6 +89,7 @@
             "policySearch": "Politiques & Contratos",
             "premiums": "Primas",
             "ridersAndFeatures": "Cláusulas Adicionales y Características",
+            "sendCorrespondence": "Enviar correspondencia",
             "sendDocument": "Enviar Documento",
             "sendStatement": "Enviar Estado de Cuenta",
             "sendTaxForm": "Enviar Formulario de Impuestos",
@@ -368,35 +369,43 @@
                 "telephoneNumber": "Número de Teléfono"
             },
             "summary": {
-                "header": "Resumen",
-                "overview": "Resumen",
-                "reviewMessage": "Todo bien! Asegúrese de revisar sus entradas antes de enviar",
-                "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
-                "bpm500Error": "Error BPM 500",
-                "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente la siga.",
-                "missingCheckToConfirm": "Para enviar, confirme que desea enviar con errores y crear una tarea NIGO.",
-                "primaryBeneficiary": "Beneficiario Principal",
-                "contingentBeneficiary": "Beneficiario Contingente",
-                "current": "Actual",
-                "updated": "Actualizado",
-                "identification": {
-                    "title": "Identificación",
-                    "gender": "Género"
-                },
                 "allocation": {
-                    "title": "Asignación",
-                    "relationshipToInsured": "Relación con el asegurado"
+                    "relationshipToParty": "Relación con la parte",
+                    "title": "Asignación"
                 },
+                "bpm500Error": "Error BPM 500",
                 "contact": {
-                    "title": "Información de Contacto",
                     "address": "Dirección",
-                    "phone": "Teléfono"
+                    "phone": "Teléfono",
+                    "title": "Información de contacto",
+                    "email": "Correo electrónico"
                 },
+                "contingentBeneficiary": "Beneficiario contingente",
+                "current": "Actual",
+                "header": "Resumen",
+                "identification": {
+                    "gender": "Género",
+                    "title": "Identificación",
+                    "ssn": "SSN",
+                    "dateOfBirth": "Fecha de nacimiento"
+                },
+                "missingCheckToConfirm": "Para enviar, confirme que desea enviar con errores y crear una tarea de NIGO.",
+                "overview": "Resumen",
+                "primaryBeneficiary": "Beneficiario principal",
+                "reviewMessage": "Todo bien! Asegúrese de revisar sus entradas antes de enviar",
+                "status400subtitle": "Vaya, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+                "submitWithErrorsText": "Enviar con errores y crear una tarea de NIGO para que el equipo correspondiente siga trabajando en ella.",
                 "tag": {
+                    "new": "Nuevo",
                     "none": "Ninguno",
-                    "updated": "Actualizado",
                     "removed": "Eliminado",
-                    "new": "Nuevo"
+                    "updated": "Actualizado"
+                },
+                "updated": "Actualizado",
+                "beneficiaryInformation": {
+                    "title": "Información del beneficiario",
+                    "perStirpes": "Por estirpe",
+                    "irrevocable": "Irevocable"
                 }
             },
             "confirm": {
@@ -716,6 +725,9 @@
                 "fullName": "Nombre es requerido",
                 "lastName": "Apellido es requerido",
                 "addressLine": "Dirección es requerida",
+                "city": "La ciudad es obligatoria",
+                "state": "El estado es obligatorio",
+                "zipCode": "El código postal es obligatorio",
                 "name": "Por favor, asegúrese de que el nombre y el apellido o el nombre de la empresa o el nombre del fiduciario estén actualizados al agregar {{roleLabel}}",
                 "addressDetails": "Por favor, asegúrese de que los detalles de la dirección estén correctamente llenados al agregar {{roleLabel}}",
                 "addRole": "Por favor, agregue un {{roleLabel}} para continuar",
@@ -1893,6 +1905,7 @@
             "notes": "Notas",
             "otherIssues": "Resoluciones Pendientes",
             "openSince": "Abierto desde {{date}}",
+            "pendingTill": "Pendiente",
             "percentComplete": "{{percent}} Completado",
             "postedOnBy": "Publicado el {{date}} por",
             "progress": "Progreso",
@@ -2024,16 +2037,18 @@
             "startNotification": "Historial",
             "sendTo": "Enviar a",
             "contactMethod": "Método de contacto",
-            "scheduledNotification": "Intento n°{{followup}} de 4 programado para el {{date}}",
+            "scheduledNotification": "Intento {{followup}} programado para {{date}}",
             "beneficiaryDeceasedNotification": "Beneficiario confirmado fallecido el {{date}}",
             "completedNotification": "Paquete de defunción recibido el {{date}}",
-            "sendNotification": "Intento n°{{followup}} de 4",
-            "resetNotification": "Método de notificación cambiado de {{old}} a {{new}} el {{date}}",
-            "resetNotificationUpdate": "{{method}} Actualizado el {{date}}",
-            "resendNotification": "Solicitud {{action}} el {{date}}",
+            "sendNotification": "Intento {{followup}}",
+            "resetNotification": "Método de notificación cambiado de {{old}} a {{new}} {{date}}",
+            "resetNotificationUpdate": "{{method}} Actualizado {{date}}",
+            "resendNotification": "Solicitud de {{action}} {{date}}.",
             "contactNotEstablished": "Contacto no establecido",
             "contactEstablished": "Contacto establecido",
-            "beneficiaryDeceased": "Beneficiario fallecido"
+            "beneficiaryDeceased": "Beneficiario fallecido",
+            "scheduledTooltip": "{{followup}} intentos restantes hasta que comience el proceso de escheatment a menos que se establezca contacto.",
+            "finalTooltip": "Último intento restante a menos que se establezca contacto."
         }
     },
     "caseRenewal": {
@@ -2951,6 +2966,32 @@
                 "annualAnniversaryStatement": "Estado Anual/Aniversario",
                 "quarterlyStatement": "Estado Trimestral"
             }
+        },
+        "sendCorrespondence": {
+            "tabs": {
+                "sendCorrespondence": "Enviar correspondencia",
+                "confirm": "Confirmar"
+            },
+            "letterTypes": {
+                "policy.assignmentletter.notified": "Carta de asignación",
+                "policy.beneficiaryrequest.notified": "Carta de solicitud de beneficiario",
+                "policy.divorcerequest.notified": "Carta de divorcio",
+                "policy.explanationofbenefitamount.notified": "Carta de explicación del monto del beneficio",
+                "policy.fatcamailing.notified": "Carta de envío de FATCA",
+                "policyNotFoundLetter": "Carta de política no encontrada",
+                "selectOne": "Seleccione uno"
+            },
+            "confirm": {
+                "titlePart1": "El ",
+                "titlePart2": "se ha enviado correctamente para su procesamiento y se enviará a los destinatarios en breve.",
+                "cta": "Ir a la política",
+                "back": "De vuelta a casa"
+            },
+            "error": "Seleccione al menos un tipo de letra para continuar",
+            "subtitle": "Instrucciones de procesamiento",
+            "body": "Seleccione el tipo de carta que desea enviar al cliente. NGC procesará la carta y la enviará a través del método de contacto que prefiera el cliente.",
+            "subtitle2": "Detalles",
+            "label": "Tipo de letra"
         },
         "sendTaxForms": {
             "selectTaxYear": "Seleccione el año(s) fiscal",
@@ -6042,13 +6083,13 @@
         }
     },
     "transactionListing": {
-        "loadingTransactions": "Recuperando transacciones detenidas...",
+        "loadingTransactions": "Recuperando transacciones...",
         "errorGettingTransactions": "No se pudieron recuperar los datos de las transacciones detenidas.",
         "uncashedTransactions": "Estado de cheques pendientes",
         "stoppedTransactions": "Transacciones detenidas",
         "noUncashedTransactions": "No hay cheques sin cobrar disponibles para este contrato.",
         "identificationInProgress": "La identificación de cheque(s) pendientes está en curso.",
-        "noUncashedTransactionsTableHead": "Contrato #{{contractNumber}}",
+        "contractNumberHeading": "Contrato #{{contractNumber}}",
         "noTransactionsFoundTitle": "No se encontraron transacciones",
         "noTransactionsMessage": "No hay transacciones relacionadas con este evento.",
         "labels": {
@@ -6056,12 +6097,23 @@
             "terminated": "Finalizado",
             "deleteFailed": "Eliminar fallido",
             "terminateFailed": "Terminar fallido",
-            "on": "En"
+            "on": "En",
+            "outstanding": "Outstanding",
+            "stopped": "Stopped",
+            "reversed": "Reversed",
+            "checkToEstate": "Check to Estate"
         },
-        "tableColumns": {
-            "transaction": "Transacción",
-            "status": "Estado",
-            "amount": "Cantidad"
+        "tooltips": {
+            "outstanding": "Se identificó un pago no cobrado en el sistema financiero.",
+            "stopped": "El pago se detuvo con éxito en el sistema financiero.",
+            "checkToEstate": "Dado que el pago se envió antes de la fecha de fallecimiento, el cheque se envió al patrimonio.",
+            "reversed": "Dado que el pago se envió después de la fecha de fallecimiento, se revirtió y se agregó nuevamente al acuerdo del beneficio por fallecimiento."
+        },
+        "cardLabels": {
+            "checkDate": "Consultar fecha",
+            "amount": "Cantidad",
+            "check": "Controlar #{{number}}",
+            "contract": "Contrato #{{number}}"
         }
     },
     "deathNotification": {
@@ -6615,6 +6667,10 @@
                     "yes": "Sí",
                     "no": "No"
                 }
+            },
+            "formErrors": {
+                "invalidDate": "Introduzca una fecha válida.",
+                "futureDate": "La fecha de muerte no puede ser futura."
             }
         },
         "notificationMethod": {
@@ -7125,8 +7181,7 @@
             "noProductsIconAlt": "Icon de no hay productos para listar",
             "noProductsAvailable": "No se han podido cargar ilustraciones. Por favor intente nuevamente despues.",
             "addIllustrationButton": "Boton de agregar illustracion",
-            "seeProducts": "Agregar un producto",
-            "addIllustration": "Agregar ilustracion"
+            "seeProducts": "Agregar un producto"
         },
         "caseSummary": {
             "edit": "Editar",
@@ -7230,12 +7285,13 @@
             "editClientCaseSideSheetTitle": "Editar caso del cliente",
             "clientCaseSection": "Detalles del caso del cliente",
             "titleLabel": "Título",
+            "agencyLabel": "Agencia",
             "insuredDetailsSection": "Detalles del asegurado",
             "firstNameLabel": "Nombre (opcional)",
             "firstNameTooltip": "tooltip del nombre",
             "lastNameLabel": "Apellido (opcional)",
             "lastNameTooltip": "tooltip del apellido",
-            "sexAssignedLabel": "Sexo asignado al nacer",
+            "sexAssignedLabel": "Sexo al nacer",
             "maleButton": "Masculino",
             "femaleButton": "Femenino",
             "dateLabel": "Fecha de nacimiento",

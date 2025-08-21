@@ -31,7 +31,10 @@ import { ReactComponent as Send } from '@deps/styles/elements/icons/color/send.s
 import { ReactComponent as ArrowRightLarge } from '@deps/styles/elements/icons/icons_outlined/arrow-right-large.svg';
 import { ReactComponent as AT } from '@deps/styles/elements/icons/icons_outlined/at.svg';
 
-import { getSendNotifications } from './bene-notification-tab.helpers';
+import {
+    getAttemptCount,
+    getSendNotifications,
+} from './bene-notification-tab.helpers';
 
 interface NotificationItemProps {
     notification: INotification;
@@ -100,12 +103,13 @@ function DeliveryMethodDetails({
 
 const getSentNotificationStatusText = (
     notification: INotification,
+    attemptCount: number,
     t: TFunction
 ) => {
-    const { followupId, sendDateTime, deliveryMethod } = notification;
+    const { sendDateTime, deliveryMethod } = notification;
     const dateText = sendDateTime ? standardMonthDayYear(sendDateTime) : '';
     const notificationText = t('caseOverview.notifications.sendNotification', {
-        followup: followupId,
+        followup: attemptCount,
     });
     const [isOpen, setIsOpen] = useState(false);
     const handleStateChange = (state: boolean) => {
@@ -119,7 +123,7 @@ const getSentNotificationStatusText = (
             </div>
             <AccordionRoot type="single" collapsible className="w-full">
                 <AccordionItem
-                    value={`item-${followupId}`}
+                    value={`item-${attemptCount}`}
                     className="border border-gray-200 rounded px-3 py-2"
                 >
                     <AccordionHeader
@@ -331,6 +335,7 @@ export const NotificationItem = ({
     notifications,
 }: NotificationItemProps) => {
     const { t } = useTranslation();
+    const attemptCount = getAttemptCount(notifications, index);
     const flowstart = t('caseOverview.notifications.startNotification');
     const sentNotifications = getSendNotifications(notifications);
     const nextResetNotification =
@@ -358,7 +363,7 @@ export const NotificationItem = ({
                 getReceiveNotificationStatusText(notification, t)}
             {notification.send === true &&
                 notification.followupId !== FollowupId.fifth &&
-                getSentNotificationStatusText(notification, t)}
+                getSentNotificationStatusText(notification, attemptCount, t)}
             {notification.followupStatus === NotificationStatus.Resend &&
                 getResendNotificationStatusText(notification, t)}
             {notification.followupStatus === NotificationStatus.Reset &&

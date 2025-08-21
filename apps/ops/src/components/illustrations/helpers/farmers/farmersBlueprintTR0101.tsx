@@ -3015,7 +3015,7 @@ export const farmersBlueprintTR0101 = {
                                 'custom-b4ffd6cf-ba90-4863-89ee-80e1566178e8',
                             text: {},
                             title: {
-                                en: 'Premium-free riders',
+                                en: 'Additional premium-free riders available',
                             },
                             isCustom: true,
                             fields: [

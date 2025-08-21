@@ -656,5 +656,34 @@ describe('gdmn withdrawal form config', () => {
                 );
             });
         });
+        describe('cslnCheckStates and productLineOptions', () => {
+            const t: TFunction = (key: string | string[]) => key as any;
+            const gdmnConfig = getGdmnConfig(t);
+
+            it('should define cslnCheckStates as ["MA"]', () => {
+                expect(gdmnConfig.cslnCheckStates).toBeDefined();
+                expect(Array.isArray(gdmnConfig.cslnCheckStates)).toBe(true);
+                expect(gdmnConfig.cslnCheckStates).toContain('MA');
+                expect(gdmnConfig.cslnCheckStates.length).toBe(1);
+            });
+
+            it('should define productLineOptions as ["LIFE"]', () => {
+                expect(gdmnConfig.productLineOptions).toBeDefined();
+                expect(Array.isArray(gdmnConfig.productLineOptions)).toBe(true);
+                expect(gdmnConfig.productLineOptions).toContain('LIFE');
+                expect(gdmnConfig.productLineOptions.length).toBe(1);
+            });
+
+            it('should not mutate cslnCheckStates or productLineOptions', () => {
+                const cslnStatesCopy = [...gdmnConfig.cslnCheckStates];
+                const productLinesCopy = [...gdmnConfig.productLineOptions];
+
+                cslnStatesCopy.push('NY');
+                productLinesCopy.push('ANNUITY');
+
+                expect(gdmnConfig.cslnCheckStates).toEqual(['MA']);
+                expect(gdmnConfig.productLineOptions).toEqual(['LIFE']);
+            });
+        });
     });
 });

@@ -65,17 +65,24 @@ export const getCaseType = (docTypeQuery: string): CaseType => {
 export const getWithdrawalFormComponentMap = (
     planCode: string | '',
     qualType: QualTypes | FASTQualTypes | '',
-    isLC: boolean
+    isLC: boolean,
+    productLine?: string | ''
 ): Record<string, React.ReactNode> => ({
-    [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} isLC={isLC} />,
+    [Carrier.FLIC]: (
+        <FlicWithdrawalForm
+            qualType={qualType}
+            isLC={isLC}
+            productLine={productLine}
+        />
+    ),
     [Carrier.SBGC]: <SbgcWithdrawalForm />,
     [Carrier.DLIC]: <DlicWithdrawalForm planCode={planCode} />,
     [Carrier.MASS]: <MassWithdrawalForm qualType={qualType} />,
     [Carrier.NASU]: <NasuWithdrawalForm />,
-    [Carrier.GDMN]: <GdmnWithdrawalForm />,
+    [Carrier.GDMN]: <GdmnWithdrawalForm productLine={productLine ?? ''} />,
     [Carrier.RSLN]: <RslnWithdrawalForm />,
     [Carrier.ULPC]: <UlpcWithdrawalForm />,
-    [Carrier.GLCO]: <GilicoWithdrawalForm />,
+    [Carrier.GLCO]: <GilicoWithdrawalForm qualType={qualType} />,
 });
 
 export const getOFTFormComponentMap = (
@@ -113,17 +120,20 @@ export const getRMDFormComponentMap = (
 
 const getSSWFormComponentMap = (
     qualType: QualTypes | '',
-    planCode?: string
+    planCode?: string,
+    productLine?: string | ''
 ): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcSSWForm />,
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
-    [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
+    [Carrier.FLIC]: (
+        <FlicSSWForm qualType={qualType} productLine={productLine} />
+    ),
     [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
     [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
     [Carrier.RSLN]: <RslnSSWForm />,
     [Carrier.PRDN]: <PrdnSSWForm />,
-    [Carrier.GDMN]: <GdmnSSWForm />,
+    [Carrier.GDMN]: <GdmnSSWForm productLine={productLine} />,
     [Carrier.USAA]: <UsaaSSWForm />,
     [Carrier.DLIC]: <DlicSSWForm planCode={planCode} />,
 });
@@ -139,14 +149,20 @@ export const getFormParts = (
     clientCode: string,
     qualType: QualTypes | FASTQualTypes | '',
     planCode: string = '',
-    isLC: boolean = true
+    isLC: boolean = true,
+    productLine: string = ''
 ) => {
     let formParts;
     switch (caseType) {
         case CaseType.Withdrawal:
             formParts = determineFormToRender(
                 clientCode,
-                getWithdrawalFormComponentMap(planCode, qualType, isLC)
+                getWithdrawalFormComponentMap(
+                    planCode,
+                    qualType,
+                    isLC,
+                    productLine || ''
+                )
             );
             break;
         case CaseType.Oft:
@@ -158,7 +174,11 @@ export const getFormParts = (
         case CaseType.SSW:
             formParts = determineFormToRender(
                 clientCode,
-                getSSWFormComponentMap(qualType as QualTypes, planCode)
+                getSSWFormComponentMap(
+                    qualType as QualTypes,
+                    planCode,
+                    productLine || ''
+                )
             );
             break;
         case CaseType.Rmd:

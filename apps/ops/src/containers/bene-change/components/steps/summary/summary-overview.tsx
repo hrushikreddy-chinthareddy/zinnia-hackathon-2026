@@ -1,4 +1,4 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -7,17 +7,18 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { Action } from '@deps/constants/policy';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 
-import { getTagVariant } from './summary-step.helpers';
+import { getTagVariant, hasBeneficiaryChanged } from './summary-step.helpers';
 
 const BeneficiaryOverview = ({ name, action, allocation }: any) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.summary',
     });
     const { tagVariant, tagText } = getTagVariant(action, t);
-    const allocationValue = action === 'DELETE' ? '--' : `${allocation}%`;
+    const allocationValue = action === Action.DELETE ? '--' : `${allocation}%`;
 
     return (
         <div className="mr-5 flex">
@@ -43,11 +44,11 @@ const BeneficiaryOverview = ({ name, action, allocation }: any) => {
     );
 };
 
-const SummaryOverview = () => {
+const SummaryOverview = ({ policy }: { policy: Policy }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.summary',
     });
-    const { beneData } = useBeneChange();
+    const { beneData, peopleSelection } = useBeneChange();
 
     const primaryBeneficiary = beneData?.filter(
         (item: any) => item.partyRole.partyRole === PartyRole.PRIMARYBENEFICIARY
@@ -57,6 +58,49 @@ const SummaryOverview = () => {
             item.partyRole.partyRole === PartyRole.CONTINGENTBENEFICIARY
     );
 
+    const currentData = peopleSelection?.cardActionData?.filteredData;
+
+    const renderBeneficiaries = (beneficiaries: any[], labelText: string) => (
+        <div>
+            <Label
+                className="h-6"
+                label={t(labelText)}
+                variant={LabelVariant.LabelLg}
+            />
+            {beneficiaries?.map((item: any) => {
+                const { firstName, middleName, lastName } =
+                    item?.party?.info ?? {};
+                const allocation =
+                    item?.party?.allocation?.beneficiaryPercentage ?? 0;
+
+                const hasActualChanges =
+                    item.action === Action.UPDATE &&
+                    hasBeneficiaryChanged(item, currentData, policy);
+                const action =
+                    item?.action === Action.UPDATE
+                        ? hasActualChanges
+                            ? Action.UPDATE
+                            : Action.NONE
+                        : item?.action;
+
+                return (
+                    <div key={`bene-overview-${item.index}`}>
+                        <BeneficiaryOverview
+                            name={toTitleCase(
+                                [firstName, middleName, lastName]
+                                    .filter(Boolean)
+                                    .join(' ')
+                            )}
+                            action={action}
+                            allocation={allocation}
+                        />
+                        <div className="w-[500px] border border-b-1 border-gray-100"></div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     return (
         <div>
             <Typography variant={TypographyVariant.H3} className="my-3">
@@ -64,61 +108,11 @@ const SummaryOverview = () => {
             </Typography>
 
             <div className="grid grid-cols-2">
-                <div>
-                    <Label
-                        className=" h-6"
-                        label={t('primaryBeneficiary')}
-                        variant={LabelVariant.LabelLg}
-                    />
-                    {primaryBeneficiary?.map((item: any) => {
-                        const { firstName, middleName, lastName } =
-                            item?.party?.info ?? {};
-                        const allocation =
-                            item?.party?.allocation?.beneficiaryPercentage ?? 0;
-                        return (
-                            <div key={`bene-overview-${item.index}`}>
-                                <BeneficiaryOverview
-                                    name={toTitleCase(
-                                        [firstName, middleName, lastName]
-                                            .filter(Boolean)
-                                            .join(' ')
-                                    )}
-                                    action={item?.action}
-                                    allocation={allocation}
-                                />
-                                <div className="w-[500px] border border-b-1 border-gray-100"></div>
-                            </div>
-                        );
-                    })}
-                </div>
-
-                <div>
-                    <Label
-                        className="h-6"
-                        label={t('contingentBeneficiary')}
-                        variant={LabelVariant.LabelLg}
-                    />
-                    {contingentBeneficiary?.map((item: any) => {
-                        const { firstName, middleName, lastName } =
-                            item?.party?.info ?? {};
-                        const allocation =
-                            item?.party?.allocation?.beneficiaryPercentage ?? 0;
-                        return (
-                            <div key={`bene-overview-${item.index}`}>
-                                <BeneficiaryOverview
-                                    name={toTitleCase(
-                                        [firstName, middleName, lastName]
-                                            .filter(Boolean)
-                                            .join(' ')
-                                    )}
-                                    action={item?.action}
-                                    allocation={allocation}
-                                />
-                                <div className="w-[500px] border border-b-1 border-gray-100"></div>
-                            </div>
-                        );
-                    })}
-                </div>
+                {renderBeneficiaries(primaryBeneficiary, 'primaryBeneficiary')}
+                {renderBeneficiaries(
+                    contingentBeneficiary,
+                    'contingentBeneficiary'
+                )}
             </div>
         </div>
     );

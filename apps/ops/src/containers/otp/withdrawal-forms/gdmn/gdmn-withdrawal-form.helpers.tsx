@@ -914,6 +914,10 @@ export default function getGdmnConfig(t: TFunction) {
         auditTrial: true,
     };
 
+    const cslnCheckStates = ['MA'];
+
+    const productLineOptions = ['LIFE'];
+
     return {
         disbursementOptions,
         formPartyConfigs,
@@ -929,5 +933,7 @@ export default function getGdmnConfig(t: TFunction) {
         fullWithdrawalOptions,
         reasonOptions,
         eSignatureFieldConfig,
+        cslnCheckStates,
+        productLineOptions,
     };
 }

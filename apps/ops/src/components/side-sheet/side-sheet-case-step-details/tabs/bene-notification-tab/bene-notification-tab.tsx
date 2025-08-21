@@ -7,8 +7,10 @@ import { INotification } from '@deps/components/side-sheet/side-sheet-case-step-
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { getTransactionsByRecordId } from '@deps/queries/api/transactions';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import {
+    getAttemptCount,
     getFilteredTransactions,
     getNextScheduledNotifications,
 } from './bene-notification-tab.helpers';
@@ -57,8 +59,20 @@ export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
         }
     }, [step]);
 
+    browserLogInfo('bene-notification-tab::BeneSideSheetStep', {
+        contractNumber: policyNumber,
+        identifier: identifier,
+        Total: notifications.length,
+    });
+
     const nextScheduledNotification =
         getNextScheduledNotifications(notifications);
+    const attemptCount = nextScheduledNotification
+        ? getAttemptCount(
+              notifications,
+              notifications.indexOf(nextScheduledNotification)
+          )
+        : 0;
     const shouldHideButton = hasException || hasReceivedNotification;
     const showStatusBlock =
         nextScheduledNotification && !hasReceivedNotification;
@@ -85,6 +99,7 @@ export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
                         policyNumber={policyNumber}
                         carrier={carrier}
                         identifier={identifier}
+                        attemptCount={attemptCount}
                     />
                 ))}
             {notifications.map((notification, index) => (

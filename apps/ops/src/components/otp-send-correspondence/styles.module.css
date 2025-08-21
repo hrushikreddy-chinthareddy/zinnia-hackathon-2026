@@ -1,0 +1,14 @@
+.subContainer {
+    border-radius: var(--measure-dimension-radius-sm);
+    background-color: var(--color-base-surface-surface-secondary);
+    margin-block-end: var(--measure-dimension-margin-sm);
+    padding: var(--measure-dimension-margin-sm);
+}
+
+.subHeading {
+    margin-block-end: var(--measure-dimension-margin-sm);
+}
+
+.dropdown {
+    max-width: 328px;
+}

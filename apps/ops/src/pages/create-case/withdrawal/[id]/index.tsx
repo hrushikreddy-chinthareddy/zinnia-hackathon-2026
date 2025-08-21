@@ -124,17 +124,24 @@ const DefaultSidebarContent = {
 const getFormComponentMap = (
     qualType: QualTypes | FASTQualTypes | '',
     isLC: boolean,
-    planCode: string
+    planCode: string,
+    productLine: string = ''
 ): Record<string, React.ReactNode> => ({
-    [Carrier.FLIC]: <FlicWithdrawalForm qualType={qualType} isLC={isLC} />,
+    [Carrier.FLIC]: (
+        <FlicWithdrawalForm
+            qualType={qualType}
+            isLC={isLC}
+            productLine={productLine}
+        />
+    ),
     [Carrier.SBGC]: <SbgcWithdrawalForm />,
     [Carrier.DLIC]: <DlicWithdrawalForm planCode={planCode} />,
     [Carrier.MASS]: <MassWithdrawalForm qualType={qualType} />,
     [Carrier.NASU]: <NasuWithdrawalForm />,
-    [Carrier.GDMN]: <GdmnWithdrawalForm />,
+    [Carrier.GDMN]: <GdmnWithdrawalForm productLine={productLine} />,
     [Carrier.RSLN]: <RslnWithdrawalForm />,
     [Carrier.ULPC]: <UlpcWithdrawalForm />,
-    [Carrier.GLCO]: <GilicoWithdrawalForm />,
+    [Carrier.GLCO]: <GilicoWithdrawalForm qualType={qualType} />,
 });
 
 export default function WithdrawalCase({
@@ -163,7 +170,9 @@ export default function WithdrawalCase({
         clientId as string,
         isLC
     );
-    const { issueState, qualType, issueDate } = contractAccountInfo;
+
+    const { issueState, qualType, issueDate, productLine } =
+        contractAccountInfo;
 
     const showTransactions =
         featureFlagDecisions?.[FEATURE_FLAGS.TRANSACTION_HISTORY];
@@ -203,7 +212,7 @@ export default function WithdrawalCase({
 
     const formParts = determineFormToRender(
         clientForFormDetermination as string,
-        getFormComponentMap(qualType, isLC, planCode)
+        getFormComponentMap(qualType, isLC, planCode, productLine)
     );
     if (!formParts) {
         console.error('WithdrawalCase::No form parts', {
@@ -560,6 +569,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     loggingContext
                 );
                 const planCode = policies?.[0]?.planCode || null;
+                const lineOfBusiness = policies?.[0]?.lineOfBusiness || null;
                 if (!planCode) {
                     logInfo(
                         'create-case/withdrawal/:id::Plan code not found',

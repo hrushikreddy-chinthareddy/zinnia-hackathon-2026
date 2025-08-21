@@ -1,18 +1,9 @@
 // import { Typography, Icon, IconType } from '@zinnia/bloom/components';
-import {
-    CarrierAvatar,
-    CarrierName,
-    Heading,
-    HeadingVariant,
-} from '@zinnia/bloom/components';
-import { useTranslation } from 'next-i18next';
+import { CarrierAvatar, CarrierName } from '@zinnia/bloom/components';
 import { ReactElement } from 'react';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
-import IconButton from '@deps/components/icon-button/icon-button';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
 
 import style from './eapp.module.css';
@@ -28,9 +19,7 @@ export interface EappProps {
     planType: ProductTypes;
 }
 export function Eapp(props: EappProps): ReactElement | null {
-    const { t } = useTranslation();
     const { activeSection } = useActiveSection();
-    const sideSheet = useSideSheetContext();
 
     if (!activeSection) {
         return null;
@@ -44,39 +33,24 @@ export function Eapp(props: EappProps): ReactElement | null {
         <div className={style.eApp}>
             <div className={style.headerWrapper}>
                 <div className={style.infoHeaderWrapper}>
-                    <CarrierAvatar
-                        carrier={props.carrier as CarrierName}
-                        height={48}
-                        width={48}
-                    />
-                    <div>
-                        <div className={style.infoHeader}>
-                            {productTypeLabel && (
-                                <Badge
-                                    variant={BadgeVariant.Brand}
-                                    label={productTypeLabel}
-                                />
-                            )}
-                            <div
-                                className={`--typography-labels-label-lg-alt ${style.headerSubtitle}`}
-                            >
-                                {props.label}
-                            </div>
-                        </div>
-                        <div>
-                            <Heading as={HeadingVariant.h2}>
-                                {sideSheet.header}
-                            </Heading>
-                        </div>
-                    </div>
-                    <div className="ml-auto">
-                        <IconButton
-                            onClick={sideSheet.onClose}
-                            aria-label={t('ariaLabel.closeSideSheet') as string}
-                            data-testid="close-button"
+                    <div className={style.infoHeader}>
+                        <CarrierAvatar
+                            carrier={props.carrier as CarrierName}
+                            height={48}
+                            width={48}
+                            // className={styles.carrierLogo}
+                        />
+                        {productTypeLabel && (
+                            <Badge
+                                variant={BadgeVariant.Brand}
+                                label={productTypeLabel}
+                            />
+                        )}
+                        <div
+                            className={`--typography-labels-label-lg-alt ${style.headerSubtitle}`}
                         >
-                            <CancelIcon width={24} height={24} />
-                        </IconButton>
+                            {props.label}
+                        </div>
                     </div>
                 </div>
                 <div className={style.sidebarWrapper}>

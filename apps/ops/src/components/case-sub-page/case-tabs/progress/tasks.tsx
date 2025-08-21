@@ -50,6 +50,12 @@ export const SupportedTaskMap = [
     TaskType.Bene_Call,
 ];
 
+type StatusConfigItem = {
+    check: (status: Statuses) => boolean;
+    key: string;
+    dateField: keyof TaskView;
+};
+
 export function Task({ task }: { task: TaskView }) {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
@@ -72,20 +78,43 @@ export function Task({ task }: { task: TaskView }) {
         sideSheet.handleOpen(true);
     };
 
-    const dateString = [
-        Statuses.New,
-        Statuses.InProgress,
-        'OPEN',
-        Statuses.NotStarted,
-        Statuses.Inprogress,
-        Statuses.Pending,
-    ].includes(task.status)
-        ? t('caseOverview.tabs.openSince', {
-              date: convertKebabedDateString(task.createdAt),
-          })
-        : t('caseOverview.tabs.closedOn', {
-              date: convertKebabedDateString(task.updatedAt),
-          });
+    const statusConfig: StatusConfigItem[] = [
+        {
+            check: (status: Statuses) =>
+                [Statuses.Pending, 'SCHEDULED'].includes(status),
+            key: 'caseOverview.tabs.pendingTill',
+            dateField: 'updatedAt',
+        },
+        {
+            check: (status: Statuses) =>
+                [
+                    Statuses.New,
+                    Statuses.InProgress,
+                    'OPEN',
+                    Statuses.NotStarted,
+                    Statuses.Inprogress,
+                ].includes(status),
+            key: 'caseOverview.tabs.openSince',
+            dateField: 'createdAt',
+        },
+        {
+            check: () => true,
+            key: 'caseOverview.tabs.closedOn',
+            dateField: 'updatedAt',
+        },
+    ];
+
+    const match = statusConfig.find(({ check }) =>
+        check(task.status as Statuses)
+    );
+
+    const dateValue = match?.dateField
+        ? task?.[match?.dateField as keyof TaskView]
+        : undefined;
+
+    const dateString = t(match?.key || '', {
+        date: convertKebabedDateString(dateValue as string),
+    });
 
     return (
         <li className={`flex w-full flex-row items-center gap-2`}>
@@ -118,6 +147,7 @@ export function Task({ task }: { task: TaskView }) {
                     />
                 </div>
                 <ChevronDown
+                    data-testid="chevron-down-icon"
                     className="rotate-270 text-secondary"
                     width={16}
                     height={16}

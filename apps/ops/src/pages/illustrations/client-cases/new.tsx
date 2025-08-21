@@ -1,5 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useMutation } from '@tanstack/react-query';
+import merge from 'lodash/merge';
 import { GetServerSidePropsContext } from 'next';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -8,23 +9,13 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { ComponentProps, useCallback, useEffect } from 'react';
 
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
+import { createClientCaseFromSureify } from '@deps/components/client-case/client-case-list/sureify-flow/create-client-case-from-sureify';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
-import { DEFAULT_LOCALE, ALL_LOCALES } from '@deps/helpers/routing.helpers';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserProfile } from '@deps/models/user-profile';
-import {
-    buildClientCaseFromNewBusiness,
-    createClientCase,
-    searchClientCaseByEappId,
-} from '@deps/queries/api/server/v1/client-cases';
-import {
-    getNewBusinessById,
-    NEW_BUSINESS_API_ORIGIN,
-} from '@deps/queries/api/server/v2/new-business';
-import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
 import { postIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -33,7 +24,6 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import {
-    logError,
     LoggingContext,
     logWarn,
     parseErrorInformation,
@@ -133,19 +123,17 @@ const getAuthToken = async (
     loggingContext: LoggingContext
 ) => {
     try {
-        const { accessToken = '' } = await getAccessToken(
-            context.req,
-            context.res
-        );
-        return accessToken;
+        const { accessToken } = await getAccessToken(context.req, context.res);
+        return accessToken ?? null;
     } catch (e) {
         logWarn('getServerSidePropsPolicyDetailsPage::Access token expired', {
             ...parseErrorInformation(e),
             ...loggingContext,
         });
-        return serverSidePropsLogout();
+        return null;
     }
 };
+
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
@@ -156,9 +144,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                     loggingContext
                 );
 
-            if (
-                !featureFlagDecisions?.[FEATURE_FLAGS.ILLUSTRATIONS_EXPERIENCE]
-            ) {
+            const IllustrationsFeatureActive =
+                featureFlagDecisions?.[FEATURE_FLAGS.ILLUSTRATIONS_EXPERIENCE];
+
+            if (!IllustrationsFeatureActive) {
                 return {
                     redirect: {
                         destination: '/cases',
@@ -166,6 +155,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     },
                 };
             }
+
             const { locale = DEFAULT_LOCALE } = context;
             const additionalData: additionalDataProps = { user: user };
             const translations = await serverSideTranslations(
@@ -175,155 +165,41 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ALL_LOCALES
             );
 
-            // parse the desire queryParam to lowercase and return it
-            const loweredCaseEAppIdQueryParam = Object.entries(
-                context.query
-            ).find(([key]) => key.toLowerCase() === 'eappid')?.[1];
+            const commonProps = {
+                locale,
+                ...translations,
+                featureFlagDecisions,
+                additionalData,
+            };
 
-            const _eAppId =
-                typeof loweredCaseEAppIdQueryParam === 'string'
-                    ? loweredCaseEAppIdQueryParam
-                    : '';
+            const normalizedQuery = Object.fromEntries(
+                Object.entries(context.query).map(([key, value]) => [
+                    key.toLocaleLowerCase(),
+                    value,
+                ])
+            );
 
-            if (_eAppId) {
-                // Step 1: Search existing client cases if and eAppId is on the query string
-                const getAuthTokenResponse = await getAuthToken(
-                    context,
-                    loggingContext
-                );
-                if (typeof getAuthTokenResponse !== 'string') {
-                    return getAuthTokenResponse;
+            const eAppId = normalizedQuery?.eappid;
+            const hasSingleEappId = eAppId && typeof eAppId === 'string';
+
+            if (hasSingleEappId) {
+                const accessToken = await getAuthToken(context, loggingContext);
+
+                if (!accessToken) {
+                    return serverSidePropsLogout();
                 }
 
-                try {
-                    const clientCases = await searchClientCaseByEappId(
-                        _eAppId,
-                        getAuthTokenResponse,
+                return merge(
+                    { props: commonProps },
+                    await createClientCaseFromSureify(
+                        eAppId,
+                        accessToken,
                         loggingContext
-                    );
-
-                    // Step 2: if a client case already exists, redirect to the client case
-                    if (
-                        clientCases &&
-                        clientCases.length > 0 &&
-                        clientCases[0].id
-                    ) {
-                        return {
-                            redirect: {
-                                destination: `/illustrations/client-cases/${clientCases[0].id}/illustrate`,
-                                permanent: false,
-                            },
-                        };
-                    } else {
-                        // Step 3: if a client case does not exist, create a new client case
-
-                        // 3a. Retrieve the new business response object from the API
-                        const newBusinessResponseObject =
-                            await getNewBusinessById(_eAppId, loggingContext);
-
-                        // Check if the new business response object is empty
-                        if (isEmptyObject(newBusinessResponseObject)) {
-                            // If it's empty, throw an error indicating that the new business was not found
-                            throwTypedError(
-                                'New Business not found',
-                                NEW_BUSINESS_API_ORIGIN
-                            );
-                        }
-                        if (newBusinessResponseObject.message) {
-                            // If the response object contains an error message, throw an error with that message
-                            throwTypedError(
-                                newBusinessResponseObject.message,
-                                NEW_BUSINESS_API_ORIGIN
-                            );
-                        }
-
-                        // 3b. Build the client case payload from the new business response object
-                        const newClientCasePayload =
-                            await buildClientCaseFromNewBusiness(
-                                newBusinessResponseObject,
-                                _eAppId,
-                                loggingContext
-                            );
-
-                        // 3c. Check if the sex at birth field is missing from the client case payload
-                        if (!newClientCasePayload.insuredDetails?.sexAtBirth) {
-                            // If it's missing,r edirect to the new client case page and pre-populate the form with the available data
-                            const { dateOfBirth } =
-                                newClientCasePayload.insuredDetails ?? {};
-
-                            return {
-                                props: {
-                                    locale,
-                                    ...translations,
-                                    featureFlagDecisions,
-                                    clientCase: {
-                                        ...newClientCasePayload,
-                                        insuredDetails: {
-                                            ...newClientCasePayload.insuredDetails,
-                                            dateOfBirth: dateOfBirth
-                                                ? dateOfBirth.toISOString()
-                                                : null,
-                                            sexAtBirth: 'MALE',
-                                        },
-                                    },
-                                    additionalData,
-                                },
-                            };
-                        }
-
-                        // 3d.Create a new client case using the payload and redirect to the illustration page
-                        const newCaseResponse = await createClientCase(
-                            newClientCasePayload,
-                            getAuthTokenResponse,
-                            loggingContext
-                        );
-                        if (newCaseResponse) {
-                            // Extract the ID and plan code from the response
-                            const { id } = newCaseResponse;
-                            const { planCode } = newBusinessResponseObject;
-
-                            // Construct the redirect URL based on the plan code
-                            const baseRedirectionUrl = `/illustrations/client-cases/${id}/illustrate`;
-                            const destination =
-                                planCode !== ''
-                                    ? `${baseRedirectionUrl}?planCode=${planCode}`
-                                    : baseRedirectionUrl;
-
-                            // Redirect to the illustration page
-                            return {
-                                redirect: {
-                                    destination,
-                                    permanent: false,
-                                },
-                            };
-                        }
-                    }
-                } catch (error: any) {
-                    logError(error.message, {
-                        ...loggingContext,
-                        error: error,
-                    });
-
-                    return {
-                        props: {
-                            locale,
-                            ...translations,
-                            featureFlagDecisions,
-                            additionalData,
-                            fetchingErrorMessage: error.message,
-                            fetchingErrorOrigin:
-                                error.origin ?? 'internal-error',
-                        },
-                    };
-                }
+                    )
+                );
             }
             return {
-                props: {
-                    locale,
-                    ...translations,
-                    featureFlagDecisions,
-                    additionalData,
-                },
+                props: commonProps,
             };
         },
     },

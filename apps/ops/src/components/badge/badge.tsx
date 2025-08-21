@@ -11,6 +11,7 @@ export interface BadgeProps {
     className?: string;
     icon?: ReactElement<any, string | JSXElementConstructor<any>>;
     rounded?: boolean;
+    testId?: string;
 }
 
 const badgeVariantToBadgeType = (variant: BadgeVariant, classNames = '') => {
@@ -50,6 +51,7 @@ const Badge = ({
     label,
     icon,
     className,
+    testId,
 }: BadgeProps): JSX.Element => {
     const variantClasses = badgeVariantToBadgeType(variant, className);
     const roundedClasses = rounded
@@ -58,7 +60,7 @@ const Badge = ({
 
     return (
         <span
-            data-testid={BadgeTest.Badge}
+            data-testid={testId ?? BadgeTest.Badge}
             className={`w-fit align-center flex cursor-default border-2 font-primary text-sm font-semibold leading-4 ${variantClasses} ${roundedClasses}`}
         >
             <span>{icon}</span>

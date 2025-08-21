@@ -9,6 +9,11 @@ export enum TransactionsAdditionalDataStepIds {
     stopUncashedTransactions = 'verifyFunds.stopUncashedTransactions',
 }
 
+export enum BeneNotification {
+    INITIAL_BENE_NOTIFICATION = 'initiateBeneNotification',
+    BENE_ENTITY_TYPE = 'bene',
+}
+
 export enum TransactionActionStatuses {
     SUCCESS = 'SUCCESS',
     FAIL = 'FAIL',
@@ -26,6 +31,12 @@ export enum UncashedTransactionStatus {
     STOP = 'STOP',
     REVERSED = 'REVERSED',
     SEND_CHECK_TO_ESTATE = 'SEND_CHECK_TO_ESTATE',
+}
+export enum UncashedTransactionStatusLabel {
+    OUTSTANDING = 'outstanding',
+    STOP = 'stopped',
+    REVERSED = 'reversed',
+    SEND_CHECK_TO_ESTATE = 'checkToEstate',
 }
 
 export interface ViewTransactionsProps {
