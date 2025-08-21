@@ -87,9 +87,13 @@ export const useIllustrationActions = () => {
                 queryKey: ['clientCaseData', clientCaseId],
             });
 
+            if (!eAppLink) {
+                return;
+            }
+
             // Using this method to open a link to avoid popup blockers
             const myAnchor = document.createElement('a');
-            myAnchor.href = eAppLink ?? '';
+            myAnchor.href = eAppLink;
             myAnchor.target = '_blank';
             myAnchor.rel = 'noopener noreferrer';
             document.body.appendChild(myAnchor);

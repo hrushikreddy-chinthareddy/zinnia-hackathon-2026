@@ -16,7 +16,7 @@ export interface PersonalInformation {
     firstName: string;
     lastName: string;
     prefix: string;
-    dateOfBirth: string; // Iso string
+    dateOfBirth: string; // ISO string
     gender: Gender;
     birthSex: Gender;
     birthState: string;
@@ -71,25 +71,25 @@ export interface PhoneNumberObject {
 
 export interface party {
     partyType: string;
-    personalInformation: PersonalInformation;
+    personalInformation: Partial<PersonalInformation>;
     partyId: string;
     partyCommunication: string;
     partyRole: PartyRole;
-    partyPercentage: number;
+    partyPercentage?: number;
     identifiers: identifier[];
-    address: AddressObject;
-    phoneNumber: PhoneNumberObject;
-    email: EmailObject;
+    address?: AddressObject;
+    phoneNumber?: PhoneNumberObject;
+    email?: EmailObject;
 }
 
 // This interface needs to be completed
 export interface Policy {
-    policyNumber: string;
+    policyNumber?: string;
     planCode: string;
     productType: string;
-    policyStatus: string;
+    policyStatus?: string;
     policyHoldingForm: string;
-    policyEffectiveDate: Date;
+    policyEffectiveDate?: Date;
     issueState: string;
     issueCountry: string;
 }

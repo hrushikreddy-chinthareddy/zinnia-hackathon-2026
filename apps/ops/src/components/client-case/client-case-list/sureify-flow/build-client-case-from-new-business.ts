@@ -110,7 +110,7 @@ export const buildInsuredDetailsFromNewbusiness = (
         firstName,
         lastName,
         sexAtBirth: toTitleCase(sexAtBirth),
-        dateOfBirth: new Date(dateOfBirth),
+        dateOfBirth: new Date(dateOfBirth!),
         state: issueState,
         // all this properties used on client case payload are not included in newBussiness
         // nicotineUser
