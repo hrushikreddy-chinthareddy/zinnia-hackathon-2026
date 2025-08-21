@@ -23,13 +23,17 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getFlicConfig, { FormSubtype } from './flic-withdrawal-form.helpers';
 
+interface FlicWithdrawalFormProps {
+    qualType: string;
+    isLC: boolean;
+    productLine?: string;
+}
+
 export default function FlicWithdrawalForm({
     qualType,
     isLC,
-}: {
-    qualType: string;
-    isLC: boolean;
-}) {
+    productLine = '',
+}: FlicWithdrawalFormProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
@@ -49,6 +53,7 @@ export default function FlicWithdrawalForm({
         fullWithdrawalOptions,
         eSignatureFieldConfig,
         reasonOptions,
+        productLineOptions,
     } = getFlicConfig(t, qualType, isLC);
 
     const {
@@ -155,10 +160,12 @@ export default function FlicWithdrawalForm({
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
             />
-            {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(
-                    (state) => state && cslnCheckStates.includes(state)
-                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+            {[ownerStateOfResidence, contractIssueState]?.some(
+                (state) => state && cslnCheckStates?.includes(state)
+            ) &&
+                productLineOptions?.includes(productLine) && (
+                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
+                )}
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}

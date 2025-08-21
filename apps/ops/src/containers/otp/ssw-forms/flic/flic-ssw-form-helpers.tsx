@@ -715,6 +715,7 @@ export default function useFlicSSWConfig(t: TFunction) {
         'RI',
         'TX',
         'WA',
+        'MA',
     ];
 
     const eSignatureFieldConfig = {
@@ -723,6 +724,8 @@ export default function useFlicSSWConfig(t: TFunction) {
         date: true,
         auditTrial: true,
     };
+
+    const productLineOptions = ['LIFE'];
 
     return {
         formValidation: sswFormValidation,
@@ -735,5 +738,6 @@ export default function useFlicSSWConfig(t: TFunction) {
         signaturesConfig,
         cslnCheckStates,
         eSignatureFieldConfig,
+        productLineOptions,
     };
 }

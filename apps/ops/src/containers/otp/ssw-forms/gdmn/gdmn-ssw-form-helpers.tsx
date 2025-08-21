@@ -92,12 +92,6 @@ export default function getGdmnConfig(t: TFunction) {
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
-        if (ownerSignature?.isDesignationPresent === null) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-            ] = t('formValidation.signatureDesignationMustBeSelected');
-        }
-
         if (
             formDisbursement?.bank[0].accountType?.text === '' &&
             [PaymentMethod.EFT, PaymentMethod.Wire].includes(
@@ -774,6 +768,9 @@ export default function getGdmnConfig(t: TFunction) {
         date: true,
         auditTrial: true,
     };
+    const cslnCheckStates = ['MA'];
+
+    const productLineOptions = ['LIFE'];
     return {
         formValidation,
         formPartyConfigs,
@@ -785,5 +782,7 @@ export default function getGdmnConfig(t: TFunction) {
         disbursementOptions,
         signaturesConfig,
         eSignatureFieldConfig,
+        cslnCheckStates,
+        productLineOptions,
     };
 }
