@@ -1,4 +1,5 @@
 'use client';
+
 import {
     Icon,
     IconType,
@@ -10,6 +11,7 @@ import {
 import { useTranslation } from 'next-i18next';
 
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { toTitleCase } from '@deps/helpers/string.helpers';
@@ -22,12 +24,15 @@ import {
     CaseTabClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import CallLogsTab from './case-tabs/call-logs-tab';
 import DocumentsTab from './case-tabs/documents-tab';
+import EventsTab from './case-tabs/events-tab';
 import NotesTab from './case-tabs/notes-tab';
 import Typography, { TypographyVariant } from '../typography/typography';
 import ProgressTab from './case-tabs/progress/progress-tab';
+import RawDataTab from './case-tabs/raw-data-tab';
 
 export default function CaseSubPage({
     caseDetails,
@@ -39,8 +44,13 @@ export default function CaseSubPage({
     handleTabChange: (val: string) => void;
 }) {
     const { t } = useTranslation();
-    const { sessionId, partyId } = usePermissionsContext();
+    const { sessionId, partyId, isZinniaInternalViewer } =
+        usePermissionsContext();
     const { policy } = useCaseActivityContext();
+    const { featureFlags } = useOptimizely();
+    const canViewRawData =
+        isZinniaInternalViewer && featureFlags[FEATURE_FLAGS.SHOW_RAW_DATA];
+    const canViewCaseEvents = featureFlags[FEATURE_FLAGS.SHOW_CASE_EVENTS];
 
     const trackTabClick = (tab: string) => () => {
         segmentAnalyticsTrackEvent<CaseTabClickedEvent>(
@@ -135,6 +145,46 @@ export default function CaseSubPage({
                             )}
                         </Typography>
                     </TabTrigger>
+                    {canViewCaseEvents && (
+                        <TabTrigger
+                            value={CaseDetailsTabValues.events}
+                            onClick={trackTabClick('Events')}
+                        >
+                            <Icon
+                                type={IconType.HISTORY_EVENT}
+                                width={20}
+                                height={20}
+                                className="hidden flex-shrink-0 lg:block"
+                            />
+                            <Typography variant={TypographyVariant.LabelMdAlt}>
+                                {toTitleCase(
+                                    t(
+                                        `caseOverview.tabs.${CaseDetailsTabValues.events}`
+                                    ) ?? ''
+                                )}
+                            </Typography>
+                        </TabTrigger>
+                    )}
+                    {canViewRawData && (
+                        <TabTrigger
+                            value={CaseDetailsTabValues['raw-data']}
+                            onClick={trackTabClick('Raw Data')}
+                        >
+                            <Icon
+                                type={IconType.DATABASE}
+                                width={20}
+                                height={20}
+                                className="hidden flex-shrink-0 lg:block"
+                            />
+                            <Typography variant={TypographyVariant.LabelMdAlt}>
+                                {toTitleCase(
+                                    t(
+                                        `caseOverview.tabs.${CaseDetailsTabValues['raw-data']}`
+                                    ) ?? ''
+                                )}
+                            </Typography>
+                        </TabTrigger>
+                    )}
                 </TabList>
                 <TabContent
                     className="w-full"
@@ -163,6 +213,22 @@ export default function CaseSubPage({
                         queryLimit={CALL_LOGS_TAB_QUERY_LIMIT}
                     />
                 </TabContent>
+                {canViewCaseEvents && (
+                    <TabContent
+                        className="w-full"
+                        value={CaseDetailsTabValues.events}
+                    >
+                        <EventsTab caseDetails={caseDetails} />
+                    </TabContent>
+                )}
+                {canViewRawData && (
+                    <TabContent
+                        className="w-full"
+                        value={CaseDetailsTabValues['raw-data']}
+                    >
+                        <RawDataTab caseDetails={caseDetails} />
+                    </TabContent>
+                )}
             </TabGroup>
         </div>
     );

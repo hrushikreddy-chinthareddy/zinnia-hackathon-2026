@@ -472,18 +472,20 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         </div>
                     )}
                 </div>
-                <Checkbox
-                    id="nicotine-user"
-                    name="nicotineUser"
-                    onClick={(v) => {
-                        updateClientCaseData({ nicotineUser: v });
-                    }}
-                    isCheckedByDefault={
-                        clientCaseData.insuredDetails?.nicotineUser
-                    }
-                >
-                    {t('clientCase.createClientCaseForm.nicotineUserLabel')}
-                </Checkbox>
+                {currentAge >= 18 && (
+                    <Checkbox
+                        id="nicotine-user"
+                        name="nicotineUser"
+                        onClick={(v) => {
+                            updateClientCaseData({ nicotineUser: v });
+                        }}
+                        isCheckedByDefault={
+                            clientCaseData.insuredDetails?.nicotineUser
+                        }
+                    >
+                        {t('clientCase.createClientCaseForm.nicotineUserLabel')}
+                    </Checkbox>
+                )}
                 <div className={styles.clientState}>
                     <Select
                         options={usStatesSelectList}

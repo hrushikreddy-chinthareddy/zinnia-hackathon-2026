@@ -113,19 +113,16 @@ const DefaultSidebarContent = {
 
 const getFormComponentMap = (
     qualType: QualTypes | FASTQualTypes | '',
-    planCode?: string,
-    productLine?: string
+    planCode?: string
 ): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcSSWForm />,
     [Carrier.GLCO]: <GlcoSSWForm planCode={planCode} />,
     [Carrier.MASS]: <MassMutualSSWForm qualType={qualType} />,
     [Carrier.NASU]: <NassauSSWForm />,
-    [Carrier.FLIC]: (
-        <FlicSSWForm qualType={qualType} productLine={productLine} />
-    ),
+    [Carrier.FLIC]: <FlicSSWForm qualType={qualType} />,
     [Carrier.ULPC]: <UlpcSSWForm planCode={planCode} />,
     [Carrier.PRDN]: <PrdnSSWForm />,
-    [Carrier.GDMN]: <GdmnSSWForm productLine={productLine} />,
+    [Carrier.GDMN]: <GdmnSSWForm />,
     [Carrier.USAA]: <UsaaSSWForm />,
     [Carrier.RSLN]: <RslnSSWForm />,
     [Carrier.DLIC]: <DlicSSWForm planCode={planCode} />,
@@ -169,8 +166,7 @@ export default function SSWCase({
         clientId as string,
         isLC
     );
-    const { issueState, qualType, issueDate, productLine } =
-        contractAccountInfo;
+    const { issueState, qualType, issueDate } = contractAccountInfo;
 
     const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
         DefaultSidebarContent
@@ -181,7 +177,7 @@ export default function SSWCase({
     const initialForm = form;
     const formParts = determineFormToRender(
         clientForFormDetermination as string,
-        getFormComponentMap(qualType, planCode, productLine)
+        getFormComponentMap(qualType, planCode)
     );
 
     if (!formParts) {

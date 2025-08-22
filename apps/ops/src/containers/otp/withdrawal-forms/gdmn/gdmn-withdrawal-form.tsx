@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
@@ -25,13 +24,7 @@ import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getGdmnConfig, { FormSubtype } from './gdmn-withdrawal-form.helpers';
 
-interface GdmnWithdrawalFormProps {
-    productLine?: string;
-}
-
-export default function GdmnWithdrawalForm({
-    productLine = '',
-}: GdmnWithdrawalFormProps) {
+export default function GdmnWithdrawalForm() {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
@@ -50,8 +43,6 @@ export default function GdmnWithdrawalForm({
         reasonOptions,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
-        cslnCheckStates,
-        productLineOptions,
     } = getGdmnConfig(t);
 
     const {
@@ -68,7 +59,6 @@ export default function GdmnWithdrawalForm({
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        contractIssueState,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -165,12 +155,6 @@ export default function GdmnWithdrawalForm({
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
             />
-            {[ownerStateOfResidence, contractIssueState]?.some(
-                (state) => state && cslnCheckStates?.includes(state)
-            ) &&
-                productLineOptions?.includes(productLine) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}
