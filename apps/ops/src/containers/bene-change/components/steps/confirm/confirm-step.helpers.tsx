@@ -352,7 +352,10 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
                 selectedPartyType == PartyType.INDIVIDUAL
                     ? item?.party?.info?.suffix || null
                     : null,
-            gender: item?.party?.info?.gender || null,
+            gender:
+                selectedPartyType == PartyType.INDIVIDUAL
+                    ? item?.party?.info?.gender
+                    : null,
             dateOfBirth: !isNullEmptyOrUndefined(item?.party?.info?.dateOfBirth)
                 ? dayjs(item?.party?.info?.dateOfBirth).format(
                       ZAHARA_API_DATE_FORMAT
@@ -401,6 +404,12 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
         isRestrictedBeneficiary:
             item?.beneInfo?.isRestrictedBeneficiary || false,
         preferredCommunicationType: item?.party?.preferredCommunicationType,
+        trustDate:
+            selectedPartyType == PartyType.TRUST
+                ? dayjs(item?.party?.info?.trustDate)?.format(
+                      ZAHARA_API_DATE_FORMAT
+                  )
+                : null,
     };
 
     return record;
