@@ -7,6 +7,10 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
+import Radio, {
+    RadioOrientation,
+    RadioVariant,
+} from '@deps/components/radio/radio';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -119,6 +123,29 @@ export default function BeneficiaryDetails({
         currentBene?.party?.info || {}
     );
 
+    const [preferedOption, setPreferredOption] = useState(null);
+
+    const preferedOptions = [
+        {
+            label: t('email.title'),
+            value: 'EMAIL',
+        },
+        {
+            label: t('phone.title'),
+            value: 'PHONE',
+        },
+        {
+            label: t('mail'),
+            value: 'REGULARMAIL',
+        },
+    ];
+
+    const handleChange = (e: any) => {
+        setPreferredOption(e.target.value);
+        console.log('currentBene', currentBene);
+        currentBene.party.preferredCommunicationType = e.target.value;
+    };
+
     useEffect(() => {
         setBeneData((prevState: any) => {
             const position = prevState
@@ -230,6 +257,33 @@ export default function BeneficiaryDetails({
                     isReadOnly={isReadOnly}
                     existingBene={partyId ? true : false}
                 />
+            </div>
+            <div>
+                <div className="my-8">
+                    <Typography variant={TypographyVariant.H2}>
+                        Contact Details
+                    </Typography>
+                </div>
+                <div
+                    className={containerClasses}
+                    key={currentBene?.party?.preferredCommunicationType}
+                >
+                    <div className={sectionClasses}>
+                        <Radio
+                            items={preferedOptions}
+                            label={t('prefferedMethod') as string}
+                            onChange={(e) => handleChange(e)}
+                            value={preferedOption}
+                            orientation={RadioOrientation.Horizontal}
+                            variant={
+                                isReadOnly
+                                    ? RadioVariant.Inactive
+                                    : RadioVariant.Default
+                            }
+                            name={`preferredCommunicationType`}
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="my-6">

@@ -400,6 +400,7 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
         isIrrevocable: item?.beneInfo?.isIrrevocable || false,
         isRestrictedBeneficiary:
             item?.beneInfo?.isRestrictedBeneficiary || false,
+        preferredCommunicationType: item?.party?.preferredCommunicationType,
     };
 
     return record;

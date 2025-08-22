@@ -315,6 +315,31 @@ const BeneficiaryIdentification = ({
                                     variant={FieldVariant.Default}
                                     disabled={isReadOnly}
                                 />
+                                <FieldDateSelect
+                                    label={t('trustDate') as string}
+                                    id="trustDate"
+                                    data-testid="trustDate"
+                                    isFutureDateDisabled={false}
+                                    onChange={(e) =>
+                                        setParty((prevState: any) => ({
+                                            ...prevState,
+                                            trustDate: e.target.value,
+                                        }))
+                                    }
+                                    size={FieldSize.Small}
+                                    type={FieldType.BaseActive}
+                                    value={party.trustDate || null}
+                                    maxLength={10}
+                                    disabled={isReadOnly}
+                                    message={
+                                        !party?.trustDate && !isReadOnly
+                                            ? t(
+                                                  'formValidations.trustDateRequired'
+                                              )
+                                            : ''
+                                    }
+                                    required
+                                />
                             </div>
                         </div>
                     )}
@@ -423,35 +448,6 @@ const BeneficiaryIdentification = ({
                                     </div>
                                 </>
                             )}
-                            <>
-                                {partyIdentification === PartyType.TRUST && (
-                                    <FieldDateSelect
-                                        label={t('trustDate') as string}
-                                        id="trustDate"
-                                        data-testid="trustDate"
-                                        isFutureDateDisabled={false}
-                                        onChange={(e) =>
-                                            setParty((prevState: any) => ({
-                                                ...prevState,
-                                                trustDate: e.target.value,
-                                            }))
-                                        }
-                                        size={FieldSize.Small}
-                                        type={FieldType.BaseActive}
-                                        value={party.trustDate || null}
-                                        maxLength={10}
-                                        disabled={isReadOnly}
-                                        message={
-                                            !party?.trustDate && !isReadOnly
-                                                ? t(
-                                                      'formValidations.trustDateRequired'
-                                                  )
-                                                : ''
-                                        }
-                                        required
-                                    />
-                                )}
-                            </>
                         </div>
                     </div>
                 </div>
