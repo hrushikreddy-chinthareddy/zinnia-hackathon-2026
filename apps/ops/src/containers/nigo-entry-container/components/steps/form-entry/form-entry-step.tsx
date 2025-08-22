@@ -108,15 +108,14 @@ function FormEntryStep({
         clientCode as string,
         isLC
     );
-    const { qualType, productLine } = contractAccountInfo;
+    const { qualType } = contractAccountInfo;
 
     const formParts = getFormParts(
         caseType,
         clientCode,
         qualType,
         planCode,
-        isLC,
-        productLine
+        isLC
     );
     const [taskApiError, setTaskApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);

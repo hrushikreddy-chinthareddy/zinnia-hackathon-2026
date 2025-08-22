@@ -31,10 +31,9 @@ import SswEditSelection from '../ssw-edit-selection';
 
 type SswFormProps = {
     qualType: QualTypes | FASTQualTypes | '';
-    productLine?: string;
 };
 
-export function FlicSSWForm({ qualType, productLine = '' }: SswFormProps) {
+export function FlicSSWForm({ qualType }: SswFormProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
@@ -53,7 +52,6 @@ export function FlicSSWForm({ qualType, productLine = '' }: SswFormProps) {
         signaturesConfig,
         cslnCheckStates,
         eSignatureFieldConfig,
-        productLineOptions,
     } = getFlicConfig(t);
     const {
         formParty,
@@ -168,10 +166,7 @@ export function FlicSSWForm({ qualType, productLine = '' }: SswFormProps) {
             {(ownerStateOfResidence || contractIssueState) &&
                 [ownerStateOfResidence, contractIssueState].some(
                     (state) => state && cslnCheckStates.includes(state)
-                ) &&
-                productLineOptions.includes(productLine) && (
-                    <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />
-                )}
+                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}

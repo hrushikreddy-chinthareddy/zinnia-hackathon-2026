@@ -838,8 +838,6 @@ export default function getFlicConfig(
         },
     ];
 
-    const productLineOptions = ['LIFE'];
-
     return {
         cslnCheckStates,
         disbursementOptions,
@@ -857,6 +855,5 @@ export default function getFlicConfig(
         fullWithdrawalOptions,
         eSignatureFieldConfig,
         reasonOptions,
-        productLineOptions,
     };
 }

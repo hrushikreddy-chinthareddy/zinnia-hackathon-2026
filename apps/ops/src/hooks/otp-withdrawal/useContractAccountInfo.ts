@@ -11,7 +11,6 @@ type ContractAccountInfo = {
     issueDate: string | '';
     contractStatus: string | '';
     planCode: string | '';
-    productLine: string | '';
 };
 
 export const useContractAccountInfo = (
@@ -27,7 +26,6 @@ export const useContractAccountInfo = (
     const [issueDate, setIssueDate] = useState<string | ''>('');
     const [contractStatus, setContractStatus] = useState<string | ''>('');
     const [planCode, setPlanCode] = useState<string | ''>(policyPlanCode || '');
-    const [productLine, setProductLine] = useState<string | ''>('');
 
     useEffect(() => {
         const getEnterprisePolicyDetails = async () => {
@@ -36,7 +34,6 @@ export const useContractAccountInfo = (
                     contract,
                     policyPlanCode
                 );
-
                 setQualType(
                     (acctInfoResponse?.qualificationType as unknown as FASTQualTypes) ||
                         ''
@@ -44,7 +41,6 @@ export const useContractAccountInfo = (
                 setIssueState(acctInfoResponse?.issueState || '');
                 setIssueDate(acctInfoResponse?.policyDates?.issueDate || '');
                 setContractStatus(acctInfoResponse?.policyStatus || '');
-                setProductLine(acctInfoResponse?.product?.lineOfBusiness || '');
                 browserLogInfo(
                     'useContractAccountInfo::getEnterprisePolicyDetails::Retrieved account info',
                     {
@@ -81,7 +77,6 @@ export const useContractAccountInfo = (
                 setIssueDate(acctInfoResponse?.IssueDate || '');
                 setContractStatus(acctInfoResponse?.ContractStatus || '');
                 setPlanCode(acctInfoResponse?.PlanCode || '');
-                setProductLine(acctInfoResponse?.ProductLine || '');
                 browserLogInfo(
                     'useContractAccountInfo::getLCPolicyDetails::Retrieved account info',
                     {
@@ -106,14 +101,7 @@ export const useContractAccountInfo = (
         };
 
         isLC ? getLCPolicyDetails() : getEnterprisePolicyDetails();
-    }, [contract, policyPlanCode, clientCode, isLC, productLine]);
+    }, [contract, policyPlanCode, clientCode, isLC]);
 
-    return {
-        qualType,
-        issueState,
-        issueDate,
-        contractStatus,
-        planCode,
-        productLine,
-    };
+    return { qualType, issueState, issueDate, contractStatus, planCode };
 };

@@ -36,14 +36,8 @@ jest.mock('next/navigation', () => {
 
 jest.mock('@deps/utils/server-logging');
 
-jest.mock('@deps/components/otp-withdrawal-form/csln-check', () => ({
-    __esModule: true,
-    default: ({ isFormStateReadOnly }: { isFormStateReadOnly: boolean }) => (
-        <div data-testid="data-testid-csln-title">{`CslnCheck: ${isFormStateReadOnly}`}</div>
-    ),
-}));
-
 describe('GDMN Form Specific component', () => {
+    // added below code t fix the dropdown target.hasPointerCapture is not a function issue
     window.HTMLElement.prototype.hasPointerCapture = jest.fn();
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
@@ -354,101 +348,5 @@ describe('GDMN Form Specific component', () => {
             AccountCloseReason.ContractLost
         );
         expect(ContractLost).not.toBeInTheDocument();
-    });
-
-    it('renders CslnCheck when state and productLine match', () => {
-        render(
-            <FormDataContext.Provider
-                value={{
-                    ...defaultFormDataContext,
-                    formSubtype: FormSubtype.PartialWithdrawal,
-                    formData,
-                    formDisbursement,
-                    formDistribution,
-                    formErrors,
-                    formFullSurrenderAck,
-                    formLoan,
-                    formParty,
-                    formProgram,
-                    formRestriction,
-                    formSignature,
-                    formSource,
-                    formTaxWithholding,
-                    formTpaAuthorization,
-                    ownerStateOfResidence: 'MA',
-                    initialForm: {
-                        ...CaseDetails,
-                        caseId: 'CA0000034607',
-                        taskType: TaskType.Withdrawal,
-                        source: 'Zinnia.TaskManagement',
-                        carrier: 'GDMN',
-                        createdDate: '',
-                        updatedDate: '',
-                        status: CaseStatus.Pending,
-                        taskId: '6551c49b18a0092d07bfa9db',
-                        data: {
-                            ...CaseDetails.data,
-                            agentEmailAddress: '',
-                            documentNumber: '',
-                            onbaseCaseId: '',
-                        },
-                    },
-                }}
-            >
-                <GdmnWithdrawalForm productLine="LIFE" />
-            </FormDataContext.Provider>
-        );
-
-        expect(
-            screen.getByTestId('data-testid-csln-title')
-        ).toBeInTheDocument();
-    });
-
-    it('should not renders CslnCheck when state and productLine match', () => {
-        render(
-            <FormDataContext.Provider
-                value={{
-                    ...defaultFormDataContext,
-                    formSubtype: FormSubtype.PartialWithdrawal,
-                    formData,
-                    formDisbursement,
-                    formDistribution,
-                    formErrors,
-                    formFullSurrenderAck,
-                    formLoan,
-                    formParty,
-                    formProgram,
-                    formRestriction,
-                    formSignature,
-                    formSource,
-                    formTaxWithholding,
-                    formTpaAuthorization,
-                    ownerStateOfResidence: 'KA',
-                    initialForm: {
-                        ...CaseDetails,
-                        caseId: 'CA0000034607',
-                        taskType: TaskType.Withdrawal,
-                        source: 'Zinnia.TaskManagement',
-                        carrier: 'GDMN',
-                        createdDate: '',
-                        updatedDate: '',
-                        status: CaseStatus.Pending,
-                        taskId: '6551c49b18a0092d07bfa9db',
-                        data: {
-                            ...CaseDetails.data,
-                            agentEmailAddress: '',
-                            documentNumber: '',
-                            onbaseCaseId: '',
-                        },
-                    },
-                }}
-            >
-                <GdmnWithdrawalForm productLine="ANNUITY" />
-            </FormDataContext.Provider>
-        );
-
-        expect(
-            screen.queryByTestId('data-testid-csln-title')
-        ).not.toBeInTheDocument();
     });
 });
