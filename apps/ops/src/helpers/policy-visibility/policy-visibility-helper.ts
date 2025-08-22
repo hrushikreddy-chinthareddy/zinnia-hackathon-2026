@@ -8,7 +8,12 @@ import {
 } from '../../product-config/carrier-product-config';
 import { DetailLinkType } from '../../types/policy-visibility';
 
-type FeatureKey = 'loans' | 'withdrawals' | 'fundsAndAccounts';
+type FeatureKey =
+    | 'loans'
+    | 'withdrawals'
+    | 'fundsAndAccounts'
+    | 'premiums'
+    | 'rmd';
 
 const featureMap: Record<
     FeatureKey,
@@ -17,6 +22,8 @@ const featureMap: Record<
     loans: 'allowsLoans',
     withdrawals: 'allowsWithdrawals',
     fundsAndAccounts: 'allowsFundsAndAccounts',
+    premiums: 'allowPremiums',
+    rmd: 'allowRMD',
 };
 
 export const getPolicyVisibility = async (
@@ -25,6 +32,8 @@ export const getPolicyVisibility = async (
     showFundsAndAccounts: boolean;
     showLoans: boolean;
     showWithdrawals: boolean;
+    showPremiums: boolean;
+    showRMD: boolean;
     detailLinkType: DetailLinkType;
 }> => {
     const productType = policy.productType as ProductType | undefined;
@@ -34,9 +43,11 @@ export const getPolicyVisibility = async (
     const overrides = planCode && planCodeProductOverrides[planCode];
 
     const featureVisibility: Record<FeatureKey, boolean> = {
-        loans: true,
-        withdrawals: true,
-        fundsAndAccounts: true,
+        loans: !policy.isAnnuity && policy.isTPA,
+        withdrawals: policy.isTPA,
+        fundsAndAccounts: policy.isTPA,
+        premiums: policy.isTPA,
+        rmd: policy.isTPA,
     };
 
     (Object.keys(featureVisibility) as FeatureKey[]).forEach((feature) => {
@@ -57,6 +68,8 @@ export const getPolicyVisibility = async (
         showFundsAndAccounts: featureVisibility.fundsAndAccounts,
         showLoans: featureVisibility.loans,
         showWithdrawals: featureVisibility.withdrawals,
+        showPremiums: featureVisibility.premiums,
+        showRMD: featureVisibility.rmd,
         detailLinkType: policy.isAnnuity
             ? DetailLinkType.Contract
             : DetailLinkType.Policy,

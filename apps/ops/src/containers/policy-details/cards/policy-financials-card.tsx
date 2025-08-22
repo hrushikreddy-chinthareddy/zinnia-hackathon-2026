@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -14,6 +14,38 @@ import { translateYearOrYears } from '@deps/helpers/string.helpers';
 import TransactionCard from './transaction-card';
 import CardContainer from '../../card-container/card-container';
 import { buildTransactionCards } from '../policy-details.helpers';
+
+const Field = ({
+    labelKey,
+    tooltipKey,
+    value,
+    formatAsCurrency = false,
+    currencyFormat,
+    t,
+}: {
+    labelKey: string;
+    tooltipKey: string;
+    value: string | number;
+    formatAsCurrency: boolean;
+    currencyFormat: Intl.NumberFormatOptions;
+    t: TFunction;
+}) => {
+    const formattedValue = formatAsCurrency
+        ? numberFormatify(value, currencyFormat)
+        : String(value);
+
+    return (
+        <div>
+            <Label
+                label={t(labelKey)}
+                tooltipTitle={t(labelKey)}
+                tooltipBody={t(tooltipKey)}
+                variant={LabelVariant.FieldLabel}
+            />
+            <Content details={formattedValue} variant={ContentVariant.Value} />
+        </div>
+    );
+};
 
 export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
     const { t } = useTranslation(undefined, {
@@ -45,32 +77,6 @@ export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
         `dashboard.search.results.policySummaryCard.${qualificationType?.toLocaleLowerCase()}`
     );
 
-    const renderField = (
-        labelKey: string,
-        tooltipKey: string,
-        value: string | number,
-        formatAsCurrency = false
-    ) => {
-        const formattedValue = formatAsCurrency
-            ? numberFormatify(value, currencyFormat)
-            : String(value);
-
-        return (
-            <div>
-                <Label
-                    label={t(labelKey)}
-                    tooltipTitle={t(labelKey)}
-                    tooltipBody={t(tooltipKey)}
-                    variant={LabelVariant.FieldLabel}
-                />
-                <Content
-                    details={formattedValue}
-                    variant={ContentVariant.Value}
-                />
-            </div>
-        );
-    };
-
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
             <Typography variant={TypographyVariant.H2}>
@@ -80,80 +86,101 @@ export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
                 {policy?.isAnnuity && (
                     <>
                         <div className="flex flex-col gap-8 lg:flex-row">
-                            {renderField(
-                                'surrenderValue',
-                                'netSurrenderValueTooltip',
-                                surrenderValue as number,
-                                true
-                            )}
-                            {renderField(
-                                'costBasis',
-                                'costBasisTooltip',
-                                costBasis as number,
-                                true
-                            )}
+                            <Field
+                                labelKey="surrenderValue"
+                                tooltipKey="netSurrenderValueTooltip"
+                                value={surrenderValue as number}
+                                formatAsCurrency={true}
+                                currencyFormat={currencyFormat}
+                                t={t}
+                            />
+                            <Field
+                                labelKey="costBasis"
+                                tooltipKey="costBasisTooltip"
+                                value={costBasis as number}
+                                formatAsCurrency={true}
+                                currencyFormat={currencyFormat}
+                                t={t}
+                            />
                         </div>
                         <div className="flex flex-col gap-8 lg:flex-row">
-                            {renderField(
-                                'qualificationType',
-                                'qualificationTypeTooltip',
-                                qualificationTypeValue
-                            )}
-                            {renderField(
-                                'deathBenefit',
-                                'baseDeathBenefitTooltip',
-                                baseDeathBenefit as number,
-                                true
-                            )}
+                            <Field
+                                labelKey="qualificationType"
+                                tooltipKey="qualificationTypeTooltip"
+                                value={qualificationTypeValue}
+                                formatAsCurrency={false}
+                                currencyFormat={currencyFormat}
+                                t={t}
+                            />
+                            <Field
+                                labelKey="deathBenefit"
+                                tooltipKey="baseDeathBenefitTooltip"
+                                value={baseDeathBenefit as number}
+                                formatAsCurrency={true}
+                                currencyFormat={currencyFormat}
+                                t={t}
+                            />
                         </div>
                     </>
                 )}
                 {!policy?.isTerm && !policy.isAnnuity && (
                     <>
                         <div className="flex flex-col gap-8 lg:flex-row">
-                            {renderField(
-                                'baseDeathBenefit',
-                                'baseDeathBenefitTooltip',
-                                baseDeathBenefit as number,
-                                true
-                            )}
-                            {renderField(
-                                'accountValue',
-                                'accountValueTooltip',
-                                accountValue as number,
-                                true
-                            )}
+                            <Field
+                                labelKey="baseDeathBenefit"
+                                tooltipKey="baseDeathBenefitTooltip"
+                                value={baseDeathBenefit as number}
+                                formatAsCurrency={true}
+                                currencyFormat={currencyFormat}
+                                t={t}
+                            />
+                            <Field
+                                labelKey="accountValue"
+                                tooltipKey="accountValueTooltip"
+                                value={accountValue as number}
+                                formatAsCurrency={true}
+                                currencyFormat={currencyFormat}
+                                t={t}
+                            />
                         </div>
                         <div className="flex flex-col gap-8 lg:flex-row">
-                            {renderField(
-                                'netSurrenderValue',
-                                'netSurrenderValueTooltip',
-                                surrenderValue as number,
-                                true
-                            )}
-                            {renderField(
-                                'costBasis',
-                                'costBasisTooltip',
-                                costBasis as number,
-                                true
-                            )}
+                            <Field
+                                labelKey="netSurrenderValue"
+                                tooltipKey="netSurrenderValueTooltip"
+                                value={surrenderValue as number}
+                                formatAsCurrency={true}
+                                currencyFormat={currencyFormat}
+                                t={t}
+                            />
+                            <Field
+                                labelKey="costBasis"
+                                tooltipKey="costBasisTooltip"
+                                value={costBasis as number}
+                                formatAsCurrency={true}
+                                currencyFormat={currencyFormat}
+                                t={t}
+                            />
                         </div>
                     </>
                 )}
                 {policy?.isTerm && (
                     <div className="flex flex-col gap-8 lg:flex-row">
-                        {renderField(
-                            'baseDeathBenefit',
-                            'baseDeathBenefitTooltip',
-                            baseDeathBenefit as number,
-                            true
-                        )}
-                        {renderField(
-                            'policyTerm',
-                            'policyTermTooltip',
-                            translateYearOrYears(fixedCostPeriod, tRaw),
-                            false
-                        )}
+                        <Field
+                            labelKey="baseDeathBenefit"
+                            tooltipKey="baseDeathBenefitTooltip"
+                            value={baseDeathBenefit as number}
+                            formatAsCurrency={true}
+                            currencyFormat={currencyFormat}
+                            t={t}
+                        />
+                        <Field
+                            labelKey="policyTerm"
+                            tooltipKey="policyTermTooltip"
+                            value={translateYearOrYears(fixedCostPeriod, tRaw)}
+                            formatAsCurrency={false}
+                            currencyFormat={currencyFormat}
+                            t={t}
+                        />
                     </div>
                 )}
             </div>
