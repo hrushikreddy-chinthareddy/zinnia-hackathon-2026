@@ -100,16 +100,6 @@ export const farmersBlueprintTR0101 = {
                                     customProperties: {
                                         tagNodeIds: ['insured-age-tag'],
                                     },
-                                    // internal: {
-                                    //     computedValue: {
-                                    //         select: ['date-of-birth'],
-                                    //         operator: 'formula',
-                                    //         operatorParams: {
-                                    //             formula:
-                                    //                 "dateToAge(date_of_birth, 'lastBirthday', '--')",
-                                    //         },
-                                    //     },
-                                    // },
                                 },
                                 {
                                     fieldType: 'custom',
@@ -155,7 +145,7 @@ export const farmersBlueprintTR0101 = {
                                         en: 'Issue Age',
                                         fr: '',
                                     },
-                                    answerNodeId: 'insured-issue-age',
+                                    answerNodeId: 'issue-age',
                                     outputPath: 'insured.issueAge',
                                     valid: [
                                         {
@@ -165,24 +155,24 @@ export const farmersBlueprintTR0101 = {
                                                 conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
-                                                        value: 0,
+                                                        value: 18,
                                                         targetNodeId:
-                                                            'insured-issue-age',
+                                                            'issue-age',
                                                         operator:
                                                             'greaterThanOrEqual',
                                                     },
                                                     {
                                                         type: 'numberComparisonCondition',
-                                                        value: 80,
+                                                        value: 50,
                                                         targetNodeId:
-                                                            'insured-issue-age',
+                                                            'issue-age',
                                                         operator:
                                                             'lessThanOrEqual',
                                                     },
                                                 ],
                                             },
                                             message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=0 and is <80 and must be entered.',
+                                                en: 'This property requires a value which is an INTEGER and is >=18 and is <=50 and must be entered.',
                                                 fr: '',
                                             },
                                         },
@@ -903,8 +893,6 @@ export const farmersBlueprintTR0101 = {
                                                                 },
                                                                 targetBirthdateNodeId:
                                                                     'date-of-birth',
-                                                                // roundingType:
-                                                                //     'lastBirthday',
                                                             },
                                                         ],
                                                     },
@@ -918,74 +906,6 @@ export const farmersBlueprintTR0101 = {
                                     ],
                                     disabled: true,
                                 },
-                                // {
-                                //     fieldType: 'input',
-                                //     id: 'eafbbfee-eb08-46b2-83e4-85b8b484bb27',
-                                //     partName:
-                                //         'custom-2482f9e9-78ca-46db-b09a-7fae45b5bf42',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Age',
-                                //         fr: '',
-                                //     },
-                                //     platforms: ['consumer'],
-                                //     renderOn: [],
-                                //     copyable: 'none',
-                                //     answerNodeId: 'age',
-                                //     internal: {
-                                //         computedValue: {
-                                //             select: ['date-of-birth'],
-                                //             operator: 'formula',
-                                //             operatorParams: {
-                                //                 formula:
-                                //                     "dateToAge(date_of_birth, 'lastBirthday', '--')",
-                                //             },
-                                //         },
-                                //     },
-                                //     outputPath: 'insured.age',
-                                //     valid: [
-                                //         {
-                                //             id: 'f41a1156-7d54-45db-a707-d1ce6f7f9227',
-                                //             conditions: {
-                                //                 booleanOperator: 'and',
-                                //                 conditions: [
-                                //                     {
-                                //                         type: 'ageRangeCondition',
-                                //                         value: {
-                                //                             minAge: 0,
-                                //                             maxAge: 80,
-                                //                             unit: 'year',
-                                //                         },
-                                //                         targetBirthdateNodeId:
-                                //                             'date-of-birth',
-                                //                         roundingType:
-                                //                             'lastBirthday',
-                                //                     },
-                                //                 ],
-                                //             },
-                                //             message: {
-                                //                 en: 'This property requires a value which is an INTEGER and is >=0 and is <80 and must be entered.',
-                                //                 fr: '',
-                                //             },
-                                //         },
-                                //     ],
-                                //     optional: false,
-                                //     disabled: true,
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     validateAs: 'string',
-                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -1022,28 +942,6 @@ export const farmersBlueprintTR0101 = {
                                                 en: 'Platinum',
                                             },
                                             isCustom: true,
-                                            visible: {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 55,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
                                             orderingIndex: 0,
                                         },
                                         {
@@ -1052,28 +950,6 @@ export const farmersBlueprintTR0101 = {
                                                 en: 'Platinum Choice',
                                             },
                                             isCustom: true,
-                                            visible: {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 55,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
                                             orderingIndex: 0,
                                         },
                                         {
@@ -1082,28 +958,6 @@ export const farmersBlueprintTR0101 = {
                                                 en: 'Platinum Plus',
                                             },
                                             isCustom: true,
-                                            visible: {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 55,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
                                             orderingIndex: 0,
                                         },
                                         {
@@ -1112,28 +966,6 @@ export const farmersBlueprintTR0101 = {
                                                 en: 'Platinum Elite',
                                             },
                                             isCustom: true,
-                                            visible: {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 55,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
                                             orderingIndex: 0,
                                         },
                                         {
@@ -1143,28 +975,6 @@ export const farmersBlueprintTR0101 = {
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
-                                            visible: {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 1,
-                                                                    maxAge: 50,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
                                         },
                                         {
                                             value: 'PREFERREDTOBACCO',
@@ -1172,28 +982,6 @@ export const farmersBlueprintTR0101 = {
                                                 en: 'Gold Plus',
                                             },
                                             isCustom: true,
-                                            visible: {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 50,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
                                             orderingIndex: 1,
                                         },
                                     ],
@@ -1590,38 +1378,6 @@ export const farmersBlueprintTR0101 = {
                             },
                             isCustom: true,
                             fields: [
-                                // {
-                                //     fieldType: 'date',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Start Date',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'schedule-from',
-                                //     outputPath: 'temporaryFlatExtra.startDate',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: 'a076c49f-92c0-433b-9544-2c617fafac33',
-                                //     partName:
-                                //         'custom-0374a377-1217-4529-b031-8539f98cd208',
-                                //     validateAs: 'futureOrCurrentDate',
-                                //     isCustom: true,
-                                // },
                                 {
                                     fieldType: 'number',
                                     text: {
@@ -1879,7 +1635,7 @@ export const farmersBlueprintTR0101 = {
                                         {
                                             value: 'MULTIPRODUCT',
                                             text: {
-                                                en: "Has additional Farmer's policies?",
+                                                en: "Farmer's Multiple Policy Owner",
                                             },
                                             isCustom: true,
                                             orderingIndex: 0,
@@ -2120,47 +1876,20 @@ export const farmersBlueprintTR0101 = {
                                                                             'any',
                                                                     },
                                                                     {
-                                                                        type: 'ageRangeCondition',
-                                                                        value: {
-                                                                            minAge: 18,
-                                                                            maxAge: 50,
-                                                                            unit: 'year',
-                                                                        },
-                                                                        targetBirthdateNodeId:
-                                                                            'date-of-birth',
-                                                                        roundingType:
-                                                                            'lastBirthday',
-                                                                    },
-                                                                ],
-                                                            },
-                                                            {
-                                                                booleanOperator:
-                                                                    'and',
-                                                                conditions: [
-                                                                    {
-                                                                        type: 'matchesCondition',
-                                                                        value: [
-                                                                            'STANDARDPLUSNONTOBACCO',
-                                                                            'STANDARDNONTOBACCO',
-                                                                            'PREFERREDNONTOBACCO',
-                                                                            'ELITENONTOBACCO',
-                                                                        ],
+                                                                        type: 'numberComparisonCondition',
+                                                                        value: 18,
                                                                         targetNodeId:
-                                                                            'premium-class',
-                                                                        quantifier:
-                                                                            'any',
+                                                                            'issue-age',
+                                                                        operator:
+                                                                            'greaterThanOrEqual',
                                                                     },
                                                                     {
-                                                                        type: 'ageRangeCondition',
-                                                                        value: {
-                                                                            minAge: 18,
-                                                                            maxAge: 55,
-                                                                            unit: 'year',
-                                                                        },
-                                                                        targetBirthdateNodeId:
-                                                                            'date-of-birth',
-                                                                        roundingType:
-                                                                            'lastBirthday',
+                                                                        type: 'numberComparisonCondition',
+                                                                        value: 50,
+                                                                        targetNodeId:
+                                                                            'issue-age',
+                                                                        operator:
+                                                                            'lessThanOrEqual',
                                                                     },
                                                                 ],
                                                             },
@@ -2168,7 +1897,10 @@ export const farmersBlueprintTR0101 = {
                                                                 type: 'matchesCondition',
                                                                 value: [
                                                                     'STANDARDNONTOBACCO',
-                                                                    'STANDARDTOBACCO',
+                                                                    'STANDARDPLUSNONTOBACCO',
+                                                                    'STANDARDNONTOBACCO',
+                                                                    'PREFERREDNONTOBACCO',
+                                                                    'ELITENONTOBACCO',
                                                                 ],
                                                                 targetNodeId:
                                                                     'premium-class',
@@ -2191,16 +1923,20 @@ export const farmersBlueprintTR0101 = {
                                                 booleanOperator: 'and',
                                                 conditions: [
                                                     {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 45,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 45,
+                                                        targetNodeId:
+                                                            'issue-age',
+                                                        operator:
+                                                            'lessThanOrEqual',
                                                     },
                                                 ],
                                             },
@@ -2392,111 +2128,6 @@ export const farmersBlueprintTR0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    visible: {
-                                        booleanOperator: 'or',
-                                        conditions: [
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 60,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'matchesCondition',
-                                                        value: [
-                                                            '10',
-                                                            '15',
-                                                            '20',
-                                                        ],
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                        quantifier: 'any',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 50,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: 'term30',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 55,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '20',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 45,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '30',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
                                     platforms: [],
                                     renderOn: [],
                                     copyable: 'none',
@@ -2522,6 +2153,17 @@ export const farmersBlueprintTR0101 = {
                                             isCustom: true,
                                         },
                                     ],
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'numberComparisonCondition',
+                                                value: 60,
+                                                targetNodeId: 'issue-age',
+                                                operator: 'lessThanOrEqual',
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     answerNodeId:
@@ -2567,6 +2209,48 @@ export const farmersBlueprintTR0101 = {
                                             },
                                         ],
                                     },
+                                    valid: [
+                                        {
+                                            id: 'ab4176f4-97f9-4469-8393-e60ddfb0c552',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 10000,
+                                                        targetNodeId:
+                                                            'accidental-death-benefit-rider-benefit',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The minimum is $10,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: 'b07c7535-102a-4ae5-bf54-955c2eebf03c',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 300000,
+                                                        targetNodeId:
+                                                            'accidental-death-benefit-rider-benefit',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The maximum is $300,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     answerNodeId:
@@ -2617,7 +2301,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLEC',
+                                            value: 'TABLED',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -2625,7 +2309,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLED',
+                                            value: 'TABLEF',
                                             text: {
                                                 en: '2.5 x Standard',
                                             },
@@ -2633,7 +2317,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLEE',
+                                            value: 'TABLEH',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },
@@ -2656,7 +2340,6 @@ export const farmersBlueprintTR0101 = {
                                         ],
                                     },
                                 },
-
                                 {
                                     answerNodeId:
                                         'children-term-insurance-rider',
@@ -2673,22 +2356,6 @@ export const farmersBlueprintTR0101 = {
                                     title: {
                                         en: '',
                                         fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 18,
-                                                    maxAge: 55,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
-                                            },
-                                        ],
                                     },
                                     platforms: [],
                                     renderOn: [],
@@ -2774,6 +2441,18 @@ export const farmersBlueprintTR0101 = {
                                                         operator:
                                                             'greaterThanOrEqual',
                                                     },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The minimum is $5,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '90d568f4-1196-41f1-81ec-0b51785b75ae',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
                                                         value: 25000,
@@ -2785,14 +2464,13 @@ export const farmersBlueprintTR0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The minimum is $5,000 and the maximum is $25,000.',
+                                                en: 'The maximum is $25,000.',
                                                 fr: '',
                                             },
                                         },
                                     ],
                                     defaultValue: 5000,
                                 },
-
                                 {
                                     answerNodeId: 'waiver-of-premium-rider',
                                     outputPath:
@@ -2808,88 +2486,6 @@ export const farmersBlueprintTR0101 = {
                                     title: {
                                         en: '',
                                         fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'or',
-                                        conditions: [
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 55,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'matchesCondition',
-                                                        value: [
-                                                            '10',
-                                                            '20',
-                                                            '15',
-                                                            '20',
-                                                        ],
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                        quantifier: 'any',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 50,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: 'term30',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 45,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '30',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                        ],
                                     },
                                     platforms: [],
                                     renderOn: [],
@@ -2966,7 +2562,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLEC',
+                                            value: 'TABLED',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -2974,7 +2570,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLED',
+                                            value: 'TABLEF',
                                             text: {
                                                 en: '2.5 x Standard',
                                             },
@@ -2982,7 +2578,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLEE',
+                                            value: 'TABLEH',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },
@@ -3036,155 +2632,6 @@ export const farmersBlueprintTR0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    visible: {
-                                        booleanOperator: 'or',
-                                        conditions: [
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 75,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '10',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 70,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '15',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 65,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '20',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 60,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: 'term30',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 55,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '20',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 45,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '30',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
                                     platforms: [],
                                     renderOn: [],
                                     copyable: 'none',
@@ -3211,6 +2658,48 @@ export const farmersBlueprintTR0101 = {
                                     ],
                                 },
                                 {
+                                    answerNodeId: 'charitable-giving-rider',
+                                    outputPath:
+                                        'riders.charitableGivingRider.values',
+                                    fieldType: 'checkboxGroup',
+                                    id: '6d3f588a-46c6-401c-90e7-a3638296b5e7',
+                                    partName:
+                                        'custom-f84b65d6-cdb9-491c-a458-0324c797f534',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                        forceNewLine: false,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: 'Rider_CGR',
+                                            text: {
+                                                en: 'Charitable Giving Rider',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
                                     answerNodeId:
                                         'chronic-illness-accelerated-death-benefit-rider',
                                     outputPath:
@@ -3230,135 +2719,6 @@ export const farmersBlueprintTR0101 = {
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
-                                            {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 70,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                            {
-                                                                type: 'matchesCondition',
-                                                                value: [
-                                                                    '10',
-                                                                    '15',
-                                                                ],
-                                                                targetNodeId:
-                                                                    'level-term-period',
-                                                                quantifier:
-                                                                    'any',
-                                                            },
-                                                        ],
-                                                    },
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 65,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                            {
-                                                                type: 'equalityCondition',
-                                                                value: '20',
-                                                                isEqual: true,
-                                                                targetNodeId:
-                                                                    'level-term-period',
-                                                            },
-                                                        ],
-                                                    },
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 50,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                            {
-                                                                type: 'equalityCondition',
-                                                                value: 'term30',
-                                                                isEqual: true,
-                                                                targetNodeId:
-                                                                    'level-term-period',
-                                                            },
-                                                        ],
-                                                    },
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 55,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                            {
-                                                                type: 'equalityCondition',
-                                                                value: '20',
-                                                                isEqual: true,
-                                                                targetNodeId:
-                                                                    'level-term-period',
-                                                            },
-                                                        ],
-                                                    },
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 45,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                            {
-                                                                type: 'equalityCondition',
-                                                                value: '30',
-                                                                isEqual: true,
-                                                                targetNodeId:
-                                                                    'level-term-period',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
                                             {
                                                 type: 'matchesCondition',
                                                 value: ['Rider_ABRTRM'],
@@ -3393,197 +2753,7 @@ export const farmersBlueprintTR0101 = {
                                             isCustom: true,
                                         },
                                     ],
-                                },
-                                {
-                                    answerNodeId: 'charitable-giving-rider',
-                                    outputPath:
-                                        'riders.charitableGivingRider.values',
-                                    fieldType: 'checkboxGroup',
-                                    id: '6d3f588a-46c6-401c-90e7-a3638296b5e7',
-                                    partName:
-                                        'custom-f84b65d6-cdb9-491c-a458-0324c797f534',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'or',
-                                        conditions: [
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 0,
-                                                            maxAge: 75,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '10',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 75,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '15',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 65,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '20',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 50,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: 'term30',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 55,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '20',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                booleanOperator: 'and',
-                                                conditions: [
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 45,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
-                                                    },
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: '30',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'level-term-period',
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 12,
-                                        forceNewLine: false,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            value: 'Rider_CGR',
-                                            text: {
-                                                en: 'Charitable Giving Rider',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
+                                    hidden: true,
                                 },
                             ],
                             displayAsCard: false,
