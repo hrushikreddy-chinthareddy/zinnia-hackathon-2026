@@ -60,6 +60,8 @@ export const buildTransactionCards = (
         showFundsAndAccounts: boolean;
         showLoans: boolean;
         showWithdrawals: boolean;
+        showPremiums: boolean;
+        showRMD: boolean;
     }
 ): TransactionCardProps[] => {
     const { policyNumber, planCode, currency, isAnnuity } = policy;
@@ -172,10 +174,11 @@ export const buildTransactionCards = (
         value: numberFormatify(fundValue as number, currencyFormat),
     };
 
-    if (policy.isAnnuity) {
-        return [premiumsCard, withdrawalsCard, rmdCard, fundsCard];
+    const cards: TransactionCardProps[] = [];
+
+    if (visibility.showPremiums) {
+        cards.push(premiumsCard);
     }
-    const cards: TransactionCardProps[] = [premiumsCard];
 
     if (visibility.showWithdrawals) {
         cards.push(withdrawalsCard);
@@ -183,6 +186,10 @@ export const buildTransactionCards = (
 
     if (!policy.isAnnuity && visibility.showLoans) {
         cards.push(loansCard);
+    }
+
+    if (policy.isAnnuity && visibility.showRMD) {
+        cards.push(rmdCard);
     }
 
     if (visibility.showFundsAndAccounts) {

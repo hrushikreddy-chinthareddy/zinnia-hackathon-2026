@@ -232,6 +232,28 @@ export const farmersBlueprintIU0101 = {
                                     partName:
                                         'custom-4a7beb6f-5685-40e7-bac8-b66457e6ba27',
                                     validateAs: 'integer',
+                                    valid: [
+                                        {
+                                            id: '8a87dfcd-7904-4d35-9bc8-10bfda84b403',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 80,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'This property requires a value which is an INTEGER and is >=0 and is <=80 and must be entered.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     fieldType: 'input',
@@ -1053,16 +1075,12 @@ export const farmersBlueprintIU0101 = {
                                                 booleanOperator: 'and',
                                                 conditions: [
                                                     {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 80,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
                                                     },
                                                 ],
                                             },
@@ -1078,16 +1096,12 @@ export const farmersBlueprintIU0101 = {
                                                 booleanOperator: 'and',
                                                 conditions: [
                                                     {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 80,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
                                                     },
                                                 ],
                                             },
@@ -1103,16 +1117,12 @@ export const farmersBlueprintIU0101 = {
                                                 booleanOperator: 'and',
                                                 conditions: [
                                                     {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 80,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
                                                     },
                                                 ],
                                             },
@@ -1128,33 +1138,12 @@ export const farmersBlueprintIU0101 = {
                                                 booleanOperator: 'and',
                                                 conditions: [
                                                     {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 18,
-                                                                    maxAge: 80,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                        ],
-                                                    },
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 80,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
                                                     },
                                                 ],
                                             },
@@ -1171,33 +1160,12 @@ export const farmersBlueprintIU0101 = {
                                                 booleanOperator: 'and',
                                                 conditions: [
                                                     {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'ageRangeCondition',
-                                                                value: {
-                                                                    minAge: 1,
-                                                                    maxAge: 80,
-                                                                    unit: 'year',
-                                                                },
-                                                                targetBirthdateNodeId:
-                                                                    'date-of-birth',
-                                                                roundingType:
-                                                                    'lastBirthday',
-                                                            },
-                                                        ],
-                                                    },
-                                                    {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 1,
-                                                            maxAge: 80,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
                                                     },
                                                 ],
                                             },
@@ -1212,16 +1180,12 @@ export const farmersBlueprintIU0101 = {
                                                 booleanOperator: 'and',
                                                 conditions: [
                                                     {
-                                                        type: 'ageRangeCondition',
-                                                        value: {
-                                                            minAge: 18,
-                                                            maxAge: 80,
-                                                            unit: 'year',
-                                                        },
-                                                        targetBirthdateNodeId:
-                                                            'date-of-birth',
-                                                        roundingType:
-                                                            'lastBirthday',
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
                                                     },
                                                 ],
                                             },
@@ -1328,15 +1292,11 @@ export const farmersBlueprintIU0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 0,
-                                                    maxAge: 17,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
+                                                type: 'numberComparisonCondition',
+                                                value: 17,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'lessThanOrEqual',
                                             },
                                         ],
                                     },
@@ -1420,7 +1380,7 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'None',
                                             },
                                             isCustom: true,
-                                            orderingIndex: 1,
+                                            orderingIndex: 2,
                                         },
                                         {
                                             value: 'TABLEA',
@@ -1934,7 +1894,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'MULTIPRODUCT',
                                             text: {
-                                                en: "Has additional Farmer's policies?",
+                                                en: "Farmer's Multiple Policy Owner",
                                             },
                                             isCustom: true,
                                             orderingIndex: 0,
@@ -2115,7 +2075,7 @@ export const farmersBlueprintIU0101 = {
                                                 conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
-                                                        value: 10000,
+                                                        value: 50000,
                                                         targetNodeId:
                                                             'face-amount',
                                                         operator:
@@ -2124,7 +2084,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The minimum is $10,000',
+                                                en: 'The minimum is $50,000',
                                                 fr: '',
                                             },
                                         },
@@ -2214,7 +2174,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-f2d50d5c-9170-4660-a0f7-9e5aaa5ec21e',
                                     validateAs: 'integer',
                                     isCustom: true,
-                                    defaultValue: 120,
+                                    defaultValue: 100,
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2390,7 +2350,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'SOLVE_FOR_TARGET_CASH_VALUE',
                                             text: {
-                                                en: 'Solve for Target Cash Value',
+                                                en: 'Target Cash Value',
                                             },
                                             isCustom: true,
                                             orderingIndex: 0,
@@ -2437,7 +2397,7 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
-                                    defaultValue: 'SOLVE_FOR_TARGET_CASH_VALUE',
+                                    defaultValue: 'TARGET_PREMIUM',
                                 },
                                 {
                                     fieldType: 'money',
@@ -2470,6 +2430,48 @@ export const farmersBlueprintIU0101 = {
                                         'custom-60b49b51-5e22-4094-b69f-f3e1a14091c7',
                                     validateAs: 'integer',
                                     isCustom: true,
+                                    valid: [
+                                        {
+                                            id: 'afc950cb-b349-4be9-a584-dff7fb36a5d4',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 50000,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The minimum is $50,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: 'a078189c-db75-4d0e-b62c-c2449acf367f',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 10000000,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The maximum is $10,000,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2620,7 +2622,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-ed6f5349-bb0f-451c-b762-e0bc7aa7a384',
                                     validateAs: 'integer',
                                     isCustom: true,
-                                    defaultValue: 120,
+                                    defaultValue: 100,
                                 },
                                 {
                                     fieldType: 'money',
@@ -2875,7 +2877,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'SOLVE_FOR_TARGET_CASH_VALUE',
                                             text: {
-                                                en: 'Solve for Target Cash Value',
+                                                en: 'Target Cash Value',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -2923,51 +2925,25 @@ export const farmersBlueprintIU0101 = {
                                         },
                                         fromYear: {
                                             min: 1,
-                                            label: { en: 'From year' },
+                                            label: {
+                                                en: 'From year',
+                                            },
                                         },
                                         through: {
                                             max: 120,
-                                            label: { en: 'Through' },
+                                            label: {
+                                                en: 'Through',
+                                            },
                                         },
                                         buttons: {
                                             add: {
-                                                label: { en: 'Add new row' },
+                                                label: {
+                                                    en: 'Add new row',
+                                                },
                                             },
                                         },
                                     },
                                 },
-                                // {
-                                //     fieldType: 'money',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Modal Premium',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'modal-premium',
-                                //     outputPath: 'modalPremiumValue',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: 'cba28c1d-d763-47d7-b602-f3016feb24e8',
-                                //     partName:
-                                //         'custom-a25eb5f1-da2a-4d33-a5e4-46bc0e4304f5',
-                                //     validateAs: 'integer',
-                                //     isCustom: true,
-                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -3086,39 +3062,6 @@ export const farmersBlueprintIU0101 = {
                                     isCustom: true,
                                     defaultValue: 'ACH',
                                 },
-                                // {
-                                //     fieldType: 'number',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Number of Years to Pay Premium',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'payment-duration',
-                                //     outputPath: 'premiumDuration',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: 'c0a05014-9007-4c46-b364-2f04f4c8d0f2',
-                                //     partName:
-                                //         'custom-e37ae76d-cb60-4f78-8e60-5c0953e68c43',
-                                //     validateAs: 'integer',
-                                //     isCustom: true,
-                                //     defaultValue: 0,
-                                // },
                                 {
                                     fieldType: 'money',
                                     text: {
@@ -3939,56 +3882,6 @@ export const farmersBlueprintIU0101 = {
                             title: {},
                             isCustom: true,
                             fields: [
-                                // {
-                                //     fieldType: 'dropdown',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Death Benefit Option',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'death-benefit-option',
-                                //     outputPath: 'deathBenefitOption.value',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: 'bf7b2782-ebd5-4def-87af-5b19d5356dec',
-                                //     partName:
-                                //         'custom-77062f3d-906d-4014-9e36-d034e6654838',
-                                //     selectOptions: [
-                                //         {
-                                //             value: 'increasing',
-                                //             text: {
-                                //                 en: 'Increasing',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //         {
-                                //             value: 'level',
-                                //             text: {
-                                //                 en: 'Level',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //     ],
-                                //     validateAs: 'string',
-                                //     defaultValue: 'level',
-                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -4129,25 +4022,35 @@ export const farmersBlueprintIU0101 = {
                                             options: [
                                                 {
                                                     value: 'LEVEL',
-                                                    label: { en: 'Level' },
+                                                    label: {
+                                                        en: 'Level',
+                                                    },
                                                 },
                                                 {
                                                     value: 'INCREASING',
-                                                    label: { en: 'Increasing' },
+                                                    label: {
+                                                        en: 'Increasing',
+                                                    },
                                                 },
                                             ],
                                         },
                                         fromYear: {
                                             min: 1,
-                                            label: { en: 'From year' },
+                                            label: {
+                                                en: 'From year',
+                                            },
                                         },
                                         through: {
                                             max: 120,
-                                            label: { en: 'Through' },
+                                            label: {
+                                                en: 'Through',
+                                            },
                                         },
                                         buttons: {
                                             add: {
-                                                label: { en: 'Add new row' },
+                                                label: {
+                                                    en: 'Add new row',
+                                                },
                                             },
                                         },
                                     },
@@ -4164,91 +4067,6 @@ export const farmersBlueprintIU0101 = {
                                         ],
                                     },
                                 },
-                                // {
-                                //     fieldType: 'input',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'From',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'death-benefit-option-from',
-                                //     outputPath: 'deathBenefitOption.from',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //         forceNewLine: true,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: '3b357e2c-5df0-4093-977b-35f422998ec2',
-                                //     partName:
-                                //         'custom-d9e46b20-8ea4-4e7c-82b2-53ab5e41aff4',
-                                //     validateAs: 'integer',
-                                // },
-                                // {
-                                //     fieldType: 'input',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Thru',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'death-benefit-option-thru',
-                                //     outputPath: 'deathBenefitOption.thru',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: 'bef51498-2496-4991-b55c-fa6c4522635d',
-                                //     partName:
-                                //         'custom-73c54cec-3b93-4e45-a70b-9f44faf2ee4a',
-                                //     validateAs: 'integer',
-                                //     valid: [
-                                //         {
-                                //             id: '0b2b9aa9-b20d-4d7e-8a5d-b11ffacf16bf',
-                                //             conditions: {
-                                //                 booleanOperator: 'and',
-                                //                 conditions: [
-                                //                     {
-                                //                         type: 'numberComparisonCondition',
-                                //                         nodeIdOfValue:
-                                //                             'death-benefit-option-from',
-                                //                         targetNodeId:
-                                //                             'death-benefit-option-thru',
-                                //                         operator: 'greaterThan',
-                                //                     },
-                                //                 ],
-                                //             },
-                                //             message: {
-                                //                 en: "The From and the Thru can't be the same.",
-                                //                 fr: '',
-                                //             },
-                                //         },
-                                //     ],
-                                // },
                                 {
                                     fieldType: 'dropdown',
                                     text: {
@@ -4389,6 +4207,31 @@ export const farmersBlueprintIU0101 = {
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
                                     defaultValue: 0,
+                                    valid: [
+                                        {
+                                            id: '419946a9-333d-460b-a617-cc0fcef0b77f',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'mathOperator',
+                                                        value: 100,
+                                                        nodeIds: [
+                                                            'long-term-fixed-account',
+                                                            'sp500-indexed-account',
+                                                            'sp-marc-5-percent-er-indexed-account',
+                                                        ],
+                                                        operator: 'equal',
+                                                        mathOperator: 'sum',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Funds must total 100%',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     fieldType: 'number',
@@ -4442,7 +4285,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Maximum is 4%',
+                                                en: 'Future Interest Rate can not be higher than the current interest rate of 4%.',
                                                 fr: '',
                                             },
                                         },
@@ -4481,6 +4324,31 @@ export const farmersBlueprintIU0101 = {
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
                                     defaultValue: 50,
+                                    valid: [
+                                        {
+                                            id: '36e4512c-6bd5-48ac-994f-2b7300e7d2f3',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'mathOperator',
+                                                        value: 100,
+                                                        nodeIds: [
+                                                            'long-term-fixed-account',
+                                                            'sp500-indexed-account',
+                                                            'sp-marc-5-percent-er-indexed-account',
+                                                        ],
+                                                        operator: 'equal',
+                                                        mathOperator: 'sum',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Funds must total 100%',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     fieldType: 'number',
@@ -4513,7 +4381,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-ba46e0e6-d290-41d1-952c-6306bd16922a',
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
-                                    defaultValue: ILLUSTRATED_RATE,
+                                    defaultValue: 7.41,
                                     valid: [
                                         {
                                             id: '36ece1c0-491e-4f80-ab88-ddbebad173a9',
@@ -4522,7 +4390,7 @@ export const farmersBlueprintIU0101 = {
                                                 conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
-                                                        value: ILLUSTRATED_RATE,
+                                                        value: 7.41,
                                                         targetNodeId:
                                                             'sp500-indexed-account-current-illustrated-rate',
                                                         operator:
@@ -4531,7 +4399,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: `Maximum is ${ILLUSTRATED_RATE}%`,
+                                                en: 'Future Interest Rate can not be higher than the current interest rate of 7.41%.',
                                                 fr: '',
                                             },
                                         },
@@ -4572,6 +4440,31 @@ export const farmersBlueprintIU0101 = {
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
                                     defaultValue: 50,
+                                    valid: [
+                                        {
+                                            id: 'decf5541-2cf1-4a78-af48-b147142ec7bb',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'mathOperator',
+                                                        value: 100,
+                                                        nodeIds: [
+                                                            'long-term-fixed-account',
+                                                            'sp500-indexed-account',
+                                                            'sp-marc-5-percent-er-indexed-account',
+                                                        ],
+                                                        operator: 'equal',
+                                                        mathOperator: 'sum',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Funds must total 100%',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     fieldType: 'number',
@@ -4604,7 +4497,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-8fed7eb2-5cc0-438e-9f62-20f660cf13cd',
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
-                                    defaultValue: ILLUSTRATED_RATE,
+                                    defaultValue: 7.41,
                                     valid: [
                                         {
                                             id: '36ece1c0-491e-4f80-ab88-ddbebad173a9',
@@ -4613,7 +4506,7 @@ export const farmersBlueprintIU0101 = {
                                                 conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
-                                                        value: ILLUSTRATED_RATE,
+                                                        value: 7.41,
                                                         targetNodeId:
                                                             'sp-marc-5-percent-er-indexed-account-current-illustrated-rate',
                                                         operator:
@@ -4622,7 +4515,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: `Maximum is ${ILLUSTRATED_RATE}%`,
+                                                en: 'Future Interest Rate can not be higher than the current interest rate of 7.41%.',
                                                 fr: '',
                                             },
                                         },
@@ -4669,9 +4562,9 @@ export const farmersBlueprintIU0101 = {
                             fields: [
                                 {
                                     fieldType: 'checkboxGroup',
-                                    id: '00fef022-990f-41e1-beda-af93990c044c',
+                                    id: '7698bc54-013b-4b4c-bcc7-130350632b79',
                                     partName:
-                                        'custom-6f5870cc-8073-4593-8885-ed5d540862c4',
+                                        'custom-8fa16e79-9919-4c40-9cb3-48fda6be2462',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -4684,81 +4577,18 @@ export const farmersBlueprintIU0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 0,
-                                                    maxAge: 80,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
-                                            },
-                                        ],
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    isCustom: true,
-                                    copyable: 'none',
-                                    answerNodeId:
-                                        'accelerated-death-benefit-rider-for-terminal-illness',
-                                    outputPath:
-                                        'riders.acceleratedDeathBenefitRiderForTerminalIllness.values',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 12,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
-                                        {
-                                            value: 'Rider_ABRTRM',
-                                            text: {
-                                                en: 'Accelerated Death Benefit Rider for Terminal Illness',
-                                            },
-                                            isCustom: true,
-                                        },
-                                    ],
-                                },
-                                {
-                                    fieldType: 'checkboxGroup',
-                                    id: '036a5c6f-641f-4209-b952-3f445b3e71d7',
-                                    partName:
-                                        'custom-8ac04b6c-c088-4575-8344-df0f77cfea09',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['Rider_ABRTRM'],
+                                                type: 'numberComparisonCondition',
+                                                value: 60,
                                                 targetNodeId:
-                                                    'accelerated-death-benefit-rider-for-terminal-illness',
-                                                quantifier: 'any',
+                                                    'insured-issue-age',
+                                                operator: 'lessThanOrEqual',
                                             },
                                             {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 18,
-                                                    maxAge: 70,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
+                                                type: 'numberComparisonCondition',
+                                                value: 1,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'greaterThanOrEqual',
                                             },
                                         ],
                                     },
@@ -4767,9 +4597,9 @@ export const farmersBlueprintIU0101 = {
                                     isCustom: true,
                                     copyable: 'none',
                                     answerNodeId:
-                                        'chronic-illness-accelerated-death-benefit-rider',
+                                        'accidental-death-benefit-rider',
                                     outputPath:
-                                        'riders.chronicIllnessAcceleratedDeathBenefitRider.values',
+                                        'riders.accidentalDeathBenefitRider.values',
                                     optional: true,
                                     placeholder: {
                                         en: '',
@@ -4779,20 +4609,258 @@ export const farmersBlueprintIU0101 = {
                                     layout: {
                                         size: 12,
                                         forceNewLine: false,
-                                        indent: 3,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            value: 'Rider_ABRCHR',
+                                            value: 'Rider_ADR',
                                             text: {
-                                                en: 'Chronic Illness Accelerated Death Benefit Rider',
+                                                en: 'Accidental Death Benefit Rider',
                                             },
                                             isCustom: true,
                                         },
                                     ],
+                                },
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Benefit',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'accidental-death-benefit-rider-benefit',
+                                    outputPath:
+                                        'riders.accidentalDeathBenefitRider.benefit',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'affd5ee0-833f-45eb-bf92-6a2f5725ec04',
+                                    partName:
+                                        'custom-1eaba30c-0b36-4dc3-bdc0-c3991691f454',
+                                    validateAs: 'integer',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ADR'],
+                                                targetNodeId:
+                                                    'accidental-death-benefit-rider',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                    isCustom: true,
+                                    valid: [
+                                        {
+                                            id: '7f0fa8cb-abed-4c99-86a1-d4cf97f374c8',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 10000,
+                                                        targetNodeId:
+                                                            'accidental-death-benefit-rider-benefit',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The minimum is $10,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '117d2af0-d971-415f-9a65-6fa499af1700',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 16,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 15,
+                                                                targetNodeId:
+                                                                    'insured-issue-age',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 50000,
+                                                                targetNodeId:
+                                                                    'accidental-death-benefit-rider-benefit',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The maximum is $50,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '7e470393-9f53-482f-ab6c-4d3bc447b7fe',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 15,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 16,
+                                                                targetNodeId:
+                                                                    'insured-issue-age',
+                                                                operator:
+                                                                    'greaterThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 300000,
+                                                                targetNodeId:
+                                                                    'accidental-death-benefit-rider-benefit',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The maximum is $300,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Table Rating',
+                                        fr: '',
+                                    },
+                                    answerNodeId:
+                                        'accidental-death-benefit-rider-table-rating',
+                                    outputPath:
+                                        'riders.accidentalDeathBenefitRider.tableRating',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '00036e14-a322-43a1-95e1-777646f7b960',
+                                    partName:
+                                        'custom-310a1219-172c-49c2-805a-b1e903f97378',
+                                    selectOptions: [
+                                        {
+                                            value: 'NONETABLE',
+                                            text: {
+                                                en: 'Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                        },
+                                        {
+                                            value: 'TABLEB',
+                                            text: {
+                                                en: '1.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLED',
+                                            text: {
+                                                en: '2.0 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEF',
+                                            text: {
+                                                en: '2.5 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEH',
+                                            text: {
+                                                en: '3.0 x Standard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    defaultValue: 'NONETABLE',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ADR'],
+                                                targetNodeId:
+                                                    'accidental-death-benefit-rider',
+                                                quantifier: 'any',
+                                            },
+                                        ],
+                                    },
+                                    isCustom: true,
                                 },
                                 {
                                     fieldType: 'checkboxGroup',
@@ -4811,15 +4879,18 @@ export const farmersBlueprintIU0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 18,
-                                                    maxAge: 55,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
+                                                type: 'numberComparisonCondition',
+                                                value: 18,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'greaterThanOrEqual',
+                                            },
+                                            {
+                                                type: 'numberComparisonCondition',
+                                                value: 55,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'lessThanOrEqual',
                                             },
                                         ],
                                     },
@@ -4912,6 +4983,18 @@ export const farmersBlueprintIU0101 = {
                                                         operator:
                                                             'greaterThanOrEqual',
                                                     },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The minimum is $5,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '0a86fa0a-84bd-491c-aeda-d3ee48f5d12a',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
                                                         value: 25000,
@@ -4923,7 +5006,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The minimum is $5,000 and the maximum is $25,000.',
+                                                en: 'The maximum is $25,000.',
                                                 fr: '',
                                             },
                                         },
@@ -4947,15 +5030,11 @@ export const farmersBlueprintIU0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 0,
-                                                    maxAge: 15,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
+                                                type: 'numberComparisonCondition',
+                                                value: 15,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'lessThanOrEqual',
                                             },
                                         ],
                                     },
@@ -5046,6 +5125,18 @@ export const farmersBlueprintIU0101 = {
                                                         operator:
                                                             'greaterThanOrEqual',
                                                     },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The minimum is $10,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '4c67aaab-c57c-4063-9d5c-7b2a73ef164b',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
                                                         value: 25000,
@@ -5057,66 +5148,47 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The minimum is $10,000 and the maximum is $25,000.',
+                                                en: 'The maximum is $25,000.',
                                                 fr: '',
                                             },
                                         },
-                                    ],
-                                },
-                                {
-                                    fieldType: 'checkboxGroup',
-                                    id: 'a9ab286c-9c5c-4620-8413-4c9a21e92c2d',
-                                    partName:
-                                        'custom-fe55edfc-fab1-4cdd-815d-b5b1a96d6edf',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 0,
-                                                    maxAge: 80,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
-                                            },
-                                        ],
-                                    },
-                                    platforms: [],
-                                    renderOn: [],
-                                    copyable: 'none',
-                                    answerNodeId: 'overloan-protection-rider',
-                                    outputPath:
-                                        'riders.overloanProtectionRider.values',
-                                    optional: true,
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 12,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    validateAs: 'string',
-                                    selectOptions: [
                                         {
-                                            value: 'Rider_OPR',
-                                            text: {
-                                                en: 'Overloan Protection Rider',
+                                            id: '50a9d054-cba4-423f-8222-f29446ea99ba',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'face-amount',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                targetNodeId:
+                                                                    'guaranteed-insurability-benefit-rider-face-amount',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                                nodeIdOfValue:
+                                                                    'face-amount',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                    },
+                                                ],
                                             },
-                                            isCustom: true,
+                                            message: {
+                                                en: "The amount can't exceed the base policy amount.",
+                                                fr: '',
+                                            },
                                         },
                                     ],
                                 },
@@ -5137,15 +5209,11 @@ export const farmersBlueprintIU0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 0,
-                                                    maxAge: 17,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
+                                                type: 'numberComparisonCondition',
+                                                value: 17,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'lessThanOrEqual',
                                             },
                                             {
                                                 type: 'equalityCondition',
@@ -5270,15 +5338,18 @@ export const farmersBlueprintIU0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 18,
-                                                    maxAge: 55,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'closestBirthday',
+                                                type: 'numberComparisonCondition',
+                                                value: 18,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'greaterThanOrEqual',
+                                            },
+                                            {
+                                                type: 'numberComparisonCondition',
+                                                value: 55,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'lessThanOrEqual',
                                             },
                                         ],
                                     },
@@ -5360,7 +5431,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLED',
+                                            value: 'TABLEF',
                                             text: {
                                                 en: '2.5 x Standard',
                                             },
@@ -5368,7 +5439,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLEC',
+                                            value: 'TABLED',
                                             text: {
                                                 en: '2.0 x Standard',
                                             },
@@ -5376,7 +5447,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'TABLEE',
+                                            value: 'TABLEH',
                                             text: {
                                                 en: '3.0 x Standard',
                                             },
@@ -5416,9 +5487,52 @@ export const farmersBlueprintIU0101 = {
                             fields: [
                                 {
                                     fieldType: 'checkboxGroup',
-                                    id: '450a8479-66d1-4547-9781-82e5621b749b',
+                                    id: '3cdba925-bea0-4891-8834-ee352b21dec8',
                                     partName:
-                                        'custom-3429b2ac-539c-4709-b2bc-05255ed2aabd',
+                                        'custom-4662a116-7d11-4f4b-a71d-dfe89c1ab015',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    isCustom: true,
+                                    copyable: 'none',
+                                    answerNodeId:
+                                        'accelerated-death-benefit-rider-for-terminal-illness',
+                                    outputPath:
+                                        'riders.acceleratedDeathBenefitRiderForTerminalIllness.values',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: 'Rider_ABRTRM',
+                                            text: {
+                                                en: 'Accelerated Death Benefit Rider for Terminal Illness',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                },
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    id: '79749e23-e895-4c6b-9c24-81cca20e3b27',
+                                    partName:
+                                        'custom-b135a63c-8d2d-46fc-82bf-ef15b0d74b28',
                                     text: {
                                         en: '',
                                         fr: '',
@@ -5431,15 +5545,44 @@ export const farmersBlueprintIU0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 1,
-                                                    maxAge: 60,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
+                                                type: 'matchesCondition',
+                                                value: ['Rider_ABRTRM'],
+                                                targetNodeId:
+                                                    'accelerated-death-benefit-rider-for-terminal-illness',
+                                                quantifier: 'any',
+                                            },
+                                            {
+                                                type: 'numberComparisonCondition',
+                                                value: 18,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'greaterThanOrEqual',
+                                            },
+                                            {
+                                                type: 'numberComparisonCondition',
+                                                value: 70,
+                                                targetNodeId:
+                                                    'insured-issue-age',
+                                                operator: 'lessThanOrEqual',
+                                            },
+                                            {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 150000,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
                                             },
                                         ],
                                     },
@@ -5448,9 +5591,9 @@ export const farmersBlueprintIU0101 = {
                                     isCustom: true,
                                     copyable: 'none',
                                     answerNodeId:
-                                        'accidental-death-benefit-rider',
+                                        'chronic-illness-accelerated-death-benefit-rider',
                                     outputPath:
-                                        'riders.accidentalDeathBenefitRider.values',
+                                        'riders.chronicIllnessAcceleratedDeathBenefitRider.values',
                                     optional: true,
                                     placeholder: {
                                         en: '',
@@ -5460,154 +5603,20 @@ export const farmersBlueprintIU0101 = {
                                     layout: {
                                         size: 12,
                                         forceNewLine: false,
+                                        indent: 3,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
                                     validateAs: 'string',
                                     selectOptions: [
                                         {
-                                            value: 'Rider_ADR',
+                                            value: 'Rider_ABRCHR',
                                             text: {
-                                                en: 'Accidental Death Benefit Rider',
+                                                en: 'Chronic Illness Accelerated Death Benefit Rider',
                                             },
                                             isCustom: true,
                                         },
                                     ],
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Benefit',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'accidental-death-benefit-rider-benefit',
-                                    outputPath:
-                                        'riders.accidentalDeathBenefitRider.benefit',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '954b0a76-8755-4c1a-871e-ea3e9564209c',
-                                    partName:
-                                        'custom-25bcba4c-8176-4fba-b524-e609b2be4141',
-                                    validateAs: 'integer',
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['Rider_ADR'],
-                                                targetNodeId:
-                                                    'accidental-death-benefit-rider',
-                                                quantifier: 'any',
-                                            },
-                                        ],
-                                    },
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'dropdown',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Table Rating',
-                                        fr: '',
-                                    },
-                                    answerNodeId:
-                                        'accidental-death-benefit-rider-table-rating',
-                                    outputPath:
-                                        'riders.accidentalDeathBenefitRider.tableRating',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '6c327a8e-57fc-4ec2-a810-66d07bcc6bdb',
-                                    partName:
-                                        'custom-39fe23fd-9d11-477e-a859-4a2265179e3d',
-                                    selectOptions: [
-                                        {
-                                            value: 'NONETABLE',
-                                            text: {
-                                                en: 'Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 0,
-                                        },
-                                        {
-                                            value: 'TABLEB',
-                                            text: {
-                                                en: '1.5 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLEC',
-                                            text: {
-                                                en: '2.0 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLED',
-                                            text: {
-                                                en: '2.5 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                        {
-                                            value: 'TABLEE',
-                                            text: {
-                                                en: '3.0 x Standard',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 1,
-                                        },
-                                    ],
-                                    validateAs: 'string',
-                                    defaultValue: 'NONETABLE',
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'matchesCondition',
-                                                value: ['Rider_ADR'],
-                                                targetNodeId:
-                                                    'accidental-death-benefit-rider',
-                                                quantifier: 'any',
-                                            },
-                                        ],
-                                    },
-                                    isCustom: true,
                                 },
                                 {
                                     fieldType: 'checkboxGroup',
@@ -5621,22 +5630,6 @@ export const farmersBlueprintIU0101 = {
                                     title: {
                                         en: '',
                                         fr: '',
-                                    },
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'ageRangeCondition',
-                                                value: {
-                                                    minAge: 0,
-                                                    maxAge: 80,
-                                                    unit: 'year',
-                                                },
-                                                targetBirthdateNodeId:
-                                                    'date-of-birth',
-                                                roundingType: 'lastBirthday',
-                                            },
-                                        ],
                                     },
                                     platforms: [],
                                     renderOn: [],
@@ -5668,6 +5661,48 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     defaultValue: ['Rider_CGR'],
+                                },
+                                {
+                                    fieldType: 'checkboxGroup',
+                                    id: '45dc53a7-f73d-4e94-83a7-5724b51d2343',
+                                    partName:
+                                        'custom-e769409f-5720-4cbc-b267-c151a9c6505c',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    platforms: [],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    answerNodeId: 'overloan-protection-rider',
+                                    outputPath:
+                                        'riders.overloanProtectionRider.values',
+                                    optional: true,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: 'Rider_OPR',
+                                            text: {
+                                                en: 'Overloan Protection Rider',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                    isCustom: true,
                                 },
                             ],
                             displayAsCard: false,
@@ -5758,96 +5793,6 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     defaultValue: 'no',
                                 },
-                                // {
-                                //     fieldType: 'dropdown',
-                                //     text: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     title: {
-                                //         en: 'Frequency',
-                                //         fr: '',
-                                //     },
-                                //     answerNodeId: 'distribution-frequency',
-                                //     renderOn: [],
-                                //     platforms: [],
-                                //     copyable: 'none',
-                                //     optional: false,
-                                //     triggerStepNavigation: false,
-                                //     layout: {
-                                //         size: 6,
-                                //     },
-                                //     displayInCardPreview: false,
-                                //     applicationModes: ['digital', 'paper'],
-                                //     placeholder: {
-                                //         en: '',
-                                //         fr: '',
-                                //     },
-                                //     id: '18cb9837-331b-4587-a0a7-c46b416a2f27',
-                                //     partName:
-                                //         'custom-c3e2fa2b-50e6-4193-a03e-75112a014217',
-                                //     selectOptions: [
-                                //         {
-                                //             value: 'daily',
-                                //             text: {
-                                //                 en: 'Daily',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //         {
-                                //             value: 'everyTwoWeeks',
-                                //             text: {
-                                //                 en: 'Every two weeks',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //         {
-                                //             value: 'monthly',
-                                //             text: {
-                                //                 en: 'Monthly',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //         {
-                                //             value: 'semi-Annual',
-                                //             text: {
-                                //                 en: 'Semi-annual',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //         {
-                                //             value: 'quarterly',
-                                //             text: {
-                                //                 en: 'Quarterly',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //         {
-                                //             value: 'annual',
-                                //             text: {
-                                //                 en: 'Annual',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //         {
-                                //             value: 'singlePayment',
-                                //             text: {
-                                //                 en: 'Single Payment',
-                                //             },
-                                //             isCustom: true,
-                                //             orderingIndex: 1,
-                                //         },
-                                //     ],
-                                //     validateAs: 'string',
-                                //     defaultValue: 'annual',
-                                //     disabled: true,
-                                // },
                                 {
                                     id: '2d62b565-3878-446b-8802-a7ff3410c4c8',
                                     fieldType: 'custom',
@@ -5858,7 +5803,6 @@ export const farmersBlueprintIU0101 = {
                                     defaultValue: [
                                         {
                                             id: '99090f2c-248f-4884-ad22-dbaef302c849',
-                                            firstColumn: undefined,
                                             fromYear: 1,
                                             through: 120,
                                         },
@@ -5878,15 +5822,21 @@ export const farmersBlueprintIU0101 = {
                                         },
                                         fromYear: {
                                             min: 1,
-                                            label: { en: 'From year' },
+                                            label: {
+                                                en: 'From year',
+                                            },
                                         },
                                         through: {
                                             max: 120,
-                                            label: { en: 'Through' },
+                                            label: {
+                                                en: 'Through',
+                                            },
                                         },
                                         buttons: {
                                             add: {
-                                                label: { en: 'Add new row' },
+                                                label: {
+                                                    en: 'Add new row',
+                                                },
                                             },
                                         },
                                     },
@@ -6040,176 +5990,6 @@ export const farmersBlueprintIU0101 = {
                             displayAsCard: false,
                             copyable: 'none',
                         },
-                        // {
-                        //     id: '18bf83bc-2d07-4c49-81ca-34087e19c1f6',
-                        //     partName:
-                        //         'custom-21a8b052-6488-40c5-8593-9f681b3b6d50',
-                        //     text: {},
-                        //     title: {},
-                        //     isCustom: true,
-                        //     fields: [
-                        //         {
-                        //             fieldType: 'number',
-                        //             id: 'dfa0de32-d2a3-46af-a5e4-452bd17eee74',
-                        //             partName:
-                        //                 'custom-3d3d509a-91b8-4842-88ce-42c97c2c46dd',
-                        //             text: {
-                        //                 en: '',
-                        //                 fr: '',
-                        //             },
-                        //             title: {
-                        //                 en: 'From',
-                        //                 fr: '',
-                        //             },
-                        //             platforms: [],
-                        //             renderOn: [],
-                        //             isCustom: true,
-                        //             copyable: 'none',
-                        //             answerNodeId: 'withdrawals-from',
-                        //             optional: false,
-                        //             placeholder: {
-                        //                 en: '',
-                        //                 fr: '',
-                        //             },
-                        //             triggerStepNavigation: false,
-                        //             layout: {
-                        //                 size: 3,
-                        //                 forceNewLine: false,
-                        //             },
-                        //             displayInCardPreview: false,
-                        //             applicationModes: ['digital', 'paper'],
-                        //             validateAs: 'integer',
-                        //         },
-                        //         {
-                        //             fieldType: 'number',
-                        //             id: '19235170-1a3f-41e0-88ff-b5287e369d5d',
-                        //             partName:
-                        //                 'custom-2c63c402-5eb2-420c-85d5-445ebf61d68a',
-                        //             text: {
-                        //                 en: '',
-                        //                 fr: '',
-                        //             },
-                        //             title: {
-                        //                 en: 'Thru',
-                        //                 fr: '',
-                        //             },
-                        //             platforms: [],
-                        //             renderOn: [],
-                        //             isCustom: true,
-                        //             copyable: 'none',
-                        //             answerNodeId: 'withdrawals-thru',
-                        //             optional: false,
-                        //             placeholder: {
-                        //                 en: '',
-                        //                 fr: '',
-                        //             },
-                        //             triggerStepNavigation: false,
-                        //             layout: {
-                        //                 size: 3,
-                        //             },
-                        //             displayInCardPreview: false,
-                        //             applicationModes: ['digital', 'paper'],
-                        //             validateAs: 'integer',
-                        //         },
-                        //         {
-                        //             fieldType: 'dropdown',
-                        //             text: {
-                        //                 en: '',
-                        //                 fr: '',
-                        //             },
-                        //             title: {
-                        //                 en: 'Type',
-                        //                 fr: '',
-                        //             },
-                        //             answerNodeId: 'distribution-type',
-                        //             renderOn: [],
-                        //             platforms: [],
-                        //             copyable: 'none',
-                        //             optional: false,
-                        //             triggerStepNavigation: false,
-                        //             layout: {
-                        //                 size: 3,
-                        //             },
-                        //             displayInCardPreview: false,
-                        //             applicationModes: ['digital', 'paper'],
-                        //             placeholder: {
-                        //                 en: '',
-                        //                 fr: '',
-                        //             },
-                        //             id: 'b483e323-aa09-4cad-afaf-f9955937f58e',
-                        //             partName:
-                        //                 'custom-e72790d8-fc28-4324-a55b-dd329dff633b',
-                        //             selectOptions: [
-                        //                 {
-                        //                     value: 'AMOUNT',
-                        //                     text: {
-                        //                         en: 'Specify',
-                        //                     },
-                        //                     isCustom: true,
-                        //                     orderingIndex: 1,
-                        //                 },
-                        //                 {
-                        //                     value: 'MAX',
-                        //                     text: {
-                        //                         en: 'Maximum',
-                        //                     },
-                        //                     isCustom: true,
-                        //                     orderingIndex: 1,
-                        //                 },
-                        //             ],
-                        //             validateAs: 'string',
-                        //             defaultValue: 'AMOUNT',
-                        //         },
-                        //         {
-                        //             fieldType: 'money',
-                        //             text: {
-                        //                 en: '',
-                        //                 fr: '',
-                        //             },
-                        //             title: {
-                        //                 en: 'Amount',
-                        //                 fr: '',
-                        //             },
-                        //             answerNodeId: 'distribution-amount',
-                        //             renderOn: [],
-                        //             platforms: [],
-                        //             copyable: 'none',
-                        //             optional: false,
-                        //             triggerStepNavigation: false,
-                        //             layout: {
-                        //                 size: 3,
-                        //             },
-                        //             displayInCardPreview: false,
-                        //             applicationModes: ['digital', 'paper'],
-                        //             placeholder: {
-                        //                 en: '',
-                        //                 fr: '',
-                        //             },
-                        //             id: '833fd531-e534-456b-97ae-68bd86502293',
-                        //             partName:
-                        //                 'custom-6f908ed5-2577-486d-b39b-8d75c6a6b276',
-                        //             validateAs: 'integer',
-                        //             isCustom: true,
-                        //             visible: {
-                        //                 booleanOperator: 'and',
-                        //                 conditions: [
-                        //                     {
-                        //                         type: 'matchesCondition',
-                        //                         value: ['AMOUNT'],
-                        //                         targetNodeId:
-                        //                             'distribution-type',
-                        //                         quantifier: 'any',
-                        //                         collectionOperators: {
-                        //                             'distributions-information':
-                        //                                 'thisItem',
-                        //                         },
-                        //                     },
-                        //                 ],
-                        //             },
-                        //         },
-                        //     ],
-                        //     displayAsCard: false,
-                        // },
                     ],
                     showInNavigation: false,
                     copyable: 'none',

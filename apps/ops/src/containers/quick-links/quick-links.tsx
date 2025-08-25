@@ -145,7 +145,7 @@ const QuickLinks = ({
                 }
             })}
 
-            {(isLife || isAnnuity) && (
+            {policy.isTPA && (isLife || isAnnuity) && (
                 <>
                     <div className="hidden min-w-[2px] bg-gray-100 md:block" />
 

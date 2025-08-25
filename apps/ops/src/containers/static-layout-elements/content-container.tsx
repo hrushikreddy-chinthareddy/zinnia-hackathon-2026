@@ -90,7 +90,7 @@ const ContentContainer = ({
                         showLink={showLink}
                         className="justify-between items-center"
                     >
-                        {hideSearch ? null : (
+                        {hideSearch || !policyDetails.isTPA ? null : (
                             <FindKeyValuesSidesheet
                                 planCode={planCode}
                                 policyNumber={policyNumber}
