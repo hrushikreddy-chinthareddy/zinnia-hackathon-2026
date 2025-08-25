@@ -109,11 +109,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         ],
         queryFn: async () => {
             if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
-                return await checkTuple(
+                const res = await checkTuple(
                     partyId,
                     FgaRelation.UiAccess,
                     FgaRoles.CASE_MANAGEMENT_ZL_ENTITY
                 );
+                return !!res.data;
             }
             return await doesUserHavePagePermissionQuery(
                 UserPermission.AllowReadCaseManagement,
@@ -133,11 +134,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             ],
             queryFn: async () => {
                 if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
-                    return await checkTuple(
+                    const res = await checkTuple(
                         partyId,
                         FgaRelation.UiAccess,
                         FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY
                     );
+                    return !!res.data;
                 }
                 return await doesUserHavePagePermissionQuery(
                     UserPermission.AllowReadPolicyAdmin,
