@@ -55,6 +55,7 @@ export function SubmitProvider({
                 'engine dump',
                 engine.getAnswerResolverInstance().export()
             );
+            const inputs = engine.getAnswerResolverInstance().export();
             const mappedAnswersResult = engine.getSimpleMappingOutput();
             if (!mappedAnswersResult.success) {
                 console.log(
@@ -87,6 +88,7 @@ export function SubmitProvider({
             return createIllustration({
                 bodyData: createIllustrationPayload.value,
                 path: factoryHandler.getIllustrationApiPath(),
+                inputs: JSON.stringify(inputs),
             });
         },
         onSuccess: async ({ data }) => {
@@ -97,7 +99,8 @@ export function SubmitProvider({
                 data.id,
                 factoryHandler.generateTitle(data, formInputs),
                 factoryHandler.getPlanType(), // product type
-                factoryHandler.getPlanCode() // carrierProductId
+                factoryHandler.getPlanCode(), // carrierProductId
+                data.inputs
             );
 
             await Promise.all([
@@ -131,6 +134,7 @@ export function SubmitProvider({
                 'Quick Quote engine dump',
                 engine.getAnswerResolverInstance().export()
             );
+            const inputs = engine.getAnswerResolverInstance().export();
             const mappedAnswersResult = engine.getSimpleMappingOutput();
             if (!mappedAnswersResult.success) {
                 console.log(
@@ -164,6 +168,7 @@ export function SubmitProvider({
             return createIllustration({
                 bodyData: createIllustrationPayload.value,
                 path: factoryHandler.getIllustrationApiPath(),
+                inputs: JSON.stringify(inputs),
             });
         },
         onSuccess: ({ data }) => {
