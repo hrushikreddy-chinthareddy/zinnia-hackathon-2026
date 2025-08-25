@@ -35,10 +35,12 @@ interface SubmitProviderProps extends PropsWithChildren<{}> {
     children: React.ReactNode;
     factoryHandler: IllustrationHandler<FarmersEntities>;
     clientCase?: IllustrationsClientCase;
+    submitCallback?: () => void;
 }
 export function SubmitProvider({
     children,
     factoryHandler,
+    submitCallback,
 }: SubmitProviderProps) {
     const { onEAppDataChange: onIllustrationDataChange } = useEapp();
     const { questionnaireEngine } = useQuestionnaireEngine();
@@ -118,6 +120,7 @@ export function SubmitProvider({
             const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data.id}`;
             Router.push(route, undefined, { shallow: true });
 
+            submitCallback?.();
             sideSheet.onClose();
         },
     });

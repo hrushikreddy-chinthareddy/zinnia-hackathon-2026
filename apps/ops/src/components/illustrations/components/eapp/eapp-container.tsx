@@ -18,12 +18,14 @@ interface EappContainer {
     clientCase?: IllustrationsClientCase;
     planCode: string;
     versionedAnswers?: VersionedAnswers;
+    submitCallback?: () => void;
 }
 
 const EappContainer: FC<EappContainer> = ({
     clientCase,
     planCode,
     versionedAnswers = new VersionedAnswers({ v1: {}, v2: {} }),
+    submitCallback,
 }) => {
     const timezoneResult = Timezone.from(DEFAULT_TIMEZONE_NAME);
     if (!timezoneResult.success) {
@@ -69,6 +71,7 @@ const EappContainer: FC<EappContainer> = ({
                     <EAppProvider>
                         <SubmitProvider
                             factoryHandler={illustrationHandlerFactory}
+                            submitCallback={submitCallback}
                         >
                             <ActiveSectionProvider
                                 handleNextSectionActionsOnChangeSection

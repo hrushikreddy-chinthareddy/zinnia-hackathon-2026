@@ -1,6 +1,6 @@
 import { SideSheet } from '@zinnia/bloom/components';
 import { VersionedAnswers } from '@zinnia/form-engine-sdk';
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useState } from 'react';
 
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 
@@ -17,6 +17,8 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
     planCode,
     clientCase,
 }) => {
+    const [open, setOpen] = useState(false);
+
     const versionedAnswers: VersionedAnswers = clientCase.inputs
         ? JSON.parse(clientCase.inputs)
         : undefined;
@@ -28,11 +30,14 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
             trigger={children}
             description="Edit Illustration"
             contentClassName={styles.editSidesheetContent}
+            open={open}
+            onOpenChange={setOpen}
         >
             <EappContainer
                 planCode={planCode}
                 clientCase={clientCase}
                 versionedAnswers={versionedAnswers}
+                submitCallback={() => setOpen(false)}
             />
         </SideSheet>
     );
