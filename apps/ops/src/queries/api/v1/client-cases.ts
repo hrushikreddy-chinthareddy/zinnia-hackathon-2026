@@ -83,12 +83,13 @@ export const saveIllustrationToClientCase = async (
     illustrationId: string,
     title: string,
     productType: string,
-    productId: string
+    productId: string,
+    inputs: string
 ) => {
     try {
         const request = client.post(
             `${BASE_URL}/${clientCaseId}/illustrations`,
-            { id: illustrationId, title, productType, productId }
+            { id: illustrationId, title, productType, productId, inputs }
         );
         const response = await request;
         if (response.status === StatusCode.Okay) {
