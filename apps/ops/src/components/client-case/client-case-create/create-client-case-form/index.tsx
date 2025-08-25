@@ -16,6 +16,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
+import { first, last, uniqBy } from 'lodash';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,8 +35,12 @@ import {
     IllustrationInsuredDetails,
     IllustrationsClientCase,
 } from '@deps/types/illustrations';
+import { MAIN_AGENCY_ROLE } from '@deps/types/producers';
 
-import { getAgentAgenciesForSelectOptions } from './create-client-case-form.helpers';
+import {
+    AgencyOption,
+    getAgentAgenciesForSelectOptions,
+} from './create-client-case-form.helpers';
 import styles from './create-client-case-form.module.css';
 import { AgentSearch } from '../agent-search/agent-search';
 
@@ -114,6 +119,65 @@ const getLoggedInAgentSellingCode = (aliases: AliasModel[]) => {
         : '';
 };
 
+const useAgencyOptions = (
+    clientCase: IllustrationsClientCase | undefined,
+    isEdit: boolean,
+    aliases: AliasModel[]
+) => {
+    const loggedInUserSellingCode = getLoggedInAgentSellingCode(aliases);
+    const clientCaseAgentDetails = clientCase?.agentDetails;
+    const firstAlias = aliases[0];
+
+    const involvedAgents = [
+        {
+            sellingCode: loggedInUserSellingCode,
+            fullName:
+                firstAlias?.fullName ||
+                `${firstAlias?.firstName} ${firstAlias?.lastName}`,
+        },
+        {
+            sellingCode: isEdit ? clientCaseAgentDetails?.sellingCode : '',
+            fullName: `${clientCaseAgentDetails?.firstName} ${clientCaseAgentDetails?.lastName}`,
+        },
+    ].filter((item) => item?.sellingCode) as {
+        sellingCode: string;
+        fullName: string;
+    }[];
+
+    const involvedAgentSellingCodes = involvedAgents.map(
+        ({ sellingCode }) => sellingCode
+    );
+
+    const { data: agencyOptions } = useQuery({
+        queryKey: ['agentHierarchy', ...involvedAgentSellingCodes],
+        queryFn: () =>
+            getUserHierarchyListBySellingCode(involvedAgentSellingCodes),
+        enabled: !!involvedAgentSellingCodes.length,
+        select: (response) => {
+            const rootAgencyOptions = response
+                .filter(({ role }) => role === MAIN_AGENCY_ROLE)
+                .map(({ sellingCode }) => {
+                    const agentData = involvedAgents.find(
+                        (item) => item.sellingCode === sellingCode
+                    )!;
+
+                    return {
+                        value: sellingCode,
+                        textValue: agentData.fullName,
+                    } as AgencyOption;
+                });
+
+            if (rootAgencyOptions.length) {
+                return [rootAgencyOptions[0]];
+            }
+
+            return getAgentAgenciesForSelectOptions(response);
+        },
+    });
+
+    return agencyOptions;
+};
+
 const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     onSubmit,
     onCancel,
@@ -124,17 +188,12 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const { partyReferenceData } = usePermissionsContext();
 
     const aliases = findAllAliasesWithSellingCode(partyReferenceData);
-    const sellingCodes = getAllSellingCodes(partyReferenceData);
-    const loggedInUserSellingCode = getLoggedInAgentSellingCode(aliases);
     const isAgent = aliases.length > 0;
 
     const mergedCase = {
         ...clientCaseInitialState,
         ...clientCase,
     };
-    const involveAgents = isEdit
-        ? [loggedInUserSellingCode, clientCase?.agentDetails?.sellingCode ?? '']
-        : [loggedInUserSellingCode];
 
     const [currentAgent, setCurrentAgent] =
         useState<IllustrationAgentDetails>();
@@ -244,6 +303,20 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         );
     };
 
+    const agencyOptions = useAgencyOptions(clientCase, isEdit, aliases);
+
+    useEffect(() => {
+        if (agencyOptions?.length && !isEdit) {
+            // update the agencyId of the client case
+            updateClientCaseData({
+                agencyId: agencyOptions[0].value,
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [agencyOptions]);
+
+    const displayAgencyDropdown = agencyOptions && agencyOptions.length > 1;
+
     const onSubmitForm = () => {
         if (onSubmit) {
             onSubmit({
@@ -258,27 +331,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             onCancel();
         }
     };
-
-    const { data: loggedInAgentAgencyOptions } = useQuery({
-        queryKey: ['agentHierarchy', involveAgents],
-        queryFn: () => getUserHierarchyListBySellingCode(involveAgents),
-        enabled: !!involveAgents.length,
-        select: (response) => getAgentAgenciesForSelectOptions(response),
-    });
-
-    const displayAgencyDropdown =
-        loggedInAgentAgencyOptions?.length &&
-        loggedInAgentAgencyOptions?.length > 1;
-
-    useEffect(() => {
-        if (loggedInAgentAgencyOptions?.length && !isEdit) {
-            // update the agencyId of the client case
-            updateClientCaseData({
-                agencyId: loggedInAgentAgencyOptions[0].value,
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loggedInAgentAgencyOptions]);
 
     useEffect(() => {
         setCurrentAge(
@@ -353,7 +405,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 {displayAgencyDropdown && (
                     <div className={styles.agencySelect}>
                         <Select
-                            options={loggedInAgentAgencyOptions}
+                            options={agencyOptions}
                             label={
                                 <Label>
                                     {t(
@@ -367,7 +419,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                             defaultValue={
                                 isEdit
                                     ? clientCaseData.agencyId
-                                    : loggedInAgentAgencyOptions[0].value
+                                    : agencyOptions[0].value
                             }
                         />
                     </div>
