@@ -4,7 +4,7 @@ export enum CompanyName {
   EVERLY = 'everly',
   WELLABE = 'wellabe',
   FARMERS = 'farmers',
-  SECURITY_BENEFIT = 'security-benefit',
+  SECURITY_BENEFIT = 'securitybenefit',
   ZINNIA = 'zinnia',
   EVERGLADES = 'everglades',
 }
@@ -13,7 +13,7 @@ export enum Subdomains {
   EVERLY = 'everly',
   WELLABE = 'wellabe',
   FARMERS = 'farmers',
-  SECURITY_BENEFIT = 'security-benefit',
+  SECURITY_BENEFIT = 'securitybenefit',
   ZINNIA = 'zinnia',
   EVERGLADES = 'everglades',
 }

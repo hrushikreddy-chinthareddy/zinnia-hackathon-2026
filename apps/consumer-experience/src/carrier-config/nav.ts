@@ -1,5 +1,6 @@
 import { CarrierLogos, CarrierName } from '@zinnia/bloom/components';
 
+import { CARRIER_REDIRECT_URLS } from '@/carrier-config/urls';
 import styles from '@/components/nav/Nav.module.css';
 import { CompanyName } from '@/types/carriers';
 
@@ -32,7 +33,7 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
       className: styles.logoZinnia,
     },
   },
-  [CarrierName.EVERLY]: {
+  [CompanyName.EVERLY]: {
     homePageHref: '/',
     hrefAriaLabel: 'Home Page',
     image: CarrierLogos[CarrierName.EVERLY_ALT],
@@ -43,7 +44,7 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
       className: styles.logoEverly,
     },
   },
-  [CarrierName.SECURITY_BENEFIT]: {
+  [CompanyName.SECURITY_BENEFIT]: {
     homePageHref: '/',
     hrefAriaLabel: 'Home Page',
     image: CarrierLogos[CarrierName.SECURITY_BENEFIT],
@@ -52,7 +53,7 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
       height: '32px',
     },
   },
-  [CarrierName.WELLABE]: {
+  [CompanyName.WELLABE]: {
     homePageHref: '/',
     hrefAriaLabel: 'Home Page',
     image: CarrierLogos[CarrierName.WELLABE],
@@ -63,8 +64,8 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
       fill: 'var(--color-primary-color-primary)',
     },
   },
-  [CarrierName.FARMERS]: {
-    homePageHref: `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/policysummary`,
+  [CompanyName.FARMERS]: {
+    homePageHref: CARRIER_REDIRECT_URLS[CarrierName.FARMERS].POLICY_SUMMARY,
     hrefAriaLabel: 'Return to all Farmers policies',
     image: CarrierLogos[CarrierName.FARMERS],
     logoProps: {
@@ -72,7 +73,7 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
       height: '32px',
     },
   },
-  [CarrierName.EVERGLADES]: {
+  [CompanyName.EVERGLADES]: {
     homePageHref: '/',
     hrefAriaLabel: 'Go back to home',
     image: CarrierLogos[CarrierName.EVERGLADES],

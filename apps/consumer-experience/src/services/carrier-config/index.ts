@@ -1,16 +1,19 @@
+import { CarrierName } from '@zinnia/bloom/components';
+
 import {
   CarrierConfig,
   ManageChange,
   PaymentProvider,
 } from '@/types/carrier-config';
-import { CompanyName } from '@/types/carriers';
 import { getThemeCookies } from '@/utils/theme';
+
+import { CARRIER_REDIRECT_URLS } from '../../carrier-config/urls';
 
 export const getCarrierConfig = async (): Promise<CarrierConfig> => {
   const currentCarrier = await getThemeCookies();
 
   switch (currentCarrier) {
-    case CompanyName.FARMERS:
+    case CarrierName.FARMERS:
       return {
         payment: {
           provider: PaymentProvider.PAYMENTUS,
@@ -19,15 +22,16 @@ export const getCarrierConfig = async (): Promise<CarrierConfig> => {
         policyProfile: {
           communicationPreference: {
             manageChanges: ManageChange.EXTERNAL,
-            url: `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/my-profile/communications`,
+            url: CARRIER_REDIRECT_URLS[CarrierName.FARMERS]
+              .COMMUNICATION_PREFERENCES,
           },
           email: {
             manageChanges: ManageChange.EXTERNAL,
-            url: `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/my-profile/primary`,
+            url: CARRIER_REDIRECT_URLS[CarrierName.FARMERS].MANAGE_CHANGES,
           },
           phoneNumber: {
             manageChanges: ManageChange.EXTERNAL,
-            url: `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/my-profile/primary`,
+            url: CARRIER_REDIRECT_URLS[CarrierName.FARMERS].MANAGE_CHANGES,
           },
         },
       };
