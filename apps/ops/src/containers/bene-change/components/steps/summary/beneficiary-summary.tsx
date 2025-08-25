@@ -285,6 +285,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                     ssn,
                     dateOfBirth,
                     trustType,
+                    trustDate,
                 } = item.party.info;
 
                 const updatedAddress = item?.party?.addresses?.[0]
@@ -304,17 +305,12 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                             trustType,
                             action
                         )) ||
-                    shouldDisplayField(existingGender, gender, action) ||
                     shouldDisplayField(
                         ssnIdentification?.identificationValue,
                         ssn,
                         action
                     ) ||
-                    shouldDisplayField(
-                        existingDateOfBirth,
-                        dateOfBirth,
-                        item.action
-                    );
+                    shouldDisplayField(trustDate, trustDate, item.action);
 
                 const allocationFieldsChanged =
                     shouldDisplayField(
@@ -431,6 +427,12 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                                         t('identification.dateOfBirth'),
                                         existingDateOfBirth as string,
                                         dateOfBirth,
+                                        item.action
+                                    )}
+                                    {renderFieldDynamically(
+                                        t('identification.trustDate'),
+                                        trustDate as string,
+                                        item?.party?.info?.trustDate,
                                         item.action
                                     )}
                                 </div>

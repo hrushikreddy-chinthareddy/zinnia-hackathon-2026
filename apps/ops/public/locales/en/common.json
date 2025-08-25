@@ -408,6 +408,7 @@
             "header": "Beneficiary Information",
             "add": "Add",
             "edit": "edit",
+            "mail":"Mail",
             "beneficiaryListing": {
                 "primaryBeneficiaries": "Primary beneficiaries",
                 "contingentBeneficiaries": "Contingent Beneficiary",
@@ -616,7 +617,8 @@
                 "addressDetails": "Please make sure address details are filled properly while adding / updating beneficiary",
                 "allocationRequired": "Please make sure allocation is greater than 0% while adding / updating beneficiary",
                 "relationshipToParty": "Please make sure relationship to party is selected while adding / updating beneficiary"
-            }
+            },
+            "prefferedMethod": "Preferred Contact Method"
         },
         "signature": {
             "continue": "Continue",
@@ -645,7 +647,8 @@
                 "gender": "Gender",
                 "title": "Identification",
                 "ssn": "SSN",
-                "dateOfBirth": "Date of birth"
+                "dateOfBirth": "Date of birth",
+                "trustDate":"Trust date"
             },
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "overview": "Overview",

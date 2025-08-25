@@ -721,7 +721,8 @@
                 "gender": "Genre",
                 "title": "Identification",
                 "ssn": "NSS",
-                "dateOfBirth": "Date de naissance"
+                "dateOfBirth": "Date de naissance",
+                "trustDate": "Date du trust"
             },
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche de NIGO.",
             "overview": "Aperçu",

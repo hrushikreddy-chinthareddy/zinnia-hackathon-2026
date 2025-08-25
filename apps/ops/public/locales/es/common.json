@@ -652,7 +652,8 @@
             "updated": "Actualizado",
             "identification": {
                 "title": "Identificación",
-                "gender": "Género"
+                "gender": "Género",
+                "trustDate": "Fecha del fideicomiso"
             },
             "allocation": {
                 "title": "Asignación",
