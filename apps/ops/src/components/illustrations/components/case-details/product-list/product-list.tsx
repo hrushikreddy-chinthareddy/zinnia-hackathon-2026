@@ -5,17 +5,19 @@ import {
     Button,
     Icon,
     IconType,
+    Loader,
     Text,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
+import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
 import {
     IllustrationsClientCase,
     IllustrationSummary,
@@ -57,6 +59,19 @@ export function findAvailableProducts(
     );
 }
 
+async function filterProductsByPlanCodeFromEapp(
+    products: Product[],
+    eAppId: string | undefined
+): Promise<Product[]> {
+    if (!eAppId) return products;
+
+    const nbReq = await getNewBusinessEApp(eAppId);
+    if (!nbReq.data?.policy?.planCode) return products;
+
+    const planCode = nbReq.data?.policy?.planCode;
+    return products.filter((product) => product.planCode === planCode);
+}
+
 type ProductWithIllustration = Product & {
     illustrations: IllustrationSummary[];
 };
@@ -72,7 +87,8 @@ const IllustrationProductList = ({
     illustrations = [],
     carrierProductId = '',
 }: IllustrationProductListProps) => {
-    const { handleSelectIllustration } = useSelectedIllustration();
+    const { selectedIllustration, handleSelectIllustration } =
+        useSelectedIllustration();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const clientCaseId = clientCase.id;
     const [showEmptyProducts, setShowEmptyProducts] = useState(false);
@@ -130,26 +146,70 @@ const IllustrationProductList = ({
             } else {
                 firstAvailableIllustration = illustrations[0];
             }
+
             const associatedProduct = products.find(
                 (product) =>
                     product.carrierProductId ===
                     firstAvailableIllustration?.productId
             );
 
-            if (associatedProduct && firstAvailableIllustration) {
+            // Adding this check to prevent re-selecting the same
+            const isAlreadySelected =
+                selectedIllustration?.illustration?.id ===
+                    firstAvailableIllustration?.id &&
+                selectedIllustration?.product?.carrierProductId ===
+                    associatedProduct?.carrierProductId;
+
+            if (
+                associatedProduct &&
+                firstAvailableIllustration &&
+                !isAlreadySelected
+            ) {
                 handleSelectIllustration(
                     associatedProduct,
                     firstAvailableIllustration
                 );
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [illustrations, products]);
+    }, [
+        handleSelectIllustration,
+        illustrationId,
+        illustrations,
+        products,
+        selectedIllustration?.illustration?.id,
+        selectedIllustration?.product?.carrierProductId,
+    ]);
 
-    const availableProducts = findAvailableProducts(products, clientCase);
+    const availableProducts = useMemo(() => {
+        return findAvailableProducts(products, clientCase);
+    }, [products, clientCase]);
+    const [filteredProducts, setFilteredProducts] = useState(
+        () => availableProducts
+    );
+
+    useEffect(() => {
+        let cancelled = false;
+        const filterProducts = async () => {
+            const available = findAvailableProducts(products, clientCase);
+            let filtered = available;
+            if (clientCase.eAppId) {
+                filtered = await filterProductsByPlanCodeFromEapp(
+                    available,
+                    clientCase.eAppId
+                );
+            }
+            if (!cancelled) {
+                setFilteredProducts(filtered);
+            }
+        };
+        void filterProducts();
+        return () => {
+            cancelled = true;
+        };
+    }, [products, clientCase, clientCase.eAppId]);
 
     const productsWithIllustrations: ProductWithIllustration[] =
-        availableProducts.map((product) => {
+        filteredProducts.map((product) => {
             const associatedIllustrations = illustrations.filter(
                 (illustration) =>
                     illustration.productId === product.carrierProductId
@@ -176,11 +236,24 @@ const IllustrationProductList = ({
                     {t('clientCase.productList.selectProduct')}
                 </header>
             )}
-            <Skeleton loading={isLoading || isFetching}>
+
+            <>
+                {(isLoading || isFetching || filteredProducts.length === 0) && (
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Loader />
+                    </div>
+                )}
+            </>
+
+            <Skeleton
+                loading={
+                    isLoading || isFetching || filteredProducts.length === 0
+                }
+            >
                 {productsWithIllustrationsCount === 0 && (
                     <ul className={styles.productList}>
                         {!isError &&
-                            availableProducts.map(
+                            filteredProducts.map(
                                 (product: Product, idx: number) => {
                                     return (
                                         <IllustrationProductItem

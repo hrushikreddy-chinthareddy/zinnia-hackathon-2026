@@ -1,5 +1,11 @@
 import { useRouter } from 'next/router';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import {
+    createContext,
+    ReactNode,
+    useCallback,
+    useContext,
+    useState,
+} from 'react';
 
 import { IllustrationSummary } from '@deps/types/illustrations';
 import { Product } from '@deps/types/product';
@@ -39,25 +45,29 @@ export function SelectedIllustrationProvider(props: { children: ReactNode }) {
     );
     const [eAppLink, setEAppLink] = useState<string | undefined>(undefined);
 
-    const handleSelectIllustration = (
-        product: Product,
-        illustration: IllustrationSummary
-    ) => {
-        if (!clientCaseId || Array.isArray(clientCaseId)) return;
+    const handleSelectIllustration = useCallback(
+        (product: Product, illustration: IllustrationSummary) => {
+            if (!clientCaseId || Array.isArray(clientCaseId)) return;
 
-        setSelectedIllustration({ illustration, product });
+            if (
+                selectedIllustration?.illustration?.id === illustration.id &&
+                selectedIllustration?.product?.carrierProductId ===
+                    product.carrierProductId
+            ) {
+                // Already selected; skip
+                return;
+            }
 
-        if (selectedIllustration?.illustration?.id === illustration.id) {
-            // Idempotency to avoid emitting redundant router events
-            return;
-        }
+            setSelectedIllustration({ illustration, product });
 
-        router.push(
-            `/illustrations/client-cases/${clientCaseId}/illustrate/${illustration.id}`,
-            undefined,
-            { shallow: true }
-        );
-    };
+            router.push(
+                `/illustrations/client-cases/${clientCaseId}/illustrate/${illustration.id}`,
+                undefined,
+                { shallow: true }
+            );
+        },
+        [clientCaseId, router, selectedIllustration]
+    );
 
     return (
         <SelectedIllustrationContext.Provider
