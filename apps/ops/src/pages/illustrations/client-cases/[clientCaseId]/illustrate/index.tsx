@@ -37,13 +37,8 @@ import styles from './illustrations.module.css';
 export type AdditionalDataProps = {
     user: UserProfile;
 };
-type ClientCaseIllustrationsPageProps = {
-    featureFlagDecisions: FeatureFlags;
-    additionalData: AdditionalDataProps;
-};
 
-// eslint-disable-next-line no-empty-pattern
-export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageProps) {
+export default function ClientCaseIllustrations() {
     const clientCaseId = useClientCaseId();
     const searchParams = useSearchParams();
     const carrierProductId = searchParams.get('planCode') || '';

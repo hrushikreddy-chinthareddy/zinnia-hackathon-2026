@@ -114,7 +114,7 @@ const IllustrationCaseSumary = ({
         mutationFn: (data: Partial<IllustrationsClientCase>) => {
             return patchIllustrationsClientCase(data);
         },
-        onSuccess: (d) => {
+        onSuccess: () => {
             // Refetch clientCaseData to include new entry
             queryClient.invalidateQueries({
                 queryKey: ['clientCaseData', clientCase.id],
@@ -123,7 +123,7 @@ const IllustrationCaseSumary = ({
         onMutate: () => {
             // add loading logic
         },
-        onError: (e) => {
+        onError: () => {
             // add error logic
         },
     });
