@@ -9,6 +9,7 @@ import {
 import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
+import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
 import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helpers';
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
 import {
@@ -406,9 +407,10 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
         preferredCommunicationType: item?.party?.preferredCommunicationType,
         trustDate:
             selectedPartyType == PartyType.TRUST
-                ? dayjs(item?.party?.info?.trustDate)?.format(
-                      ZAHARA_API_DATE_FORMAT
-                  )
+                ? dayjs(
+                      item?.party?.info?.trustDate,
+                      DATE_PICKER_FORMAT
+                  )?.format(ZAHARA_API_DATE_FORMAT)
                 : null,
     };
 
