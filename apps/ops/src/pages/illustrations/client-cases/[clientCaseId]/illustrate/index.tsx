@@ -53,6 +53,7 @@ export default function ClientCaseIllustrations() {
         structuralSharing: false,
         queryFn: () => {
             const response = getClientCase(clientCaseId);
+
             return response;
         },
         select: useCallback(
@@ -135,7 +136,7 @@ export default function ClientCaseIllustrations() {
                         </section>
                         <section className={clsx(styles.illustrationContainer)}>
                             <IllustrationDetails
-                                clientCaseId={clientCase.id}
+                                clientCase={clientCase}
                                 eAppId={clientCase.eAppId}
                             />
                         </section>

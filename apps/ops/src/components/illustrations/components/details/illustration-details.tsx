@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { getIllustrationQueryOptions } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
+import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 
 import IllustrationDetailsContent from './content/illustration-details-content';
@@ -15,12 +16,12 @@ import { IllustrationDetailProvider } from '../../providers/IllustrationDetailPr
 import { useSelectedIllustration } from '../../providers/SelectedIllustrationProvider';
 
 type IllustrationDetailsProps = {
-    clientCaseId: string;
+    clientCase: IllustrationsClientCase;
     eAppId?: string;
 };
 
 export default function IllustrationDetails({
-    clientCaseId,
+    clientCase,
     eAppId,
 }: IllustrationDetailsProps) {
     const { selectedIllustration, setNewBusinessCaseId, setEAppLink } =
@@ -86,9 +87,10 @@ export default function IllustrationDetails({
                     <IllustrationDetailsToolbar
                         status={illustration.status}
                         isLoading={isLoading}
-                        clientCaseId={clientCaseId}
+                        clientCase={clientCase}
                         illustrationId={illustration.id}
                         eAppId={eAppId}
+                        planCode={product.planCode}
                     />
                 </Skeleton>
                 <IllustrationDetailsContent isLoading={true} />
