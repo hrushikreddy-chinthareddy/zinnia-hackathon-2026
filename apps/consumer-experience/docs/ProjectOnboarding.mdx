@@ -6,29 +6,15 @@ See [here](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3889922062/Consumer
 
 ## First steps
 
-### Setting up your user
+### Setting up your user (internal login process e.g. Everly, Wellabe)
 
-#### User access
+- First you will need to make a new Policy (Life product) or Contract (Annuity product). Follow steps in [MakeANewPolicy doc](./MakeANewPolicy.mdx)
+- Creating the policy will establish you as a MyPolicyView user and will create an auth0 user for you
+- Once you've created and lifecycled a policy/contract, you can log in with the email you used to create the product
 
-A real consumer will only have access to products on their account, however, for development purposes it's helpful to have an extra layer of access so that you can view any contract.
+### Farmers
 
-1. Go to [access management tool](http://alb-dep-qa-1124930781.us-east-1.elb.amazonaws.com/)
-1. find your user
-1. add `zinnia processor` access
-   > If you do not have access to the access management tool, request it in engineering channel.
-
-#### Adding Products
-
-> Creating a policy will create your Auth0 user as well. This will allow access to Consumer
-
-If you do not currently have any products associated with your account or need a different product added:
-
-- [Create a policy](./make-a-new-policy.md)
-- Create an annuity:
-  - follow instructions in [making a new policy](./make-a-new-policy.md)
-  - and then follow [annuity specific steps](./make-a-new-policy.md#for-fixed-annuity)
-
-> The Policy vs Annuity language is a little misleading. We use "policies" to mean "life" products specifically. You'll see `LineOfBusiness` everywhere to differentiate. LIFE === policies, ANNUITY === annuities.
+Farmers experience is slightly different because it uses SSO (with Farmers Okta authentication) and because Farmers issues their policies. To log in see doc [here](./Farmers/LoggingIn.mdx)
 
 ### Dev Menu and Mock Data
 
@@ -40,7 +26,8 @@ To use the dev menu add the query string `..show_dev_menu..=true`. From there yo
 
 ## Developing in the project
 
-- Try to keep components as "dumb" as possible. Pass data down as a prop and make the data call in the parent component
+- Try to keep components as "dumb" as possible. i.e. Pass data down as a prop and make the data call in the parent component.
+- Wrap components in `<Suspense>` when they're doing big boi things. [This blog post](https://blog.saeloun.com/2022/01/20/new-suspense-ssr-architecture-in-react-18/) explains why nicely.
 
 ### Server Side vs Client Side
 
@@ -55,11 +42,6 @@ To use the dev menu add the query string `..show_dev_menu..=true`. From there yo
 3. server actions -> need client side to call server methods, but not something the client-side will need to reuse often
    > NOTE: Sometimes something might start as a server action but need to become a route handler
 
-**Put into analogy terms**
-
-Server actions are like components and the route handler is like the page
-because the route handler "exposes" the server action at a specific location, but server actions can be reused in multiple places
-
 ### Styling
 
 We use [Bloom components](https://zinnia-design-system.supernova-docs.io/latest) wherever possible. For everything else, there's a mix of global, css modules and utility classes in the project. We decided to add utility classes for things like [spacing](src/app/styles/spacing.css) and [borders](src/app/styles/borders.css) so that devs wouldn't have to make an additional style file for simple components.
@@ -68,7 +50,6 @@ We use [Bloom components](https://zinnia-design-system.supernova-docs.io/latest)
 
 This file feels incredibly complicated since we have to shove all middleware checks into one file (thanks, Next), but there is some history behind all of the checks that helps to understand what is going on.
 
-- one policy vs multiple policies vs multiple policies on different carriers
 - has signed terms and conditions -- this is zinnia specific and will only appear once on initial log in (i.e. does not show for each policy)
   - if you have already agreed to this, but need to see it again, Rocco has access to the db to clear it per user (TODO: get more people access)
 - policy acknowledgement check

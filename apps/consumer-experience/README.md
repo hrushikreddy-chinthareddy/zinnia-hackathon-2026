@@ -59,7 +59,7 @@ Add the following lines to the bottom of your file
 ```
 127.0.0.1 everly.mypolicyview.local
 127.0.0.1 farmers.mypolicyview.local
-127.0.0.1 security-benefit.mypolicyview.local
+127.0.0.1 securitybenefit.mypolicyview.local
 127.0.0.1 wellabe.mypolicyview.local
 ```
 
@@ -76,7 +76,7 @@ Now you should be able to open `http://everly.mypolicyview.local:3000/` to view 
 
 # Local development
 
-Go [here](./docs/onboarding-to-the-project.md) for more info.
+Go [here](./docs/ProjectOnboarding.mdx) for more info.
 
 ## Dev Menu
 

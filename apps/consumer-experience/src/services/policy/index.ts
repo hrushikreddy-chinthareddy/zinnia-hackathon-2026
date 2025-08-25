@@ -80,6 +80,7 @@ import {
 import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getSession } from '@/utils/auth';
+import { LogWarn } from '@/utils/logging/errors';
 import { logError } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
@@ -432,8 +433,17 @@ export const getMyPoliciesByCarrier = withLogging(
         }
       );
 
+    if (!filteredPolicies || filteredPolicies.length === 0) {
+      throw new LogWarn('No returned policies matched the carrier filter', {
+        cause: {
+          carrierList: carrierId,
+        },
+      });
+    }
+
     const allPolicyDataSettledResult =
       await Promise.allSettled<ApiResponse<Policy>>(filteredPolicies);
+
     const hasFulfilledPolicy = allPolicyDataSettledResult.some(
       a => a.status === 'fulfilled'
     );

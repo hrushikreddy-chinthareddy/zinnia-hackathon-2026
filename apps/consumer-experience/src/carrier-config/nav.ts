@@ -44,6 +44,8 @@ export const navCarrierConfig: Record<CompanyName, NavCarrierConfig> = {
       className: styles.logoEverly,
     },
   },
+  // In bloom this is defined as security-benefit, but our
+  // subdomain is securitybenefit so using CompanyName enum here
   [CompanyName.SECURITY_BENEFIT]: {
     homePageHref: '/',
     hrefAriaLabel: 'Home Page',
