@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
+import { useIllustrationHeader } from '@deps/components/illustrations/helpers/hooks/use-illustration-header';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -93,6 +94,7 @@ const IllustrationProductList = ({
     const clientCaseId = clientCase.id;
     const [showEmptyProducts, setShowEmptyProducts] = useState(false);
     const sideSheet = useSideSheetContext();
+    const { buildIllustrationHeader } = useIllustrationHeader();
     const router = useRouter();
     const { illustrationId } = router.query;
 
@@ -112,8 +114,17 @@ const IllustrationProductList = ({
 
     const handleNewIllustration = (planCode: string) => {
         if (planCode && clientCase) {
+            const actionTitle = t(
+                'clientCase.productList.addIllustration'
+            ) as string;
+            const eappHeader = buildIllustrationHeader(
+                planCode,
+                clientCase,
+                actionTitle
+            );
+
             sideSheet.changeSideSheetContent(
-                'Add Illustration',
+                eappHeader,
                 <EappContainer planCode={planCode} clientCase={clientCase} />
             );
             sideSheet.handleOpen(true, '50%');

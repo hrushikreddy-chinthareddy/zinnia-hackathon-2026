@@ -15,12 +15,12 @@
 .infoHeaderWrapper {
     display: flex;
     justify-content: space-between;
+    gap: var(--measure-dimension-gap-lg);
 }
 
 .infoHeader {
     display: flex;
     align-items: center;
-    margin-bottom: var(--measure-dimension-margin-xxs);
 
     > * {
         margin-right: var(--measure-dimension-gap-md);
