@@ -12,6 +12,8 @@ export const productTypeVisibilityRules: ProductTypeVisibilityRules = {
         allowsLoans: false,
         allowsWithdrawals: false,
         allowsFundsAndAccounts: false,
+        allowPremiums: false,
+        allowRMD: false,
     },
     // Add more product types as needed
 };

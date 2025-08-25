@@ -1,3 +1,10 @@
+import {
+    Address,
+    Email,
+    Party,
+    PartyType,
+    Phone,
+} from '@xd/api-types/dist/generated-types/sor';
 import React, { createContext } from 'react';
 
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
@@ -67,3 +74,41 @@ export const beneChangeDefaultValues = {
 export const BeneChangeContext = createContext<BeneChangeFormState>(
     beneChangeDefaultValues
 );
+
+export interface BeneficiaryItem {
+    partyRole: {
+        partyId?: string;
+    };
+    party: {
+        info?: {
+            partyType?: PartyType;
+            prefix?: string;
+            firstName?: string;
+            middleName?: string;
+            lastName?: string;
+            suffix?: string;
+            fullName?: string;
+            dateOfBirth?: string;
+            gender?: string;
+            trustType?: string;
+            ssn?: string;
+        };
+        allocation?: {
+            beneficiaryPercentage?: number;
+            relationshipToParty?: string;
+        };
+        addresses?: Array<Address>;
+        phones?: Array<Phone>;
+        emails?: Array<Email>;
+    };
+    beneInfo?: {
+        isPerStirpes?: boolean;
+        isIrrevocable?: boolean;
+    };
+}
+
+export interface ExtendedParty extends Party {
+    isPerStirpes?: boolean;
+    isIrrevocable?: boolean;
+    beneficiaryPercentage?: number;
+}

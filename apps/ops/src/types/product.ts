@@ -7,7 +7,7 @@ export interface Product {
     productLine: string;
     productType: ProductType;
     planCode: string;
-    termLength: Array<number>;
+    termLength?: Array<number>;
     availableToSell: boolean;
     id: string;
 }

@@ -37,6 +37,8 @@ export const CaseDetailsTabValues: { [key: string]: string } = {
     documents: 'documents',
     notes: 'notes',
     'call-logs': 'call-logs',
+    'raw-data': 'raw-data',
+    events: 'events',
 };
 
 export const PolicyActivityTabValues: { [key: string]: string } = {
@@ -62,3 +64,6 @@ export const DefaultValue = {
     nullPercentage: '--%',
 };
 export const CALL_LOGS_TAB_QUERY_LIMIT = 100;
+
+export const LEGACY_START_DATE = '1900-01-01';
+export const LEGACY_END_DATE = '2999-12-31';

@@ -12,6 +12,26 @@ export interface GetHierarchyResponse {
     role: string;
 }
 
+type AgencyRole =
+    | 'GeneralAgency'
+    | 'BrokerDealer'
+    | 'IndependentMarketingOrganization'
+    | 'ThirdPartyMarketer'
+    | 'RegisteredInvestmentAdvisor'
+    | 'Rep';
+
+export interface GetDownlineResponse {
+    sellingCode: string;
+    npn: string;
+    role: AgencyRole;
+    level: number;
+    isActive: boolean;
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
+    emailAddress: string;
+}
+
 export interface Carrier {
     carrierShortName: string;
     name: string;

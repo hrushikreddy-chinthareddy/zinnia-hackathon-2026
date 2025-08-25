@@ -103,6 +103,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
+            const isPermittedToViewRawData = await checkTuplePage(
+                context,
+                FgaRelation.Party,
+                FgaRoles.ZINNIA_INTERNAL_VIEWER,
+                loggingContext
+            );
+
             if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
                 return {
                     redirect: {
@@ -135,7 +142,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            if (!tab || !CaseDetailsTabValues[tab]) {
+            const canViewRawData =
+                featureFlagDecisions[FEATURE_FLAGS.SHOW_RAW_DATA] &&
+                isPermittedToViewRawData;
+            if (
+                !tab ||
+                !CaseDetailsTabValues[tab] ||
+                (tab === CaseDetailsTabValues['raw-data'] && !canViewRawData)
+            ) {
                 return {
                     redirect: {
                         destination: `/cases/${id}/${CaseDetailsTabValues.progress}`,

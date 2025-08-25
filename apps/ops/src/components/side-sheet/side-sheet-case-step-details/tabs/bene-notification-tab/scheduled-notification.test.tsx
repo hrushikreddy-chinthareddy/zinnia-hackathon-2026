@@ -32,6 +32,9 @@ const baseNotification: INotification = {
     statusDateTime: '2025-07-23T13:04:31.584Z',
     dueToResend: false,
     dueToReset: true,
+    email: 'test@example.com',
+    address: '123 Street',
+    faxNumber: '123456',
 };
 
 describe('##ScheduledNotification', () => {
@@ -49,11 +52,9 @@ describe('##ScheduledNotification', () => {
                 policyNumber="551006123"
                 carrier="FLIC"
                 identifier="2a66c678-f166-4a1d-a3f3-c97d92f9b444"
+                attemptCount={4}
             />
         );
-        expect(
-            screen.getByTestId('constact-not-established-status-badge')
-        ).toBeInTheDocument();
         expect(
             screen.getByText('caseOverview.notifications.scheduledNotification')
         ).toBeInTheDocument();
@@ -81,6 +82,7 @@ describe('##ScheduledNotification', () => {
                 policyNumber="551006123"
                 carrier="FLIC"
                 identifier="2a66c678-f166-4a1d-a3f3-c97d92f9b444"
+                attemptCount={4}
             />
         );
         expect(screen.getByTestId('icon-MAIL')).toBeInTheDocument();
@@ -95,9 +97,10 @@ describe('##ScheduledNotification', () => {
                 policyNumber="551006123"
                 carrier="FLIC"
                 identifier="2a66c678-f166-4a1d-a3f3-c97d92f9b444"
+                attemptCount={4}
             />
         );
-        const btn = screen.getByRole('button');
+        const btn = screen.getByTestId('update-contact-method-btn');
         fireEvent.click(btn);
         expect(push).toHaveBeenCalledWith(
             '/claims/update-notification-method?policyNumber=551006123&carrier=FLIC&recordId=2a66c678-f166-4a1d-a3f3-c97d92f9b444'
@@ -112,9 +115,12 @@ describe('##ScheduledNotification', () => {
                 policyNumber="551006123"
                 carrier="FLIC"
                 identifier="2a66c678-f166-4a1d-a3f3-c97d92f9b444"
+                attemptCount={4}
             />
         );
-        expect(screen.queryByRole('button')).not.toBeInTheDocument();
+        expect(
+            screen.queryByTestId('update-contact-method-btn')
+        ).not.toBeInTheDocument();
         expect(
             screen.queryByText('caseOverview.notifications.contactMethod')
         ).not.toBeInTheDocument();

@@ -47,7 +47,7 @@ export function SubmitProvider({
             // You can use this log in oder to prefil answers in the e-app container
             console.log(
                 'engine dump',
-                engine.getAnswerResolverInstance().dump()
+                engine.getAnswerResolverInstance().export()
             );
             const mappedAnswersResult = engine.getSimpleMappingOutput();
             if (!mappedAnswersResult.success) {
@@ -121,7 +121,7 @@ export function SubmitProvider({
             // You can use this log in oder to prefil answers in the e-app container
             console.log(
                 'Quick Quote engine dump',
-                engine.getAnswerResolverInstance().dump()
+                engine.getAnswerResolverInstance().export()
             );
             const mappedAnswersResult = engine.getSimpleMappingOutput();
             if (!mappedAnswersResult.success) {

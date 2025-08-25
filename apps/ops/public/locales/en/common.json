@@ -89,6 +89,7 @@
             "policySearch": "Policies & Contracts",
             "premiums": "Premiums",
             "ridersAndFeatures": "Riders and Features",
+            "sendCorrespondence": "Send Correspondence",
             "sendDocument": "Send Document",
             "sendStatement": "Send Statement",
             "sendTaxForm": "Send Tax Form",
@@ -645,14 +646,17 @@
             "contact": {
                 "address": "Address",
                 "phone": "Phone",
-                "title": "Contact Info"
+                "title": "Contact Info",
+                "email": "Email"
             },
             "contingentBeneficiary": "Contingent beneficiary",
             "current": "Current",
             "header": "Summary",
             "identification": {
                 "gender": "Gender",
-                "title": "Identification"
+                "title": "Identification",
+                "ssn": "SSN",
+                "dateOfBirth": "Date of birth"
             },
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "overview": "Overview",
@@ -666,7 +670,12 @@
                 "removed": "Removed",
                 "updated": "Updated"
             },
-            "updated": "Updated"
+            "updated": "Updated",
+            "beneficiaryInformation": {
+                "title": "Beneficiary Information",
+                "perStirpes": "Per Stirpes",
+                "irrevocable": "Irrevocable"
+            }
         },
         "confirm": {
             "close": "Close",
@@ -750,6 +759,9 @@
                 "fullName": "Name is required",
                 "lastName": "Last name is required",
                 "addressLine": "Address is required",
+                "city": "City is required",
+                "state": "State is required",
+                "zipCode": "Zip code is required",
                 "name": "Please make sure first and last or company or trustee name is updated while adding {{roleLabel}}",
                 "addressDetails": "Please make sure address details are filled properly while adding {{roleLabel}}",
                 "addRole": "Please add a {{roleLabel}} to continue",
@@ -1927,6 +1939,7 @@
             "closedOn": "Closed on {{date}}",
             "documents": "Documents",
             "caseDocuments": "Case Documents",
+            "events": "Events",
             "policyDocuments": "Policy Documents",
             "issue": "Issue: {{issue}}",
             "issueCount_one": "{{count}} issue",
@@ -1934,9 +1947,11 @@
             "notes": "Notes",
             "otherIssues": "Outstanding Resolutions",
             "openSince": "Open since {{date}}",
+            "pendingTill": "Pending",
             "percentComplete": "{{percent}} Complete",
             "postedOnBy": "Posted on {{date}} by",
             "progress": "Progress",
+            "raw-data": "Raw Data",
             "resolved": "Resolved: {{issue}}",
             "showAllPolicyDocuments": "Show all policy documents",
             "since": "Since {{date}}",
@@ -1965,6 +1980,7 @@
                 "ceding carrier": "Ceding Carrier",
                 "premium source": "Funding Source",
                 "re-illustration": "Re-Illustration",
+                "linked case": "Linked Case",
                 "bene": "Notify"
             },
             "reviewIssues": "Review",
@@ -2064,16 +2080,18 @@
             "startNotification": "History",
             "sendTo": "Send to",
             "contactMethod": "Contact Method",
-            "scheduledNotification": "Attempts #{{followup}} of 4 scheduled for {{date}}",
+            "scheduledNotification": "Attempt {{followup}} scheduled for {{date}}",
             "beneficiaryDeceasedNotification": "Beneficiary confirmed deceased on {{date}}",
             "completedNotification": "Death packet received on {{date}}",
-            "sendNotification": "Attempts #{{followup}} of 4",
+            "sendNotification": "Attempt {{followup}}",
             "resetNotification": "Notification method changed from {{old}} to {{new}} {{date}}",
             "resetNotificationUpdate": "{{method}} Updated {{date}}",
             "resendNotification": "{{action}} Request {{date}}.",
             "contactNotEstablished": "Contact Not Established",
             "contactEstablished": "Contact Established",
-            "beneficiaryDeceased": "Beneficiary deceased"
+            "beneficiaryDeceased": "Beneficiary deceased",
+            "scheduledTooltip": "{{followup}} attempts remaining until escheatment process begins unless contact is established.",
+            "finalTooltip": "Last attempt remaining unless contact is established."
         }
     },
     "caseRenewal": {
@@ -3006,6 +3024,32 @@
                 "annualAnniversaryStatement": "Annual/Anniversary Statement",
                 "quarterlyStatement": "Quarterly Statement"
             }
+        },
+        "sendCorrespondence": {
+            "tabs": {
+                "sendCorrespondence": "Send correspondence",
+                "confirm": "Confirm"
+            },
+            "letterTypes": {
+                "policy.assignmentletter.notified": "Assignment Letter",
+                "policy.beneficiaryrequest.notified": "Beneficiary Request Letter",
+                "policy.divorcerequest.notified": "Divorce Letter",
+                "policy.explanationofbenefitamount.notified": "Explanation of Benefit Amount Letter",
+                "policy.fatcamailing.notified": "FATCA Mailing Letter",
+                "policyNotFoundLetter": "Policy Not Found Letter",
+                "selectOne": "Select one"
+            },
+            "confirm": {
+                "titlePart1": "The ",
+                "titlePart2": "has been successfully submitted for processing and will be sent to the recipient(s) shortly.",
+                "cta": "Go to policy",
+                "back": "Back to home"
+            },
+            "error": "Select at least one letter type to continue",
+            "subtitle": "Processing instructions",
+            "body": "Select the type of letter to send to the customer. The letter will be processed by NGC and then sent via the customer’s preferred contact method.",
+            "subtitle2": "Details",
+            "label": "Letter type"
         },
         "sendTaxForms": {
             "selectTaxYear": "Select tax year(s)",
@@ -3956,6 +4000,7 @@
                 "minRequiredPercentage": "Min required ({{percent}}%)",
                 "actualSurrenderAmount": "Actual surrender amount",
                 "checkingEndingIn": "Checking ending in {{ accountNumber }}",
+                "check": "CHECK",
                 "COSTOFINSURANCE": "Cost of insurance",
                 "EXPENSECHARGE": "Expense charge",
                 "MARKETVALUEADJUSTMENT": "Market value adjustment",
@@ -5910,7 +5955,7 @@
             "sendForms": "Send forms",
             "sendStatements": "Send statements",
             "sendTaxForms": "Send tax forms",
-            "sendCorrespondence": "Send Correspondence"
+            "sendCorrespondence": "Send correspondence"
         },
         "additionalActions": {
             "label": "Additional Actions",
@@ -6253,13 +6298,13 @@
         }
     },
     "transactionListing": {
-        "loadingTransactions": "Retrieving stopped transactions...",
+        "loadingTransactions": "Retrieving transactions...",
         "errorGettingTransactions": "Stopped transactions data couldn't be retrieved.",
-        "uncashedTransactions": "Outstanding Checks Status",
+        "uncashedTransactions": "Uncashed Checks",
         "stoppedTransactions": "Stopped Transactions",
         "noUncashedTransactions": "No uncashed checks available for this contract.",
         "identificationInProgress": "Identification of outstanding check(s) is currently in progress.",
-        "noUncashedTransactionsTableHead": "Contract #{{contractNumber}}",
+        "contractNumberHeading": "Contract #{{contractNumber}}",
         "noTransactionsFoundTitle": "No transactions were found",
         "noTransactionsMessage": "There are no transactions related with this event.",
         "labels": {
@@ -6273,11 +6318,17 @@
             "reversed": "Reversed",
             "checkToEstate": "Check to Estate"
         },
-        "tableColumns": {
-            "transaction": "Transaction",
-            "checkNo": "Check Number / Date",
-            "status": "Status",
-            "amount": "Amount"
+        "tooltips": {
+            "outstanding": "An uncashed payment was identified in the finance system.",
+            "stopped": "The payment was successfully stopped in the finance system.",
+            "checkToEstate": "Since the payment was sent before the date of death, the check was sent to the estate.",
+            "reversed": "Since the payment was sent after the date of death, it was reversed and added back to the death benefit settlement."
+        },
+        "cardLabels": {
+            "checkDate": "Check Date",
+            "amount": "Amount",
+            "check": "Check #{{number}}",
+            "contract": "Contract #{{number}}"
         }
     },
     "deathNotification": {
@@ -6831,6 +6882,10 @@
                     "yes": "Yes",
                     "no": "No"
                 }
+            },
+            "formErrors": {
+                "invalidDate": "Enter valid date.",
+                "futureDate": "Date of Death cannot be in the future."
             }
         },
         "notificationMethod": {
@@ -7346,8 +7401,7 @@
             "noProductsIconAlt": "No products to list icon",
             "noProductsAvailable": "Unable to load illustrations. Please try again later.",
             "addIllustrationButton": "Add illustration button",
-            "seeProducts": "Add a product",
-            "addIllustration": "Add illustration"
+            "seeProducts": "Add a product"
         },
         "caseSummary": {
             "edit": "Edit",
@@ -7451,12 +7505,13 @@
             "editClientCaseSideSheetTitle": "Edit Client Case",
             "clientCaseSection": "Client Case Details",
             "titleLabel": "Title",
+            "agencyLabel": "Agency",
             "insuredDetailsSection": "Insured Details",
             "firstNameLabel": "First name (optional)",
             "firstNameTooltip": "first name tooltip",
             "lastNameLabel": "Last name (optional)",
             "lastNameTooltip": "last name tooltip",
-            "sexAssignedLabel": "Sex assigned at birth",
+            "sexAssignedLabel": "Sex at Birth",
             "maleButton": "Male",
             "femaleButton": "Female",
             "dateLabel": "Date of birth",

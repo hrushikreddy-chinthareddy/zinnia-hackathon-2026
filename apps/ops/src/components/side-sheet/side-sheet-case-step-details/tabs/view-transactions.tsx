@@ -17,7 +17,7 @@ import {
     ViewTransactionsProps,
 } from './transactions-step-additional-data.types';
 import TransactionsTable from './transactions-table';
-import UncashedTransactionsTable from './uncashed-transactions-table';
+import UncashedChecks from './uncashed-checks/uncashed-checks';
 
 export function ViewTransactions({
     stepAdditionalData,
@@ -184,7 +184,7 @@ export function ViewTransactions({
                 displayInProgress()
             ) : programs.length > 0 ? (
                 prop === StepProgramTypes.UNCASHED ? (
-                    <UncashedTransactionsTable transactions={programs} t={t} />
+                    <UncashedChecks transactions={programs} t={t} />
                 ) : (
                     <TransactionsTable transactions={programs} t={t} />
                 )

@@ -124,11 +124,14 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                     party.partyRoles.includes(
                         PartyRole.PRIMARYSERVICINGAGENT
                     ) ||
-                    party.partyRoles.includes(PartyRole.PRIMARYWRITINGAGENT)
+                    party.partyRoles.includes(PartyRole.PRIMARYWRITINGAGENT) ||
+                    // the spec that is coming back to use has a misspelled "writinggagent" so can't use the type here until that's updated
+                    party.partyRoles.includes('ADDITIONALWRITINGAGENT')
                 );
             }),
         [nameTags]
     );
+
     const clientCode = policy?.carrierId;
     const { data: agentData } = useQueries({
         queries: agentParties?.map((agent) => ({

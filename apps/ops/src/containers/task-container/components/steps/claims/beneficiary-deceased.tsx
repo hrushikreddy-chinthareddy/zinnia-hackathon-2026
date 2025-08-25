@@ -21,6 +21,20 @@ function BeneficiaryDeceased({
     t,
     readOnly,
 }: BeneficiaryDeceasedProps) {
+    const handleDateSelect = (date: Date | undefined) => {
+        if (date && date.toString() === 'Invalid Date') {
+            setBeneficiary({
+                ...beneficiary,
+                beneDeathDate: null,
+            });
+        } else {
+            setBeneficiary({
+                ...beneficiary,
+                beneDeathDate: date?.toLocaleDateString() || null,
+            });
+        }
+    };
+
     return (
         <>
             <div className="col-span-1 mt-4">
@@ -32,12 +46,7 @@ function BeneficiaryDeceased({
                     }
                     name="dateOfDeath"
                     value={beneficiary.beneDeathDate || undefined}
-                    onDateSelect={(val: Date | undefined) => {
-                        setBeneficiary({
-                            ...beneficiary,
-                            beneDeathDate: val?.toLocaleDateString() || null,
-                        });
-                    }}
+                    onDateSelect={handleDateSelect}
                     disabled={readOnly}
                 />
             </div>

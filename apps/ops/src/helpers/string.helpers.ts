@@ -7,6 +7,8 @@ import {
     DEFAULT_DATE_FORMAT,
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
+    LEGACY_END_DATE,
+    LEGACY_START_DATE,
 } from '@deps/types/constants';
 
 import { calculateAgeNumber } from './age.helpers';
@@ -200,7 +202,13 @@ export const hasDigitsRegex = new RegExp(/\d+/);
 
 // Converts yyyy-mm-dd strings into m/d/yyyy
 export const convertKebabedDateString = (date: string | undefined): string => {
-    if (date === '' || typeof date !== 'string') return DEFAULT_ERROR_STRING;
+    if (
+        date === '' ||
+        typeof date !== 'string' ||
+        date === LEGACY_START_DATE ||
+        date === LEGACY_END_DATE
+    )
+        return DEFAULT_ERROR_STRING;
 
     const [year, month, day] = date.split('-');
     if (!year || !month || !day) {

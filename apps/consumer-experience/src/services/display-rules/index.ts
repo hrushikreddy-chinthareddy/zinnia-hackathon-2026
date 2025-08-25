@@ -4,6 +4,7 @@ import {
   ProductType,
 } from '@xd/api-types/dist/generated-types/sor';
 
+import { RouteKey } from '@/route-map';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { isPayorOnly } from '@/utils/party';
@@ -18,7 +19,7 @@ import { getLoggedInUserPolicyAndPartyDataErrors } from '../policy/types';
  * These rules should follow product/role directed requirements.
  * Not UX/UI related requirements such as "only show this if there are X number of items in the array".
  */
-export const evaluateRules = (
+export const evaluateComponentVisibilityRules = (
   policy: Policy,
   partyRoles: PartyRole[],
   skip?: boolean //An alternate skip option to override every option and force it to show
@@ -30,7 +31,6 @@ export const evaluateRules = (
   // and ideally should be handled by CIAM
   const isNotPayor = !isPayorOnly(partyRoles);
 
-  // Evaluate all rules at once
   return {
     [ComponentName.OVERVIEW_PROFILE]: () => true,
     [ComponentName.OVERVIEW_PAYMENT_HISTORY]: () => isPayorNotOwner || !!skip,
@@ -52,6 +52,38 @@ export const evaluateRules = (
   };
 };
 
+export const evaluateRouteRules = (
+  policy: Policy,
+  partyRoles: PartyRole[]
+): Record<RouteKey, () => boolean> | null => {
+  const isNotPayor = !isPayorOnly(partyRoles);
+
+  return {
+    [RouteKey.ACCOUNT]: () =>
+      isNotPayor && policy.product?.productType !== ProductType.TERM,
+    [RouteKey.ALLOCATIONS]: () => isNotPayor,
+    [RouteKey.BENEFICIARIES]: () => isNotPayor,
+    [RouteKey.BENEFICIARY]: () => isNotPayor,
+    [RouteKey.COVERAGE]: () => true,
+    [RouteKey.DETAILS]: () => true,
+    [RouteKey.DOCUMENTS]: () => isNotPayor,
+    [RouteKey.HISTORY]: () => true,
+    [RouteKey.LOANS]: () => isNotPayor,
+    [RouteKey.MY_COVERAGE]: () => isNotPayor,
+    [RouteKey.NOTIFICATIONS]: () => isNotPayor,
+    [RouteKey.PREMIUM]: () => true,
+    [RouteKey.PREMIUM_DETAILS]: () => true,
+    [RouteKey.PREMIUM_HISTORY]: () => true,
+    [RouteKey.PROFILE]: () => true,
+    [RouteKey.RIDERS]: () => isNotPayor,
+    [RouteKey.SURRENDER]: () => isNotPayor,
+    [RouteKey.WITHDRAWALS]: () => isNotPayor,
+  };
+};
+
+/**
+ * Get component visibility based on the policy and party roles
+ */
 export const getComponentVisibility = async (
   policyNumber: string,
   planCode: string
@@ -71,7 +103,7 @@ export const getComponentVisibility = async (
     );
 
     // Evaluate all rules at once
-    const visibility = evaluateRules(
+    const visibility = evaluateComponentVisibilityRules(
       data?.policy ?? {},
       data?.partyRoles || [],
       error?.cause === getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_ID_FOUND
@@ -85,6 +117,43 @@ export const getComponentVisibility = async (
   } catch (error) {
     logError(
       '::getComponentVisibility::Error evaluating component visibility:',
+      error
+    );
+    return null;
+  }
+};
+
+/**
+ *
+ * Based on user role to a policy, return which routes should be accessible
+ */
+export const getRoutePermissions = async (
+  policyNumber: string,
+  planCode: string
+): Promise<Record<RouteKey, () => boolean> | null> => {
+  try {
+    const loggingContext = await buildCommonLogContext();
+
+    logTrace('getRoutePermissions::start', {
+      ...loggingContext,
+      planCode,
+      policyNumber,
+    });
+
+    const { data } = await getLoggedInUserPolicyAndPartyData(
+      { planCode, policyNumber },
+      loggingContext
+    );
+
+    // Evaluate all rules at once
+    const routePermissions = evaluateRouteRules(
+      data?.policy ?? {},
+      data?.partyRoles || []
+    );
+    return routePermissions;
+  } catch (error) {
+    logError(
+      '::getRoutePermissions::Error evaluating component visibility:',
       error
     );
     return null;

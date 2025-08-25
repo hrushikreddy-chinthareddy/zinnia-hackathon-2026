@@ -405,7 +405,9 @@ const RoleIdentification = ({
                             <Field
                                 label={t('firstName') as string}
                                 message={
-                                    !firstNameExist && !isReadOnly
+                                    currentErrors?.name &&
+                                    !firstNameExist &&
+                                    !isReadOnly
                                         ? t('formValidations.firstName')
                                         : ''
                                 }
@@ -421,7 +423,12 @@ const RoleIdentification = ({
                                 maxLength={15}
                                 variant={getVariant(
                                     RoleField.FirstName,
-                                    party,
+                                    currentErrors?.name
+                                        ? party
+                                        : {
+                                              [RoleField.FirstName]:
+                                                  'placeholder',
+                                          },
                                     isReadOnly
                                 )}
                                 required
@@ -454,7 +461,7 @@ const RoleIdentification = ({
                                     );
                                 }}
                                 message={
-                                    !lastNameExist && !isReadOnly
+                                    currentErrors?.name && !isReadOnly
                                         ? t('formValidations.lastName')
                                         : ''
                                 }
@@ -464,7 +471,12 @@ const RoleIdentification = ({
                                 maxLength={40}
                                 variant={getVariant(
                                     RoleField.LastName,
-                                    party,
+                                    currentErrors?.name
+                                        ? party
+                                        : {
+                                              [RoleField.LastName]:
+                                                  'placeholder',
+                                          },
                                     isReadOnly
                                 )}
                                 required
@@ -499,7 +511,7 @@ const RoleIdentification = ({
                                             : t(`companyName`) || ''
                                     }
                                     message={
-                                        !lastNameExist && !isReadOnly
+                                        currentErrors?.name && !isReadOnly
                                             ? t('formValidations.fullName')
                                             : ''
                                     }
@@ -517,7 +529,12 @@ const RoleIdentification = ({
                                     maxLength={40}
                                     variant={getVariant(
                                         RoleField.LastName,
-                                        party,
+                                        currentErrors?.name
+                                            ? party
+                                            : {
+                                                  [RoleField.LastName]:
+                                                      'placeholder',
+                                              },
                                         isReadOnly
                                     )}
                                     required

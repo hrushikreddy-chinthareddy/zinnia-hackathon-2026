@@ -8,7 +8,7 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextResponse, type NextRequest } from 'next/server';
 import { v4 as uuid4 } from 'uuid';
 
-import { RouteKey } from '@/route-map';
+import { getRouteKeyFromUrl, RouteKey } from '@/route-map';
 import { isMockAllowed } from '@/utils';
 import {
   ACKNOWLEDGEMENT_COOKIE_KEY,
@@ -28,6 +28,7 @@ import {
 import { checkResetDeliveryDateEligibility } from './services/bpm';
 import { ROOT_URL_PATH } from './types';
 import { COOKIE_DOMAIN } from '../constants';
+import { getRoutePermissions } from './services/display-rules';
 import { TermsAndConditionApiResponse } from './types/auth';
 import { Subdomains } from './types/carriers';
 import {
@@ -207,6 +208,40 @@ export async function middleware(req: NextRequest) {
           )
         );
       }
+    }
+
+    // Check that the logged in user has the correct role on a policy to view a page
+    if (pathnameIsInternalPage) {
+      const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
+
+      //We dont have a plancode or policy number for some reason, move on
+      if (!planCode || !policyNumber) {
+        return resNext;
+      }
+
+      const routePermissions = await getRoutePermissions(
+        policyNumber,
+        planCode
+      );
+
+      // if something goes wrong, just let the user go to the page anyway
+      // the backend should still prevent them from doing anything bad based on their user permissions.
+      if (!routePermissions) {
+        return resNext;
+      }
+
+      const routeKeyFromPathname = getRouteKeyFromUrl(pathname);
+
+      const hasPermission =
+        routePermissions[routeKeyFromPathname as RouteKey]();
+
+      // You shouldn't be here, GET ON OUTTA HERE! YOU GET OUT!
+      if (!hasPermission) {
+        return NextResponse.redirect(new URL('/404', req.url));
+      }
+
+      // Everything is good, carry on!
+      return resNext;
     }
 
     //********************************** */

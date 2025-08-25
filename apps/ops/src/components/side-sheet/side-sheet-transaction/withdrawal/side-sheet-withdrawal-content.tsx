@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { toTitleCase } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
@@ -23,11 +23,34 @@ import { WithdrawalSideSheetValues } from './types';
 type SideSheetWithdrawalContentProps = {
     loading?: boolean;
     values: WithdrawalSideSheetValues;
+    policy: Policy;
     t: TFunction;
+};
+
+const getPartyFullName = (policy: Policy, partyId: string) => {
+    const party = policy?.parties?.find((p) => p.partyId === partyId);
+    if (!party) return DEFAULT_ERROR_STRING;
+
+    const first = party.firstName?.toLocaleUpperCase() || '';
+    const last = party.lastName?.toLocaleUpperCase() || '';
+    return `${first} ${last}`.trim() || DEFAULT_ERROR_STRING;
+};
+
+const getPayeeAddress = (policy: Policy, addressId: string) => {
+    const address = policy?.parties
+        ?.flatMap((p) => p.addresses || [])
+        .find((addr) => addr.addressId === addressId);
+
+    if (!address) return DEFAULT_ERROR_STRING;
+
+    return `${address.addressLine1} ${address?.addressLine2 || ''} ${
+        address?.addressLine3 || ''
+    } ${address?.city || ''} ${address?.state || ''} ${address?.zipCode || ''}`;
 };
 
 const SideSheetWithdrawalContent = ({
     values,
+    policy,
     t,
 }: SideSheetWithdrawalContentProps) => {
     const {
@@ -165,19 +188,13 @@ const SideSheetWithdrawalContent = ({
                 </Typography>
                 <div className="mt-4">
                     <table role="table" className="w-full rounded-lg">
-                        {/* Hardcoded table caption
-                        TODO MG: need transalations */}
                         <caption className="hidden">
                             Payee details table of withdrawal transaction
-                            stating whom received the percentage and dollar
-                            amount of the withdrawn amount.
+                            stating recipient and allocation details.
                         </caption>
                         <thead>
                             <tr role="row" className="flex">
-                                <th
-                                    scope="col"
-                                    className="w-[60%] rounded-tl-lg border-b-1 border-l-1 border-t-1 border-gray-200 bg-gray-50 px-3 py-2 text-left"
-                                >
+                                <th className="w-[60%] rounded-tl-lg border-b border-l border-t border-gray-200 bg-gray-50 px-3 py-2 text-left">
                                     <Typography
                                         variant={TypographyVariant.BodySmBold}
                                     >
@@ -186,10 +203,7 @@ const SideSheetWithdrawalContent = ({
                                         )}
                                     </Typography>
                                 </th>
-                                <th
-                                    scope="col"
-                                    className="w-[30%] border-b-1 border-t-1 border-gray-200 bg-gray-50 px-3 py-2 text-right"
-                                >
+                                <th className="w-[30%] border-b border-t border-gray-200 bg-gray-50 px-3 py-2 text-right">
                                     <Typography
                                         variant={TypographyVariant.BodySmBold}
                                     >
@@ -198,10 +212,7 @@ const SideSheetWithdrawalContent = ({
                                         )}
                                     </Typography>
                                 </th>
-                                <th
-                                    scope="col"
-                                    className="w-[30%] rounded-tr-lg border-b-1 border-r-1 border-t-1 border-gray-200 bg-gray-50 px-3 py-2 text-right"
-                                >
+                                <th className="w-[30%] rounded-tr-lg border-b border-r border-t border-gray-200 bg-gray-50 px-3 py-2 text-right">
                                     <Typography
                                         variant={TypographyVariant.BodySmBold}
                                     >
@@ -214,23 +225,21 @@ const SideSheetWithdrawalContent = ({
                         </thead>
                         <tbody>
                             {payeePaymentDetails?.map((payee, index: Key) => (
-                                <tr role="row" key={index} className="flex">
-                                    <td
-                                        role="cell"
-                                        className="flex w-[60%] flex-col rounded-bl-lg border-b-1 border-l-1 border-gray-200 px-3 py-2 text-left"
-                                    >
+                                <tr key={index} role="row" className="flex">
+                                    <td className="flex w-[60%] flex-col rounded-bl-lg border-b border-l border-gray-200 px-3 py-2 text-left">
                                         <Typography
                                             variant={
                                                 TypographyVariant.BodySmBold
                                             }
                                         >
                                             <PiiWrapper>
-                                                {
-                                                    payee.bankDetails
-                                                        .nameOnAccount
-                                                }
+                                                {getPartyFullName(
+                                                    policy,
+                                                    payee.partyId
+                                                )}
                                             </PiiWrapper>
                                         </Typography>
+
                                         <Typography
                                             variant={TypographyVariant.BodySm}
                                         >
@@ -238,29 +247,42 @@ const SideSheetWithdrawalContent = ({
                                                 {payee.bankDetails.branchName}
                                             </PiiWrapper>
                                         </Typography>
+
                                         <Typography
                                             variant={TypographyVariant.BodySm}
                                         >
                                             <PiiWrapper>
-                                                {t(
-                                                    'policy.history.withdrawalSidesheet.checkingEndingIn',
-                                                    {
-                                                        accountNumber:
-                                                            payee.bankDetails.accountNumber?.substring(
-                                                                payee
-                                                                    .bankDetails
-                                                                    .accountNumber
-                                                                    .length - 4
-                                                            ),
-                                                    }
-                                                )}
+                                                {payee.paymentForm === 'CHECK'
+                                                    ? t(
+                                                          'policy.history.withdrawalSidesheet.check'
+                                                      )
+                                                    : t(
+                                                          'policy.history.withdrawalSidesheet.checkingEndingIn',
+                                                          {
+                                                              accountNumber:
+                                                                  payee.bankDetails.accountNumber?.slice(
+                                                                      -4
+                                                                  ),
+                                                          }
+                                                      )}
+                                            </PiiWrapper>
+                                        </Typography>
+
+                                        <Typography
+                                            variant={TypographyVariant.BodySm}
+                                        >
+                                            <PiiWrapper>
+                                                {payee.paymentForm ===
+                                                    'CHECK' &&
+                                                    getPayeeAddress(
+                                                        policy,
+                                                        payee.addressId || ''
+                                                    )}
                                             </PiiWrapper>
                                         </Typography>
                                     </td>
-                                    <td
-                                        role="cell"
-                                        className="w-[30%] content-center border-b-1 border-gray-200 px-3 py-2 text-right"
-                                    >
+
+                                    <td className="w-[30%] content-center border-b border-gray-200 px-3 py-2 text-right">
                                         <Typography
                                             variant={TypographyVariant.BodySm}
                                         >
@@ -270,14 +292,11 @@ const SideSheetWithdrawalContent = ({
                                             )}
                                         </Typography>
                                     </td>
-                                    <td
-                                        role="cell"
-                                        className="w-[30%] content-center rounded-br-lg border-b-1 border-r-1 border-gray-200 px-3 py-2 text-right"
-                                    >
+
+                                    <td className="w-[30%] content-center rounded-br-lg border-b border-r border-gray-200 px-3 py-2 text-right">
                                         <Typography
                                             variant={TypographyVariant.BodySm}
                                         >
-                                            {/* Defaulting to DEFAULT_ERROR_STRING for pending sidesheets waiting on Promise to be fulfilled*/}
                                             {numberFormatify(
                                                 payee.disbursementAmount ||
                                                     DEFAULT_ERROR_STRING

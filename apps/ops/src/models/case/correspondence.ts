@@ -89,3 +89,10 @@ export type CorrespondenceFormParts = {
     correspondence: Correspondence;
     confirm: Confirm;
 };
+
+export type AdhocLetterRequestBody = {
+    correlationId: string;
+    eventType: string;
+    eventSubType?: string;
+    carrier: string;
+};

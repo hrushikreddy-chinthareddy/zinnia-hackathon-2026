@@ -13,7 +13,8 @@
     "chromatic": "npx chromatic --exit-zero-on-changes"
   },
   "exports": {
-    ".": "./dist/pom.js"
+    ".": "./src/index.ts",
+    "./*": "./src/*"
   },
   "dependencies": {
     "@radix-ui/react-popover": "^1.0.7",

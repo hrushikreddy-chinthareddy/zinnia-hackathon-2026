@@ -1,7 +1,7 @@
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import zinniaconfig from '@zinnia/eslint-config/library'
-import tseslint from 'typescript-eslint'
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import zinniaconfig from '@zinnia/eslint-config/library';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   ...zinniaconfig,
@@ -17,8 +17,7 @@ export default tseslint.config(
       ecmaVersion: 2020,
       globals: globals.browser,
     },
-    plugins: {
-    },
+    plugins: {},
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
@@ -26,5 +25,5 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
     },
-  },
-)
+  }
+);

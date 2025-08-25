@@ -13,7 +13,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { SideSheetPeopleHeaderProps } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helpers';
+import { formatPhone } from '@deps/helpers/string.helpers';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -94,7 +94,7 @@ export const FormattedPhone = ({ phone }: FormattedPhoneProps) => {
     return (
         <>
             <Typography className="truncate" variant={TypographyVariant.BodySm}>
-                <PiiWrapper>{formatPhoneNumberWithExtension(phone)}</PiiWrapper>
+                <PiiWrapper>{formatPhone(phone)}</PiiWrapper>
             </Typography>
             {bestTime && (
                 <Typography

@@ -1,0 +1,28 @@
+.accordionSection {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 100%;
+    display: block;
+}
+.accordionContent {
+    border-left: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: space-between;
+    padding-left: 8px;
+    width: 100%;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: space-between;
+    padding: 8px;
+    width: 100%;
+}
+.primitive {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}

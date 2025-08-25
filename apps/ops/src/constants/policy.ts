@@ -175,3 +175,11 @@ export enum EntityTypeValue {
     Corporation = 'CORPORATION',
     Other = 'UNKNOWN',
 }
+
+export enum Action {
+    ADD = 'ADD',
+    REMOVE = 'REMOVE',
+    UPDATE = 'UPDATE',
+    NONE = 'NONE',
+    DELETE = 'DELETE',
+}

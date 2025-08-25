@@ -55,6 +55,7 @@ export interface PermissionsContextProps {
     isAllowReadIllustrations: boolean;
     hasUsagePermission: boolean;
     hasTestHarnessAccess: boolean;
+    isZinniaInternalViewer: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -186,6 +187,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     relation: FgaRelation.UiAccess,
                     object: 'entity:zinnia_live_test_harness',
                 },
+                {
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.Party,
+                    object: FgaRoles.ZINNIA_INTERNAL_VIEWER,
+                },
             ];
             const data = await bulkCheckPermissionsQuery({ tuples });
             const superAdmin = checkIfUserIsSuperAdmin(data);
@@ -211,6 +217,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.TEST_HARNESS_ACCESS,
                 FgaRelation.UiAccess
             );
+            const isZinniaInternalViewer = !!checkRelation(
+                data,
+                FgaRoles.ZINNIA_INTERNAL_VIEWER,
+                FgaRelation.Party
+            );
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
@@ -222,6 +233,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowReadIllustrations,
                 hasUsagePermission: !!hasUsage,
                 hasTestHarnessAccess,
+                isZinniaInternalViewer,
             };
         },
         enabled: !!partyId,
@@ -268,6 +280,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowReadIllustrations:
                     !!fgaRoleData?.isAllowReadIllustrations,
                 hasUsagePermission: !!fgaRoleData?.hasUsagePermission,
+                isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
             }}
         >
             {children}

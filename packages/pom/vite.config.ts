@@ -7,7 +7,7 @@ import { libInjectCss } from 'vite-plugin-lib-inject-css';
 export default defineConfig({
   define: {
     'process.env': {
-      'NEXT_PUBLIC_BASE_URL': process.env.NEXT_PUBLIC_BASE_URL,
+      NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     },
   },
   plugins: [
@@ -16,7 +16,7 @@ export default defineConfig({
     dts({
       rollupTypes: true,
       tsconfigPath: './tsconfig.app.json',
-    })
+    }),
   ],
   build: {
     lib: {
@@ -29,10 +29,10 @@ export default defineConfig({
       output: {
         globals: {
           react: 'React',
-          '@zinnia/utils': '@zinnia/utils'
-        }
-      }
-    }
+          '@zinnia/utils': '@zinnia/utils',
+        },
+      },
+    },
   },
   optimizeDeps: {
     include: ['@zinnia/utils'],

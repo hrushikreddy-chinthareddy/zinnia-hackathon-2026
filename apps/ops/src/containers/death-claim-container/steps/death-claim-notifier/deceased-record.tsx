@@ -1,9 +1,14 @@
 import { Checkbox } from '@zinnia/bloom/components';
+import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import { FieldSize, FieldType } from '@deps/components/fields/field';
+import {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import Radio from '@deps/components/radio/radio';
 import { TranslationFiles } from '@deps/config/translations';
@@ -12,6 +17,8 @@ import {
     stringifyTrueFalseNull,
     toTitleCase,
 } from '@deps/helpers/string.helpers';
+import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import { DeceasedParty } from '../../death-claim.types';
 
@@ -20,6 +27,7 @@ interface DeceasedRecordProps {
     handleDeceased: (data: DeceasedParty, index: number) => void;
     index: number;
     isDisabled: boolean;
+    setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
 }
 
 export const DeceasedRecord = ({
@@ -27,12 +35,15 @@ export const DeceasedRecord = ({
     handleDeceased,
     index,
     isDisabled,
+    setFormErrors,
 }: DeceasedRecordProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims.deceasedDetails',
     });
     const { t: gen } = useTranslation();
     const [currentDeceased, setCurrentDeceased] = useState(owner || {});
+    const [dateError, setDateError] = useState<boolean>(false);
+    const [dateErrorMsg, setDateErrorMsg] = useState<string>('');
 
     const sectionOptions = [
         {
@@ -78,11 +89,58 @@ export const DeceasedRecord = ({
         }));
     };
 
-    const onDateOfDeathChange = (date: string) => {
-        setCurrentDeceased((prevState) => ({
-            ...prevState,
-            dateOfDeath: date,
-        }));
+    const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const numberRegex = /^\d+$/;
+        if (!numberRegex.test(e.target.value)) {
+            return;
+        }
+        const errors: FormValidationErrors = {};
+        const day = dayjs(e.target.value, NUMERIC_DATE_FORMAT);
+
+        if (day.isValid()) {
+            if (isDateAllowed(day)) {
+                errors[`deceased_date_${index}`] = '';
+                setDateErrorMsg('');
+                setCurrentDeceased((prevState) => ({
+                    ...prevState,
+                    dateOfDeath: e.target.value,
+                }));
+                setDateError(false);
+                setFormErrors((prevState) => ({
+                    ...prevState,
+                    ...errors,
+                }));
+            } else {
+                errors[`deceased_date_${index}`] = t('formErrors.futureDate');
+                setDateErrorMsg(t('formErrors.futureDate') as string);
+                setCurrentDeceased((prevState) => ({
+                    ...prevState,
+                    dateOfDeath: e.target.value,
+                }));
+                setDateError(true);
+                setFormErrors((prevState) => ({
+                    ...prevState,
+                    ...errors,
+                }));
+            }
+        } else {
+            errors[`deceased_date_${index}`] = t('formErrors.invalidDate');
+            setDateErrorMsg(t('formErrors.invalidDate') as string);
+            setCurrentDeceased((prevState) => ({
+                ...prevState,
+                dateOfDeath: e.target.value,
+            }));
+            setDateError(true);
+            setFormErrors((prevState) => ({
+                ...prevState,
+                ...errors,
+            }));
+        }
+    };
+
+    const isDateAllowed = (date: Dayjs) => {
+        const currentDate = dayjs();
+        return date.isBefore(currentDate) || date.isSame(currentDate);
     };
 
     const labelTxt = toTitleCase(
@@ -115,10 +173,8 @@ export const DeceasedRecord = ({
                         <FieldDateSelect
                             isFutureDateDisabled={true}
                             className="max-w-xs"
-                            label={t(`labels.dateOfDeath`) as string}
-                            onChange={(e) =>
-                                onDateOfDeathChange(e.target.value)
-                            }
+                            label={t('labels.dateOfDeath') as string}
+                            onChange={handleDateChange}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={currentDeceased?.dateOfDeath ?? ''}
@@ -126,6 +182,13 @@ export const DeceasedRecord = ({
                                 `date-of-death-${owner?.party.partyId}-` +
                                 Math.random()
                             }
+                            message={dateError ? dateErrorMsg : ''}
+                            variant={
+                                dateError
+                                    ? FieldVariant.Error
+                                    : FieldVariant.Default
+                            }
+                            isDateAllowed={isDateAllowed}
                         />
                     </div>
                     <div className="my-3">

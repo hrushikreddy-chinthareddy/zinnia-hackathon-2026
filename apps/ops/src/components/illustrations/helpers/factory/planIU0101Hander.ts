@@ -275,7 +275,11 @@ const farmersEntitiesSchema = t.object(
     t.optionalProperty('scheduleDistributions', t.union(t.string, t.undefined)),
     distributionAmountTableSchema,
 
-    t.optionalProperty('distributionOptions', t.union(t.string, t.undefined))
+    t.optionalProperty('distributionOptions', t.union(t.string, t.undefined)),
+    t.optionalProperty(
+        'nonNicotineConversionAtAge18',
+        t.union(t.array(t.string), t.undefined)
+    )
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -417,20 +421,20 @@ function createIllustrationPayload(
         });
     }
 
-    const flatExtras = [];
+    const flatExtra = [];
 
     if (
         SUBSTANDARD_PREMIUM_CLASSES.includes(values.premiumClass) &&
         values.tableOrFlatExtraSelection?.[0] == 'selectTableOrFlatExtraRatings'
     ) {
         if (values.permanentFlatExtra?.amount) {
-            flatExtras.push({
+            flatExtra.push({
                 type: FARMERS_HARDCODED_DATA.permanentFlatExtraType,
                 amount: values.permanentFlatExtra.amount,
             });
         }
         if (values.temporaryFlatExtra?.amount) {
-            flatExtras.push({
+            flatExtra.push({
                 type: FARMERS_HARDCODED_DATA.temporaryFlatExtraType,
                 amount: values.temporaryFlatExtra.amount,
                 duration: values.temporaryFlatExtra?.duration,
@@ -506,7 +510,7 @@ function createIllustrationPayload(
                             substandardRating: values.subStandardRating,
                         }),
                         underwritingClass: values.premiumClass,
-                        flatExtras,
+                        flatExtra: flatExtra,
                     },
                 ],
             },
@@ -671,6 +675,11 @@ function createIllustrationPayload(
                 isMec: values.mec1035,
                 carryOverLoan: 1,
             },
+            ...(values.nonNicotineConversionAtAge18 && {
+                juvenileReclassification:
+                    values.nonNicotineConversionAtAge18[0] ===
+                    'non-NicotineConversionAtAge18',
+            }),
         },
         fundAllocations: [
             {

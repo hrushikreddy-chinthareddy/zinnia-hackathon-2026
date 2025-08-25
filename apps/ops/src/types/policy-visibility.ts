@@ -9,6 +9,8 @@ type VisibilityFlags = {
     allowsLoans: boolean;
     allowsWithdrawals: boolean;
     allowsFundsAndAccounts: boolean;
+    allowPremiums: boolean;
+    allowRMD: boolean;
 };
 
 // Base visibility rules by product type

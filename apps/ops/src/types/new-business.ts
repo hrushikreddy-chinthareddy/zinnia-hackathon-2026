@@ -10,13 +10,13 @@ type EmailType = 'PERSONAL';
 type IdentifierType = 'EXTERNAL' | 'SSN';
 type IdentifierKeyType = 'ECN' | 'Party Id' | 'UPN' | 'AOR';
 
-interface PersonalInformation {
+export interface PersonalInformation {
     valid: boolean;
     birthSexValid: boolean;
     firstName: string;
     lastName: string;
     prefix: string;
-    dateOfBirth: Date;
+    dateOfBirth: string; // ISO string
     gender: Gender;
     birthSex: Gender;
     birthState: string;
@@ -71,25 +71,25 @@ export interface PhoneNumberObject {
 
 export interface party {
     partyType: string;
-    personalInformation: PersonalInformation;
+    personalInformation: Partial<PersonalInformation>;
     partyId: string;
     partyCommunication: string;
     partyRole: PartyRole;
-    partyPercentage: number;
+    partyPercentage?: number;
     identifiers: identifier[];
-    address: AddressObject;
-    phoneNumber: PhoneNumberObject;
-    email: EmailObject;
+    address?: AddressObject;
+    phoneNumber?: PhoneNumberObject;
+    email?: EmailObject;
 }
 
 // This interface needs to be completed
-interface Policy {
-    policyNumber: string;
+export interface Policy {
+    policyNumber?: string;
     planCode: string;
     productType: string;
-    policyStatus: string;
+    policyStatus?: string;
     policyHoldingForm: string;
-    policyEffectiveDate: Date;
+    policyEffectiveDate?: Date;
     issueState: string;
     issueCountry: string;
 }

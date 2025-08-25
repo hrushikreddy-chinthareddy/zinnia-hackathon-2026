@@ -1,6 +1,7 @@
 import { Policy } from '@zinnia/api-types/types/sor';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { getPolicyVisibility } from '@deps/helpers/policy-visibility/policy-visibility-helper';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
 import {
@@ -53,17 +54,10 @@ const setupTest = <T>(props: T) => {
 };
 describe('policy details helpers', () => {
     describe('buildTransactionCards', () => {
-        it('should build the transaction cards for the policy', () => {
-            const visibility = {
-                showFundsAndAccounts: true,
-                showLoans: true,
-                showWithdrawals: true,
-            };
-            const result = buildTransactionCards(
-                new PolicyDetails(mockPolicy),
-                tSpy,
-                visibility
-            );
+        it('should build the transaction cards for the policy', async () => {
+            const policy = new PolicyDetails(mockPolicy);
+            const visibility = await getPolicyVisibility(policy);
+            const result = buildTransactionCards(policy, tSpy, visibility);
 
             expect(result).toEqual([
                 {
@@ -95,6 +89,16 @@ describe('policy details helpers', () => {
                     value: '$695.17',
                 },
             ]);
+        });
+
+        it('does not render financial cards when TPA is false (Non-Zinnia)', async () => {
+            const policy = setupTest({
+                thirdPartyAdministratorId: 'Non-Zinnia',
+            });
+            const visibility = await getPolicyVisibility(policy);
+            const result = buildTransactionCards(policy, tSpy, visibility);
+
+            expect(result).toEqual([]);
         });
     });
 

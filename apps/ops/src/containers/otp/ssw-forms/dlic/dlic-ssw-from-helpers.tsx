@@ -91,6 +91,7 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
         );
 
         if (
+            isLC &&
             sswProgramStartDate &&
             [29, 30, 31].includes(
                 dayjs(sswProgramStartDate, ZAHARA_API_DATE_FORMAT).get('D')
