@@ -1,11 +1,14 @@
 .formContainer {
+    margin-top: var(--measure-dimension-gap-lg);
+    margin-bottom: var(--measure-dimension-gap-2xl);
+}
+
+.searchRow {
     align-items: center;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     gap: var(--measure-dimension-gap-lg);
-    margin-top: var(--measure-dimension-gap-lg);
-    margin-bottom: var(--measure-dimension-gap-2xl);
 
     @media (min-width: 768px) {
         flex-direction: row;
