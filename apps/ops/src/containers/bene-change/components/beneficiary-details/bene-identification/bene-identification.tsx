@@ -157,6 +157,19 @@ const BeneficiaryIdentification = ({
             : FieldVariant.Default;
     };
 
+    const onChangeTrustDate = (event: any) => {
+        setParty((prevState: any) => ({
+            ...prevState,
+            trustDate: event.target.value || null,
+        }));
+    };
+
+    const onGenderChange = (event: any) => {
+        setParty((prevState: any) => ({
+            ...prevState,
+            gender: event.target.value,
+        }));
+    };
     return (
         <div>
             <div className={containerClasses}>
@@ -320,12 +333,7 @@ const BeneficiaryIdentification = ({
                                     id="trustDate"
                                     data-testid="trustDate"
                                     isFutureDateDisabled={false}
-                                    onChange={(e) =>
-                                        setParty((prevState: any) => ({
-                                            ...prevState,
-                                            trustDate: e.target.value,
-                                        }))
-                                    }
+                                    onChange={(e) => onChangeTrustDate(e)}
                                     size={FieldSize.Small}
                                     type={FieldType.BaseActive}
                                     value={party.trustDate || null}
@@ -409,12 +417,9 @@ const BeneficiaryIdentification = ({
                                         <Radio
                                             label={t('gender') as string}
                                             items={genderOption(t)}
-                                            onChange={(event) => {
-                                                setParty((prevState: any) => ({
-                                                    ...prevState,
-                                                    gender: event.target.value,
-                                                }));
-                                            }}
+                                            onChange={(event) =>
+                                                onGenderChange(event)
+                                            }
                                             disabled={isReadOnly}
                                             value={party?.gender || ''}
                                             variant={

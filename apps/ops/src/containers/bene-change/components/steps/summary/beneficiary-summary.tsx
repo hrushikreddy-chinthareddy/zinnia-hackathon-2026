@@ -313,7 +313,8 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                         ssn,
                         action
                     ) ||
-                    shouldDisplayField(trustDate, trustDate, item.action);
+                    (partyTypeInfo === PartyType.TRUST &&
+                        shouldDisplayField(trustDate, trustDate, item.action));
 
                 const allocationFieldsChanged =
                     shouldDisplayField(
@@ -435,10 +436,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                                     {renderFieldDynamically(
                                         t('identification.trustDate'),
                                         trustDate as string,
-                                        dayjs(
-                                            item?.party?.info?.trustDate,
-                                            DATE_PICKER_FORMAT
-                                        ).format(ZAHARA_API_DATE_FORMAT),
+                                        item?.party?.info?.trustDate,
                                         item.action
                                     )}
                                 </div>

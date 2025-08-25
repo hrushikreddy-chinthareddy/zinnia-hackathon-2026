@@ -142,7 +142,6 @@ export default function BeneficiaryDetails({
 
     const handleChange = (e: any) => {
         setPreferredOption(e.target.value);
-        console.log('currentBene', currentBene);
         currentBene.party.preferredCommunicationType = e.target.value;
     };
 
