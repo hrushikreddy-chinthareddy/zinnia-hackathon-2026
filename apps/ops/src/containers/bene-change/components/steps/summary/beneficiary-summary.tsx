@@ -6,9 +6,11 @@ import {
     Policy,
 } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
+import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
@@ -28,6 +30,7 @@ import {
     toTitleCase,
     isNullEmptyOrUndefined,
 } from '@deps/helpers/string.helpers';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import {
     DEFAULT_BENE_ADDRESS,
@@ -432,7 +435,10 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                                     {renderFieldDynamically(
                                         t('identification.trustDate'),
                                         trustDate as string,
-                                        item?.party?.info?.trustDate,
+                                        dayjs(
+                                            item?.party?.info?.trustDate,
+                                            DATE_PICKER_FORMAT
+                                        ).format(ZAHARA_API_DATE_FORMAT),
                                         item.action
                                     )}
                                 </div>
