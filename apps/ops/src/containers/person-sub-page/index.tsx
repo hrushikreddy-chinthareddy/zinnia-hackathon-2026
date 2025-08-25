@@ -87,7 +87,7 @@ export const PersonSubPage = ({
 
     const { isPermissioned: isUserAllowedToEditCards } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policyNumber,
             planCode
         );

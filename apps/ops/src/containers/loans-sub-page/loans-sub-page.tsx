@@ -139,7 +139,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     });
     const { isPermissioned: isUserPermissionedToEditLoan } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policyNumber,
             planCode
         );

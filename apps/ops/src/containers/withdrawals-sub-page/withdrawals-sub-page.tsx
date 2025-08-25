@@ -215,7 +215,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     };
     const { isPermissioned: isUserPermissionedToWithdraw } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policyNumber,
             planCode
         );

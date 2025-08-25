@@ -75,7 +75,7 @@ const WithdrawalsPageHeaderContainer = ({
 
     const { isPermissioned: isUserPermissionedToWithdraw } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policyNumber,
             planCode
         );

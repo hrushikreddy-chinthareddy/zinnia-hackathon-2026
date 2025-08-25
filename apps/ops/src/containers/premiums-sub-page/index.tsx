@@ -133,7 +133,7 @@ export const PremiumsSubPage = () => {
     });
     const { isPermissioned: isUserPermissionedToAutopay } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policyNumber,
             planCode
         );

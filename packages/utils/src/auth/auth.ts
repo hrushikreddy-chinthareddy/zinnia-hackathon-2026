@@ -26,6 +26,7 @@ export interface FGA_Tuple {
 }
 
 export enum TransactionPermission {
+  WritePolicy = 'write_policy',
   WriteAllTransactions = 'write_all_transactions',
   WriteNotificationOfDeathClaim = 'write_notification_of_death_claim',
   // Add future ones here
