@@ -100,7 +100,7 @@ export function SubmitProvider({
                 factoryHandler.generateTitle(data, formInputs),
                 factoryHandler.getPlanType(), // product type
                 factoryHandler.getPlanCode(), // carrierProductId
-                data.inputs
+                data.inputs // illustration inputs
             );
 
             await Promise.all([

@@ -21,6 +21,7 @@ export interface IllustrationsClientCase {
     productTypes: string[];
     agencyId: string;
     agencyName: string;
+    inputs?: string;
 }
 
 export interface IllustrationSummary {
