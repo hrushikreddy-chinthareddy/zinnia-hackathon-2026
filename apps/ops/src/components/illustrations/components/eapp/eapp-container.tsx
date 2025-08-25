@@ -1,4 +1,5 @@
 import { VersionedAnswers, Language, Timezone } from '@zinnia/form-engine-sdk';
+import { FC } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
@@ -13,12 +14,17 @@ import { SubmitProvider } from '../../providers/SubmitProvider';
 // TODO: timezone needs to be taken from the user
 const DEFAULT_TIMEZONE_NAME = 'America/Toronto';
 
-interface EappContainerProps {
+interface EappContainer {
     clientCase?: IllustrationsClientCase;
     planCode: string;
+    versionedAnswers?: VersionedAnswers;
 }
 
-const EappContainer = (props: EappContainerProps) => {
+const EappContainer: FC<EappContainer> = ({
+    clientCase,
+    planCode,
+    versionedAnswers = new VersionedAnswers({ v1: {}, v2: {} }),
+}) => {
     const timezoneResult = Timezone.from(DEFAULT_TIMEZONE_NAME);
     if (!timezoneResult.success) {
         // TODO: better error handling if that happens. We will need to retrieve the timezone from the user and validate
@@ -26,24 +32,17 @@ const EappContainer = (props: EappContainerProps) => {
     }
 
     const illustrationHandlerFactory = IllustrationHandlerFactory(
-        props.planCode,
-        props.clientCase
+        planCode,
+        clientCase
     );
 
     if (!illustrationHandlerFactory) {
-        console.log(`Plan code ${props.planCode} not found.`);
+        console.log(`Plan code ${planCode} not found.`);
     }
-
-    // These answers are prefilled to make development easier. V2 should eventually just be an empty array.
-    // Update these answers to see different answers in the questionnaire on load
-    const versionedAnswers = new VersionedAnswers({
-        v1: {},
-        v2: {},
-    });
 
     return (
         <>
-            {(!props.clientCase || !props.planCode) && (
+            {(!clientCase || !planCode) && (
                 <CardInfo
                     className="mt-8"
                     icon={
@@ -59,10 +58,8 @@ const EappContainer = (props: EappContainerProps) => {
             {illustrationHandlerFactory && (
                 <QuestionnaireEngineProvider
                     blueprint={illustrationHandlerFactory.getBlueprint()}
-                    clientCase={
-                        props.clientCase || ({} as IllustrationsClientCase)
-                    }
-                    planCode={props.planCode}
+                    clientCase={clientCase || ({} as IllustrationsClientCase)}
+                    planCode={planCode}
                     language={Language.en}
                     versionedAnswers={versionedAnswers}
                     subscribers={[]}
