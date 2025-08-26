@@ -4,7 +4,7 @@ import { FC, PropsWithChildren, useState } from 'react';
 
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 
-import styles from './EditSidesheet.module.css';
+import styles from './edit-sidesheet.module.css';
 import EappContainer from '../../eapp/eapp-container';
 
 interface EditSidesheetProps {

@@ -26,7 +26,7 @@ import { ProductTypes } from '@deps/types/product';
 import ToolbarButton from './illustration-details-toolbar-button';
 import styles from './illustration-details-toolbar.module.css';
 import StatusBadge from '../../case-details/illustration-item/status-badge';
-import { EditSidesheet } from '../edit-sidesheet/EditSidesheet';
+import { EditSidesheet } from '../edit-sidesheet/edit-sidesheet';
 
 type IllustrationDetailsToolbarProps = {
     isLoading?: boolean;
