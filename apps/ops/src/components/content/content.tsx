@@ -1,4 +1,3 @@
-import * as changeCase from 'change-case';
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
 
@@ -36,7 +35,7 @@ interface ContentProps extends PropsWithChildren<PiiProps> {
 }
 
 export const Content = ({
-    details = '',
+    details,
     variant = ContentVariant.Body,
     highlights,
     truncate,
@@ -48,12 +47,9 @@ export const Content = ({
 }: ContentProps) => {
     const { className, contentClassName, ...newRest } = rest;
     const renderedText = highlights ? (
-        <Highlighter
-            text={changeCase.sentenceCase(details)}
-            highlights={highlights}
-        />
+        <Highlighter text={details} highlights={highlights} />
     ) : (
-        changeCase.sentenceCase(details)
+        details
     );
 
     const classes = clsx(
