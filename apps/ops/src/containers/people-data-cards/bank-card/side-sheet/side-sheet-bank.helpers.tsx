@@ -2,6 +2,7 @@ import {
     AccountType,
     BankAccount,
     BankAccountBase,
+    BankAccountPurpose,
 } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
@@ -15,6 +16,7 @@ import {
 } from '@deps/helpers/bank-validation.helpers';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
+import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
 
 interface BankDetails {
     bankAccount: BankAccountBase;
@@ -35,6 +37,7 @@ interface GetFormErrors {
     bankAccount: BankAccount;
     caseId?: string;
     t: TFunction;
+    isDelete: boolean;
 }
 
 export const getAccountTypeOptions = ({ t }: GetAccountTypeOptions) => [
@@ -48,7 +51,12 @@ export const getAccountTypeOptions = ({ t }: GetAccountTypeOptions) => [
     },
 ];
 
-export const getFormErrors = ({ bankAccount, caseId, t }: GetFormErrors) => {
+export const getFormErrors = ({
+    bankAccount,
+    caseId,
+    t,
+    isDelete = false,
+}: GetFormErrors) => {
     let errors: Errors = {};
 
     if (caseId == null) {
@@ -58,12 +66,15 @@ export const getFormErrors = ({ bankAccount, caseId, t }: GetFormErrors) => {
         };
     }
 
-    if (!bankAccount.accountNumber) {
+    if (!bankAccount.accountNumber && !isDelete) {
         errors = {
             ...errors,
             accountNumber: t('errors.accountNumber') as string,
         };
-    } else if (!isAccountNumberValid(bankAccount.accountNumber)) {
+    } else if (
+        !isDelete &&
+        !isAccountNumberValid(bankAccount.accountNumber ?? '')
+    ) {
         errors = {
             ...errors,
             accountNumber: t('errors.accountIsInvalid') as string,
@@ -96,7 +107,7 @@ export const BankDetails = ({ bankAccount }: BankDetails) => {
         <div className="flex flex-col gap-6">
             <div className="flex flex-col">
                 <Label
-                    label={t('people.card.bankOptions.accountType')}
+                    label={t('people.card.bank.bankOptions.accountType')}
                     variant={LabelVariant.FieldLabel}
                 />
                 <Typography variant={TypographyVariant.BodySm}>
@@ -105,7 +116,7 @@ export const BankDetails = ({ bankAccount }: BankDetails) => {
             </div>
             <div className="flex flex-col">
                 <Label
-                    label={t('people.card.bankOptions.routingNumber')}
+                    label={t('people.card.bank.bankOptions.routingNumber')}
                     variant={LabelVariant.FieldLabel}
                 />
                 <Typography variant={TypographyVariant.BodySm}>
@@ -114,7 +125,7 @@ export const BankDetails = ({ bankAccount }: BankDetails) => {
             </div>
             <div className="flex flex-col">
                 <Label
-                    label={t('people.card.bankOptions.bankName')}
+                    label={t('people.card.bank.bankOptions.bankName')}
                     variant={LabelVariant.FieldLabel}
                 />
                 <Typography variant={TypographyVariant.BodySm}>
@@ -123,11 +134,11 @@ export const BankDetails = ({ bankAccount }: BankDetails) => {
             </div>
             <div className="flex flex-col">
                 <Label
-                    label={t('people.card.bankOptions.accountNumber')}
+                    label={t('people.card.bank.bankOptions.accountNumber')}
                     variant={LabelVariant.FieldLabel}
                 />
                 <Typography variant={TypographyVariant.BodySm}>
-                    {t('people.card.bankOptions.endingIn', {
+                    {t('people.card.bank.bankOptions.endingIn', {
                         accountNumber: formatAccountNumber(
                             bankAccount.accountNumber,
                             true
@@ -137,4 +148,51 @@ export const BankDetails = ({ bankAccount }: BankDetails) => {
             </div>
         </div>
     );
+};
+
+interface TProps {
+    t: TFunction;
+}
+
+type GetPurposeOptions = TProps;
+
+export const getPurposeOptions = ({ t }: GetPurposeOptions) => [
+    {
+        label: t('people.card.bank.purpose.loanInterestBilling'),
+        value: BankAccountPurpose.LOANINTERESTBILLING,
+    },
+    {
+        label: t('people.card.bank.purpose.disbursements'),
+        value: BankAccountPurpose.DISBURSEMENTS,
+    },
+    {
+        label: t('people.card.bank.purpose.loanPrincipalBilling'),
+        value: BankAccountPurpose.LOANPRINCIPALBILLING,
+    },
+    {
+        label: t('people.card.bank.purpose.premiumBilling'),
+        value: BankAccountPurpose.PREMIUMBILLING,
+    },
+    {
+        label: t('people.card.bank.purpose.oneTimePremiumBilling'),
+        value: BankAccountPurpose.ONETIMEPREMIUMBILLING,
+    },
+    {
+        label: t('people.card.bank.purpose.payout'),
+        value: BankAccountPurpose.PAYOUT,
+    },
+    {
+        label: t('people.card.bank.purpose.oneTimeWire'),
+        value: BankAccountPurpose.ONETIMEWIREEE,
+    },
+];
+
+export const GetAction = (isAdd: boolean, isDelete: boolean) => {
+    return () => {
+        return isAdd
+            ? NonFinancialTransactionActions.Add
+            : isDelete
+            ? NonFinancialTransactionActions.Delete
+            : NonFinancialTransactionActions.Edit;
+    };
 };

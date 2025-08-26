@@ -4608,6 +4608,10 @@
                 "mainCta": {
                     "add": "Enregistrer l'email {{type}}",
                     "update": "Mettre à jour l'email {{type}}"
+                },
+                "fieldLabels": {
+                    "purpose": "But",
+                    "removeBank": "Supprimer ce compte bancaire"
                 }
             },
             "communicationpreference": {
@@ -4825,11 +4829,30 @@
                     "nameOnAccount": "Nom sur le compte",
                     "nameOnCard": "Nom sur la carte",
                     "new": "Nouveau",
-                    "routingNumber": "Numéro de routage"
+                    "routingNumber": "Numéro de routage",
+                    "edit": "Modifier",
+                    "bankAccount": "Compte bancaire",
+                    "permissionDeniedTooltip": "Consultez les directives pour obtenir des instructions sur la modification des coordonnées bancaires."
                 },
                 "label": "Détails bancaires",
                 "transactions": {
                     "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
+                },
+                "purpose": {
+                    "loanInterestBilling": "Facturation des intérêts sur les prêts",
+                    "disbursements": "Décaissement",
+                    "loanPrincipalBilling": "Facturation du principal du prêt",
+                    "premiumBilling": "Facturation premium",
+                    "oneTimePremiumBilling": "Facturation unique des primes",
+                    "payout": "Paiement",
+                    "oneTimeWire": "Fil unique"
+                },
+                "bankOptions":{
+                    "accountType": "Type de compte",
+                    "bankName": "Nom de la banque",
+                    "routingNumber": "Numéro de routage",
+                    "accountNumber": "Numéro de compte",
+                    "endingIn":"Se terminant par {{accountNumber}}"
                 }
             },
             "email": {
