@@ -1,12 +1,9 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { PropsWithChildren, useReducer } from 'react';
 
 import { getSystematicProgramAmounts } from '@/components/workflows/systematic-premiums/utils';
-import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
-import { getAllSystematicPrograms } from '@/queries/policy-queries';
-import { QueryKeys } from '@/queries/query-keys';
+import { useSystematicProgramsFor } from '@/hooks/use-systematic-programs';
 
 import {
   Action,
@@ -30,24 +27,10 @@ function SystematicPremiumsReducer(
 const SystematicPremiumsProvider = ({
   children,
 }: SystematicPremiumsProviderProps) => {
-  const { planCode, policyNumber } = usePolicyUrlInputs();
   const search = useSearchParams();
   const arrangementId = search.get('arrangementId');
 
-  const { data: systematicPremium } = useQuery({
-    queryKey: [
-      QueryKeys.SYSTEMATIC_PREMIUMS,
-      planCode,
-      policyNumber,
-      arrangementId,
-    ],
-    queryFn: () => getAllSystematicPrograms({ planCode, policyNumber }),
-    select: data => data.find(sp => sp.arrangementId === arrangementId),
-    enabled:
-      !!planCode?.length &&
-      !!policyNumber?.length &&
-      search.has('arrangementId'),
-  });
+  const { data: systematicPremium } = useSystematicProgramsFor(arrangementId)
 
   const {
     paymentFrequency,

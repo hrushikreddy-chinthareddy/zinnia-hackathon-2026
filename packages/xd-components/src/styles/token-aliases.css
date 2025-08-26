@@ -1,0 +1,43 @@
+:root {
+  /* token aliases for bloom */
+  /* border radius */
+  --radius-sm: var(--measure-dimension-radius-sm);
+  --radius-md: var(--measure-dimension-radius-md);
+  --radius-lg: var(--measure-dimension-radius-lg);
+  --radius-xl: var(--measure-dimension-radius-xl);
+  --radius-2xl: var(--measure-dimension-radius-2xl);
+  --stroke-sm: var(--measure-dimension-stroke-sm);
+  --stroke-md: var(--measure-dimension-stroke-md);
+  --stroke-lg: var(--measure-dimension-stroke-lg);
+  --stroke-xl: var(--measure-dimension-stroke-xl);
+  --stroke-2xl: var(--measure-dimension-stroke-2xl);
+  --stroke-3xl: var(--measure-dimension-stroke-3xl);
+  /* border color */
+  --border-subtle: var(--color-base-border-border-subtle);
+  --border-light: var(--color-base-border-border-light);
+  /* border width */
+  --stroke-sm: var(--measure-dimension-stroke-sm);
+  --stroke-md: var(--measure-dimension-stroke-md);
+  --stroke-lg: var(--measure-dimension-stroke-lg);
+  --stroke-xl: var(--measure-dimension-stroke-xl);
+  --stroke-2xl: var(--measure-dimension-stroke-2xl);
+  --stroke-3xl: var(--measure-dimension-stroke-3xl);
+  /* typography */
+  --body-sm: var(--typography-content-body-sm);
+  --body-md: var(--typography-content-body-md);
+  --body-lg: var(--typography-content-body-lg);
+  --body-xl: var(--typography-content-body-xl);
+  --body-2xl: var(--typography-content-body-2xl);
+  --body-3xl: var(--typography-content-body-3xl);
+  --body-4xl: var(--typography-content-body-4xl);
+  --body-5xl: var(--typography-content-body-5xl);
+  --body-6xl: var(--typography-content-body-6xl);
+  --body-7xl: var(--typography-content-body-7xl);
+  /* spacing */
+  --space-2: var(--measure-dimension-gap-2xl);
+  --space-3: var(--measure-dimension-gap-3xl);
+  /* fonts */
+  --subtitle: var(--typography-titles-subtitle);
+  /* padding */
+  --padding-2xl: var(--measure-dimension-padding-2xl);
+}

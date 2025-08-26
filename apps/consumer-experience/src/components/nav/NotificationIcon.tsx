@@ -1,7 +1,6 @@
 'use client';
 
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { useParams } from 'next/navigation';
 
 import { Link } from '@/components/link/Link';
 import styles from '@/components/nav/Nav.module.css';
@@ -18,7 +17,6 @@ export const NotificationIcon = () => {
   const { policyNumber, planCode, lineOfBusinessUrl, lineOfBusiness } =
     usePolicyUrlInputs();
   const NOTIFICATION_HREF = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/notifications`;
-  const params = useParams();
 
   const { data: fetchNotificationsFlagEnabled } = useFeatureFlagsFor(
     FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS

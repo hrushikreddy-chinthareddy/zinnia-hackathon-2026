@@ -28,6 +28,11 @@ export const stepsInfo: Record<SystematicPremiumSteps, StepInfo> = {
     title: 'summary',
     order: 3,
     url: systematicPremiumUrls[SystematicPremiumSteps.SUMMARY],
+    actions: {
+      primary: {
+        text: 'Submit Autopay'
+      }
+    }
   },
   [SystematicPremiumSteps.MFA]: {
     title: 'verify your identity',
