@@ -6,7 +6,7 @@ import {
 import dayjs from 'dayjs';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'next-i18next';
-import { cloneElement, ReactElement, ReactNode } from 'react';
+import { cloneElement, ReactElement } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { calculateDaysAgo } from '@deps/helpers/case-management';
@@ -20,7 +20,7 @@ interface GetStatusDetailsProps {
 }
 
 interface CaseStatusTooltipProps {
-    trigger: ReactNode;
+    trigger: ReactElement;
     singleCase: Case;
 }
 
@@ -162,14 +162,17 @@ export const CaseStatusTooltip = ({
         singleCase.policyNumber;
     const tooltipId = generateTooltipId(caseIdValue);
 
+    // We're cloning this because the trigger could be any element but needs the aria describedby applied now that it's a part of the tooltip element
+    const Trigger = cloneElement(trigger, {
+        'aria-describedby': tooltipId,
+    });
+
     return (
         <Tooltip
             placement={TooltipPlacement.TopRight}
             tooltipClassName="!w-auto"
             triggerClassName="!z-10"
-            trigger={cloneElement(trigger as ReactElement, {
-                'aria-describedby': tooltipId,
-            })}
+            trigger={Trigger}
         >
             {statusTooltip}
         </Tooltip>
