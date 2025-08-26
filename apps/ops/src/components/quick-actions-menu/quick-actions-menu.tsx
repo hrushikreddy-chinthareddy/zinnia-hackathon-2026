@@ -141,7 +141,7 @@ export const MenuContextualContent = ({
 
     const { isPermissioned: isUserPermissionedToDoTransaction } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policy.policyNumber,
             policy.planCode
         );

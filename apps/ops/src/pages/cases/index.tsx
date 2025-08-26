@@ -114,8 +114,12 @@ const CaseManagementDashboard = ({
     isAdvisorsExcel,
     user,
 }: CaseManagementDashboardProps) => {
-    const [caseManagementFilters, setCaseManagementFilters] =
-        useCaseFilterQueryStore();
+    const [
+        caseManagementFilters,
+        setCaseManagementFilters,
+        currentSearchValue,
+        setCurrentSearchValue,
+    ] = useCaseFilterQueryStore();
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
@@ -126,6 +130,7 @@ const CaseManagementDashboard = ({
 
                 return {
                     ...prevFilters,
+                    searchValue: currentSearchValue,
                     sortBy: key,
                     sortDirection:
                         sameColumn && prevFilters.sortDirection === 'asc'
@@ -135,7 +140,7 @@ const CaseManagementDashboard = ({
                 };
             });
         },
-        [setCaseManagementFilters]
+        [currentSearchValue, setCaseManagementFilters]
     );
 
     const { t } = useTranslation();
@@ -173,10 +178,10 @@ const CaseManagementDashboard = ({
             };
         }
         return caseStatsRequest;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         caseManagementFilters.additionalFilters,
         caseManagementFilters.searchValue,
+        caseManagementFilters.toggleValue,
         isAdvisorsExcel,
         enableAdditionalAdvisorsExcelCarriers,
     ]);
@@ -223,16 +228,13 @@ const CaseManagementDashboard = ({
             sortDirection: caseManagementFilters.sortDirection,
             sortBy: caseManagementFilters.sortBy || 'createdAt',
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
-        // for caseManagementFilters.toggleValue,
         caseManagementFilters.searchValue,
+        caseManagementFilters.toggleValue,
         caseManagementFilters.additionalFilters,
         caseManagementFilters.offset,
-        limit,
         caseManagementFilters.sortDirection,
         caseManagementFilters.sortBy,
-        enableAdditionalAdvisorsExcelCarriers,
     ]);
 
     const {
@@ -344,6 +346,7 @@ const CaseManagementDashboard = ({
     const removeAdditionalFilter = (filters: CaseSearchAdditionalFilters) =>
         setCaseManagementFilters((prevFilters) => ({
             ...prevFilters,
+            searchValue: currentSearchValue,
             additionalFilters: filters,
             offset: 0,
         }));
@@ -398,19 +401,12 @@ const CaseManagementDashboard = ({
         [setCaseManagementFilters]
     );
 
-    // Memoized Component(s)
-    const searchBar = useMemo(() => {
-        return (
-            <SearchBar
-                searchValue={caseManagementFilters.searchValue}
-                onSearch={handleSearch}
-                toggleLabels={toggleLabels}
-                initialToggleValue={caseManagementFilters.toggleValue}
-                onToggle={handleToggle}
-                onClear={handleClear}
-            />
-        );
-    }, [caseManagementFilters, handleClear, handleSearch, handleToggle]);
+    const handleSearchInputChange = (value: string, key: PolicySearchKeys) => {
+        setCurrentSearchValue((prevSearch) => ({
+            ...prevSearch,
+            [key]: value,
+        }));
+    };
 
     const paginationControls = useMemo(() => {
         const goToPage = (pageNumber: number) => {
@@ -484,16 +480,17 @@ const CaseManagementDashboard = ({
             </>
         );
     }, [
-        caseSearchData,
         caseSearchLoading,
         caseSearchError,
         caseManagementFilters.offset,
         caseManagementFilters.searchValue,
         caseManagementFilters.sortDirection,
+        caseManagementFilters.sortBy,
+        caseSearchData,
         handleCreatedBySort,
-        paginationControls,
-        t,
         liveResultsMessage,
+        t,
+        paginationControls,
     ]);
 
     // Sidesheet Support
@@ -505,6 +502,7 @@ const CaseManagementDashboard = ({
                 authorizedCarriers={authorizedCarriers}
                 filters={caseManagementFilters.additionalFilters}
                 setCaseManagementFilters={setCaseManagementFilters}
+                currentSearchValue={currentSearchValue}
                 closeSideSheet={() => sideSheet.handleOpen(false)}
             />
         );
@@ -519,14 +517,27 @@ const CaseManagementDashboard = ({
     // JSX
     return (
         <CaseManagementFiltersContext.Provider
-            value={[caseManagementFilters, setCaseManagementFilters]}
+            value={[
+                caseManagementFilters,
+                setCaseManagementFilters,
+                currentSearchValue,
+                setCurrentSearchValue,
+            ]}
         >
             <PageHead titleKey="caseManagement" />
             <Typography variant={TypographyVariant.H1} className="mb-4">
                 {t('caseManagementDashboard.h1')}
             </Typography>
             <>
-                {searchBar}
+                <SearchBar
+                    searchValue={caseManagementFilters.searchValue}
+                    onSearch={handleSearch}
+                    toggleLabels={toggleLabels}
+                    initialToggleValue={caseManagementFilters.toggleValue}
+                    onToggle={handleToggle}
+                    onClear={handleClear}
+                    onChangeCallback={handleSearchInputChange}
+                />
                 <fieldset form="search-form">
                     <legend>
                         <label
@@ -536,7 +547,7 @@ const CaseManagementDashboard = ({
                             {t('caseOverview.tasks.status')}
                         </label>
                     </legend>
-                    <div className="sm:mb-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
                         <StatusFilter
                             caseTotals={caseTotals}
                             onChange={(vals) =>
@@ -550,6 +561,10 @@ const CaseManagementDashboard = ({
                                     return {
                                         ...prev,
                                         offset: 0,
+                                        searchValue: {
+                                            // set this to the current search value in the input field
+                                            currentSearchValue,
+                                        },
                                         additionalFilters: {
                                             ...prev.additionalFilters,
                                             caseStatus: vals,

@@ -384,7 +384,7 @@ export const StatusBanner = ({
 
     const { isPermissioned: isUserPermissionedToWrite } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policy.policyNumber,
             policy.planCode
         );

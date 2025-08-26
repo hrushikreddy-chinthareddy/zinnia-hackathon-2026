@@ -8,6 +8,7 @@ import {
     CaseSearchFilters,
 } from '@deps/contexts/CaseManagementFilters';
 import { Statuses } from '@deps/models/case/case';
+import { SearchViewQuery } from '@deps/types/search';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import useQueryFilters from '@deps/utils/queryStoreFilters';
 
@@ -330,6 +331,9 @@ export const useCaseFilterQueryStore = () => {
     const [caseManagementFilters, setCaseManagementFilters] =
         useState<CaseSearchFilters>(convertQueryToFilters(queryStoreFilter));
 
+    const [currentSearchFieldValue, setCurrentSearchFieldValue] =
+        useState<SearchViewQuery>({});
+
     const setFilters = (filters: SetStateAction<CaseSearchFilters>) => {
         let newFilters: CaseSearchFilters;
         if (typeof filters === 'function') {
@@ -342,9 +346,16 @@ export const useCaseFilterQueryStore = () => {
         setCaseManagementFilters(newFilters);
     };
 
-    return [caseManagementFilters, setFilters] as [
+    return [
+        caseManagementFilters,
+        setFilters,
+        currentSearchFieldValue,
+        setCurrentSearchFieldValue,
+    ] as [
         typeof caseManagementFilters,
-        typeof setFilters
+        typeof setFilters,
+        typeof currentSearchFieldValue,
+        typeof setCurrentSearchFieldValue
     ];
 };
 

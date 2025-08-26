@@ -80,7 +80,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
 
     const { isPermissioned: isUserPermissionedToDoTransaction } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policy?.policyNumber,
             policy?.product?.planCode
         );
