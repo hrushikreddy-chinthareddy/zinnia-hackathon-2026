@@ -1,6 +1,7 @@
 import { Button, Loader } from '@zinnia/bloom/components';
 import { FC, useEffect, useMemo } from 'react';
 
+import { ButtonType } from '@deps/components/button/button';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
 import style from './sidebar.module.css';
@@ -95,6 +96,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit }) => {
                     size="small"
                     onClick={() => onSubmit({ isEdit: false })}
                     disabled={!isCompleted}
+                    mode={isEdit ? ButtonType.Secondary : ButtonType.Primary}
                 >
                     {isEdit ? 'Create new' : 'Calculate'}
                 </Button>
@@ -105,7 +107,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit }) => {
                         onClick={() => onSubmit({ isEdit: true })}
                         disabled={!isCompleted}
                     >
-                        Edit
+                        Update
                     </Button>
                 )}
             </div>
