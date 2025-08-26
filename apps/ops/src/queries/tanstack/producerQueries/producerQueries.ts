@@ -1,3 +1,5 @@
+import { uniq } from 'lodash';
+
 import {
     getDownlineBySellingCode,
     getHierarchyBySellingCode,
@@ -16,7 +18,7 @@ export const getUserHierarchyBySellingCode = async (
 
 export const getUserDownlineBySellingCode = async (
     sellingCode: string,
-    partialFullName: string
+    partialFullName = ''
 ): Promise<GetDownlineResponse[][] | null> => {
     const { data } = await getDownlineBySellingCode(
         sellingCode,
@@ -25,12 +27,30 @@ export const getUserDownlineBySellingCode = async (
     return data;
 };
 
+export const getUsersDownlineList = async (
+    sellingCodeArray: string[],
+    agentName: string
+) => {
+    const filteredSellingCodes = sellingCodeArray.filter(
+        (sellingCode) => !!sellingCode
+    );
+    const downlinePromises = filteredSellingCodes.map((sellingCode) =>
+        getUserDownlineBySellingCode(sellingCode, agentName)
+    );
+    const hieararchyResponses = (await Promise.all(downlinePromises)).filter(
+        (hierarchy) => !!hierarchy
+    );
+
+    return hieararchyResponses;
+};
+
 export const getUserHierarchyListBySellingCode = async (
     agentSellingCodes: string[]
 ) => {
-    const filteredAgentSellingCodes = agentSellingCodes.filter(
-        (sellingCode) => !!sellingCode
+    const filteredAgentSellingCodes = uniq(
+        agentSellingCodes.filter((sellingCode) => !!sellingCode)
     );
+
     const hierarchyPromises = filteredAgentSellingCodes.map((sellingCode) =>
         getUserHierarchyBySellingCode(sellingCode)
     );

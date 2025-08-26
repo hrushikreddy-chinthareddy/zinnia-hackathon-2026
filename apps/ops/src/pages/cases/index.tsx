@@ -527,55 +527,67 @@ const CaseManagementDashboard = ({
             </Typography>
             <>
                 {searchBar}
-                <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <StatusFilter
-                        caseTotals={caseTotals}
-                        onChange={(vals) =>
-                            setCaseManagementFilters((prev) => {
-                                const { notInCaseStatus = [] } =
-                                    prev.additionalFilters;
-                                const nonConflictingNicsVals =
-                                    notInCaseStatus.filter(
-                                        (val) => !vals.includes(val)
-                                    ); // remove any values that are both in caseStatus and notInCaseStatus
-                                return {
-                                    ...prev,
-                                    offset: 0,
-                                    additionalFilters: {
-                                        ...prev.additionalFilters,
-                                        caseStatus: vals,
-                                        notInCaseStatus: nonConflictingNicsVals,
-                                    },
-                                };
-                            })
-                        }
-                        sessionId={user.sid}
-                        userId={user.partyId}
-                        values={
-                            caseManagementFilters.additionalFilters.caseStatus
-                        }
-                    />
-                    <NavElement
-                        tabIndex={0}
-                        size={NavElementSize.Small}
-                        type={NavElementType.Button}
-                        startIcon={<FilterButton />}
-                        className="flex items-center whitespace-nowrap"
-                        aria-label={
-                            t('ariaLabel.openRefineResultsButton') as string
-                        }
-                        onClick={openRefineResultsSidesheet}
-                        onKeyDown={handleKeyDown}
-                    >
-                        {t('caseManagementDashboard.addFilters')}
-                    </NavElement>
-                    <ActiveFilters
-                        authorizedCarriers={authorizedCarriers}
-                        filters={caseManagementFilters.additionalFilters}
-                        removeFilter={removeAdditionalFilter}
-                        onReset={resetAllFilters}
-                    />
-                </div>
+                <fieldset form="search-form">
+                    <legend>
+                        <label
+                            htmlFor="status-select"
+                            className="typography-labels-field-label mt-4 mb-1"
+                        >
+                            {t('caseOverview.tasks.status')}
+                        </label>
+                    </legend>
+                    <div className="sm:mb-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <StatusFilter
+                            caseTotals={caseTotals}
+                            onChange={(vals) =>
+                                setCaseManagementFilters((prev) => {
+                                    const { notInCaseStatus = [] } =
+                                        prev.additionalFilters;
+                                    const nonConflictingNicsVals =
+                                        notInCaseStatus.filter(
+                                            (val) => !vals.includes(val)
+                                        ); // remove any values that are both in caseStatus and notInCaseStatus
+                                    return {
+                                        ...prev,
+                                        offset: 0,
+                                        additionalFilters: {
+                                            ...prev.additionalFilters,
+                                            caseStatus: vals,
+                                            notInCaseStatus:
+                                                nonConflictingNicsVals,
+                                        },
+                                    };
+                                })
+                            }
+                            sessionId={user.sid}
+                            userId={user.partyId}
+                            values={
+                                caseManagementFilters.additionalFilters
+                                    .caseStatus
+                            }
+                        />
+                        <NavElement
+                            tabIndex={0}
+                            size={NavElementSize.Small}
+                            type={NavElementType.Button}
+                            startIcon={<FilterButton />}
+                            className="flex items-center whitespace-nowrap"
+                            aria-label={
+                                t('ariaLabel.openRefineResultsButton') as string
+                            }
+                            onClick={openRefineResultsSidesheet}
+                            onKeyDown={handleKeyDown}
+                        >
+                            {t('caseManagementDashboard.addFilters')}
+                        </NavElement>
+                        <ActiveFilters
+                            authorizedCarriers={authorizedCarriers}
+                            filters={caseManagementFilters.additionalFilters}
+                            removeFilter={removeAdditionalFilter}
+                            onReset={resetAllFilters}
+                        />
+                    </div>
+                </fieldset>
                 {tableContent}
             </>
         </CaseManagementFiltersContext.Provider>

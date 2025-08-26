@@ -7375,7 +7375,8 @@
             "noProductsIconAlt": "No products to list icon",
             "noProductsAvailable": "Unable to load illustrations. Please try again later.",
             "addIllustrationButton": "Add illustration button",
-            "seeProducts": "Add a product"
+            "seeProducts": "Add a product",
+            "addIllustration": "Add Illustration"
         },
         "caseSummary": {
             "edit": "Edit",

@@ -79,8 +79,6 @@ export const SearchFieldContainer = ({
                 color="#676767"
             />
             <input
-                // We're using an aria attribute here because if there are multiple inputs they couldn't use one label attached to them both
-                aria-labelledby="case-search-label"
                 placeholder={placeholder ? placeholder : toSentenceCase(label)}
                 className={clsx(
                     styles.input,
@@ -123,7 +121,7 @@ const SearchField = ({ activeLabels, values, ...rest }: SearchFieldProps) => {
 
         if (group?.length) {
             fields = (
-                <fieldset className={styles.fieldSet}>
+                <div className={styles.fieldSet}>
                     {group.map((g, index) => (
                         <SearchFieldContainer
                             key={'search-field-container-key-' + index}
@@ -132,7 +130,7 @@ const SearchField = ({ activeLabels, values, ...rest }: SearchFieldProps) => {
                             {...rest}
                         />
                     ))}
-                </fieldset>
+                </div>
             );
         } else {
             fields = (
