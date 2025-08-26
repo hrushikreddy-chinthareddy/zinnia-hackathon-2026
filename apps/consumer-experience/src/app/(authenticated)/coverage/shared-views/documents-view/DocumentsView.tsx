@@ -10,16 +10,17 @@ import { Metadata } from 'next';
 import DocumentsWithPagination from '@/components/documents-list/DocumentsWithPagination';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { getDocumentsV2, getTaxDocumentsV2 } from '@/services/document/v2';
 import { getTaxDocumentsV3, searchDocumentsV3 } from '@/services/document/v3';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPolicyDetails } from '@/services/policy';
+import { DocumentsVersion } from '@/types/carrier-config';
 import {
   DocumentCategory,
   DocumentV3SearchItem,
   ExtendedDocumentMeta,
 } from '@/types/document';
-import { retrieveDocumentsFromV2 } from '@/utils/documents';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
@@ -59,9 +60,11 @@ export const DocumentsView = async ({
     },
     loggingContext
   );
+  const { documents } = await getCarrierConfig();
   const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
   const shouldUseV2 =
-    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || (await retrieveDocumentsFromV2());
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
+    documents.version === DocumentsVersion.V2;
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
     shouldUseV2
       ? getDocumentsV2({

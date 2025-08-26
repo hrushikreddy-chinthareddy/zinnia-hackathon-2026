@@ -3,10 +3,11 @@ import { Metadata } from 'next';
 
 import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { DocumentsVersion } from '@/types/carrier-config';
 import { DocumentCategory } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
-import { retrieveDocumentsFromV2 } from '@/utils/documents';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { createQueryString } from '@/utils/strings';
 
@@ -34,8 +35,10 @@ export default async function DocumentPreview({
   };
 }) {
   const flags = await getFeatureFlags();
+  const { documents } = await getCarrierConfig();
   const shouldUseV2 =
-    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || (await retrieveDocumentsFromV2());
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
+    documents.version === DocumentsVersion.V2;
   const { lineOfBusiness, documentId, ...otherParams } = params;
   const { fileName, ...otherSearchParams } = searchParams;
   let docDownloadUrl;
@@ -57,8 +60,8 @@ export default async function DocumentPreview({
     });
     docDownloadUrl =
       searchParams.docCategory === DocumentCategory.TAX
-        ? `/api/documents/v3/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
-        : `/api/documents/v3/${documentId}/download/${fileName}.pdf?${queryParamString}`;
+        ? `/api/documents/v3/tax-docs/download/${documentId}.pdf?${queryParamString}`
+        : `/api/documents/v3/download/${documentId}.pdf?${queryParamString}`;
   }
 
   return (
@@ -67,7 +70,7 @@ export default async function DocumentPreview({
         <PdfPreviewer
           defaultRedirectUrl={`/coverage/${lineOfBusiness}/${params.planCode}/${params.policyNumber}/documents/error`}
           documentDownloadUrl={docDownloadUrl}
-          fileName={fileName}
+          documentId={documentId}
         />
       </div>
     </div>
