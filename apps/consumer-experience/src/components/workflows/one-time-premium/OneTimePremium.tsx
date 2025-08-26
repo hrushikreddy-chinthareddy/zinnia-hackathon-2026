@@ -14,6 +14,7 @@ interface OneTimePremiumProps {
   currentStepOverride: number;
   planCode: string;
   policyNumber: string;
+  disableSubmission?: boolean;
   children?: React.ReactNode;
 }
 

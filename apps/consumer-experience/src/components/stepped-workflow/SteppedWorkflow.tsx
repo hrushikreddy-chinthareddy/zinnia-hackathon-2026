@@ -16,6 +16,7 @@ export type SteppedWorkflowStep = {
   cancelButtonText?: string;
   nextButtonText?: string;
   actions?: React.ReactNode;
+  disableSubmission?: boolean;
 };
 
 export type SteppedWorkflowProps = {
@@ -72,12 +73,14 @@ const WorkflowContainer = ({
   workflowSteps,
   children,
 }: SteppedWorkflowProps) => {
-  const { stepInfo, currentStep } = useSteppedWorkflowContext();
+  const { stepInfo, currentStep, primaryButtonDisabled } =
+    useSteppedWorkflowContext();
 
   const totalSteps = workflowSteps.filter(({ order }) => order !== null).length;
 
   let nextButtonProps: ButtonProps & RefAttributes<HTMLButtonElement> = {
     children: currentStep?.actions?.primary?.text ?? 'Continue',
+    disabled: primaryButtonDisabled,
   };
 
   if (currentStep) {

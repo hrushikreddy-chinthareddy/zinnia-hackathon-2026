@@ -37,6 +37,14 @@ export async function GET(
       ...loggingContext,
       error,
     });
-    throw error;
+
+    return NextResponse.json({
+      data: null,
+      error: {
+        status: 500,
+        name: 'Failed to fetch payment methods',
+        message: 'Failed to fetch payment methods',
+      },
+    });
   }
 }
