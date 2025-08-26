@@ -592,6 +592,19 @@
                     "firstName": "Le prénom est requis",
                     "lastName": "Le nom est requis",
                     "last": "Le nom de famille est requis"
+                },
+                "entityType": "Type d'entité",
+                "entityTypeOptions": {
+                    "soleProprietorship": "Entreprise individuelle",
+                    "generalPartnership": "Société en nom collectif",
+                    "limitedPartnership": "Société en commandite",
+                    "sCorporation": "Société S",
+                    "cCorporation": "Société C",
+                    "limitedLiabilityCompany": "Société à responsabilité limitée",
+                    "charitableOrganization": "Organisation caritative",
+                    "estate": "Succession",
+                    "corporation": "Société",
+                    "other": "Autre"
                 }
             },
             "contactInfo": {
@@ -874,7 +887,20 @@
                 "transferConsideration": "Transfert pour considération"
             },
             "yes": "Oui",
-            "no": "Non"
+            "no": "Non",
+            "entityType": "Type d'entité",
+            "entityTypeOptions": {
+                "soleProprietorship": "Entreprise individuelle",
+                "generalPartnership": "Société en nom collectif",
+                "limitedPartnership": "Société en commandite",
+                "sCorporation": "Société S",
+                "cCorporation": "Société C",
+                "limitedLiabilityCompany": "Société à responsabilité limitée",
+                "charitableOrganization": "Organisation caritative",
+                "estate": "Succession",
+                "corporation": "Société",
+                "other": "Autre"
+            }
         },
         "beneDetails": {
             "title": "Requête reçue pour changer de bénéficiaire?",
