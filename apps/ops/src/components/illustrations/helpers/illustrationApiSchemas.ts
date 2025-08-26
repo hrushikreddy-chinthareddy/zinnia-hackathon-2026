@@ -214,7 +214,7 @@ enum TargetCashValueOption {
     ENDOWMENT = 'ENDOWMENT',
 }
 
-enum UnderwritingClass {
+export enum UnderwritingClass {
     ULTRANONTOBACCO = 'ULTRANONTOBACCO',
     ELITENONTOBACCO = 'ELITENONTOBACCO',
     PREFERREDNONTOBACCO = 'PREFERREDNONTOBACCO',

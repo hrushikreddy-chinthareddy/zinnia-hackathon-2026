@@ -23,6 +23,7 @@ import {
     InsuredRoleCodes,
     NonInsuredRoleCodes,
     SubStandardRating,
+    UnderwritingClass,
 } from '../illustrationApiSchemas';
 import { riderNamesMap } from '../rider-names-map';
 
@@ -300,8 +301,25 @@ const FARMERS_HARDCODED_DATA = {
 } as const;
 
 // TODO: these constants are shared across all blueprints.
-const SUBSTANDARD_PREMIUM_CLASSES = ['STANDARDNONTOBACCO', 'STANDARDTOBACCO'];
+const SUBSTANDARD_PREMIUM_CLASSES = [
+    'juvenileSubstandard',
+    'platinumSubstandard',
+    'goldSubstandard',
+];
 
+function getUnderWritingClass(premiumClass: string): string {
+    if (
+        premiumClass === 'juvenile' ||
+        premiumClass === 'juvenileSubstandard' ||
+        premiumClass === 'goldSubstandard'
+    ) {
+        return UnderwritingClass.STANDARDTOBACCO;
+    } else if (premiumClass === 'platinumSubstandard') {
+        return UnderwritingClass.STANDARDNONTOBACCO;
+    }
+
+    return premiumClass;
+}
 function createIllustrationPayload(
     answerOutputData: unknown
 ): Result<
@@ -490,6 +508,8 @@ function createIllustrationPayload(
 
     const premiumDuration = values.premiumDuration || 0;
 
+    const underWritingClass = getUnderWritingClass(values.premiumClass);
+
     const output = {
         calculationType: values.illustrationType,
         source: FARMERS_HARDCODED_DATA.source,
@@ -509,7 +529,7 @@ function createIllustrationPayload(
                         ...(values.subStandardRating && {
                             substandardRating: values.subStandardRating,
                         }),
-                        underwritingClass: values.premiumClass,
+                        underwritingClass: underWritingClass,
                         flatExtra: flatExtra,
                     },
                 ],

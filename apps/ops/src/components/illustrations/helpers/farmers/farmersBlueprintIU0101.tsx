@@ -1191,6 +1191,90 @@ export const farmersBlueprintIU0101 = {
                                             },
                                             orderingIndex: 1,
                                         },
+                                        {
+                                            value: 'juvenile',
+                                            text: {
+                                                en: 'Juvenile',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                            visible: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 17,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        {
+                                            value: 'juvenileSubstandard',
+                                            text: {
+                                                en: 'Juvenile Substandard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 0,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 17,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        {
+                                            value: 'platinumSubstandard',
+                                            text: {
+                                                en: 'Platinum Substandard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        {
+                                            value: 'goldSubstandard',
+                                            text: {
+                                                en: 'Gold Substandard',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                        },
                                     ],
                                     validateAs: 'string',
                                     defaultValue: 'STANDARDNONTOBACCO',
@@ -1239,8 +1323,9 @@ export const farmersBlueprintIU0101 = {
                                             {
                                                 type: 'matchesCondition',
                                                 value: [
-                                                    'STANDARDNONTOBACCO',
-                                                    'STANDARDTOBACCO',
+                                                    'goldSubstandard',
+                                                    'platinumSubstandard',
+                                                    'juvenileSubstandard',
                                                 ],
                                                 targetNodeId: 'premium-class',
                                                 quantifier: 'any',
@@ -5545,13 +5630,6 @@ export const farmersBlueprintIU0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
-                                                type: 'matchesCondition',
-                                                value: ['Rider_ABRTRM'],
-                                                targetNodeId:
-                                                    'accelerated-death-benefit-rider-for-terminal-illness',
-                                                quantifier: 'any',
-                                            },
-                                            {
                                                 type: 'numberComparisonCondition',
                                                 value: 18,
                                                 targetNodeId:
@@ -5564,25 +5642,6 @@ export const farmersBlueprintIU0101 = {
                                                 targetNodeId:
                                                     'insured-issue-age',
                                                 operator: 'lessThanOrEqual',
-                                            },
-                                            {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        type: 'emptinessCondition',
-                                                        isEmpty: true,
-                                                        targetNodeId:
-                                                            'face-amount',
-                                                    },
-                                                    {
-                                                        type: 'numberComparisonCondition',
-                                                        value: 150000,
-                                                        targetNodeId:
-                                                            'face-amount',
-                                                        operator:
-                                                            'greaterThanOrEqual',
-                                                    },
-                                                ],
                                             },
                                         ],
                                     },
@@ -5615,6 +5674,93 @@ export const farmersBlueprintIU0101 = {
                                                 en: 'Chronic Illness Accelerated Death Benefit Rider',
                                             },
                                             isCustom: true,
+                                        },
+                                    ],
+                                    valid: [
+                                        {
+                                            id: 'b56f8155-65b3-4caf-be3b-46b9891a8958',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
+                                                        targetNodeId:
+                                                            'chronic-illness-accelerated-death-benefit-rider',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'chronic-illness-accelerated-death-benefit-rider',
+                                                            },
+                                                            {
+                                                                booleanOperator:
+                                                                    'or',
+                                                                conditions: [
+                                                                    {
+                                                                        type: 'numberComparisonCondition',
+                                                                        value: 150000,
+                                                                        targetNodeId:
+                                                                            'face-amount',
+                                                                        operator:
+                                                                            'greaterThanOrEqual',
+                                                                    },
+                                                                    {
+                                                                        type: 'emptinessCondition',
+                                                                        isEmpty:
+                                                                            true,
+                                                                        targetNodeId:
+                                                                            'face-amount',
+                                                                    },
+                                                                ],
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Minimum Face Amount of Base Policy $150,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '93849e09-017e-4d83-966b-85d4aa13e20a',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
+                                                        targetNodeId:
+                                                            'chronic-illness-accelerated-death-benefit-rider',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'chronic-illness-accelerated-death-benefit-rider',
+                                                            },
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'accelerated-death-benefit-rider-for-terminal-illness',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Only available with Accelerated Death Benefit Rider for Terminal Illness.',
+                                                fr: '',
+                                            },
                                         },
                                     ],
                                 },

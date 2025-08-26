@@ -55,3 +55,10 @@
         );
     }
 }
+
+.error {
+    border-color: var(
+        --color-status-surface-status-error-border-alt,
+        #db004f
+    ) !important;
+}
