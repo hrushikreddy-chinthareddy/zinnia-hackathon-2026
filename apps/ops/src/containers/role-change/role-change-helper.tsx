@@ -1,7 +1,6 @@
 import { capitalize } from '@xd/utils/dist';
 import {
     Country,
-    EntityType,
     IdentificationType,
     Party,
     PartyRole,
@@ -19,6 +18,7 @@ import { FieldVariant } from '@deps/components/fields/field';
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
 import {
     BooleanValue,
+    EntityTypeValue,
     NewTrustType,
     PolicyRole,
     ReasonValue,
@@ -497,6 +497,7 @@ export const buildRoleChangeRequestBody = (
         identifications = [],
         preferredCommunicationType = null,
         trustDate = null,
+        entityType,
     } = party;
 
     if (partyType != PartyType.INDIVIDUAL) {
@@ -598,9 +599,7 @@ export const buildRoleChangeRequestBody = (
             phones,
             emails,
             entityType:
-                partyType === PartyType.ORGANIZATION
-                    ? EntityType.UNKNOWN
-                    : null,
+                partyType === PartyType.ORGANIZATION ? entityType : null,
             trustDate:
                 isRoleCheck && partyType === PartyType.TRUST
                     ? getFormattedZaharaDate(trustDate)
@@ -902,3 +901,48 @@ export const GetIsReadOnly = (
 
 export const CLIENT_COPY = 'CLIENT_COPY';
 export const NEW_BUSINESS = 'NEW_BUSINESS';
+
+export const entityTypeOptions = (t: TFunction) => {
+    return [
+        {
+            label: t('entityTypeOptions.soleProprietorship'),
+            value: EntityTypeValue.SoleProprietorship,
+        },
+        {
+            label: t('entityTypeOptions.generalPartnership'),
+            value: EntityTypeValue.GeneralPartnership,
+        },
+        {
+            label: t('entityTypeOptions.limitedPartnership'),
+            value: EntityTypeValue.LimitedPartnership,
+        },
+        {
+            label: t('entityTypeOptions.sCorporation'),
+            value: EntityTypeValue.SCorporation,
+        },
+        {
+            label: t('entityTypeOptions.cCorporation'),
+            value: EntityTypeValue.CCorporation,
+        },
+        {
+            label: t('entityTypeOptions.limitedLiabilityCompany'),
+            value: EntityTypeValue.LimitedLiabilityCompany,
+        },
+        {
+            label: t('entityTypeOptions.charitableOrganization'),
+            value: EntityTypeValue.CharitableOrganization,
+        },
+        {
+            label: t('entityTypeOptions.estate'),
+            value: EntityTypeValue.Estate,
+        },
+        {
+            label: t('entityTypeOptions.corporation'),
+            value: EntityTypeValue.Corporation,
+        },
+        {
+            label: t('entityTypeOptions.other'),
+            value: EntityTypeValue.Other,
+        },
+    ];
+};

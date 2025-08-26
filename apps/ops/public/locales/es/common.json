@@ -532,6 +532,19 @@
                     "firstName": "El nombre es obligatorio",
                     "lastName": "El apellido es obligatorio",
                     "last": "El apellido es obligatorio"
+                },
+                "entityType": "Tipo de entidad",
+                "entityTypeOptions": {
+                    "soleProprietorship": "Empresa unipersonal",
+                    "generalPartnership": "Sociedad general",
+                    "limitedPartnership": "Sociedad limitada",
+                    "sCorporation": "Corporación S",
+                    "cCorporation": "Corporación C",
+                    "limitedLiabilityCompany": "Sociedad de responsabilidad limitada",
+                    "charitableOrganization": "Organización benéfica",
+                    "estate": "Patrimonio",
+                    "corporation": "Corporación",
+                    "other": "Otro"
                 }
             },
             "contactInfo": {
@@ -798,7 +811,20 @@
                 "transferConsideration": "'Transferencia por consideración'"
             },
             "yes": "Sí",
-            "no": "No"
+            "no": "No",
+            "entityType": "Tipo de entidad",
+            "entityTypeOptions": {
+                "soleProprietorship": "Empresa unipersonal",
+                "generalPartnership": "Sociedad general",
+                "limitedPartnership": "Sociedad limitada",
+                "sCorporation": "Corporación S",
+                "cCorporation": "Corporación C",
+                "limitedLiabilityCompany": "Sociedad de responsabilidad limitada",
+                "charitableOrganization": "Organización benéfica",
+                "estate": "Patrimonio",
+                "corporation": "Corporación",
+                "other": "Otro"
+            }
         },
         "beneDetails": {
             "title": "Se recibió una solicitud de cambio de beneficiario?",

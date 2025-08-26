@@ -23,6 +23,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import {
     containerClasses,
+    EntityTypeValue,
     RoleField,
     Roles,
     sectionClasses,
@@ -62,6 +63,7 @@ import {
     IDENTIFICATIONS,
     CLIENT_COPY,
     NEW_BUSINESS,
+    entityTypeOptions,
 } from '../../role-change-helper';
 
 const DEFAULT_PARTY_INSTANCE = {
@@ -78,6 +80,7 @@ const DEFAULT_PARTY_INSTANCE = {
     trustType: null,
     usCitizen: null,
     trustDate: null,
+    entityType: null,
 };
 
 export interface RoleIdentificationProps {
@@ -137,6 +140,8 @@ const RoleIdentification = ({
     const options = BooleanOptions(t);
 
     const trustOptions = newTrustOptions(t2);
+
+    const entityType = entityTypeOptions(t);
 
     const firstNameExist =
         party?.firstName && party?.firstName.trim().length > 0;
@@ -227,6 +232,10 @@ const RoleIdentification = ({
         });
 
         setUploadedFiles(files);
+    };
+
+    const onEntityTypeChange = (value: string) => {
+        handleChange(RoleField.EntityType, value);
     };
 
     return (
@@ -530,6 +539,27 @@ const RoleIdentification = ({
                                     )}
                                     required
                                 />
+                                {party?.partyType ===
+                                    PartyType.ORGANIZATION && (
+                                    <>
+                                        <SelectSimple
+                                            label={t('entityType') as string}
+                                            options={entityType}
+                                            onChange={onEntityTypeChange}
+                                            size={FieldSize.Small}
+                                            value={
+                                                party?.entityType ??
+                                                EntityTypeValue.Other
+                                            }
+                                            variant={
+                                                isReadOnly
+                                                    ? FieldVariant.Inactive
+                                                    : FieldVariant.Default
+                                            }
+                                            disabled={isReadOnly}
+                                        />
+                                    </>
+                                )}
                                 {party?.partyType === PartyType.TRUST && (
                                     <>
                                         <SelectSimple
