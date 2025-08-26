@@ -42,7 +42,7 @@ export const SelectBank = ({
   editBankEnabled?: boolean;
   onAddPaymentMethod: () => void;
 }) => {
-  const { state, dispatch } = useSystematicPremiums();
+  const { dispatch } = useSystematicPremiums();
   const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
   const { planCode, policyNumber, lineOfBusinessUrl } = usePolicyUrlInputs();
@@ -51,8 +51,17 @@ export const SelectBank = ({
   const form = useForm<SPSelectBankStepSchema>({
     resolver: zodResolver(selectBankStepSchema),
     defaultValues: {
-      bank: state.selectBankStep.bank,
-      payor: state.selectBankStep.payor,
+      bank: {
+        accountNumber: defaultBank?.accountNumber,
+        bankId: defaultBank?.bankId,
+        branchName: defaultBank?.branchName,
+        accountType: defaultBank?.accountType,
+        autopayEnabled: defaultBank?.autopayEnabled,
+      },
+      payor: {
+        payorName: defaultBank?.nameOnAccount,
+        payorPartyId: defaultBank?.appliesToPartyId,
+      },
     },
   });
 
@@ -134,6 +143,7 @@ export const SelectBank = ({
                   >
                     <BankName
                       bankName={bankDetail.branchName}
+                      accountType={bankDetail.accountType}
                       className="typography-labels-label-lg"
                     />
                     <div
