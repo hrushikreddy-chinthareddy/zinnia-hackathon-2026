@@ -1,5 +1,5 @@
 import { Button, Loader } from '@zinnia/bloom/components';
-import { useEffect, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
@@ -29,7 +29,11 @@ const dataToTitleMap: Record<
     termLength: { label: 'Term length', type: 'string' },
 };
 
-export function Sidebar() {
+interface SidebarProps {
+    isEdit?: boolean;
+}
+
+export const Sidebar: FC<SidebarProps> = ({ isEdit }) => {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
     const { onSubmit, onQuickQuote, isError, isLoadingQuickQuote } =
         useSubmit();
@@ -89,12 +93,22 @@ export function Sidebar() {
                 <Button
                     expand
                     size="small"
-                    onClick={onSubmit}
+                    onClick={() => onSubmit({ isEdit: false })}
                     disabled={!isCompleted}
                 >
-                    Calculate
+                    {isEdit ? 'Create new' : 'Calculate'}
                 </Button>
+                {isEdit && (
+                    <Button
+                        expand
+                        size="small"
+                        onClick={() => onSubmit({ isEdit: true })}
+                        disabled={!isCompleted}
+                    >
+                        Edit
+                    </Button>
+                )}
             </div>
         </div>
     );
-}
+};

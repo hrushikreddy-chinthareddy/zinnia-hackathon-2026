@@ -19,6 +19,7 @@ interface EappContainer {
     planCode: string;
     versionedAnswers?: VersionedAnswers;
     submitCallback?: () => void;
+    isEdit?: boolean;
 }
 
 const EappContainer: FC<EappContainer> = ({
@@ -26,6 +27,7 @@ const EappContainer: FC<EappContainer> = ({
     planCode,
     versionedAnswers = new VersionedAnswers({ v1: {}, v2: {} }),
     submitCallback,
+    isEdit,
 }) => {
     const timezoneResult = Timezone.from(DEFAULT_TIMEZONE_NAME);
     if (!timezoneResult.success) {
@@ -81,6 +83,7 @@ const EappContainer: FC<EappContainer> = ({
                                     label={illustrationHandlerFactory.getLabel()}
                                     planCode={illustrationHandlerFactory.getPlanCode()}
                                     planType={illustrationHandlerFactory.getPlanType()}
+                                    isEdit={isEdit}
                                 />
                             </ActiveSectionProvider>
                         </SubmitProvider>

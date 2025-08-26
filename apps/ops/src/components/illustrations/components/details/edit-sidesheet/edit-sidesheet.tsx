@@ -38,6 +38,7 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
                 clientCase={clientCase}
                 versionedAnswers={versionedAnswers}
                 submitCallback={() => setOpen(false)}
+                isEdit
             />
         </SideSheet>
     );

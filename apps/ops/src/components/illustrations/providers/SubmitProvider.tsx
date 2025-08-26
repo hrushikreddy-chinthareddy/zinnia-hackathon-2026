@@ -19,8 +19,12 @@ import { useQuestionnaireEngine } from './QuestionnaireEngineProvider';
 import { IllustrationHandler } from '../helpers/factory/illustrationsHandlerAbstractClass';
 import { FarmersEntities } from '../helpers/farmers/famersBlueprintToIllustrationPayloadTL0101';
 
+interface onSubmitArgs {
+    isEdit?: boolean;
+}
+
 type SubmitContextValue = {
-    onSubmit: () => void;
+    onSubmit: (args: onSubmitArgs) => void;
     onQuickQuote: () => void;
     isError?: boolean;
     isLoadingQuickQuote: boolean;
@@ -125,6 +129,81 @@ export function SubmitProvider({
         },
     });
 
+    const editIllustrationMutation = useMutation({
+        mutationKey: ['editIllustration'],
+        mutationFn: async (engine: QuestionnaireEngine): Promise<any> => {
+            // Use this next line to debug only. Never access the dump to grab values in the engine.
+            // You can use this log in oder to prefil answers in the e-app container
+            console.log(
+                'engine dump',
+                engine.getAnswerResolverInstance().export()
+            );
+            const inputs = engine.getAnswerResolverInstance().export();
+            const mappedAnswersResult = engine.getSimpleMappingOutput();
+            if (!mappedAnswersResult.success) {
+                console.log(
+                    'Mapped Answers Result error',
+                    mappedAnswersResult.error
+                );
+                return Promise.reject();
+            }
+            const answers = mappedAnswersResult.value;
+            console.log('answers', answers);
+            answers.illustrationType = 'SINGLE_ILLUSTRATION';
+            if (!answers.illustrationRequestDate) {
+                answers.illustrationRequestDate = new Date()
+                    .toISOString()
+                    .slice(0, 10);
+            }
+            setFormInputs(answers);
+
+            const createIllustrationPayload =
+                factoryHandler.createIllustrationPayloadFromAnswerOutput(
+                    mappedAnswersResult.value
+                ); //getFarmersCreateIllustrationPayload(mappedAnswersResult.value);
+            if (!createIllustrationPayload.success) {
+                console.log(
+                    'SubmitProvider create illustration payload error',
+                    createIllustrationPayload
+                );
+                return Promise.reject();
+            }
+            return createIllustration({
+                bodyData: createIllustrationPayload.value,
+                path: factoryHandler.getIllustrationApiPath(),
+                inputs: JSON.stringify(inputs),
+            });
+        },
+        onSuccess: ({ data }) => {
+            const clientCase = factoryHandler.getClientCase();
+
+            saveIllustrationToClientCase(
+                clientCase.id,
+                data.id,
+                factoryHandler.generateTitle(data, formInputs),
+                factoryHandler.getPlanType(), // product type
+                factoryHandler.getPlanCode(), // carrierProductId
+                data.inputs // illustration inputs
+            );
+
+            queryClient.invalidateQueries({
+                queryKey: ['illustrationData', data.id],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['clientCaseData', clientCase.id],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['productList', clientCase.id],
+            });
+
+            const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data.id}`;
+            Router.push(route, undefined, { shallow: true });
+
+            submitCallback?.();
+            sideSheet.onClose();
+        },
+    });
+
     const {
         mutateAsync: quickQuoteIllustrationMutateAsync,
         isPending: isLoadingQuickQuote,
@@ -192,8 +271,14 @@ export function SubmitProvider({
 
     const contextValue = useMemo(
         () => ({
-            onSubmit: () =>
-                createIllustrationMutateAsync(questionnaireEngine, {}),
+            onSubmit: ({ isEdit }) => {
+                if (isEdit) {
+                    //TODO: Handle the edit logic
+                    return editIllustrationMutateAsync(questionnaireEngine, {});
+                }
+
+                return createIllustrationMutateAsync(questionnaireEngine, {});
+            },
             onQuickQuote: () =>
                 quickQuoteIllustrationMutateAsync(questionnaireEngine, {}),
             isError,
