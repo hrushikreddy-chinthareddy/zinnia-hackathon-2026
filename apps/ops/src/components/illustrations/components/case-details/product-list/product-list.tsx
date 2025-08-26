@@ -1,5 +1,3 @@
-import { Skeleton } from '@radix-ui/themes';
-import { useQuery } from '@tanstack/react-query';
 import {
     BodyVariant,
     Button,
@@ -10,13 +8,13 @@ import {
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useIllustrationHeader } from '@deps/components/illustrations/helpers/hooks/use-illustration-header';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { getProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
+import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
 import {
     IllustrationsClientCase,
     IllustrationSummary,
@@ -27,8 +25,8 @@ import IllustrationProductItem from './product-item';
 import styles from './product-list.module.css';
 import EappContainer from '../../eapp/eapp-container';
 
-export function isJuvenile(clientCase: IllustrationsClientCase): boolean {
-    const dob = new Date(clientCase.insuredDetails?.dateOfBirth || '');
+export function isJuvenile(dateOfBirth?: string): boolean {
+    const dob = new Date(dateOfBirth || '');
 
     if (!dob || dob.toString() === 'Invalid Date') {
         return false; // no DOB provided, cannot determine age
@@ -49,13 +47,26 @@ export function isJuvenile(clientCase: IllustrationsClientCase): boolean {
 
 export function findAvailableProducts(
     products: Product[],
-    clientCase: IllustrationsClientCase
+    insuredDateOfBirth?: string
 ): Product[] {
     return products.filter(
         (product) =>
             product.availableToSell &&
-            !(product.productType === 'TERM' && isJuvenile(clientCase))
+            !(product.productType === 'TERM' && isJuvenile(insuredDateOfBirth))
     );
+}
+
+async function filterProductsByPlanCodeFromEapp(
+    products: Product[],
+    eAppId: string | undefined
+): Promise<Product[]> {
+    if (!eAppId) return products;
+
+    const nbReq = await getNewBusinessEApp(eAppId);
+    if (!nbReq.data?.policy?.planCode) return products;
+
+    const planCode = nbReq.data?.policy?.planCode;
+    return products.filter((product) => product.planCode === planCode);
 }
 
 type ProductWithIllustration = Product & {
@@ -66,56 +77,49 @@ interface IllustrationProductListProps {
     clientCase: IllustrationsClientCase;
     illustrations?: IllustrationSummary[];
     carrierProductId?: string;
+    products?: Product[];
+    isError?: boolean;
     onNewIllustration?: (planCode: string) => void;
 }
 const IllustrationProductList = ({
     clientCase,
     illustrations = [],
     carrierProductId = '',
+    products = [],
+    isError = false,
 }: IllustrationProductListProps) => {
-    const { handleSelectIllustration } = useSelectedIllustration();
+    const { selectedIllustration, handleSelectIllustration } =
+        useSelectedIllustration();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const clientCaseId = clientCase.id;
     const [showEmptyProducts, setShowEmptyProducts] = useState(false);
     const sideSheet = useSideSheetContext();
     const { buildIllustrationHeader } = useIllustrationHeader();
     const router = useRouter();
     const { illustrationId } = router.query;
 
-    const {
-        data: products = [],
-        isLoading,
-        isError,
-        isFetching,
-    } = useQuery({
-        queryKey: ['productList', clientCaseId],
-        queryFn: () => {
-            return getProductsByCarrier('', 'FNWL', '');
-        },
-        select: (data) => data.data || [],
-        enabled: true,
-    });
-
-    const handleNewIllustration = (planCode: string) => {
-        if (planCode && clientCase) {
-            const actionTitle = t(
+    const handleNewIllustration = useCallback(
+        (planCode: string) => {
+            if (!planCode || !clientCase) {
+                console.log('PlanCode is missing.');
+                return;
+            }
+           const actionTitle = t(
                 'clientCase.productList.addIllustration'
             ) as string;
-            const eappHeader = buildIllustrationHeader(
+           const eappHeader = buildIllustrationHeader(
                 planCode,
                 clientCase,
                 actionTitle
             );
-
             sideSheet.changeSideSheetContent(
                 eappHeader,
                 <EappContainer planCode={planCode} clientCase={clientCase} />
             );
             sideSheet.handleOpen(true, '50%');
-        } else {
-            console.log('PlanCode is missing.');
-        }
-    };
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- sideSheet changes on mutation
+        [clientCase]
+    );
 
     // if a carrierProductId is passed to the component, open the new illustraion panel for that product
     useEffect(() => {
@@ -127,40 +131,85 @@ const IllustrationProductList = ({
                 handleNewIllustration(preselectedProduct.planCode);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [products]);
+    }, [products, carrierProductId, isError, handleNewIllustration]);
+
+    // TODO:Move this to the SelectedIllustrationProvider if possible
+    useEffect(() => {
+        if (
+            !illustrations.length ||
+            illustrationId === selectedIllustration?.illustration.id
+        ) {
+            return;
+        }
+
+        const firstAvailableIllustration = illustrationId
+            ? illustrations.find(
+                  (illustration) => illustration.id === illustrationId
+              )
+            : illustrations[0];
+
+        const associatedProduct = products.find(
+            (product) =>
+                product.carrierProductId ===
+                firstAvailableIllustration?.productId
+        );
+
+        // Adding this check to prevent re-selecting the same
+        const isAlreadySelected =
+            selectedIllustration?.illustration?.id ===
+                firstAvailableIllustration?.id &&
+            selectedIllustration?.product?.carrierProductId ===
+                associatedProduct?.carrierProductId;
+
+        if (
+            associatedProduct &&
+            firstAvailableIllustration &&
+            !isAlreadySelected
+        ) {
+            handleSelectIllustration(
+                associatedProduct,
+                firstAvailableIllustration
+            );
+        }
+    }, [
+        handleSelectIllustration,
+        illustrationId,
+        illustrations,
+        products,
+        selectedIllustration?.illustration?.id,
+        selectedIllustration?.product?.carrierProductId,
+    ]);
+
+    const availableProducts = useMemo(() => {
+        return findAvailableProducts(
+            products,
+            String(clientCase.insuredDetails?.dateOfBirth || '')
+        );
+    }, [products, clientCase.insuredDetails?.dateOfBirth]);
+
+    const [filteredProducts, setFilteredProducts] =
+        useState<Product[]>(availableProducts);
 
     useEffect(() => {
-        if (illustrations.length > 0) {
-            let firstAvailableIllustration;
-
-            if (illustrationId) {
-                firstAvailableIllustration = illustrations.find(
-                    (illustration) => illustration.id === illustrationId
-                );
-            } else {
-                firstAvailableIllustration = illustrations[0];
-            }
-            const associatedProduct = products.find(
-                (product) =>
-                    product.carrierProductId ===
-                    firstAvailableIllustration?.productId
-            );
-
-            if (associatedProduct && firstAvailableIllustration) {
-                handleSelectIllustration(
-                    associatedProduct,
-                    firstAvailableIllustration
+        let cancelled = false;
+        const filter = async () => {
+            let filtered = availableProducts;
+            if (clientCase.eAppId) {
+                filtered = await filterProductsByPlanCodeFromEapp(
+                    availableProducts,
+                    clientCase.eAppId
                 );
             }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [illustrations, products]);
-
-    const availableProducts = findAvailableProducts(products, clientCase);
+            if (!cancelled) setFilteredProducts(filtered);
+        };
+        filter();
+        return () => {
+            cancelled = true;
+        };
+    }, [availableProducts, clientCase.eAppId]);
 
     const productsWithIllustrations: ProductWithIllustration[] =
-        availableProducts.map((product) => {
+        filteredProducts.map((product) => {
             const associatedIllustrations = illustrations.filter(
                 (illustration) =>
                     illustration.productId === product.carrierProductId
@@ -187,109 +236,96 @@ const IllustrationProductList = ({
                     {t('clientCase.productList.selectProduct')}
                 </header>
             )}
-            <Skeleton loading={isLoading || isFetching}>
-                {productsWithIllustrationsCount === 0 && (
-                    <ul className={styles.productList}>
-                        {!isError &&
-                            availableProducts.map(
-                                (product: Product, idx: number) => {
-                                    return (
-                                        <IllustrationProductItem
-                                            key={idx}
-                                            product={product}
-                                            onNewIllustration={
-                                                handleNewIllustration
-                                            }
-                                        />
-                                    );
-                                }
-                            )}
-                    </ul>
-                )}
-
+            {productsWithIllustrationsCount === 0 && (
                 <ul className={styles.productList}>
                     {!isError &&
-                        productsWithIllustrations
-                            .filter((product) => !!product.illustrations.length)
-                            .map(
-                                (
-                                    product: ProductWithIllustration,
-                                    idx: number
-                                ) => {
-                                    return (
-                                        <IllustrationProductItem
-                                            key={idx}
-                                            product={product}
-                                            illustrations={
-                                                product.illustrations
-                                            }
-                                            eAppId={clientCase.eAppId}
-                                            onNewIllustration={
-                                                handleNewIllustration
-                                            }
-                                        />
-                                    );
-                                }
-                            )}
+                        filteredProducts.map(
+                            (product: Product, idx: number) => {
+                                return (
+                                    <IllustrationProductItem
+                                        key={idx}
+                                        product={product}
+                                        onNewIllustration={
+                                            handleNewIllustration
+                                        }
+                                    />
+                                );
+                            }
+                        )}
                 </ul>
+            )}
 
+            <ul className={styles.productList}>
                 {!isError &&
-                    productsWithIllustrationsCount > 0 &&
-                    productsWithoutIllustrationsCount > 0 && (
-                        <Button
-                            key={'add-product-btn'}
-                            mode="link"
-                            data-testid="addproduct-link-btn"
-                            aria-label={
-                                t(
-                                    'clientCase.illustrationDetails.addProductAriaLabel'
-                                ) as string
+                    productsWithIllustrations
+                        .filter((product) => !!product.illustrations.length)
+                        .map(
+                            (product: ProductWithIllustration, idx: number) => {
+                                return (
+                                    <IllustrationProductItem
+                                        key={idx}
+                                        product={product}
+                                        illustrations={product.illustrations}
+                                        eAppId={clientCase.eAppId}
+                                        onNewIllustration={
+                                            handleNewIllustration
+                                        }
+                                    />
+                                );
                             }
-                            type="button"
-                            size="small"
-                            className={clsx(styles.displayProducts)}
-                            onClick={() =>
-                                setShowEmptyProducts(!showEmptyProducts)
-                            }
-                        >
-                            <Icon type={IconType.ADD}></Icon>
-                            <span>
-                                {t('clientCase.productList.seeProducts')}
-                            </span>
-                            <Icon
-                                type={IconType.CHEVRON}
-                                className={clsx(
-                                    'text-semantic-warning',
-                                    styles.chevron,
-                                    showEmptyProducts && styles.arrowDown
-                                )}
-                            ></Icon>
-                        </Button>
-                    )}
+                        )}
+            </ul>
 
-                {showEmptyProducts && (
-                    <ul className={styles.productList}>
-                        {productsWithIllustrations
-                            .filter((product) => !product.illustrations.length)
-                            .map(
-                                (
-                                    product: ProductWithIllustration,
-                                    idx: number
-                                ) => {
-                                    return (
-                                        <IllustrationProductItem
-                                            key={idx}
-                                            product={product}
-                                            onNewIllustration={
-                                                handleNewIllustration
-                                            }
-                                        />
-                                    );
-                                }
+            {!isError &&
+                productsWithIllustrationsCount > 0 &&
+                productsWithoutIllustrationsCount > 0 && (
+                    <Button
+                        key={'add-product-btn'}
+                        mode="link"
+                        data-testid="addproduct-link-btn"
+                        aria-label={
+                            t(
+                                'clientCase.illustrationDetails.addProductAriaLabel'
+                            ) as string
+                        }
+                        type="button"
+                        size="small"
+                        className={clsx(styles.displayProducts)}
+                        onClick={() => setShowEmptyProducts(!showEmptyProducts)}
+                    >
+                        <Icon type={IconType.ADD}></Icon>
+                        <span>{t('clientCase.productList.seeProducts')}</span>
+                        <Icon
+                            type={IconType.CHEVRON}
+                            className={clsx(
+                                'text-semantic-warning',
+                                styles.chevron,
+                                showEmptyProducts && styles.arrowDown
                             )}
-                    </ul>
+                        ></Icon>
+                    </Button>
                 )}
-            </Skeleton>
+
+            {showEmptyProducts && (
+                <ul className={styles.productList}>
+                    {productsWithIllustrations
+                        .filter((product) => !product.illustrations.length)
+                        .map(
+                            (product: ProductWithIllustration, idx: number) => {
+                                return (
+                                    <IllustrationProductItem
+                                        key={idx}
+                                        product={product}
+                                        onNewIllustration={
+                                            handleNewIllustration
+                                        }
+                                    />
+                                );
+                            }
+                        )}
+                </ul>
+            )}
+            {/* </Skeleton> */}
             {(isError || !products) && (
                 <div className={styles.noProducts}>
                     <Icon
