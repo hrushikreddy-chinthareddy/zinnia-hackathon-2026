@@ -5,7 +5,7 @@ import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 export async function POST(_request: NextRequest) {
-  const loggingContext = buildNextReqLoggingContext(_request);
+  const loggingContext = await buildNextReqLoggingContext(_request);
   logTrace('case::search::POST::start', loggingContext);
 
   try {
@@ -13,6 +13,7 @@ export async function POST(_request: NextRequest) {
     const { data, error } = await searchCasesByPolicyNumber({
       policyNumber,
       carrierCode,
+      loggingCtx: loggingContext,
     });
 
     logTrace('case::search::POST::complete', {
