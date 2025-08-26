@@ -18,4 +18,5 @@ export enum FEATURE_FLAGS {
   EVERLY_CHILD_RIDER = 'everly_child_rider',
   UPDATED_TRANSACTION_URL = 'updated_transaction_url',
   PAYMENT_METHODS_API = 'payment_methods_api',
+  TRANSACTION_FREE_LOOK_CANCEL = 'transaction_free_look_cancel',
 }

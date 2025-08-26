@@ -40,7 +40,12 @@ export const NotificationIcon = () => {
     return null;
 
   return (
-    <Link isInternal href={NOTIFICATION_HREF} className={styles.notification}>
+    <Link
+      isInternal
+      href={NOTIFICATION_HREF}
+      className={styles.notification}
+      aria-label="go to notifications center"
+    >
       {acknowledgedNotificationsLoading ? (
         <SkeletonLoader width="36px" height="24px" />
       ) : (
