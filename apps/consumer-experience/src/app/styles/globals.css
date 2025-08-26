@@ -1,4 +1,4 @@
-@import '~@xd-components/styles/token-aliases';
+@import '~@xd-components/styles/token-aliases.css';
 @import '~@zinnia/bloom/css';
 @import '~@zinnia/bloom/themes/bloom';
 @import '~@zinnia/bloom/themes/everly';

@@ -6,6 +6,7 @@ import {
   ManageChange,
   PaymentProvider,
 } from '@/types/carrier-config';
+import { CompanyName } from '@/types/carriers';
 import { getThemeCookies } from '@/utils/theme';
 
 import { CARRIER_REDIRECT_URLS } from '../../carrier-config/urls';
