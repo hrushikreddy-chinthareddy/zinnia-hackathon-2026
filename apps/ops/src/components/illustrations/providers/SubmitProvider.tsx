@@ -66,33 +66,34 @@ export function SubmitProvider({
         illustrationType: string;
     }) => {
         const mappedAnswersResult = engine.getSimpleMappingOutput();
-
         if (!mappedAnswersResult.success) {
-            throw new Error(
-                `Mapped Answers Result error: ${mappedAnswersResult.error}`
+            console.log(
+                'Mapped Answers Result error',
+                mappedAnswersResult.error
             );
+            return Promise.reject();
         }
+        const answers = { ...mappedAnswersResult.value, illustrationType };
 
-        const answers = mappedAnswersResult.value;
-
+        // answers.illustrationType = illustrationType;
         if (!answers.illustrationRequestDate) {
             answers.illustrationRequestDate = new Date()
                 .toISOString()
                 .slice(0, 10);
         }
         setFormInputs(answers);
-        const createIllustrationPayload =
-            factoryHandler.createIllustrationPayloadFromAnswerOutput({
-                ...mappedAnswersResult.value,
-                illustrationType,
-            });
 
-        console.log('createIllustrationPayload', createIllustrationPayload);
+        const createIllustrationPayload =
+            factoryHandler.createIllustrationPayloadFromAnswerOutput(answers);
+
         if (!createIllustrationPayload.success) {
-            throw new Error(
-                `SubmitProvider create illustration payload error: ${createIllustrationPayload}`
+            console.log(
+                'SubmitProvider getIllustrationPayload  error',
+                createIllustrationPayload
             );
+            return Promise.reject();
         }
+
         return createIllustrationPayload.value;
     };
 
