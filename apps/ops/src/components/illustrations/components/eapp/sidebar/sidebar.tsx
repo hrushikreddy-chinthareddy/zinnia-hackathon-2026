@@ -14,6 +14,7 @@ const dataToTitleMap: Record<
 > = {
     solveFor: { label: 'Solve for', type: 'string' },
     targetPremium: { label: 'Target premium', type: 'money' },
+    mecPremium: { label: 'MEC premium', type: 'money' },
     faceAmount: { label: 'Face amount', type: 'money' },
     initialPremium: { label: 'Initial premium', type: 'money' },
     cashValue: { label: 'Cash value', type: 'money' },
