@@ -253,7 +253,6 @@ export function SubmitProvider({
         () => ({
             onSubmit: ({ isEdit, oldIllustrationId }) => {
                 if (isEdit) {
-                    //TODO: Handle the edit logic
                     return editIllustrationMutateAsync(
                         { engine: questionnaireEngine, oldIllustrationId },
                         {}
