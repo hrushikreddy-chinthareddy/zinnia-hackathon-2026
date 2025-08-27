@@ -103,10 +103,10 @@ const IllustrationProductList = ({
                 console.log('PlanCode is missing.');
                 return;
             }
-           const actionTitle = t(
+            const actionTitle = t(
                 'clientCase.productList.addIllustration'
             ) as string;
-           const eappHeader = buildIllustrationHeader(
+            const eappHeader = buildIllustrationHeader(
                 planCode,
                 clientCase,
                 actionTitle
