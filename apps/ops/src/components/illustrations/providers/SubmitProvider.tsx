@@ -32,6 +32,8 @@ type SubmitContextValue = {
     onQuickQuote: () => void;
     isError?: boolean;
     isLoadingQuickQuote: boolean;
+    createIllustrationPending: boolean;
+    editIllustrationPending: boolean;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -164,7 +166,7 @@ export function SubmitProvider({
                 oldIllustrationId,
             });
         },
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             const clientCase = factoryHandler.getClientCase();
 
             editIllustrationToClientCase(
@@ -180,16 +182,18 @@ export function SubmitProvider({
                 data.inputs // illustration inputs
             );
 
-            queryClient.invalidateQueries({
-                queryKey: ['illustrationData', data.id],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ['clientCaseData', clientCase.id],
-            });
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: ['illustrationData', data.id],
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ['clientCaseData', clientCase.id],
+                }),
 
-            queryClient.invalidateQueries({
-                queryKey: ['productList', clientCase.id],
-            });
+                queryClient.invalidateQueries({
+                    queryKey: ['productList', clientCase.id],
+                }),
+            ]);
 
             const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data.id}`;
             Router.push(route, undefined, { shallow: true });
@@ -229,8 +233,14 @@ export function SubmitProvider({
         },
     });
 
-    const { isError: createIllustrationError } = createIllustrationMutation;
-    const { isError: editIllustrationError } = editIllustrationMutation;
+    const {
+        isError: createIllustrationError,
+        isPending: createIllustrationPending,
+    } = createIllustrationMutation;
+    const {
+        isError: editIllustrationError,
+        isPending: editIllustrationPending,
+    } = editIllustrationMutation;
 
     const { mutateAsync: createIllustrationMutateAsync } =
         createIllustrationMutation;
@@ -255,6 +265,8 @@ export function SubmitProvider({
                 quickQuoteIllustrationMutateAsync(questionnaireEngine, {}),
             isError: createIllustrationError || editIllustrationError,
             isLoadingQuickQuote,
+            createIllustrationPending,
+            editIllustrationPending,
         }),
         [
             createIllustrationError,
@@ -264,6 +276,8 @@ export function SubmitProvider({
             questionnaireEngine,
             editIllustrationMutateAsync,
             quickQuoteIllustrationMutateAsync,
+            createIllustrationPending,
+            editIllustrationPending,
         ]
     );
 

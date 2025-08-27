@@ -37,8 +37,14 @@ interface SidebarProps {
 
 export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
-    const { onSubmit, onQuickQuote, isError, isLoadingQuickQuote } =
-        useSubmit();
+    const {
+        onSubmit,
+        onQuickQuote,
+        isError,
+        isLoadingQuickQuote,
+        editIllustrationPending,
+        createIllustrationPending,
+    } = useSubmit();
     const { data } = useEapp();
 
     const isCompleted = useMemo(() => {
@@ -96,7 +102,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
                     expand
                     size="small"
                     onClick={() => onSubmit({ isEdit: false })}
-                    disabled={!isCompleted}
+                    disabled={!isCompleted || createIllustrationPending}
                     mode={isEdit ? ButtonType.Secondary : ButtonType.Primary}
                 >
                     {isEdit ? 'Create new' : 'Calculate'}
@@ -111,7 +117,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
                                 oldIllustrationId: illustrationId,
                             })
                         }
-                        disabled={!isCompleted}
+                        disabled={!isCompleted || editIllustrationPending}
                     >
                         Update
                     </Button>
