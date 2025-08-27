@@ -160,7 +160,11 @@ export default function IllustrationDetailsToolbar({
                         {t('clientCase.illustrationDetails.unArchive')}
                     </ToolbarButton>
                 ) : status !== IllustrationStatuses.EXPIRED ? (
-                    <EditSidesheet planCode={planCode} clientCase={clientCase}>
+                    <EditSidesheet
+                        planCode={planCode}
+                        clientCase={clientCase}
+                        illustrationId={illustrationId}
+                    >
                         <ToolbarButton
                             icon={IconType.EDIT}
                             className={styles.linkButton}
