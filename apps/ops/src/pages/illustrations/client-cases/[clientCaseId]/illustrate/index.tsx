@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
-import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback } from 'react';
 
@@ -56,6 +55,7 @@ export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageP
         isFetching,
     } = useQuery({
         queryKey: ['clientCaseData', clientCaseId],
+        structuralSharing: false,
         queryFn: () => {
             const response = getClientCase(clientCaseId);
             return response;

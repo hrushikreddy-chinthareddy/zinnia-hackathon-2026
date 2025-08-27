@@ -110,10 +110,6 @@ export function SubmitProvider({
                 queryClient.invalidateQueries({
                     queryKey: ['productList', clientCase.id],
                 }),
-
-                queryClient.invalidateQueries({
-                    queryKey: ['clientCaseData', clientCase.id],
-                }),
             ]);
 
             const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data.id}`;
