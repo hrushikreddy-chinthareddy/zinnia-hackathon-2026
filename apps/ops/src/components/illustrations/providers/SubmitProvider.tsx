@@ -170,6 +170,7 @@ export function SubmitProvider({
             editIllustrationToClientCase(
                 clientCase.id,
                 data.oldIllustrationId,
+                data.id,
                 factoryHandler.generateTitle(data, {
                     ...formInputs,
                     illustrationType: 'SINGLE_ILLUSTRATION',
@@ -185,6 +186,7 @@ export function SubmitProvider({
             queryClient.invalidateQueries({
                 queryKey: ['clientCaseData', clientCase.id],
             });
+
             queryClient.invalidateQueries({
                 queryKey: ['productList', clientCase.id],
             });

@@ -120,6 +120,7 @@ export const saveIllustrationToClientCase = async (
 export const editIllustrationToClientCase = async (
     clientCaseId: string,
     oldIllustrationId: string,
+    newIllustrationId: string,
     title: string,
     productType: string,
     productId: string,
@@ -128,7 +129,7 @@ export const editIllustrationToClientCase = async (
     try {
         const request = client.patch(
             `${BASE_URL}/${clientCaseId}/illustrations/${oldIllustrationId}`,
-            { id: oldIllustrationId, title, productType, productId, inputs }
+            { id: newIllustrationId, title, productType, productId, inputs }
         );
         const response = await request;
         if (response.status === StatusCode.Okay) {
