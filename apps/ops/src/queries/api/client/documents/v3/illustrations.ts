@@ -215,10 +215,12 @@ export const createIllustration = async ({
     bodyData,
     path,
     inputs,
+    oldIllustrationId,
 }: {
     bodyData: CreateIllustrationQueryBodyValue;
     path: string;
     inputs: string;
+    oldIllustrationId?: string;
 }) => {
     const response = await client.post<any, AxiosResponse<any>>(
         `${baseAppUrl}/${path}`,
@@ -230,6 +232,7 @@ export const createIllustration = async ({
         data: {
             ...response.data,
             inputs,
+            oldIllustrationId,
         },
     };
 };

@@ -32,9 +32,10 @@ const dataToTitleMap: Record<
 
 interface SidebarProps {
     isEdit?: boolean;
+    illustrationId?: string;
 }
 
-export const Sidebar: FC<SidebarProps> = ({ isEdit }) => {
+export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
     const { onSubmit, onQuickQuote, isError, isLoadingQuickQuote } =
         useSubmit();
@@ -104,7 +105,12 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit }) => {
                     <Button
                         expand
                         size="small"
-                        onClick={() => onSubmit({ isEdit: true })}
+                        onClick={() =>
+                            onSubmit({
+                                isEdit: true,
+                                oldIllustrationId: illustrationId,
+                            })
+                        }
                         disabled={!isCompleted}
                     >
                         Update
