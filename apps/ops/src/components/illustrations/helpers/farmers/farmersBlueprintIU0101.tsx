@@ -4466,7 +4466,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-ba46e0e6-d290-41d1-952c-6306bd16922a',
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
-                                    defaultValue: 7.41,
+                                    defaultValue: ILLUSTRATED_RATE,
                                     valid: [
                                         {
                                             id: '36ece1c0-491e-4f80-ab88-ddbebad173a9',
@@ -4475,7 +4475,7 @@ export const farmersBlueprintIU0101 = {
                                                 conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
-                                                        value: 7.41,
+                                                        value: ILLUSTRATED_RATE,
                                                         targetNodeId:
                                                             'sp500-indexed-account-current-illustrated-rate',
                                                         operator:
@@ -4484,7 +4484,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Future Interest Rate can not be higher than the current interest rate of 7.41%.',
+                                                en: `Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.`,
                                                 fr: '',
                                             },
                                         },
@@ -4582,7 +4582,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-8fed7eb2-5cc0-438e-9f62-20f660cf13cd',
                                     numericalDataType: 'float',
                                     validateAs: 'percentage',
-                                    defaultValue: 7.41,
+                                    defaultValue: ILLUSTRATED_RATE,
                                     valid: [
                                         {
                                             id: '36ece1c0-491e-4f80-ab88-ddbebad173a9',
@@ -4591,7 +4591,7 @@ export const farmersBlueprintIU0101 = {
                                                 conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
-                                                        value: 7.41,
+                                                        value: ILLUSTRATED_RATE,
                                                         targetNodeId:
                                                             'sp-marc-5-percent-er-indexed-account-current-illustrated-rate',
                                                         operator:
@@ -4600,7 +4600,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Future Interest Rate can not be higher than the current interest rate of 7.41%.',
+                                                en: `Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.`,
                                                 fr: '',
                                             },
                                         },
