@@ -126,11 +126,12 @@ export function QuestionnaireEngineProvider(
         return [engine];
     }, [
         props.blueprint,
-        props.versionedAnswers,
-        props.subscribers,
-        props.applicationContext,
-        questionnaire,
+        props.versionedAnswers.v2,
         props.timezone,
+        props.applicationContext,
+        props.subscribers,
+        props.prePopulateData,
+        questionnaire,
     ]);
 
     return (
