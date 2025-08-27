@@ -1,6 +1,9 @@
 import { SideSheet } from '@zinnia/bloom/components';
 import { FC, PropsWithChildren, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { useIllustrationHeader } from '@deps/components/illustrations/helpers/hooks/use-illustration-header';
+import { TranslationFiles } from '@deps/config/translations';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 
 import styles from './edit-sidesheet.module.css';
@@ -19,7 +22,15 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
     illustrationId,
 }) => {
     const [open, setOpen] = useState(false);
+    const { buildIllustrationHeader } = useIllustrationHeader();
+    const { t } = useTranslation(TranslationFiles.COMMON, {});
 
+    const title = buildIllustrationHeader(
+        planCode,
+        clientCase,
+        t('clientCase.illustrationDetails.editIllustration') ||
+            'Edit Illustration'
+    );
     const illustration = clientCase.illustrations?.find(
         (illustration) => illustration.id === illustrationId
     );
@@ -31,7 +42,7 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
     return (
         <SideSheet
             preventCloseOnOutsideClick={false}
-            header={'Edit Illustration'}
+            header={title}
             trigger={children}
             contentClassName={styles.editSidesheetContent}
             open={open}

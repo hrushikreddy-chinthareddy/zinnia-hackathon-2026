@@ -4847,12 +4847,12 @@
                     "payout": "Paiement",
                     "oneTimeWire": "Fil unique"
                 },
-                "bankOptions":{
+                "bankOptions": {
                     "accountType": "Type de compte",
                     "bankName": "Nom de la banque",
                     "routingNumber": "Numéro de routage",
                     "accountNumber": "Numéro de compte",
-                    "endingIn":"Se terminant par {{accountNumber}}"
+                    "endingIn": "Se terminant par {{accountNumber}}"
                 }
             },
             "email": {
@@ -7386,7 +7386,8 @@
             "cancel": "Annuler",
             "cancelArchiveAriaLabel": "Annuler archivage de l'illustration",
             "confirmArchiveAriaLabel": "Confirmer archivage de l'illustration",
-            "addProductAriaLabel": "Bouton pour ajouter un produit"
+            "addProductAriaLabel": "Bouton pour ajouter un produit",
+            "editIllustration": "Modifier l'illustration"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",

@@ -4919,12 +4919,12 @@
                     "payout": "Payout",
                     "oneTimeWire": "One Time Wire"
                 },
-                "bankOptions":{
+                "bankOptions": {
                     "accountType": "Account type",
                     "bankName": "Bank name",
                     "routingNumber": "Routing number",
                     "accountNumber": "Account number",
-                    "endingIn":"Ending in {{accountNumber}}"
+                    "endingIn": "Ending in {{accountNumber}}"
                 }
             },
             "email": {
@@ -7513,7 +7513,8 @@
             "cancel": "Cancel",
             "cancelArchiveAriaLabel": "Cancel archive illustration button",
             "confirmArchiveAriaLabel": "Confirm archive illustration button",
-            "addProductAriaLabel": "Add product button"
+            "addProductAriaLabel": "Add product button",
+            "editIllustration": "Edit Illustration"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
