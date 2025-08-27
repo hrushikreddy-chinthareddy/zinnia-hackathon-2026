@@ -1,5 +1,4 @@
 import { SideSheet } from '@zinnia/bloom/components';
-import { VersionedAnswers } from '@zinnia/form-engine-sdk';
 import { FC, PropsWithChildren, useState } from 'react';
 
 import { IllustrationsClientCase } from '@deps/types/illustrations';
@@ -10,17 +9,23 @@ import EappContainer from '../../eapp/eapp-container';
 interface EditSidesheetProps {
     planCode: string;
     clientCase: IllustrationsClientCase;
+    illustrationId?: string;
 }
 
 export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
     children,
     planCode,
     clientCase,
+    illustrationId,
 }) => {
     const [open, setOpen] = useState(false);
 
-    const versionedAnswers: VersionedAnswers = clientCase.inputs
-        ? JSON.parse(clientCase.inputs)
+    const illustration = clientCase.illustrations?.find(
+        (illustration) => illustration.id === illustrationId
+    );
+
+    const versionedAnswers = illustration?.inputs
+        ? JSON.parse(illustration?.inputs)
         : undefined;
 
     return (
@@ -39,6 +44,7 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
                 versionedAnswers={versionedAnswers}
                 submitCallback={() => setOpen(false)}
                 isEdit
+                illustrationId={illustrationId}
             />
         </SideSheet>
     );
