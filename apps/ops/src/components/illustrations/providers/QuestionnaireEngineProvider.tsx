@@ -119,6 +119,8 @@ export function QuestionnaireEngineProvider(
             },
         });
 
+        console.log('versionedAnswers', props.versionedAnswers.v2);
+
         //if props versioned answers v2 is empty, then prepopulate
         if (Object.keys(props.versionedAnswers.v2).length === 0) {
             engine.populateSimpleMappingAnswers(props.prePopulateData);
