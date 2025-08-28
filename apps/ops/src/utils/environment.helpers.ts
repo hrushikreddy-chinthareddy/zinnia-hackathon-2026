@@ -50,19 +50,12 @@ export const isProd = () => {
 };
 
 export const isDemo = () => {
-    const nonDemoEnvs = [
-        ENVIRONMENT_NAME.PROD,
-        ENVIRONMENT_NAME.QA,
-        ENVIRONMENT_NAME.UAT,
-        ENVIRONMENT_NAME.DEV,
-    ];
+    const demoEnvs = [ENVIRONMENT_NAME.FARMERS_TRAINING, ENVIRONMENT_NAME.DEMO];
 
     const currentBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-    // Check if the current URL is NOT in the list of production environment URLs
-    return !nonDemoEnvs.some(
-        (env) => environmentUrls[env] === currentBackendUrl
-    );
+    // Check if the current URL is in the list of demo environment URLs
+    return demoEnvs.some((env) => environmentUrls[env] === currentBackendUrl);
 };
 
 export const isEvglDemo = () => {
