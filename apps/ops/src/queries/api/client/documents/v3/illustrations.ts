@@ -214,27 +214,14 @@ const BASE_URL = `${baseAppUrl}/api/illustration/v3`;
 export const createIllustration = async ({
     bodyData,
     path,
-    inputs,
-    oldIllustrationId,
 }: {
     bodyData: CreateIllustrationQueryBodyValue;
     path: string;
-    inputs: string;
-    oldIllustrationId?: string;
 }) => {
-    const response = await client.post<any, AxiosResponse<any>>(
+    return await client.post<any, AxiosResponse<any>>(
         `${baseAppUrl}/${path}`,
         bodyData
     );
-
-    return {
-        ...response,
-        data: {
-            ...response.data,
-            inputs,
-            oldIllustrationId,
-        },
-    };
 };
 
 export const getNewTermLifeIllustration = async (illustrationId: string) => {

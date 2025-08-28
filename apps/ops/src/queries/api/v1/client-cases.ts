@@ -133,7 +133,10 @@ export const editIllustrationToClientCase = async (
         );
         const response = await request;
         if (response.status === StatusCode.Okay) {
-            return { data: response.data, error: null };
+            return {
+                data: { ...response.data, id: newIllustrationId },
+                error: null,
+            };
         } else {
             const error = new Error(response?.statusText);
             return {

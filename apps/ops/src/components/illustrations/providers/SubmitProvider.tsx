@@ -100,11 +100,9 @@ export function SubmitProvider({
                 engine,
                 illustrationType: 'SINGLE_ILLUSTRATION',
             });
-            const inputs = engine.getAnswerResolverInstance().export();
             return createIllustration({
                 bodyData: payload,
                 path: factoryHandler.getIllustrationApiPath(),
-                inputs: JSON.stringify(inputs),
             });
         },
         onSuccess: async ({ data }) => {
@@ -155,33 +153,32 @@ export function SubmitProvider({
                 engine,
                 illustrationType: 'SINGLE_ILLUSTRATION',
             });
+            const clientCase = factoryHandler.getClientCase();
             const inputs = engine.getAnswerResolverInstance().export();
-            return createIllustration({
+            const createResponse = await createIllustration({
                 bodyData: payload,
                 path: factoryHandler.getIllustrationApiPath(),
-                inputs: JSON.stringify(inputs),
-                oldIllustrationId,
             });
-        },
-        onSuccess: async ({ data }) => {
-            const clientCase = factoryHandler.getClientCase();
 
-            editIllustrationToClientCase(
+            return await editIllustrationToClientCase(
                 clientCase.id,
-                data.oldIllustrationId,
-                data.id,
-                factoryHandler.generateTitle(data, {
+                oldIllustrationId || '',
+                createResponse.data.id,
+                factoryHandler.generateTitle(createResponse.data, {
                     ...formInputs,
                     illustrationType: 'SINGLE_ILLUSTRATION',
                 }),
                 factoryHandler.getPlanType(), // product type
                 factoryHandler.getPlanCode(), // carrierProductId
-                data.inputs // illustration inputs
+                JSON.stringify(inputs) // illustration inputs
             );
+        },
+        onSuccess: async ({ data }) => {
+            const clientCase = factoryHandler.getClientCase();
 
             await Promise.all([
                 queryClient.invalidateQueries({
-                    queryKey: ['illustrationData', data.id],
+                    queryKey: ['illustrationData', data?.id],
                 }),
                 queryClient.invalidateQueries({
                     queryKey: ['clientCaseData', clientCase.id],
@@ -192,7 +189,7 @@ export function SubmitProvider({
                 }),
             ]);
 
-            const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data.id}`;
+            const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data?.id}`;
             Router.push(route, undefined, { shallow: true });
 
             submitCallback?.();
@@ -214,9 +211,6 @@ export function SubmitProvider({
             return createIllustration({
                 bodyData: payload,
                 path: factoryHandler.getIllustrationApiPath(),
-                inputs: JSON.stringify(
-                    engine.getAnswerResolverInstance().export()
-                ),
             });
         },
         onSuccess: ({ data }) => {
