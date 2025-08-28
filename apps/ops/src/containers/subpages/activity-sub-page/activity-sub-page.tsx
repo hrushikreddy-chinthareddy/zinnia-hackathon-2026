@@ -4,20 +4,27 @@ import {
     TabList,
     TabTrigger,
 } from '@zinnia/bloom/components';
-import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CallLogsTab from '@deps/components/case-sub-page/case-tabs/call-logs-tab';
 import PageHeader from '@deps/components/page-header/page-header';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { PolicyActivityTabValues } from '@deps/types/constants';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import TransactionsTab from './transactions-tab';
 
 export default function ActivitySubPage() {
     const { policy } = useContext(PolicyData);
     const { t } = useTranslation();
+    const { hasCallLogsAccess } = usePermissionsContext();
+    const router = useRouter();
+    const { query } = router;
+    const { slug } = query;
 
     const getInitialTabValue = () => {
         let initialTabVal = PolicyActivityTabValues.transactions;
@@ -39,6 +46,21 @@ export default function ActivitySubPage() {
         setTabVal(val);
     };
 
+    useEffect(() => {
+        browserLogInfo('CaseOverview_Permission_Check', {
+            pathname: router.pathname,
+            hasCallLogsAccess,
+            policyNumber: policy?.policyNumber,
+        });
+        const isCallLogsPage =
+            Array.isArray(slug) && slug.includes('call-logs');
+        if (isCallLogsPage && !hasCallLogsAccess) {
+            router.push(
+                `${baseAppUrl}/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`
+            );
+        }
+    }, [hasCallLogsAccess, policy, router]);
+
     return (
         <div className="flex flex-col rounded bg-white">
             <PageHeader
@@ -54,20 +76,26 @@ export default function ActivitySubPage() {
                     <TabTrigger value={PolicyActivityTabValues.transactions}>
                         Transactions
                     </TabTrigger>
-                    <TabTrigger value={PolicyActivityTabValues['call-logs']}>
-                        Call Logs
-                    </TabTrigger>
+                    {hasCallLogsAccess && (
+                        <TabTrigger
+                            value={PolicyActivityTabValues['call-logs']}
+                        >
+                            Call Logs
+                        </TabTrigger>
+                    )}
                 </TabList>
                 <TabContent value={PolicyActivityTabValues.transactions}>
                     <TransactionsTab />
                 </TabContent>
 
-                <TabContent value={PolicyActivityTabValues['call-logs']}>
-                    <CallLogsTab
-                        policyNumber={policy.policyNumber}
-                        queryLimit={10}
-                    />
-                </TabContent>
+                {hasCallLogsAccess && (
+                    <TabContent value={PolicyActivityTabValues['call-logs']}>
+                        <CallLogsTab
+                            policyNumber={policy.policyNumber}
+                            queryLimit={10}
+                        />
+                    </TabContent>
+                )}
             </TabGroup>
         </div>
     );

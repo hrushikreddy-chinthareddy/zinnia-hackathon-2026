@@ -55,6 +55,8 @@ export interface PermissionsContextProps {
     isAllowReadIllustrations: boolean;
     hasEditServiceRequestAccess?: boolean;
     hasUsagePermission: boolean;
+    hasCallLogsAccess: boolean;
+    hasNotesAccess: boolean;
     hasTestHarnessAccess: boolean;
     isZinniaInternalViewer: boolean;
 }
@@ -230,6 +232,16 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.ILLUSTRATIONS_EXPERIENCE,
                 FgaRelation.UiAccess
             );
+            const hasCallLogsAccess = !!checkRelation(
+                data,
+                FgaRoles.CALL_LOGS_ZL,
+                FgaRelation.UiAccess
+            );
+            const hasNotesAccess = !!checkRelation(
+                data,
+                FgaRoles.NOTES_ACCESS,
+                FgaRelation.UiAccess
+            );
 
             const hasTestHarnessAccess = !!checkRelation(
                 data,
@@ -251,6 +263,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasPolicyIndexPageAccess: !!hasPolicyIndexPageAccess,
                 isAllowReadIllustrations,
                 hasUsagePermission: !!hasUsage,
+                hasCallLogsAccess,
+                hasNotesAccess,
                 hasTestHarnessAccess,
                 isZinniaInternalViewer,
             };
@@ -302,6 +316,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasEditServiceRequestAccess:
                     !!hasEditServiceRequestAccess?.data,
                 hasUsagePermission: !!fgaRoleData?.hasUsagePermission,
+                hasCallLogsAccess: !!fgaRoleData?.hasCallLogsAccess,
+                hasNotesAccess: !!fgaRoleData?.hasNotesAccess,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
             }}
         >

@@ -44,8 +44,13 @@ export default function CaseSubPage({
     handleTabChange: (val: string) => void;
 }) {
     const { t } = useTranslation();
-    const { sessionId, partyId, isZinniaInternalViewer } =
-        usePermissionsContext();
+    const {
+        sessionId,
+        partyId,
+        hasCallLogsAccess,
+        hasNotesAccess,
+        isZinniaInternalViewer,
+    } = usePermissionsContext();
     const { policy } = useCaseActivityContext();
     const { featureFlags } = useOptimizely();
     const canViewRawData =
@@ -109,42 +114,46 @@ export default function CaseSubPage({
                             )}
                         </Typography>
                     </TabTrigger>
-                    <TabTrigger
-                        value={CaseDetailsTabValues.notes}
-                        onClick={trackTabClick('Notes')}
-                    >
-                        <Icon
-                            type={IconType.ANNOTATION}
-                            width={20}
-                            height={20}
-                            className="hidden lg:block"
-                        />
-                        <Typography variant={TypographyVariant.LabelMdAlt}>
-                            {toTitleCase(
-                                t(
-                                    `caseOverview.tabs.${CaseDetailsTabValues.notes}`
-                                ) ?? ''
-                            )}
-                        </Typography>
-                    </TabTrigger>
-                    <TabTrigger
-                        value={CaseDetailsTabValues['call-logs']}
-                        onClick={trackTabClick('Call Logs')}
-                    >
-                        <Icon
-                            type={IconType.PHONE}
-                            width={20}
-                            height={20}
-                            className="hidden flex-shrink-0 lg:block"
-                        />
-                        <Typography variant={TypographyVariant.LabelMdAlt}>
-                            {toTitleCase(
-                                t(
-                                    `caseOverview.tabs.${CaseDetailsTabValues['call-logs']}`
-                                ) ?? ''
-                            )}
-                        </Typography>
-                    </TabTrigger>
+                    {hasNotesAccess && (
+                        <TabTrigger
+                            value={CaseDetailsTabValues.notes}
+                            onClick={trackTabClick('Notes')}
+                        >
+                            <Icon
+                                type={IconType.ANNOTATION}
+                                width={20}
+                                height={20}
+                                className="hidden lg:block"
+                            />
+                            <Typography variant={TypographyVariant.LabelMdAlt}>
+                                {toTitleCase(
+                                    t(
+                                        `caseOverview.tabs.${CaseDetailsTabValues.notes}`
+                                    ) ?? ''
+                                )}
+                            </Typography>
+                        </TabTrigger>
+                    )}
+                    {hasCallLogsAccess && (
+                        <TabTrigger
+                            value={CaseDetailsTabValues['call-logs']}
+                            onClick={trackTabClick('Call Logs')}
+                        >
+                            <Icon
+                                type={IconType.PHONE}
+                                width={20}
+                                height={20}
+                                className="hidden flex-shrink-0 lg:block"
+                            />
+                            <Typography variant={TypographyVariant.LabelMdAlt}>
+                                {toTitleCase(
+                                    t(
+                                        `caseOverview.tabs.${CaseDetailsTabValues['call-logs']}`
+                                    ) ?? ''
+                                )}
+                            </Typography>
+                        </TabTrigger>
+                    )}
                     {canViewCaseEvents && (
                         <TabTrigger
                             value={CaseDetailsTabValues.events}
@@ -198,21 +207,25 @@ export default function CaseSubPage({
                 >
                     <DocumentsTab caseDetails={caseDetails} policy={policy} />
                 </TabContent>
-                <TabContent
-                    className="w-full"
-                    value={CaseDetailsTabValues.notes}
-                >
-                    <NotesTab caseDetails={caseDetails} />
-                </TabContent>
-                <TabContent
-                    className="w-full"
-                    value={CaseDetailsTabValues['call-logs']}
-                >
-                    <CallLogsTab
-                        policyNumber={caseDetails.policyNumber}
-                        queryLimit={CALL_LOGS_TAB_QUERY_LIMIT}
-                    />
-                </TabContent>
+                {hasNotesAccess && (
+                    <TabContent
+                        className="w-full"
+                        value={CaseDetailsTabValues.notes}
+                    >
+                        <NotesTab caseDetails={caseDetails} />
+                    </TabContent>
+                )}
+                {hasCallLogsAccess && (
+                    <TabContent
+                        className="w-full"
+                        value={CaseDetailsTabValues['call-logs']}
+                    >
+                        <CallLogsTab
+                            policyNumber={caseDetails.policyNumber}
+                            queryLimit={CALL_LOGS_TAB_QUERY_LIMIT}
+                        />
+                    </TabContent>
+                )}
                 {canViewCaseEvents && (
                     <TabContent
                         className="w-full"
