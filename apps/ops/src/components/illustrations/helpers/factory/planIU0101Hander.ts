@@ -256,11 +256,23 @@ const farmersEntitiesSchema = t.object(
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
+        'longTermHoldingAccountCurrentIllustratedRate',
+        t.union(t.number, t.undefined)
+    ),
+    t.optionalProperty(
         'sp500IndexedAccountAllocation',
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
+        'sp500IndexedAccountCurrentIllustratedRate',
+        t.union(t.number, t.undefined)
+    ),
+    t.optionalProperty(
         'spMarc5PercentErIndexedAccountAllocation',
+        t.union(t.number, t.undefined)
+    ),
+    t.optionalProperty(
+        'spMarc5PercentErIndexedAccountCurrentIllustratedRate',
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
@@ -705,15 +717,21 @@ function createIllustrationPayload(
             {
                 allocationPercent: values.longTermFixedAccountAllocation,
                 fundId: 'FLF001',
+                illustratedRate:
+                    values.longTermHoldingAccountCurrentIllustratedRate,
             },
             {
                 allocationPercent: values.sp500IndexedAccountAllocation,
                 fundId: 'FLI001',
+                illustratedRate:
+                    values.sp500IndexedAccountCurrentIllustratedRate,
             },
             {
                 allocationPercent:
                     values.spMarc5PercentErIndexedAccountAllocation,
                 fundId: 'FLI002',
+                illustratedRate:
+                    values.spMarc5PercentErIndexedAccountCurrentIllustratedRate,
             },
         ],
         ...(values.scheduleDistributions === 'yes' &&

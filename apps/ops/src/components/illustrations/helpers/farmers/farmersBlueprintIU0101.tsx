@@ -4447,6 +4447,8 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     answerNodeId:
                                         'sp500-indexed-account-current-illustrated-rate',
+                                    outputPath:
+                                        'sp500IndexedAccountCurrentIllustratedRate',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -4563,6 +4565,8 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     answerNodeId:
                                         'sp-marc-5-percent-er-indexed-account-current-illustrated-rate',
+                                    outputPath:
+                                        'spMarc5PercentErIndexedAccountCurrentIllustratedRate',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
