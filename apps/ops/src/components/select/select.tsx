@@ -61,6 +61,14 @@ const SingleSelectOptions = ({
                         >
                             {option.label}
                         </Typography>
+                        {option.description && (
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-gray-500"
+                            >
+                                {option.description}
+                            </Typography>
+                        )}
                     </Select.ItemText>
                 </Select.Item>
             ))}
@@ -110,6 +118,14 @@ const MultiselectOptionItem = ({
                     >
                         {option.label}
                     </Typography>
+                    {option.description && (
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className="ml-2 text-gray-500"
+                        >
+                            {option.description}
+                        </Typography>
+                    )}
                 </DropdownMenu.CheckboxItem>
             ))}
         </>
