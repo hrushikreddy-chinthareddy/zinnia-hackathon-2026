@@ -53,6 +53,7 @@ export interface PermissionsContextProps {
     isOpsManagerView: boolean;
     hasPolicyIndexPageAccess: boolean;
     isAllowReadIllustrations: boolean;
+    hasEditServiceRequestAccess?: boolean;
     hasUsagePermission: boolean;
     hasTestHarnessAccess: boolean;
     isZinniaInternalViewer: boolean;
@@ -163,6 +164,22 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             staleTime: FIFTEEN_MINUTES_IN_MS,
         });
 
+    const {
+        data: hasEditServiceRequestAccess,
+        isLoading: hasServiceRequestLoading,
+    } = useQuery({
+        queryKey: ['isAllowServiceRequest', partyId],
+        queryFn: async () => {
+            return await checkTuple(
+                partyId,
+                FgaRelation.UiAccess,
+                FgaUiEntity.ZinniaLiveServiceRequest
+            );
+        },
+        enabled: !!partyId,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
+
     const { data: partyReferenceData, isLoading: showToppanMerrillLoading } =
         useQuery({
             queryKey: ['partyReferenceMetaData', partyId],
@@ -247,6 +264,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         !caseManagementLoading &&
         !policyAdminLoading &&
         !otpRenewalsLoading &&
+        !hasServiceRequestLoading &&
         !showToppanMerrillLoading &&
         !homeCheckLoading &&
         !opsManagerLoading;
@@ -281,6 +299,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     !!fgaRoleData?.hasPolicyIndexPageAccess,
                 isAllowReadIllustrations:
                     !!fgaRoleData?.isAllowReadIllustrations,
+                hasEditServiceRequestAccess:
+                    !!hasEditServiceRequestAccess?.data,
                 hasUsagePermission: !!fgaRoleData?.hasUsagePermission,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
             }}

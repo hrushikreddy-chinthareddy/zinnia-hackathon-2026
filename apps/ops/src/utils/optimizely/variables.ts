@@ -5,6 +5,7 @@ export enum FEATURE_FLAG_VARIABLES {
     TASK_SAVE_AS_DRAFT = 'task-save-as-draft',
     TASK_CONTINUE_BUTTON_ENABLE = 'task-continue-button-enable',
     DOCUMENTS_V3_FEATURE_FLAG = 'documents-v3-update-client-wise',
+    SERVICE_REQUEST = 'service_request_default_case',
 }
 
 export enum FEATURE_VARIABLES_CORRESPONDENCE_KEYS {
