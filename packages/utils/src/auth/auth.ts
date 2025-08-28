@@ -10,6 +10,8 @@ export enum FgaRoles {
   CALL_LOG_ACCESS = 'entity:zinnia_live_call_log_audio',
   ILLUSTRATIONS_EXPERIENCE = 'entity:zinnia_live_illustrations_experience',
   USAGE_DASHBOARD_ENTITY = 'entity:zinnia_live_usage_dashboard',
+  NOTES_ACCESS = 'entity:zinnia_live_notes',
+  CALL_LOGS_ZL = 'entity:zinnia_live_call_logs',
   TEST_HARNESS_ACCESS = 'entity:zinnia_live_test_harness',
   ZINNIA_INTERNAL_VIEWER = 'role:zinnia_internal_viewer',
 }
@@ -83,6 +85,16 @@ export function createBulkCheckBodyRequest(partyId: string) {
         user,
         relation: FgaRelation.UiAccess,
         object: FgaRoles.USAGE_DASHBOARD_ENTITY,
+      },
+      {
+        user,
+        relation: FgaRelation.UiAccess,
+        object: FgaRoles.NOTES_ACCESS,
+      },
+      {
+        user,
+        relation: FgaRelation.UiAccess,
+        object: FgaRoles.CALL_LOGS_ZL,
       },
     ],
   };

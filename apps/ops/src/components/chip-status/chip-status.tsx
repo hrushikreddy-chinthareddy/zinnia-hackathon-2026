@@ -38,6 +38,7 @@ const ChipStatus: FC<ChipStatusProps> = ({
     status,
     statusText,
     classNames,
+    ...props
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'status',
@@ -67,6 +68,7 @@ const ChipStatus: FC<ChipStatusProps> = ({
             variant={variant}
             data-testid="chip-status"
             label={toSentenceCase(dynamicText)}
+            {...props}
         />
     );
 };

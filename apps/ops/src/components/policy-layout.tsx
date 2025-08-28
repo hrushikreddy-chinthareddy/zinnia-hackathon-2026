@@ -10,6 +10,7 @@ import { StaticContentProvider } from '@deps/contexts/LayoutContexts/StaticConte
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { PolicySearchResult } from '@deps/types/search';
 
 interface PageLayoutProps extends PropsWithChildren {
     policyDetails?: Policy;
@@ -18,6 +19,7 @@ interface PageLayoutProps extends PropsWithChildren {
     hideSearch?: boolean;
     showJointOwner?: boolean;
     showLink?: boolean;
+    policyReference?: PolicySearchResult;
 }
 
 const PolicyLayout: React.FC<PageLayoutProps> = ({
@@ -27,6 +29,7 @@ const PolicyLayout: React.FC<PageLayoutProps> = ({
     hideSearch,
     showJointOwner,
     showLink,
+    policyReference,
 }) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();

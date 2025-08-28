@@ -31,6 +31,7 @@ import {
 import { CheckTupleResponse } from '@deps/types/fga';
 import {
     PolicyReferenceSearchResponse,
+    PolicySearchResult,
     SearchViewQuery,
 } from '@deps/types/search';
 import {
@@ -861,7 +862,7 @@ export const searchPolicySSR = async (
     limit: number,
     offset: number,
     logCtx: LoggingContext
-): Promise<any | null> => {
+): Promise<PolicySearchResult[] | null> => {
     const loggingContext = {
         ...logCtx,
         function: 'searchPolicySSR',
@@ -932,6 +933,57 @@ export const getAssociatedAddresses = async (
         console.error(
             'getAssociatedAddresses::An error occurred while getting associated party addresses',
             error
+        );
+        return error.response;
+    }
+};
+
+export const searchPolicies = async (
+    policyNumber: string,
+    planCode: string,
+    carrierIds: Carrier[],
+    limit: number,
+    offset: number
+): Promise<PolicySearchResult[] | null> => {
+    browserLogInfo(
+        'searchPolicies::Searching policy by policy number & plan code',
+        {
+            url: `${baseAppUrl}/api/policy/v1/policies/reference/search?offset=${offset}&limit=${limit}`,
+            policyNumber,
+            planCode,
+            carrierIds,
+            limit,
+            offset,
+        }
+    );
+    try {
+        limit = limit || 10;
+        offset = offset || 0;
+        const url = `${baseAppUrl}/api/policy/v1/policies/reference/search?offset=${offset}&limit=${limit}`;
+        const formData = {
+            policyNumber,
+            planCode,
+            carrierIds: carrierIds,
+        };
+
+        const { data } = await client.post<any, AxiosResponse<any>>(
+            url,
+            formData
+        );
+
+        return data.results;
+    } catch (error: any) {
+        browserLogError(
+            'searchPolicies::An error occurred while getting policies',
+            {
+                policyNumber,
+                planCode,
+                carrierIds,
+                limit,
+                offset,
+                error,
+                url: `${baseAppUrl}/api/policy/v1/policies/reference/search?offset=${offset}&limit=${limit}`,
+            }
         );
         return error.response;
     }

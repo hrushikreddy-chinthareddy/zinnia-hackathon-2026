@@ -56,14 +56,12 @@ export const TextWidget = function (props: WidgetProps) {
         );
     }
 
-    return (disabled as boolean) ? (
-        <div>{value}</div>
-    ) : readonly ? (
-        <>{value}</>
+    return readonly ? (
+        value
     ) : (
         <div className="max-w-sm flex w-full flex-col">
             <TextField
-                className={readonly ? style.readOnly : ''}
+                className={readonly || disabled ? style.readOnly : ''}
                 placeholder={placeholder}
                 id={id}
                 value={value || ''}
@@ -74,6 +72,7 @@ export const TextWidget = function (props: WidgetProps) {
                 status={
                     rawErrors && rawErrors?.length > 0 ? 'error' : undefined
                 }
+                readOnly={disabled}
             />
         </div>
     );

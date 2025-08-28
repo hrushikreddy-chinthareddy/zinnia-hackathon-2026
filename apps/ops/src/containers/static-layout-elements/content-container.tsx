@@ -66,10 +66,14 @@ const ContentContainer = ({
     );
 
     const policyDetails = new PolicyDetails(policy);
-    const { partyId: userPartyId, sessionId } = usePermissionsContext();
+    const {
+        partyId: userPartyId,
+        sessionId,
+        hasCallLogsAccess,
+    } = usePermissionsContext();
 
     const { data: quickLinks, isLoading: loadingQuickLinks } =
-        usePolicyQuickLinks(t, policyDetails);
+        usePolicyQuickLinks(t, policyDetails, hasCallLogsAccess);
 
     return (
         <>

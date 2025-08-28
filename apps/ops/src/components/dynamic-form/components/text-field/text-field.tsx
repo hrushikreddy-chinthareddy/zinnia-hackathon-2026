@@ -34,6 +34,7 @@ const TextField = (props: TextFieldProps) => {
         onFocus,
         onKeyDown,
         hideError,
+        readOnly,
     } = props;
     let { status } = props;
     if (hideError && status === 'error') {
@@ -61,6 +62,7 @@ const TextField = (props: TextFieldProps) => {
                 onKeyDown={(e) => {
                     e.key === 'Enter' ? e.preventDefault() : null;
                 }}
+                readOnly={readOnly}
             />
         </>
     );

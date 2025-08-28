@@ -144,7 +144,6 @@ export enum FEATURE_FLAGS {
     OPS_MANAGER_FEATURE = 'ops-manager-feature',
     DASHBOARD_NIGO_TAB = 'dashboard_nigo_tab',
     BENEFICIARY_CHANGE_TRANSACTION = 'beneficiary_change_transaction',
-    SERVICE_REQUEST_FORM_ENABLED = 'service_request_default_case',
     MARKET_CONNECT_ENABLED = 'market_connect_contacts',
     MARKET_CONNECT_PRODUCT_MATCHER = 'market_connect_product_matcher',
     MARKET_CONNECT_QUICK_QUOTE = 'market_connect_quick_quote',

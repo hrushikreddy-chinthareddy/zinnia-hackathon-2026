@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
+import { useOttp } from '@/components/providers/one-time-premium-payment/OttpContext';
 import { OttpSteps } from '@/components/providers/one-time-premium-payment/types';
 import { SteppedWorkflow } from '@/components/stepped-workflow/SteppedWorkflow';
 import { useComponentVisibility } from '@/hooks/use-component-visibility';
@@ -54,6 +55,7 @@ export const OneTimePremium = ({
     : `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/premium`;
 
   const baseTransactionUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/premium`;
+  const { state } = useOttp();
 
   return (
     <SteppedWorkflow
@@ -64,6 +66,7 @@ export const OneTimePremium = ({
       cancelUrl={cancelUrl}
       currentStepOverride={currentStepOverride}
       workflowSteps={Object.values(OttpStages)}
+      currentState={state}
     >
       {children}
     </SteppedWorkflow>

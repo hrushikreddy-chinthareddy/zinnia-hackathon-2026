@@ -62,7 +62,7 @@ export const BankData = ({
     <div>
       <div className={styles.bankName}>
         <div className="typography-labels-label-lg justify-between">
-          <BankName bankName={branchName} />
+          <BankName bankName={branchName} accountType={accountType} />
           <div className={styles.bankActions}>
             {editBankEnabled && <EditBankSidesheet />}
             {removeBankEnabled && onRemoveBank && (

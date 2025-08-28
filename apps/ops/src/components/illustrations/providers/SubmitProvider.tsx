@@ -1,7 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QuestionnaireEngine } from '@zinnia/form-engine-sdk';
 import Router from 'next/router';
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import {
+    createContext,
+    PropsWithChildren,
+    useContext,
+    useMemo,
+    useState,
+} from 'react';
 
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { createIllustration } from '@deps/queries/api/client/documents/v3/illustrations';
@@ -83,10 +89,10 @@ export function SubmitProvider({
                 path: factoryHandler.getIllustrationApiPath(),
             });
         },
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             const clientCase = factoryHandler.getClientCase();
 
-            saveIllustrationToClientCase(
+            await saveIllustrationToClientCase(
                 clientCase.id,
                 data.id,
                 factoryHandler.generateTitle(data, formInputs),
@@ -94,15 +100,17 @@ export function SubmitProvider({
                 factoryHandler.getPlanCode() // carrierProductId
             );
 
-            queryClient.invalidateQueries({
-                queryKey: ['illustrationData', data.id],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ['clientCaseData', clientCase.id],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ['productList', clientCase.id],
-            });
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: ['illustrationData', data.id],
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ['clientCaseData', clientCase.id],
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ['productList', clientCase.id],
+                }),
+            ]);
 
             const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data.id}`;
             Router.push(route, undefined, { shallow: true });
@@ -112,7 +120,7 @@ export function SubmitProvider({
     });
 
     const {
-        mutateAsync: quickQuoteIllustrationMutation,
+        mutateAsync: quickQuoteIllustrationMutateAsync,
         isPending: isLoadingQuickQuote,
     } = useMutation({
         mutationKey: ['saveOrderEntryAnswers'],
@@ -169,20 +177,31 @@ export function SubmitProvider({
         },
     });
 
+    const { isError } = createIllustrationMutation;
+
+    const { mutateAsync: createIllustrationMutateAsync } =
+        createIllustrationMutation;
+
+    const contextValue = useMemo(
+        () => ({
+            onSubmit: () =>
+                createIllustrationMutateAsync(questionnaireEngine, {}),
+            onQuickQuote: () =>
+                quickQuoteIllustrationMutateAsync(questionnaireEngine, {}),
+            isError,
+            isLoadingQuickQuote,
+        }),
+        [
+            createIllustrationMutateAsync,
+            quickQuoteIllustrationMutateAsync,
+            questionnaireEngine,
+            isError,
+            isLoadingQuickQuote,
+        ]
+    );
+
     return (
-        <SubmitContext.Provider
-            value={{
-                onSubmit: () =>
-                    createIllustrationMutation.mutateAsync(
-                        questionnaireEngine,
-                        {}
-                    ),
-                onQuickQuote: () =>
-                    quickQuoteIllustrationMutation(questionnaireEngine, {}),
-                isError: createIllustrationMutation.isError,
-                isLoadingQuickQuote,
-            }}
-        >
+        <SubmitContext.Provider value={contextValue}>
             {children}
         </SubmitContext.Provider>
     );
