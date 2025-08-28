@@ -4834,12 +4834,12 @@
                     "payout": "Pago",
                     "oneTimeWire": "Cable de una sola vez"
                 },
-                "bankOptions":{
+                "bankOptions": {
                     "accountType": "Tipo de cuenta",
                     "bankName": "Nombre del banco",
                     "routingNumber": "Número de ruta",
                     "accountNumber": "Número de cuenta",
-                    "endingIn":"Terminando en {{accountNumber}}"
+                    "endingIn": "Terminando en {{accountNumber}}"
                 }
             },
             "email": {
@@ -7319,7 +7319,8 @@
             "cancel": "Cancelar",
             "cancelArchiveAriaLabel": "Cancelar archivado de ilustración",
             "confirmArchiveAriaLabel": "Confirmar archivado de ilustración",
-            "addProductAriaLabel": "Boton para agregar un producto"
+            "addProductAriaLabel": "Boton para agregar un producto",
+            "editIllustration": "Editar ilustración"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",

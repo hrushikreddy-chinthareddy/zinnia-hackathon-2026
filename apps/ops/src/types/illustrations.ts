@@ -29,6 +29,7 @@ export interface IllustrationSummary {
     productId: string; // this is storing carrierProductId, final desition on which field pending
     status: IllustrationStatus;
     title?: string;
+    inputs?: string;
 }
 
 export interface IllustrationAgentDetails {

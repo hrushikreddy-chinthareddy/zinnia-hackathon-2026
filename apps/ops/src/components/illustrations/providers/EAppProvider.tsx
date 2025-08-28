@@ -34,7 +34,7 @@ export const EAppContext = createContext<EappContextValue | undefined>(
     undefined
 );
 
-export function EAppProvider(props: PropsWithChildren<{}>) {
+export function EAppProvider(props: PropsWithChildren) {
     const [eAppData, setEAppData] = useState<EAppData>({});
 
     return (
