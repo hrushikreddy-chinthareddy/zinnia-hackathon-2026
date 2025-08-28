@@ -37,10 +37,7 @@ export function Eapp(props: EappProps): ReactElement | null {
                         <SectionView section={activeSection} />
                     </div>
                     <div className={style.applicationSidebar}>
-                        <Sidebar
-                            isEdit={props.isEdit}
-                            illustrationId={props.illustrationId}
-                        />
+                        <Sidebar isEdit={props.isEdit} />
                     </div>
                 </div>
             </div>

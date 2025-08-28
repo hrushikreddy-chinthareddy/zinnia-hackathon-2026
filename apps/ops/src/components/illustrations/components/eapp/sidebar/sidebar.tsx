@@ -2,6 +2,7 @@ import { Button, Loader } from '@zinnia/bloom/components';
 import { FC, useEffect, useMemo } from 'react';
 
 import { ButtonType } from '@deps/components/button/button';
+import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
 import style from './sidebar.module.css';
@@ -32,10 +33,9 @@ const dataToTitleMap: Record<
 
 interface SidebarProps {
     isEdit?: boolean;
-    illustrationId?: string;
 }
 
-export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
+export const Sidebar: FC<SidebarProps> = ({ isEdit }) => {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
     const {
         onNewSubmit,
@@ -46,6 +46,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
         editIllustrationPending,
         createIllustrationPending,
     } = useSubmit();
+    const { selectedIllustration } = useSelectedIllustration();
     const { data } = useEapp();
 
     const isCompleted = useMemo(() => {
@@ -112,7 +113,13 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
                     <Button
                         expand
                         size="small"
-                        onClick={() => onEditSubmit(illustrationId)}
+                        onClick={() => {
+                            if (selectedIllustration?.illustration.id) {
+                                onEditSubmit(
+                                    selectedIllustration?.illustration.id
+                                );
+                            }
+                        }}
                         disabled={!isCompleted || editIllustrationPending}
                     >
                         Update

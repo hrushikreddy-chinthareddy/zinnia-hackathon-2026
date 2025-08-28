@@ -24,7 +24,7 @@ import { FarmersEntities } from '../helpers/farmers/famersBlueprintToIllustratio
 
 type SubmitContextValue = {
     onNewSubmit: () => void;
-    onEditSubmit: (oldIllustrationId?: string) => void;
+    onEditSubmit: (oldIllustrationId: string) => void;
     onQuickQuote: () => void;
     isError?: boolean;
     isLoadingQuickQuote: boolean;
@@ -147,7 +147,7 @@ export function SubmitProvider({
             oldIllustrationId,
         }: {
             engine: QuestionnaireEngine;
-            oldIllustrationId?: string;
+            oldIllustrationId: string;
         }) => {
             const payload = await getIllustrationPayload({
                 engine,
@@ -244,7 +244,7 @@ export function SubmitProvider({
             onNewSubmit: () => {
                 return createIllustrationMutateAsync(questionnaireEngine, {});
             },
-            onEditSubmit: (oldIllustrationId?: string) => {
+            onEditSubmit: (oldIllustrationId: string) => {
                 return editIllustrationMutateAsync(
                     { engine: questionnaireEngine, oldIllustrationId },
                     {}
