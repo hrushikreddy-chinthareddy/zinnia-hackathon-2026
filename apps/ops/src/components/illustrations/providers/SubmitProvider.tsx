@@ -100,29 +100,31 @@ export function SubmitProvider({
                 engine,
                 illustrationType: 'SINGLE_ILLUSTRATION',
             });
-            return createIllustration({
+            const inputs = engine.getAnswerResolverInstance().export();
+            const createResponse = await createIllustration({
                 bodyData: payload,
                 path: factoryHandler.getIllustrationApiPath(),
             });
-        },
-        onSuccess: async ({ data }) => {
             const clientCase = factoryHandler.getClientCase();
 
-            await saveIllustrationToClientCase(
+            return await saveIllustrationToClientCase(
                 clientCase.id,
-                data.id,
-                factoryHandler.generateTitle(data, {
+                createResponse.data.id,
+                factoryHandler.generateTitle(createResponse.data, {
                     ...formInputs,
                     illustrationType: 'SINGLE_ILLUSTRATION',
                 }),
                 factoryHandler.getPlanType(), // product type
                 factoryHandler.getPlanCode(), // carrierProductId
-                data.inputs // illustration inputs
+                JSON.stringify(inputs) // illustration inputs
             );
+        },
+        onSuccess: async ({ data }) => {
+            const clientCase = factoryHandler.getClientCase();
 
             await Promise.all([
                 queryClient.invalidateQueries({
-                    queryKey: ['illustrationData', data.id],
+                    queryKey: ['illustrationData', data?.id],
                 }),
                 queryClient.invalidateQueries({
                     queryKey: ['clientCaseData', clientCase.id],
@@ -132,7 +134,7 @@ export function SubmitProvider({
                 }),
             ]);
 
-            const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data.id}`;
+            const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data?.id}`;
             Router.push(route, undefined, { shallow: true });
 
             submitCallback?.();
