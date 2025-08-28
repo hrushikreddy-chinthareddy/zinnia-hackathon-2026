@@ -20,7 +20,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
       <AccordionItem value="item-1" className={styles.item}>
         <AccordionHeader>
           <AccordionTrigger className={styles.trigger}>
-            <Icon type={IconType.CHEVRON} className={styles.chevron} />
+            <Icon type={IconType.CHEVRON_RIGHT} className={styles.chevron} />
             <h3 className="typography-labels-label-lg">{sectionLabel}</h3>
           </AccordionTrigger>
         </AccordionHeader>

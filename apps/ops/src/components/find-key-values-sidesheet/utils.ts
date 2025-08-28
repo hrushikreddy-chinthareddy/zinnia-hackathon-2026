@@ -15,7 +15,17 @@ import {
     TermLifeDetailsViewInfo,
 } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DataDefinition } from '@deps/types/data';
+
+import { currencyFields } from './translations/currency-fields';
+import { dateFields } from './translations/date-fields';
+import { enums } from './translations/enums';
+import { exactTranslations } from './translations/exact';
+import { grammarCorrections } from './translations/grammar-corrections';
+import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
+import { DataTuple } from './types';
 
 /**
  * Takes in a policy and generates the key values search fields for that policy
@@ -64,4 +74,67 @@ export const generateKeyValueGroups = (
             items,
         };
     });
+};
+const splitIntoWords = (label: string) => {
+    return label.replace(/([a-z])([A-Z])/g, '$1 $2');
+};
+const formatAsSentenceCase = (label: string) => {
+    return label
+        .replace(
+            /\w+/g,
+            (s) => {
+                return s === s.toUpperCase() ? s : s.toLowerCase();
+            } // Convert words to lowercase, unless they are abbreviations
+        )
+        .replace(
+            /^./g,
+            (s) => s.toUpperCase() // Capitalize the first letter of the sentence
+        );
+};
+export const formatAsSectionLabel = (label: string) => {
+    const words = splitIntoWords(label);
+    const asSentence = formatAsSentenceCase(words);
+    return asSentence;
+};
+const formatAsDataLabel = (label: string) => {
+    if (exactTranslations[label]) {
+        return exactTranslations[label];
+    }
+    const words = splitIntoWords(label);
+    const formatted = Object.entries({
+        ...industryTermToAbbrev,
+        ...grammarCorrections,
+    }).reduce(
+        (acc, [key, val]) =>
+            acc.replace(
+                new RegExp(`\\b${key}\\b`, 'i'), // whole word match, case insensitive
+                val
+            ),
+        words
+    );
+    const asSentence = formatAsSentenceCase(formatted);
+    return asSentence;
+};
+const formatAsDataValue = (fieldName: string, fieldData: string | number) => {
+    switch (true) {
+        case typeof fieldData === 'string' && !!enums[fieldData]:
+            return enums[fieldData];
+        case currencyFields.has(fieldName):
+            return numberFormatify(fieldData);
+        case dateFields.has(fieldName):
+            return convertKebabedDateString(
+                (fieldData && String(fieldData)) || undefined
+            );
+        default:
+            return fieldData;
+    }
+};
+export const formatDataField = ([
+    fieldName,
+    fieldData,
+]: DataTuple): DataTuple => {
+    return [
+        formatAsDataLabel(fieldName),
+        formatAsDataValue(fieldName, fieldData),
+    ];
 };

@@ -24,5 +24,8 @@
   "html.format.wrapLineLength": 80,
   "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   }
 }
