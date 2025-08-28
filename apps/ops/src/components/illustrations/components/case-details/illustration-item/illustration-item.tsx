@@ -19,35 +19,33 @@ interface IllustrationItemProps {
 
 const IllustrationItem = ({
     illustration,
-    product,
     isSelected,
     isSelectableForApplication,
 }: IllustrationItemProps) => {
-    const { handleSelectIllustration, clientCaseId } =
-        useSelectedIllustration();
+    const { clientCaseId } = useSelectedIllustration();
     return (
-        <li>
+        <li
+            className={clsx(
+                styles.illustrationItem,
+                isSelected && styles.selected
+            )}
+        >
             <Link
                 href={`/illustrations/client-cases/${clientCaseId}/illustrate/${illustration.id}`}
                 shallow={true}
-                className={clsx(
-                    styles.illustrationItem,
-                    isSelected && styles.selected
-                )}
+                className={styles.illustrationLink}
             >
                 <Icon type={IconType.DOCUMENT_REPORT} />
                 <span className="flex-1">{illustration.title}</span>
                 <div className={clsx(styles.status)}>
                     <StatusBadge status={illustration.status} />
-                    <span className={clsx(styles.menu)}>
-                        <IllustrationMenu
-                            isSelectForApplicationVisible={
-                                isSelectableForApplication
-                            }
-                        ></IllustrationMenu>
-                    </span>
                 </div>
             </Link>
+            <span className={clsx(styles.menu)}>
+                <IllustrationMenu
+                    isSelectForApplicationVisible={isSelectableForApplication}
+                ></IllustrationMenu>
+            </span>
         </li>
     );
 };

@@ -50,9 +50,9 @@ export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageP
 
     const {
         data: clientCase,
-        isLoading,
+        isLoading: isLoadingClientCase,
         isError,
-        isFetching,
+        isFetching: isFetchingClientCase,
     } = useQuery({
         queryKey: ['clientCaseData', clientCaseId],
         structuralSharing: false,
@@ -88,7 +88,7 @@ export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageP
             clientCase={clientCase}
         >
             <div className={clsx(styles.caseIllustrations)}>
-                {((!clientCase && !isFetching) || isError) && (
+                {((!clientCase && !isFetchingClientCase) || isError) && (
                     <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-semantic-warning bg-white shadow-sm">
                         <CardInfo
                             icon={
@@ -105,7 +105,11 @@ export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageP
                 {clientCase && (
                     <>
                         <section className={clsx(styles.caseContainer)}>
-                            <Skeleton loading={isLoading || isFetching}>
+                            <Skeleton
+                                loading={
+                                    isLoadingClientCase || isFetchingClientCase
+                                }
+                            >
                                 <IllustrationCaseSumary
                                     clientCase={
                                         clientCase as IllustrationsClientCase
@@ -128,14 +132,20 @@ export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageP
                                         </div>
                                     )}
                                 </>
-
-                                <IllustrationProductList
-                                    carrierProductId={carrierProductId}
-                                    clientCase={clientCase}
-                                    illustrations={clientCase?.illustrations}
-                                    products={products}
-                                    isError={isErrorProducts}
-                                />
+                                {!isLoadingProducts &&
+                                    !isFetchingProducts &&
+                                    !isLoadingClientCase &&
+                                    !isFetchingClientCase && (
+                                        <IllustrationProductList
+                                            carrierProductId={carrierProductId}
+                                            clientCase={clientCase}
+                                            illustrations={
+                                                clientCase?.illustrations
+                                            }
+                                            products={products}
+                                            isError={isErrorProducts}
+                                        />
+                                    )}
                             </div>
                         </section>
                         <section className={clsx(styles.illustrationContainer)}>

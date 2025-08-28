@@ -1,11 +1,19 @@
 .illustrationItem {
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
     padding: var(--measure-dimension-gap-lg) var(--measure-dimension-gap-lg);
     cursor: pointer;
 
     &:hover {
+        background-color: var(--color-states-hover-surface-hover-fill-alt);
+    }
+
+    &:has(.illustrationLink:focus) {
+        outline: -webkit-focus-ring-color auto 1px;
+    }
+
+    &:has(.illustrationLink:focus):not(.selected) {
         background-color: var(--color-states-hover-surface-hover-fill-alt);
     }
 
@@ -22,5 +30,17 @@
     }
     .menu {
         margin-left: var(--measure-dimension-gap-lg);
+    }
+
+    .illustrationLink {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        outline: none;
+
+        &:focus {
+            outline: none;
+        }
     }
 }

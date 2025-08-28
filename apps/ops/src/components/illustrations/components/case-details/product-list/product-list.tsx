@@ -3,6 +3,7 @@ import {
     Button,
     Icon,
     IconType,
+    Loader,
     Text,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
@@ -92,10 +93,18 @@ const IllustrationProductList = ({
         useSelectedIllustration();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [showEmptyProducts, setShowEmptyProducts] = useState(false);
+    const [isProcessingProducts, setIsProcessingProducts] = useState(true);
     const sideSheet = useSideSheetContext();
     const { buildIllustrationHeader } = useIllustrationHeader();
     const router = useRouter();
     const { illustrationId } = router.query;
+
+    const navigateToIllustration = useCallback(
+        (id: string) => {
+            router.push(`${router.asPath}/${id}`);
+        },
+        [router]
+    );
 
     const handleNewIllustration = useCallback(
         (planCode: string) => {
@@ -133,51 +142,31 @@ const IllustrationProductList = ({
         }
     }, [products, carrierProductId, isError, handleNewIllustration]);
 
-    // TODO:Move this to the SelectedIllustrationProvider if possible
+    // Handle illustration selection from URL
     useEffect(() => {
-        if (
-            !illustrations.length ||
-            illustrationId === selectedIllustration?.illustration.id
-        ) {
-            return;
-        }
+        if (!illustrationId || !illustrations.length) return;
 
-        const firstAvailableIllustration = illustrationId
-            ? illustrations.find(
-                  (illustration) => illustration.id === illustrationId
-              )
-            : illustrations[0];
-
+        const targetIllustration = illustrations.find(
+            (ill) => ill.id === illustrationId
+        );
         const associatedProduct = products.find(
             (product) =>
-                product.carrierProductId ===
-                firstAvailableIllustration?.productId
+                product.carrierProductId === targetIllustration?.productId
         );
 
-        // Adding this check to prevent re-selecting the same
-        const isAlreadySelected =
-            selectedIllustration?.illustration?.id ===
-                firstAvailableIllustration?.id &&
-            selectedIllustration?.product?.carrierProductId ===
-                associatedProduct?.carrierProductId;
-
         if (
+            targetIllustration &&
             associatedProduct &&
-            firstAvailableIllustration &&
-            !isAlreadySelected
+            selectedIllustration?.illustration?.id !== illustrationId
         ) {
-            handleSelectIllustration(
-                associatedProduct,
-                firstAvailableIllustration
-            );
+            handleSelectIllustration(associatedProduct, targetIllustration);
         }
     }, [
-        handleSelectIllustration,
         illustrationId,
         illustrations,
         products,
         selectedIllustration?.illustration?.id,
-        selectedIllustration?.product?.carrierProductId,
+        handleSelectIllustration,
     ]);
 
     const availableProducts = useMemo(() => {
@@ -187,12 +176,11 @@ const IllustrationProductList = ({
         );
     }, [products, clientCase.insuredDetails?.dateOfBirth]);
 
-    const [filteredProducts, setFilteredProducts] =
-        useState<Product[]>(availableProducts);
-
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
     useEffect(() => {
         let cancelled = false;
         const filter = async () => {
+            setIsProcessingProducts(true);
             let filtered = availableProducts;
             if (clientCase.eAppId) {
                 filtered = await filterProductsByPlanCodeFromEapp(
@@ -200,7 +188,10 @@ const IllustrationProductList = ({
                     clientCase.eAppId
                 );
             }
-            if (!cancelled) setFilteredProducts(filtered);
+            if (!cancelled) {
+                setFilteredProducts(filtered);
+                setIsProcessingProducts(false);
+            }
         };
         filter();
         return () => {
@@ -209,24 +200,55 @@ const IllustrationProductList = ({
     }, [availableProducts, clientCase.eAppId]);
 
     const productsWithIllustrations: ProductWithIllustration[] =
-        filteredProducts.map((product) => {
-            const associatedIllustrations = illustrations.filter(
-                (illustration) =>
-                    illustration.productId === product.carrierProductId
-            );
-            return { ...product, illustrations: associatedIllustrations };
-        });
-
-    const productsWithIllustrationsCount = productsWithIllustrations.filter(
-        (product) => !!product.illustrations.length
-    ).length;
-    const productsWithoutIllustrationsCount = productsWithIllustrations.filter(
+        filteredProducts
+            .map((product) => {
+                const associatedIllustrations = illustrations.filter(
+                    (illustration) =>
+                        illustration.productId === product.carrierProductId
+                );
+                return { ...product, illustrations: associatedIllustrations };
+            })
+            .filter((product) => !!product.illustrations.length);
+    const productsWithoutIllustrations = productsWithIllustrations.filter(
         (product) => !product.illustrations.length
-    ).length;
+    );
+    const productsWithIllustrationsCount = productsWithIllustrations.length;
+    const productsWithoutIllustrationsCount =
+        productsWithoutIllustrations.length;
+
+    // Auto-select first illustration when none is selected and route to it
+    useEffect(() => {
+        if (
+            !productsWithIllustrations?.[0]?.illustrations?.length ||
+            illustrationId
+        ) {
+            return;
+        }
+
+        const firstIllustration = productsWithIllustrations[0].illustrations[0];
+        if (firstIllustration) {
+            navigateToIllustration(firstIllustration.id);
+        }
+    }, [productsWithIllustrations, illustrationId, navigateToIllustration]);
+
+    // Show loader while processing products
+    if (isProcessingProducts) {
+        return (
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: '2rem',
+                }}
+            >
+                <Loader />
+            </div>
+        );
+    }
 
     return (
         <article className={styles.productSelection}>
-            {!illustrations.length && (
+            {productsWithIllustrationsCount === 0 && (
                 <header
                     className={clsx(
                         styles.selectionTitle,
@@ -254,27 +276,33 @@ const IllustrationProductList = ({
                         )}
                 </ul>
             )}
-
-            <ul className={styles.productList}>
-                {!isError &&
-                    productsWithIllustrations
-                        .filter((product) => !!product.illustrations.length)
-                        .map(
-                            (product: ProductWithIllustration, idx: number) => {
-                                return (
-                                    <IllustrationProductItem
-                                        key={idx}
-                                        product={product}
-                                        illustrations={product.illustrations}
-                                        eAppId={clientCase.eAppId}
-                                        onNewIllustration={
-                                            handleNewIllustration
-                                        }
-                                    />
-                                );
-                            }
-                        )}
-            </ul>
+            {productsWithIllustrationsCount > 0 && (
+                <ul className={styles.productList}>
+                    {!isError &&
+                        productsWithIllustrations
+                            .filter((product) => !!product.illustrations.length)
+                            .map(
+                                (
+                                    product: ProductWithIllustration,
+                                    idx: number
+                                ) => {
+                                    return (
+                                        <IllustrationProductItem
+                                            key={idx}
+                                            product={product}
+                                            illustrations={
+                                                product.illustrations
+                                            }
+                                            eAppId={clientCase.eAppId}
+                                            onNewIllustration={
+                                                handleNewIllustration
+                                            }
+                                        />
+                                    );
+                                }
+                            )}
+                </ul>
+            )}
 
             {!isError &&
                 productsWithIllustrationsCount > 0 &&
@@ -325,7 +353,7 @@ const IllustrationProductList = ({
                         )}
                 </ul>
             )}
-            {/* </Skeleton> */}
+
             {(isError || !products) && (
                 <div className={styles.noProducts}>
                     <Icon
