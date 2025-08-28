@@ -22,13 +22,9 @@ import { useQuestionnaireEngine } from './QuestionnaireEngineProvider';
 import { IllustrationHandler } from '../helpers/factory/illustrationsHandlerAbstractClass';
 import { FarmersEntities } from '../helpers/farmers/famersBlueprintToIllustrationPayloadTL0101';
 
-interface onSubmitArgs {
-    isEdit?: boolean;
-    oldIllustrationId?: string;
-}
-
 type SubmitContextValue = {
-    onSubmit: (args: onSubmitArgs) => void;
+    onNewSubmit: () => void;
+    onEditSubmit: (oldIllustrationId?: string) => void;
     onQuickQuote: () => void;
     isError?: boolean;
     isLoadingQuickQuote: boolean;
@@ -251,15 +247,14 @@ export function SubmitProvider({
 
     const contextValue: SubmitContextValue = useMemo(
         () => ({
-            onSubmit: ({ isEdit, oldIllustrationId }) => {
-                if (isEdit) {
-                    return editIllustrationMutateAsync(
-                        { engine: questionnaireEngine, oldIllustrationId },
-                        {}
-                    );
-                }
-
+            onNewSubmit: () => {
                 return createIllustrationMutateAsync(questionnaireEngine, {});
+            },
+            onEditSubmit: (oldIllustrationId?: string) => {
+                return editIllustrationMutateAsync(
+                    { engine: questionnaireEngine, oldIllustrationId },
+                    {}
+                );
             },
             onQuickQuote: () =>
                 quickQuoteIllustrationMutateAsync(questionnaireEngine, {}),

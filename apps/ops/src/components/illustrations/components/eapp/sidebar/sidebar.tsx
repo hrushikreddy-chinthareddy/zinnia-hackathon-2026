@@ -38,7 +38,8 @@ interface SidebarProps {
 export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
     const {
-        onSubmit,
+        onNewSubmit,
+        onEditSubmit,
         onQuickQuote,
         isError,
         isLoadingQuickQuote,
@@ -101,7 +102,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
                 <Button
                     expand
                     size="small"
-                    onClick={() => onSubmit({ isEdit: false })}
+                    onClick={onNewSubmit}
                     disabled={!isCompleted || createIllustrationPending}
                     mode={isEdit ? ButtonType.Secondary : ButtonType.Primary}
                 >
@@ -111,12 +112,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
                     <Button
                         expand
                         size="small"
-                        onClick={() =>
-                            onSubmit({
-                                isEdit: true,
-                                oldIllustrationId: illustrationId,
-                            })
-                        }
+                        onClick={() => onEditSubmit(illustrationId)}
                         disabled={!isCompleted || editIllustrationPending}
                     >
                         Update
