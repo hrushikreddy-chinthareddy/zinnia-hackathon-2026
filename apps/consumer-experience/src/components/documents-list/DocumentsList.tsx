@@ -29,12 +29,14 @@ export default function DocumentsList({
   planCode,
   policyNumber,
   lineOfBusiness,
+  shouldUseV2 = false,
 }: {
   docCategory: DocumentCategory;
   documents: ExtendedDocumentMeta[] | DocumentV3SearchItem[];
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
+  shouldUseV2?: boolean;
 }) {
   if (!documents?.length) {
     return (
@@ -58,10 +60,12 @@ export default function DocumentsList({
           documentClassification:
             d.documentClassification ||
             (d as ExtendedDocumentMeta)?.downloadSource,
-          fileName:
-            d?.displayName?.replace(/[^A-Z0-9]/gi, '') ??
-            d.documentId ??
-            d.documentID,
+          ...(shouldUseV2 && {
+            fileName:
+              d?.displayName?.replace(/[^A-Z0-9]/gi, '') ??
+              d.documentId ??
+              d.documentID,
+          }),
           docCategory,
         };
 

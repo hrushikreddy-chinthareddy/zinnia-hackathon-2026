@@ -150,7 +150,12 @@ export default function DocumentsResultsTable({
                 <TableRow>
                     <TableHeaderCell>
                         <div className="flex flex-row items-center gap-1">
-                            {t('documentId')}
+                            <Typography
+                                variant={TypographyVariant.BodySmBold}
+                                asTag="h3"
+                            >
+                                {t('documentId')}
+                            </Typography>
                             {documentType !==
                                 DocumentTypeView.Correspondence && (
                                 <Popover
@@ -178,7 +183,12 @@ export default function DocumentsResultsTable({
                     <TableHeaderCell>{t('fileType')}</TableHeaderCell>
                     <TableHeaderCell>
                         <div className="flex flex-row items-center gap-1">
-                            {t('actions')}
+                            <Typography
+                                variant={TypographyVariant.BodySmBold}
+                                asTag="h3"
+                            >
+                                {t('actions')}
+                            </Typography>
                             <Popover
                                 body={t('actionsTooltip')}
                                 title={t('actions') as string}

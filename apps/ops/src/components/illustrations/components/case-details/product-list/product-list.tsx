@@ -1,21 +1,21 @@
-import { Skeleton } from '@radix-ui/themes';
-import { useQuery } from '@tanstack/react-query';
 import {
     BodyVariant,
     Button,
     Icon,
     IconType,
+    Loader,
     Text,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useIllustrationHeader } from '@deps/components/illustrations/helpers/hooks/use-illustration-header';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { getProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
+import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
 import {
     IllustrationsClientCase,
     IllustrationSummary,
@@ -26,8 +26,8 @@ import IllustrationProductItem from './product-item';
 import styles from './product-list.module.css';
 import EappContainer from '../../eapp/eapp-container';
 
-export function isJuvenile(clientCase: IllustrationsClientCase): boolean {
-    const dob = new Date(clientCase.insuredDetails?.dateOfBirth || '');
+export function isJuvenile(dateOfBirth?: string): boolean {
+    const dob = new Date(dateOfBirth || '');
 
     if (!dob || dob.toString() === 'Invalid Date') {
         return false; // no DOB provided, cannot determine age
@@ -48,13 +48,26 @@ export function isJuvenile(clientCase: IllustrationsClientCase): boolean {
 
 export function findAvailableProducts(
     products: Product[],
-    clientCase: IllustrationsClientCase
+    insuredDateOfBirth?: string
 ): Product[] {
     return products.filter(
         (product) =>
             product.availableToSell &&
-            !(product.productType === 'TERM' && isJuvenile(clientCase))
+            !(product.productType === 'TERM' && isJuvenile(insuredDateOfBirth))
     );
+}
+
+async function filterProductsByPlanCodeFromEapp(
+    products: Product[],
+    eAppId: string | undefined
+): Promise<Product[]> {
+    if (!eAppId) return products;
+
+    const nbReq = await getNewBusinessEApp(eAppId);
+    if (!nbReq.data?.policy?.planCode) return products;
+
+    const planCode = nbReq.data?.policy?.planCode;
+    return products.filter((product) => product.planCode === planCode);
 }
 
 type ProductWithIllustration = Product & {
@@ -65,46 +78,57 @@ interface IllustrationProductListProps {
     clientCase: IllustrationsClientCase;
     illustrations?: IllustrationSummary[];
     carrierProductId?: string;
+    products?: Product[];
+    isError?: boolean;
     onNewIllustration?: (planCode: string) => void;
 }
 const IllustrationProductList = ({
     clientCase,
     illustrations = [],
     carrierProductId = '',
+    products = [],
+    isError = false,
 }: IllustrationProductListProps) => {
-    const { handleSelectIllustration } = useSelectedIllustration();
+    const { selectedIllustration, handleSelectIllustration } =
+        useSelectedIllustration();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const clientCaseId = clientCase.id;
     const [showEmptyProducts, setShowEmptyProducts] = useState(false);
+    const [isProcessingProducts, setIsProcessingProducts] = useState(true);
     const sideSheet = useSideSheetContext();
+    const { buildIllustrationHeader } = useIllustrationHeader();
     const router = useRouter();
     const { illustrationId } = router.query;
 
-    const {
-        data: products = [],
-        isLoading,
-        isError,
-        isFetching,
-    } = useQuery({
-        queryKey: ['productList', clientCaseId],
-        queryFn: () => {
-            return getProductsByCarrier('', 'FNWL', '');
+    const navigateToIllustration = useCallback(
+        (id: string) => {
+            router.push(`${router.asPath}/${id}`);
         },
-        select: (data) => data.data || [],
-        enabled: true,
-    });
+        [router]
+    );
 
-    const handleNewIllustration = (planCode: string) => {
-        if (planCode && clientCase) {
+    const handleNewIllustration = useCallback(
+        (planCode: string) => {
+            if (!planCode || !clientCase) {
+                console.log('PlanCode is missing.');
+                return;
+            }
+            const actionTitle = t(
+                'clientCase.productList.addIllustration'
+            ) as string;
+            const eappHeader = buildIllustrationHeader(
+                planCode,
+                clientCase,
+                actionTitle
+            );
             sideSheet.changeSideSheetContent(
-                'Add Illustration',
+                eappHeader,
                 <EappContainer planCode={planCode} clientCase={clientCase} />
             );
             sideSheet.handleOpen(true, '50%');
-        } else {
-            console.log('PlanCode is missing.');
-        }
-    };
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- sideSheet changes on mutation
+        [clientCase]
+    );
 
     // if a carrierProductId is passed to the component, open the new illustraion panel for that product
     useEffect(() => {
@@ -116,57 +140,115 @@ const IllustrationProductList = ({
                 handleNewIllustration(preselectedProduct.planCode);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [products]);
+    }, [products, carrierProductId, isError, handleNewIllustration]);
 
+    // Handle illustration selection from URL
     useEffect(() => {
-        if (illustrations.length > 0) {
-            let firstAvailableIllustration;
+        if (!illustrationId || !illustrations.length) return;
 
-            if (illustrationId) {
-                firstAvailableIllustration = illustrations.find(
-                    (illustration) => illustration.id === illustrationId
-                );
-            } else {
-                firstAvailableIllustration = illustrations[0];
-            }
-            const associatedProduct = products.find(
-                (product) =>
-                    product.carrierProductId ===
-                    firstAvailableIllustration?.productId
-            );
+        const targetIllustration = illustrations.find(
+            (ill) => ill.id === illustrationId
+        );
+        const associatedProduct = products.find(
+            (product) =>
+                product.carrierProductId === targetIllustration?.productId
+        );
 
-            if (associatedProduct && firstAvailableIllustration) {
-                handleSelectIllustration(
-                    associatedProduct,
-                    firstAvailableIllustration
-                );
-            }
+        if (
+            targetIllustration &&
+            associatedProduct &&
+            selectedIllustration?.illustration?.id !== illustrationId
+        ) {
+            handleSelectIllustration(associatedProduct, targetIllustration);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [illustrations, products]);
+    }, [
+        illustrationId,
+        illustrations,
+        products,
+        selectedIllustration?.illustration?.id,
+        handleSelectIllustration,
+    ]);
 
-    const availableProducts = findAvailableProducts(products, clientCase);
+    const availableProducts = useMemo(() => {
+        return findAvailableProducts(
+            products,
+            String(clientCase.insuredDetails?.dateOfBirth || '')
+        );
+    }, [products, clientCase.insuredDetails?.dateOfBirth]);
+
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+    useEffect(() => {
+        let cancelled = false;
+        const filter = async () => {
+            setIsProcessingProducts(true);
+            let filtered = availableProducts;
+            if (clientCase.eAppId) {
+                filtered = await filterProductsByPlanCodeFromEapp(
+                    availableProducts,
+                    clientCase.eAppId
+                );
+            }
+            if (!cancelled) {
+                setFilteredProducts(filtered);
+                setIsProcessingProducts(false);
+            }
+        };
+        filter();
+        return () => {
+            cancelled = true;
+        };
+    }, [availableProducts, clientCase.eAppId]);
 
     const productsWithIllustrations: ProductWithIllustration[] =
-        availableProducts.map((product) => {
-            const associatedIllustrations = illustrations.filter(
-                (illustration) =>
-                    illustration.productId === product.carrierProductId
-            );
-            return { ...product, illustrations: associatedIllustrations };
-        });
-
-    const productsWithIllustrationsCount = productsWithIllustrations.filter(
-        (product) => !!product.illustrations.length
-    ).length;
-    const productsWithoutIllustrationsCount = productsWithIllustrations.filter(
+        filteredProducts
+            .map((product) => {
+                const associatedIllustrations = illustrations.filter(
+                    (illustration) =>
+                        illustration.productId === product.carrierProductId
+                );
+                return { ...product, illustrations: associatedIllustrations };
+            })
+            .filter((product) => !!product.illustrations.length);
+    const productsWithoutIllustrations = productsWithIllustrations.filter(
         (product) => !product.illustrations.length
-    ).length;
+    );
+    const productsWithIllustrationsCount = productsWithIllustrations.length;
+    const productsWithoutIllustrationsCount =
+        productsWithoutIllustrations.length;
+
+    // Auto-select first illustration when none is selected and route to it
+    useEffect(() => {
+        if (
+            !productsWithIllustrations?.[0]?.illustrations?.length ||
+            illustrationId
+        ) {
+            return;
+        }
+
+        const firstIllustration = productsWithIllustrations[0].illustrations[0];
+        if (firstIllustration) {
+            navigateToIllustration(firstIllustration.id);
+        }
+    }, [productsWithIllustrations, illustrationId, navigateToIllustration]);
+
+    // Show loader while processing products
+    if (isProcessingProducts) {
+        return (
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: '2rem',
+                }}
+            >
+                <Loader />
+            </div>
+        );
+    }
 
     return (
         <article className={styles.productSelection}>
-            {!illustrations.length && (
+            {productsWithIllustrationsCount === 0 && (
                 <header
                     className={clsx(
                         styles.selectionTitle,
@@ -176,26 +258,25 @@ const IllustrationProductList = ({
                     {t('clientCase.productList.selectProduct')}
                 </header>
             )}
-            <Skeleton loading={isLoading || isFetching}>
-                {productsWithIllustrationsCount === 0 && (
-                    <ul className={styles.productList}>
-                        {!isError &&
-                            availableProducts.map(
-                                (product: Product, idx: number) => {
-                                    return (
-                                        <IllustrationProductItem
-                                            key={idx}
-                                            product={product}
-                                            onNewIllustration={
-                                                handleNewIllustration
-                                            }
-                                        />
-                                    );
-                                }
-                            )}
-                    </ul>
-                )}
-
+            {productsWithIllustrationsCount === 0 && (
+                <ul className={styles.productList}>
+                    {!isError &&
+                        filteredProducts.map(
+                            (product: Product, idx: number) => {
+                                return (
+                                    <IllustrationProductItem
+                                        key={idx}
+                                        product={product}
+                                        onNewIllustration={
+                                            handleNewIllustration
+                                        }
+                                    />
+                                );
+                            }
+                        )}
+                </ul>
+            )}
+            {productsWithIllustrationsCount > 0 && (
                 <ul className={styles.productList}>
                     {!isError &&
                         productsWithIllustrations
@@ -221,64 +302,58 @@ const IllustrationProductList = ({
                                 }
                             )}
                 </ul>
+            )}
 
-                {!isError &&
-                    productsWithIllustrationsCount > 0 &&
-                    productsWithoutIllustrationsCount > 0 && (
-                        <Button
-                            key={'add-product-btn'}
-                            mode="link"
-                            data-testid="addproduct-link-btn"
-                            aria-label={
-                                t(
-                                    'clientCase.illustrationDetails.addProductAriaLabel'
-                                ) as string
-                            }
-                            type="button"
-                            size="small"
-                            className={clsx(styles.displayProducts)}
-                            onClick={() =>
-                                setShowEmptyProducts(!showEmptyProducts)
-                            }
-                        >
-                            <Icon type={IconType.ADD}></Icon>
-                            <span>
-                                {t('clientCase.productList.seeProducts')}
-                            </span>
-                            <Icon
-                                type={IconType.CHEVRON}
-                                className={clsx(
-                                    'text-semantic-warning',
-                                    styles.chevron,
-                                    showEmptyProducts && styles.arrowDown
-                                )}
-                            ></Icon>
-                        </Button>
-                    )}
-
-                {showEmptyProducts && (
-                    <ul className={styles.productList}>
-                        {productsWithIllustrations
-                            .filter((product) => !product.illustrations.length)
-                            .map(
-                                (
-                                    product: ProductWithIllustration,
-                                    idx: number
-                                ) => {
-                                    return (
-                                        <IllustrationProductItem
-                                            key={idx}
-                                            product={product}
-                                            onNewIllustration={
-                                                handleNewIllustration
-                                            }
-                                        />
-                                    );
-                                }
+            {!isError &&
+                productsWithIllustrationsCount > 0 &&
+                productsWithoutIllustrationsCount > 0 && (
+                    <Button
+                        key={'add-product-btn'}
+                        mode="link"
+                        data-testid="addproduct-link-btn"
+                        aria-label={
+                            t(
+                                'clientCase.illustrationDetails.addProductAriaLabel'
+                            ) as string
+                        }
+                        type="button"
+                        size="small"
+                        className={clsx(styles.displayProducts)}
+                        onClick={() => setShowEmptyProducts(!showEmptyProducts)}
+                    >
+                        <Icon type={IconType.ADD}></Icon>
+                        <span>{t('clientCase.productList.seeProducts')}</span>
+                        <Icon
+                            type={IconType.CHEVRON}
+                            className={clsx(
+                                'text-semantic-warning',
+                                styles.chevron,
+                                showEmptyProducts && styles.arrowDown
                             )}
-                    </ul>
+                        ></Icon>
+                    </Button>
                 )}
-            </Skeleton>
+
+            {showEmptyProducts && (
+                <ul className={styles.productList}>
+                    {productsWithIllustrations
+                        .filter((product) => !product.illustrations.length)
+                        .map(
+                            (product: ProductWithIllustration, idx: number) => {
+                                return (
+                                    <IllustrationProductItem
+                                        key={idx}
+                                        product={product}
+                                        onNewIllustration={
+                                            handleNewIllustration
+                                        }
+                                    />
+                                );
+                            }
+                        )}
+                </ul>
+            )}
+
             {(isError || !products) && (
                 <div className={styles.noProducts}>
                     <Icon

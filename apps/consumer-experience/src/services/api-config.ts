@@ -21,6 +21,7 @@ export const policyApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/policy/$
 export const consumerExperienceAPIBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/consumer-experience/v1`;
 export const enterprisePolicySearchBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/enterprise-search/v1`;
 export const productRateBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/product-rate/v1/carriers`;
+export const enterpriseCaseSearchBaseUrl = enterprisePolicySearchBaseUrl;
 export const caseManagementBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/case/v1/cases`;
 export const documentV2ApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/document/v2`;
 export const documentV3ApiBaseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/document/v3`;

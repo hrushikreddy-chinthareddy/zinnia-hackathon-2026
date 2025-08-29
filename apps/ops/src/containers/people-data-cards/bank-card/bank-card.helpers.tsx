@@ -1,7 +1,9 @@
 import { AccountType, BankAccount } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
+import { useContext } from 'react';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import { BankAccountWithPending } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
@@ -9,25 +11,68 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import {
     formatCardExpirationDate,
     formatAccountNumber,
     toTitleCase,
 } from '@deps/helpers/string.helpers';
+import {
+    NonFinancialTransactionActions,
+    NonFinancialTransactions,
+} from '@deps/queries/api/bpm-non-financial';
+import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+
+import { SideSheetPeopleHeaderProps } from '../side-sheet-people-header/side-sheet-people-header';
 
 interface BankAccountsProps {
     bankAccounts: BankAccount[];
+    onEditClick: (params: {
+        bankAccount: BankAccount | BankAccountWithPending;
+        header: SideSheetPeopleHeaderProps;
+    }) => void;
+    isEligible?: boolean;
 }
 
-export const BankAccounts = ({ bankAccounts }: BankAccountsProps) => {
+const editIconColor = '#00628B';
+
+export const BankAccounts = ({
+    bankAccounts,
+    onEditClick,
+    isEligible,
+}: BankAccountsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.bank.general',
     });
     const { t: defaultT } = useTranslation();
+    const { policyDetails } = useContext(PolicyData);
+    const { featureFlags } = useOptimizely();
+    const shouldShowBankEdit =
+        featureFlags[FEATURE_FLAGS.BANK_CHANGE_TRANSACTION];
 
     if (!bankAccounts?.length) return null;
+
+    const editClickHandler = (
+        onEditClick: (params: {
+            bankAccount: BankAccount | BankAccountWithPending;
+            header: SideSheetPeopleHeaderProps;
+        }) => void,
+        bankAccount: BankAccount
+    ) => {
+        return () => {
+            onEditClick({
+                bankAccount,
+                header: {
+                    action: NonFinancialTransactionActions.Edit,
+                    transaction: NonFinancialTransactions.BankAccount,
+                },
+            });
+        };
+    };
 
     return (
         <>
@@ -54,18 +99,54 @@ export const BankAccounts = ({ bankAccounts }: BankAccountsProps) => {
                     >
                         <div className="flex items-center gap-1">
                             <PiiWrapper>
-                                <Label
-                                    label={
-                                        branchName?.toLocaleUpperCase() ??
-                                        DEFAULT_ERROR_STRING
-                                    }
-                                    sentenceCase={false}
-                                    variant={
-                                        isBankAccount
-                                            ? LabelVariant.LabelLg
-                                            : LabelVariant.LabelSm
-                                    }
-                                />
+                                <div className="flex items-center gap-1">
+                                    <Label
+                                        label={
+                                            branchName?.toLocaleUpperCase() ??
+                                            DEFAULT_ERROR_STRING
+                                        }
+                                        sentenceCase={false}
+                                        variant={
+                                            isBankAccount
+                                                ? LabelVariant.LabelLg
+                                                : LabelVariant.LabelSm
+                                        }
+                                    />
+                                    {shouldShowBankEdit && (
+                                        <>
+                                            {isEligible ? (
+                                                <EditIcon
+                                                    height={16}
+                                                    width={16}
+                                                    onClick={editClickHandler(
+                                                        onEditClick,
+                                                        bankAccount
+                                                    )}
+                                                    data-testid="edit-bank-account-icon"
+                                                    color={editIconColor}
+                                                    className={`ml-1 ${
+                                                        !isEligible
+                                                            ? 'pointer-events-none opacity-50'
+                                                            : 'cursor-pointer'
+                                                    }`}
+                                                />
+                                            ) : (
+                                                <TempNavInactive
+                                                    hideIcon
+                                                    tooltipBody={t(
+                                                        'permissionDeniedTooltip'
+                                                    )}
+                                                >
+                                                    <EditIcon
+                                                        height={16}
+                                                        width={16}
+                                                        data-testid="edit-bank-account-icon-disabled"
+                                                    />
+                                                </TempNavInactive>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
                             </PiiWrapper>
                             {isPending && <PendingTag />}
                         </div>

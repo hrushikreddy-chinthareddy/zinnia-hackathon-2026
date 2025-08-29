@@ -21,6 +21,7 @@ import {
     useState,
 } from 'react';
 
+import { EntityTypeValue } from '@deps/constants/policy';
 import { Signature } from '@deps/models/case/task';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -51,12 +52,13 @@ export type ExtendedPhone = Omit<Phone, 'endDate'> & {
     endDate?: string | null;
 };
 
-export type Party = Omit<PartyBase, 'identifications'> & {
+export type Party = Omit<PartyBase, 'identifications' | 'entityType'> & {
     partyId?: string;
     identifications?: RoleIdentification[];
     addresses: ExtendedAddress[];
     phones: ExtendedPhone[];
     emails: ExtendedEmail[];
+    entityType: EntityTypeValue | null;
 };
 
 export type RoleData = {
@@ -131,6 +133,7 @@ export const defaultRoleValue: RoleChangeContextType = {
                     emailAddress: '',
                 },
             ],
+            entityType: EntityTypeValue.Other,
         },
         caseId: undefined,
     },

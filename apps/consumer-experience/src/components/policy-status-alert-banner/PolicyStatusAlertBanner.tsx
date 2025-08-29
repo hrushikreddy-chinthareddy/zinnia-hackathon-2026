@@ -9,10 +9,12 @@ import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
 import { usePathname } from 'next/navigation';
 
 import { Link } from '@/components/link/Link';
+import { useFeatureFlagsFor } from '@/hooks/use-feature-flags';
 import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 
@@ -34,6 +36,9 @@ export const PolicyStatusAlertBanner = ({
   lineOfBusiness = LineOfBusiness.LIFE,
 }: PolicyStatusAlertBannerProps) => {
   const pathName = usePathname();
+  const { data: freeLookCancelEnabled } = useFeatureFlagsFor(
+    FEATURE_FLAGS.TRANSACTION_FREE_LOOK_CANCEL
+  );
 
   const showFreelookBannerPaths = new Set([
     `/coverage/policies/${planCode}/${policyNumber}`,
@@ -79,12 +84,25 @@ export const PolicyStatusAlertBanner = ({
 
     case FeatureType.FREELOOK:
       if (canShowFreelookBanner) {
+        const statusAction = freeLookCancelEnabled ? (
+          <Link
+            isInternal
+            href={`/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/free-look-cancel/information`}
+          >
+            click here
+          </Link>
+        ) : (
+          <span>
+            call <CarrierPhoneNumber />
+          </span>
+        );
+
         statusContent = {
           text: (
             <span className="typography-nav-links-sm-inline">
               You’re still in the free look period, a {policyStatusData.period}
               -day window after policy issuance when you can cancel without
-              penalty. If you'd like to cancel, call <CarrierPhoneNumber />.
+              penalty. If you'd like to cancel, {statusAction}.
             </span>
           ),
           variant: BannerVariant.Information,

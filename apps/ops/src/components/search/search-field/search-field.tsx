@@ -7,7 +7,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
@@ -29,6 +29,7 @@ export const SearchFieldContainer = ({
     activeLabels,
     onChange,
     onClear,
+    values,
     inputClasses,
 }: SearchFieldProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -40,6 +41,7 @@ export const SearchFieldContainer = ({
         errorMessage,
     } = activeLabels;
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const inputValue = values[activeLabels?.value || ''] || '';
 
     const inputClass = () => {
         switch (activeLabels.value) {
@@ -59,12 +61,11 @@ export const SearchFieldContainer = ({
     };
 
     const [hasValue, setHasValue] = useState(false);
+    useEffect(() => {
+        setHasValue(!!inputValue);
+    }, [inputValue]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value !== '') {
-            setHasValue(true);
-        } else {
-            setHasValue(false);
-        }
         if (onChange) {
             const text = e?.target?.value || '';
             onChange(text, policyKey as PolicySearchKeys);
@@ -79,8 +80,6 @@ export const SearchFieldContainer = ({
                 color="#676767"
             />
             <input
-                // We're using an aria attribute here because if there are multiple inputs they couldn't use one label attached to them both
-                aria-labelledby="case-search-label"
                 placeholder={placeholder ? placeholder : toSentenceCase(label)}
                 className={clsx(
                     styles.input,
@@ -91,6 +90,7 @@ export const SearchFieldContainer = ({
                 key={activeLabels.value}
                 ref={inputRef}
                 onChange={handleChange}
+                value={inputValue}
             />
             {hasValue && (
                 <Button
@@ -123,7 +123,7 @@ const SearchField = ({ activeLabels, values, ...rest }: SearchFieldProps) => {
 
         if (group?.length) {
             fields = (
-                <fieldset className={styles.fieldSet}>
+                <div className={styles.fieldSet}>
                     {group.map((g, index) => (
                         <SearchFieldContainer
                             key={'search-field-container-key-' + index}
@@ -132,7 +132,7 @@ const SearchField = ({ activeLabels, values, ...rest }: SearchFieldProps) => {
                             {...rest}
                         />
                     ))}
-                </fieldset>
+                </div>
             );
         } else {
             fields = (

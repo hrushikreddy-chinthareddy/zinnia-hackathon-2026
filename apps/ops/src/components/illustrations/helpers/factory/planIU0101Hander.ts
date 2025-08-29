@@ -23,6 +23,7 @@ import {
     InsuredRoleCodes,
     NonInsuredRoleCodes,
     SubStandardRating,
+    UnderwritingClass,
 } from '../illustrationApiSchemas';
 import { riderNamesMap } from '../rider-names-map';
 
@@ -255,11 +256,23 @@ const farmersEntitiesSchema = t.object(
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
+        'longTermHoldingAccountCurrentIllustratedRate',
+        t.union(t.number, t.undefined)
+    ),
+    t.optionalProperty(
         'sp500IndexedAccountAllocation',
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
+        'sp500IndexedAccountCurrentIllustratedRate',
+        t.union(t.number, t.undefined)
+    ),
+    t.optionalProperty(
         'spMarc5PercentErIndexedAccountAllocation',
+        t.union(t.number, t.undefined)
+    ),
+    t.optionalProperty(
+        'spMarc5PercentErIndexedAccountCurrentIllustratedRate',
         t.union(t.number, t.undefined)
     ),
     t.optionalProperty(
@@ -300,8 +313,25 @@ const FARMERS_HARDCODED_DATA = {
 } as const;
 
 // TODO: these constants are shared across all blueprints.
-const SUBSTANDARD_PREMIUM_CLASSES = ['STANDARDNONTOBACCO', 'STANDARDTOBACCO'];
+const SUBSTANDARD_PREMIUM_CLASSES = [
+    'juvenileSubstandard',
+    'platinumSubstandard',
+    'goldSubstandard',
+];
 
+function getUnderWritingClass(premiumClass: string): string {
+    if (
+        premiumClass === 'juvenile' ||
+        premiumClass === 'juvenileSubstandard' ||
+        premiumClass === 'goldSubstandard'
+    ) {
+        return UnderwritingClass.STANDARDTOBACCO;
+    } else if (premiumClass === 'platinumSubstandard') {
+        return UnderwritingClass.STANDARDNONTOBACCO;
+    }
+
+    return premiumClass;
+}
 function createIllustrationPayload(
     answerOutputData: unknown
 ): Result<
@@ -490,6 +520,8 @@ function createIllustrationPayload(
 
     const premiumDuration = values.premiumDuration || 0;
 
+    const underWritingClass = getUnderWritingClass(values.premiumClass);
+
     const output = {
         calculationType: values.illustrationType,
         source: FARMERS_HARDCODED_DATA.source,
@@ -509,7 +541,7 @@ function createIllustrationPayload(
                         ...(values.subStandardRating && {
                             substandardRating: values.subStandardRating,
                         }),
-                        underwritingClass: values.premiumClass,
+                        underwritingClass: underWritingClass,
                         flatExtra: flatExtra,
                     },
                 ],
@@ -685,15 +717,21 @@ function createIllustrationPayload(
             {
                 allocationPercent: values.longTermFixedAccountAllocation,
                 fundId: 'FLF001',
+                illustratedRate:
+                    values.longTermHoldingAccountCurrentIllustratedRate,
             },
             {
                 allocationPercent: values.sp500IndexedAccountAllocation,
                 fundId: 'FLI001',
+                illustratedRate:
+                    values.sp500IndexedAccountCurrentIllustratedRate,
             },
             {
                 allocationPercent:
                     values.spMarc5PercentErIndexedAccountAllocation,
                 fundId: 'FLI002',
+                illustratedRate:
+                    values.spMarc5PercentErIndexedAccountCurrentIllustratedRate,
             },
         ],
         ...(values.scheduleDistributions === 'yes' &&
@@ -797,6 +835,12 @@ function getIllustrationDataFromResponse(data: any, formInputs: any) {
             data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
         initialPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
+        targetPremium:
+            data?.assumed?.annualTimeSeriesData?.at(-1)?.minimumPremiumAmount ||
+            DEFAULT_ERROR_STRING,
+        mecPremium:
+            data?.assumed?.annualTimeSeriesData?.[0]?.sevenPayPremiumAmount ||
+            DEFAULT_ERROR_STRING,
         ...netSurrenderValue,
     };
 }

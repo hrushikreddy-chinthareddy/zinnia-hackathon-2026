@@ -1,5 +1,6 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import Link from 'next/link';
 
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { IllustrationSummary } from '@deps/types/illustrations';
@@ -18,31 +19,33 @@ interface IllustrationItemProps {
 
 const IllustrationItem = ({
     illustration,
-    product,
     isSelected,
     isSelectableForApplication,
 }: IllustrationItemProps) => {
-    const { handleSelectIllustration } = useSelectedIllustration();
+    const { clientCaseId } = useSelectedIllustration();
     return (
         <li
             className={clsx(
                 styles.illustrationItem,
                 isSelected && styles.selected
             )}
-            onClick={() => handleSelectIllustration(product, illustration)}
         >
-            <Icon type={IconType.DOCUMENT_REPORT} />
-            <span className="flex-1">{illustration.title}</span>
-            <div className={clsx(styles.status)}>
-                <StatusBadge status={illustration.status} />
-                <span className={clsx(styles.menu)}>
-                    <IllustrationMenu
-                        isSelectForApplicationVisible={
-                            isSelectableForApplication
-                        }
-                    ></IllustrationMenu>
-                </span>
-            </div>
+            <Link
+                href={`/illustrations/client-cases/${clientCaseId}/illustrate/${illustration.id}`}
+                shallow={true}
+                className={styles.illustrationLink}
+            >
+                <Icon type={IconType.DOCUMENT_REPORT} />
+                <span className="flex-1">{illustration.title}</span>
+                <div className={clsx(styles.status)}>
+                    <StatusBadge status={illustration.status} />
+                </div>
+            </Link>
+            <span className={clsx(styles.menu)}>
+                <IllustrationMenu
+                    isSelectForApplicationVisible={isSelectableForApplication}
+                ></IllustrationMenu>
+            </span>
         </li>
     );
 };

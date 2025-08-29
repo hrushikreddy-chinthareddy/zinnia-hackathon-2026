@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { FgaRelation } from '@xd/utils/dist';
 import { Policy } from '@zinnia/api-types/types/sor';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { v4 as uuidV4 } from 'uuid';
@@ -8,24 +9,30 @@ import { TranslationFiles } from '@deps/config/translations';
 import DefaultCaseContainer from '@deps/containers/default-case/default-case-container';
 import { applyDynamicOptions } from '@deps/containers/task-container/task-handlers/handle-task';
 import { DefaultCaseProvider } from '@deps/contexts/DefaultCaseContext';
+import { OptimizelyVariableKey } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { DefaultDataEntryTask } from '@deps/models/case/default-case';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { UserProfile } from '@deps/models/user-profile';
 import { getTaskFormMetadata } from '@deps/operations/tasks/task-operations';
-import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import {
+    getPolicyDetailsSsr,
+    searchPolicySSR,
+} from '@deps/queries/api/policies';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
+import { FgaUiEntity } from '@deps/types/fga';
+import { Source } from '@deps/types/search';
 import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import {
-    FeatureFlags,
-    optimizelyService,
-} from '@deps/utils/optimizely/optimizely';
+import { getFeatureFlagByKey } from '@deps/utils/optimizely/optimizely';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     logError,
     logInfo,
@@ -35,19 +42,21 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-interface DefaultCaseProps extends SegmentTrackedPageProps {
+interface ServiceRequestProps extends SegmentTrackedPageProps {
     policy: Policy;
+    defaultTask: DefaultDataEntryTask;
     user: UserProfile;
     taskMetadata: FormMetadata[];
     correlationId: string;
 }
 
-const DefaultCase = ({
+const ServiceRequest = ({
     policy,
+    defaultTask,
     user,
     taskMetadata,
     correlationId,
-}: DefaultCaseProps) => {
+}: ServiceRequestProps) => {
     useSegmentPageTracker(user, SegmentPageName.DefaultCaseDataEntry, {
         correlationId,
         policyNumber: policy.policyNumber,
@@ -60,6 +69,7 @@ const DefaultCase = ({
                 policy={policy}
                 user={user}
                 correlationId={correlationId}
+                taskData={defaultTask}
             >
                 <DefaultCaseContainer
                     taskMetadata={taskMetadata}
@@ -91,32 +101,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
                 return serverSidePropsLogout();
             }
-            // Create a permissions object to pass to the page, strongly typed using the enum.
-            const featureFlagDecisions: FeatureFlags =
-                await optimizelyService.getFeatureFlagDecisions(
-                    user.sub,
-                    loggingContext
-                );
-            const shouldShowDefaultCase =
-                featureFlagDecisions?.[
-                    FEATURE_FLAGS.SERVICE_REQUEST_FORM_ENABLED
-                ];
 
-            if (!shouldShowDefaultCase) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
-            }
-
-            const translations = await serverSideTranslations(
-                locale,
-                [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
-                nextI18nextConfig,
-                ALL_LOCALES
+            const hasServiceRequestAccess = await checkTuplePage(
+                context,
+                FgaRelation.UiAccess,
+                FgaUiEntity.ZinniaLiveServiceRequest,
+                loggingContext
             );
+
             try {
                 const policy = await getPolicyDetailsSsr(
                     policyNumber,
@@ -125,15 +117,76 @@ export const getServerSideProps = withPageAuthAndLogging(
                     loggingContext,
                     true
                 );
+                const carrierId = policy?.carrierId?.toLowerCase() || '';
+                const limit = 1;
+                const offset = 0;
 
-                const taskMetadata = await getTaskFormMetadata(
-                    policy?.carrierId || '',
-                    TaskType.Default_Case_DataEntry,
-                    ProcessType.DEFAULT_CASE,
-                    accessToken,
-                    loggingContext,
-                    false
+                const shouldShowDefaultCase = await getFeatureFlagByKey(
+                    FEATURE_FLAG_VARIABLES.SERVICE_REQUEST,
+                    OptimizelyVariableKey.Clients,
+                    carrierId,
+                    user.sub,
+                    loggingContext
                 );
+
+                if (!shouldShowDefaultCase || !hasServiceRequestAccess) {
+                    logError('policies/service-request::403 redirect', {
+                        partyId: user?.partyId,
+                        requestStatus: 403,
+                        featureFlagEnabled: shouldShowDefaultCase,
+                        hasPagePermissions: hasServiceRequestAccess,
+                        requestPath: context.resolvedUrl,
+                        ...loggingContext,
+                    });
+
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
+
+                const [taskMetadata, policyReference, translations] =
+                    await Promise.all([
+                        getTaskFormMetadata(
+                            policy?.carrierId || '',
+                            TaskType.Default_Case_DataEntry,
+                            ProcessType.DEFAULT_CASE,
+                            accessToken,
+                            loggingContext,
+                            false
+                        ),
+                        searchPolicySSR(
+                            policyNumber,
+                            [policy?.carrierId as Carrier],
+                            accessToken,
+                            limit,
+                            offset,
+                            loggingContext
+                        ),
+                        serverSideTranslations(
+                            locale,
+                            [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+                            nextI18nextConfig,
+                            ALL_LOCALES
+                        ),
+                    ]);
+
+                if (!policy || policyReference?.[0]?.source !== Source.ZAHARA) {
+                    logInfo('service-request/policy-not-found', {
+                        ...loggingContext,
+                        policyNumber: policyNumber,
+                        planCode: planCode,
+                        source: policyReference?.[0]?.source,
+                    });
+                    return {
+                        redirect: {
+                            destination: `/404`,
+                            permanent: false,
+                        },
+                    };
+                }
 
                 const currentTaskMetadata =
                     taskMetadata?.schemaContent?.tabSchemas ||
@@ -148,23 +201,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                     currentTaskMetadata.push(fallbackMetadata ?? {});
                 }
 
-                if (!policy) {
-                    logInfo('default-case/policy-not-found', loggingContext);
-                    return {
-                        redirect: {
-                            destination: `/404?title=policyNotFound&planCode=${planCode}&policyNumber=${policyNumber}`,
-                            permanent: false,
-                        },
-                    };
-                }
-
+                const defaultTask = {
+                    taskType: TaskType.Default_Case_DataEntry,
+                    carrier: policy.carrierId,
+                };
                 //transform schema options with api
                 await applyDynamicOptions(
-                    {
-                        ...policy,
-                        taskType: TaskType.Default_Case_DataEntry,
-                        carrier: policy.carrierId,
-                    },
+                    defaultTask,
                     accessToken,
                     currentTaskMetadata
                 );
@@ -172,6 +215,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     props: {
                         ...translations,
                         policy,
+                        defaultTask,
                         user,
                         correlationId,
                         taskMetadata: currentTaskMetadata,
@@ -189,10 +233,10 @@ export const getServerSideProps = withPageAuthAndLogging(
         },
     },
     {
-        file: 'policies/[planCode]/[id]/default-case',
+        file: 'policies/[planCode]/[id]/service-request',
         function: 'getServerSideProps',
-        page: 'policies/:planCode/:id/default-case',
+        page: 'policies/:planCode/:id/service-request',
     }
 );
 
-export default DefaultCase;
+export default ServiceRequest;

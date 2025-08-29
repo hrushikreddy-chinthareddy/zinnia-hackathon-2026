@@ -11,6 +11,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import z from 'zod';
 
 import { FieldDate } from '@/components/field/date/FieldDate';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import {
   dateStepSchema,
   SurrenderAction,
@@ -57,7 +58,21 @@ export const Date = () => {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       <div className={styles.field}>
-        <Label labelFor="surrender-amount">Surrender Amount</Label>
+        <Label
+          labelFor="surrender-amount"
+          interactiveElements={[
+            <LabelPopover key="net-surrender-value" title="Net surrender value">
+              <p>
+                Your net surrender value is the current account value minus
+                surrender charges, outstanding loans, and other fees. This
+                number tells you how much you can expect to receive if you
+                decide to surrender your policy and cancel your coverage.
+              </p>
+            </LabelPopover>,
+          ]}
+        >
+          Surrender Amount
+        </Label>
         {/* @TODO: CUI-919 - get this from the policy */}
         <p className="typography-content-value">
           {formatUSDollars(NET_SURRENDER_VALUE)}

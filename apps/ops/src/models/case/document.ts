@@ -9,6 +9,8 @@ export enum DocumentType {
     ReReg = 'ReReg',
     Suitability = 'Suitability',
     SuitabilityReview = 'SuitabilityReview',
+    CallLogs = 'Call Log',
+    Spif = 'SPIF',
 }
 
 export enum DocumentFileExtension {

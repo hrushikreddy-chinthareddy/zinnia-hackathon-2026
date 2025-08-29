@@ -20,11 +20,11 @@ import {
 } from '@deps/contexts/OptimizelyContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case } from '@deps/models/case/case';
+import { DocumentType as ExcludeDocumentTypes } from '@deps/models/case/document';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
-
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
 const getKnownCaseDocIds = (caseDetails: Case): string[] => {
@@ -74,6 +74,10 @@ export default function DocumentsTab({
                     ? SearchRequest.documentClassification.INBOUND
                     : SearchRequest.documentClassification.OUTBOUND,
             zinniaLiveCaseId: caseDetails.id,
+            excludeDocumentTypes: [
+                ExcludeDocumentTypes.CallLogs,
+                ExcludeDocumentTypes.Spif,
+            ],
         };
     }, [caseDetails, docSource]);
 
@@ -93,6 +97,10 @@ export default function DocumentsTab({
                 caseDetails?.planCode ||
                 caseDetails?.additionalData?.planCode ||
                 policy?.planCode,
+            excludeDocumentTypes: [
+                ExcludeDocumentTypes.CallLogs,
+                ExcludeDocumentTypes.Spif,
+            ],
         };
     }, [caseDetails, policy, docSource]);
 

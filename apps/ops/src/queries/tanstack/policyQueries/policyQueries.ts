@@ -2,8 +2,13 @@ import { hasCookie } from 'cookies-next';
 
 import { PolicySortBy } from '@deps/components/policy-index/types';
 import { SortOrder } from '@deps/hooks/dashboard/useTableOptions';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { getAgentData } from '@deps/queries/api/agents';
-import { fetchPolicy, searchPolicy } from '@deps/queries/api/policies';
+import {
+    fetchPolicy,
+    searchPolicies,
+    searchPolicy,
+} from '@deps/queries/api/policies';
 import { MOCK_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
 import { getMockPolicy } from '@deps/services/mocks/mock-policy.helpers';
 import { SearchViewQuery } from '@deps/types/search';
@@ -69,4 +74,26 @@ export const getAgentDataQuery = async (
         throw 'No agent data found';
     }
     return result;
+};
+
+export const searchPoliciesQuery = async (
+    id: string,
+    planCode: string,
+    carrierIds: Carrier[],
+    limit: number,
+    offset: number
+) => {
+    const response = await searchPolicies(
+        id,
+        planCode,
+        carrierIds,
+        limit,
+        offset
+    );
+
+    if (!response) {
+        throw 'policies not found';
+    }
+
+    return response;
 };

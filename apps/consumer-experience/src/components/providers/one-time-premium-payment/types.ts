@@ -15,6 +15,7 @@ export enum OttpAction {
   SET_PAYOR_BANK = 'setPayorBank',
   SET_PAYMENT_SUBMIT_STATUS = 'setPaymentSubmitStatus',
   SET_PAYMENT_FEE = 'setPaymentFee',
+  RESET = 'reset',
 }
 
 const payorBankSchema = z.object({
@@ -48,7 +49,7 @@ export const selectBankSchema = z.object({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Action = { type: OttpAction; payload: any };
+export type Action = { type: OttpAction; payload?: any };
 export type Dispatch = (action: Action) => void;
 export interface OttpState {
   effectiveDate: string;

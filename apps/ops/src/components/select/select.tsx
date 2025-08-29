@@ -61,6 +61,14 @@ const SingleSelectOptions = ({
                         >
                             {option.label}
                         </Typography>
+                        {option.description && (
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-gray-500"
+                            >
+                                {option.description}
+                            </Typography>
+                        )}
                     </Select.ItemText>
                 </Select.Item>
             ))}
@@ -110,6 +118,14 @@ const MultiselectOptionItem = ({
                     >
                         {option.label}
                     </Typography>
+                    {option.description && (
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className="ml-2 text-gray-500"
+                        >
+                            {option.description}
+                        </Typography>
+                    )}
                 </DropdownMenu.CheckboxItem>
             ))}
         </>
@@ -137,6 +153,7 @@ const SelectComponent = ({
     onOpenChange,
     maxContentWidth,
     readOnly,
+    id,
 }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const MainComponent = isMultiselect ? DropdownMenu : Select;
@@ -222,7 +239,7 @@ const SelectComponent = ({
         selectedLabel = selectedOption.label as string;
 
     return (
-        <div className={clsx(className, 'flex w-full flex-col')}>
+        <div className={clsx(className, 'flex w-full flex-col')} id={id}>
             <FieldLabel
                 required={required}
                 labelClassNames={labelClassNames}

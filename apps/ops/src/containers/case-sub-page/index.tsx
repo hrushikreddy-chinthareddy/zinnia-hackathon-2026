@@ -1,17 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { BadgeVariant } from '@zinnia/bloom/components';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 import CaseSubPage from '@deps/components/case-sub-page/case-sub-page';
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { Case } from '@deps/models/case/case';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { getCaseDetailsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { CaseDetailsTabValues } from '@deps/types/constants';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import CasePageHeader from './CasePageHeader';
@@ -28,6 +31,9 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     const [tabVal, setTabVal] = useState(tab);
     const { featureFlags } = useOptimizely();
     const { policy } = useCaseActivityContext();
+    const { hasCallLogsAccess, hasNotesAccess } = usePermissionsContext();
+    const router = useRouter();
+    const { query } = router;
 
     const { data: caseDetailsModel } = useQuery({
         queryKey: ['caseDetails', caseDetails?.id],
@@ -49,6 +55,25 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         );
         setTabVal(val);
     };
+
+    useEffect(() => {
+        browserLogInfo('CaseOverview_Permission_Check', {
+            pathname: router.pathname,
+            hasCallLogsAccess,
+            hasNotesAccess,
+            caseId: caseDetails?.id,
+            policyNumber: policy?.policyNumber,
+        });
+        const isNotesTab = query?.tab === CaseDetailsTabValues['notes'];
+        const isCallLogsTab = query?.tab === CaseDetailsTabValues['call-logs'];
+        if (
+            (isNotesTab && !hasNotesAccess) ||
+            (isCallLogsTab && !hasCallLogsAccess)
+        ) {
+            router.push(`${baseAppUrl}/cases/${caseDetails?.id}/progress`);
+        }
+        setTabVal(CaseDetailsTabValues.progress);
+    }, [hasCallLogsAccess, hasNotesAccess, router]);
 
     const statusDetails = getStatusDetails({
         singleCase: caseDetailsModel,

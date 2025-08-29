@@ -150,6 +150,7 @@ export enum RoleField {
     IssueCountry = 'issueCountry',
     TrustDate = 'trustDate',
     PreferredCommunicationType = 'preferredCommunicationType',
+    EntityType = 'entityType',
 }
 
 export enum SignatureField {
@@ -160,6 +161,19 @@ export enum SignatureField {
 
 export enum Links {
     Internal500CTAlink = 'https://zinnia.atlassian.net/servicedesk/customer/portal/6',
+}
+
+export enum EntityTypeValue {
+    SoleProprietorship = 'SOLEPROPRIETORSHIP',
+    GeneralPartnership = 'GENERALPARTNERSHIP',
+    LimitedPartnership = 'LIMITEDPARTNERSHIP',
+    SCorporation = 'SCORPORATION',
+    CCorporation = 'CCORPORATION',
+    LimitedLiabilityCompany = 'LIMITEDLIABILITYCOMPANY',
+    CharitableOrganization = 'CHARITABLEORGANIZATION',
+    Estate = 'ESTATE',
+    Corporation = 'CORPORATION',
+    Other = 'UNKNOWN',
 }
 
 export enum Action {

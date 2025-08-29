@@ -412,8 +412,7 @@ export const getProcessReferenceDataSSR = async (
             },
             loggingContext
         );
-
-        return data;
+        return data?.referenceData ?? data;
     } catch (error: any) {
         logError(
             'getProcessReferenceData::An error occurred while getting reference data',

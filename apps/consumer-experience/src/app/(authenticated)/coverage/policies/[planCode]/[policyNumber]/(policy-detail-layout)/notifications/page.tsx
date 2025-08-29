@@ -12,6 +12,7 @@ import {
 } from '@/services/terms-and-conditions';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError } from '@/utils/logging/log-fns';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 const pageTitle = getPageTitle(RouteKey.NOTIFICATIONS);
@@ -27,6 +28,7 @@ interface Props {
 
 export default async function NotificationsPage({ params }: Props) {
   const flags = await getFeatureFlags();
+  const loggingCtx = await buildCommonLogContext()
   let initialNotifications: Array<CaseInstanceSummary> | undefined;
   let initialAcknowledgedNotifications: Array<CaseAcknowledgmentItem> = [];
   const notificationViewEnabled =
@@ -36,6 +38,7 @@ export default async function NotificationsPage({ params }: Props) {
 
   const { data: cases, error } = await searchCasesByPolicyNumber({
     policyNumber: params.policyNumber,
+    loggingCtx
   });
 
   if (

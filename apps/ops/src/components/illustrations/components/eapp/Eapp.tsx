@@ -1,10 +1,7 @@
 // import { Typography, Icon, IconType } from '@zinnia/bloom/components';
-import { CarrierAvatar, CarrierName } from '@zinnia/bloom/components';
 import { ReactElement } from 'react';
 
-import Badge from '@deps/components/badge/badge';
-import { BadgeVariant } from '@deps/components/badge/badge.helpers';
-import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
+import { ProductTypes } from '@deps/types/product';
 
 import style from './eapp.module.css';
 import { Menu } from './menu/menu';
@@ -17,6 +14,8 @@ export interface EappProps {
     label: string;
     planCode: string;
     planType: ProductTypes;
+    isEdit?: boolean;
+    illustrationId?: string;
 }
 export function Eapp(props: EappProps): ReactElement | null {
     const { activeSection } = useActiveSection();
@@ -25,34 +24,9 @@ export function Eapp(props: EappProps): ReactElement | null {
         return null;
     }
 
-    const productTypeLabel = props.planType
-        ? ProductTypeLabel.get(props.planType)
-        : '';
-
     return (
         <div className={style.eApp}>
             <div className={style.headerWrapper}>
-                <div className={style.infoHeaderWrapper}>
-                    <div className={style.infoHeader}>
-                        <CarrierAvatar
-                            carrier={props.carrier as CarrierName}
-                            height={48}
-                            width={48}
-                            // className={styles.carrierLogo}
-                        />
-                        {productTypeLabel && (
-                            <Badge
-                                variant={BadgeVariant.Brand}
-                                label={productTypeLabel}
-                            />
-                        )}
-                        <div
-                            className={`--typography-labels-label-lg-alt ${style.headerSubtitle}`}
-                        >
-                            {props.label}
-                        </div>
-                    </div>
-                </div>
                 <div className={style.sidebarWrapper}>
                     <Menu />
                 </div>
@@ -63,7 +37,10 @@ export function Eapp(props: EappProps): ReactElement | null {
                         <SectionView section={activeSection} />
                     </div>
                     <div className={style.applicationSidebar}>
-                        <Sidebar />
+                        <Sidebar
+                            isEdit={props.isEdit}
+                            illustrationId={props.illustrationId}
+                        />
                     </div>
                 </div>
             </div>

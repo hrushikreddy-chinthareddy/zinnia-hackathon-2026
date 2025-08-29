@@ -25,6 +25,7 @@ interface SearchBarProps
     formClasses?: string;
     handleError?: (bool: boolean) => void;
     disabled?: boolean;
+    onChangeCallback?: (value: string, key: PolicySearchKeys) => void;
 }
 
 const SearchBar = ({
@@ -37,6 +38,7 @@ const SearchBar = ({
     className,
     handleError,
     disabled = false,
+    onChangeCallback,
 }: SearchBarProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const getToggleLabel = useCallback(
@@ -84,6 +86,7 @@ const SearchBar = ({
 
     const handleChange = (value: string, key: PolicySearchKeys) => {
         handleError?.(false); // reset field error message on change
+        onChangeCallback?.(value, key);
         setValues((prevValues) => ({ ...prevValues, [key]: value || '' }));
     };
 
@@ -109,78 +112,96 @@ const SearchBar = ({
         <form
             className={clsx(styles.formContainer, className)}
             onSubmit={handleFormSubmit}
+            id="search-form"
         >
-            <div className={styles.searchContainer}>
-                <DropdownMenu.Root>
-                    <DropdownMenu.Trigger
-                        className={clsx(
-                            styles.dropdownTrigger,
-                            'typography-content-body-sm whitespace-nowrap'
-                        )}
-                        role="combobox"
-                        aria-controls="filter-dropdown"
+            <fieldset>
+                <legend>
+                    <label
+                        htmlFor="search-by-dropdown"
+                        className="typography-labels-field-label mb-1"
                     >
-                        <label id="case-search-label">
-                            <Typography variant={TypographyVariant.BodySm}>
-                                {activeLabels.label}
-                            </Typography>
-                        </label>
-                        <Icon
-                            type={IconType.CHEVRON}
-                            height={22}
-                            width={22}
-                            color="#00628B"
-                        />
-                    </DropdownMenu.Trigger>
-
-                    <DropdownMenu.Portal>
-                        <DropdownMenu.Content
-                            className={styles.dropdownMenu}
-                            id="filter-dropdown"
-                            role="listbox"
-                            aria-label={
-                                t(
-                                    'caseManagementDashboard.search.searchKeyType'
-                                ) || 'Search by'
-                            }
-                        >
-                            {dropdownLabels.map((item, index) => (
-                                <DropdownMenu.Item
-                                    className={styles.dropdownItem}
-                                    key={`dropdown-item-${index}`}
-                                    onSelect={() =>
-                                        handleToggle(item.value || '')
-                                    }
-                                >
+                        {t('caseManagementDashboard.search.searchKeyType')}
+                    </label>
+                </legend>
+                <div className={styles.searchRow}>
+                    <div className={styles.searchContainer}>
+                        <DropdownMenu.Root>
+                            <DropdownMenu.Trigger
+                                id="search-by-dropdown"
+                                className={clsx(
+                                    styles.dropdownTrigger,
+                                    'typography-content-body-sm whitespace-nowrap'
+                                )}
+                                role="combobox"
+                                aria-controls="filter-dropdown"
+                            >
+                                <label id="case-search-label">
                                     <Typography
                                         variant={TypographyVariant.BodySm}
                                     >
-                                        {item.label}
+                                        {activeLabels.label}
                                     </Typography>
-                                </DropdownMenu.Item>
-                            ))}
-                        </DropdownMenu.Content>
-                    </DropdownMenu.Portal>
-                </DropdownMenu.Root>
-                <SearchField
-                    activeLabels={activeLabels}
-                    values={values}
-                    onClear={onClear}
-                    onChange={handleChange}
-                />
-            </div>
-            <Button
-                className="md:mt-1"
-                mode="primary"
-                onClick={handleSearch}
-                data-testid="search-btn"
-                aria-label={t('ariaLabel.search') as string}
-                type="submit"
-                size="small"
-                disabled={disabled}
-            >
-                {t('dashboard.search.btnText')}
-            </Button>
+                                </label>
+                                <Icon
+                                    type={IconType.CHEVRON}
+                                    height={22}
+                                    width={22}
+                                    color="#00628B"
+                                />
+                            </DropdownMenu.Trigger>
+
+                            <DropdownMenu.Portal>
+                                <DropdownMenu.Content
+                                    className={styles.dropdownMenu}
+                                    id="filter-dropdown"
+                                    role="listbox"
+                                    aria-label={
+                                        t(
+                                            'caseManagementDashboard.search.searchKeyType'
+                                        ) || 'Search by'
+                                    }
+                                >
+                                    {dropdownLabels.map((item, index) => (
+                                        <DropdownMenu.Item
+                                            className={styles.dropdownItem}
+                                            key={`dropdown-item-${index}`}
+                                            onSelect={() =>
+                                                handleToggle(item.value || '')
+                                            }
+                                        >
+                                            <Typography
+                                                variant={
+                                                    TypographyVariant.BodySm
+                                                }
+                                            >
+                                                {item.label}
+                                            </Typography>
+                                        </DropdownMenu.Item>
+                                    ))}
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Portal>
+                        </DropdownMenu.Root>
+                        <SearchField
+                            activeLabels={activeLabels}
+                            values={values}
+                            onClear={onClear}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <Button
+                        className="md:mt-1"
+                        mode="primary"
+                        onClick={handleSearch}
+                        data-testid="search-btn"
+                        aria-label={t('ariaLabel.search') as string}
+                        type="submit"
+                        size="small"
+                        disabled={disabled}
+                    >
+                        {t('dashboard.search.btnText')}
+                    </Button>
+                </div>
+            </fieldset>
         </form>
     );
 };

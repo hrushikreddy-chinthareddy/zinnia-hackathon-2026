@@ -72,9 +72,13 @@ const CaseDetailsSideNav = ({
     return (
         <>
             <div className="flex w-full flex-col border-t-2 border-gray-100 p-4">
-                <Title className="mb-2" variant={TitleVariant.SubTitle}>
+                <Typography
+                    asTag="h2"
+                    variant={TypographyVariant.BodyBold}
+                    className="mb-2"
+                >
                     {t('sidenav.navButtons.caseDetails')}
-                </Title>
+                </Typography>
 
                 <div className="grid grid-cols-2 my-4 gap-y-2">
                     {process && (

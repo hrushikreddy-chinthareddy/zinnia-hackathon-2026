@@ -10,6 +10,7 @@ import {
     Loader,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { uniq } from 'lodash';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -17,11 +18,12 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { getUserDownlineBySellingCode } from '@deps/queries/tanstack/producerQueries/producerQueries';
+import { getUsersDownlineList } from '@deps/queries/tanstack/producerQueries/producerQueries';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-// import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
+import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
 import { IllustrationAgentDetails } from '@deps/types/illustrations';
 
+import { getAgentsFromDownline } from './agent-search.helpers';
 import styles from './agent-search.module.css';
 
 interface DynamicObject {
@@ -31,21 +33,20 @@ interface DynamicObject {
 interface AgentSearchProps {
     currentAgentData: IllustrationAgentDetails;
     onSelectAgent: (args0: DynamicObject) => void;
-    mainAgencyId: string;
+    agencyIdArray: string[];
+    shouldShowEdit: boolean;
 }
+
+const ENTER_KEY_NAME = 'enter';
 
 export const AgentSearch = ({
     currentAgentData,
     onSelectAgent,
-    mainAgencyId,
+    agencyIdArray,
+    shouldShowEdit,
 }: AgentSearchProps) => {
-    // you should get the agencyId to create the client case.
-    // the initial agencyId || sellingCode is only for the inital search
-
-    // use this loggedInAgentAgencyId to search only on the agencies that the user is part of
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [isEditing, setIsEditing] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
     const [agentNameInput, setAgentNameInput] = useState('');
     const [searchResults, setSearchResults] = useState<
@@ -62,46 +63,38 @@ export const AgentSearch = ({
         styles.agentEmailResult
     );
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: ({
-            agencyId,
+            agencyIdArray,
             agentName,
         }: {
-            agencyId: string;
+            agencyIdArray: string[];
             agentName: string;
-        }) => getUserDownlineBySellingCode(agencyId, agentName),
+        }) => getUsersDownlineList(uniq(agencyIdArray), agentName),
         mutationKey: ['getUserDownline'],
-        onSuccess: (data) => {
-            if (data) {
-                // what are we going to do with those fullname results?
-                const formattedResponse = data.flatMap((e) => e);
-                const formattedAgents = formattedResponse.map((agent) => ({
-                    ...agent,
-                    email: agent.emailAddress,
-                }));
-                setSearchResults(formattedAgents);
+        onSuccess: (response) => {
+            if (!response?.length) {
+                setIsNotFound(true);
+                return;
             }
-            setIsLoading(false);
+            const formattedAgents = getAgentsFromDownline(response);
+            setSearchResults(formattedAgents);
         },
-
         onMutate: () => {
-            setIsLoading(true);
             setSearchResults([]);
             setIsNotFound(false);
         },
         onError: () => {
             setIsNotFound(true);
-            setIsLoading(false);
         },
     });
 
     const onSearch = () => {
-        mutate({ agencyId: mainAgencyId, agentName: agentNameInput });
+        mutate({ agencyIdArray, agentName: agentNameInput });
     };
 
     const clearAll = () => {
         setIsEditing(false);
-        setIsLoading(false);
         setIsNotFound(false);
         setAgentNameInput('');
         setSearchResults([]);
@@ -157,7 +150,7 @@ export const AgentSearch = ({
     };
 
     const determineRender = () => {
-        if (isLoading) {
+        if (isPending) {
             return (
                 <div className={styles.loaderContainer}>
                     <Loader />
@@ -189,7 +182,13 @@ export const AgentSearch = ({
     };
 
     return (
-        <div>
+        <div
+            onKeyDown={(event) => {
+                if (event.key.toLowerCase() === ENTER_KEY_NAME) {
+                    onSearch();
+                }
+            }}
+        >
             <Label
                 interactiveElements={[
                     <Tooltip
@@ -243,7 +242,7 @@ export const AgentSearch = ({
                             aria-label={t('ariaLabel.search') as string}
                             onClick={onSearch}
                             size="small"
-                            disabled={isLoading}
+                            disabled={isPending}
                         >
                             {t('dashboard.search.btnText')}
                         </Button>
@@ -261,21 +260,17 @@ export const AgentSearch = ({
                             className={styles.agentEmail}
                         >
                             {selectedAgent.email}
-                            {/* (
-                            {t(
-                                'clientCase.createClientCaseForm.searchAgent.current'
-                            )}
-                            ) */}
                         </Typography>
                     </div>
-                    {/* leave commented until the search api is ready */}
-                    {/* <EditIcon
-                        color="blue"
-                        height={'20px'}
-                        width={'20px'}
-                        className={styles.editIcon}
-                        onClick={() => setIsEditing(!isEditing)}
-                    /> */}
+                    {shouldShowEdit && (
+                        <EditIcon
+                            color="blue"
+                            height={'20px'}
+                            width={'20px'}
+                            className={styles.editIcon}
+                            onClick={() => setIsEditing(!isEditing)}
+                        />
+                    )}
                 </div>
             )}
         </div>

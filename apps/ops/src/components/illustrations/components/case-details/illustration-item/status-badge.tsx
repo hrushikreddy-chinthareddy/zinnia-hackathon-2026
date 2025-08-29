@@ -1,6 +1,8 @@
 import { Badge, BadgeVariant, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useTranslation } from 'next-i18next';
 
+import { TranslationFiles } from '@deps/config/translations';
 import {
     IllustrationStatus,
     IllustrationStatuses,
@@ -13,6 +15,8 @@ interface StatusBadgeProps {
 }
 
 const StatusBadge = ({ status }: StatusBadgeProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {});
+
     switch (status) {
         case IllustrationStatuses.SUBMITTED:
         case IllustrationStatuses.SELECTED:
@@ -26,7 +30,11 @@ const StatusBadge = ({ status }: StatusBadgeProps) => {
                         aria-hidde={true}
                     />
                     <Badge
-                        label="Selected"
+                        label={
+                            t(
+                                'clientCase.illustrationDetails.selected'
+                            ) as string
+                        }
                         variant={BadgeVariant.SUCCESS}
                         style={{ paddingLeft: '1.75rem' }}
                     />
@@ -43,7 +51,11 @@ const StatusBadge = ({ status }: StatusBadgeProps) => {
                         aria-hidde={true}
                     />
                     <Badge
-                        label="Archived"
+                        label={
+                            t(
+                                'clientCase.illustrationDetails.archived'
+                            ) as string
+                        }
                         variant={BadgeVariant.INACTIVE}
                         style={{ paddingLeft: '1.75rem' }}
                     />
@@ -60,7 +72,11 @@ const StatusBadge = ({ status }: StatusBadgeProps) => {
                         aria-hidde={true}
                     />
                     <Badge
-                        label="Expired"
+                        label={
+                            t(
+                                'clientCase.illustrationDetails.expired'
+                            ) as string
+                        }
                         variant={BadgeVariant.ERROR}
                         style={{ paddingLeft: '1.75rem' }}
                     />

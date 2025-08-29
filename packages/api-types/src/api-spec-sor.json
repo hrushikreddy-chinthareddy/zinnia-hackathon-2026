@@ -8157,7 +8157,7 @@
             "description": "The actual dollar amount withheld for taxes.",
             "example": 100
           },
-           "withholdAmount": {
+          "withholdAmount": {
             "type": "number",
             "format": "double",
             "description": "The actual dollar amount withheld for taxes.",
@@ -8457,7 +8457,7 @@
           "PREMIUMBILLING",
           "ONETIMEPREMIUMBILLING",
           "PAYOUT",
-          "ONETIMEWIRE"
+          "ONETIMEWIREEE"
         ],
         "description": "Bank Account Purpose refers to the designated use or intent of a bank account in relation to specific financial transactions, particularly in the context of insurance or annuity billing. It defines what type of amount is being billed to or paid from the account."
       },

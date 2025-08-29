@@ -4,12 +4,13 @@ import { Metadata } from 'next';
 
 import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { getDocumentsV2 } from '@/services/document/v2';
 import { searchDocumentsV3 } from '@/services/document/v3';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { DocumentsVersion } from '@/types/carrier-config';
 import { DocumentV3SearchItem, ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
-import { retrieveDocumentsFromV2 } from '@/utils/documents';
 import { logInfo } from '@/utils/logging/log-fns';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
@@ -37,10 +38,12 @@ export default async function PolicyAcknowledgementDocumentPreview({
   };
 }) {
   const flags = await getFeatureFlags();
+  const { documents } = await getCarrierConfig();
   const { lineOfBusiness, policyNumber, planCode } = params;
   const { clientCode } = searchParams;
   const shouldUseV2 =
-    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] || (await retrieveDocumentsFromV2());
+    !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
+    documents.version === DocumentsVersion.V2;
 
   const policyDocuments = shouldUseV2
     ? await getDocumentsV2({
@@ -80,7 +83,7 @@ export default async function PolicyAcknowledgementDocumentPreview({
 
   const docDownloadUrl = shouldUseV2
     ? `/api/documents/${document?.documentId}/download/${fileName}.pdf?clientCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`
-    : `/api/documents/v3/${document?.documentId}/download/${fileName}?parentCarrierCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`;
+    : `/api/documents/v3/${document?.documentId}/download?parentCarrierCode=${clientCode}&policyNumber=${policyNumber}&planCode=${planCode}`;
 
   return (
     <div style={{ height: '100svh' }}>
@@ -88,7 +91,7 @@ export default async function PolicyAcknowledgementDocumentPreview({
         <PdfPreviewer
           defaultRedirectUrl={`/coverage/${lineOfBusiness}/${planCode}/${policyNumber}/documents/error`}
           documentDownloadUrl={docDownloadUrl}
-          fileName={fileName}
+          documentId={document?.documentId ?? ''}
         />
       </div>
     </div>

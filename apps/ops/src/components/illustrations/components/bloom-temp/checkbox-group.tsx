@@ -1,4 +1,5 @@
 import { Checkbox, CheckboxIndicator } from '@radix-ui/react-checkbox';
+import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 
 import style from './checkbox-group.module.css';
@@ -7,12 +8,14 @@ type CheckboxGroupProps = {
     options: Array<{ value: string; label: string; ariaLabel: string }>;
     value: string[];
     onValueChange: (value: string[]) => void;
+    showError?: boolean;
 };
 
 export function CheckboxGroup({
     options,
     value,
     onValueChange,
+    showError,
 }: CheckboxGroupProps) {
     const mapOfCheckedStatuses = useMemo(() => {
         const map: Record<string, boolean> = {};
@@ -57,7 +60,10 @@ export function CheckboxGroup({
                             );
                         }}
                         value={option.value}
-                        className={style.checkbox}
+                        className={clsx(
+                            style.checkbox,
+                            showError && style.error
+                        )}
                     >
                         <CheckboxIndicator className={style.indicator} />
                     </Checkbox>

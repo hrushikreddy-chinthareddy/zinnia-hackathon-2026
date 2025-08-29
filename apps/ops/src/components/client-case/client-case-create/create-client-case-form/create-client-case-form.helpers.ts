@@ -1,12 +1,15 @@
 import { groupBy, sortBy } from 'lodash';
 
-import { GetHierarchyResponse, Upline } from '@deps/types/producers';
+import {
+    GetHierarchyResponse,
+    MAIN_AGENCY_ROLE,
+    Upline,
+} from '@deps/types/producers';
 
-interface AgencyOption {
+export interface AgencyOption {
     value: string;
     textValue: string;
 }
-const MAIN_AGENCY_ROLE = 'GeneralAgency';
 
 const formatAgenciesForSelect = (agenciesUpline: Upline[]): AgencyOption[] => {
     return agenciesUpline.map((agency) => {
@@ -70,7 +73,7 @@ export const getAgentAgenciesForSelectOptions = (
     const nearestHierarchyAgencyGroupKey =
         Object.keys(groupAgencies)[NEAREST_HIEARCHY_LEVEl];
     const formattedAgencies = formatAgenciesForSelect(
-        groupAgencies[nearestHierarchyAgencyGroupKey]
+        groupAgencies[nearestHierarchyAgencyGroupKey] ?? []
     );
 
     return formattedAgencies;

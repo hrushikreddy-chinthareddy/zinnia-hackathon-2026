@@ -246,7 +246,7 @@ export const cancelSystematicProgram = withLogging(
   ): Promise<SystematicProgramTransactionResponse> => {
     const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/systematicprograms/${arrangementId}`;
 
-    const rawResponse = await ServerApi.post(
+    const rawResponse = await ServerApi.put(
       url,
       JSON.stringify(body),
       {

@@ -16,13 +16,14 @@
                 "formSchema": {
                     "type": "object",
                     "definitions": {
-                        "caseTypeEnum": {},
-                        "caseSubTypeEnum": {}
+                        "caseTypeEnum": {
+                            "enum": ["SERVICE REQUEST"]
+                        }
                     },
                     "properties": {
                         "caseDetails": {
                             "type": "object",
-                            "title": "Request Details",
+                            "title": "New Case Details",
                             "required": ["caseType", "caseSubType"],
                             "properties": {
                                 "caseType": {
@@ -32,16 +33,19 @@
                                 },
                                 "caseSubType": {
                                     "type": "string",
-                                    "title": "Case Sub Type",
-                                    "$ref": "#/definitions/caseSubTypeEnum"
+                                    "title": "Case Sub Type"
                                 },
                                 "contractNumber": {
                                     "type": "string",
-                                    "title": "Contract #"
+                                    "title": "Contract Number"
                                 },
                                 "carrier": {
                                     "type": "string",
                                     "title": "Carrier"
+                                },
+                                "lineOfBusiness": {
+                                    "type": "string",
+                                    "title": "Line of Business"
                                 },
                                 "customerDetails": {
                                     "type": "object",
@@ -63,21 +67,21 @@
                                 },
                                 "callDetails": {
                                     "type": "object",
-                                    "title": "Call Details",
+                                    "title": "Details",
                                     "required": [
                                         "callerRole",
                                         "callerName",
                                         "callerPhone"
                                     ],
                                     "properties": {
+                                        "associateName": {
+                                            "type": "string",
+                                            "title": "Customer Service Associate Name"
+                                        },
                                         "callerRole": {
                                             "type": "string",
                                             "title": "Caller Role",
                                             "enum": ["Owner", "Agent", "Others"]
-                                        },
-                                        "associateName": {
-                                            "type": "string",
-                                            "title": "Customer Service Associate Name"
                                         },
                                         "callerName": {
                                             "type": "string",
@@ -86,7 +90,8 @@
                                         },
                                         "callerPhone": {
                                             "type": "string",
-                                            "title": "Caller Phone #"
+                                            "title": "Caller Phone #",
+                                            "minLength": 1
                                         }
                                     }
                                 }
@@ -121,59 +126,102 @@
                         "norender": true
                     },
                     "caseDetails": {
+                        "ui:options": {
+                            "ObjectFieldTemplate": "AddressFieldTemplate",
+                            "backgroundColor": "white"
+                        },
                         "caseType": {
+                            "ui:disabled": true,
                             "ui:placeholder": "Select Case Type",
-                            "ui:props": {
-                                "apiUrl": "case/v1/refdata/PROCESS_SUB_TYPE?",
-                                "apiPayload": {
-                                    "parentKey": ["{{value}}"]
-                                },
-                                "apiMethod": "get",
-                                "dataKey": "caseSubTypeEnum",
-                                "response": {
-                                    "enum": "key",
-                                    "enumNames": "value"
-                                }
+                            "ui:options": {
+                                "width": 50,
+                                "enumNames": ["Service Request"]
                             },
                             "ui:hideError": true
                         },
                         "caseSubType": {
                             "ui:widget": "SelectWidget",
-                            "ui-options": {
-                                "label": true,
-                                "dependentField": "caseType"
+                            "ui:options": {
+                                "width": 50,
+                                "label": true
                             },
                             "ui:placeholder": "Select Case Sub Type",
                             "ui:hideError": true
                         },
-                        "contractNumber": {},
-                        "carrier": {
-                            "ui:widget": "hidden"
+                        "contractNumber": {
+                            "ui:options": {
+                                "width": 33
+                            },
+                            "ui:disabled": true,
+                            "ui:hideError": true
                         },
+                        "carrier": {
+                            "ui:options": {
+                                "width": 33
+                            },
+                            "ui:disabled": true,
+                            "ui:hideError": true
+                        },
+                        "lineOfBusiness": {
+                            "ui:options": {
+                                "width": 33
+                            },
+                            "ui:disabled": true,
+                            "ui:hideError": true
+                        },
+
                         "customerDetails": {
+                            "ui:options": {
+                                "label": true,
+                                "ObjectFieldTemplate": "AddressFieldTemplate",
+                                "backgroundColor": "white"
+                            },
                             "firstName": {
-                                "ui:disabled": false
+                                "ui:options": {
+                                    "width": 50
+                                },
+
+                                "ui:hideError": true
                             },
                             "lastName": {
-                                "ui:disabled": false
+                                "ui:options": {
+                                    "width": 50
+                                },
+
+                                "ui:hideError": true
                             },
                             "taxId": {
                                 "ui:disabled": false
                             }
                         },
                         "callDetails": {
+                            "ui:options": {
+                                "label": true,
+                                "ObjectFieldTemplate": "AddressFieldTemplate",
+                                "backgroundColor": "white"
+                            },
                             "callerRole": {
-                                "ui:placeholder": "Select Caller Role",
+                                "ui:options": {
+                                    "width": 33
+                                },
+                                "ui:placeholder": "Select a role",
                                 "ui:hideError": true
                             },
                             "associateName": {
-                                "ui:disabled": false
+                                "ui:disabled": true
                             },
                             "callerName": {
-                                "ui:disabled": false,
+                                "ui:options": {
+                                    "width": 33
+                                },
                                 "ui:hideError": true
                             },
-                            "callerPhoneNumber": {}
+                            "callerPhone": {
+                                "ui:options": {
+                                    "width": 33
+                                },
+                                "ui:hideError": true
+                            }
                         }
                     },
                     "attachment": {
@@ -335,8 +383,16 @@
                     "properties": {
                         "caseDetails": {
                             "type": "object",
-                            "title": "Case Details",
+                            "title": "New Case Details",
                             "properties": {
+                                "caseType": {
+                                    "type": "string",
+                                    "title": "Case Type"
+                                },
+                                "caseSubType": {
+                                    "type": "string",
+                                    "title": "Case Sub Type"
+                                },
                                 "additionalDetails": {
                                     "type": "object",
                                     "title": "Additional Information",
@@ -349,7 +405,8 @@
                                     },
                                     "required": ["comment"]
                                 }
-                            }
+                            },
+                            "required": ["additionalDetails"]
                         }
                     },
                     "allOf": [
@@ -359,7 +416,7 @@
                                     "caseDetails": {
                                         "properties": {
                                             "caseSubType": {
-                                                "const": "LI_REPRESENTATIVE_ADDRESS_AND_PHONE_CHANGE"
+                                                "const": "LI REPRESENTATIVE ADDRESS AND PHONE CHANGE"
                                             }
                                         }
                                     }
@@ -373,68 +430,10 @@
                                                 "type": "object",
                                                 "title": "Additional Information",
                                                 "properties": {
-                                                    "address": {
-                                                        "type": "object",
-                                                        "title": "",
-                                                        "properties": {
-                                                            "country": {
-                                                                "type": "string",
-                                                                "title": "Country Code",
-                                                                "$ref": "#/definitions/countryCodeEnum"
-                                                            },
-                                                            "addressLine1": {
-                                                                "type": "string",
-                                                                "title": "Address"
-                                                            },
-                                                            "addressLine2": {
-                                                                "type": [
-                                                                    "string",
-                                                                    "null"
-                                                                ],
-                                                                "title": "Address 2"
-                                                            },
-                                                            "addressLine3": {
-                                                                "type": [
-                                                                    "string",
-                                                                    "null"
-                                                                ],
-                                                                "title": "Address 3"
-                                                            },
-                                                            "city": {
-                                                                "type": "string",
-                                                                "title": "City"
-                                                            },
-                                                            "state": {
-                                                                "type": "string",
-                                                                "title": "State",
-                                                                "$ref": "#/definitions/stateEnum"
-                                                            },
-                                                            "zip": {
-                                                                "type": "string",
-                                                                "title": "Zip"
-                                                            },
-                                                            "zipPlusFour": {
-                                                                "type": "string",
-                                                                "title": "Zip+4"
-                                                            }
-                                                        }
-                                                    },
                                                     "newAddressEffectiveDate": {
                                                         "type": "string",
                                                         "format": "date",
                                                         "title": "New Address Effective Date"
-                                                    },
-                                                    "currentPhoneNumber": {
-                                                        "type": "string",
-                                                        "title": "Current Phone Number"
-                                                    },
-                                                    "businessPhone": {
-                                                        "type": "string",
-                                                        "title": "Business Phone"
-                                                    },
-                                                    "faxNumber": {
-                                                        "type": "string",
-                                                        "title": "Fax Number"
                                                     },
                                                     "newPhoneNumber": {
                                                         "type": "string",
@@ -447,6 +446,10 @@
                                                     "newFaxNumber": {
                                                         "type": "string",
                                                         "title": "New Fax Number"
+                                                    },
+                                                    "newEmail": {
+                                                        "type": "string",
+                                                        "title": "New Email"
                                                     }
                                                 }
                                             }
@@ -455,13 +458,14 @@
                                 }
                             }
                         },
+
                         {
                             "if": {
                                 "properties": {
                                     "caseDetails": {
                                         "properties": {
                                             "caseSubType": {
-                                                "const": "NB_SUPPORTING_DOCUMENT"
+                                                "const": "STOP PAY REQUEST"
                                             }
                                         }
                                     }
@@ -475,119 +479,6 @@
                                                 "type": "object",
                                                 "title": "Additional Information",
                                                 "properties": {
-                                                    "lineOfBusiness": {
-                                                        "type": "string",
-                                                        "title": "Line of Business",
-                                                        "enum": [
-                                                            "Life",
-                                                            "Annuity",
-                                                            "Health",
-                                                            "Other"
-                                                        ]
-                                                    },
-                                                    "contractNumber": {
-                                                        "type": "string",
-                                                        "title": "Contract #"
-                                                    },
-                                                    "contractOwnerTaxId": {
-                                                        "type": "string",
-                                                        "title": "Contract Owner Tax ID"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "if": {
-                                "properties": {
-                                    "caseDetails": {
-                                        "properties": {
-                                            "caseSubType": {
-                                                "const": "NON_FINANCIAL_FIX"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "caseDetails": {
-                                        "properties": {
-                                            "additionalDetails": {
-                                                "type": "object",
-                                                "title": "Additional Information",
-                                                "properties": {
-                                                    "lineOfBusiness": {
-                                                        "type": "string",
-                                                        "title": "Line of Business",
-                                                        "enum": [
-                                                            "Life",
-                                                            "Annuity",
-                                                            "Health",
-                                                            "Other"
-                                                        ]
-                                                    },
-                                                    "contractNumber": {
-                                                        "type": "string",
-                                                        "title": "Contract #"
-                                                    },
-                                                    "taxId": {
-                                                        "type": "string",
-                                                        "title": "SSN/Tax ID"
-                                                    },
-                                                    "callDateTime": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "title": "Call Date and Time"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "if": {
-                                "properties": {
-                                    "caseDetails": {
-                                        "properties": {
-                                            "caseSubType": {
-                                                "const": "STOP_PAY_REQUEST"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "caseDetails": {
-                                        "properties": {
-                                            "additionalDetails": {
-                                                "type": "object",
-                                                "title": "Additional Information",
-                                                "properties": {
-                                                    "lineOfBusiness": {
-                                                        "type": "string",
-                                                        "title": "Line of Business",
-                                                        "enum": [
-                                                            "Life",
-                                                            "Annuity",
-                                                            "Health",
-                                                            "Other"
-                                                        ]
-                                                    },
-                                                    "contractNumber": {
-                                                        "type": "string",
-                                                        "title": "Contract Number"
-                                                    },
-                                                    "taxId": {
-                                                        "type": "string",
-                                                        "title": "SSN/Tax ID"
-                                                    },
                                                     "additionalContractNumber": {
                                                         "type": "string",
                                                         "title": "Additional Contract Number(s)"
@@ -595,15 +486,6 @@
                                                     "externalId": {
                                                         "type": "string",
                                                         "title": "External ID"
-                                                    },
-                                                    "callDateTime": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "title": "Call Date and Time"
-                                                    },
-                                                    "callerRelationship": {
-                                                        "type": "string",
-                                                        "title": "Caller's Relationship to Contract"
                                                     }
                                                 }
                                             }
@@ -625,7 +507,21 @@
                     },
                     "caseDetails": {
                         "ui:options": {
-                            "label": false
+                            "label": true,
+                            "ObjectFieldTemplate": "AddressFieldTemplate",
+                            "backgroundColor": "white"
+                        },
+                        "caseType": {
+                            "ui:options": {
+                                "width": 33
+                            },
+                            "ui:readonly": true
+                        },
+                        "caseSubType": {
+                            "ui:options": {
+                                "width": 50
+                            },
+                            "ui:readonly": true
                         },
                         "additionalDetails": {
                             "address": {

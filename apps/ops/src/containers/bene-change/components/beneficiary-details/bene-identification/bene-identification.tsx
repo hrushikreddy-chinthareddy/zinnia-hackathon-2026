@@ -15,6 +15,8 @@ import FieldDateSelect, {
 import Radio, { RadioVariant } from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
+import { EntityTypeValue } from '@deps/constants/policy';
+import { entityTypeOptions } from '@deps/containers/role-change/role-change-helper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -45,6 +47,7 @@ const DEFAULT_PARTY_INSTANCE = {
     dateOfBirth: null,
     trustType: TrustType.Individual,
     trustDate: null,
+    entityType: EntityTypeValue.Other,
 };
 
 export interface BeneficiaryIdentificationProps {
@@ -170,6 +173,24 @@ const BeneficiaryIdentification = ({
             gender: event.target.value,
         }));
     };
+    const onCompanyNameChange = (event: any) => {
+        setCurrentErrors((prevState: any) => {
+            const { lastName, ...errors } = prevState ?? {};
+            return errors;
+        });
+        setParty((prevState: any) => ({
+            ...prevState,
+            lastName: event.target.value,
+        }));
+    };
+
+    const onEntityTypeChange = (value: string) => {
+        setParty((prevState: any) => ({
+            ...prevState,
+            entityType: value,
+        }));
+    };
+
     return (
         <div>
             <div className={containerClasses}>
@@ -354,33 +375,41 @@ const BeneficiaryIdentification = ({
 
                     {partyIdentification === PartyType.ORGANIZATION && (
                         <div className="my-4 grid w-full grid-cols-2">
-                            <Field
-                                label={t(`companyName`) as string}
-                                message={currentErrors?.lastName}
-                                onChange={(event) => {
-                                    setCurrentErrors((prevState: any) => {
-                                        const { lastName, ...errors } =
-                                            prevState ?? {};
-                                        return errors;
-                                    });
-                                    setParty((prevState: any) => ({
-                                        ...prevState,
-                                        lastName: event.target.value,
-                                    }));
-                                }}
-                                size={FieldSize.Small}
-                                type={FieldType.BaseActive}
-                                value={party?.lastName || ''}
-                                maxLength={40}
-                                variant={
-                                    isReadOnly
-                                        ? FieldVariant.Inactive
-                                        : currentErrors?.lastName
-                                        ? FieldVariant.Error
-                                        : FieldVariant.Default
-                                }
-                                required
-                            />
+                            <div className="flex flex-col gap-4">
+                                <Field
+                                    label={t(`companyName`) as string}
+                                    message={currentErrors?.lastName}
+                                    onChange={onCompanyNameChange}
+                                    size={FieldSize.Small}
+                                    type={FieldType.BaseActive}
+                                    value={party?.lastName || ''}
+                                    maxLength={40}
+                                    variant={
+                                        isReadOnly
+                                            ? FieldVariant.Inactive
+                                            : currentErrors?.lastName
+                                            ? FieldVariant.Error
+                                            : FieldVariant.Default
+                                    }
+                                    required
+                                />
+                                <SelectSimple
+                                    label={t('entityType') as string}
+                                    options={entityTypeOptions(t)}
+                                    onChange={onEntityTypeChange}
+                                    size={FieldSize.Small}
+                                    value={
+                                        party?.entityType ??
+                                        EntityTypeValue.Other
+                                    }
+                                    variant={
+                                        isReadOnly
+                                            ? FieldVariant.Inactive
+                                            : FieldVariant.Default
+                                    }
+                                    disabled={isReadOnly}
+                                />
+                            </div>
                         </div>
                     )}
                 </div>

@@ -19,12 +19,12 @@ export const stepsInfo: Record<SurrenderSteps, StepInfo> = {
     url: surrenderUrls[SurrenderSteps.INFO],
   },
   [SurrenderSteps.AMOUNT]: {
-    title: 'Date',
+    title: 'Surrender Policy',
     order: 1,
     url: surrenderUrls[SurrenderSteps.AMOUNT],
   },
   [SurrenderSteps.TAX]: {
-    title: 'Tax Withholdings',
+    title: 'Tax Withholding',
     order: 2,
     url: surrenderUrls[SurrenderSteps.TAX],
   },
@@ -44,7 +44,7 @@ export const stepsInfo: Record<SurrenderSteps, StepInfo> = {
     url: surrenderUrls[SurrenderSteps.SUMMARY],
   },
   [SurrenderSteps.MFA]: {
-    title: 'Verify your identity',
+    title: 'Verify Your Identity',
     order: null,
     url: surrenderUrls[SurrenderSteps.MFA],
     actions: {

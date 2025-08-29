@@ -1,8 +1,15 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import {
+    createContext,
+    PropsWithChildren,
+    useContext,
+    useMemo,
+    useState,
+} from 'react';
 
 export type EAppData = {
     solveFor?: string;
     targetPremium?: number;
+    mecPremium?: number;
     faceAmount?: number;
     initialPremium?: number;
     cashValue?: number;
@@ -27,15 +34,18 @@ export const EAppContext = createContext<EappContextValue | undefined>(
     undefined
 );
 
-export function EAppProvider(props: PropsWithChildren<{}>) {
+export function EAppProvider(props: PropsWithChildren) {
     const [eAppData, setEAppData] = useState<EAppData>({});
 
     return (
         <EAppContext.Provider
-            value={{
-                data: eAppData,
-                onEAppDataChange: (data) => setEAppData(data),
-            }}
+            value={useMemo(
+                () => ({
+                    data: eAppData,
+                    onEAppDataChange: setEAppData,
+                }),
+                [eAppData]
+            )}
         >
             {props.children}
         </EAppContext.Provider>

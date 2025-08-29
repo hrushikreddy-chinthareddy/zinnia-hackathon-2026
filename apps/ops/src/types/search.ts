@@ -40,6 +40,10 @@ export interface PolicySearchResult {
     ssn: string;
 }
 
+export enum Source {
+    ZAHARA = 'zahara',
+}
+
 export interface SearchViewQuery {
     firstName?: string;
     lastName?: string;

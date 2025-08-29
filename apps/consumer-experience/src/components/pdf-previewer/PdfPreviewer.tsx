@@ -12,11 +12,11 @@ import PreviewUnsupported from './PreviewUnsupported';
 export default function PdfPreviewer({
   defaultRedirectUrl,
   documentDownloadUrl,
-  fileName,
+  documentId,
 }: {
   defaultRedirectUrl: string;
   documentDownloadUrl: string;
-  fileName: string;
+  documentId: string;
 }) {
   const [supportsEmbed, setSupportsEmbed] = useState(true);
   const [documentData, setDocumentData] = useState<string>('');
@@ -88,12 +88,12 @@ export default function PdfPreviewer({
         width={'100%'}
         height={'100%'}
       >
-        <PreviewUnsupported fileName={fileName} url={documentData} />
+        <PreviewUnsupported documentId={documentId} url={documentData} />
       </object>
     ) : (
       <Loading />
     )
   ) : (
-    <PreviewUnsupported fileName={fileName} url={documentData} />
+    <PreviewUnsupported documentId={documentId} url={documentData} />
   );
 }

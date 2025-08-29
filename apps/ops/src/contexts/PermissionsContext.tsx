@@ -53,7 +53,10 @@ export interface PermissionsContextProps {
     isOpsManagerView: boolean;
     hasPolicyIndexPageAccess: boolean;
     isAllowReadIllustrations: boolean;
+    hasEditServiceRequestAccess?: boolean;
     hasUsagePermission: boolean;
+    hasCallLogsAccess: boolean;
+    hasNotesAccess: boolean;
     hasTestHarnessAccess: boolean;
     isZinniaInternalViewer: boolean;
 }
@@ -109,11 +112,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         ],
         queryFn: async () => {
             if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
-                return await checkTuple(
+                const res = await checkTuple(
                     partyId,
                     FgaRelation.UiAccess,
                     FgaRoles.CASE_MANAGEMENT_ZL_ENTITY
                 );
+                return !!res.data;
             }
             return await doesUserHavePagePermissionQuery(
                 UserPermission.AllowReadCaseManagement,
@@ -133,11 +137,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             ],
             queryFn: async () => {
                 if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
-                    return await checkTuple(
+                    const res = await checkTuple(
                         partyId,
                         FgaRelation.UiAccess,
                         FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY
                     );
+                    return !!res.data;
                 }
                 return await doesUserHavePagePermissionQuery(
                     UserPermission.AllowReadPolicyAdmin,
@@ -160,6 +165,22 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             enabled: !!partyId,
             staleTime: FIFTEEN_MINUTES_IN_MS,
         });
+
+    const {
+        data: hasEditServiceRequestAccess,
+        isLoading: hasServiceRequestLoading,
+    } = useQuery({
+        queryKey: ['isAllowServiceRequest', partyId],
+        queryFn: async () => {
+            return await checkTuple(
+                partyId,
+                FgaRelation.UiAccess,
+                FgaUiEntity.ZinniaLiveServiceRequest
+            );
+        },
+        enabled: !!partyId,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
 
     const { data: partyReferenceData, isLoading: showToppanMerrillLoading } =
         useQuery({
@@ -211,6 +232,16 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.ILLUSTRATIONS_EXPERIENCE,
                 FgaRelation.UiAccess
             );
+            const hasCallLogsAccess = !!checkRelation(
+                data,
+                FgaRoles.CALL_LOGS_ZL,
+                FgaRelation.UiAccess
+            );
+            const hasNotesAccess = !!checkRelation(
+                data,
+                FgaRoles.NOTES_ACCESS,
+                FgaRelation.UiAccess
+            );
 
             const hasTestHarnessAccess = !!checkRelation(
                 data,
@@ -232,6 +263,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasPolicyIndexPageAccess: !!hasPolicyIndexPageAccess,
                 isAllowReadIllustrations,
                 hasUsagePermission: !!hasUsage,
+                hasCallLogsAccess,
+                hasNotesAccess,
                 hasTestHarnessAccess,
                 isZinniaInternalViewer,
             };
@@ -245,6 +278,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         !caseManagementLoading &&
         !policyAdminLoading &&
         !otpRenewalsLoading &&
+        !hasServiceRequestLoading &&
         !showToppanMerrillLoading &&
         !homeCheckLoading &&
         !opsManagerLoading;
@@ -279,7 +313,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     !!fgaRoleData?.hasPolicyIndexPageAccess,
                 isAllowReadIllustrations:
                     !!fgaRoleData?.isAllowReadIllustrations,
+                hasEditServiceRequestAccess:
+                    !!hasEditServiceRequestAccess?.data,
                 hasUsagePermission: !!fgaRoleData?.hasUsagePermission,
+                hasCallLogsAccess: !!fgaRoleData?.hasCallLogsAccess,
+                hasNotesAccess: !!fgaRoleData?.hasNotesAccess,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
             }}
         >

@@ -186,9 +186,13 @@ export const Parties = ({
     return (
         <div className="flex w-full flex-col" {...rest}>
             {!!showTitle && (
-                <Title className="mb-2" variant={TitleVariant.SubTitle}>
+                <Typography
+                    className="mb-2"
+                    asTag="h2"
+                    variant={TypographyVariant.BodyBold}
+                >
                     {t('caseOverview.sidenav.people')}
-                </Title>
+                </Typography>
             )}
             {!!owners.length && (
                 <ul className="flex w-full flex-col">

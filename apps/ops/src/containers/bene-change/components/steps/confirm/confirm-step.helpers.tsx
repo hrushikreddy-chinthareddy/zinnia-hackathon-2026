@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import { EntityTypeValue } from '@deps/constants/policy';
 import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helpers';
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
 import {
@@ -399,6 +400,7 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
                 item.action === 'DELETE'
                     ? dayjs().format(ZAHARA_API_DATE_FORMAT)
                     : null,
+            entityType: item?.party?.info?.entityType ?? EntityTypeValue.Other,
         },
         isPerStirpes: item?.beneInfo?.isPerStirpes || false,
         isIrrevocable: item?.beneInfo?.isIrrevocable || false,

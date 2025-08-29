@@ -193,7 +193,11 @@ const QuickViewHeader = ({
         TranslationFiles.COLDEFS,
     ]);
     const { searchValue } = useContext(DashboardContext);
-    const { partyId: userPartyId, sessionId } = usePermissionsContext();
+    const {
+        partyId: userPartyId,
+        sessionId,
+        hasCallLogsAccess,
+    } = usePermissionsContext();
 
     const {
         carrierId,
@@ -208,7 +212,6 @@ const QuickViewHeader = ({
         () => policyDataToGlobalValues(policy, t),
         [policy, t]
     );
-
     const sideSheet = useSideSheetContext();
     const openDetailsSidesheet = () => {
         sideSheet.changeSideSheetContent(
@@ -263,8 +266,9 @@ const QuickViewHeader = ({
                 });
         }
     };
+
     const { data: quickLinks, isLoading: loadingQuickLinks } =
-        usePolicyQuickLinks(t, policy);
+        usePolicyQuickLinks(t, policy, hasCallLogsAccess);
 
     return (
         <header data-testid={CardDetailsTest.HEADER}>
@@ -384,7 +388,7 @@ export const StatusBanner = ({
 
     const { isPermissioned: isUserPermissionedToWrite } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policy.policyNumber,
             policy.planCode
         );

@@ -50,7 +50,7 @@ export const bankAccountSchema = z
   .object({
     accountNumber: z.string().optional(),
     bankId: z.string().optional(),
-    branchName: z.string().optional(),
+    branchName: z.string().nullish(),
     bankName: z.string().optional(),
     accountType: z.string().optional(),
     autopayEnabled: z.boolean().optional(),

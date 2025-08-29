@@ -23,6 +23,7 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { ReferenceDataQuery, getReferenceData } from '@deps/queries/api/cases';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { SearchViewQuery } from '@deps/types/search';
 import {
     FilterClickedEvent,
     SegmentTrackedEventName,
@@ -53,6 +54,7 @@ export interface SideSheetRefineResultsProps {
     setCaseManagementFilters: Dispatch<SetStateAction<CaseSearchFilters>>;
     closeSideSheet: () => void;
     authorizedCarriers: string[];
+    currentSearchValue?: SearchViewQuery;
 }
 
 export default function SideSheetRefineResults({
@@ -60,6 +62,7 @@ export default function SideSheetRefineResults({
     setCaseManagementFilters,
     closeSideSheet,
     authorizedCarriers,
+    currentSearchValue,
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
@@ -437,6 +440,7 @@ export default function SideSheetRefineResults({
 
         setCaseManagementFilters((prevFilters) => ({
             ...prevFilters,
+            searchValue: currentSearchValue || {},
             offset: 0,
             additionalFilters,
         }));
@@ -493,17 +497,19 @@ export default function SideSheetRefineResults({
             }
         );
     }, [
+        setCaseManagementFilters,
+        closeSideSheet,
         additionalFilters,
         sessionId,
         partyId,
-        closeSideSheet,
-        setCaseManagementFilters,
         t,
+        currentSearchValue,
     ]);
 
     const handleReset = () => {
         setCaseManagementFilters((prevFilters) => ({
             ...prevFilters,
+            searchValue: currentSearchValue || {},
             offset: 0,
             additionalFilters: initialAdditionalFilters,
         }));

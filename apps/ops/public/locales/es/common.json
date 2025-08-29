@@ -10,7 +10,7 @@
     "last14Days": "Últimos 14 días",
     "last30Days": "Últimos 30 días",
     "yearToDate": "Año hasta la fecha",
-    "caseStatsDashboardTitle": "Tablero de Control de Transportistas",
+    "caseStatsDashboardTitle": "Estadísticas de casos",
     "customRange": "Rango personalizado",
     "allAgents": "Todos los Agentes",
     "allDistributors": "Todos los Distribuidores",
@@ -534,6 +534,19 @@
                     "lastName": "El apellido es obligatorio",
                     "last": "El apellido es obligatorio",
                     "trustDateRequired": "La fecha de fideicomiso es requerida"
+                },
+                "entityType": "Tipo de entidad",
+                "entityTypeOptions": {
+                    "soleProprietorship": "Empresa unipersonal",
+                    "generalPartnership": "Sociedad general",
+                    "limitedPartnership": "Sociedad limitada",
+                    "sCorporation": "Corporación S",
+                    "cCorporation": "Corporación C",
+                    "limitedLiabilityCompany": "Sociedad de responsabilidad limitada",
+                    "charitableOrganization": "Organización benéfica",
+                    "estate": "Patrimonio",
+                    "corporation": "Corporación",
+                    "other": "Otro"
                 }
             },
             "contactInfo": {
@@ -801,7 +814,20 @@
                 "transferConsideration": "'Transferencia por consideración'"
             },
             "yes": "Sí",
-            "no": "No"
+            "no": "No",
+            "entityType": "Tipo de entidad",
+            "entityTypeOptions": {
+                "soleProprietorship": "Empresa unipersonal",
+                "generalPartnership": "Sociedad general",
+                "limitedPartnership": "Sociedad limitada",
+                "sCorporation": "Corporación S",
+                "cCorporation": "Corporación C",
+                "limitedLiabilityCompany": "Sociedad de responsabilidad limitada",
+                "charitableOrganization": "Organización benéfica",
+                "estate": "Patrimonio",
+                "corporation": "Corporación",
+                "other": "Otro"
+            }
         },
         "beneDetails": {
             "title": "Se recibió una solicitud de cambio de beneficiario?",
@@ -4571,6 +4597,10 @@
                 "mainCta": {
                     "add": "Guardar correo electrónico de {{type}}",
                     "update": "Actualizar correo electrónico de {{type}}"
+                },
+                "fieldLabels": {
+                    "purpose": "Objetivo",
+                    "removeBank": "Eliminar esta cuenta bancaria"
                 }
             },
             "communicationpreference": {
@@ -4789,11 +4819,30 @@
                     "nameOnAccount": "Nombre en la cuenta",
                     "nameOnCard": "Nombre en la tarjeta",
                     "new": "Nuevo",
-                    "routingNumber": "Número de ruta"
+                    "routingNumber": "Número de ruta",
+                    "edit": "Editar",
+                    "bankAccount": "Cuenta bancaria",
+                    "permissionDeniedTooltip": "Consulte las pautas para obtener instrucciones sobre cómo editar los datos bancarios."
                 },
                 "label": "Detalles bancarios",
                 "transactions": {
                     "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
+                },
+                "purpose": {
+                    "loanInterestBilling": "Facturación de intereses de préstamos",
+                    "disbursements": "Desembolso",
+                    "loanPrincipalBilling": "Facturación del capital del préstamo",
+                    "premiumBilling": "Facturación Premium",
+                    "oneTimePremiumBilling": "Facturación Premium Única",
+                    "payout": "Pago",
+                    "oneTimeWire": "Cable de una sola vez"
+                },
+                "bankOptions": {
+                    "accountType": "Tipo de cuenta",
+                    "bankName": "Nombre del banco",
+                    "routingNumber": "Número de ruta",
+                    "accountNumber": "Número de cuenta",
+                    "endingIn": "Terminando en {{accountNumber}}"
                 }
             },
             "email": {
@@ -7184,7 +7233,8 @@
             "noProductsIconAlt": "Icon de no hay productos para listar",
             "noProductsAvailable": "No se han podido cargar ilustraciones. Por favor intente nuevamente despues.",
             "addIllustrationButton": "Boton de agregar illustracion",
-            "seeProducts": "Agregar un producto"
+            "seeProducts": "Agregar un producto",
+            "addIllustration": "Agregar Ilustración"
         },
         "caseSummary": {
             "edit": "Editar",
@@ -7272,7 +7322,8 @@
             "cancel": "Cancelar",
             "cancelArchiveAriaLabel": "Cancelar archivado de ilustración",
             "confirmArchiveAriaLabel": "Confirmar archivado de ilustración",
-            "addProductAriaLabel": "Boton para agregar un producto"
+            "addProductAriaLabel": "Boton para agregar un producto",
+            "editIllustration": "Editar ilustración"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",

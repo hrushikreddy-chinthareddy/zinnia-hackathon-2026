@@ -11,6 +11,7 @@ import { ProductTypes } from '@deps/types/product';
 import {
     CreateIllustrationPayload,
     CreateIllustrationPayloadParsingError,
+    UnderwritingClass,
 } from '../illustrationApiSchemas';
 
 export class OutputDataParsingError extends Error {
@@ -56,8 +57,32 @@ export abstract class IllustrationHandler<TOutputEntities> {
 
     public mapClientCaseInsuredData() {
         const clientCase = this.clientCase;
+        const insuredAge = calculateAgeNumber(
+            clientCase.insuredDetails?.dateOfBirth?.toString()
+        );
 
+        function getPremiumClass(
+            age: number | undefined,
+            isNicotineUser: boolean | undefined
+        ): string | null {
+            if (age && age < 18) {
+                return 'juvenile';
+            } else if (isNicotineUser) {
+                return UnderwritingClass.STANDARDTOBACCO;
+            }
+            return null;
+        }
+
+        // get the premium class default based on client case details
+        // if null, the default will be set by the blueprint
+        const premiumClass = getPremiumClass(
+            insuredAge,
+            clientCase.insuredDetails?.nicotineUser
+        );
         return {
+            ...(premiumClass && {
+                premiumClass: premiumClass,
+            }),
             ...(clientCase?.insuredDetails?.state && {
                 jurisdiction: clientCase.insuredDetails.state,
             }),

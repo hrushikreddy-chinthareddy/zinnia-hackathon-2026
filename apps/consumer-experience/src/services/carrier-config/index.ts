@@ -1,17 +1,49 @@
+import { CarrierName } from '@zinnia/bloom/components';
+
 import {
   CarrierConfig,
+  DocumentsVersion,
   ManageChange,
   PaymentProvider,
 } from '@/types/carrier-config';
 import { CompanyName } from '@/types/carriers';
 import { getThemeCookies } from '@/utils/theme';
 
+import { CARRIER_REDIRECT_URLS } from '../../carrier-config/urls';
+
 export const getCarrierConfig = async (): Promise<CarrierConfig> => {
   const currentCarrier = await getThemeCookies();
 
+  const defaultConfig: CarrierConfig = {
+    payment: {
+      provider: PaymentProvider.ZINNIA,
+      verifyIdentityRequired: true,
+    },
+    policyProfile: {
+      communicationPreference: {
+        manageChanges: ManageChange.INTERNAL,
+      },
+      email: {
+        manageChanges: ManageChange.INTERNAL,
+      },
+      phoneNumber: {
+        manageChanges: ManageChange.INTERNAL,
+      },
+    },
+    // This should be temporary since eventually EDS (the documents team) will manage
+    // the service the document is retrieved from depending on carrier. The logic for now
+    // is that legacy carriers are on v2 and any new carriers from wellabe forward are on
+    // v3. If this logic is still being used when onboarding a carrier, be sure to verify
+    // which documents service they are using!
+    documents: {
+      version: DocumentsVersion.V3,
+    },
+  };
+
   switch (currentCarrier) {
-    case CompanyName.FARMERS:
+    case CarrierName.FARMERS:
       return {
+        ...defaultConfig,
         payment: {
           provider: PaymentProvider.PAYMENTUS,
           verifyIdentityRequired: false,
@@ -19,36 +51,34 @@ export const getCarrierConfig = async (): Promise<CarrierConfig> => {
         policyProfile: {
           communicationPreference: {
             manageChanges: ManageChange.EXTERNAL,
-            url: `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/my-profile/communications`,
+            url: CARRIER_REDIRECT_URLS[CarrierName.FARMERS]
+              .COMMUNICATION_PREFERENCES,
           },
           email: {
             manageChanges: ManageChange.EXTERNAL,
-            url: `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/my-profile/primary`,
+            url: CARRIER_REDIRECT_URLS[CarrierName.FARMERS].MANAGE_CHANGES,
           },
           phoneNumber: {
             manageChanges: ManageChange.EXTERNAL,
-            url: `${process.env.NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL}/my-profile/primary`,
+            url: CARRIER_REDIRECT_URLS[CarrierName.FARMERS].MANAGE_CHANGES,
           },
         },
       };
 
-    default:
+    case CompanyName.WELLABE:
       return {
-        payment: {
-          provider: PaymentProvider.ZINNIA,
-          verifyIdentityRequired: true,
-        },
-        policyProfile: {
-          communicationPreference: {
-            manageChanges: ManageChange.INTERNAL,
-          },
-          email: {
-            manageChanges: ManageChange.INTERNAL,
-          },
-          phoneNumber: {
-            manageChanges: ManageChange.INTERNAL,
-          },
+        ...defaultConfig,
+      };
+
+    case CompanyName.EVERLY:
+      return {
+        ...defaultConfig,
+        documents: {
+          version: DocumentsVersion.V2,
         },
       };
+
+    default:
+      return defaultConfig;
   }
 };

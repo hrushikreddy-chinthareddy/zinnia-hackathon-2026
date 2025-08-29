@@ -1,6 +1,7 @@
 import {
     CommunicationPreferenceChangeRequest,
     TransactionAcceptedResponse,
+    ValidationResult,
 } from '@zinnia/api-types/types/bpm';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
@@ -66,6 +67,15 @@ export interface NonFinancialTransactionResponse {
     error?: any;
 }
 
+export interface NonFinancialTransactionValidationResponse
+    extends NonFinancialTransactionResponse {
+    data: {
+        err: string;
+        status: string | number;
+        validationResult?: ValidationResult[];
+    };
+}
+
 interface AddressBody extends NonFinancialTransactionBody {
     address: AddressBase;
 }
@@ -93,6 +103,10 @@ interface NonFinancialTransaction {
 interface AddNonFinancialTransaction extends NonFinancialTransaction {}
 interface EditNonFinancialTransaction extends NonFinancialTransaction {
     itemId?: string;
+}
+
+interface ValidateNonFinancialTransaction extends AddNonFinancialTransaction {
+    action: NonFinancialTransactionActions;
 }
 
 export const addNonFinancialTransaction = async ({
@@ -305,6 +319,71 @@ export const changePartyName = async ({
             'existingPartyNameChange::transaction_error::an error occurred',
             error
         );
+        return error;
+    }
+};
+
+export const validateNonFinancialTransaction = async ({
+    body,
+    partyId,
+    planCode,
+    policyNumber,
+    transaction,
+    action,
+}: ValidateNonFinancialTransaction): Promise<
+    NonFinancialTransactionValidationResponse | undefined
+> => {
+    if (!planCode || !policyNumber || !partyId) {
+        browserLogInfo(
+            'ValidateNonFinancialTransaction::missing plancode, policyNumber, or partyId'
+        );
+    }
+    let operation = '';
+    switch (action) {
+        case NonFinancialTransactionActions.Add:
+            operation = 'Add';
+            break;
+        case NonFinancialTransactionActions.Edit:
+            operation = 'Update';
+            break;
+        case NonFinancialTransactionActions.Delete:
+            operation = 'Delete';
+            break;
+        default:
+            operation = 'Add';
+    }
+
+    try {
+        const response = await client.post<any, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/bankaccount/${partyId}/validation?operation=${operation}`,
+            body
+        );
+
+        return response;
+    } catch (error: any) {
+        if (error?.status === StatusCode.BadRequest) {
+            browserLogInfo(
+                'ValidateNonFinancialTransaction::transaction_error::BPM error occurred',
+                {
+                    error,
+                    transaction,
+                    planCode,
+                    policyNumber,
+                    action,
+                }
+            );
+        } else {
+            browserLogInfo(
+                'ValidateNonFinancialTransaction::transaction_error::BPM error occurred',
+                {
+                    error,
+                    transaction,
+                    planCode,
+                    policyNumber,
+                    action,
+                }
+            );
+        }
         return error;
     }
 };

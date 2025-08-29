@@ -241,11 +241,15 @@ export interface CaseReferenceResponse {
     };
 }
 
-export interface ProcessReferenceData {
+export type ProcessReferenceItem = {
     type: string;
     key: string;
     value: string;
-}
+    parentKey?: string;
+};
+export type ProcessReferenceData = ProcessReferenceItem & {
+    child?: ProcessReferenceItem[];
+};
 
 export interface Nigo {
     createdDate: string | null;

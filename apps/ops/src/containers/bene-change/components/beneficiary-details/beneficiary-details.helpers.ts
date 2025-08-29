@@ -65,6 +65,7 @@ export const getInitialBene = (
         dateOfBirth: selectedParty?.dateOfBirth,
         partyType: selectedParty?.partyType,
         trustType: selectedParty?.trustType,
+        entityType: selectedParty?.entityType,
     };
 
     const beneData = {
