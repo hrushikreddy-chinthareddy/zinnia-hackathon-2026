@@ -41,7 +41,7 @@ export type PhoneProps = {
     handlePhoneChange: any;
     index: number;
     isReadOnly: boolean;
-    isRequired: boolean;
+    isRequired?: boolean;
 };
 
 function PhoneDetails({
@@ -49,7 +49,7 @@ function PhoneDetails({
     handlePhoneChange,
     index,
     isReadOnly,
-    isRequired,
+    isRequired = true,
 }: PhoneProps) {
     const INITIAL_PHONE: Phone = {
         bestTime: ANYTIME,
