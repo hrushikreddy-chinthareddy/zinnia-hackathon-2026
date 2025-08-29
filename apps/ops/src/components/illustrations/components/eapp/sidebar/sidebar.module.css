@@ -38,7 +38,9 @@
 }
 
 .calculateBtn {
-    width: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
 }
 
 @container sidebar-content (min-width: 200px) {

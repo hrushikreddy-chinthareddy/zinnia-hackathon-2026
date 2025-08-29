@@ -119,18 +119,24 @@ export function QuestionnaireEngineProvider(
             },
         });
 
-        engine.populateSimpleMappingAnswers(props.prePopulateData);
+        console.log('versionedAnswers', props.versionedAnswers.v2);
+
+        //if props versioned answers v2 is empty, then prepopulate
+        if (Object.keys(props.versionedAnswers.v2).length === 0) {
+            engine.populateSimpleMappingAnswers(props.prePopulateData);
+        }
 
         setRenderingQuestionnaire(engine.renderingQuestionnaire);
 
         return [engine];
     }, [
         props.blueprint,
-        props.versionedAnswers,
-        props.subscribers,
-        props.applicationContext,
-        questionnaire,
+        props.versionedAnswers.v2,
         props.timezone,
+        props.applicationContext,
+        props.subscribers,
+        props.prePopulateData,
+        questionnaire,
     ]);
 
     return (

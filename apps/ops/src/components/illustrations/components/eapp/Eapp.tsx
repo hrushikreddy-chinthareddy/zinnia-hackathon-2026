@@ -14,6 +14,8 @@ export interface EappProps {
     label: string;
     planCode: string;
     planType: ProductTypes;
+    isEdit?: boolean;
+    illustrationId?: string;
 }
 export function Eapp(props: EappProps): ReactElement | null {
     const { activeSection } = useActiveSection();
@@ -35,7 +37,10 @@ export function Eapp(props: EappProps): ReactElement | null {
                         <SectionView section={activeSection} />
                     </div>
                     <div className={style.applicationSidebar}>
-                        <Sidebar />
+                        <Sidebar
+                            isEdit={props.isEdit}
+                            illustrationId={props.illustrationId}
+                        />
                     </div>
                 </div>
             </div>

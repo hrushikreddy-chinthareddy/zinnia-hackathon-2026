@@ -143,10 +143,10 @@ export const buildTransactionCards = (
                   )}`,
         value:
             totalReqMinDistributionAmount && totalReqMinDistributionAmount > 0
-                ? t('eligible')
+                ? t('required')
                 : totalReqMinDistributionAmount === 0 ||
                   totalReqMinDistributionAmount === null
-                ? t('ineligible')
+                ? t('notRequired')
                 : t('notAvailable'),
     };
 
