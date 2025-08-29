@@ -3420,7 +3420,9 @@
                 "withdrawals": "Retiros",
                 "withdrawalsTaken": "Retiros realizados",
                 "yearsRemaining": "años restantes",
-                "ytd": "Año hasta la fecha"
+                "ytd": "Año hasta la fecha",
+                "required": "Requerido",
+                "notRequired": "No requerido"
             },
             "contestability": {
                 "activeBadgeTooltip": "Si hay una reclamación por fallecimiento durante el período de contestabilidad, la aseguradora tomará medidas adicionales para verificar que el asegurado fue honesto durante su solicitud. La aseguradora incluso puede impugnar la reclamación.",

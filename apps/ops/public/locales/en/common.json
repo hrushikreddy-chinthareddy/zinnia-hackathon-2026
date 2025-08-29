@@ -3453,7 +3453,9 @@
                 "targetbenefitplan": "Target Benefit Plan",
                 "ugma/utma": "UGMA/UTMA Custodial Account",
                 "vulnq": "Non-Qualified Variable Universal Life",
-                "qlacira": "QLAC IRA (Qualified Longevity Annuity Contract)"
+                "qlacira": "QLAC IRA (Qualified Longevity Annuity Contract)",
+                "required": "Required",
+                "notRequired": "Not required"
             },
             "contestability": {
                 "activeBadgeTooltip": "If there's a death claim during the contestability period, the carrier will take extra care to verify the insured was honest during their application. Carrier may even contest the claim.",

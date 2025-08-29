@@ -3408,7 +3408,9 @@
                 "withdrawals": "Retraits",
                 "withdrawalsTaken": "Retraits effectués",
                 "yearsRemaining": "années restantes",
-                "ytd": "YTD"
+                "ytd": "YTD",
+                "required": "Requis",
+                "notRequired": "Non requis"
             },
             "contestability": {
                 "activeBadgeTooltip": "Si une demande de décès survient pendant la période de contestation, l'assureur fera preuve d'une vigilance accrue pour vérifier si l'assuré a été honnête lors de sa demande. L'assureur peut même contester la demande.",
