@@ -1329,10 +1329,15 @@
             "selectReason": "Seleccionar Razón",
             "cancel": "Cancelar",
             "updateStatus": "Actualizar Estado",
+            "notes": "Notas",
             "pendingReasonOptions": {
                 "awaitingAdditionalInformation": "Esperando información adicional",
                 "awaitingApproval": "Esperando aprobación",
-                "awaitingApplication": "Esperando aplicación"
+                "awaitingApplication": "Esperando aplicación",
+                "supportTicketRaised": "Ticket de soporte creado"
+            },
+            "errors": {
+                "notesRequired": "Por favor, ingrese notas."
             }
         },
         "tasksListing": {
@@ -4282,6 +4287,7 @@
             "errorAdditionalDocuments": "Error al obtener documentos adicionales.",
             "commonTaskIssues": "Se encontraron uno o más problemas de {{taskType}}.",
             "reasonLabel": "Razón del estado",
+            "scheduledNoteLabel": "Nota",
             "inProgress": "En progreso",
             "pendingLabel": "Pendiente hasta",
             "canceledLabel": "Cancelado el",

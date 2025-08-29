@@ -362,10 +362,15 @@
             "selectReason": "Sélectionner une raison",
             "cancel": "Annuler",
             "updateStatus": "Mettre à jour le statut",
+            "notes": "Notes",
             "pendingReasonOptions": {
                 "awaitingAdditionalInformation": "En attente d'informations supplémentaires",
                 "awaitingApproval": "En attente d'approbation",
-                "awaitingApplication": "En attente de candidature"
+                "awaitingApplication": "En attente de candidature",
+                "supportTicketRaised": "Ticket de support créé"
+            },
+            "errors": {
+                "notesRequired": "Veuillez entrer des notes."
             }
         },
         "tasksListing": {
@@ -4281,6 +4286,7 @@
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
             "reasonLabel": "Raison du statut",
+            "scheduledNoteLabel": "Note",
             "inProgress": "En cours",
             "pendinglabel": "En attente jusqu'au",
             "canceledLabel": "Annulé le",

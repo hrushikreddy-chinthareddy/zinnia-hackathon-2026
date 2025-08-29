@@ -1344,10 +1344,15 @@
             "selectReason": "Select Reason",
             "cancel": "Cancel",
             "updateStatus": "Update Status",
+            "notes": "Notes",
             "pendingReasonOptions": {
                 "awaitingAdditionalInformation": "Awaiting additional information",
                 "awaitingApproval": "Awaiting approval",
-                "awaitingApplication": "Awaiting application"
+                "awaitingApplication": "Awaiting application",
+                "supportTicketRaised": "Support Ticket Raised"
+            },
+            "errors": {
+                "notesRequired": "Notes are required."
             }
         },
         "tasksListing": {
@@ -4350,6 +4355,7 @@
             "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "reasonLabel": "Status reason",
+            "scheduledNoteLabel": "Note",
             "inProgress": "In Progress",
             "pendinglabel": "Pending until",
             "canceledLabel": "Canceled on",
