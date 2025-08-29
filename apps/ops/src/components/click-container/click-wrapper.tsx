@@ -51,6 +51,7 @@ const ClickWrapper: React.FC<ClickWrapperProps> = ({
 
     return (
         <div
+            tabIndex={0}
             data-testid={testId}
             className={containerClasses}
             role={role}
